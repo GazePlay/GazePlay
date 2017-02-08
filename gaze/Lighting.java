@@ -1,0 +1,73 @@
+package gaze;
+
+import gaze.GazeEvent;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
+import javafx.scene.Parent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+
+/**
+ * Created by schwab on 10/09/2016.
+ */
+public class Lighting extends Parent {
+
+    private int X;
+    private int Y;
+    private EventHandler<Event> enterEvent;
+    private Rectangle pixel;
+    private int lightingLength;
+    private Color lightingColor;
+
+    public Lighting(int x, int y, int pixelWidth, int lightingLength, Color lightingColor) {
+
+
+        X = x;
+        Y = y;
+        this.lightingLength = lightingLength * 1000;
+        this.lightingColor = lightingColor;
+        pixel = new Rectangle(x,y,pixelWidth,pixelWidth);
+        //pixel.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+        pixel.setFill(Color.BLACK);
+        this.getChildren().add(pixel);
+
+        enterEvent = new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+
+                if((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)) {
+
+                    enter();
+                }
+            }
+        };
+
+        this.addEventFilter(MouseEvent.ANY, enterEvent);
+
+        this.addEventHandler(GazeEvent.ANY, enterEvent);
+
+    }
+
+    public void enter(){
+
+        Timeline timeline = new Timeline();
+        Timeline timeline2 = new Timeline();
+
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pixel.fillProperty(), lightingColor)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(lightingLength),new KeyValue(pixel.fillProperty(), Color.BLACK)));
+
+        SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
+
+        sequence.play();
+    }
+
+
+}
