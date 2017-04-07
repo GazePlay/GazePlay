@@ -3,7 +3,6 @@ package samplesAmela;
 //It is repeated always, it works like a charm :)
 
 import javafx.animation.Animation;
-import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -20,22 +19,11 @@ import javafx.scene.media.MediaPlayer;
 import java.io.File;
 import javafx.util.Duration;
 
-import org.jcp.xml.dsig.internal.dom.Utils;
-//import java.time.Duration;
 
-import javax.print.DocFlavor;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
-
-import static java.time.temporal.ChronoUnit.MILLIS;
 
 
 /**
