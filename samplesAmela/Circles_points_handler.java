@@ -3,8 +3,6 @@ package samplesAmela;
  * Created by Amela Fejza on 5/23/2017.
  */
 
-//wolfieefinal + points added
-
 import gaze.GazeEvent;
 import gaze.GazeUtils;
 import javafx.animation.Animation;
@@ -60,7 +58,7 @@ public class Circles_points_handler extends Application {
     ArrayList<Circle> array_count = new ArrayList<Circle>();
     int count = 0;
     Circle circle;
-    final double min_time = 5000;
+    final double min_time = 1000;
     long entry;
     double center_x=50, center_y=50;
     Scene scene;
@@ -294,7 +292,7 @@ public class Circles_points_handler extends Application {
 
 
 
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED ) {
+                if (e.getEventType() == MouseEvent.MOUSE_CLICKED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
                     canvas.getChildren().removeAll(imgViewTriangle, imgViewSquare, imgViewTrapez);
                     canvas.add(imgViewBravo, 3, 3);
@@ -354,7 +352,7 @@ public class Circles_points_handler extends Application {
 
 
 
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED ) {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
                     System.out.println("I eggcited");
                     entry = (new Date()).getTime();
@@ -363,7 +361,7 @@ public class Circles_points_handler extends Application {
                     circle.setOpacity(0.5);
 
                 }
-                else if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED) {
 
                     System.out.println("I moved");
                     indicator.setVisible(true);
@@ -376,7 +374,7 @@ public class Circles_points_handler extends Application {
                         createAnimation();
                     }
 
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
+                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
                     entry = -1;
                     indicator.setOpacity(1);
