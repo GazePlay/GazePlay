@@ -3,6 +3,7 @@ package samplesAmela;
 import gaze.GazeEvent;
 import gaze.GazeUtils;
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -22,18 +23,13 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
-
-//with the click
+import java.util.*;
 
 /**
- * Created by Amela Fejza on 5/23/2017.
- */
+ * Created by Amela Fejza on 5/24/2017.
+*/
 
-public class JeuAnimaux_handler extends Application {
+public class JeuAnimaux_handler2 extends Application {
 
     private static Scene sceneFirst;
     private static HBox hboxFirst;
@@ -47,7 +43,14 @@ public class JeuAnimaux_handler extends Application {
     private static ImageView imgView2;
     private static ImageView imgView3;
     private static ImageView imgView4;
-    private static  EventHandler<Event> aEvent;
+    private static ImageView imgViewClick;
+    private static EventHandler<Event> aEvent;
+    private static FadeTransition ft;
+    private int number;
+    long entry;
+    final double min_time = 1000;
+    Bubble bubble;
+
 
     public static void main(String[] args)  {
         Application.launch();
@@ -60,50 +63,113 @@ public class JeuAnimaux_handler extends Application {
             public void handle(Event e) {
 
 
-
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                    System.out.println("Image Clicked! BRAVO!");
-
-                    Animation animation = new Transition() {
-
-                        {
-                            setCycleDuration(Duration.millis(3000));
-                            hboxFirst.getChildren().removeAll(imgView1, imgView2, imgView3);
-                            hboxFirst.getChildren().add(imgView4);
-                            String musicFileBravo =  System.getProperties().getProperty("user.home") + File.separator + "GazePlay" + File.separator + "files" + File.separator + "myGame"+File.separator+"applause.mp3";
-                            File fSound = new File(musicFileBravo);
-
-                            Media firstSound = new Media(fSound.toURI().toString());
-                            MediaPlayer mediaPlayerBravo = new MediaPlayer(firstSound);
-                            mediaPlayerBravo.play();
-                        }
-
-                        @Override
-                        protected void interpolate(double frac) {
-                            final int n = Math.round(3000 * (float) frac);
-
-                        }
-                    };
-
-                    animation.play();
-
-                    animation.setOnFinished(new EventHandler<ActionEvent>() {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
 
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            hboxFirst.getChildren().removeAll(imgView4);
-                            createGame(sceneFirst, hboxFirst);
-
-                        }
-                    });
-
+                    System.out.println("I eggcited");
+                    entry = (new Date()).getTime();
                 }
 
-            }
-        };
+                if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED){
 
+
+                    System.out.println("I moved");
+
+                    long now = (new Date()).getTime();
+                    //ft = new FadeTransition(Duration.millis(3000), imgViewClick );
+                    System.out.println((now - entry) / min_time);
+                    if ((now - entry) > min_time && entry != -1) {
+
+                        Animation animation = new Transition() {
+
+                            {
+
+                                setCycleDuration(Duration.millis(2000));
+
+                                ft = new FadeTransition(Duration.millis(1000), imgViewClick);
+                                ft.setFromValue(0.3);
+                                ft.setToValue(1);
+                                ft.setCycleCount(1);
+                                ft.setAutoReverse(true);
+
+                                ft.play();
+
+                            }
+
+                            @Override
+                            protected void interpolate(double frac) {
+                                final int n = Math.round(100 * (float) frac);
+
+                            }
+                        };
+
+                        animation.play();
+
+                        animation.setOnFinished(new EventHandler<ActionEvent>() {
+
+                            @Override
+                            public void handle(ActionEvent actionEvent) {
+
+                                //puts BRAVO image
+                                hboxFirst.getChildren().removeAll(imgView1, imgView2, imgView3);
+                                hboxFirst.getChildren().add(imgView4);
+
+                                String musicFileBravo = "samplesAmela/sounds/applause.mp3";
+
+                                Media soundBravo = new Media(new File(musicFileBravo).toURI().toString());
+                                MediaPlayer mediaPlayerBravo = new MediaPlayer(soundBravo);
+                                mediaPlayerBravo.play();
+
+                                System.out.println("Image 1 Clicked! BRAVO!");
+
+
+                                //create an animation just to remove bravo and add bubbles
+                                Animation animation = new Transition() {
+
+                                    {
+                                        setCycleDuration(Duration.millis(3000));
+                                        //hboxFirst.getChildren().add(bubble);
+
+
+                                    }
+
+                                    @Override
+                                    protected void interpolate(double frac) {
+                                        final int n = Math.round(100 * (float) frac);
+
+                                    }
+
+                                };
+                                animation.play();
+                                animation.setOnFinished(new EventHandler<ActionEvent>() {
+
+
+                                    @Override
+                                    public void handle(ActionEvent actionEvent) {
+
+                                        hboxFirst.getChildren().removeAll(imgView4);
+                                        //hboxFirst.getChildren().remove(bubble);
+                                        createGame(sceneFirst, hboxFirst);
+                                    }
+                                });
+                            }
+                        });
+
+
+                    }
+                }
+                if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED)
+
+                            {
+
+                                entry = -1;
+                            }
+
+
+
+        }
+
+        };
     }
 
 
@@ -128,7 +194,7 @@ public class JeuAnimaux_handler extends Application {
 
     }
 
-    public void createGame(Scene scene, HBox hbox){
+    public void createGame(Scene scene,HBox hbox ){
 
         sceneFirst = scene;
         hboxFirst = hbox;
@@ -181,9 +247,10 @@ public class JeuAnimaux_handler extends Application {
             if(random2.equals(soundNames.get(i))){
                 yes = soundNames.get(i);
             }
-        }
+        }*/
 
-        System.out.println(yes); */
+       //System.out.println(yes);
+
         System.out.println(random2);
 
         Media sound = new Media(new File(pathSound+ File.separator+random2).toURI().toString());
@@ -228,35 +295,45 @@ public class JeuAnimaux_handler extends Application {
         imgView4.setFitHeight(200);
         imgView4.setFitWidth(200);
 
+        switch (number){
+            case 1:  imgViewClick = imgView1; break;
+            case 2: imgViewClick = imgView2; break;
+            case 3: imgViewClick = imgView3; break;
+        }
+
         hboxFirst.getChildren().addAll(imgView1, imgView2, imgView3);
 
         random = random + ".jpg";
         mediaPlayer.play();
         if(random.equals(firstImage1)){
+            number=1;
+            imgViewClick=imgView1;
 
-            GazeUtils.addEventFilter(imgView1);
+            GazeUtils.addEventFilter(imgViewClick);
             aEvent = createAnimation();
-            imgView1.addEventFilter(MouseEvent.ANY, aEvent);
-            imgView1.addEventFilter(GazeEvent.ANY, aEvent);
+            imgViewClick.addEventFilter(MouseEvent.ANY, aEvent);
+            imgViewClick.addEventFilter(GazeEvent.ANY, aEvent);
 
 
         } else if (random.equals(firstImage2)) {
-
+            number=2;
+            imgViewClick=imgView2;
             //mediaPlayerDog.play();
 
-            GazeUtils.addEventFilter(imgView2);
+            GazeUtils.addEventFilter(imgViewClick);
             aEvent = createAnimation();
-            imgView2.addEventFilter(MouseEvent.ANY, aEvent);
-            imgView2.addEventFilter(GazeEvent.ANY, aEvent);
+            imgViewClick.addEventFilter(MouseEvent.ANY, aEvent);
+            imgViewClick.addEventFilter(GazeEvent.ANY, aEvent);
 
         } else if (random.equals(firstImage3)) {
-
+            number =3;
+            imgViewClick=imgView3;
             //mediaPlayerHorse.play();
 
-            GazeUtils.addEventFilter(imgView3);
+            GazeUtils.addEventFilter(imgViewClick);
             aEvent = createAnimation();
-            imgView3.addEventFilter(MouseEvent.ANY, aEvent);
-            imgView3.addEventFilter(GazeEvent.ANY, aEvent);
+            imgViewClick.addEventFilter(MouseEvent.ANY, aEvent);
+            imgViewClick.addEventFilter(GazeEvent.ANY, aEvent);
 
         }
     }

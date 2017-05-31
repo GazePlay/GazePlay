@@ -1,20 +1,19 @@
 package samplesAmela;
-/**
- * Created by Amela Fejza on 5/23/2017.
- */
+
+//choose the image not by clicking but by fading
 
 import gaze.GazeEvent;
 import gaze.GazeUtils;
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.FillTransition;
 import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,37 +24,35 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
-import javafx.scene.paint.*;
 import javafx.util.Duration;
-
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
-
-
-public class Circles_points_handler extends Application {
+/**
+ * Created by Amela Fejza on 5/24/2017.
+ */
+public class Circles_handler2 extends Application {
 
     double gridSize = 100;
     ProgressIndicator indicator;
     GridPane canvas ;
     int arraypts[][] ={
-            {1, 4, 2, 1, 3, 4},   // tri
-            {1, 1, 1, 5, 5, 5, 5, 1 },   // quad
-            {2, 5, 2, 2, 4, 1, 6, 2, 6, 5 }   // pent
+            {1, 4, 2, 1 , 3, 3},  // tri
+            {1, 1, 1, 5 , 5, 1, 5, 5, },   // quad
+            {2, 2, 2, 5 , 4, 1, 6, 2, 6, 5 }  // pent
 
     };
 
     int array[] = {0,1,2};
     ArrayList<Integer> array_sizes = new ArrayList<Integer>();
-    ArrayList<Circle> array_count = new ArrayList<Circle>();
+
     int count = 0;
     Circle circle;
     final double min_time = 1000;
@@ -64,13 +61,17 @@ public class Circles_points_handler extends Application {
     Scene scene;
     HBox hboxFirst;
     int size, index;
+    FadeTransition ft;
     Bubble bubble;
 
-    public Circles_points_handler(){
+    public Circles_handler2(){
         for (int index = 0; index < array.length; index++)
         {
             array_sizes.add(array[index]);
         }
+
+
+
     }
 
 
@@ -81,26 +82,37 @@ public class Circles_points_handler extends Application {
 
     private static ImageView imgViewClick;
 
-    private static File myFile4 = new File(System.getProperties().getProperty("user.home") + File.separator + "GazePlay" + File.separator + "files" + File.separator + "myGame" + File.separator + "myNode" + File.separator + "triangle.jpg");
+    private static File myFile4 = new File(System.getProperties().getProperty("user.home") + File.separator + "GazePlay" + File.separator + "files" + File.separator + "myGame" + File.separator + "myNode" + File.separator + "three.png");
     private static String triangle = myFile4.toURI().toString();
     private static Image imgTriangle = new Image(triangle);
     private static ImageView imgViewTriangle = new ImageView(imgTriangle);
 
 
-    private static File myFile5 = new File(System.getProperties().getProperty("user.home") + File.separator + "GazePlay" + File.separator + "files" + File.separator + "myGame" + File.separator + "myNode" + File.separator + "square.jpg");
+    private static File myFile5 = new File(System.getProperties().getProperty("user.home") + File.separator + "GazePlay" + File.separator + "files" + File.separator + "myGame" + File.separator + "myNode" + File.separator + "four.png");
     private static String square = myFile5.toURI().toString();
     private static Image imgSquare = new Image(square);
     private static ImageView imgViewSquare = new ImageView(imgSquare);
 
-    private static File myFile6 = new File(System.getProperties().getProperty("user.home") + File.separator + "GazePlay" + File.separator + "files" + File.separator + "myGame" + File.separator + "myNode" + File.separator + "pentagon.png");
+    private static File myFile6 = new File(System.getProperties().getProperty("user.home") + File.separator + "GazePlay" + File.separator + "files" + File.separator + "myGame" + File.separator + "myNode" + File.separator + "five.jpg");
     private static String trapez = myFile6.toURI().toString();
     private static Image imgTrapez = new Image(trapez);
     private static ImageView imgViewTrapez = new ImageView(imgTrapez);
-    private static  EventHandler<Event> enterEvent;
+    private static EventHandler<Event> enterEvent;
     private static  EventHandler<Event> bravoEvent;
 
+
+   /* enterEvent = buildEvent();
+
+        this.addEventFilter(MouseEvent.ANY, enterEvent);
+
+        this.addEventFilter(GazeEvent.ANY, enterEvent);*/
+    /*private static EventHandler<Event> buildEvent() {
+        return new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {*/
+
     //triangleAnimation triangle = new triangleAnimation();
-    @Override
+   // @Override
     public void start(Stage primaryStage) {
 
         canvas = new GridPane();
@@ -118,6 +130,7 @@ public class Circles_points_handler extends Application {
             rowConst.setPercentHeight(100.0 / numRows);
             canvas.getRowConstraints().add(rowConst);
         }
+
 
         scene = new Scene(canvas, 800, 800);
         primaryStage.setScene(scene);
@@ -144,20 +157,13 @@ public class Circles_points_handler extends Application {
         imgViewTrapez.setFitWidth(200);
         imgViewTrapez.setFitHeight(200);
 
+
         Animation animation = new Transition() {
 
             {
                 setCycleDuration(Duration.millis(1000));
 
                 canvas.getChildren().removeAll(indicator, circle);
-                Circle c = new Circle();
-                c.setRadius(20.0f);
-                c.setOpacity(1);
-                c.setFill(Color.LIGHTGRAY);
-                c.setVisible(true);
-                array_count.add(c);
-                canvas.add(c,arraypts[index][count], arraypts[index][count+1]);
-
                 count+=2;
 
                 // root.getChildren().remove(indicator);
@@ -177,24 +183,9 @@ public class Circles_points_handler extends Application {
 
             @Override
             public void handle(ActionEvent actionEvent) {
-                if(count<size && count<4){
+                if(count<size){
                     canvas.add(indicator, arraypts[index][count], arraypts[index][count+1]);
                     canvas.add(circle,arraypts[index][count], arraypts[index][count+1]);
-                   /* array_count.add(circle.getCenterX());
-                    array_count.add(circle.getCenterY());*/
-                    //add the line
-                   /* Line line = new Line(0,0,arraypts[index][count]*100,arraypts[index][count+1]*100 );
-                    line.setStroke(Color.BLACK);
-                    line.setStrokeWidth(3.0);
-                    canvas.getChildren().add(line);*/
-
-                }
-                else if(count<size && count>2){
-
-                    canvas.add(indicator, arraypts[index][count], arraypts[index][count+1]);
-                    canvas.add(circle,arraypts[index][count], arraypts[index][count+1]);
-
-
                 }
 
                 else {
@@ -202,16 +193,18 @@ public class Circles_points_handler extends Application {
                     canvas.setGridLinesVisible(false);
                     //canvas.getChildren().clear();
                     canvas.getChildren().removeAll(circle, indicator);
-                    for(Circle ar : array_count){
-                        canvas.getChildren().remove(ar);
-                    }
                     hboxFirst=new HBox();
                     // hboxFirst.setPadding(new Insets(5,5,5,5));
                     // hboxFirst.setPadding(new Insets(15, 12, 15, 12));
+                    indicator.setOpacity(0);
 
                     canvas.add(imgViewTriangle, 1, 1);
                     canvas.add(imgViewSquare, 3, 3);
                     canvas.add(imgViewTrapez, 5, 5);
+                    //canvas.add(indicator, 1, 1);
+                    //canvas.add(indicator, 3, 3);
+                    //canvas.add(indicator, 5, 5);
+
                       /* String musicFileKot = "src/sample/sounds/applause.mp3";
 
                         Media kot = new Media(new File(musicFileKot).toURI().toString());
@@ -230,22 +223,50 @@ public class Circles_points_handler extends Application {
                     imgViewClick.addEventFilter(GazeEvent.ANY, bravoEvent);
 
 
-                        //scene.setFill(Color.TRANSPARENT);
-                        /*canvas.getChildren().removeAll(imgViewTriangle, imgViewSquare, imgViewTrapez);
-                        canvas.add(imgViewBravo, 3, 3);
+                }
+            }
+        });
 
-                        String musicFileBravo = "src/sample/sounds/applause.mp3";
 
-                        Media soundBravo = new Media(new File(musicFileBravo).toURI().toString());
-                        MediaPlayer mediaPlayerBravo = new MediaPlayer(soundBravo);
-                        mediaPlayerBravo.play();
+    }
 
-                        System.out.println("Image 1 Clicked! BRAVO!");*/
-                        /*Animation animation = new Transition() {
+    //bravo event handler
+    private  EventHandler<Event> buildBravoEvent() {
+        return new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+
+
+
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                    System.out.println("I eggcited");
+                    entry = (new Date()).getTime();
+
+                }
+
+                else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED) {
+
+                    System.out.println("I moved");
+
+                    long now = (new Date()).getTime();
+                    //ft = new FadeTransition(Duration.millis(3000), imgViewClick );
+                    System.out.println((now - entry) / min_time);
+                    if ((now - entry) > min_time && entry != -1) {
+
+
+                        Animation animation = new Transition() {
 
                             {
-                                setCycleDuration(Duration.millis(5000));
-                                canvas.getChildren().add(bubble);
+                                setCycleDuration(Duration.millis(2000));
+
+                                ft = new FadeTransition(Duration.millis(1000), imgViewClick);
+                                ft.setFromValue(0.3);
+                                ft.setToValue(1);
+                                ft.setCycleCount(1);
+                                ft.setAutoReverse(true);
+
+                                ft.play();
 
 
                             }
@@ -263,83 +284,71 @@ public class Circles_points_handler extends Application {
 
                             @Override
                             public void handle(ActionEvent actionEvent) {
-                                canvas.getChildren().remove(imgViewBravo);
-                                canvas.getChildren().remove(bubble);
 
-                                count=0;
-                                Image image = canvas.snapshot(new SnapshotParameters(), null);
-                                ImagePattern pattern = new ImagePattern(image, 0, 0, 0, 0, false);
-                                pattern=createGridPattern();
+                                //puts BRAVO image
+                                canvas.getChildren().removeAll(imgViewTriangle, imgViewSquare, imgViewTrapez);
+                                canvas.add(imgViewBravo, 3, 3);
+
+                                String musicFileBravo = "samplesAmela/sounds/applause.mp3";
+
+                                Media soundBravo = new Media(new File(musicFileBravo).toURI().toString());
+                                MediaPlayer mediaPlayerBravo = new MediaPlayer(soundBravo);
+                                mediaPlayerBravo.play();
+
+                                System.out.println("Image 1 Clicked! BRAVO!");
+
+
+                                //create an animation just to remove bravo
+                                Animation animation = new Transition() {
+
+                                    {
+                                        setCycleDuration(Duration.millis(3000));
+                                        canvas.getChildren().add(bubble);
+
+
+                                    }
+
+                                    @Override
+                                    protected void interpolate(double frac) {
+                                        final int n = Math.round(100 * (float) frac);
+
+                                    }
+
+                                };
+                                animation.play();
+                                animation.setOnFinished(new EventHandler<ActionEvent>() {
+
+
+                                    @Override
+                                    public void handle(ActionEvent actionEvent) {
+                                        canvas.getChildren().remove(imgViewBravo);
+                                        canvas.getChildren().remove(bubble);
+
+                                        count = 0;
+                                        Image image = canvas.snapshot(new SnapshotParameters(), null);
+                                        ImagePattern pattern = new ImagePattern(image, 0, 0, 0, 0, false);
+                                        pattern = createGridPattern();
+                                    }
+                                });
                             }
-                        });*/
+                        });
+
+
+                    }
+                }
+                    else if(e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                        entry = -1;
+
+
+                    }
 
 
 
 
                 }
-            }
-        });
 
 
-    }
-
-
-    //bravo event handler
-    private  EventHandler<Event> buildBravoEvent() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-
-
-
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                    canvas.getChildren().removeAll(imgViewTriangle, imgViewSquare, imgViewTrapez);
-                    canvas.add(imgViewBravo, 3, 3);
-
-                    String musicFileBravo = "samplesAmela/sounds/applause.mp3";
-
-                    Media soundBravo = new Media(new File(musicFileBravo).toURI().toString());
-                    MediaPlayer mediaPlayerBravo = new MediaPlayer(soundBravo);
-                    mediaPlayerBravo.play();
-
-                    System.out.println("Image 1 Clicked! BRAVO!");
-
-                    Animation animation = new Transition() {
-
-                        {
-                            setCycleDuration(Duration.millis(5000));
-                            canvas.getChildren().add(bubble);
-
-
-                        }
-
-                        @Override
-                        protected void interpolate(double frac) {
-                            final int n = Math.round(100 * (float) frac);
-
-                        }
-
-                    };
-                    animation.play();
-                    animation.setOnFinished(new EventHandler<ActionEvent>() {
-
-
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            canvas.getChildren().remove(imgViewBravo);
-                            canvas.getChildren().remove(bubble);
-
-                            count=0;
-                            Image image = canvas.snapshot(new SnapshotParameters(), null);
-                            ImagePattern pattern = new ImagePattern(image, 0, 0, 0, 0, false);
-                            pattern=createGridPattern();
-                        }
-                    });
-
-                }
-
-            }
         };
 
     }
@@ -401,7 +410,7 @@ public class Circles_points_handler extends Application {
         circle.setRadius(45.0f);
 
         circle.setOpacity(1);
-        circle.setFill(Color.BLUE);
+        circle.setFill(Color.LIGHTBLUE);
         circle.setVisible(true);
         canvas.setGridLinesVisible(true);
 
@@ -409,6 +418,7 @@ public class Circles_points_handler extends Application {
         enterEvent = buildEvent();
         circle.addEventFilter(MouseEvent.ANY, enterEvent);
         circle.addEventFilter(GazeEvent.ANY, enterEvent);
+
 
         indicator.setOpacity(0.0);
         canvas.add(indicator, arraypts[index][count], arraypts[index][count+1]);
@@ -426,3 +436,5 @@ public class Circles_points_handler extends Application {
     }
 
 }
+
+

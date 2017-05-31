@@ -1,20 +1,18 @@
 package samplesAmela;
-/**
- * Created by Amela Fejza on 5/23/2017.
- */
+
+//choose the image not by clicking but by fading
 
 import gaze.GazeEvent;
 import gaze.GazeUtils;
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,23 +23,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
-import javafx.scene.paint.*;
 import javafx.util.Duration;
-
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
-
-
-public class Circles_points_handler extends Application {
+/**
+ * Created by Amela Fejza on 5/30/2017.
+ */
+public class Circles_points_handler2 extends Application{
 
     double gridSize = 100;
     ProgressIndicator indicator;
@@ -64,9 +60,10 @@ public class Circles_points_handler extends Application {
     Scene scene;
     HBox hboxFirst;
     int size, index;
+    FadeTransition ft;
     Bubble bubble;
 
-    public Circles_points_handler(){
+    public Circles_points_handler2(){
         for (int index = 0; index < array.length; index++)
         {
             array_sizes.add(array[index]);
@@ -96,7 +93,7 @@ public class Circles_points_handler extends Application {
     private static String trapez = myFile6.toURI().toString();
     private static Image imgTrapez = new Image(trapez);
     private static ImageView imgViewTrapez = new ImageView(imgTrapez);
-    private static  EventHandler<Event> enterEvent;
+    private static EventHandler<Event> enterEvent;
     private static  EventHandler<Event> bravoEvent;
 
     //triangleAnimation triangle = new triangleAnimation();
@@ -230,7 +227,7 @@ public class Circles_points_handler extends Application {
                     imgViewClick.addEventFilter(GazeEvent.ANY, bravoEvent);
 
 
-                        //scene.setFill(Color.TRANSPARENT);
+                    //scene.setFill(Color.TRANSPARENT);
                         /*canvas.getChildren().removeAll(imgViewTriangle, imgViewSquare, imgViewTrapez);
                         canvas.add(imgViewBravo, 3, 3);
 
@@ -292,54 +289,117 @@ public class Circles_points_handler extends Application {
 
 
 
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    canvas.getChildren().removeAll(imgViewTriangle, imgViewSquare, imgViewTrapez);
-                    canvas.add(imgViewBravo, 3, 3);
-
-                    String musicFileBravo = "samplesAmela/sounds/applause.mp3";
-
-                    Media soundBravo = new Media(new File(musicFileBravo).toURI().toString());
-                    MediaPlayer mediaPlayerBravo = new MediaPlayer(soundBravo);
-                    mediaPlayerBravo.play();
-
-                    System.out.println("Image 1 Clicked! BRAVO!");
-
-                    Animation animation = new Transition() {
-
-                        {
-                            setCycleDuration(Duration.millis(5000));
-                            canvas.getChildren().add(bubble);
-
-
-                        }
-
-                        @Override
-                        protected void interpolate(double frac) {
-                            final int n = Math.round(100 * (float) frac);
-
-                        }
-
-                    };
-                    animation.play();
-                    animation.setOnFinished(new EventHandler<ActionEvent>() {
-
-
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            canvas.getChildren().remove(imgViewBravo);
-                            canvas.getChildren().remove(bubble);
-
-                            count=0;
-                            Image image = canvas.snapshot(new SnapshotParameters(), null);
-                            ImagePattern pattern = new ImagePattern(image, 0, 0, 0, 0, false);
-                            pattern=createGridPattern();
-                        }
-                    });
+                    System.out.println("I eggcited");
+                    entry = (new Date()).getTime();
 
                 }
 
+                else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED) {
+
+                    System.out.println("I moved");
+
+                    long now = (new Date()).getTime();
+                    //ft = new FadeTransition(Duration.millis(3000), imgViewClick );
+                    System.out.println((now - entry) / min_time);
+                    if ((now - entry) > min_time && entry != -1) {
+
+
+                        Animation animation = new Transition() {
+
+                            {
+                                setCycleDuration(Duration.millis(2000));
+
+                                ft = new FadeTransition(Duration.millis(1000), imgViewClick);
+                                ft.setFromValue(0.3);
+                                ft.setToValue(1);
+                                ft.setCycleCount(1);
+                                ft.setAutoReverse(true);
+
+                                ft.play();
+
+
+                            }
+
+                            @Override
+                            protected void interpolate(double frac) {
+                                final int n = Math.round(100 * (float) frac);
+
+                            }
+
+                        };
+                        animation.play();
+                        animation.setOnFinished(new EventHandler<ActionEvent>() {
+
+
+                            @Override
+                            public void handle(ActionEvent actionEvent) {
+
+                                //puts BRAVO image
+                                canvas.getChildren().removeAll(imgViewTriangle, imgViewSquare, imgViewTrapez);
+                                canvas.add(imgViewBravo, 3, 3);
+
+                                String musicFileBravo = "samplesAmela/sounds/applause.mp3";
+
+                                Media soundBravo = new Media(new File(musicFileBravo).toURI().toString());
+                                MediaPlayer mediaPlayerBravo = new MediaPlayer(soundBravo);
+                                mediaPlayerBravo.play();
+
+                                System.out.println("Image 1 Clicked! BRAVO!");
+
+
+                                //create an animation just to remove bravo
+                                Animation animation = new Transition() {
+
+                                    {
+                                        setCycleDuration(Duration.millis(3000));
+                                        canvas.getChildren().add(bubble);
+
+
+                                    }
+
+                                    @Override
+                                    protected void interpolate(double frac) {
+                                        final int n = Math.round(100 * (float) frac);
+
+                                    }
+
+                                };
+                                animation.play();
+                                animation.setOnFinished(new EventHandler<ActionEvent>() {
+
+
+                                    @Override
+                                    public void handle(ActionEvent actionEvent) {
+                                        canvas.getChildren().remove(imgViewBravo);
+                                        canvas.getChildren().remove(bubble);
+
+                                        count = 0;
+                                        Image image = canvas.snapshot(new SnapshotParameters(), null);
+                                        ImagePattern pattern = new ImagePattern(image, 0, 0, 0, 0, false);
+                                        pattern = createGridPattern();
+                                    }
+                                });
+                            }
+                        });
+
+
+                    }
+                }
+                    else if(e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                        entry = -1;
+
+
+                    }
+
+
+
+
             }
+
+
         };
 
     }
@@ -424,5 +484,6 @@ public class Circles_points_handler extends Application {
     public static void main(String[] args) {
         Application.launch(args);
     }
+
 
 }
