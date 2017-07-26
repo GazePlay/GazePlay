@@ -30,9 +30,8 @@ public class Portrait extends Circle {
 
         this.radius = radius;
 
-       // setFill(new ImagePattern(newPhoto(),0,0,1,1, true));
+        setFill(new ImagePattern(newPhoto(),0,0,1,1, true));
 
-        setFill(new Color(1,1,1,1));
     }
 
     public void setPosition(double X, double Y){

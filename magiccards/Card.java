@@ -56,7 +56,7 @@ public class Card extends Parent {
         this.initHeight=height;
         this.scene = scene;
         card = new Rectangle(x, y, width, height);
-        card.setFill(new ImagePattern(new Image("file:data/magiccards/images/red-card-game.png"),0,0,1,1, true));
+        card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"),0,0,1,1, true));
         this.getChildren().add(card);
         this.image = image;
         indicator = new ProgressIndicator(0);
@@ -227,7 +227,7 @@ public class Card extends Parent {
                     root.getChildren().add(winCard);
                 }
                 else {
-                    Card card = new Card(width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, new Image("file:data/magiccards/images/error.png"), false, scene);
+                    Card card = new Card(width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, new Image("data/magiccards/images/error.png"), false, scene);
                     root.getChildren().add(card);
                 }
             }

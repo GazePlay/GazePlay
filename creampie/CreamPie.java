@@ -21,8 +21,6 @@ public class CreamPie extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-
-
         primaryStage.setTitle("CreamPie");
 
         primaryStage.setFullScreen(true);

@@ -184,7 +184,7 @@ public class GazePlay extends Application {
             }
         }
 
-        root.getChildren().add(Utils.home(scene, root, cbxGames));
+     //   root.getChildren().add(Utils.home(scene, root, cbxGames));
 
 
         //System.exit(0);

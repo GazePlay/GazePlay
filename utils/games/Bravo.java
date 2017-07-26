@@ -7,9 +7,13 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+
+import java.net.URL;
 
 /**
  * Created by schwab on 30/10/2016.
@@ -19,7 +23,7 @@ public class Bravo extends Rectangle{
     public Bravo() {
 
         super(-10000, -10000, 0, 0);
-        setFill(new ImagePattern(new Image("file:data/common/images/bravo.png")));
+        setFill(new ImagePattern(new Image("data/common/images/bravo.png")));
     }
 /*
     public static Rectangle buildBravo() {
@@ -77,8 +81,14 @@ public class Bravo extends Rectangle{
 
         sequence.play();
 
-        AudioClip plonkSound = new AudioClip("file:data/common/sounds/applause.mp3");
-        plonkSound.play();
+        //AudioClip plonkSound = new AudioClip("file:data/common/sounds/applause.mp3");
+        //plonkSound.play();
+
+        URL url = ClassLoader.getSystemResource("data/common/sounds/applause.mp3");
+        String path = url.toString();
+        Media media = new Media(path);
+        MediaPlayer mp = new MediaPlayer(media);
+        mp.play();
 
         return sequence;
     }

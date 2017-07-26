@@ -9,11 +9,14 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Screen;
 import utils.games.Portrait;
 import javafx.util.Duration;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -123,8 +126,14 @@ public class Target extends Portrait {
 
         sequence.play();
 
-        AudioClip plonkSound = new AudioClip("file:data/ninja/sounds/2009.wav");
-        plonkSound.play();
+        //AudioClip plonkSound = new AudioClip("file:data/ninja/sounds/2009.wav");
+        //plonkSound.play();
+
+        URL url = ClassLoader.getSystemResource("data/ninja/sounds/2009.wav");
+        String path = url.toString();
+        Media media = new Media(path);
+        MediaPlayer mp = new MediaPlayer(media);
+        mp.play();
 
         sequence.setOnFinished(new EventHandler<ActionEvent>() {
 
