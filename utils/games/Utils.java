@@ -29,7 +29,7 @@ public class Utils {
 
         File directory = new File(folder);
 
-        ArrayList<Image> images = new ArrayList<>(directory.list().length);
+            ArrayList<Image> images = new ArrayList<>(directory.list().length);
 
         for(String imagePath : directory.list()){
 

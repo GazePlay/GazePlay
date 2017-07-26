@@ -3,6 +3,7 @@ package creampie;
 /**
  * Created by schwab on 12/08/2016.
  */
+
 import gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -19,6 +20,9 @@ public class CreamPie extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
+
+
         primaryStage.setTitle("CreamPie");
 
         primaryStage.setFullScreen(true);

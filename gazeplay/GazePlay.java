@@ -33,6 +33,16 @@ public class GazePlay extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        /*String current = null;
+        try {
+            current = new java.io.File( "." ).getCanonicalPath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Current dir:"+current);
+
+        System.exit(0);*/
+
         primaryStage.setTitle("GazePlay");
 
         primaryStage.setFullScreen(true);
@@ -175,6 +185,9 @@ public class GazePlay extends Application {
         }
 
         root.getChildren().add(Utils.home(scene, root, cbxGames));
+
+
+        //System.exit(0);
     }
 
 

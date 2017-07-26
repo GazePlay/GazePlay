@@ -71,6 +71,7 @@ public class Target extends Portrait {
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(radiusProperty(), radius)));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(centerXProperty(), newX())));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(centerYProperty(), newY())));
+        //timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fillProperty(), new ImagePattern(newPhoto(), 0, 0, 1,1, true))));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fillProperty(), new ImagePattern(newPhoto(), 0, 0, 1,1, true))));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(rotateProperty(), 0)));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000),new KeyValue(visibleProperty(),true)));
