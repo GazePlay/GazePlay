@@ -92,7 +92,9 @@ public class Blocs extends Application {
 
         //scene.setFill(new ImagePattern(new Image("file:data/blocs/images/déménagement.jpg")));
 
-        Image[] images = Utils.getImages(System.getProperty("user.home") + "/GazePlay/files/images/blocs");
+        System.out.println(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
+
+        Image[] images = Utils.getImages(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
 
         int value = (int)Math.floor(Math.random()*images.length);
 
@@ -118,6 +120,8 @@ public class Blocs extends Application {
                 else
                     R.setFill(Color.BLACK);
                 root.getChildren().add(R);
+
+                R.toBack();
 
                 GazeUtils.addEventFilter(R);
 

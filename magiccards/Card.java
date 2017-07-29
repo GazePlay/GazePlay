@@ -236,7 +236,7 @@ public class Card extends Parent {
 
     private static Image getRandomImage() {
 
-        Image[] images = Utils.getImages(System.getProperty("user.home") + "/GazePlay/files/images/magiccards");
+        Image[] images = Utils.getImages(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"magiccards"+Utils.FILESEPARATOR);
 
         int value = (int)Math.floor(Math.random()*images.length);
 

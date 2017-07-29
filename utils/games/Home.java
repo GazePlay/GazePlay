@@ -14,6 +14,5 @@ public class Home extends Rectangle{
         super(X, Y, width, heigth);
 
         this.setFill(new ImagePattern(new Image("data/common/images/home-button.png"),0,0,1,1, true));
-
     }
 }

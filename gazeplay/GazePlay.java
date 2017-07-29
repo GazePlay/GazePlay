@@ -74,7 +74,8 @@ public class GazePlay extends Application {
 
         root.getChildren().add(cbxGames);
 
-        root.getChildren().add(Utils.exit(scene));
+        //root.getChildren().add(Utils.exit(scene));
+        Utils.addButtons(scene, root, cbxGames);
 
         primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
 
@@ -83,15 +84,13 @@ public class GazePlay extends Application {
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();
-
     }
 
     private void chooseGame(Number value) {
 
         System.out.println(value);
 
-        clear();
-
+        Utils.clear(scene, root, cbxGames);
 
         switch (value.intValue()){
 
@@ -184,6 +183,8 @@ public class GazePlay extends Application {
             }
         }
 
+        root.getChildren().add(Utils.home(scene, root, cbxGames));
+
      //   root.getChildren().add(Utils.home(scene, root, cbxGames));
 
 
@@ -191,9 +192,4 @@ public class GazePlay extends Application {
     }
 
 
-
-    public void clear(){
-
-        Utils.clear(scene, root, cbxGames);
-    }
 }
