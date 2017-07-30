@@ -45,6 +45,9 @@ public class Card extends Parent {
     ProgressIndicator indicator;
     Bravo bravo = new Bravo();
 
+    final static Image[] images = Utils.images(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"magiccards"+Utils.FILESEPARATOR);
+
+
     EventHandler<Event> enterEvent;
     boolean anniOff = true;
 
@@ -147,10 +150,10 @@ public class Card extends Parent {
 
                             Timeline timeline = new Timeline();
 
-                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), image.getWidth()*final_zoom)));
-                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), image.getHeight()*final_zoom)));
-                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(), (scene.getWidth()-image.getWidth()*final_zoom)/2)));
-                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), (scene.getHeight()-image.getWidth()*final_zoom)/2)));
+                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth()*final_zoom)));
+                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight()*final_zoom)));
+                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(), (scene.getWidth()-card.getWidth()*final_zoom)/2)));
+                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), (scene.getHeight()-card.getWidth()*final_zoom)/2)));
                             //timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(), (scene.getWidth()-image.getWidth())/2)));
                             //timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), (scene.getHeight()-image.getHeight())/2)));
 
@@ -236,7 +239,7 @@ public class Card extends Parent {
 
     private static Image getRandomImage() {
 
-        Image[] images = Utils.getImages(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"magiccards"+Utils.FILESEPARATOR);
+        //Image[] images = Utils.getImages(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"magiccards"+Utils.FILESEPARATOR);
 
         int value = (int)Math.floor(Math.random()*images.length);
 

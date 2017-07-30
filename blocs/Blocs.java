@@ -42,8 +42,7 @@ public class Blocs extends Application {
     private static boolean hasColors;
     private static Bravo bravo = new Bravo();
     private static ChoiceBox<String> choiceBox;
-
-
+    private static final Image[] images = Utils.images(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
 
     public static void main(String[] args) {Application.launch(args);
     }
@@ -93,8 +92,6 @@ public class Blocs extends Application {
         //scene.setFill(new ImagePattern(new Image("file:data/blocs/images/déménagement.jpg")));
 
         System.out.println(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
-
-        Image[] images = Utils.getImages(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
 
         int value = (int)Math.floor(Math.random()*images.length);
 

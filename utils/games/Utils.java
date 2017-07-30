@@ -1,5 +1,6 @@
 package utils.games;
 
+import gazeplay.GazePlay;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -16,10 +17,10 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 import javax.activation.MimetypesFileTypeMap;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -32,6 +33,11 @@ public class Utils {
     private static Bravo bravo = new Bravo();
 
     public static Image[] getImages(String folder) {
+
+        return getImages(folder, -1);
+    }
+
+    public static Image[] getImages(String folder, int nbMax) {
 
         File directory = new File(folder);
 
@@ -47,7 +53,19 @@ public class Utils {
                 images.add(new Image(file));
         }
 
-        return obj2im(images.toArray());
+        Image[] Timages =  obj2im(images.toArray());
+
+        if(nbMax <= 0)
+            return Timages;
+
+        Image[] Rimages = new Image[nbMax];
+
+        for(int i = 0; i < nbMax; i++){
+
+            Rimages[i] = Timages[(int)(Math.random()*Timages.length)];
+        }
+
+        return Rimages;
     }
 
     private static Image[] obj2im(Object[] objects) {
@@ -166,11 +184,14 @@ public class Utils {
         // --- Menu File
         Menu menu = new Menu("GazePlay");
 
-        StringBuilder licence = new StringBuilder(10000);
+        StringBuilder licence = new StringBuilder(50000);
         String line;
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader("data/common/licence.txt"));
+
+            InputStream is =  ClassLoader.getSystemClassLoader().getResourceAsStream("data/common/licence.txt");
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             while ((line = br.readLine()) != null) {
                 licence.append('\n');
@@ -202,5 +223,30 @@ public class Utils {
         logo.setFill(new ImagePattern(new Image("data/common/images/gazeplay.jpg"),0,0,1,1, true));
 
         return logo;
+    }
+
+    public static Image[] images(String folder){
+
+        if((new File(folder)).exists()) {
+
+            return getImages(folder);
+        }
+        else{
+
+            Image[] defaultImages = new Image[10];
+            defaultImages[0] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/animal-807308_1920.png"));
+            defaultImages[1] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/bulldog-1047518_1920.jpg"));
+            defaultImages[2] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/businessman-607786_1920.png"));
+            defaultImages[3] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/businessman-607834_1920.png"));
+            defaultImages[4] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/crocodile-614386_1920.png"));
+            defaultImages[5] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/goldfish-30837_1280.png"));
+            defaultImages[6] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/graphic_missbone17.gif"));
+            defaultImages[7] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/nurse-37322_1280.png"));
+            defaultImages[8] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/owl-161583_1280.png"));
+            defaultImages[9] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/pez-payaso-animales-el-mar-pintado-por-teoalmeyra-9844979.jpg"));
+            return defaultImages;
+        }
+
+
     }
 }
