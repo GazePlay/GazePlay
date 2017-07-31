@@ -26,7 +26,7 @@ public class MagicCards  extends Application {
 
         Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
-        Card.addCards(root, scene, 2, 2);
+        Card.addCards(root, scene, null,2, 2);
 
         primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
 

@@ -103,7 +103,7 @@ public class Utils {
 
     }
 
-    public static Node home(Scene scene, Group root, ChoiceBox<String> cbxGames) {
+    public static void home(Scene scene, Group root, ChoiceBox<String> cbxGames) {
 
         double width = scene.getWidth() / 10;
         double height = width;
@@ -137,7 +137,7 @@ public class Utils {
 
         home.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
-        return home;
+        root.getChildren().add(home);
     }
 
     public static void addButtons(Scene scene, Group root, ChoiceBox<String> cbxGames) {

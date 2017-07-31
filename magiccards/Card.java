@@ -4,14 +4,17 @@ import gaze.GazeEvent;
 import gaze.GazeUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -19,6 +22,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import utils.games.Bravo;
+import utils.games.Home;
 import utils.games.Utils;
 
 import java.util.Date;
@@ -42,6 +46,8 @@ public class Card extends Parent {
     private double initWidth;
     private double initHeight;
     private Scene scene;
+    private ChoiceBox choiceBox;
+    private Group root;
     ProgressIndicator indicator;
     Bravo bravo = new Bravo();
 
@@ -51,13 +57,15 @@ public class Card extends Parent {
     EventHandler<Event> enterEvent;
     boolean anniOff = true;
 
-    public Card(double x, double y, double width, double height, Image image, boolean winner, Scene scene){
+    public Card(int nbColomns, int nbLines, double x, double y, double width, double height, Image image, boolean winner, Scene scene, Group root, ChoiceBox choiceBox){
 
         this.entry = -1;
         this.winner = winner;
         this.initWidth=width;
         this.initHeight=height;
         this.scene = scene;
+        this.choiceBox = choiceBox;
+        this.root=root;
         card = new Rectangle(x, y, width, height);
         card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"),0,0,1,1, true));
         this.getChildren().add(card);
@@ -153,9 +161,7 @@ public class Card extends Parent {
                             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth()*final_zoom)));
                             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight()*final_zoom)));
                             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(), (scene.getWidth()-card.getWidth()*final_zoom)/2)));
-                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), (scene.getHeight()-card.getWidth()*final_zoom)/2)));
-                            //timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(), (scene.getWidth()-image.getWidth())/2)));
-                            //timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), (scene.getHeight()-image.getHeight())/2)));
+                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), (scene.getHeight()-card.getHeight()*final_zoom)/2)));
 
 
 
@@ -163,7 +169,30 @@ public class Card extends Parent {
                                 @Override
                                 public void handle(ActionEvent actionEvent) {
 
-                                    bravo.win();
+
+                                    for(Node N : root.getChildren()){
+
+                                        System.out.println(N.getClass());
+
+                                        if( (N instanceof Home)) {
+
+                                            System.out.println("OK");
+                                            N.setTranslateX(-10000);
+                                            N.setOpacity(0);
+                                            N.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                        }
+                                    }
+
+                                    SequentialTransition sequence = bravo.win();
+                                    sequence.setOnFinished(new EventHandler<ActionEvent>() {
+
+                                        @Override
+                                        public void handle(ActionEvent actionEvent) {
+                                            Utils.clear(scene, root, choiceBox);
+                                            Card.addCards(root, scene, choiceBox,2, 2);
+                                            Utils.home(scene, root, choiceBox);
+                                        }
+                                    });
                                 }
                             });
 
@@ -208,7 +237,7 @@ public class Card extends Parent {
     }
 
 
-    public static void addCards(Group root, Scene scene, int nbColumns, int nbLines) {
+    public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbColumns, int nbLines) {
 
         double cardHeight = computeCardHeight(scene, nbLines);
         double cardWidth = cardHeight * cardRatio;
@@ -226,11 +255,11 @@ public class Card extends Parent {
             for (int j = 0 ; j < nbLines ; j++){
 
                 if(k++==winner) {
-                    winCard = new Card(width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, getRandomImage(), true, scene);
+                    winCard = new Card(nbColumns,  nbLines, width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, getRandomImage(), true, scene, root, cbxGames);
                     root.getChildren().add(winCard);
                 }
                 else {
-                    Card card = new Card(width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, new Image("data/magiccards/images/error.png"), false, scene);
+                    Card card = new Card(nbColumns,  nbLines, width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, new Image("data/magiccards/images/error.png"), false, scene, root, cbxGames);
                     root.getChildren().add(card);
                 }
             }

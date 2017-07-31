@@ -116,7 +116,7 @@ public class GazePlay extends Application {
 
                 System.out.println("Magic Cards (2x2)");
 
-                Card.addCards(root, scene, 2, 2);
+                Card.addCards(root, scene, cbxGames,2, 2);
 
                 break;
             }
@@ -125,7 +125,7 @@ public class GazePlay extends Application {
 
                 System.out.println("Magic Cards (3x2)");
 
-                Card.addCards(root, scene, 3, 2);
+                Card.addCards(root, scene, cbxGames,3, 2);
 
                 break;
             }
@@ -134,7 +134,7 @@ public class GazePlay extends Application {
 
                 System.out.println("Magic Cards (3x3)");
 
-                Card.addCards(root, scene, 3, 3);
+                Card.addCards(root, scene, cbxGames,3, 3);
 
                 break;
             }
@@ -183,7 +183,7 @@ public class GazePlay extends Application {
             }
         }
 
-        root.getChildren().add(Utils.home(scene, root, cbxGames));
+        Utils.home(scene, root, cbxGames);
 
      //   root.getChildren().add(Utils.home(scene, root, cbxGames));
 

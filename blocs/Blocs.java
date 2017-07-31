@@ -150,7 +150,8 @@ public class Blocs extends Application {
 
                         for(Node N : blockRoot.getChildren()){
 
-                            if(! (N instanceof Home) && ! (N instanceof Bravo)) {
+                            //if(! (N instanceof Home) && ! (N instanceof Bravo)) {
+                            if(! (N instanceof Bravo)) {
 
                                 N.setTranslateX(-10000);
                                 N.setOpacity(0);
@@ -166,6 +167,7 @@ public class Blocs extends Application {
                             public void handle(ActionEvent actionEvent) {
                                 Utils.clear(theScene, blockRoot, choiceBox);
                                 makeBlocks(theScene, blockRoot, choiceBox, nColomns, nLines, hasColors, p4w);
+                                Utils.home(theScene, blockRoot, choiceBox);
                             }
                         });
                     }
