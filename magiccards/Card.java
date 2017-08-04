@@ -163,23 +163,19 @@ public class Card extends Parent {
                             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(), (scene.getWidth()-card.getWidth()*final_zoom)/2)));
                             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), (scene.getHeight()-card.getHeight()*final_zoom)/2)));
 
-
-
                             timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent actionEvent) {
 
+                                    for(Node N : root.getChildren()){//clear all but image and reward
 
-                                    for(Node N : root.getChildren()){
+                                        if(((N instanceof Card && card != ((Card)N).getCard()) && ! (N instanceof Bravo) ) ||  (N instanceof Home)) {
 
-                                        System.out.println(N.getClass());
-
-                                        if( (N instanceof Home)) {
-
-                                            System.out.println("OK");
                                             N.setTranslateX(-10000);
                                             N.setOpacity(0);
                                             N.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                        }
+                                        else{
                                         }
                                     }
 
@@ -285,7 +281,9 @@ public class Card extends Parent {
         return scene.getWidth()/ nbColumns;
     }
 
-
+    public Rectangle getCard() {
+        return card;
+    }
 
 
 

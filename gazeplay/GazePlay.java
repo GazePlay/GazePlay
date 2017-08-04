@@ -16,6 +16,9 @@ import magiccards.Card;
 import ninja.Ninja;
 import utils.games.Utils;
 
+import java.lang.reflect.Field;
+import java.nio.charset.Charset;
+
 /**
  * Created by schwab on 17/12/2016.
  */
@@ -42,6 +45,17 @@ public class GazePlay extends Application {
         System.out.println("Current dir:"+current);
 
         System.exit(0);*/
+
+        try {
+            System.setProperty("file.encoding","UTF-8");
+            Field charset = Charset.class.getDeclaredField("defaultCharset");
+            charset.setAccessible(true);
+            charset.set(null,null);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
         primaryStage.setTitle("GazePlay");
 
