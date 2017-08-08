@@ -66,7 +66,7 @@ public class GazePlay extends Application {
 
         cbxGames = new ChoiceBox<>();
 
-       cbxGames.getItems().addAll("\tCreampie", "\tNinja Portraits", "Magic Cards\t\t(2x2)", "Magic Cards\t\t(3x2)", "Magic Cards\t\t(3x3)", "blocks\t\t\t(2x2)", "blocks\t\t\t(3x2)", "blocks\t\t\t(3x3)", "\tCarte à gratter");
+       cbxGames.getItems().addAll("\tCreampie", "\tNinja Portraits", "Magic Cards\t\t(2x2)", "Magic Cards\t\t(2x3)", "Magic Cards\t\t(3x2)", "Magic Cards\t\t(3x3)", "blocks\t\t\t(2x2)", "blocks\t\t\t(2x3)", "blocks\t\t\t(3x3)", "\tCarte à gratter");
 
         //cbxGames.getSelectionModel().selectFirst();
 
@@ -136,6 +136,15 @@ public class GazePlay extends Application {
 
             case 3 : {
 
+                System.out.println("Magic Cards (2x3)");
+
+                Card.addCards(root, scene, cbxGames,2, 3);
+
+                break;
+            }
+
+            case 4 : {
+
                 System.out.println("Magic Cards (3x2)");
 
                 Card.addCards(root, scene, cbxGames,3, 2);
@@ -143,7 +152,7 @@ public class GazePlay extends Application {
                 break;
             }
 
-            case 4 : {
+            case 5 : {
 
                 System.out.println("Magic Cards (3x3)");
 
@@ -152,7 +161,7 @@ public class GazePlay extends Application {
                 break;
             }
 
-            case 5 :{
+            case 6 :{
 
                 System.out.println("blocks (2x2)");
 
@@ -161,16 +170,16 @@ public class GazePlay extends Application {
                 break;
             }
 
-            case 6 : {
+            case 7 : {
 
-                System.out.println("blocks (3x2)");
+                System.out.println("blocks (2x3)");
 
-                Blocs.makeBlocks(scene, root, cbxGames, 3, 2, true, 1);
+                Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1);
 
                 break;
             }
 
-            case 7 : {
+            case 8 : {
 
                 System.out.println("blocks (3x3)");
 
@@ -179,11 +188,11 @@ public class GazePlay extends Application {
                 break;
             }
 
-            case 8 : {
+            case 9 : {
 
                 System.out.println("Carte à gratter");
 
-                Blocs.makeBlocks(scene, root, cbxGames, 10, 10, false, 0.7f);
+                Blocs.makeBlocks(scene, root, cbxGames, 10, 10, false, 0.6f);
 
                 break;
             }

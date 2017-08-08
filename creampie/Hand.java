@@ -13,6 +13,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import utils.games.Utils;
 
 import java.net.URL;
 
@@ -110,10 +111,6 @@ public class Hand extends Parent {
 
         sequence.play();
 
-        URL url = ClassLoader.getSystemResource("data/creampie/sounds/missile.mp3");
-        String path = url.toString();
-        Media media = new Media(path);
-        MediaPlayer mp = new MediaPlayer(media);
-        mp.play();
+        Utils.playSound("data/creampie/sounds/missile.mp3");
     }
 }

@@ -75,9 +75,7 @@ public class Bravo extends Rectangle{
 
         sequence.getChildren().add(timeline);
 
-        System.out.println("OK");
-
-        sequence.setCycleCount(7);
+        sequence.setCycleCount(6);
 
         sequence.play();
 
@@ -89,8 +87,7 @@ public class Bravo extends Rectangle{
         Media media = new Media(path);
         MediaPlayer mp = new MediaPlayer(media);
         mp.play();
-
-        System.out.println("fin WIN$$$$$$$$$$$");
+        
         return sequence;
     }
 

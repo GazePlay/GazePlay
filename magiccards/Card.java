@@ -42,7 +42,8 @@ public class Card extends Parent {
     private boolean found;
     private boolean anim0ff = false;
     private long entry;
-    //private double min_time;
+    int nbLines;
+    int nbColumns;
     private double initWidth;
     private double initHeight;
     private Scene scene;
@@ -57,7 +58,7 @@ public class Card extends Parent {
     EventHandler<Event> enterEvent;
     boolean anniOff = true;
 
-    public Card(int nbColomns, int nbLines, double x, double y, double width, double height, Image image, boolean winner, Scene scene, Group root, ChoiceBox choiceBox){
+    public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image, boolean winner, Scene scene, Group root, ChoiceBox choiceBox){
 
         this.entry = -1;
         this.winner = winner;
@@ -66,6 +67,8 @@ public class Card extends Parent {
         this.scene = scene;
         this.choiceBox = choiceBox;
         this.root=root;
+        this.nbLines=nbLines;
+        this.nbColumns=nbColumns;
         card = new Rectangle(x, y, width, height);
         card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"),0,0,1,1, true));
         this.getChildren().add(card);
@@ -187,7 +190,7 @@ public class Card extends Parent {
                                         @Override
                                         public void handle(ActionEvent actionEvent) {
                                             Utils.clear(scene, root, choiceBox);
-                                            Card.addCards(root, scene, choiceBox,2, 2);
+                                            Card.addCards(root, scene, choiceBox, nbLines, nbColumns);
                                             Utils.home(scene, root, choiceBox);
                                         }
                                     });
@@ -235,14 +238,11 @@ public class Card extends Parent {
     }
 
 
-    public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbColumns, int nbLines) {
+    public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbLines, int nbColumns) {
 
         double cardHeight = computeCardHeight(scene, nbLines);
         double cardWidth = cardHeight * cardRatio;
         double width = computeCardWidth(scene, nbColumns) - cardWidth;
-
-        System.out.println(cardHeight);
-        System.out.println(cardWidth);
 
         int winner = (int)(nbColumns * nbLines * Math.random());
         int k = 0;

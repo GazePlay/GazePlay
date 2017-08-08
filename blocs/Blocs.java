@@ -69,7 +69,7 @@ public class Blocs extends Application {
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbColomns, int nbLines, boolean colors, float percents4Win){
+    public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns, boolean colors, float percents4Win){
 
         finished = false;
 
@@ -88,8 +88,6 @@ public class Blocs extends Application {
         choiceBox = cbxGames;
 
         blockRoot.getChildren().add(bravo);
-
-        //scene.setFill(new ImagePattern(new Image("file:data/blocs/images/déménagement.jpg")));
 
         System.out.println(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
 
@@ -163,14 +161,13 @@ public class Blocs extends Application {
                             }
                         }
 
-                        System.out.println("bravo");
                         SequentialTransition sequence = bravo.win();
                         sequence.setOnFinished(new EventHandler<ActionEvent>() {
 
                             @Override
                             public void handle(ActionEvent actionEvent) {
                                 Utils.clear(theScene, blockRoot, choiceBox);
-                                makeBlocks(theScene, blockRoot, choiceBox, nColomns, nLines, hasColors, p4w);
+                                makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w);
                                 Utils.home(theScene, blockRoot, choiceBox);
                             }
                         });

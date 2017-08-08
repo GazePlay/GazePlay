@@ -11,12 +11,15 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -243,6 +246,14 @@ public class Utils {
             return defaultImages;
         }
 
+    }
 
+    public static void playSound(String ressource) {
+
+        URL url = ClassLoader.getSystemResource(ressource);
+        String path = url.toString();
+        Media media = new Media(path);
+        MediaPlayer mp = new MediaPlayer(media);
+        mp.play();
     }
 }

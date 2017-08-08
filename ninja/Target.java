@@ -15,6 +15,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.stage.Screen;
 import utils.games.Portrait;
 import javafx.util.Duration;
+import utils.games.Utils;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -137,10 +138,6 @@ public class Target extends Portrait {
             }
         });
 
-        URL url = ClassLoader.getSystemResource("data/ninja/sounds/2009.wav");
-        String path = url.toString();
-        Media media = new Media(path);
-        MediaPlayer mp = new MediaPlayer(media);
-        mp.play();
+        Utils.playSound("data/ninja/sounds/2009.wav");
     }
 }
