@@ -24,7 +24,6 @@ import java.nio.charset.Charset;
  */
 public class GazePlay extends Application {
 
-
     private Scene scene;
     private Group root;
     private static ChoiceBox<String> cbxGames;
@@ -67,7 +66,7 @@ public class GazePlay extends Application {
 
         cbxGames = new ChoiceBox<>();
 
-        cbxGames.getItems().addAll("\tCreampie", "\tNinja Portraits", "Magic Cards\t\t(2x2)", "Magic Cards\t\t(3x2)", "Magic Cards\t\t(3x3)", "blocks\t\t\t(2x2)", "blocks\t\t\t(3x2)", "blocks\t\t\t(3x3)", "\tCarte à gratter");
+       cbxGames.getItems().addAll("\tCreampie", "\tNinja Portraits", "Magic Cards\t\t(2x2)", "Magic Cards\t\t(3x2)", "Magic Cards\t\t(3x3)", "blocks\t\t\t(2x2)", "blocks\t\t\t(3x2)", "blocks\t\t\t(3x3)", "\tCarte à gratter");
 
         //cbxGames.getSelectionModel().selectFirst();
 

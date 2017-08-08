@@ -151,15 +151,19 @@ public class Blocs extends Application {
                         for(Node N : blockRoot.getChildren()){
 
                             //if(! (N instanceof Home) && ! (N instanceof Bravo)) {
+
                             if(! (N instanceof Bravo)) {
 
                                 N.setTranslateX(-10000);
                                 N.setOpacity(0);
                                 N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                R.removeEventFilter(GazeEvent.ANY, enterEvent);
-                                GazeUtils.removeEventFilter(R);
+
+                                //R.removeEventFilter(GazeEvent.ANY, enterEvent);
+                                //GazeUtils.removeEventFilter(R);
                             }
                         }
+
+                        System.out.println("bravo");
                         SequentialTransition sequence = bravo.win();
                         sequence.setOnFinished(new EventHandler<ActionEvent>() {
 

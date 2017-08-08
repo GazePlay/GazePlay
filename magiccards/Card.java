@@ -158,6 +158,19 @@ public class Card extends Parent {
 
                             Timeline timeline = new Timeline();
 
+                            for(Node N : root.getChildren()){//clear all but image and reward
+
+                                if(((N instanceof Card && card != ((Card)N).getCard()) && ! (N instanceof Bravo) ) ||  (N instanceof Home)) {
+
+                                    N.setTranslateX(-10000);
+                                    N.setOpacity(0);
+                                    N.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                }
+                                else{
+                                }
+                            }
+
+
                             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth()*final_zoom)));
                             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight()*final_zoom)));
                             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(), (scene.getWidth()-card.getWidth()*final_zoom)/2)));
@@ -167,17 +180,6 @@ public class Card extends Parent {
                                 @Override
                                 public void handle(ActionEvent actionEvent) {
 
-                                    for(Node N : root.getChildren()){//clear all but image and reward
-
-                                        if(((N instanceof Card && card != ((Card)N).getCard()) && ! (N instanceof Bravo) ) ||  (N instanceof Home)) {
-
-                                            N.setTranslateX(-10000);
-                                            N.setOpacity(0);
-                                            N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                        }
-                                        else{
-                                        }
-                                    }
 
                                     SequentialTransition sequence = bravo.win();
                                     sequence.setOnFinished(new EventHandler<ActionEvent>() {

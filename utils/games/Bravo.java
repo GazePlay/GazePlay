@@ -6,7 +6,6 @@ import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
-import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
@@ -45,6 +44,7 @@ public class Bravo extends Rectangle{
 
         int minWidth = screen.getWidth()/3;
         int maxWidth = screen.getWidth()/2;
+
         setX(XSmall);
         setY(YSmall);
         setWidth(minWidth);
@@ -54,7 +54,7 @@ public class Bravo extends Rectangle{
 
         this.setVisible(true);
 
-        this.toFront();
+        //this.toFront(); // bug when it is uncommented (with bloc at least).
 
         SequentialTransition sequence = new SequentialTransition();
 
@@ -90,6 +90,7 @@ public class Bravo extends Rectangle{
         MediaPlayer mp = new MediaPlayer(media);
         mp.play();
 
+        System.out.println("fin WIN$$$$$$$$$$$");
         return sequence;
     }
 

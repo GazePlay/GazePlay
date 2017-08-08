@@ -1,6 +1,5 @@
 package utils.games;
 
-import gazeplay.GazePlay;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -18,9 +17,6 @@ import javafx.scene.shape.Rectangle;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**

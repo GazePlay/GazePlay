@@ -31,7 +31,7 @@ class TrueGazeListener implements IGazeListener {
         //Point2D point = GazeUtils.getEyesCenterNormalized(gazeData);
 
         //System.out.println(point);
-        System.out.println("gazedata = " + gazeData.rawCoordinates);
+        //System.out.println("gazedata = " + gazeData.rawCoordinates);
         if(secondScreen != null){
 
             secondScreen.light(gazeData.rawCoordinates);
