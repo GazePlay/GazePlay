@@ -126,15 +126,6 @@ public class Target extends Portrait {
 
         sequence.play();
 
-        //AudioClip plonkSound = new AudioClip("file:data/ninja/sounds/2009.wav");
-        //plonkSound.play();
-
-        URL url = ClassLoader.getSystemResource("data/ninja/sounds/2009.wav");
-        String path = url.toString();
-        Media media = new Media(path);
-        MediaPlayer mp = new MediaPlayer(media);
-        mp.play();
-
         sequence.setOnFinished(new EventHandler<ActionEvent>() {
 
             @Override
@@ -145,5 +136,11 @@ public class Target extends Portrait {
                 setVisible(true);
             }
         });
+
+        URL url = ClassLoader.getSystemResource("data/ninja/sounds/2009.wav");
+        String path = url.toString();
+        Media media = new Media(path);
+        MediaPlayer mp = new MediaPlayer(media);
+        mp.play();
     }
 }

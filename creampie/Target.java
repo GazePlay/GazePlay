@@ -21,7 +21,6 @@ import utils.games.Portrait;
  */
 public class Target extends Portrait {
 
-
     private Hand hand;
 
     EventHandler<Event> enterEvent;

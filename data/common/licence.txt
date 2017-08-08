@@ -1,6 +1,6 @@
 GAZEPLAY Copyright (C) 2016-2017 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
 
-Version : beta 2
+Version : beta 3
 
 contact : didier.schwab@univ-grenoble-alpes.fr
 
@@ -13,7 +13,8 @@ Plusieurs étudiants ont contribué au développement des jeux et/ou aux idées 
 de leur formation : Rajaa BARHTAOUI, Amela FEJZA
 
 Plusieurs personnes ont également contribué par leurs idées, par leur aide technique ou matérielle :
-Sandra Chaulet, Loïc Vial, Andon Tchechmedjiev, Céline Schwab, Francis Jambon, et bien sûr Tess.
+Sandra Chaulet, Francis Jambon, Frédéric Pons, Céline Chalbos Schwab, Andon Tchechmedjiev, Loïc Vial,
+et bien sûr Tess et toutes ses petites copines inspiratrices.
 
 
  ------------------------------------------------------------------

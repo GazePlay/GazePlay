@@ -86,58 +86,19 @@ public class Hand extends Parent {
 
     private void touch(TouchEvent te) {
 
-        URL url = ClassLoader.getSystemResource("data/creampie/sounds/missile.mp3");
-        String path = url.toString();
-        Media media = new Media(path);
-        MediaPlayer mp = new MediaPlayer(media);
-        mp.play();
-/*
-        try {
-            Clip clip = AudioSystem.getClip();
-            AudioInputStream ais = AudioSystem.getAudioInputStream(new BufferedInputStream(inputStream));
-            clip.open(ais);
-            clip.start();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
-//        AudioClip plonkSound = new AudioClip("file:data/creampie/sounds/missile.mp3");
-
-        //plonkSound.play();
-
-        //InputStream inputStream = ClassLoader.getSystemResourceAsStream("data/creampie/sounds/missile.mp3");
-
-       /*
-
-        URL ressource = getClass().getResource("data/creampie/sounds/missile.mp3");
-        System.out.println(ressource);
-        AudioClip plonkSound = new AudioClip(ressource.toString());
-        plonkSound.play();*/
-
-
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
 
-       // timeline.getKeyFrames().add(new KeyFrame(new Duration(200),new KeyValue(background.fitHeightProperty(),size)));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(200),new KeyValue(hand.heightProperty(),size)));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(200),new KeyValue(hand.widthProperty(), size)));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(pie.translateXProperty(),te.x-maxSize)));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(pie.translateYProperty(),te.y-maxSize)));
-        //timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(pie.fitHeightProperty(), maxSize*2)));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(pie.heightProperty(),maxSize*2)));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(pie.widthProperty(), maxSize*2)));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(pie.rotateProperty(), pie.getRotate()+360)));
 
-
-
-     //   timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(background.fitHeightProperty(),maxSize)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(hand.heightProperty(),maxSize)));
+       timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(hand.heightProperty(),maxSize)));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(hand.widthProperty(), maxSize)));
-        //timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pie.fitHeightProperty(), size)));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pie.heightProperty(),size)));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pie.widthProperty(), size)));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(hand.translateXProperty(),handTranslateX)));
@@ -145,19 +106,14 @@ public class Hand extends Parent {
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pie.translateXProperty(),pieTranslateX)));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pie.translateYProperty(),pieTranslateY)));
 
-        /*timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),new KeyValue(background.fitHeightProperty(),Maxsize)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),new KeyValue(pie.centerXProperty(),te.x)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),new KeyValue(pie.centerYProperty(),te.y)));
-
-
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(background.fitHeightProperty(),size)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pie.centerXProperty(),scene.getWidth()/2)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pie.centerYProperty(),scene.getHeight()-size)));
-*/
         SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
 
         sequence.play();
+
+        URL url = ClassLoader.getSystemResource("data/creampie/sounds/missile.mp3");
+        String path = url.toString();
+        Media media = new Media(path);
+        MediaPlayer mp = new MediaPlayer(media);
+        mp.play();
     }
-
-
 }
