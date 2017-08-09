@@ -79,14 +79,7 @@ public class Bravo extends Rectangle{
 
         sequence.play();
 
-        //AudioClip plonkSound = new AudioClip("file:data/common/sounds/applause.mp3");
-        //plonkSound.play();
-
-        URL url = ClassLoader.getSystemResource("data/common/sounds/applause.mp3");
-        String path = url.toString();
-        Media media = new Media(path);
-        MediaPlayer mp = new MediaPlayer(media);
-        mp.play();
+        Utils.playSound("data/common/sounds/applause.mp3");
         
         return sequence;
     }
