@@ -2,19 +2,23 @@ package bubbles;
 
 import gaze.GazeEvent;
 import gaze.GazeUtils;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
 import javafx.util.Duration;
+import utils.games.Portrait;
+import utils.games.Utils;
+
+import java.util.ArrayList;
 
 /**
  * Created by schwab on 28/08/2016.
@@ -26,6 +30,8 @@ public class Bubble extends Parent {
 
     private final int maxTimeLength = 7;
     private final int minTimeLength = 4;
+
+    private final int nbFragments = 10; //number of little circles after explosion
 
     EventHandler<Event> enterEvent;
     Scene scene;
@@ -53,28 +59,70 @@ public class Bubble extends Parent {
         }
     }
 
-    private void enter(Circle target) {
-
-        //System.out.println("enter");
-
-        //newCircle();
+    private void explose(Circle C){
 
         Timeline timeline = new Timeline();
 
+        ArrayList<Circle> fragments = new ArrayList(nbFragments);
 
+        ObservableList<Node> nodes = this.getChildren();
 
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(target.opacityProperty(), 0)));
+        for (int i = 0; i < nbFragments; i++) {
 
+            Circle fragment = new Circle();
 
+            nodes.add(fragment);
+
+            fragments.add(fragment);
+
+            fragment.setCenterX(C.getCenterX());
+            fragment.setCenterY(C.getCenterY());
+            fragment.setOpacity(1);
+            fragment.setRadius(20);
+            fragment.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+            fragment.setVisible(true);
+
+            double XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
+            double YendValue = Math.random() * Screen.getPrimary().getBounds().getHeight();
+
+            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.centerXProperty(), XendValue, Interpolator.LINEAR)));
+            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.centerYProperty(), YendValue, Interpolator.EASE_OUT)));
+            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.opacityProperty(), 0)));
+        }
 
         timeline.play();
 
+        timeline.setOnFinished(new EventHandler<ActionEvent>() {
 
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                nodes.removeAll(fragments);
+            }
+        });
+
+
+
+        if(Math.random()>0.5)
+            Utils.playSound("data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3");
+        else
+            Utils.playSound("data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3");
+    }
+
+    private void enter(Circle target) {
+
+        Timeline timeline = new Timeline();
+
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(target.opacityProperty(), 0)));
+
+        timeline.play();
+
+        explose(target);
     }
 
     private void newCircle() {
 
-        Circle C = new Circle();
+        Circle C = buildCircle();
 
         this.getChildren().add(C);
 
@@ -87,6 +135,17 @@ public class Bubble extends Parent {
         moveCircle(C);
     }
 
+    private Circle buildCircle(){
+
+        Circle C = new Circle();
+
+        double radius = (maxRadius - minRadius) * Math.random() + minRadius;
+        C.setFill(new Color(Math.random(), Math.random(), Math.random(), 0.7));
+        C.setRadius(radius);
+
+        return C;
+    }
+
     private void moveCircle(Circle C) {
 
         double centerX = (scene.getWidth() - maxRadius) * Math.random() + maxRadius;
@@ -95,9 +154,6 @@ public class Bubble extends Parent {
         C.setCenterX(centerX);
         //C.setTranslateY((scene.getHeight() - maxRadius) * Math.random() + maxRadius);
         C.setCenterY(centerY);
-        double radius = (maxRadius - minRadius) * Math.random() + minRadius;
-        C.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
-        C.setRadius(radius);
 
         Timeline timeline = new Timeline();
 
