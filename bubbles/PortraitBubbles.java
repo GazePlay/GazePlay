@@ -5,25 +5,25 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
  * Created by schwab on 28/08/2016.
  */
-public class Bubbles extends Application {
+public class PortraitBubbles extends Application {
 
 
     public static void main(String[] args) {
-        Application.launch(bubbles.Bubbles.class, args);
+
+        Application.launch(PortraitBubbles.class, args);
     }
 
 
     @Override
     public void start(Stage primaryStage) {
 
-        primaryStage.setTitle("Bubbles");
+        primaryStage.setTitle("Portrait Bubbles");
         primaryStage.setFullScreen(true);
 
         Group root = new Group();
@@ -32,7 +32,7 @@ public class Bubbles extends Application {
 
         primaryStage.setScene(scene);
 
-        Bubble bubble = new Bubble(scene);
+        Bubble bubble = new Bubble(scene, Bubble.PORTRAIT);
 
         root.getChildren().add(bubble);
 

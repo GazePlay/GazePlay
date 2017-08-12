@@ -10,8 +10,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.util.Duration;
@@ -25,6 +27,8 @@ import java.util.ArrayList;
  */
 public class Bubble extends Parent {
 
+    private int type;
+
     private final int maxRadius = 70;
     private final int minRadius = 30;
 
@@ -35,12 +39,19 @@ public class Bubble extends Parent {
 
     private ArrayList<Circle> fragments = new ArrayList(nbFragments);
 
+    private final static Image[] photos = Utils.images(System.getProperties().getProperty("user.home")+ Utils.FILESEPARATOR +"GazePlay"+ Utils.FILESEPARATOR +"files"+ Utils.FILESEPARATOR +"images"+ Utils.FILESEPARATOR +"portraits");
+
     EventHandler<Event> enterEvent;
     Scene scene;
 
-    public Bubble(Scene scene) {
+    public static final int PORTRAIT = 0;
+    public static final int COLOR = 1;
+
+    public Bubble(Scene scene, int type) {
 
         this.scene = scene;
+
+        this.type = type;
 
         for (int i = 0; i < nbFragments; i++) {
 
@@ -50,10 +61,16 @@ public class Bubble extends Parent {
 
             fragment.setOpacity(1);
             fragment.setRadius(20);
-            fragment.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
             fragment.setVisible(true);
             fragment.setCenterX(-100);
             fragment.setCenterY(-100);
+
+
+            if(type == COLOR)
+                fragment.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+            else
+                fragment.setFill(new ImagePattern(newPhoto(),0,0,1,1, true));
+
         }
 
         this.getChildren().addAll(fragments);
@@ -65,7 +82,7 @@ public class Bubble extends Parent {
                // System.out.println(e.getEventType() + " " + e.getTarget());
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    System.out.println(e.getEventType());
+                    //System.out.println(e.getEventType());
                     enter((Circle) e.getTarget());
                 }
             }
@@ -125,8 +142,6 @@ public class Bubble extends Parent {
 
     private void enter(Circle target) {
 
-        System.out.println("enter");
-
         Timeline timeline = new Timeline();
 
         timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(target.centerXProperty(), - maxRadius*5)));
@@ -160,8 +175,13 @@ public class Bubble extends Parent {
         Circle C = new Circle();
 
         double radius = (maxRadius - minRadius) * Math.random() + minRadius;
-        C.setFill(new Color(Math.random(), Math.random(), Math.random(), 0.7));
+
         C.setRadius(radius);
+
+        if(type == COLOR)
+            C.setFill(new Color(Math.random(), Math.random(), Math.random(), 0.7));
+        else
+            C.setFill(new ImagePattern(newPhoto(),0,0,1,1, true));
 
         return C;
     }
@@ -199,5 +219,11 @@ public class Bubble extends Parent {
                 newCircle();
             }
         });
+    }
+
+    protected Image newPhoto(){
+
+        return photos[((int)(photos.length*Math.random()))];
+
     }
 }
