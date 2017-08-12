@@ -33,12 +33,30 @@ public class Bubble extends Parent {
 
     private final int nbFragments = 10; //number of little circles after explosion
 
+    private ArrayList<Circle> fragments = new ArrayList(nbFragments);
+
     EventHandler<Event> enterEvent;
     Scene scene;
 
     public Bubble(Scene scene) {
 
         this.scene = scene;
+
+        for (int i = 0; i < nbFragments; i++) {
+
+            Circle fragment = new Circle();
+
+            fragments.add(fragment);
+
+            fragment.setOpacity(1);
+            fragment.setRadius(20);
+            fragment.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+            fragment.setVisible(true);
+            fragment.setCenterX(-100);
+            fragment.setCenterY(-100);
+        }
+
+        this.getChildren().addAll(fragments);
 
         enterEvent = new EventHandler<Event>() {
             @Override
@@ -47,61 +65,57 @@ public class Bubble extends Parent {
                // System.out.println(e.getEventType() + " " + e.getTarget());
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    //System.out.println(e.getEventType());
+                    System.out.println(e.getEventType());
                     enter((Circle) e.getTarget());
                 }
             }
         };
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
 
             newCircle();
         }
     }
 
-    private void explose(Circle C){
+    public void explose(Circle C){
 
         Timeline timeline = new Timeline();
-
-        ArrayList<Circle> fragments = new ArrayList(nbFragments);
-
-        ObservableList<Node> nodes = this.getChildren();
+        Timeline timeline2 = new Timeline();
 
         for (int i = 0; i < nbFragments; i++) {
 
-            Circle fragment = new Circle();
+            Circle fragment = fragments.get(i);
 
-            nodes.add(fragment);
-
-            fragments.add(fragment);
-
-            fragment.setCenterX(C.getCenterX());
+           /* fragment.setCenterX(C.getCenterX());
             fragment.setCenterY(C.getCenterY());
-            fragment.setOpacity(1);
-            fragment.setRadius(20);
-            fragment.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
-            fragment.setVisible(true);
+            fragment.setOpacity(1);*/
+            timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.centerXProperty(), C.getCenterX(), Interpolator.LINEAR)));
+            timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.centerYProperty(), C.getCenterY(), Interpolator.EASE_OUT)));
+            timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
+
 
             double XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
             double YendValue = Math.random() * Screen.getPrimary().getBounds().getHeight();
 
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.centerXProperty(), XendValue, Interpolator.LINEAR)));
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.centerYProperty(), YendValue, Interpolator.EASE_OUT)));
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.opacityProperty(), 0)));
+            timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.centerXProperty(), XendValue, Interpolator.LINEAR)));
+            timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.centerYProperty(), YendValue, Interpolator.EASE_OUT)));
+            timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.opacityProperty(), 0)));
         }
 
-        timeline.play();
+        SequentialTransition sequence = new SequentialTransition();
+        sequence.getChildren().addAll(timeline, timeline2);
+        sequence.play();
+
+        ObservableList<Node> nodes = this.getChildren();
 
         timeline.setOnFinished(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent actionEvent) {
 
-                nodes.removeAll(fragments);
+              //  nodes.removeAll(fragments);
             }
         });
-
-
 
         if(Math.random()>0.5)
             Utils.playSound("data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3");
@@ -111,11 +125,17 @@ public class Bubble extends Parent {
 
     private void enter(Circle target) {
 
+        System.out.println("enter");
+
         Timeline timeline = new Timeline();
 
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(target.opacityProperty(), 0)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(target.centerXProperty(), - maxRadius*5)));
 
         timeline.play();
+
+        target.removeEventFilter(MouseEvent.ANY, enterEvent);
+
+        target.removeEventFilter(GazeEvent.ANY, enterEvent);
 
         explose(target);
     }
