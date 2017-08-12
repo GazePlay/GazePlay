@@ -19,7 +19,6 @@ public class PortraitBubbles extends Application {
         Application.launch(PortraitBubbles.class, args);
     }
 
-
     @Override
     public void start(Stage primaryStage) {
 
@@ -39,9 +38,5 @@ public class PortraitBubbles extends Application {
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();
-
-
     }
-
-
 }

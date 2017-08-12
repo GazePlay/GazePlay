@@ -18,11 +18,8 @@ public class Portrait extends Circle {
     public Portrait(int radius) {
 
         super(radius);
-
         this.setPosition(newX(),newY());
-
         this.radius = radius;
-
         setFill(new ImagePattern(newPhoto(),0,0,1,1, true));
     }
 
