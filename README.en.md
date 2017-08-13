@@ -1,40 +1,43 @@
-# Gazeplay
+# GazePlay
 
 * Read this in other languages: [English](README.en.md) [French](README.md)
 
 Gazeplay est un logiciel **gratuit** qui rassemble plusieurs mini-jeux jouables grâce à un occulomètre (*Eye-tracker*). La dernière version compte 12 jeux.
 
-## Système 
+## System Requirement  
 
-GazePlay fonctionne sous Windows, MacOs et Linux. Il est utilisable par tout occulomètre capable de diriger la souris.
+GazePlay works on Windows, MacOs and Linux. It is usable with all eye-tracker able to control mouse cursor.
 
-Il a été testé avec un Eye Tribe sur Windows, MacOs, Linux.
+It is fully compatible with Eye tribe's Eye tracker.
 
 ## Principe
 
-De nombreux polyhandicapés ne sont pas capables d'utiliser de manière assez précise ni leurs membres (mains, pieds), ni leur voix. Les outils ou jeux sur terminaux numériques leur sont ainsi inaccessibles. Le regard semble alors être, dans bien des cas, la manière la plus directe de leur permettre d'interagir.
+Many poly-disabled people are not able to use their limbs (hands, feet) or their voices in a precise way. Tools and games on digital terminals are thus inaccessible to them. In many cases, gaze is the most direct way that enable them to interact.
 
-Il s’agit d’utiliser ce qu’on appelle des eye-trackers, appareils qui permettent de savoir ou se pose le regard d’un individu. Évidement ces jeux doivent rester simples et les interactions assez directes pour permettre aux individus de comprendre et assimiler les conséquences de leurs actions, c'est-à-dire les conséquences de leur regard. On peut imaginer des jeux consistant à tirer sur des cibles, des casses-briques, des jeux de cartes, des mémory,...
+Obviously the games must remain simple and the interactions pretty direct to help individuals to understand and assimilate the consequences of their action, or we can say the consequences of their gaze in this case. We can imagine games consisting of shooting targets, bricks, card games, memory etc.
 
-Ces jeux offrent au moins deux avantages à l'individu :
+These games should offer at least two advantages to the individual:
+1) Allowing him to train his gaze in order to offer him the possibility of acquiring more complex interactions.
+2) To entertain him.
 
-1) le divertir ;
-2) lui permettre d'entraîner son regard afin de lui offrir la possibilité d'acquérir des interactions plus complexes. Il s’agit ainsi d’une première étape visant la possibilité de mettre en place une véritable communication basée sur des pictogrammes par exemple.
+## Games
 
-## Jeux
+There are currently 12 games (including 6 variants).
 
-Ils sont actuellement 12 jeux (dont 6 variantes).
+### Cream Pies
 
-### Tartes à la crème
+Gamer throw a cream pie on the target when gaze look it.
 
 ### Ninja
 
-### Cartes magiques
+
+
+### Magic cards
 
 ### Blocs
 
 ### Cartes à gratter
 
-### Bulles
+### Bubbles
 
-## Téléchargements
+## Downloads
