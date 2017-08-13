@@ -25,11 +25,13 @@ Ces jeux offrent au moins deux avantages à l'individu :
 
 Ils sont actuellement 12 jeux (dont 6 variantes).
 
-![Écran principal GazePlay](README/images/gazePlay.jpg "google logo")
+<!-- ![Écran principal GazePlay](README/images/gazePlay.jpg "Écran principal GazePlay") -->
 
 ### Tartes à la crème
 
 Le joueur lance une tarte à la crème sur la cible lorsqu'il la regarde.
+
+!(README/images/Creampie.jpg "Jeu des tartes à la crème")
 
 ### Ninja
 
