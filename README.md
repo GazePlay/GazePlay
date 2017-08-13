@@ -1,4 +1,4 @@
-# Gazeplay
+# GazePlay
 
 * Read this in other languages: [English](README/README.en.md) [French](README.md)
 
@@ -52,9 +52,13 @@ Une récompense est offerte au joueur lorsqu'il l'a trouvée.
 
 Une grande image est cachée par des blocs de couleur que le joueur doit regarder pour les faire disparaître. Lorsque l'ensemble des blocs ont disparu, la récompense est offerte.
 
+![blocs](README/images/blocs.jpg)
+
 ### Cartes à gratter
 
 Une grande image est cachée dans une carte à gratter. Le joueur gratte la carte grâce à son regard. Lorsque une grande partie de la carte a été grattée, l'image est affichée et la récompense offerte.
+
+![Scratchcard](README/images/Scratchcard.jpg)
 
 ### Bulles
 
