@@ -31,21 +31,38 @@ Ils sont actuellement 12 jeux (dont 6 variantes).
 
 ### Tartes à la crème
 
-Le joueur lance une tarte à la crème sur la cible lorsqu'il la regarde.
+Le joueur lance une tarte à la crème sur la cible statique lorsqu'il la regarde.
 
 ![Jeu des tartes à la crème](README/images/CreamPie.jpg)
 
 ### Ninja
 
+La cible suit des mouvements aléatoires et explose lorsque le joueur la regarde.
 
+![Ninja](README/images/ninja-1.jpg)
 
 ### Cartes magiques
 
+Plusieurs cartes sont affichées et le joueur doit les regarder pour les retourner. L'une de ces cartes comporte une image.
+Une récompense est offerte au joueur lorsqu'il l'a trouvée.
+
+![magic-card-2](README/images/magic-card-2.jpg)
+
 ### Blocs
+
+Une grande image est cachée par des blocs de couleur que le joueur doit regarder pour les faire disparaître. Lorsque l'ensemble des blocs ont disparu, la récompense est offerte.
 
 ### Cartes à gratter
 
+Une grande image est cachée dans une carte à gratter. Le joueur gratte la carte grâce à son regard. Lorsque une grande partie de la carte a été grattée, l'image est affichée et la récompense offerte.
+
 ### Bulles
+
+Des bulles de couleur remontent lentement à la surface et exploser lorsque le joueur les regarde.
+
+### Bulles Portrait
+
+Des bulles contenant des portraits remontent lentement à la surface et exploser lorsque le joueur les regarde.
 
 ## Téléchargements
 
