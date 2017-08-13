@@ -10,7 +10,7 @@ Le logiciel est fourni avec des images par défaut mais il est facile de mettre 
 
 GazePlay fonctionne sous Windows, MacOs et Linux. Il est utilisable par tout occulomètre capable de diriger la souris.
 
-Il a est également complètement compatible avec un Eye Tribe sur Windows, MacOs, Linux.
+Il a est également complètement compatible avec un Eye Tribe sur Windows et MacOs.
 
 ## Principe
 
@@ -75,6 +75,32 @@ Des bulles contenant des portraits remontent lentement à la surface et exploser
 
 ## Téléchargements
 
+https://github.com/schwabdidier/GazePlay/releases
 
+Il est fortement conseillé de télécharger la dernière version dont l'extension est un jar (fichier nommé *GazePlayXXX.jar*) où *XXX* indique la version.
+
+## Installation
+
+Copiez-collez ou déplacez le fichier téléchargé sur votre disque dur à l'endroit que vous préférez. Le bureau sera parfait.
 
 ## Modifier les images
+
+Quel que soit le système d'exploitation, le logiciel cherche dans le répertoire de l'utilisateur un répertoire nommé *GazePlay*. Par exemple, le nom de l'utilisateur est *NomUtilisateur*
+
+* Sous **Windows** C:\Users\NomUtilisateur\Documents
+
+* Sous **MacOs** /Users/NomUtilisateur/GazePlay
+
+* Sous **Linux** /home/NomUtilisateur/GazePlay
+
+Dans ce répertoire, il faudra créer un répertoire *images* dans lequel vous aurez à créer 3 autres répertoires :
+
+1) *portraits* : contient les images utilisées par *tartes à la crème*, *ninja* et *bulles portrait*. Il vaut mieux choisir des images relativement petites (300x300 pixels).
+
+2) *magiccards* : contient les images utilisées par *cartes magique*. Toutes les tailles d'image conviennent.
+
+3) *blocs* : contient les images utilisées par *blocs* et par *cartes à gratter*. Choisir des images assez grandes (idéalement au moins la taille de l'écran).
+
+## Contributions
+
+Ce logiciel est destiné à être amélioré. Toute personne peut contribuer par ses idées d'amélioration. Il est évidement également possible de contribuer par ses talents de graphiste ou d'informaticien pour créer de nouveaux jeux/améliorer les existants.
