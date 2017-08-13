@@ -110,3 +110,5 @@ Dans ce répertoire, il faudra créer un répertoire *images* dans lequel vous a
 ## Contributions
 
 Ce logiciel est destiné à être amélioré. Toute personne peut contribuer par ses idées d'amélioration. Il est évidement également possible de contribuer par ses talents de graphiste ou d'informaticien pour créer de nouveaux jeux/améliorer les existants.
+
+Contact : Didier Schwab didier.schwab à univ-grenoble-alpes point fr (remplacer le à par @ et le point par .).
