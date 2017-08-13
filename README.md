@@ -64,14 +64,16 @@ Une grande image est cachée dans une carte à gratter. Le joueur gratte la cart
 
 Des bulles de couleur remontent lentement à la surface et exploser lorsque le joueur les regarde.
 
-![Colored Bubbles](README/images/portrait-bubbles.jpg)
+![Colored Bubbles](README/images/colored-bubbles.jpg)
 
 ### Bulles Portrait
 
 Des bulles contenant des portraits remontent lentement à la surface et exploser lorsque le joueur les regarde.
 
-![Portrait Bubbles](README/images/colored-bubbles.jpg)
+![Portrait Bubbles](README/images/portrait-bubbles.jpg)
 
 ## Téléchargements
+
+
 
 ## Modifier les images
