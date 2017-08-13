@@ -20,6 +20,7 @@ Obviously the games must remain simple and the interactions pretty direct to hel
 
 These games should offer at least two advantages to the individual:
 1) Allowing him to train his gaze in order to offer him the possibility of acquiring more complex interactions.
+
 2) To entertain him.
 
 ## Games

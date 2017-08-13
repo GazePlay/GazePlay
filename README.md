@@ -21,6 +21,7 @@ Il s’agit d’utiliser ce qu’on appelle des eye-trackers, appareils qui perm
 Ces jeux offrent au moins deux avantages à l'individu :
 
 1) le divertir ;
+
 2) lui permettre d'entraîner son regard afin de lui offrir la possibilité d'acquérir des interactions plus complexes. Il s’agit ainsi d’une première étape visant la possibilité de mettre en place une véritable communication basée sur des pictogrammes par exemple.
 
 ## Jeux
