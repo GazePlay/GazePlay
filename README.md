@@ -1,6 +1,6 @@
 # Gazeplay
 
-* Read this in other languages: [English](README.en.md) [French](README.md)
+* Read this in other languages: [English](README/README.en.md) [French](README.md)
 
 Gazeplay est un logiciel **gratuit** qui rassemble plusieurs mini-jeux jouables grâce à un occulomètre (*Eye-tracker*). La dernière version compte 12 jeux.
 
@@ -24,6 +24,8 @@ Ces jeux offrent au moins deux avantages à l'individu :
 ## Jeux
 
 Ils sont actuellement 12 jeux (dont 6 variantes).
+
+![Écran principal GazePlay](README/images/gazePlay.jpg "google logo")
 
 ### Tartes à la crème
 

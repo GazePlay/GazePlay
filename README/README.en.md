@@ -1,6 +1,6 @@
 # GazePlay
 
-* Read this in other languages: [English](README.en.md) [French](README.md)
+* Read this in other languages: [English](README.en.md) [French](../README.md)
 
 Gazeplay est un logiciel **gratuit** qui rassemble plusieurs mini-jeux jouables grâce à un occulomètre (*Eye-tracker*). La dernière version compte 12 jeux.
 
@@ -36,7 +36,7 @@ Gamer throw a cream pie on the target when gaze look it.
 
 ### Blocs
 
-### Cartes à gratter
+### Scratchcard
 
 ### Bubbles
 
