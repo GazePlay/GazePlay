@@ -31,9 +31,7 @@ public class PortraitBubbles extends Application {
 
         primaryStage.setScene(scene);
 
-        Bubble bubble = new Bubble(scene, Bubble.PORTRAIT);
-
-        root.getChildren().add(bubble);
+        Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT);
 
         primaryStage.show();
 

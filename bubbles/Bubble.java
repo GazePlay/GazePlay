@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -47,11 +48,13 @@ public class Bubble extends Parent {
     public static final int PORTRAIT = 0;
     public static final int COLOR = 1;
 
-    public Bubble(Scene scene, int type) {
+    public Bubble(Scene scene, Group root, int type) {
 
         this.scene = scene;
 
         this.type = type;
+
+        root.getChildren().add(this);
 
         for (int i = 0; i < nbFragments; i++) {
 

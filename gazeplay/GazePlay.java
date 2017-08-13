@@ -1,6 +1,7 @@
 package gazeplay;
 
 import blocs.Blocs;
+import bubbles.Bubble;
 import creampie.CreamPie;
 import gaze.SecondScreen;
 import javafx.application.Application;
@@ -66,7 +67,7 @@ public class GazePlay extends Application {
 
         cbxGames = new ChoiceBox<>();
 
-       cbxGames.getItems().addAll("\tCreampie", "\tNinja Portraits", "Magic Cards\t\t(2x2)", "Magic Cards\t\t(2x3)", "Magic Cards\t\t(3x2)", "Magic Cards\t\t(3x3)", "blocks\t\t\t(2x2)", "blocks\t\t\t(2x3)", "blocks\t\t\t(3x3)", "\tCarte à gratter");
+       cbxGames.getItems().addAll("\tCreampie", "\tNinja Portraits", "Magic Cards\t\t(2x2)", "Magic Cards\t\t(2x3)", "Magic Cards\t\t(3x2)", "Magic Cards\t\t(3x3)", "blocks\t\t\t(2x2)", "blocks\t\t\t(2x3)", "blocks\t\t\t(3x3)", "\tCarte à gratter", "\tColored Bubbles", "\tPortrait Bubbles");
 
         //cbxGames.getSelectionModel().selectFirst();
 
@@ -193,6 +194,24 @@ public class GazePlay extends Application {
                 System.out.println("Carte à gratter");
 
                 Blocs.makeBlocks(scene, root, cbxGames, 10, 10, false, 0.6f);
+
+                break;
+            }
+
+            case 10 : {
+
+                System.out.println("Colored Bubbles");
+
+                Bubble bubble = new Bubble(scene, root, Bubble.COLOR);
+
+                break;
+            }
+
+            case 11 : {
+
+                System.out.println("Portrait Bubbles");
+
+                Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT);
 
                 break;
             }

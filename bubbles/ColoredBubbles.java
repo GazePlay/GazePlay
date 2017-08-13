@@ -29,8 +29,7 @@ public class ColoredBubbles extends Application {
         Scene scene = new Scene(root, 1200, 700, Color.BLACK);
         primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
         primaryStage.setScene(scene);
-        Bubble bubble = new Bubble(scene, Bubble.COLOR);
-        root.getChildren().add(bubble);
+        Bubble bubble = new Bubble(scene, root, Bubble.COLOR);
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();
