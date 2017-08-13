@@ -75,7 +75,7 @@ Des bulles contenant des portraits remontent lentement à la surface et exploser
 
 ## Téléchargements
 
-![Dernière Version](https://github.com/schwabdidier/GazePlay/releases/download/v1-beta-candidate-3/GazePlay-beta-3.jar)
+[Dernière Version](https://github.com/schwabdidier/GazePlay/releases/download/v1-beta-candidate-3/GazePlay-beta-3.jar)
 
 ## Installation
 
@@ -85,9 +85,9 @@ Double cliquez sur le fichier. Si tout se passe bien, le logiciel se lance.
 
 Dans le cas contraire, il est probable que vous n'ayez pas de machine virtuelle Java installée.
 
-![Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
+[Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
 
-En cas de problème, didier.schwab à univ-grenoble-alpes point fr (remplacer le à par @ et le point par .).
+En cas de problème, didier.schwab à univ tiret grenoble tiret alpes point fr (remplacer le à par @ et le point par .).
 
 ## Modifier les images
 
