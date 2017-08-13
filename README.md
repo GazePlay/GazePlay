@@ -4,11 +4,13 @@
 
 Gazeplay est un logiciel **gratuit** qui rassemble plusieurs mini-jeux jouables grâce à un occulomètre (*Eye-tracker*). La dernière version compte 12 jeux.
 
-## Système 
+Le logiciel est fourni avec des images par défaut mais il est facile de mettre les siennes avec lesquelles le joueur interagira plus facilement (voir section).
+
+## Système requis
 
 GazePlay fonctionne sous Windows, MacOs et Linux. Il est utilisable par tout occulomètre capable de diriger la souris.
 
-Il a été testé avec un Eye Tribe sur Windows, MacOs, Linux.
+Il a est également complètement compatible avec un Eye Tribe sur Windows, MacOs, Linux.
 
 ## Principe
 
@@ -31,7 +33,7 @@ Ils sont actuellement 12 jeux (dont 6 variantes).
 
 Le joueur lance une tarte à la crème sur la cible lorsqu'il la regarde.
 
-![Jeu des tartes à la crème](README/images/CreamPie.jpg "Jeu des tartes à la crème")
+![Jeu des tartes à la crème](README/images/CreamPie.jpg)
 
 ### Ninja
 
@@ -46,3 +48,5 @@ Le joueur lance une tarte à la crème sur la cible lorsqu'il la regarde.
 ### Bulles
 
 ## Téléchargements
+
+## Modifier les images
