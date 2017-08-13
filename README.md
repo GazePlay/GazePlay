@@ -31,7 +31,7 @@ Ils sont actuellement 12 jeux (dont 6 variantes).
 
 Le joueur lance une tarte à la crème sur la cible lorsqu'il la regarde.
 
-!(README/images/Creampie.jpg "Jeu des tartes à la crème")
+![Jeu des tartes à la crème](README/images/Creampie.jpg "Jeu des tartes à la crème")
 
 ### Ninja
 
