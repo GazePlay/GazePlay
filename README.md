@@ -6,6 +6,11 @@ Gazeplay est un logiciel **gratuit** qui rassemble plusieurs mini-jeux jouables 
 
 Le logiciel est fourni avec des images par défaut mais il est facile de mettre les siennes avec lesquelles le joueur interagira plus facilement (voir section).
 
+## Vidéo de présentation
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/yMjBgVmhXV8" frameborder="0" allowfullscreen></iframe>
+
+
 ## Système requis
 
 GazePlay fonctionne sous Windows, MacOs et Linux. Il est utilisable par tout occulomètre capable de diriger la souris.
