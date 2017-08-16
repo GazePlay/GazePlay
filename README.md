@@ -8,8 +8,7 @@ Le logiciel est fourni avec des images par défaut mais il est facile de mettre 
 
 ## Vidéo de présentation
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/yMjBgVmhXV8" frameborder="0" allowfullscreen></iframe>
-
+[![Vidéo de présentation](https://i.ytimg.com/vi/yMjBgVmhXV8/maxresdefault.jpg)](https://www.youtube.com/embed/yMjBgVmhXV8)
 
 ## Système requis
 
