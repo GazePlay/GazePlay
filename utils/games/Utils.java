@@ -102,7 +102,7 @@ public class Utils {
 
     }
 
-    public static void home(Scene scene, Group root, ChoiceBox<String> cbxGames) {
+    public static void home(Scene scene, Group root, ChoiceBox<String> cbxGames, Stats stats) {
 
         double width = scene.getWidth() / 10;
         double height = width;
@@ -114,6 +114,8 @@ public class Utils {
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
             @Override
             public void handle(javafx.event.Event e) {
+
+                System.out.println(stats);
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 

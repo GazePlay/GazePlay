@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import utils.games.Stats;
 
 public class CreamPie extends Application {
 
@@ -29,7 +30,9 @@ public class CreamPie extends Application {
 
         Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
-        launch(root, scene);
+        Stats stats = new Stats();
+
+        launch(root, scene, stats);
 
         primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
 
@@ -40,11 +43,11 @@ public class CreamPie extends Application {
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void launch(Group root, Scene scene){
+    public static void launch(Group root, Scene scene, Stats stats){
 
         Hand hand = new Hand(scene);
 
-        Target portrait = new Target(hand);
+        Target portrait = new Target(hand, stats);
 
         root.getChildren().add(portrait);
 

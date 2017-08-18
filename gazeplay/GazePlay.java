@@ -3,6 +3,7 @@ package gazeplay;
 import blocs.Blocs;
 import bubbles.Bubble;
 import creampie.CreamPie;
+import utils.games.Stats;
 import gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -106,13 +107,15 @@ public class GazePlay extends Application {
 
         Utils.clear(scene, root, cbxGames);
 
+        Stats stats = new Stats();
+
         switch (value.intValue()){
 
             case 0 : {
 
                 System.out.println("Creampie");
 
-                CreamPie.launch(root, scene);
+                CreamPie.launch(root, scene, stats);
 
                 break;
             }
@@ -224,7 +227,7 @@ public class GazePlay extends Application {
             }
         }
 
-        Utils.home(scene, root, cbxGames);
+        Utils.home(scene, root, cbxGames, stats);
 
      //   root.getChildren().add(Utils.home(scene, root, cbxGames));
 

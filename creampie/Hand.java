@@ -25,9 +25,7 @@ public class Hand extends Parent {
     private static final int size = 40;
     private static final int maxSize = 100;
 
-    //private ImageView background;
     private Rectangle hand;
-    //private ImageView pie;
     private Rectangle pie;
 
     private Scene scene;

@@ -9,12 +9,11 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
 import utils.games.Portrait;
+import utils.games.Stats;
 
 /**
  * Created by schwab on 26/12/2016.
@@ -29,11 +28,17 @@ public class Target extends Portrait {
 
     private static int radius = 100;
 
-    public Target(Hand hand) {
+    private Stats stats;
+
+    public Target(Hand hand, Stats stats) {
 
         super(radius);
 
         this.hand = hand;
+
+        this.stats = stats;
+
+        stats.newBeginTime();
 
         enterEvent = new EventHandler<Event>() {
             @Override
@@ -42,6 +47,7 @@ public class Target extends Portrait {
                 if((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)  && anniOff) {
 
                     anniOff = false;
+                    stats.incNbShoot();
                     enter();
                 }
             }
@@ -82,14 +88,8 @@ public class Target extends Portrait {
             public void handle(ActionEvent actionEvent) {
 
                 anniOff = true;
+                stats.newBeginTime();
             }
         });
-    }
-
-    public static void launch(Group root, Scene scene) {
-
-        ninja.Target portrait = new ninja.Target(root);
-
-        root.getChildren().add(portrait);
     }
 }

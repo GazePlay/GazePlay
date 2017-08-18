@@ -41,7 +41,7 @@ public class License extends Rectangle{
 
                     root.getChildren().add(licence(width, height));
 
-                    Utils.home(scene, root, cbxGames);
+                    Utils.home(scene, root, cbxGames, null);
                 }
             }
         };

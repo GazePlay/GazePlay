@@ -191,7 +191,7 @@ public class Card extends Parent {
                                         public void handle(ActionEvent actionEvent) {
                                             Utils.clear(scene, root, choiceBox);
                                             Card.addCards(root, scene, choiceBox, nbLines, nbColumns);
-                                            Utils.home(scene, root, choiceBox);
+                                            Utils.home(scene, root, choiceBox, null);
                                         }
                                     });
                                 }
