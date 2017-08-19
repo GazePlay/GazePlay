@@ -40,8 +40,6 @@ public class Card extends Parent {
     private boolean winner;
     private Image image;
     private boolean found;
-    private boolean anim0ff = false;
-    private long entry;
     int nbLines;
     int nbColumns;
     private double initWidth;
@@ -60,7 +58,6 @@ public class Card extends Parent {
 
     public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image, boolean winner, Scene scene, Group root, ChoiceBox choiceBox){
 
-        this.entry = -1;
         this.winner = winner;
         this.initWidth=width;
         this.initHeight=height;
@@ -79,7 +76,7 @@ public class Card extends Parent {
         indicator.setMinWidth(width*0.9);
         indicator.setMinHeight(width*0.9);
         indicator.setOpacity(0);
-       // indicator.progressProperty().bind(slider.valueProperty().divide(127.0));
+        // indicator.progressProperty().bind(slider.valueProperty().divide(127.0));
         this.getChildren().add(indicator);
         //indicator.setTranslateX(-15);
 
@@ -104,8 +101,8 @@ public class Card extends Parent {
 
         card.setFill(new ImagePattern(image,0,0,1,1, true));
     }
-
-    private EventHandler<Event> buildEvent() {
+/*
+    private EventHandler<Event> oldBuildEvent() {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -235,6 +232,136 @@ public class Card extends Parent {
             }
         };
 
+    }*/
+
+    private EventHandler<Event> buildEvent() {
+        return new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+
+                System.out.println(e.getEventType());
+/*
+                if (anim0ff) {
+
+                    return;
+                }*/
+
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                    indicator.setOpacity(0.5);
+                    indicator.setProgress(0);
+
+                    SequentialTransition sequence = new SequentialTransition();
+
+                    Timeline timelineCard = new Timeline();
+
+                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.xProperty(), card.getX() - (initWidth*zoom_factor - initWidth)/2)));
+                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.yProperty(), card.getY() - (initHeight*zoom_factor - initHeight)/2)));
+                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth*zoom_factor)));
+                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight*zoom_factor)));
+
+                    Timeline timelineProgressBar = new Timeline();
+
+                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(min_time), new KeyValue(indicator.progressProperty(), 1)));
+
+                    sequence.getChildren().addAll(timelineCard, timelineProgressBar);
+
+                    sequence.play();
+
+                    found = true;
+
+                    sequence.setOnFinished(new EventHandler<ActionEvent>() {
+
+                        @Override
+                        public void handle(ActionEvent actionEvent) {
+
+                            if (!found)
+                                return;
+
+                            System.out.println("GAGNÉ");
+
+                            card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+
+                            if (winner) {
+
+                                int final_zoom = 2;
+
+                                indicator.setOpacity(0);
+
+                                Timeline timeline = new Timeline();
+
+                                for (Node N : root.getChildren()) {//clear all but image and reward
+
+                                    if ((N instanceof Card && card != ((Card) N).getCard() && !(N instanceof Bravo)) || (N instanceof Home)) {//we put outside screen Home and cards
+
+                                        N.setTranslateX(-10000);
+                                        N.setOpacity(0);
+                                        N.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                    } else {//we keep only Bravo and winning card
+                                    }
+                                }
+
+
+                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth() * final_zoom)));
+                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight() * final_zoom)));
+                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(), (scene.getWidth() - card.getWidth() * final_zoom) / 2)));
+                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), (scene.getHeight() - card.getHeight() * final_zoom) / 2)));
+
+                                timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent actionEvent) {
+
+
+                                        SequentialTransition sequence = bravo.win();
+                                        sequence.setOnFinished(new EventHandler<ActionEvent>() {
+
+                                            @Override
+                                            public void handle(ActionEvent actionEvent) {
+                                                Utils.clear(scene, root, choiceBox);
+                                                Card.addCards(root, scene, choiceBox, nbLines, nbColumns);
+                                                Utils.home(scene, root, choiceBox, null);
+                                            }
+                                        });
+                                    }
+                                });
+
+                                timeline.play();
+
+                            } else {//bad card
+
+                                Timeline timeline = new Timeline();
+
+                                timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(card.opacityProperty(), 0)));
+
+                                timeline.play();
+
+                                indicator.setOpacity(0);
+
+                            }
+
+                      /*   else {
+
+
+                        }*/
+                        }
+                    });
+                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                    found = false;
+
+                    Timeline timeline = new Timeline();
+
+                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.xProperty(), card.getX() + (initWidth*zoom_factor - initWidth)/2)));
+                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.yProperty(), card.getY() + (initHeight*zoom_factor - initHeight)/2)));
+                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth)));
+                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight)));
+
+                    timeline.play();
+                    indicator.setOpacity(0);
+                    indicator.setProgress(0);
+                }
+            }
+        };
     }
 
 

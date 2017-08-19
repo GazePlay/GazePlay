@@ -13,13 +13,11 @@ import javafx.scene.input.MouseEvent;
 
 public class    GazeEvent extends Event {
 
-
     public static final EventType<GazeEvent> ANY =
             new EventType<GazeEvent>(Event.ANY, "GAZE");
 
     public static final EventType<GazeEvent> GAZE_ENTERED =
             new EventType<>(GazeEvent.ANY, "GAZE_ENTERED");
-
 
     public static final EventType<GazeEvent> GAZE_EXITED =
             new EventType<>(GazeEvent.ANY, "GAZE_EXITED");
