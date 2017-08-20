@@ -5,6 +5,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -179,10 +182,43 @@ public class Utils {
         averageLength.setFont(new Font(20));
         averageLength.setFill(new Color(1,1,1,1));
 
-        root.getChildren().addAll(statistics, shoots, totalTime, length, averageLength);
+        LineChart<Number,Number> chart = buildChart(stats);
+
+        chart.setTranslateY(scene.getHeight()/2);
+
+        root.getChildren().addAll(statistics, shoots, totalTime, length, averageLength, chart);
 
         home(scene, root, cbxGames, null);
 
+    }
+
+    private static LineChart<Number,Number> buildChart(Stats stats) {
+
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+
+        LineChart<Number,Number> lineChart =
+                new LineChart<Number,Number>(xAxis,yAxis);
+
+        lineChart.setTitle("Mon titre");
+        //defining a series
+        XYChart.Series series = new XYChart.Series();
+        series.setName("Temps de réaction");
+
+        //populating the series with data
+
+        ArrayList<Integer> shoots = stats.getShoots();
+
+        int i = 0;
+
+        for(Integer I: shoots){
+
+            series.getData().add(new XYChart.Data(++i, I.intValue()));
+        }
+
+        lineChart.getData().add(series);
+
+        return lineChart;
     }
 
     private static String convert(long totalTime) {
@@ -206,19 +242,19 @@ public class Utils {
 
         if(days>0) {
             builder.append(days);
-            builder.append(" days ");
+            builder.append(" d ");
         }
         if(hours>0) {
             builder.append(hours);
-            builder.append(" hours ");
+            builder.append(" h ");
         }
         if(minutes>0) {
             builder.append(minutes);
-            builder.append(" minutes ");
+            builder.append(" m ");
         }
         if(seconds>0) {
             builder.append(seconds);
-            builder.append(" seconds ");
+            builder.append(" s ");
         }
         if(totalTime>0) {
             builder.append(totalTime);

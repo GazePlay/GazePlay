@@ -58,9 +58,11 @@ public class Target extends Portrait {
             @Override
             public void handle(Event e) {
 
-                if((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)  && anniOff) {
+                if((e.getEventType() == MouseEvent.MOUSE_ENTERED_TARGET ||e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)  && anniOff) {
 
+                    System.out.println(e);
                     anniOff = false;
+                    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                     stats.incNbShoot();
                     enter();
                 }
@@ -78,7 +80,7 @@ public class Target extends Portrait {
     }
 
 
-    private void move(){
+  /*  private void oldmove(){
 
         SequentialTransition sequence = new SequentialTransition();
         for (int i = 0; i < 40 ; i++){
@@ -91,8 +93,27 @@ public class Target extends Portrait {
         }
 
         sequence.play();
-    }
+    }*/
 
+    private void move(){
+
+        Timeline timeline = new Timeline();
+        int length = (int)(2000*Math.random())+1000;//between 1 and 3 seconds
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(centerXProperty(), newX())));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(centerYProperty(), newY())));
+
+        timeline.play();
+
+        timeline.setOnFinished(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                move();
+            }
+        });
+
+    }
 
     private void enter(){
 
@@ -141,7 +162,6 @@ public class Target extends Portrait {
             public void handle(ActionEvent actionEvent) {
 
                 anniOff = true;
-                move();
                 setVisible(true);
                 stats.start();
             }

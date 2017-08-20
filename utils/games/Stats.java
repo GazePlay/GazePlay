@@ -1,5 +1,7 @@
 package utils.games;
 
+import java.util.ArrayList;
+
 public class Stats {
 
 
@@ -7,6 +9,13 @@ public class Stats {
     private long length;
     private long beginTime;
     private long zeroTime;
+    private ArrayList<Integer> shoots;
+
+    public ArrayList<Integer> getShoots() {
+        return shoots;
+    }
+
+
 
     public Stats() {
 
@@ -14,12 +23,15 @@ public class Stats {
         beginTime = 0;
         length = 0;
         zeroTime = System.currentTimeMillis();
+        shoots = new ArrayList<Integer>(1000);
     }
 
     public void incNbShoot(){
 
         nbShoots++;
-        length += System.currentTimeMillis() - beginTime;
+        long last = System.currentTimeMillis() - beginTime;
+        length += last;
+        shoots.add((new Long (last)).intValue());
     }
 
     public void start(){
@@ -39,7 +51,7 @@ public class Stats {
                 ", length=" + getLength() +
                 ", average length=" + getAverageLength() +
                 ", zero time =" + getTotalTime() +
-                '}';
+                '}' + shoots;
     }
 
     public long getLength() {
