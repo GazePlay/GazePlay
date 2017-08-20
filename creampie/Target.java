@@ -38,8 +38,6 @@ public class Target extends Portrait {
 
         this.stats = stats;
 
-        stats.newBeginTime();
-
         enterEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -58,6 +56,8 @@ public class Target extends Portrait {
         this.addEventFilter(MouseEvent.ANY, enterEvent);
 
         this.addEventFilter(GazeEvent.ANY, enterEvent);
+
+        stats.start();
     }
 
     private void enter(){
@@ -88,7 +88,7 @@ public class Target extends Portrait {
             public void handle(ActionEvent actionEvent) {
 
                 anniOff = true;
-                stats.newBeginTime();
+                stats.start();
             }
         });
     }

@@ -6,13 +6,14 @@ public class Stats {
     private int nbShoots;
     private long length;
     private long beginTime;
-   // private long endTime;
+    private long zeroTime;
 
     public Stats() {
 
         nbShoots = 0;
         beginTime = 0;
         length = 0;
+        zeroTime = System.currentTimeMillis();
     }
 
     public void incNbShoot(){
@@ -21,7 +22,7 @@ public class Stats {
         length += System.currentTimeMillis() - beginTime;
     }
 
-    public void newBeginTime(){
+    public void start(){
 
         beginTime = System.currentTimeMillis();
     }
@@ -36,8 +37,8 @@ public class Stats {
         return "Stats{" +
                 "nbShoots=" + getNbshoots() +
                 ", length=" + getLength() +
-                ", average length=" + averageLength() +
-
+                ", average length=" + getAverageLength() +
+                ", zero time =" + getTotalTime() +
                 '}';
     }
 
@@ -46,11 +47,16 @@ public class Stats {
         return length;
     }
 
-    public long averageLength(){
+    public long getAverageLength(){
 
         if(nbShoots == 0)
             return 0;
         else
             return getLength()/nbShoots;
+    }
+
+    public long getTotalTime() {
+
+        return System.currentTimeMillis() - zeroTime;
     }
 }

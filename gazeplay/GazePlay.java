@@ -124,7 +124,7 @@ public class GazePlay extends Application {
 
                 System.out.println("Ninja Portraits");
 
-                Ninja.launch(root, scene);
+                Ninja.launch(root, scene, stats);
 
                 break;
             }

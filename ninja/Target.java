@@ -15,6 +15,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.stage.Screen;
 import utils.games.Portrait;
 import javafx.util.Duration;
+import utils.games.Stats;
 import utils.games.Utils;
 
 import java.net.URL;
@@ -35,11 +36,15 @@ public class Target extends Portrait {
 
     private static int nbBall = 20;
 
+    private Stats stats;
+
     private ArrayList<Portrait> portraits = new ArrayList(nbBall);
 
-    public Target(Group root) {
+    public Target(Group root, Stats stats) {
 
         super(radius);
+
+        this.stats = stats;
 
         for (int i = 0; i < nbBall; i++) {
 
@@ -56,6 +61,7 @@ public class Target extends Portrait {
                 if((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)  && anniOff) {
 
                     anniOff = false;
+                    stats.incNbShoot();
                     enter();
                 }
             }
@@ -67,6 +73,8 @@ public class Target extends Portrait {
         this.addEventHandler(GazeEvent.ANY, enterEvent);
 
         move();
+
+        stats.start();
     }
 
 
@@ -135,6 +143,7 @@ public class Target extends Portrait {
                 anniOff = true;
                 move();
                 setVisible(true);
+                stats.start();
             }
         });
 
