@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -168,55 +169,102 @@ public class Utils {
         shoots.setFont(new Font(20));
         shoots.setFill(new Color(1,1,1,1));
 
-        Text length = new Text("Temps de réaction : " + convert(stats.getLength()));
+        Text length = new Text("Temps effectif de jeu : " + convert(stats.getLength()));
 
         length.setX(100);
         length.setY(200);
         length.setFont(new Font(20));
         length.setFill(new Color(1,1,1,1));
 
-        Text averageLength = new Text("Secondes par tir : " + convert(stats.getAverageLength()));
+        Text averageLength = new Text("Temps de réaction moyen : " + convert(stats.getAverageLength()));
 
         averageLength.setX(100);
         averageLength.setY(250);
         averageLength.setFont(new Font(20));
         averageLength.setFill(new Color(1,1,1,1));
 
-        LineChart<Number,Number> chart = buildChart(stats);
+        Text standDev = new Text("Écart-type : " + convert((long)stats.getSD()));
+
+        standDev.setX(100);
+        standDev.setY(300);
+        standDev.setFont(new Font(20));
+        standDev.setFill(new Color(1,1,1,1));
+
+        LineChart<String,Number> chart = buildChart(stats);
 
         chart.setTranslateY(scene.getHeight()/2);
 
-        root.getChildren().addAll(statistics, shoots, totalTime, length, averageLength, chart);
+        root.getChildren().addAll(statistics, shoots, totalTime, length, averageLength, standDev, chart);
 
         home(scene, root, cbxGames, null);
 
     }
 
-    private static LineChart<Number,Number> buildChart(Stats stats) {
+    private static LineChart<String,Number> buildChart(Stats stats) {
 
-        final NumberAxis xAxis = new NumberAxis();
+        final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
 
-        LineChart<Number,Number> lineChart =
-                new LineChart<Number,Number>(xAxis,yAxis);
+        LineChart<String,Number> lineChart =
+                new LineChart<String,Number>(xAxis,yAxis);
 
-        lineChart.setTitle("Mon titre");
+        lineChart.setTitle("Réaction");
         //defining a series
         XYChart.Series series = new XYChart.Series();
         series.setName("Temps de réaction");
+
+        XYChart.Series average = new XYChart.Series();
+        average.setName("Moyenne");
+
+        XYChart.Series sdp = new XYChart.Series();
+        //sdp.setName("Moyenne");
+
+        XYChart.Series sdm = new XYChart.Series();
+        //sdm.setName("Moyenne");
+
+        xAxis.setLabel("Lancer");
+        yAxis.setLabel("ms");
 
         //populating the series with data
 
         ArrayList<Integer> shoots = stats.getShoots();
 
+        double sd = stats.getSD();
+
         int i = 0;
+
+        average.getData().add(new XYChart.Data(0+"", stats.getAverageLength()));
+        sdp.getData().add(new XYChart.Data(0+"", stats.getAverageLength()+sd));
+        sdm.getData().add(new XYChart.Data(0+"", stats.getAverageLength()-sd));
 
         for(Integer I: shoots){
 
-            series.getData().add(new XYChart.Data(++i, I.intValue()));
+            i++;
+            series.getData().add(new XYChart.Data(i+"", I.intValue()));
+            average.getData().add(new XYChart.Data(i+"", stats.getAverageLength()));
+
+            sdp.getData().add(new XYChart.Data(i+"", stats.getAverageLength()+sd));
+            sdm.getData().add(new XYChart.Data(i+"", stats.getAverageLength()-sd));
         }
 
+        i++;
+        average.getData().add(new XYChart.Data(i+"", stats.getAverageLength()));
+        sdp.getData().add(new XYChart.Data(i+"", stats.getAverageLength()+sd));
+        sdm.getData().add(new XYChart.Data(i+"", stats.getAverageLength()-sd));
+
+        lineChart.setCreateSymbols(false);
+
+        lineChart.getData().add(average);
+        lineChart.getData().add(sdp);
+        lineChart.getData().add(sdm);
         lineChart.getData().add(series);
+
+
+        series.getNode().setStyle("-fx-stroke-width: 3; -fx-stroke: red; -fx-stroke-dash-offset:5;");
+        average.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: lightgreen; -fx-stroke-dash-array: 2 12 12 2;-fx-stroke-line-cap:butt;");
+        sdp.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey; -fx-stroke-dash-array: 2 12 12 2;");
+        sdm.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: darkgray; -fx-stroke-dash-array: 2 12 12 2;");
+
 
         return lineChart;
     }

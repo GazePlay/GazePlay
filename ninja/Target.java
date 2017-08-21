@@ -113,7 +113,7 @@ public class Target extends Portrait {
             }
         });
 
-    }
+    }   
 
     private void enter(){
 

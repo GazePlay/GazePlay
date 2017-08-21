@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Stats {
 
-
     private int nbShoots;
     private long length;
     private long beginTime;
@@ -14,8 +13,6 @@ public class Stats {
     public ArrayList<Integer> getShoots() {
         return shoots;
     }
-
-
 
     public Stats() {
 
@@ -70,5 +67,24 @@ public class Stats {
     public long getTotalTime() {
 
         return System.currentTimeMillis() - zeroTime;
+    }
+
+    public double getVariance() {
+
+        double average = getAverageLength();
+
+        double sum = 0;
+
+        for(Integer I : shoots){
+
+            sum+=Math.pow((I.intValue()-average),2);
+        }
+
+        return sum/nbShoots;
+    }
+
+    public double getSD() {
+
+        return Math.sqrt(getVariance());
     }
 }
