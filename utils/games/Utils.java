@@ -1,5 +1,6 @@
 package utils.games;
 
+import javafx.embed.swing.SwingNode;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -22,6 +23,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.tc33.jheatchart.HeatChart;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
@@ -146,6 +148,8 @@ public class Utils {
 
     private static void show (Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames){
 
+        stats.stop();
+
         clear(scene, root, cbxGames);
 
         Text statistics = new Text("Statistiques");
@@ -158,49 +162,100 @@ public class Utils {
         Text totalTime = new Text("Temps total de jeu : " + convert(stats.getTotalTime()));
 
         totalTime.setX(100);
-        totalTime.setY(100);
+        totalTime.setY(150);
         totalTime.setFont(new Font(20));
         totalTime.setFill(new Color(1,1,1,1));
 
         Text shoots = new Text("Tirs : " + stats.getNbshoots());
 
         shoots.setX(100);
-        shoots.setY(150);
+        shoots.setY(200);
         shoots.setFont(new Font(20));
         shoots.setFill(new Color(1,1,1,1));
 
         Text length = new Text("Temps effectif de jeu : " + convert(stats.getLength()));
 
         length.setX(100);
-        length.setY(200);
+        length.setY(250);
         length.setFont(new Font(20));
         length.setFill(new Color(1,1,1,1));
 
         Text averageLength = new Text("Temps de réaction moyen : " + convert(stats.getAverageLength()));
 
         averageLength.setX(100);
-        averageLength.setY(250);
+        averageLength.setY(300);
         averageLength.setFont(new Font(20));
         averageLength.setFill(new Color(1,1,1,1));
 
         Text standDev = new Text("Écart-type : " + convert((long)stats.getSD()));
 
         standDev.setX(100);
-        standDev.setY(300);
+        standDev.setY(350);
         standDev.setFont(new Font(20));
         standDev.setFill(new Color(1,1,1,1));
 
-        LineChart<String,Number> chart = buildChart(stats);
+        Text UncountedShoot = new Text("Tirs non comptés : " + stats.getNbUnCountedShoots());
+
+        UncountedShoot.setX(scene.getWidth()/2);
+        UncountedShoot.setY(150);
+        UncountedShoot.setFont(new Font(20));
+        UncountedShoot.setFill(new Color(1,1,1,1));
+
+        LineChart<String,Number> chart = buildLineChart(stats);
 
         chart.setTranslateY(scene.getHeight()/2);
+        chart.setMaxWidth(scene.getWidth()*0.4);
+        chart.setMaxHeight(scene.getHeight()*0.4);
 
-        root.getChildren().addAll(statistics, shoots, totalTime, length, averageLength, standDev, chart);
+        chart.setLegendVisible(false);
+
+        Rectangle heatChart = BuildHeatChart(stats);
+
+        heatChart.setX(scene.getWidth()*5/9);
+        heatChart.setY(scene.getHeight()/2+15);
+        heatChart.setWidth(scene.getWidth()*0.35);
+        heatChart.setHeight(scene.getHeight()*0.35);
+
+        root.getChildren().addAll(statistics, shoots, totalTime, length, averageLength, standDev, UncountedShoot, chart, heatChart);
 
         home(scene, root, cbxGames, null);
-
     }
 
-    private static LineChart<String,Number> buildChart(Stats stats) {
+    private static Rectangle BuildHeatChart(Stats stats){
+
+        double[][] data = stats.getHeatMap();
+
+        // Step 1: Create our heat map chart using our data.
+        HeatChart map = new HeatChart(data);
+
+        map.setHighValueColour(java.awt.Color.RED);
+        map.setLowValueColour(java.awt.Color.white);
+
+        map.setShowXAxisValues(false);
+        map.setShowYAxisValues(false);
+        map.setChartMargin(0);
+
+        // Step 2: Customise the chart.
+       // map.setTitle("This is my heat chart title");
+       // map.setXAxisLabel("X Axis");
+       // map.setYAxisLabel("Y Axis");
+
+        try {
+            map.saveToFile(new File("/Users/schwab/Documents/TET-Communicator/src/java-heat-chart.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Rectangle heatMap = new Rectangle(400,300);
+        //Rectangle heatMap = new Rectangle();
+        //heatMap.setVisible(true);
+
+        heatMap.setFill(new ImagePattern(new Image("file:/Users/schwab/Documents/TET-Communicator/src/java-heat-chart.png"),0,0,1,1, true));
+
+        return heatMap;
+    }
+
+    private static LineChart<String,Number> buildLineChart(Stats stats) {
 
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
@@ -208,13 +263,13 @@ public class Utils {
         LineChart<String,Number> lineChart =
                 new LineChart<String,Number>(xAxis,yAxis);
 
-        lineChart.setTitle("Réaction");
+       // lineChart.setTitle("Réaction");
         //defining a series
         XYChart.Series series = new XYChart.Series();
-        series.setName("Temps de réaction");
+        //series.setName("Temps de réaction");
 
         XYChart.Series average = new XYChart.Series();
-        average.setName("Moyenne");
+       // average.setName("Moyenne");
 
         XYChart.Series sdp = new XYChart.Series();
         //sdp.setName("Moyenne");
@@ -222,8 +277,8 @@ public class Utils {
         XYChart.Series sdm = new XYChart.Series();
         //sdm.setName("Moyenne");
 
-        xAxis.setLabel("Lancer");
-        yAxis.setLabel("ms");
+      //  xAxis.setLabel("Lancer");
+      //  yAxis.setLabel("ms");
 
         //populating the series with data
 
@@ -261,10 +316,9 @@ public class Utils {
 
 
         series.getNode().setStyle("-fx-stroke-width: 3; -fx-stroke: red; -fx-stroke-dash-offset:5;");
-        average.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: lightgreen; -fx-stroke-dash-array: 2 12 12 2;-fx-stroke-line-cap:butt;");
-        sdp.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey; -fx-stroke-dash-array: 2 12 12 2;");
-        sdm.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: darkgray; -fx-stroke-dash-array: 2 12 12 2;");
-
+        average.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: lightgreen;");
+        sdp.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
+        sdm.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
 
         return lineChart;
     }

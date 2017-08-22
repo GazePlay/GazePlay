@@ -29,7 +29,7 @@ public class Ninja extends Application {
 
             Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
-            Stats stats = new Stats();
+            Stats stats = new Stats(scene);
 
             launch(root, scene, stats);
 

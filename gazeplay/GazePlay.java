@@ -107,7 +107,7 @@ public class GazePlay extends Application {
 
         Utils.clear(scene, root, cbxGames);
 
-        Stats stats = new Stats();
+        Stats stats = new Stats(scene);
 
         switch (value.intValue()){
 
