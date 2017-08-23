@@ -8,7 +8,8 @@ import java.util.ArrayList;
 
 public class Stats {
 
-    private final int heatMapPixelSize=20;
+    private final int heatMapPixelSize=10;
+    private final int trail = 3;
 
     private int nbShoots;
     private long length;
@@ -39,7 +40,7 @@ public class Stats {
         shoots = new ArrayList<Integer>(1000);
         recordMouseMovements = buildRecordMouseMovements();
         scene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
-        heatMap = new double[(int)scene.getWidth()/heatMapPixelSize+1][(int)scene.getHeight()/heatMapPixelSize+1];
+        heatMap = new double[(int)scene.getHeight()/heatMapPixelSize][(int)scene.getWidth()/heatMapPixelSize];
     }
 
     private EventHandler<MouseEvent> buildRecordMouseMovements() {
@@ -49,15 +50,29 @@ public class Stats {
             @Override
             public void handle(MouseEvent e) {
 
-                int x = ((int)e.getX()/heatMapPixelSize);
-                int y = ((int)e.getY()/heatMapPixelSize);
 
-                System.out.println(x + ", " + y);
+                //in heatChart, x and y are opposed
+                int x = ((int)e.getY()/heatMapPixelSize);
+                int y = ((int)e.getX()/heatMapPixelSize);
 
-                if(x>=0&&y>=0)
-                    heatMap[x][y]++;
+              //  System.out.println(x + ", " + y);
+
+                inc(x,y);
+
+                for(int i = -trail; i<= trail; i++)
+                    for(int j = -trail; j<= trail; j++){
+
+                        inc(x+i,y+j);
+                    }
             }
         };
+    }
+
+    private void inc(int x, int y){
+
+        if(x>=0&&y>=0&&x<heatMap.length&&y<heatMap[0].length)
+           // heatMap[heatMap[0].length - y][heatMap.length - x]++;
+        heatMap[x][y]++;
     }
 
     public void incNbShoot(){

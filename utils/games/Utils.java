@@ -229,7 +229,7 @@ public class Utils {
         HeatChart map = new HeatChart(data);
 
         map.setHighValueColour(java.awt.Color.RED);
-        map.setLowValueColour(java.awt.Color.white);
+        map.setLowValueColour(java.awt.Color.lightGray);
 
         map.setShowXAxisValues(false);
         map.setShowYAxisValues(false);
