@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class Stats {
 
-    private final int heatMapPixelSize=10;
-    private final int trail = 3;
+    private final int heatMapPixelSize=5;
+    private final int trail = 2;
 
     private int nbShoots;
     private long length;
@@ -64,6 +64,7 @@ public class Stats {
 
                         inc(x+i,y+j);
                     }
+                inc(x,y);
             }
         };
     }
@@ -72,7 +73,7 @@ public class Stats {
 
         if(x>=0&&y>=0&&x<heatMap.length&&y<heatMap[0].length)
            // heatMap[heatMap[0].length - y][heatMap.length - x]++;
-        heatMap[x][y]++;
+            heatMap[x][y]++;
     }
 
     public void incNbShoot(){

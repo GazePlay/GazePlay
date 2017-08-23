@@ -209,7 +209,7 @@ public class Utils {
 
         chart.setLegendVisible(false);
 
-        Rectangle heatChart = BuildHeatChart(stats);
+        Rectangle heatChart = BuildHeatChart(stats, scene);
 
         heatChart.setX(scene.getWidth()*5/9);
         heatChart.setY(scene.getHeight()/2+15);
@@ -221,7 +221,7 @@ public class Utils {
         home(scene, root, cbxGames, null);
     }
 
-    private static Rectangle BuildHeatChart(Stats stats){
+    private static Rectangle BuildHeatChart(Stats stats, Scene scene){
 
         double[][] data = stats.getHeatMap();
 
@@ -246,13 +246,71 @@ public class Utils {
             e.printStackTrace();
         }
 
-        Rectangle heatMap = new Rectangle(400,300);
+        Rectangle heatMap = new Rectangle();
         //Rectangle heatMap = new Rectangle();
         //heatMap.setVisible(true);
 
         heatMap.setFill(new ImagePattern(new Image("file:/Users/schwab/Documents/TET-Communicator/src/java-heat-chart.png"),0,0,1,1, true));
 
+        EventHandler<Event> openEvent = openChartEvent(heatMap, scene);
+
+        heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openEvent);
+
         return heatMap;
+    }
+
+    private static EventHandler<Event> openChartEvent(Rectangle heatMap, Scene scene){
+
+        return new EventHandler<javafx.event.Event>() {
+
+        @Override
+        public void handle(javafx.event.Event e) {
+
+            if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+
+                System.out.println("Increase Size");
+
+                heatMap.setX(scene.getWidth()*5/9);
+                heatMap.setY(scene.getHeight()/2+15);
+                heatMap.setWidth(scene.getWidth()*0.35);
+                heatMap.setHeight(scene.getHeight()*0.35);
+
+                heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+
+                heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, closeChartEvent(heatMap, scene));
+
+            }
+        }
+
+        };
+
+    }
+
+    private static EventHandler<Event> closeChartEvent(Rectangle heatMap, Scene scene){
+
+        return new EventHandler<javafx.event.Event>() {
+
+            @Override
+            public void handle(javafx.event.Event e) {
+
+                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+
+                    System.out.println("Decrease Size");
+
+                    heatMap.setX(scene.getWidth()*1/10);
+                    heatMap.setY(scene.getHeight()*1/10);
+                    heatMap.setWidth(scene.getWidth()*0.8);
+                    heatMap.setHeight(scene.getHeight()*0.8);
+
+                    heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+
+                    heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openChartEvent(heatMap, scene));
+
+                }
+            }
+
+        };
+
     }
 
     private static LineChart<String,Number> buildLineChart(Stats stats) {
