@@ -88,8 +88,6 @@ public class StatsDisplay {
 
         LineChart<String,Number> chart = buildLineChart(stats, scene);
 
-        chart.setLegendVisible(false);
-
         Rectangle heatChart = BuildHeatChart(stats, scene);
 
         heatChart.setX(scene.getWidth()*5/9);
@@ -129,7 +127,16 @@ public class StatsDisplay {
 
         //populating the series with data
 
-        ArrayList<Integer> shoots = stats.getLengthBetweenGoals();
+        ArrayList<Integer> shoots = null;
+
+        if(stats instanceof BubblesGamesStats){
+
+            shoots = stats.getSortedLengthBetweenGoals();
+        }else{
+
+            shoots = stats.getLengthBetweenGoals();
+        }
+
 
         double sd = stats.getSD();
 
@@ -169,6 +176,8 @@ public class StatsDisplay {
         EventHandler<Event> openLineChartEvent = openLineChart(lineChart, scene);
 
         lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED, openLineChartEvent);
+
+        lineChart.setLegendVisible(false);
 
         lineChart.setTranslateX(scene.getWidth()*1/10);
         lineChart.setTranslateY(scene.getHeight()/2);

@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public abstract class Stats {
 
@@ -137,5 +138,31 @@ public abstract class Stats {
     public void stop() {
 
         scene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
+    }
+
+    public ArrayList<Integer> getSortedLengthBetweenGoals(){
+
+        int nbElements = lengthBetweenGoals.size();
+
+        ArrayList<Integer> sortedList = (ArrayList<Integer>)lengthBetweenGoals.clone();
+
+        Collections.sort(sortedList);
+
+        ArrayList<Integer> normalList = (ArrayList<Integer>)lengthBetweenGoals.clone();
+
+        int j = 0;
+
+        for(int i = 0; i < nbElements ; i++) {
+
+            if(i%2 == 0)
+                normalList.set(j, sortedList.get(i));
+            else {
+                normalList.set(nbElements -1 - j, sortedList.get(i));
+                j++;
+            }
+
+        }
+
+        return normalList;
     }
 }
