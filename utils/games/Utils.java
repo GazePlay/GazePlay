@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -17,15 +16,11 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import org.tc33.jheatchart.HeatChart;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by schwab on 23/12/2016.
@@ -130,7 +125,7 @@ public class Utils {
                     }
                     else{
 
-                        Utils.show(stats, scene, root, cbxGames);
+                        StatsDisplay.dislayStats(stats, scene, root, cbxGames);
 
                     }
                 }
@@ -140,215 +135,6 @@ public class Utils {
         home.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
         root.getChildren().add(home);
-    }
-
-    private static void show (Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames){
-
-        stats.stop();
-
-        clear(scene, root, cbxGames);
-
-        Text statistics = new Text("Statistiques");
-
-        statistics.setX(scene.getWidth()*0.4);
-        statistics.setY(60);
-        statistics.setFont(new Font(60));
-        statistics.setFill(new Color(1,1,1,1));
-
-        Text totalTime = new Text("Temps total de jeu : " + convert(stats.getTotalTime()));
-
-        totalTime.setX(100);
-        totalTime.setY(150);
-        totalTime.setFont(new Font(20));
-        totalTime.setFill(new Color(1,1,1,1));
-
-        Text shoots = new Text("Tirs : " + stats.getNbshoots());
-
-        shoots.setX(100);
-        shoots.setY(200);
-        shoots.setFont(new Font(20));
-        shoots.setFill(new Color(1,1,1,1));
-
-        Text length = new Text("Temps effectif de jeu : " + convert(stats.getLength()));
-
-        length.setX(100);
-        length.setY(250);
-        length.setFont(new Font(20));
-        length.setFill(new Color(1,1,1,1));
-
-        Text averageLength = new Text("Temps de réaction moyen : " + convert(stats.getAverageLength()));
-
-        averageLength.setX(100);
-        averageLength.setY(300);
-        averageLength.setFont(new Font(20));
-        averageLength.setFill(new Color(1,1,1,1));
-
-        Text standDev = new Text("Écart-type : " + convert((long)stats.getSD()));
-
-        standDev.setX(100);
-        standDev.setY(350);
-        standDev.setFont(new Font(20));
-        standDev.setFill(new Color(1,1,1,1));
-
-        Text UncountedShoot = new Text("Tirs non comptés : " + stats.getNbUnCountedShoots());
-
-        UncountedShoot.setX(scene.getWidth()/2);
-        UncountedShoot.setY(150);
-        UncountedShoot.setFont(new Font(20));
-        UncountedShoot.setFill(new Color(1,1,1,1));
-
-        LineChart<String,Number> chart = StatsDisplay.buildLineChart(stats);
-
-        chart.setTranslateY(scene.getHeight()/2);
-        chart.setMaxWidth(scene.getWidth()*0.4);
-        chart.setMaxHeight(scene.getHeight()*0.4);
-
-        chart.setLegendVisible(false);
-
-        Rectangle heatChart = BuildHeatChart(stats, scene);
-
-        heatChart.setX(scene.getWidth()*5/9);
-        heatChart.setY(scene.getHeight()/2+15);
-        heatChart.setWidth(scene.getWidth()*0.35);
-        heatChart.setHeight(scene.getHeight()*0.35);
-
-        root.getChildren().addAll(statistics, shoots, totalTime, length, averageLength, standDev, UncountedShoot, chart, heatChart);
-
-        home(scene, root, cbxGames, null);
-    }
-
-    private static Rectangle BuildHeatChart(Stats stats, Scene scene){
-
-        double[][] data = stats.getHeatMap();
-
-        // Step 1: Create our heat map chart using our data.
-        HeatChart map = new HeatChart(data);
-
-        map.setHighValueColour(java.awt.Color.RED);
-        map.setLowValueColour(java.awt.Color.lightGray);
-
-        map.setShowXAxisValues(false);
-        map.setShowYAxisValues(false);
-        map.setChartMargin(0);
-
-        // Step 2: Customise the chart.
-       // map.setTitle("This is my heat chart title");
-       // map.setXAxisLabel("X Axis");
-       // map.setYAxisLabel("Y Axis");
-
-        try {
-            map.saveToFile(new File("/Users/schwab/Documents/TET-Communicator/src/java-heat-chart.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Rectangle heatMap = new Rectangle();
-        //Rectangle heatMap = new Rectangle();
-        //heatMap.setVisible(true);
-
-        heatMap.setFill(new ImagePattern(new Image("file:/Users/schwab/Documents/TET-Communicator/src/java-heat-chart.png"),0,0,1,1, true));
-
-        EventHandler<Event> openEvent = openChartEvent(heatMap, scene);
-
-        heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openEvent);
-
-        return heatMap;
-    }
-
-    private static EventHandler<Event> openChartEvent(Rectangle heatMap, Scene scene){
-
-        return new EventHandler<javafx.event.Event>() {
-
-        @Override
-        public void handle(javafx.event.Event e) {
-
-            if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
-                System.out.println("Increase Size");
-
-                heatMap.setX(scene.getWidth()*5/9);
-                heatMap.setY(scene.getHeight()/2+15);
-                heatMap.setWidth(scene.getWidth()*0.35);
-                heatMap.setHeight(scene.getHeight()*0.35);
-
-                heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
-
-                heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, closeChartEvent(heatMap, scene));
-
-            }
-        }
-
-        };
-    }
-
-    private static EventHandler<Event> closeChartEvent(Rectangle heatMap, Scene scene){
-
-        return new EventHandler<javafx.event.Event>() {
-
-            @Override
-            public void handle(javafx.event.Event e) {
-
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
-                    System.out.println("Decrease Size");
-
-                    heatMap.setX(scene.getWidth()*1/10);
-                    heatMap.setY(scene.getHeight()*1/10);
-                    heatMap.setWidth(scene.getWidth()*0.8);
-                    heatMap.setHeight(scene.getHeight()*0.8);
-
-                    heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
-
-                    heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openChartEvent(heatMap, scene));
-
-                }
-            }
-
-        };
-
-    }
-
-    private static String convert(long totalTime) {
-
-        System.out.println(totalTime);
-
-
-        long days = TimeUnit.MILLISECONDS.toDays(totalTime);
-        totalTime -= TimeUnit.DAYS.toMillis(days);
-
-        long hours = TimeUnit.MILLISECONDS.toHours(totalTime);
-        totalTime -= TimeUnit.HOURS.toMillis(hours);
-
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTime);
-        totalTime -= TimeUnit.MINUTES.toMillis(minutes);
-
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(totalTime);
-        totalTime -= TimeUnit.SECONDS.toMillis(seconds);
-
-        StringBuilder builder = new StringBuilder(1000);
-
-        if(days>0) {
-            builder.append(days);
-            builder.append(" d ");
-        }
-        if(hours>0) {
-            builder.append(hours);
-            builder.append(" h ");
-        }
-        if(minutes>0) {
-            builder.append(minutes);
-            builder.append(" m ");
-        }
-        if(seconds>0) {
-            builder.append(seconds);
-            builder.append(" s ");
-        }
-        if(totalTime>0) {
-            builder.append(totalTime);
-            builder.append(" ms");
-        }
-
-        return builder.toString();
     }
 
     private static void goHome(Scene scene, Group root, ChoiceBox<String> cbxGames) {
