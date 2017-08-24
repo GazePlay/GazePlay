@@ -1,4 +1,4 @@
-package utils.games;
+package utils.games.stats;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.tc33.jheatchart.HeatChart;
+import utils.games.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsDisplay {
 
-    static void dislayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames){
+    public static void displayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames){
 
         stats.stop();
 
@@ -45,7 +46,7 @@ public class StatsDisplay {
         totalTime.setFont(new Font(20));
         totalTime.setFill(new Color(1,1,1,1));
 
-        Text shoots = new Text("Tirs : " + stats.getNbshoots());
+        Text shoots = new Text("Tirs : " + stats.getNbGoals());
 
         shoots.setX(100);
         shoots.setY(200);
@@ -73,12 +74,17 @@ public class StatsDisplay {
         standDev.setFont(new Font(20));
         standDev.setFill(new Color(1,1,1,1));
 
-        Text UncountedShoot = new Text("Tirs non comptés : " + stats.getNbUnCountedShoots());
+        Text UncountedShoot = new Text();
 
-        UncountedShoot.setX(scene.getWidth()/2);
-        UncountedShoot.setY(150);
-        UncountedShoot.setFont(new Font(20));
-        UncountedShoot.setFill(new Color(1,1,1,1));
+        if(stats instanceof ShootGamesStats && !(stats instanceof BubblesGamesStats) && ((ShootGamesStats)stats).getNbUnCountedShoots()!=0) {
+
+            UncountedShoot = new Text("Tirs non comptés : " + ((ShootGamesStats)stats).getNbUnCountedShoots());
+
+            UncountedShoot.setX(scene.getWidth() / 2);
+            UncountedShoot.setY(150);
+            UncountedShoot.setFont(new Font(20));
+            UncountedShoot.setFill(new Color(1, 1, 1, 1));
+        }
 
         LineChart<String,Number> chart = buildLineChart(stats, scene);
 
@@ -123,7 +129,7 @@ public class StatsDisplay {
 
         //populating the series with data
 
-        ArrayList<Integer> shoots = stats.getShoots();
+        ArrayList<Integer> shoots = stats.getLengthBetweenGoals();
 
         double sd = stats.getSD();
 

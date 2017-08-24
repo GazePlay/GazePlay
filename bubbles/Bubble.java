@@ -18,7 +18,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.util.Duration;
-import utils.games.Portrait;
+import utils.games.stats.BubblesGamesStats;
+import utils.games.stats.Stats;
 import utils.games.Utils;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class Bubble extends Parent {
     public static final int PORTRAIT = 0;
     public static final int COLOR = 1;
 
-    public Bubble(Scene scene, Group root, int type) {
+    public Bubble(Scene scene, Group root, int type, BubblesGamesStats stats) {
 
         this.scene = scene;
 
@@ -87,6 +88,8 @@ public class Bubble extends Parent {
 
                     //System.out.println(e.getEventType());
                     enter((Circle) e.getTarget());
+                    stats.incNbShoot();
+                    stats.start();
                 }
             }
         };
@@ -95,6 +98,8 @@ public class Bubble extends Parent {
 
             newCircle();
         }
+
+        stats.start();
     }
 
     public void explose(Circle C){

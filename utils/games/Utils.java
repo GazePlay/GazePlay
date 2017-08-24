@@ -16,6 +16,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import utils.games.stats.Stats;
+import utils.games.stats.StatsDisplay;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
@@ -125,8 +127,7 @@ public class Utils {
                     }
                     else{
 
-                        StatsDisplay.dislayStats(stats, scene, root, cbxGames);
-
+                        StatsDisplay.displayStats(stats, scene, root, cbxGames);
                     }
                 }
             }

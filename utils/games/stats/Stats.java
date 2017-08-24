@@ -1,4 +1,4 @@
-package utils.games;
+package utils.games.stats;
 
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -6,38 +6,35 @@ import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 
-public class Stats {
+public abstract class Stats {
 
     private final int heatMapPixelSize=5;
     private final int trail = 2;
 
-    private int nbShoots;
-    private long length;
-    private long beginTime;
-    private long zeroTime;
-    private ArrayList<Integer> shoots;
-    private Scene scene;
-    private EventHandler<MouseEvent> recordMouseMovements;
+    protected int nbGoals;
+    protected long length;
+    protected long beginTime;
+    protected long zeroTime;
+    protected ArrayList<Integer> lengthBetweenGoals;
+    protected Scene scene;
+    protected EventHandler<MouseEvent> recordMouseMovements;
 
-    private double[][] heatMap;
+    protected double[][] heatMap;
 
-    private int nbUnCountedShoots;
 
-    public ArrayList<Integer> getShoots() {
-        return shoots;
+
+    public ArrayList<Integer> getLengthBetweenGoals() {
+        return lengthBetweenGoals;
     }
-
-
 
     public Stats(Scene scene) {
 
         this.scene = scene;
-        nbShoots = 0;
+        nbGoals = 0;
         beginTime = 0;
         length = 0;
-        nbUnCountedShoots = 0;
         zeroTime = System.currentTimeMillis();
-        shoots = new ArrayList<Integer>(1000);
+        lengthBetweenGoals = new ArrayList<Integer>(1000);
         recordMouseMovements = buildRecordMouseMovements();
         scene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
         heatMap = new double[(int)scene.getHeight()/heatMapPixelSize][(int)scene.getWidth()/heatMapPixelSize];
@@ -76,38 +73,24 @@ public class Stats {
             heatMap[x][y]++;
     }
 
-    public void incNbShoot(){
-
-
-        long last = System.currentTimeMillis() - beginTime;
-        if(last>100) {
-            nbShoots++;
-            length += last;
-            shoots.add((new Long(last)).intValue());
-        }else{
-
-            nbUnCountedShoots++;
-        }
-    }
-
     public void start(){
 
         beginTime = System.currentTimeMillis();
     }
 
-    public int getNbshoots() {
+    public int getNbGoals() {
 
-        return nbShoots;
+        return nbGoals;
     }
 
     @Override
     public String toString() {
         return "Stats{" +
-                "nbShoots=" + getNbshoots() +
+                "nbShoots=" + getNbGoals() +
                 ", length=" + getLength() +
                 ", average length=" + getAverageLength() +
                 ", zero time =" + getTotalTime() +
-                '}' + shoots;
+                '}' + lengthBetweenGoals;
     }
 
     public long getLength() {
@@ -117,10 +100,10 @@ public class Stats {
 
     public long getAverageLength(){
 
-        if(nbShoots == 0)
+        if(nbGoals == 0)
             return 0;
         else
-            return getLength()/nbShoots;
+            return getLength()/ nbGoals;
     }
 
     public long getTotalTime() {
@@ -134,12 +117,12 @@ public class Stats {
 
         double sum = 0;
 
-        for(Integer I : shoots){
+        for(Integer I : lengthBetweenGoals){
 
             sum+=Math.pow((I.intValue()-average),2);
         }
 
-        return sum/nbShoots;
+        return sum/ nbGoals;
     }
 
     public double getSD() {
@@ -154,9 +137,5 @@ public class Stats {
     public void stop() {
 
         scene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
-    }
-
-    public int getNbUnCountedShoots() {
-        return nbUnCountedShoots;
     }
 }

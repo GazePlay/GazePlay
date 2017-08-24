@@ -3,7 +3,9 @@ package gazeplay;
 import blocs.Blocs;
 import bubbles.Bubble;
 import creampie.CreamPie;
-import utils.games.Stats;
+import utils.games.stats.BubblesGamesStats;
+import utils.games.stats.ShootGamesStats;
+import utils.games.stats.Stats;
 import gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -107,7 +109,7 @@ public class GazePlay extends Application {
 
         Utils.clear(scene, root, cbxGames);
 
-        Stats stats = new Stats(scene);
+        Stats stats = null;
 
         switch (value.intValue()){
 
@@ -115,7 +117,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Creampie");
 
-                CreamPie.launch(root, scene, stats);
+                stats = new ShootGamesStats(scene);
+
+                CreamPie.launch(root, scene, (ShootGamesStats)stats);
 
                 break;
             }
@@ -124,7 +128,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Ninja Portraits");
 
-                Ninja.launch(root, scene, stats);
+                stats = new ShootGamesStats(scene);
+
+                Ninja.launch(root, scene, (ShootGamesStats)stats);
 
                 break;
             }
@@ -205,7 +211,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Colored Bubbles");
 
-                Bubble bubble = new Bubble(scene, root, Bubble.COLOR);
+                stats = new BubblesGamesStats(scene);
+
+                Bubble bubble = new Bubble(scene, root, Bubble.COLOR, (BubblesGamesStats) stats);
 
                 break;
             }
@@ -214,7 +222,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Portrait Bubbles");
 
-                Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT);
+                stats = new BubblesGamesStats(scene);
+
+                Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT, (BubblesGamesStats)stats);
 
                 break;
             }

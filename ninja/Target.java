@@ -8,17 +8,14 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Screen;
 import utils.games.Portrait;
 import javafx.util.Duration;
-import utils.games.Stats;
+import utils.games.stats.ShootGamesStats;
+import utils.games.stats.Stats;
 import utils.games.Utils;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -40,7 +37,7 @@ public class Target extends Portrait {
 
     private ArrayList<Portrait> portraits = new ArrayList(nbBall);
 
-    public Target(Group root, Stats stats) {
+    public Target(Group root, ShootGamesStats stats) {
 
         super(radius);
 

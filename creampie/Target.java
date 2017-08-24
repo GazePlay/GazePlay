@@ -13,7 +13,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
 import utils.games.Portrait;
-import utils.games.Stats;
+import utils.games.stats.ShootGamesStats;
+import utils.games.stats.Stats;
 
 /**
  * Created by schwab on 26/12/2016.
@@ -30,7 +31,7 @@ public class Target extends Portrait {
 
     private Stats stats;
 
-    public Target(Hand hand, Stats stats) {
+    public Target(Hand hand, ShootGamesStats stats) {
 
         super(radius);
 

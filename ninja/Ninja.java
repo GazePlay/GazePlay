@@ -7,7 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import utils.games.Stats;
+import utils.games.stats.ShootGamesStats;
+import utils.games.stats.Stats;
 
 /**
  * Created by schwab on 26/12/2016.
@@ -29,7 +30,7 @@ public class Ninja extends Application {
 
             Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
-            Stats stats = new Stats(scene);
+            ShootGamesStats stats = new ShootGamesStats(scene);
 
             launch(root, scene, stats);
 
@@ -42,7 +43,7 @@ public class Ninja extends Application {
             SecondScreen secondScreen = SecondScreen.launch();
         }
 
-    public static void launch(Group root, Scene scene, Stats stats) {
+    public static void launch(Group root, Scene scene, ShootGamesStats stats) {
 
         Target portrait = new Target(root, stats);
 
