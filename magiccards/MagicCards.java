@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import utils.games.stats.HiddenItemsGames;
 
 /**
  * Created by schwab on 17/09/2016.
@@ -26,7 +27,9 @@ public class MagicCards  extends Application {
 
         Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
-        Card.addCards(root, scene, null,2, 2);
+        HiddenItemsGames stats = new HiddenItemsGames(scene);
+
+        Card.addCards(root, scene, null,2, 2, stats);
 
         primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
 

@@ -19,7 +19,6 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 import utils.games.stats.BubblesGamesStats;
-import utils.games.stats.Stats;
 import utils.games.Utils;
 
 import java.util.ArrayList;
@@ -88,7 +87,7 @@ public class Bubble extends Parent {
 
                     //System.out.println(e.getEventType());
                     enter((Circle) e.getTarget());
-                    stats.incNbShoot();
+                    stats.incNbGoals();
                     stats.start();
                 }
             }

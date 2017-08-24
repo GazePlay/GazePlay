@@ -119,7 +119,7 @@ public class Utils {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    System.out.println(stats);
+                    System.out.println("stats = " + stats);
 
                     if (stats == null) {
 

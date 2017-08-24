@@ -24,6 +24,7 @@ import javafx.util.Duration;
 import utils.games.Bravo;
 import utils.games.Home;
 import utils.games.Utils;
+import utils.games.stats.HiddenItemsGames;
 
 import java.util.Date;
 
@@ -48,15 +49,15 @@ public class Card extends Parent {
     private ChoiceBox choiceBox;
     private Group root;
     ProgressIndicator indicator;
+    HiddenItemsGames stats;
     Bravo bravo = new Bravo();
 
     final static Image[] images = Utils.images(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"magiccards"+Utils.FILESEPARATOR);
 
-
     EventHandler<Event> enterEvent;
     boolean anniOff = true;
 
-    public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image, boolean winner, Scene scene, Group root, ChoiceBox choiceBox){
+    public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image, boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGames stats){
 
         this.winner = winner;
         this.initWidth=width;
@@ -66,6 +67,7 @@ public class Card extends Parent {
         this.root=root;
         this.nbLines=nbLines;
         this.nbColumns=nbColumns;
+        this.stats = stats;
         card = new Rectangle(x, y, width, height);
         card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"),0,0,1,1, true));
         this.getChildren().add(card);
@@ -101,145 +103,11 @@ public class Card extends Parent {
 
         card.setFill(new ImagePattern(image,0,0,1,1, true));
     }
-/*
-    private EventHandler<Event> oldBuildEvent() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-
-                //System.out.println(e.getEventType());
-
-                if (found || anim0ff) {
-
-                    return;
-                }
-
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                    anim0ff = true;
-
-                    indicator.setOpacity(0.5);
-
-                    entry = (new Date()).getTime();
-
-                    Timeline timeline = new Timeline();
-
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.xProperty(), card.getX() - (initWidth*zoom_factor - initWidth)/2)));
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.yProperty(), card.getY() - (initHeight*zoom_factor - initHeight)/2)));
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth*zoom_factor)));
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight*zoom_factor)));
-
-                    timeline.play();
-
-                    anim0ff = false;
-
-
-                } else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
-
-                    //System.out.println("MOVE");
-
-                    long now = (new Date()).getTime();
-
-                    indicator.setProgress((now - entry)/min_time);
-
-                    if (entry != -1 && (now - entry) > min_time) {
-
-                        //System.out.println("GAGNÉ");
-
-                        found = true;
-
-                        card.setFill(new ImagePattern(image,0,0,1,1, true));
-
-                        if(winner){
-
-                            int final_zoom = 2;
-
-                            indicator.setOpacity(0);
-
-                            Timeline timeline = new Timeline();
-
-                            for(Node N : root.getChildren()){//clear all but image and reward
-
-                                if(((N instanceof Card && card != ((Card)N).getCard()) && ! (N instanceof Bravo) ) ||  (N instanceof Home)) {
-
-                                    N.setTranslateX(-10000);
-                                    N.setOpacity(0);
-                                    N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                }
-                                else{
-                                }
-                            }
-
-
-                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth()*final_zoom)));
-                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight()*final_zoom)));
-                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(), (scene.getWidth()-card.getWidth()*final_zoom)/2)));
-                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), (scene.getHeight()-card.getHeight()*final_zoom)/2)));
-
-                            timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent actionEvent) {
-
-
-                                    SequentialTransition sequence = bravo.win();
-                                    sequence.setOnFinished(new EventHandler<ActionEvent>() {
-
-                                        @Override
-                                        public void handle(ActionEvent actionEvent) {
-                                            Utils.clear(scene, root, choiceBox);
-                                            Card.addCards(root, scene, choiceBox, nbLines, nbColumns);
-                                            Utils.home(scene, root, choiceBox, null);
-                                        }
-                                    });
-                                }
-                            });
-
-                            timeline.play();
-
-                        }
-                        else{//bad card
-
-                            Timeline timeline = new Timeline();
-
-                            timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(card.opacityProperty(), 0)));
-
-                            timeline.play();
-
-                            indicator.setOpacity(0);
-
-                        }
-
-                    } else {
-
-
-                    }
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                    anim0ff = true;
-
-                    Timeline timeline = new Timeline();
-
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.xProperty(), card.getX() + (initWidth*zoom_factor - initWidth)/2)));
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.yProperty(), card.getY() + (initHeight*zoom_factor - initHeight)/2)));
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth)));
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight)));
-
-                    timeline.play();
-                    entry = -1;
-                    anim0ff = false;
-                    indicator.setOpacity(0);
-                }
-            }
-        };
-
-    }*/
 
     private EventHandler<Event> buildEvent() {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-
-                System.out.println(e.getEventType());
 /*
                 if (anim0ff) {
 
@@ -278,11 +146,11 @@ public class Card extends Parent {
                             if (!found)
                                 return;
 
-                            System.out.println("GAGNÉ");
-
                             card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
 
                             if (winner) {
+
+                                stats.incNbGoals();
 
                                 int final_zoom = 2;
 
@@ -318,8 +186,9 @@ public class Card extends Parent {
                                             @Override
                                             public void handle(ActionEvent actionEvent) {
                                                 Utils.clear(scene, root, choiceBox);
-                                                Card.addCards(root, scene, choiceBox, nbLines, nbColumns);
-                                                Utils.home(scene, root, choiceBox, null);
+                                                Card.addCards(root, scene, choiceBox, nbLines, nbColumns,  stats);
+                                                Utils.home(scene, root, choiceBox, stats);
+                                                stats.start();
                                             }
                                         });
                                     }
@@ -364,8 +233,7 @@ public class Card extends Parent {
         };
     }
 
-
-    public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbLines, int nbColumns) {
+    public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbLines, int nbColumns, HiddenItemsGames stats) {
 
         double cardHeight = computeCardHeight(scene, nbLines);
         double cardWidth = cardHeight * cardRatio;
@@ -380,20 +248,19 @@ public class Card extends Parent {
             for (int j = 0 ; j < nbLines ; j++){
 
                 if(k++==winner) {
-                    winCard = new Card(nbColumns,  nbLines, width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, getRandomImage(), true, scene, root, cbxGames);
+                    winCard = new Card(nbColumns,  nbLines, width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, getRandomImage(), true, scene, root, cbxGames, stats);
                     root.getChildren().add(winCard);
                 }
                 else {
-                    Card card = new Card(nbColumns,  nbLines, width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, new Image("data/magiccards/images/error.png"), false, scene, root, cbxGames);
+                    Card card = new Card(nbColumns,  nbLines, width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, new Image("data/magiccards/images/error.png"), false, scene, root, cbxGames, stats);
                     root.getChildren().add(card);
                 }
             }
         winCard.toFront();
+        stats.start();
     }
 
     private static Image getRandomImage() {
-
-        //Image[] images = Utils.getImages(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"magiccards"+Utils.FILESEPARATOR);
 
         int value = (int)Math.floor(Math.random()*images.length);
 

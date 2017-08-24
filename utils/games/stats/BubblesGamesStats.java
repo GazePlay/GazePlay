@@ -9,7 +9,7 @@ public class BubblesGamesStats extends Stats{
         super(scene);
     }
 
-    public void incNbShoot(){
+    public void incNbGoals(){
 
         long last = System.currentTimeMillis() - beginTime;
         nbGoals++;

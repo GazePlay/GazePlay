@@ -22,8 +22,6 @@ public abstract class Stats {
 
     protected double[][] heatMap;
 
-
-
     public ArrayList<Integer> getLengthBetweenGoals() {
         return lengthBetweenGoals;
     }
@@ -138,6 +136,15 @@ public abstract class Stats {
     public void stop() {
 
         scene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
+    }
+
+    public void incNbGoals(){
+
+        long last = System.currentTimeMillis() - beginTime;
+        nbGoals++;
+        length += last;
+        lengthBetweenGoals.add((new Long(last)).intValue());
+
     }
 
     public ArrayList<Integer> getSortedLengthBetweenGoals(){

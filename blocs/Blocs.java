@@ -93,8 +93,6 @@ public class Blocs extends Application {
 
         int value = (int)Math.floor(Math.random()*images.length);
 
-        System.out.println(value);
-
         scene.setFill(new ImagePattern(images[value]));
 
         enterEvent = buildEvent();

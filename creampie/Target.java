@@ -46,7 +46,7 @@ public class Target extends Portrait {
                 if((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)  && anniOff) {
 
                     anniOff = false;
-                    stats.incNbShoot();
+                    stats.incNbGoals();
                     enter();
                 }
             }

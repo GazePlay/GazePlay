@@ -4,6 +4,7 @@ import blocs.Blocs;
 import bubbles.Bubble;
 import creampie.CreamPie;
 import utils.games.stats.BubblesGamesStats;
+import utils.games.stats.HiddenItemsGames;
 import utils.games.stats.ShootGamesStats;
 import utils.games.stats.Stats;
 import gaze.SecondScreen;
@@ -139,7 +140,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Magic Cards (2x2)");
 
-                Card.addCards(root, scene, cbxGames,2, 2);
+                stats = new HiddenItemsGames(scene);
+
+                Card.addCards(root, scene, cbxGames,2, 2, (HiddenItemsGames)stats);
 
                 break;
             }
@@ -148,7 +151,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Magic Cards (2x3)");
 
-                Card.addCards(root, scene, cbxGames,2, 3);
+                stats = new HiddenItemsGames(scene);
+
+                Card.addCards(root, scene, cbxGames,2, 3, (HiddenItemsGames)stats);
 
                 break;
             }
@@ -157,7 +162,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Magic Cards (3x2)");
 
-                Card.addCards(root, scene, cbxGames,3, 2);
+                stats = new HiddenItemsGames(scene);
+
+                Card.addCards(root, scene, cbxGames,3, 2, (HiddenItemsGames)stats);
 
                 break;
             }
@@ -166,7 +173,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Magic Cards (3x3)");
 
-                Card.addCards(root, scene, cbxGames,3, 3);
+                stats = new HiddenItemsGames(scene);
+
+                Card.addCards(root, scene, cbxGames,3, 3, (HiddenItemsGames)stats);
 
                 break;
             }
@@ -174,6 +183,8 @@ public class GazePlay extends Application {
             case 6 :{
 
                 System.out.println("blocks (2x2)");
+
+                stats = new HiddenItemsGames(scene);
 
                 Blocs.makeBlocks(scene, root, cbxGames, 2, 2, true, 1);
 
@@ -184,6 +195,8 @@ public class GazePlay extends Application {
 
                 System.out.println("blocks (2x3)");
 
+                stats = new HiddenItemsGames(scene);
+
                 Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1);
 
                 break;
@@ -193,6 +206,8 @@ public class GazePlay extends Application {
 
                 System.out.println("blocks (3x3)");
 
+                stats = new HiddenItemsGames(scene);
+
                 Blocs.makeBlocks(scene, root, cbxGames, 3, 3, true, 1);
 
                 break;
@@ -201,6 +216,8 @@ public class GazePlay extends Application {
             case 9 : {
 
                 System.out.println("Carte à gratter");
+
+                stats = new HiddenItemsGames(scene);
 
                 Blocs.makeBlocks(scene, root, cbxGames, 10, 10, false, 0.6f);
 

@@ -13,7 +13,7 @@ public class ShootGamesStats extends Stats{
         nbUnCountedShoots = 0;
     }
 
-    public void incNbShoot(){
+    public void incNbGoals(){
 
         long last = System.currentTimeMillis() - beginTime;
         if(last>100) {
