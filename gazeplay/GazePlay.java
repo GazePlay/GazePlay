@@ -186,7 +186,7 @@ public class GazePlay extends Application {
 
                 stats = new HiddenItemsGames(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 2, 2, true, 1);
+                Blocs.makeBlocks(scene, root, cbxGames, 2, 2, true, 1, (HiddenItemsGames)stats);
 
                 break;
             }
@@ -197,7 +197,7 @@ public class GazePlay extends Application {
 
                 stats = new HiddenItemsGames(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1);
+                Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1, (HiddenItemsGames)stats);
 
                 break;
             }
@@ -208,7 +208,7 @@ public class GazePlay extends Application {
 
                 stats = new HiddenItemsGames(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 3, 3, true, 1);
+                Blocs.makeBlocks(scene, root, cbxGames, 3, 3, true, 1, (HiddenItemsGames)stats);
 
                 break;
             }
@@ -219,7 +219,7 @@ public class GazePlay extends Application {
 
                 stats = new HiddenItemsGames(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 10, 10, false, 0.6f);
+                Blocs.makeBlocks(scene, root, cbxGames, 10, 10, false, 0.6f, (HiddenItemsGames)stats);
 
                 break;
             }
@@ -255,11 +255,6 @@ public class GazePlay extends Application {
         }
 
         Utils.home(scene, root, cbxGames, stats);
-
-     //   root.getChildren().add(Utils.home(scene, root, cbxGames));
-
-
-        //System.exit(0);
     }
 
 

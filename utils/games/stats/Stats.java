@@ -9,8 +9,8 @@ import java.util.Collections;
 
 public abstract class Stats {
 
-    private final int heatMapPixelSize=5;
-    private final int trail = 2;
+    private final int heatMapPixelSize=10;
+    private final int trail = 1;
 
     protected int nbGoals;
     protected long length;

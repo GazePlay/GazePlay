@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import utils.games.Bravo;
 import utils.games.Utils;
+import utils.games.stats.HiddenItemsGames;
 
 public class Blocs extends Application {
 
@@ -62,14 +63,16 @@ public class Blocs extends Application {
 
         primaryStage.setScene(theScene);
 
-        makeBlocks(theScene, blockRoot, null, 2, 2, true, 1);
+        HiddenItemsGames stats = new HiddenItemsGames(theScene);
+
+        makeBlocks(theScene, blockRoot, null, 2, 2, true, 1, stats);
 
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns, boolean colors, float percents4Win){
+    public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns, boolean colors, float percents4Win, HiddenItemsGames stats){
 
         finished = false;
 
@@ -95,7 +98,7 @@ public class Blocs extends Application {
 
         scene.setFill(new ImagePattern(images[value]));
 
-        enterEvent = buildEvent();
+        enterEvent = buildEvent(stats);
 
         int width = (int)(scene.getWidth() / nbColomns);
         int height = (int)(scene.getHeight() / nbLines);
@@ -121,10 +124,12 @@ public class Blocs extends Application {
                 R.addEventFilter(MouseEvent.ANY, enterEvent);
 
                 R.addEventFilter(GazeEvent.ANY, enterEvent);
+
+                stats.start();
             }
     }
 
-    private static EventHandler<Event> buildEvent() {
+    private static EventHandler<Event> buildEvent(HiddenItemsGames stats) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -143,6 +148,8 @@ public class Blocs extends Application {
                     if(((float)initCount-count)/initCount >= p4w && !finished){
 
                         finished = true;
+
+                        stats.incNbGoals();
 
                         for(Node N : blockRoot.getChildren()){
 
@@ -165,8 +172,8 @@ public class Blocs extends Application {
                             @Override
                             public void handle(ActionEvent actionEvent) {
                                 Utils.clear(theScene, blockRoot, choiceBox);
-                                makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w);
-                                Utils.home(theScene, blockRoot, choiceBox,null);
+                                makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, stats);
+                                Utils.home(theScene, blockRoot, choiceBox,stats);
                             }
                         });
                     }
