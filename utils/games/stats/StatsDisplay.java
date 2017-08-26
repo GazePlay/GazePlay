@@ -48,7 +48,19 @@ public class StatsDisplay {
         totalTime.setFont(new Font(20));
         totalTime.setFill(new Color(1,1,1,1));
 
-        Text shoots = new Text("Tirs : " + stats.getNbGoals());
+        Text shoots = new Text();
+        if(stats instanceof ShootGamesStats) {
+
+            shoots = new Text("Tirs : " + stats.getNbGoals());
+        }
+        else if(stats instanceof BubblesGamesStats){
+
+            shoots = new Text("Bulles éclatées : " + stats.getNbGoals());
+        }
+        else if(stats instanceof HiddenItemsGames) {
+
+            shoots = new Text("Images découvertes : " + stats.getNbGoals());
+        }
 
         shoots.setX(100);
         shoots.setY(200);
@@ -62,12 +74,21 @@ public class StatsDisplay {
         length.setFont(new Font(20));
         length.setFill(new Color(1,1,1,1));
 
-        Text averageLength = new Text("Temps de réaction moyen : " + convert(stats.getAverageLength()));
+        Text averageLength = new Text();
+
+        if(stats instanceof ShootGamesStats) {
+
+            averageLength = new Text("Temps de réaction moyen : " + convert(stats.getAverageLength()));
+        }
+        else if(stats instanceof HiddenItemsGames || stats instanceof BubblesGamesStats) {
+
+            averageLength = new Text("Temps moyen : " + convert(stats.getAverageLength()));
+        }
 
         averageLength.setX(100);
         averageLength.setY(300);
         averageLength.setFont(new Font(20));
-        averageLength.setFill(new Color(1,1,1,1));
+        averageLength.setFill(new Color(1, 1, 1, 1));
 
         Text standDev = new Text("Écart-type : " + convert((long)stats.getSD()));
 
