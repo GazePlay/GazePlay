@@ -26,6 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsDisplay {
 
+    private static String heatMapFileName = "java-heat-chart.png";
+
     public static void displayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames){
 
         stats.stop();
@@ -201,22 +203,21 @@ public class StatsDisplay {
         map.setShowYAxisValues(false);
         map.setChartMargin(0);
 
-        // Step 2: Customise the chart.
-       // map.setTitle("This is my heat chart title");
-       // map.setXAxisLabel("X Axis");
-       // map.setYAxisLabel("Y Axis");
+        File F = new File(Utils.getTempFolder());
+
+        String heatMapPath = Utils.getTempFolder() + heatMapFileName;
+
+        File saveFile = new File(heatMapPath);
 
         try {
-            map.saveToFile(new File("/Users/schwab/Documents/TET-Communicator/src/java-heat-chart.png"));
+            map.saveToFile(saveFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         Rectangle heatMap = new Rectangle();
-        //Rectangle heatMap = new Rectangle();
-        //heatMap.setVisible(true);
 
-        heatMap.setFill(new ImagePattern(new Image("file:/Users/schwab/Documents/TET-Communicator/src/java-heat-chart.png"),0,0,1,1, true));
+        heatMap.setFill(new ImagePattern(new Image("file:" + heatMapPath),0,0,1,1, true));
 
         EventHandler<Event> openHeatMapEvent = openHeatMap(heatMap, scene);
 

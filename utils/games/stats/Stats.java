@@ -51,8 +51,6 @@ public abstract class Stats {
                 int x = ((int)e.getY()/heatMapPixelSize);
                 int y = ((int)e.getX()/heatMapPixelSize);
 
-              //  System.out.println(x + ", " + y);
-
                 inc(x,y);
 
                 for(int i = -trail; i<= trail; i++)

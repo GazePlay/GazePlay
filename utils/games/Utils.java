@@ -31,6 +31,8 @@ public class Utils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
 
+    private static String tempFolder = "temp";
+
     private static Bravo bravo = new Bravo();
 
     public static Image[] getImages(String folder) {
@@ -269,5 +271,23 @@ public class Utils {
         Media media = new Media(path);
         MediaPlayer mp = new MediaPlayer(media);
         mp.play();
+    }
+
+    /**
+     *
+     * @return Default directory for GazePlay : in user's home directory, in a folder called GazePlay
+     */
+    public static String getGazePlayFolder(){
+
+        return System.getProperties().getProperty("user.home") + FILESEPARATOR +"GazePlay"+ FILESEPARATOR;
+    }
+
+    /**
+     *
+     * @return Temp directory for GazePlay : in the default directory of GazePlay, a folder called Temp
+     */
+    public static String getTempFolder(){
+
+        return getGazePlayFolder()+tempFolder+FILESEPARATOR;
     }
 }
