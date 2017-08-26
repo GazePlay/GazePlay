@@ -248,6 +248,8 @@ public class Utils {
         }
         else{
 
+            System.out.println("folder doesn't exit : " + folder);
+
             Image[] defaultImages = new Image[10];
             defaultImages[0] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/animal-807308_1920.png"));
             defaultImages[1] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/bulldog-1047518_1920.jpg"));
@@ -289,5 +291,25 @@ public class Utils {
     public static String getTempFolder(){
 
         return getGazePlayFolder()+tempFolder+FILESEPARATOR;
+    }
+
+    /**
+     *
+     * @return images directory for GazePlay : in the default directory of GazePlay, in a folder called files another folder called images
+     */
+
+    public static String getImagesFolder(){
+
+        return getGazePlayFolder() + "files" +FILESEPARATOR + "images" + FILESEPARATOR;
+    }
+
+    /**
+     *
+     * @return images directory for GazePlay : in the default directory of GazePlay, in a folder called files another folder called images
+     */
+
+    public static String getSoundsFolder(){
+
+        return getGazePlayFolder() + "files" + FILESEPARATOR + "sounds" + FILESEPARATOR;
     }
 }

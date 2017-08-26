@@ -13,7 +13,7 @@ public class Portrait extends Circle {
     protected static final int maxY = 500;
     protected int radius = 100;
 
-    private final static Image[] photos = Utils.images(System.getProperties().getProperty("user.home")+ Utils.FILESEPARATOR +"GazePlay"+ Utils.FILESEPARATOR +"files"+ Utils.FILESEPARATOR +"images"+ Utils.FILESEPARATOR +"portraits");
+    private final static Image[] photos = Utils.images(Utils.getImagesFolder() + "portraits");
 
     public Portrait(int radius) {
 

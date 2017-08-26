@@ -92,8 +92,6 @@ public class Blocs extends Application {
 
         blockRoot.getChildren().add(bravo);
 
-        System.out.println(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
-
         int value = (int)Math.floor(Math.random()*images.length);
 
         scene.setFill(new ImagePattern(images[value]));

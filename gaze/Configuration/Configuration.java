@@ -1,6 +1,8 @@
 package gaze.Configuration;
 
 
+import utils.games.Utils;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,11 +21,7 @@ public class Configuration {
         final Properties prop = new Properties();
         InputStream input = null;
 
-
-
-        String fileSeparator = System.getProperties().getProperty("file.separator");
-
-        String configPath = System.getProperties().getProperty("user.home")+ fileSeparator +"GazePlay"+fileSeparator+"TET.properties";
+        String configPath = Utils.getGazePlayFolder()+"TET.properties";
 
         try {
             input = new FileInputStream(configPath);

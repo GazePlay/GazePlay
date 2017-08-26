@@ -51,7 +51,7 @@ public class Card extends Parent {
     HiddenItemsGames stats;
     Bravo bravo = new Bravo();
 
-    final static Image[] images = Utils.images(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"magiccards"+Utils.FILESEPARATOR);
+    final static Image[] images = Utils.images(Utils.getImagesFolder()+"magiccards"+Utils.FILESEPARATOR);
 
     EventHandler<Event> enterEvent;
     boolean anniOff = true;
@@ -209,7 +209,6 @@ public class Card extends Parent {
                                 timeline.play();
 
                                 indicator.setOpacity(0);
-
                             }
                         }
                     });
