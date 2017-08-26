@@ -26,8 +26,6 @@ import utils.games.Home;
 import utils.games.Utils;
 import utils.games.stats.HiddenItemsGames;
 
-import java.util.Date;
-
 /**
  * Created by schwab on 17/09/2016.
  */
@@ -40,7 +38,8 @@ public class Card extends Parent {
     private Rectangle card;
     private boolean winner;
     private Image image;
-    private boolean found;
+    private boolean toTurn = false;//true if the card is about to be turned (ie player gaze is on it and progress bar is increasing)
+    private boolean turned = false;//true if the card has been turned
     int nbLines;
     int nbColumns;
     private double initWidth;
@@ -59,7 +58,7 @@ public class Card extends Parent {
 
     public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image, boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGames stats){
 
-        this.winner = winner;
+        this.winner = winner;//true if it is the good card
         this.initWidth=width;
         this.initHeight=height;
         this.scene = scene;
@@ -108,11 +107,9 @@ public class Card extends Parent {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-/*
-                if (anim0ff) {
 
+                if(turned)
                     return;
-                }*/
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
@@ -136,17 +133,24 @@ public class Card extends Parent {
 
                     sequence.play();
 
-                    found = true;
+                    toTurn = true;
 
                     sequence.setOnFinished(new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent actionEvent) {
 
-                            if (!found)
+                            if(!toTurn){// la carte n'est plus à tourner quand l'évènement est terminé.
+
                                 return;
+                            }
+
+                            turned = true;
 
                             card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+
+                            card.removeEventFilter(MouseEvent.ANY, enterEvent);
+                            card.removeEventFilter(GazeEvent.ANY, enterEvent);
 
                             if (winner) {
 
@@ -165,10 +169,10 @@ public class Card extends Parent {
                                         N.setTranslateX(-10000);
                                         N.setOpacity(0);
                                         N.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                        N.removeEventFilter(GazeEvent.ANY, enterEvent);
                                     } else {//we keep only Bravo and winning card
                                     }
                                 }
-
 
                                 timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth() * final_zoom)));
                                 timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight() * final_zoom)));
@@ -207,16 +211,11 @@ public class Card extends Parent {
                                 indicator.setOpacity(0);
 
                             }
-
-                      /*   else {
-
-
-                        }*/
                         }
                     });
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                    found = false;
+                    toTurn = false;
 
                     Timeline timeline = new Timeline();
 

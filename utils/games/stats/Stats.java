@@ -56,7 +56,6 @@ public abstract class Stats {
                 for(int i = -trail; i<= trail; i++)
                     for(int j = -trail; j<= trail; j++){
 
-                        System.out.println(Math.sqrt(i*i+j*j));
                         if(Math.sqrt(i*i+j*j)<trail)
                             inc(x+i,y+j);
                     }
