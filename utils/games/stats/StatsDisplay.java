@@ -203,7 +203,8 @@ public class StatsDisplay {
         map.setShowYAxisValues(false);
         map.setChartMargin(0);
 
-        File F = new File(Utils.getTempFolder());
+        //creation of temp folder if it doesn't already exist.
+        (new File(Utils.getTempFolder())).mkdir();
 
         String heatMapPath = Utils.getTempFolder() + heatMapFileName;
 

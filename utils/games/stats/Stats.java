@@ -9,8 +9,8 @@ import java.util.Collections;
 
 public abstract class Stats {
 
-    private final int heatMapPixelSize=10;
-    private final int trail = 1;
+    private final int heatMapPixelSize=5;
+    private final int trail = 10;
 
     protected int nbGoals;
     protected long length;
@@ -51,14 +51,16 @@ public abstract class Stats {
                 int x = ((int)e.getY()/heatMapPixelSize);
                 int y = ((int)e.getX()/heatMapPixelSize);
 
-                inc(x,y);
+                //inc(x,y);
 
                 for(int i = -trail; i<= trail; i++)
                     for(int j = -trail; j<= trail; j++){
 
-                        inc(x+i,y+j);
+                        System.out.println(Math.sqrt(i*i+j*j));
+                        if(Math.sqrt(i*i+j*j)<trail)
+                            inc(x+i,y+j);
                     }
-                inc(x,y);
+                //inc(x,y);
             }
         };
     }

@@ -21,6 +21,7 @@ import magiccards.Card;
 import ninja.Ninja;
 import utils.games.Utils;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 
@@ -60,6 +61,9 @@ public class GazePlay extends Application {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
+        //creation of GazePlay default folder if it does not exist.
+        (new File(Utils.getGazePlayFolder())).mkdir();
 
         primaryStage.setTitle("GazePlay");
 
