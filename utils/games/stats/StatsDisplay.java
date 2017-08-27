@@ -26,8 +26,6 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsDisplay {
 
-    private static String heatMapFileName = "java-heat-chart.png";
-
     public static void displayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames){
 
         stats.stop();
@@ -119,6 +117,8 @@ public class StatsDisplay {
         heatChart.setHeight(scene.getHeight()*0.35);
 
         root.getChildren().addAll(statistics, shoots, totalTime, length, averageLength, standDev, UncountedShoot, chart, heatChart);
+
+        stats.saveStats();
 
         Utils.home(scene, root, cbxGames, null);
     }
@@ -214,32 +214,9 @@ public class StatsDisplay {
 
         double[][] data = stats.getHeatMap();
 
-        // Step 1: Create our heat map chart using our data.
-        HeatChart map = new HeatChart(data);
-
-        map.setHighValueColour(java.awt.Color.RED);
-        map.setLowValueColour(java.awt.Color.lightGray);
-
-        map.setShowXAxisValues(false);
-        map.setShowYAxisValues(false);
-        map.setChartMargin(0);
-
-        //creation of temp folder if it doesn't already exist.
-        (new File(Utils.getTempFolder())).mkdir();
-
-        String heatMapPath = Utils.getTempFolder() + heatMapFileName;
-
-        File saveFile = new File(heatMapPath);
-
-        try {
-            map.saveToFile(saveFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         Rectangle heatMap = new Rectangle();
 
-        heatMap.setFill(new ImagePattern(new Image("file:" + heatMapPath),0,0,1,1, true));
+        heatMap.setFill(new ImagePattern(new Image("file:" + Utils.getHeatMapPath()),0,0,1,1, true));
 
         EventHandler<Event> openHeatMapEvent = openHeatMap(heatMap, scene);
 

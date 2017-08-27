@@ -3,7 +3,16 @@ package utils.games.stats;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import utils.games.Utils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -11,6 +20,8 @@ public abstract class Stats {
 
     private final int heatMapPixelSize=5;
     private final int trail = 10;
+
+    protected String gameName;
 
     protected int nbGoals;
     protected long length;
@@ -37,6 +48,61 @@ public abstract class Stats {
         recordMouseMovements = buildRecordMouseMovements();
         scene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
         heatMap = new double[(int)scene.getHeight()/heatMapPixelSize][(int)scene.getWidth()/heatMapPixelSize];
+    }
+
+    protected void saveRawHeatMap(File file){
+
+        PrintWriter out = null;
+
+        try {
+            out = new PrintWriter(file);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for(int i = 0; i < heatMap.length; i++){
+
+            for(int j = 0; j < heatMap[0].length-1; j++) {
+
+                out.print((int)heatMap[i][j]);
+                out.print(", ");
+            }
+
+            out.print((int)heatMap[i][heatMap[i].length-1]);
+            out.println("");
+        }
+        out.flush();
+    }
+
+    public void savePNGHeatMap(File destination){
+
+        Path HeatMapPath = Paths.get(Utils.getHeatMapPath());
+        Path dest= Paths.get(destination.getAbsolutePath());
+
+        try {
+            Files.copy(HeatMapPath, dest, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveStats(){
+
+        File saveFile = new File(Utils.getStatsFolder());
+        saveFile.mkdir();
+
+        File gameFolder = new File(Utils.getStatsFolder()+gameName);
+        gameFolder.mkdir();
+
+        File savepath = new File(gameFolder.getAbsoluteFile() + Utils.FILESEPARATOR + Utils.today());
+        savepath.mkdir();
+
+        File heatMapCSVPath = new File(savepath.getAbsoluteFile() + Utils.FILESEPARATOR + Utils.now()+"-heatmap.csv");
+        File heatMapPNGPath = new File(savepath.getAbsoluteFile() + Utils.FILESEPARATOR + Utils.now()+"-heatmap.png");
+
+        saveRawHeatMap(heatMapCSVPath);
+        savePNGHeatMap(heatMapPNGPath);
     }
 
     private EventHandler<MouseEvent> buildRecordMouseMovements() {

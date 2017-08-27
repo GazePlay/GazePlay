@@ -7,6 +7,7 @@ public class BubblesGamesStats extends Stats{
     public BubblesGamesStats(Scene scene) {
 
         super(scene);
+        this.gameName = "bubbles";
     }
 
     public void incNbGoals(){
@@ -16,4 +17,10 @@ public class BubblesGamesStats extends Stats{
         length += last;
         lengthBetweenGoals.add((new Long(last)).intValue());
     }
+
+    @Override
+    public void saveStats() {
+        super.saveStats();
+    }
+
 }

@@ -16,13 +16,17 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import org.tc33.jheatchart.HeatChart;
 import utils.games.stats.Stats;
 import utils.games.stats.StatsDisplay;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by schwab on 23/12/2016.
@@ -30,10 +34,11 @@ import java.util.ArrayList;
 public class Utils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
+    private static final String heatMapFileName = "java-heat-chart.png";
 
-    private static String tempFolder = "temp";
+    private static final String tempFolder = "temp";
 
-    private static Bravo bravo = new Bravo();
+    private static final Bravo bravo = new Bravo();
 
     public static Image[] getImages(String folder) {
 
@@ -305,11 +310,87 @@ public class Utils {
 
     /**
      *
-     * @return images directory for GazePlay : in the default directory of GazePlay, in a folder called files another folder called images
+     * @return sounds directory for GazePlay : in the default directory of GazePlay, in a folder called files another folder called sounds
      */
 
     public static String getSoundsFolder(){
 
         return getGazePlayFolder() + "files" + FILESEPARATOR + "sounds" + FILESEPARATOR;
+    }
+
+    /**
+     *
+     * @return statistics directory for GazePlay : in the default directory of GazePlay, in a folder called statistics
+     */
+
+    public static String getStatsFolder(){
+
+        return getGazePlayFolder() + "statistics" + FILESEPARATOR;
+    }
+
+    /**
+     *
+     * @return current date with respect to the format yyyy-MM-dd
+     */
+    public static String today(){
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        return dateFormat.format(date);
+
+    }
+
+    /**
+     *
+     * @return current time with respect to the format yyyy-MM-dd-HH-MM-ss
+     */
+    public static String now(){
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+
+    }
+
+    public static void save(String S, File F){
+
+        try {
+            PrintWriter out = new PrintWriter(F);
+
+            out.println(S);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void buildHeatMap(double[][] data){
+
+        // Step 1: Create our heat map chart using our data.
+        HeatChart map = new HeatChart(data);
+
+        map.setHighValueColour(java.awt.Color.RED);
+        map.setLowValueColour(java.awt.Color.lightGray);
+
+        map.setShowXAxisValues(false);
+        map.setShowYAxisValues(false);
+        map.setChartMargin(0);
+
+        //creation of temp folder if it doesn't already exist.
+        (new File(Utils.getTempFolder())).mkdir();
+
+        String heatMapPath = Utils.getTempFolder() + heatMapFileName;
+
+        File saveFile = new File(heatMapPath);
+
+        try {
+            map.saveToFile(saveFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getHeatMapPath(){
+
+        return Utils.getTempFolder() + heatMapFileName;
     }
 }

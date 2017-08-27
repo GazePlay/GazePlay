@@ -1,6 +1,9 @@
 package utils.games.stats;
 
 import javafx.scene.Scene;
+import utils.games.Utils;
+
+import java.io.File;
 
 public class ShootGamesStats extends Stats{
 
@@ -28,6 +31,12 @@ public class ShootGamesStats extends Stats{
 
     public int getNbUnCountedShoots() {
         return nbUnCountedShoots;
+    }
+
+    @Override
+    public void saveStats(){
+
+        super.saveStats();
     }
 
 
