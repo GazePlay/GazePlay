@@ -16,11 +16,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.tc33.jheatchart.HeatChart;
 import utils.games.Utils;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -55,7 +52,7 @@ public class StatsDisplay {
 
             shoots = new Text("Bulles éclatées : " + stats.getNbGoals());
         }
-        else if(stats instanceof HiddenItemsGames) {
+        else if(stats instanceof HiddenItemsGamesStats) {
 
             shoots = new Text("Images découvertes : " + stats.getNbGoals());
         }
@@ -78,7 +75,7 @@ public class StatsDisplay {
 
             averageLength = new Text("Temps de réaction moyen : " + convert(stats.getAverageLength()));
         }
-        else if(stats instanceof HiddenItemsGames || stats instanceof BubblesGamesStats) {
+        else if(stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
 
             averageLength = new Text("Temps moyen : " + convert(stats.getAverageLength()));
         }

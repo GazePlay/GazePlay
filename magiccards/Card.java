@@ -24,7 +24,7 @@ import javafx.util.Duration;
 import utils.games.Bravo;
 import utils.games.Home;
 import utils.games.Utils;
-import utils.games.stats.HiddenItemsGames;
+import utils.games.stats.HiddenItemsGamesStats;
 
 /**
  * Created by schwab on 17/09/2016.
@@ -48,7 +48,7 @@ public class Card extends Parent {
     private ChoiceBox choiceBox;
     private Group root;
     ProgressIndicator indicator;
-    HiddenItemsGames stats;
+    HiddenItemsGamesStats stats;
     Bravo bravo = new Bravo();
 
     final static Image[] images = Utils.images(Utils.getImagesFolder()+"magiccards"+Utils.FILESEPARATOR);
@@ -56,7 +56,7 @@ public class Card extends Parent {
     EventHandler<Event> enterEvent;
     boolean anniOff = true;
 
-    public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image, boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGames stats){
+    public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image, boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGamesStats stats){
 
         this.winner = winner;//true if it is the good card
         this.initWidth=width;
@@ -231,7 +231,7 @@ public class Card extends Parent {
         };
     }
 
-    public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbLines, int nbColumns, HiddenItemsGames stats) {
+    public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbLines, int nbColumns, HiddenItemsGamesStats stats) {
 
         double cardHeight = computeCardHeight(scene, nbLines);
         double cardWidth = cardHeight * cardRatio;

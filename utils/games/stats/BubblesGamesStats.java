@@ -22,5 +22,4 @@ public class BubblesGamesStats extends Stats{
     public void saveStats() {
         super.saveStats();
     }
-
 }

@@ -11,7 +11,6 @@ import gaze.SecondScreen;
 import javafx.animation.SequentialTransition;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ChoiceBox;
-import utils.games.Home;
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -27,7 +26,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import utils.games.Bravo;
 import utils.games.Utils;
-import utils.games.stats.HiddenItemsGames;
+import utils.games.stats.HiddenItemsGamesStats;
 
 public class Blocs extends Application {
 
@@ -63,7 +62,7 @@ public class Blocs extends Application {
 
         primaryStage.setScene(theScene);
 
-        HiddenItemsGames stats = new HiddenItemsGames(theScene);
+        HiddenItemsGamesStats stats = new HiddenItemsGamesStats(theScene);
 
         makeBlocks(theScene, blockRoot, null, 2, 2, true, 1, stats);
 
@@ -72,7 +71,7 @@ public class Blocs extends Application {
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns, boolean colors, float percents4Win, HiddenItemsGames stats){
+    public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns, boolean colors, float percents4Win, HiddenItemsGamesStats stats){
 
         finished = false;
 
@@ -127,7 +126,7 @@ public class Blocs extends Application {
             }
     }
 
-    private static EventHandler<Event> buildEvent(HiddenItemsGames stats) {
+    private static EventHandler<Event> buildEvent(HiddenItemsGamesStats stats) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {

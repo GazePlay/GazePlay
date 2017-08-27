@@ -4,12 +4,10 @@ import gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import utils.games.stats.HiddenItemsGames;
+import utils.games.stats.HiddenItemsGamesStats;
 
 /**
  * Created by schwab on 17/09/2016.
@@ -27,7 +25,7 @@ public class MagicCards  extends Application {
 
         Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
-        HiddenItemsGames stats = new HiddenItemsGames(scene);
+        HiddenItemsGamesStats stats = new HiddenItemsGamesStats(scene);
 
         Card.addCards(root, scene, null,2, 2, stats);
 

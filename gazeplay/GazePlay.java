@@ -141,9 +141,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Magic Cards (2x2)");
 
-                stats = new HiddenItemsGames(scene);
+                stats = new MagicCardsGamesStats(scene);
 
-                Card.addCards(root, scene, cbxGames,2, 2, (HiddenItemsGames)stats);
+                Card.addCards(root, scene, cbxGames,2, 2, (HiddenItemsGamesStats)stats);
 
                 break;
             }
@@ -152,9 +152,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Magic Cards (2x3)");
 
-                stats = new HiddenItemsGames(scene);
+                stats = new MagicCardsGamesStats(scene);
 
-                Card.addCards(root, scene, cbxGames,2, 3, (HiddenItemsGames)stats);
+                Card.addCards(root, scene, cbxGames,2, 3, (HiddenItemsGamesStats)stats);
 
                 break;
             }
@@ -163,9 +163,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Magic Cards (3x2)");
 
-                stats = new HiddenItemsGames(scene);
+                stats = new MagicCardsGamesStats(scene);
 
-                Card.addCards(root, scene, cbxGames,3, 2, (HiddenItemsGames)stats);
+                Card.addCards(root, scene, cbxGames,3, 2, (HiddenItemsGamesStats)stats);
 
                 break;
             }
@@ -174,9 +174,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Magic Cards (3x3)");
 
-                stats = new HiddenItemsGames(scene);
+                stats = new MagicCardsGamesStats(scene);
 
-                Card.addCards(root, scene, cbxGames,3, 3, (HiddenItemsGames)stats);
+                Card.addCards(root, scene, cbxGames,3, 3, (HiddenItemsGamesStats)stats);
 
                 break;
             }
@@ -185,9 +185,9 @@ public class GazePlay extends Application {
 
                 System.out.println("blocks (2x2)");
 
-                stats = new HiddenItemsGames(scene);
+                stats = new BlocsGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 2, 2, true, 1, (HiddenItemsGames)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 2, 2, true, 1, (HiddenItemsGamesStats)stats);
 
                 break;
             }
@@ -196,9 +196,9 @@ public class GazePlay extends Application {
 
                 System.out.println("blocks (2x3)");
 
-                stats = new HiddenItemsGames(scene);
+                stats = new BlocsGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1, (HiddenItemsGames)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1, (HiddenItemsGamesStats)stats);
 
                 break;
             }
@@ -207,9 +207,9 @@ public class GazePlay extends Application {
 
                 System.out.println("blocks (3x3)");
 
-                stats = new HiddenItemsGames(scene);
+                stats = new BlocsGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 3, 3, true, 1, (HiddenItemsGames)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 3, 3, true, 1, (HiddenItemsGamesStats)stats);
 
                 break;
             }
@@ -218,9 +218,9 @@ public class GazePlay extends Application {
 
                 System.out.println("Carte à gratter");
 
-                stats = new HiddenItemsGames(scene);
+                stats = new ScratchcardGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 10, 10, false, 0.6f, (HiddenItemsGames)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 10, 10, false, 0.6f, (HiddenItemsGamesStats)stats);
 
                 break;
             }
