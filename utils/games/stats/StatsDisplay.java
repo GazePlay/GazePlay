@@ -18,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import utils.games.Utils;
 
+import javax.rmi.CORBA.Util;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -209,7 +210,7 @@ public class StatsDisplay {
 
     private static Rectangle BuildHeatChart(Stats stats, Scene scene){
 
-        double[][] data = stats.getHeatMap();
+        Utils.buildHeatMap(stats.getHeatMap());
 
         Rectangle heatMap = new Rectangle();
 

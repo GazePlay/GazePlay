@@ -342,6 +342,30 @@ public class Utils {
 
     /**
      *
+     * @return current date with respect to the format dd/MM/yyyy
+     */
+    public static String todayCSV(){
+
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        return dateFormat.format(date);
+
+    }
+
+    /**
+     *
+     * @return current time with respect to the format HH:MM:ss
+     */
+    public static String time(){
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:MM:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+
+    }
+
+    /**
+     *
      * @return current time with respect to the format yyyy-MM-dd-HH-MM-ss
      */
     public static String now(){

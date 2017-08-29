@@ -37,6 +37,14 @@ public abstract class Stats {
         return lengthBetweenGoals;
     }
 
+    public void printLengthBetweenGoalsToString(PrintWriter out){
+
+        for(Integer I : lengthBetweenGoals) {
+            out.print(I.intValue());
+            out.print(',');
+        }
+    }
+
     public Stats(Scene scene) {
 
         this.scene = scene;
@@ -236,5 +244,10 @@ public abstract class Stats {
         }
 
         return normalList;
+    }
+
+    protected String getTodayFolder(){
+
+        return Utils.getStatsFolder() + gameName + Utils.FILESEPARATOR + Utils.today() + Utils.FILESEPARATOR;
     }
 }
