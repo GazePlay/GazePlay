@@ -417,4 +417,18 @@ public class Utils {
 
         return Utils.getTempFolder() + heatMapFileName;
     }
+
+    public static PrintWriter getInfoStatsFile(String folder) {
+
+        PrintWriter out = null;
+
+        try {
+            out = new PrintWriter(folder+ Utils.now()+"-info-game.csv");
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return out;
+    }
 }

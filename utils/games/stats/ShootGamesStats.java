@@ -40,14 +40,7 @@ public class ShootGamesStats extends Stats{
 
         super.saveStats();
 
-        PrintWriter out = null;
-
-        try {
-            out = new PrintWriter(getTodayFolder()+Utils.now()+"-info-game.csv");
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        PrintWriter out = Utils.getInfoStatsFile(getTodayFolder());
 
         out.print("Date");
         out.print(',');

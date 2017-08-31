@@ -2,7 +2,7 @@ package utils.games.stats;
 
 import javafx.scene.Scene;
 
-public class BubblesGamesStats extends Stats{
+public class BubblesGamesStats extends ShootGamesStats{
 
     public BubblesGamesStats(Scene scene) {
 
@@ -16,10 +16,5 @@ public class BubblesGamesStats extends Stats{
         nbGoals++;
         length += last;
         lengthBetweenGoals.add((new Long(last)).intValue());
-    }
-
-    @Override
-    public void saveStats() {
-        super.saveStats();
     }
 }
