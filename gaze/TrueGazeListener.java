@@ -44,19 +44,20 @@ class TrueGazeListener implements IGazeListener {
             javafx.geometry.Point2D p = gi.getNode().sceneToLocal(gazeData.rawCoordinates.x,gazeData.rawCoordinates.y);
 
 
+
             //if(gi.getShape().contains(gazeData.rawCoordinates.x,gazeData.rawCoordinates.y)){
             if(gi.getNode().contains(p)){
 
                 if(gi.isOn()){
 
-                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime()));
+                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), gazeData.rawCoordinates.x,gazeData.rawCoordinates.y));
                     //System.out.println(GazeEvent.GAZE_MOVED + " : " + gi.getShape());
                 }
                 else {
 
                     gi.setOn(true);
                     gi.setTime((new Date()).getTime());
-                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED));
+                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), gazeData.rawCoordinates.x,gazeData.rawCoordinates.y));
                     //System.out.println(GazeEvent.GAZE_ENTERED + " : " + gi.getShape());
                 }
             }
@@ -66,7 +67,7 @@ class TrueGazeListener implements IGazeListener {
 
                     gi.setOn(false);
                     gi.setTime(-1);
-                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED));
+                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), gazeData.rawCoordinates.x,gazeData.rawCoordinates.y));
                     //System.out.println(GazeEvent.GAZE_EXITED + " : " + gi.getShape());
                 }
                 else{//gaze was not on the shape previously

@@ -4,6 +4,7 @@ package gaze;
  * Created by schwab on 14/08/2016.
  */
 
+import com.theeyetribe.clientsdk.IGazeListener;
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
@@ -11,7 +12,9 @@ import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 
 
-public class    GazeEvent extends Event {
+public class GazeEvent extends Event {
+
+    static IGazeListener gazeListener;
 
     public static final EventType<GazeEvent> ANY =
             new EventType<GazeEvent>(Event.ANY, "GAZE");
@@ -26,6 +29,10 @@ public class    GazeEvent extends Event {
             new EventType<>(GazeEvent.ANY, "GAZE_MOVED");
 
     private long time;
+
+    private double X;
+
+    private double Y;
 
     /**
      * Creates a new {@code LightningEvent} with an event type of {@code PLASMA_STRIKE}.
@@ -49,6 +56,13 @@ public class    GazeEvent extends Event {
 
     }
 
+    public GazeEvent(EventType<GazeEvent> et, long time, double X, double Y) {
+        super(et);
+        this.time = time;
+        this.X = X;
+        this.Y = Y;
+    }
+
     /**
      * Construct a new {@code LightningEvent} with the specified event source and Target.
      * If the source or Target is set to {@code null}, it is replaced by the
@@ -70,6 +84,16 @@ public class    GazeEvent extends Event {
     @Override
     public EventType<? extends GazeEvent> getEventType() {
         return (EventType<? extends GazeEvent>) super.getEventType();
+    }
+
+    public double getX(){
+
+        return X;
+    }
+
+    public double getY(){
+
+        return Y;
     }
 
 }

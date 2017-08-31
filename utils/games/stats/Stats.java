@@ -1,5 +1,6 @@
 package utils.games.stats;
 
+import gaze.GazeEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
@@ -30,6 +31,7 @@ public abstract class Stats {
     protected ArrayList<Integer> lengthBetweenGoals;
     protected Scene scene;
     protected EventHandler<MouseEvent> recordMouseMovements;
+    protected EventHandler<GazeEvent> recordGazeMovements;
 
     protected double[][] heatMap;
 
@@ -54,7 +56,9 @@ public abstract class Stats {
         zeroTime = System.currentTimeMillis();
         lengthBetweenGoals = new ArrayList<Integer>(1000);
         recordMouseMovements = buildRecordMouseMovements();
+        recordGazeMovements = buildRecordGazeMovements();
         scene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+        scene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
         heatMap = new double[(int)scene.getHeight()/heatMapPixelSize][(int)scene.getWidth()/heatMapPixelSize];
     }
 
@@ -111,6 +115,30 @@ public abstract class Stats {
 
         saveRawHeatMap(heatMapCSVPath);
         savePNGHeatMap(heatMapPNGPath);
+    }
+
+    private EventHandler<GazeEvent> buildRecordGazeMovements(){
+
+        return new EventHandler<GazeEvent>() {
+
+            @Override
+            public void handle(GazeEvent e) {
+
+
+                //in heatChart, x and y are opposed
+                int x = ((int)e.getY()/heatMapPixelSize);
+                int y = ((int)e.getX()/heatMapPixelSize);
+
+                //inc(x,y);
+
+                for(int i = -trail; i<= trail; i++)
+                    for(int j = -trail; j<= trail; j++){
+
+                        if(Math.sqrt(i*i+j*j)<trail)
+                            inc(x+i,y+j);
+                    }
+            }
+        };
     }
 
     private EventHandler<MouseEvent> buildRecordMouseMovements() {
@@ -240,7 +268,6 @@ public abstract class Stats {
                 normalList.set(nbElements -1 - j, sortedList.get(i));
                 j++;
             }
-
         }
 
         return normalList;

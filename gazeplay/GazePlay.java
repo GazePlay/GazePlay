@@ -102,7 +102,7 @@ public class GazePlay extends Application {
 
         primaryStage.show();
 
-        SecondScreen secondScreen = SecondScreen.launch();
+      //  SecondScreen secondScreen = SecondScreen.launch();
     }
 
     private void chooseGame(Number value) {

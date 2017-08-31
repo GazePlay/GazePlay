@@ -68,5 +68,4 @@ public class GazeUtils {
             nodesEventHandler.remove(i);
         }
     }
-
 }
