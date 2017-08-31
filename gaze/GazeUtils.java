@@ -68,4 +68,8 @@ public class GazeUtils {
             nodesEventHandler.remove(i);
         }
     }
+
+    public static boolean isOn() {
+        return GazeManager.getInstance().activate();
+    }
 }

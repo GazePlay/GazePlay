@@ -1,6 +1,8 @@
 package utils.games.stats;
 
+import com.theeyetribe.clientsdk.GazeManager;
 import gaze.GazeEvent;
+import gaze.GazeUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
@@ -55,10 +57,17 @@ public abstract class Stats {
         length = 0;
         zeroTime = System.currentTimeMillis();
         lengthBetweenGoals = new ArrayList<Integer>(1000);
-        recordMouseMovements = buildRecordMouseMovements();
-        recordGazeMovements = buildRecordGazeMovements();
-        scene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
-        scene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+
+        if(GazeUtils.isOn()){
+
+            recordGazeMovements = buildRecordGazeMovements();
+            scene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+        }
+        else {
+
+            recordMouseMovements = buildRecordMouseMovements();
+            scene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+        }
         heatMap = new double[(int)scene.getHeight()/heatMapPixelSize][(int)scene.getWidth()/heatMapPixelSize];
     }
 
@@ -236,7 +245,14 @@ public abstract class Stats {
 
     public void stop() {
 
-        scene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
+        if(GazeUtils.isOn()){
+
+            scene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
+        }
+        else {
+
+            scene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
+        }
     }
 
     public void incNbGoals(){
