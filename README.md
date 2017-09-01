@@ -28,6 +28,8 @@ Ces jeux offrent au moins deux avantages à l'individu :
 
 2) lui permettre d'entraîner son regard afin de lui offrir la possibilité d'acquérir des interactions plus complexes. Il s’agit ainsi d’une première étape visant la possibilité de mettre en place une véritable communication basée sur des pictogrammes par exemple.
 
+GazePlay intègre des statistiques destinées à vérifier les progrès du joueur.
+
 ## Jeux
 
 Ils sont actuellement 12 jeux (dont 6 variantes).
@@ -110,6 +112,21 @@ Dans ce répertoire, il faudra créer un répertoire *images* dans lequel vous a
 2) *magiccards* : contient les images utilisées par *cartes magique*. Toutes les tailles d'image conviennent.
 
 3) *blocs* : contient les images utilisées par *blocs* et par *cartes à gratter*. Choisir des images assez grandes (idéalement au moins la taille de l'écran).
+
+## Statistiques
+
+À la fin d'une partie, ses statistiques sont affichées. Elles intègrent deux diagrammes cliquables :
+
+1) Un diagramme en ligne qui présente le temps pour chaque coup (suivant les jeux, temps pour cibler un portrait, temps pour trouver/dévoiler l'image,...). Le diagramme présente également la moyenne et l'écart-type sur la partie.
+2) Une carte de chaleur qui indique les zones de l'écran où les yeux sont passés pendant la partie. Plus la zone est rouge plus les yeux sont passés sur la zone. 
+
+![Statistiques](README/images/statistics.jpg)
+
+L'ensemble des statistiques sont enregistrés dans le répertoire de GazePlay. Dans un répertoire *statistics*, les statistiques sont classées par jeu puis par date. Trois fichiers sont enregistrés :
+1) *heatmap.csv* : La carte de chaleur sous forme brute. Ce fichier csv peut-être ouvert avec un tableur comme LibreOffice.org Calc, logiciel libre et gratuit ou les classiques Microsoft Excel, Apple Numbers,...).
+2) *heatmap.png* : La carte de chaleur sous forme d'image.
+3) *info-game.csv* : Les statistiques de la partie dans un fichier csv. 
+
 
 ## Contributions
 
