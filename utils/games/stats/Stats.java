@@ -261,7 +261,6 @@ public abstract class Stats {
         nbGoals++;
         length += last;
         lengthBetweenGoals.add((new Long(last)).intValue());
-
     }
 
     public ArrayList<Integer> getSortedLengthBetweenGoals(){

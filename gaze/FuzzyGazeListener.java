@@ -55,14 +55,14 @@ class FuzzyGazeListener implements IGazeListener {
                 if(gi.isOn()){
 
                     gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime()));
-                    //System.out.println(GazeEvent.GAZE_MOVED + " : " + gi.getShape());
+                    //System.out.println(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
                 }
                 else {
 
                     gi.setOn(true);
                     gi.setTime((new Date()).getTime());
                     gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED));
-                    //System.out.println(GazeEvent.GAZE_ENTERED + " : " + gi.getShape());
+                    //System.out.println(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
                 }
             }
             else{//gaze is not on the shape
@@ -81,7 +81,7 @@ class FuzzyGazeListener implements IGazeListener {
                         gi.setOn(false);
                         gi.setTime(-1);
                         gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED));
-                        //System.out.println(GazeEvent.GAZE_EXITED + " : " + gi.getShape());
+                        //System.out.println(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
                     }
                 }
                 else{//gaze was not on the shape previously

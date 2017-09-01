@@ -37,11 +37,11 @@ public class Target extends Portrait {
 
     private ArrayList<Portrait> portraits = new ArrayList(nbBall);
 
-    public Target(Group root, ShootGamesStats stats) {
+    public Target(Group root, ShootGamesStats shoottats) {
 
         super(radius);
 
-        this.stats = stats;
+        stats = shoottats;
 
         for (int i = 0; i < nbBall; i++) {
 
@@ -51,18 +51,7 @@ public class Target extends Portrait {
             portraits.add(P);
         }
 
-        enterEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-
-                if((e.getEventType() == MouseEvent.MOUSE_ENTERED_TARGET ||e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)  && anniOff) {
-
-                    anniOff = false;
-                    stats.incNbGoals();
-                    enter();
-                }
-            }
-        };
+        enterEvent = buildEvent();
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
 
@@ -74,21 +63,19 @@ public class Target extends Portrait {
         stats.start();
     }
 
+    private EventHandler<Event> buildEvent() {
 
-  /*  private void oldmove(){
+        return e -> {
 
-        SequentialTransition sequence = new SequentialTransition();
-        for (int i = 0; i < 40 ; i++){
+            //  if((e.getEventType() == MouseEvent.MOUSE_ENTERED_TARGET ||e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)  && anniOff) {
 
-            Timeline timeline = new Timeline();
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(centerXProperty(), newX())));
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(centerYProperty(), newY())));
+            if (anniOff && (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
 
-            sequence.getChildren().add(timeline);
-        }
-
-        sequence.play();
-    }*/
+                anniOff = false;
+                enter();
+            }
+        };
+    }
 
     private void move(){
 
@@ -108,11 +95,13 @@ public class Target extends Portrait {
             }
         });
 
-    }   
+    }
 
     private void enter(){
 
-        this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
+        stats.incNbGoals();
+
+        //this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
@@ -144,8 +133,7 @@ public class Target extends Portrait {
         timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(centerXProperty(), newX())));
         timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(centerYProperty(), newY())));
         timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fillProperty(), new ImagePattern(newPhoto(), 0, 0, 1,1, true))));
-        timeline4.getKeyFrames().add(new KeyFrame(new Duration(1000),new KeyValue(opacityProperty(), 1)));
-
+        timeline4.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(opacityProperty(), 1)));
 
         SequentialTransition sequence = new SequentialTransition(timeline,timeline2, timeline3, timeline4);
 
@@ -157,7 +145,7 @@ public class Target extends Portrait {
             public void handle(ActionEvent actionEvent) {
 
                 anniOff = true;
-                setVisible(true);
+
                 stats.start();
             }
         });
