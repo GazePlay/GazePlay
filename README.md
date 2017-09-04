@@ -81,7 +81,7 @@ Des bulles contenant des portraits remontent lentement à la surface et exploser
 
 ## Téléchargements
 
-[Dernière Version](https://github.com/schwabdidier/GazePlay/releases/download/v1-beta-candidate-4/GazePlay-beta-4.jar)
+[Dernière Version](https://github.com/schwabdidier/GazePlay/releases/download/v1-beta-candidate-5/GazePlay-beta-5.jar)
 
 ## Installation
 
@@ -126,7 +126,6 @@ L'ensemble des statistiques sont enregistrés dans le répertoire de GazePlay. D
 1) *heatmap.csv* : La carte de chaleur sous forme brute. Ce fichier csv peut-être ouvert avec un tableur comme LibreOffice.org Calc, logiciel libre et gratuit ou les classiques Microsoft Excel, Apple Numbers,...).
 2) *heatmap.png* : La carte de chaleur sous forme d'image.
 3) *info-game.csv* : Les statistiques de la partie dans un fichier csv. 
-
 
 ## Contributions
 
