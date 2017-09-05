@@ -273,11 +273,16 @@ public class Utils {
 
     public static void playSound(String ressource) {
 
+
         URL url = ClassLoader.getSystemResource(ressource);
         String path = url.toString();
         Media media = new Media(path);
-        MediaPlayer mp = new MediaPlayer(media);
-        mp.play();
+        try {
+            MediaPlayer mp = new MediaPlayer(media);
+            mp.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

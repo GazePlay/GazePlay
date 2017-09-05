@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-gazeplay-Class: creampie.CreamPie
-Main-Class: eyetrackersservers.EyeTribeServer
+Class-Path: GazePlay-beta-6.jar
+Main-Class: gazeplay.GazePlay
 
