@@ -170,7 +170,7 @@ public class Blocs extends Application {
                             public void handle(ActionEvent actionEvent) {
                                 Utils.clear(theScene, blockRoot, choiceBox);
                                 makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, stats);
-                                Utils.home(theScene, blockRoot, choiceBox,stats);
+                                Utils.home(theScene, blockRoot, choiceBox, stats);
                             }
                         });
                     }

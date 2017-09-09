@@ -1,4 +1,4 @@
 package tobii;
 
-public class Tobi {
+public class Tobii {
 }

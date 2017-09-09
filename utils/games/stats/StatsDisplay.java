@@ -86,10 +86,26 @@ public class StatsDisplay {
         averageLength.setFont(new Font(20));
         averageLength.setFill(new Color(1, 1, 1, 1));
 
+        Text medianLength = new Text();
+
+        if(stats instanceof ShootGamesStats) {
+
+            medianLength = new Text("Temps de réaction médian : " + convert(stats.getMedianLength()));
+        }
+        else if(stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
+
+            medianLength = new Text("Temps médian : " + convert(stats.getMedianLength()));
+        }
+
+        medianLength.setX(100);
+        medianLength.setY(350);
+        medianLength.setFont(new Font(20));
+        medianLength.setFill(new Color(1, 1, 1, 1));
+
         Text standDev = new Text("Écart-type : " + convert((long)stats.getSD()));
 
         standDev.setX(100);
-        standDev.setY(350);
+        standDev.setY(400);
         standDev.setFont(new Font(20));
         standDev.setFill(new Color(1,1,1,1));
 
@@ -114,7 +130,7 @@ public class StatsDisplay {
         heatChart.setWidth(scene.getWidth()*0.35);
         heatChart.setHeight(scene.getHeight()*0.35);
 
-        root.getChildren().addAll(statistics, shoots, totalTime, length, averageLength, standDev, UncountedShoot, chart, heatChart);
+        root.getChildren().addAll(statistics, shoots, totalTime, length, averageLength, medianLength, standDev, UncountedShoot, chart, heatChart);
 
         stats.saveStats();
 
@@ -135,17 +151,10 @@ public class StatsDisplay {
         //series.setName("Temps de réaction");
 
         XYChart.Series average = new XYChart.Series();
-        // average.setName("Moyenne");
 
         XYChart.Series sdp = new XYChart.Series();
-        //sdp.setName("Moyenne");
 
         XYChart.Series sdm = new XYChart.Series();
-        //sdm.setName("Moyenne");
-
-        //  xAxis.setLabel("Lancer");
-        //  yAxis.setLabel("ms");
-
         //populating the series with data
 
         ArrayList<Integer> shoots = null;
@@ -157,7 +166,6 @@ public class StatsDisplay {
 
             shoots = stats.getLengthBetweenGoals();
         }
-
 
         double sd = stats.getSD();
 

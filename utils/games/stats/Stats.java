@@ -215,6 +215,32 @@ public abstract class Stats {
             return getLength()/ nbGoals;
     }
 
+    public long getMedianLength(){
+
+        if(nbGoals == 0)
+            return 0;
+        else {
+
+            int nbElements = lengthBetweenGoals.size();
+
+            ArrayList<Integer> sortedList = (ArrayList<Integer>)lengthBetweenGoals.clone();
+
+            Collections.sort(sortedList);
+
+            int middle = (int)(nbElements/2);
+
+            if(nbElements%2==0){//number of elements is even, median is the average of the two central number
+
+                return (sortedList.get(middle)+sortedList.get(middle+1))/2;
+
+            }else{//number of elements is odd, median is the central number
+
+                return sortedList.get(middle);
+            }
+
+        }
+    }
+
     public long getTotalTime() {
 
         return System.currentTimeMillis() - zeroTime;
