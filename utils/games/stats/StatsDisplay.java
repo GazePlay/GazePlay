@@ -18,7 +18,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import utils.games.Utils;
 
-import javax.rmi.CORBA.Util;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -37,12 +36,12 @@ public class StatsDisplay {
         statistics.setFont(new Font(60));
         statistics.setFill(new Color(1,1,1,1));
 
-        Text totalTime = new Text("Temps total de jeu : " + convert(stats.getTotalTime()));
+        Text totalLength = new Text("Temps total de jeu : " + convert(stats.getTotalLength()));
 
-        totalTime.setX(100);
-        totalTime.setY(150);
-        totalTime.setFont(new Font(20));
-        totalTime.setFill(new Color(1,1,1,1));
+        totalLength.setX(100);
+        totalLength.setY(150);
+        totalLength.setFont(new Font(20));
+        totalLength.setFill(new Color(1,1,1,1));
 
         Text shoots = new Text();
         if(stats instanceof ShootGamesStats) {
@@ -130,7 +129,7 @@ public class StatsDisplay {
         heatChart.setWidth(scene.getWidth()*0.35);
         heatChart.setHeight(scene.getHeight()*0.35);
 
-        root.getChildren().addAll(statistics, shoots, totalTime, length, averageLength, medianLength, standDev, UncountedShoot, chart, heatChart);
+        root.getChildren().addAll(statistics, shoots, totalLength, length, averageLength, medianLength, standDev, UncountedShoot, chart, heatChart);
 
         stats.saveStats();
 

@@ -3,8 +3,6 @@ package utils.games.stats;
 import javafx.scene.Scene;
 import utils.games.Utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 public class ShootGamesStats extends Stats{
@@ -69,7 +67,7 @@ public class ShootGamesStats extends Stats{
         out.print(',');
         out.print(Utils.time());
         out.print(',');
-        out.print(getTotalTime());
+        out.print(getTotalLength());
         out.print(',');
         out.print(getNbGoals());
         out.print(',');

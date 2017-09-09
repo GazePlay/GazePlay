@@ -1,6 +1,5 @@
 package utils.games.stats;
 
-import com.theeyetribe.clientsdk.GazeManager;
 import gaze.GazeEvent;
 import gaze.GazeUtils;
 import javafx.event.EventHandler;
@@ -198,7 +197,7 @@ public abstract class Stats {
                 "nbShoots=" + getNbGoals() +
                 ", length=" + getLength() +
                 ", average length=" + getAverageLength() +
-                ", zero time =" + getTotalTime() +
+                ", zero time =" + getTotalLength() +
                 '}' + lengthBetweenGoals;
     }
 
@@ -241,7 +240,7 @@ public abstract class Stats {
         }
     }
 
-    public long getTotalTime() {
+    public long getTotalLength() {
 
         return System.currentTimeMillis() - zeroTime;
     }
