@@ -3,6 +3,8 @@ package gazeplay;
 import blocs.Blocs;
 import bubbles.Bubble;
 import creampie.CreamPie;
+import gaze.Configuration.Configuration;
+import utils.games.multilinguism.Multilinguism;
 import utils.games.stats.*;
 import gaze.SecondScreen;
 import javafx.application.Application;
@@ -30,7 +32,6 @@ public class GazePlay extends Application {
     private Scene scene;
     private Group root;
     private static ChoiceBox<String> cbxGames;
-    private static String language;
 
     public static void main(String[] args) {
         Application.launch(GazePlay.class, args);
@@ -38,16 +39,6 @@ public class GazePlay extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-        /*String current = null;
-        try {
-            current = new java.io.File( "." ).getCanonicalPath();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Current dir:"+current);
-
-        System.exit(0);*/
 
         try {
             System.setProperty("file.encoding","UTF-8");
@@ -73,16 +64,13 @@ public class GazePlay extends Application {
 
         cbxGames = new ChoiceBox<>();
 
-       cbxGames.getItems().addAll("\tCreampie", "\tNinja Portraits", "Magic Cards\t\t(2x2)", "Magic Cards\t\t(2x3)", "Magic Cards\t\t(3x2)", "Magic Cards\t\t(3x3)", "blocks\t\t\t(2x2)", "blocks\t\t\t(2x3)", "blocks\t\t\t(3x3)", "\tCarte à gratter", "\tColored Bubbles", "\tPortrait Bubbles");
-
-        //cbxGames.getSelectionModel().selectFirst();
+        cbxGames.getItems().addAll("\tCreampie", "\tNinja Portraits", "Magic Cards\t\t(2x2)", "Magic Cards\t\t(2x3)", "Magic Cards\t\t(3x2)", "Magic Cards\t\t(3x3)", "blocks\t\t\t(2x2)", "blocks\t\t\t(2x3)", "blocks\t\t\t(3x3)", "\tCarte à gratter", "\tColored Bubbles", "\tPortrait Bubbles");
 
         cbxGames.setScaleX(2);
         cbxGames.setScaleY(2);
 
         cbxGames.setTranslateX(scene.getWidth()*0.9/2);
         cbxGames.setTranslateY(scene.getHeight()*0.9/2);
-
 
         cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -94,7 +82,6 @@ public class GazePlay extends Application {
 
         root.getChildren().add(cbxGames);
 
-        //root.getChildren().add(Utils.exit(scene));
         Utils.addButtons(scene, root, cbxGames);
 
         primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));

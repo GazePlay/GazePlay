@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import org.tc33.jheatchart.HeatChart;
+import utils.games.multilinguism.Multilinguism;
 import utils.games.stats.Stats;
 import utils.games.stats.StatsDisplay;
 
@@ -135,7 +136,7 @@ public class Utils {
                     }
                     else{
 
-                        StatsDisplay.displayStats(stats, scene, root, cbxGames, (new Configuration()).language);
+                        StatsDisplay.displayStats(stats, scene, root, cbxGames);
                     }
                 }
             }
@@ -437,4 +438,5 @@ public class Utils {
 
         return out;
     }
+
 }

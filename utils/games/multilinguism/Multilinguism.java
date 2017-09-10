@@ -1,5 +1,7 @@
 package utils.games.multilinguism;
 
+import gaze.Configuration.Configuration;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,59 +10,75 @@ import java.util.Iterator;
 
 public class Multilinguism {
 
-        private static Multilinguism multilinguism;
-        private HashMap<Entry, String> traductions;
+    private static Multilinguism multilinguism;
+    private HashMap<Entry, String> traductions;
 
-        private Multilinguism(){
+    private Multilinguism(){
 
-            traductions = new HashMap<>(1000);
+        traductions = new HashMap<>(1000);
 
-            try {
-                BufferedReader br = null;
+        try {
+            BufferedReader br = null;
 
-                br = new BufferedReader(new FileReader("data/multilinguism/multilinguism.csv"));
+            br = new BufferedReader(new FileReader("data/multilinguism/multilinguism.csv"));
 
-                String ligne = null;
+            String ligne = null;
 
-                boolean firstline = true;
+            boolean firstline = true;
 
-                String[] languages = null, data = null ;
+            String[] languages = null, data = null ;
 
-                while ((ligne = br.readLine()) != null){
-                    if(firstline) {
-                        // Retourner la ligne dans un tableau
-                        languages = ligne.split(",");
-                        firstline = false;
-                    }
-                    else {
-                        data = ligne.split(",");
-                        String key = data[0];
-                        for (int i = 1; i < data.length; i++){
+            while ((ligne = br.readLine()) != null){
+                if(firstline) {
+                    // Retourner la ligne dans un tableau
+                    languages = ligne.split(",");
+                    firstline = false;
+                }
+                else {
+                    data = ligne.split(",");
+                    String key = data[0];
+                    for (int i = 1; i < data.length; i++){
 
-                            //System.out.println(key + ", " + languages[i] + ", " +data[i]);
-                            traductions.put(new Entry(key, languages[i]), data[i]);
-                        }
+                        //System.out.println(key + ", " + languages[i] + ", " +data[i]);
+                        traductions.put(new Entry(key, languages[i]), data[i]);
                     }
                 }
-                br.close();
+            }
+            br.close();
 
-            } catch (IOException e) {
-                e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Multilinguism getMultilinguism(){
+
+        if(multilinguism == null)
+            multilinguism = new Multilinguism();
+
+        return multilinguism;
+    }
+
+    public String getTrad(String key, String language){
+
+        return traductions.get(new Entry(key, language));
+    }
+
+    public static String getLanguage() {
+
+        String language = (new Configuration()).language;
+
+        for(Languages l : Languages.values()){
+
+            if(l.toString().equals(language)){
+
+                return language;
             }
         }
 
-        public static Multilinguism getMultilinguism(){
+        return "eng";
+    }
 
-            if(multilinguism == null)
-                multilinguism = new Multilinguism();
-
-            return multilinguism;
-        }
-
-        public String getTrad(String key, String language){
-
-            return traductions.get(new Entry(key, language));
-        };
 }
 
 class Entry {
@@ -99,3 +117,5 @@ class Entry {
         return result;
     }
 }
+
+enum Languages{fra,eng}

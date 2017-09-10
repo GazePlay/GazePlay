@@ -25,7 +25,7 @@ import java.io.IOException;
  */
 public class License extends Rectangle{
 
-    public License(double X, double Y, double width, double height, Scene scene, Group root, ChoiceBox<String> cbxGames){
+    public License(double X, double Y, double width, double height, Scene scene, Group root, ChoiceBox<String> cbxGames, String language){
 
         super(X, Y, width, height);
 
