@@ -15,6 +15,7 @@ import java.util.Properties;
 public class Configuration {
 
     public String gazeMode = "true";
+    public String language = "eng";
 
     public Configuration() {
 
@@ -32,6 +33,10 @@ public class Configuration {
             String buffer = prop.getProperty("GazeMode");
             if(buffer!=null)
                 gazeMode = buffer.toLowerCase();
+
+            buffer = prop.getProperty("Language");
+            if(buffer!=null)
+                language = buffer.toLowerCase();
 
 
         } catch (final IOException ex) {

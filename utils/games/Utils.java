@@ -1,5 +1,6 @@
 package utils.games;
 
+import gaze.Configuration.Configuration;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -134,7 +135,7 @@ public class Utils {
                     }
                     else{
 
-                        StatsDisplay.displayStats(stats, scene, root, cbxGames);
+                        StatsDisplay.displayStats(stats, scene, root, cbxGames, (new Configuration()).language);
                     }
                 }
             }

@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsDisplay {
 
-    public static void displayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames){
+    public static void displayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames, String language){
 
         stats.stop();
 

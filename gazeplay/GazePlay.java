@@ -30,6 +30,7 @@ public class GazePlay extends Application {
     private Scene scene;
     private Group root;
     private static ChoiceBox<String> cbxGames;
+    private static String language;
 
     public static void main(String[] args) {
         Application.launch(GazePlay.class, args);
