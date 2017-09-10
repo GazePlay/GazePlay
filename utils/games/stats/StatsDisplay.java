@@ -28,23 +28,18 @@ public class StatsDisplay {
 
         Multilinguism multilinguism = Multilinguism.getMultilinguism();
 
-        System.out.println(multilinguism.getTrad("Length", "fra"));
-        System.out.println(multilinguism.getTrad("Length", "eng"));
-
-        System.exit(0);
-
         stats.stop();
 
         Utils.clear(scene, root, cbxGames);
 
-        Text statistics = new Text("Statistiques");
+        Text statistics = new Text(multilinguism.getTrad("Stats-title", language));
 
         statistics.setX(scene.getWidth()*0.4);
         statistics.setY(60);
         statistics.setFont(new Font(60));
         statistics.setFill(new Color(1,1,1,1));
 
-        Text totalLength = new Text("Temps total de jeu : " + convert(stats.getTotalLength()));
+        Text totalLength = new Text(multilinguism.getTrad("TotalLength", language) + " : " + convert(stats.getTotalLength()));
 
         totalLength.setX(100);
         totalLength.setY(150);
@@ -54,15 +49,15 @@ public class StatsDisplay {
         Text shoots = new Text();
         if(stats instanceof ShootGamesStats) {
 
-            shoots = new Text("Tirs : " + stats.getNbGoals());
+            shoots = new Text(multilinguism.getTrad("Shoots", language) + " : " + stats.getNbGoals());
         }
         else if(stats instanceof BubblesGamesStats){
 
-            shoots = new Text("Bulles éclatées : " + stats.getNbGoals());
+            shoots = new Text(multilinguism.getTrad("BubbleShoot", language) + " : " + stats.getNbGoals());
         }
         else if(stats instanceof HiddenItemsGamesStats) {
 
-            shoots = new Text("Images découvertes : " + stats.getNbGoals());
+            shoots = new Text(multilinguism.getTrad("HiddenItemsShoot", language) + " : " + stats.getNbGoals());
         }
 
         shoots.setX(100);
@@ -70,7 +65,7 @@ public class StatsDisplay {
         shoots.setFont(new Font(20));
         shoots.setFill(new Color(1,1,1,1));
 
-        Text length = new Text("Temps effectif de jeu : " + convert(stats.getLength()));
+        Text length = new Text(multilinguism.getTrad("Length", language) + " : " + convert(stats.getLength()));
 
         length.setX(100);
         length.setY(250);
@@ -81,11 +76,11 @@ public class StatsDisplay {
 
         if(stats instanceof ShootGamesStats) {
 
-            averageLength = new Text("Temps de réaction moyen : " + convert(stats.getAverageLength()));
+            averageLength = new Text(multilinguism.getTrad("ShootaverageLength", language) + " : " + convert(stats.getAverageLength()));
         }
         else if(stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
 
-            averageLength = new Text("Temps moyen : " + convert(stats.getAverageLength()));
+            averageLength = new Text(multilinguism.getTrad("AverageLength", language) + " : " + convert(stats.getAverageLength()));
         }
 
         averageLength.setX(100);
@@ -97,11 +92,11 @@ public class StatsDisplay {
 
         if(stats instanceof ShootGamesStats) {
 
-            medianLength = new Text("Temps de réaction médian : " + convert(stats.getMedianLength()));
+            medianLength = new Text(multilinguism.getTrad("ShootmedianLength", language) + " : " + convert(stats.getMedianLength()));
         }
         else if(stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
 
-            medianLength = new Text("Temps médian : " + convert(stats.getMedianLength()));
+            medianLength = new Text(multilinguism.getTrad("MedianLength", language) + " : " + convert(stats.getMedianLength()));
         }
 
         medianLength.setX(100);
@@ -109,7 +104,7 @@ public class StatsDisplay {
         medianLength.setFont(new Font(20));
         medianLength.setFill(new Color(1, 1, 1, 1));
 
-        Text standDev = new Text("Écart-type : " + convert((long)stats.getSD()));
+        Text standDev = new Text(multilinguism.getTrad("StandDev", language) + " : " + convert((long)stats.getSD()));
 
         standDev.setX(100);
         standDev.setY(400);
@@ -120,7 +115,7 @@ public class StatsDisplay {
 
         if(stats instanceof ShootGamesStats && !(stats instanceof BubblesGamesStats) && ((ShootGamesStats)stats).getNbUnCountedShoots()!=0) {
 
-            UncountedShoot = new Text("Tirs non comptés : " + ((ShootGamesStats)stats).getNbUnCountedShoots());
+            UncountedShoot = new Text(multilinguism.getTrad("UncountedShoot", language) + " : " + ((ShootGamesStats)stats).getNbUnCountedShoots());
 
             UncountedShoot.setX(scene.getWidth() / 2);
             UncountedShoot.setY(150);
