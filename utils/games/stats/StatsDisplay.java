@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import utils.games.Utils;
+import utils.games.multilinguism.Multilinguism;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +25,13 @@ import java.util.concurrent.TimeUnit;
 public class StatsDisplay {
 
     public static void displayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames, String language){
+
+        Multilinguism multilinguism = Multilinguism.getMultilinguism();
+
+        System.out.println(multilinguism.getTrad("Length", "fra"));
+        System.out.println(multilinguism.getTrad("Length", "eng"));
+
+        System.exit(0);
 
         stats.stop();
 
