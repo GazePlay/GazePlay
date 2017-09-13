@@ -237,7 +237,6 @@ public abstract class Stats {
 
                 return sortedList.get(middle);
             }
-
         }
     }
 
