@@ -228,8 +228,9 @@ public abstract class Stats {
 
             int middle = (int)(nbElements/2);
 
-            if(nbElements%2==0){//number of elements is even, median is the average of the two central number
+            if(nbElements%2==0){//number of elements is even, median is the average of the two central numbers
 
+                middle-=1;
                 return (sortedList.get(middle)+sortedList.get(middle+1))/2;
 
             }else{//number of elements is odd, median is the central number
