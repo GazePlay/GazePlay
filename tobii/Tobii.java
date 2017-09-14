@@ -52,8 +52,8 @@ public class Tobii {
             while ((line = reader.readLine()) != null) {
                 // Traitement du flux de sortie de l'application si besoin est
 
-               if(i++==1000)
-                    System.out.println(parseTobiiOutput(line));
+         //      if(i++==100)
+         //           System.out.println(parseTobiiOutput(line));
                 Point2D gazePosition = parseTobiiOutput(line);
                 if(gazePosition!=null){
 
