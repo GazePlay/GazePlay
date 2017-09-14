@@ -1,7 +1,8 @@
 package tobii;
 
+import gaze.SecondScreen;
+import gaze.TobiiGazeListener;
 import javafx.geometry.Point2D;
-import javafx.stage.Screen;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class Tobii {
 
     private static Point2D parseTobiiOutput(String tobiiOutput) {
 
-        System.out.println(tobiiOutput);
+      //  System.out.println(tobiiOutput);
 
         float x = 0;
         float y = 0;
@@ -31,7 +32,7 @@ public class Tobii {
         return point;
     }
 
-    public static void execProg() {
+    public static void execProg(TobiiGazeListener listener) {
 
         Runtime runtime = Runtime.getRuntime();
 
@@ -44,11 +45,20 @@ public class Tobii {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = "";
+
+        int i = 0;
+
         try {
             while ((line = reader.readLine()) != null) {
                 // Traitement du flux de sortie de l'application si besoin est
 
-                System.out.println(parseTobiiOutput(line));
+               if(i++==1000)
+                    System.out.println(parseTobiiOutput(line));
+                Point2D gazePosition = parseTobiiOutput(line);
+                if(gazePosition!=null){
+
+                    listener.onGazeUpdate(gazePosition);
+                }
             }
         }catch(Exception ioe){
         ioe.printStackTrace();
@@ -64,7 +74,7 @@ public class Tobii {
         System.out.println(parseTobiiOutput("Gaze point: 10809889523 0.371530, 0.707418"));
         System.out.println(parseTobiiOutput("Gaze point: 10817493839 INVALID"));*/
 
-        execProg();
+        //execProg();
 
     }
 

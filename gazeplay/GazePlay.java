@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import magiccards.Card;
 import ninja.Ninja;
-import tobii.Tobii;
 import utils.games.Utils;
 import utils.games.stats.*;
 
@@ -88,9 +87,7 @@ public class GazePlay extends Application {
 
         primaryStage.show();
 
-        Tobii.execProg();
-
-      //  SecondScreen secondScreen = SecondScreen.launch();
+       // SecondScreen secondScreen = SecondScreen.launch();
     }
 
     private void chooseGame(Number value) {

@@ -4,6 +4,7 @@ import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
 import gaze.Configuration.Configuration;
 import javafx.scene.Node;
+import tobii.Tobii;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,6 @@ public class GazeUtils {
 
     static ArrayList<GazeInfos> nodesEventHandler = new ArrayList<GazeInfos>(100);
 
-
     static final GazeManager gm = GazeManager.getInstance();
     static boolean success = gm.activate();
     static final IGazeListener gazeListener = createGazeListener();//new TrueGazeListener(nodesEventFilter, nodesEventHandler);
@@ -25,10 +25,16 @@ public class GazeUtils {
 
         Configuration config = new Configuration();
 
+        if (config.eyetracker.equals("tobii")) {
+
+            Tobii.execProg(new TobiiGazeListener(nodesEventFilter, nodesEventHandler));
+        }
+        else
         if(config.gazeMode.equals("true"))
             return new TrueGazeListener(nodesEventFilter, nodesEventHandler);
         else
             return  new FuzzyGazeListener(nodesEventFilter, nodesEventHandler);
+        return null;
     }
 
     public static void addEventFilter(Node gs){

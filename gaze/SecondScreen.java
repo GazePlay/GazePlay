@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import tobii.Tobii;
 
 /**
  * Created by schwab on 10/09/2016.
@@ -31,11 +32,11 @@ public class SecondScreen {
 
     }
 
-    public static SecondScreen launch(){
+    public static SecondScreen launch() {
 
         ObservableList<Screen> screens = Screen.getScreens();
 
-        if(screens.size() < 2)
+        if (screens.size() < 2)
             return null;
 
         Screen screen1 = screens.get(0);
@@ -61,31 +62,39 @@ public class SecondScreen {
 
         Configuration config = new Configuration();
 
-        if(config.gazeMode.equals("true"))
-            gazeListener =  new TrueGazeListener(sc);
+   /*     if (config.eyetracker.equals("tobii"))
+            Tobii.execProg(sc);
+        else*/
+            if (config.gazeMode.equals("true"))
+            gazeListener = new TrueGazeListener(sc);
         else
-            gazeListener =   new FuzzyGazeListener(sc);
+            gazeListener = new FuzzyGazeListener(sc);
 
         return sc;
     }
 
     private static void makeLighting(Group root, Rectangle2D RScreen) {
 
-        int width = (int)RScreen.getWidth();
-        int height = (int)RScreen.getHeight();
+        int width = (int) RScreen.getWidth();
+        int height = (int) RScreen.getHeight();
 
 
-        T = new Lighting[width/pixelWidth][height/pixelWidth];
-        for(int i = 0; i < T.length; i++)
-            for(int j = 0; j < T[i].length; j++){
+        T = new Lighting[width / pixelWidth][height / pixelWidth];
+        for (int i = 0; i < T.length; i++)
+            for (int j = 0; j < T[i].length; j++) {
 
-                T[i][j] = new Lighting(i*pixelWidth,j*pixelWidth, pixelWidth, lightingLength, lightingColor);
+                T[i][j] = new Lighting(i * pixelWidth, j * pixelWidth, pixelWidth, lightingLength, lightingColor);
                 root.getChildren().add(T[i][j]);
             }
     }
 
     public static void light(Point2D rawCoordinates) {
 
-        T[(int)(rawCoordinates.x/pixelWidth)][(int)(rawCoordinates.y/pixelWidth)].enter();
+        T[(int) (rawCoordinates.x / pixelWidth)][(int) (rawCoordinates.y / pixelWidth)].enter();
+    }
+
+    public static void light(javafx.geometry.Point2D rawCoordinates) {
+
+        T[(int) (rawCoordinates.getX() / pixelWidth)][(int) (rawCoordinates.getY() / pixelWidth)].enter();
     }
 }

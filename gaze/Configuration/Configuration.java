@@ -15,6 +15,7 @@ import java.util.Properties;
 public class Configuration {
 
     public String gazeMode = "true";
+    public String eyetracker = "tobii";
     public String language = "eng";
 
     public Configuration() {
@@ -34,10 +35,13 @@ public class Configuration {
             if(buffer!=null)
                 gazeMode = buffer.toLowerCase();
 
+            buffer = prop.getProperty("EyeTracker");
+            if(buffer!=null)
+                eyetracker = buffer.toLowerCase();
+
             buffer = prop.getProperty("Language");
             if(buffer!=null)
                 language = buffer.toLowerCase();
-
 
         } catch (final IOException ex) {
             System.out.println(configPath + " not found");
