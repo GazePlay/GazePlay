@@ -3,10 +3,6 @@ package gazeplay;
 import blocs.Blocs;
 import bubbles.Bubble;
 import creampie.CreamPie;
-import gaze.Configuration.Configuration;
-import utils.games.multilinguism.Multilinguism;
-import utils.games.stats.*;
-import gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,7 +14,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import magiccards.Card;
 import ninja.Ninja;
+import tobii.Tobii;
 import utils.games.Utils;
+import utils.games.stats.*;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -85,10 +83,12 @@ public class GazePlay extends Application {
         Utils.addButtons(scene, root, cbxGames);
 
         primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
-
+        
         primaryStage.setScene(scene);
 
         primaryStage.show();
+
+        Tobii.execProg();
 
       //  SecondScreen secondScreen = SecondScreen.launch();
     }

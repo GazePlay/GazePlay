@@ -1,6 +1,5 @@
 package utils.games;
 
-import gaze.Configuration.Configuration;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -18,7 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import org.tc33.jheatchart.HeatChart;
-import utils.games.multilinguism.Multilinguism;
 import utils.games.stats.Stats;
 import utils.games.stats.StatsDisplay;
 

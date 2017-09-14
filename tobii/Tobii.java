@@ -1,50 +1,70 @@
 package tobii;
 
 import javafx.geometry.Point2D;
+import javafx.stage.Screen;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Tobii {
 
-    private static Point2D parseTobiiOutput(String tobiiOutput){
+    private static final double screenWidth = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
+    private static final double screenHeight = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
+
+    private static Point2D parseTobiiOutput(String tobiiOutput) {
 
         System.out.println(tobiiOutput);
 
         float x = 0;
         float y = 0;
         try {
-            x = Float.valueOf(tobiiOutput.substring(24, 32));
-            y = Float.valueOf(tobiiOutput.substring(34, 42));
+            x = Float.valueOf(tobiiOutput.substring(24, 32))*(float)screenWidth;
+            y = Float.valueOf(tobiiOutput.substring(34, 42))*(float)screenHeight;
         } catch (Exception e) {
 
             return null;
         }
 
-        System.out.println(x);
-        System.out.println(y);
-
-        Point2D point = new Point2D(x,y);
-
-        System.out.println(point);
+        Point2D point = new Point2D(x, y);
 
         return point;
     }
 
-    public static void execProg() throws Exception{
+    public static void execProg() {
 
         Runtime runtime = Runtime.getRuntime();
-        runtime.exec(new String[] { "C:\\Program Files\\MonAppli\\monappli.exe" } );
 
+        Process process = null;
+        try {
+            process = runtime.exec(new String[]{"C:\\Users\\schwab\\IdeaProjects\\GazePlay\\tobii\\GazePlay-tobii.exe"});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = "";
+        try {
+            while ((line = reader.readLine()) != null) {
+                // Traitement du flux de sortie de l'application si besoin est
 
+                System.out.println(parseTobiiOutput(line));
+            }
+        }catch(Exception ioe){
+        ioe.printStackTrace();
+        }
     }
 
     public static void main(String[] argv){
 
-        parseTobiiOutput("Gaze point: 10809754557 0.433731, 0.719170");
-        parseTobiiOutput("Gaze point: 10809814527 0.372081, 0.670327");
-        parseTobiiOutput("Gaze point: 10809828278 0.373068, 0.672786");
-        parseTobiiOutput("Gaze point: 10809874253 0.369580, 0.700685");
-        parseTobiiOutput("Gaze point: 10809889523 0.371530, 0.707418");
-        parseTobiiOutput("Gaze point: 10817493839 INVALID");
+     /*   System.out.println(parseTobiiOutput("Gaze point: 10809754557 0.433731, 0.719170"));
+        System.out.println(parseTobiiOutput("Gaze point: 10809814527 0.372081, 0.670327"));
+        System.out.println(parseTobiiOutput("Gaze point: 10809828278 0.373068, 0.672786"));
+        System.out.println(parseTobiiOutput("Gaze point: 10809874253 0.369580, 0.700685"));
+        System.out.println(parseTobiiOutput("Gaze point: 10809889523 0.371530, 0.707418"));
+        System.out.println(parseTobiiOutput("Gaze point: 10817493839 INVALID"));*/
+
+        execProg();
 
     }
 
