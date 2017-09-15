@@ -32,7 +32,7 @@ public class StatsDisplay {
 
         Utils.clear(scene, root, cbxGames);
 
-        Text statistics = new Text(multilinguism.getTrad("Stats-title", Multilinguism.getLanguage()));
+        Text statistics = new Text(multilinguism.getTrad("StatsTitle", Multilinguism.getLanguage()));
 
         statistics.setX(scene.getWidth()*0.4);
         statistics.setY(60);

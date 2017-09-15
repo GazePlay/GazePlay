@@ -28,6 +28,8 @@ import utils.games.Bravo;
 import utils.games.Utils;
 import utils.games.stats.HiddenItemsGamesStats;
 
+import java.util.ArrayList;
+
 public class Blocs extends Application {
 
     private static EventHandler<Event> enterEvent;
@@ -42,6 +44,7 @@ public class Blocs extends Application {
     private static boolean hasColors;
     private static Bravo bravo = new Bravo();
     private static ChoiceBox<String> choiceBox;
+    private static ArrayList<ArrayList<Rectangle>> rectangles;
     private static final Image[] images = Utils.images(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
 
     public static void main(String[] args) {Application.launch(args);
@@ -91,6 +94,10 @@ public class Blocs extends Application {
 
         blockRoot.getChildren().add(bravo);
 
+        rectangles = new ArrayList<>(nbColomns);
+        for(int i = 0; i < nbLines; i++)
+            rectangles.add(new ArrayList<>(nbLines));
+
         int value = (int)Math.floor(Math.random()*images.length);
 
         scene.setFill(new ImagePattern(images[value]));
@@ -113,6 +120,7 @@ public class Blocs extends Application {
                 else
                     R.setFill(Color.BLACK);
                 root.getChildren().add(R);
+                rectangles.get(i).add(R);
 
                 R.toBack();
 

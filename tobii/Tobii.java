@@ -40,7 +40,9 @@ public class Tobii {
         try {
             process = runtime.exec(new String[]{"C:\\Users\\schwab\\IdeaProjects\\GazePlay\\tobii\\GazePlay-tobii.exe"});
         } catch (IOException e) {
-            e.printStackTrace();
+
+            System.err.println("No tobii connected");
+            return;
         }
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));

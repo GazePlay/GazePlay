@@ -25,6 +25,8 @@ public class GazeUtils {
 
         Configuration config = new Configuration();
 
+        System.out.println(config.eyetracker);
+
         if (config.eyetracker.equals("tobii")) {
 
             Tobii.execProg(new TobiiGazeListener(nodesEventFilter, nodesEventHandler));
