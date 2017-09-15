@@ -44,7 +44,7 @@ public class Blocs extends Application {
     private static boolean hasColors;
     private static Bravo bravo = new Bravo();
     private static ChoiceBox<String> choiceBox;
-    private static ArrayList<ArrayList<Rectangle>> rectangles;
+    private static ArrayList<ArrayList<Bloc>> blocs;
     private static final Image[] images = Utils.images(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
 
     public static void main(String[] args) {Application.launch(args);
@@ -94,9 +94,9 @@ public class Blocs extends Application {
 
         blockRoot.getChildren().add(bravo);
 
-        rectangles = new ArrayList<>(nbColomns);
+        blocs = new ArrayList<>(nbColomns);
         for(int i = 0; i < nbLines; i++)
-            rectangles.add(new ArrayList<>(nbLines));
+            blocs.add(new ArrayList<>(nbLines));
 
         int value = (int)Math.floor(Math.random()*images.length);
 
@@ -114,21 +114,21 @@ public class Blocs extends Application {
         for (int i = 0; i < nbColomns; i++)
             for (int j = 0; j < nbLines; j++) {
 
-                Rectangle R = new Rectangle(i * width, j * height, width, height);
+                Bloc bloc = new Bloc(i * width, j * height, width, height,i ,j);
                 if(colors)
-                    R.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+                    bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
                 else
-                    R.setFill(Color.BLACK);
-                root.getChildren().add(R);
-                rectangles.get(i).add(R);
+                    bloc.setFill(Color.BLACK);
+                root.getChildren().add(bloc);
+                blocs.get(i).add(bloc);
 
-                R.toBack();
+                bloc.toBack();
 
-                GazeUtils.addEventFilter(R);
+                GazeUtils.addEventFilter(bloc);
 
-                R.addEventFilter(MouseEvent.ANY, enterEvent);
+                bloc.addEventFilter(MouseEvent.ANY, enterEvent);
 
-                R.addEventFilter(GazeEvent.ANY, enterEvent);
+                bloc.addEventFilter(GazeEvent.ANY, enterEvent);
 
                 stats.start();
             }
@@ -141,13 +141,15 @@ public class Blocs extends Application {
 
                 if(!finished && e.getEventType().equals(MouseEvent.MOUSE_ENTERED) || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
-                    Rectangle R = (Rectangle) e.getTarget();
+                    Bloc bloc = (Bloc) e.getTarget();
 
-                    R.removeEventFilter(MouseEvent.ANY, enterEvent);
-                    R.removeEventFilter(GazeEvent.ANY, enterEvent);
-                    GazeUtils.removeEventFilter(R);
-                    R.setTranslateX(-10000);
-                    R.setOpacity(0);
+
+
+                    bloc.removeEventFilter(MouseEvent.ANY, enterEvent);
+                    bloc.removeEventFilter(GazeEvent.ANY, enterEvent);
+                    GazeUtils.removeEventFilter(bloc);
+                    bloc.setTranslateX(-10000);
+                    bloc.setOpacity(0);
                     count--;
 
                     if(((float)initCount-count)/initCount >= p4w && !finished){
@@ -185,5 +187,18 @@ public class Blocs extends Application {
                 }
             }
         };
+    }
+}
+
+class Bloc extends Rectangle{
+
+    public int posX;
+    public int posY;
+
+
+    public Bloc(double x, double y, double width, double height, int posX, int posY) {
+        super(x, y, width, height);
+        this.posX=posX;
+        this.posY=posY;
     }
 }

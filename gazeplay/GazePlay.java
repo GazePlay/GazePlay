@@ -205,7 +205,7 @@ public class GazePlay extends Application {
 
                 stats = new ScratchcardGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 10, 10, false, 0.6f, (HiddenItemsGamesStats)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 100, 100, false, 0.6f, (HiddenItemsGamesStats)stats);
 
                 break;
             }
