@@ -24,7 +24,6 @@ public class Tobii {
 
             return null;
         }
-
         Point2D point = new Point2D(x, y);
 
         return point;
