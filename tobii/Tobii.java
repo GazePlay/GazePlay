@@ -15,8 +15,6 @@ public class Tobii {
 
     private static Point2D parseTobiiOutput(String tobiiOutput) {
 
-      //  System.out.println(tobiiOutput);
-
         float x = 0;
         float y = 0;
         try {
