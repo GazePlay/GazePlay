@@ -9,14 +9,14 @@ import gaze.GazeEvent;
 import gaze.GazeUtils;
 import gaze.SecondScreen;
 import javafx.animation.SequentialTransition;
-import javafx.event.ActionEvent;
-import javafx.scene.control.ChoiceBox;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -45,6 +45,7 @@ public class Blocs extends Application {
     private static Bravo bravo = new Bravo();
     private static ChoiceBox<String> choiceBox;
     private static ArrayList<ArrayList<Bloc>> blocs;
+    private static final int trail = 10;
     private static final Image[] images = Utils.images(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
 
     public static void main(String[] args) {Application.launch(args);
@@ -67,14 +68,14 @@ public class Blocs extends Application {
 
         HiddenItemsGamesStats stats = new HiddenItemsGamesStats(theScene);
 
-        makeBlocks(theScene, blockRoot, null, 2, 2, true, 1, stats);
+        makeBlocks(theScene, blockRoot, null, 2, 2, true, 1, false, stats);
 
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns, boolean colors, float percents4Win, HiddenItemsGamesStats stats){
+    public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns, boolean colors, float percents4Win, boolean useTrail, HiddenItemsGamesStats stats){
 
         finished = false;
 
@@ -102,7 +103,7 @@ public class Blocs extends Application {
 
         scene.setFill(new ImagePattern(images[value]));
 
-        enterEvent = buildEvent(stats);
+        enterEvent = buildEvent(stats, useTrail);
 
         int width = (int)(scene.getWidth() / nbColomns);
         int height = (int)(scene.getHeight() / nbLines);
@@ -134,16 +135,25 @@ public class Blocs extends Application {
             }
     }
 
-    private static EventHandler<Event> buildEvent(HiddenItemsGamesStats stats) {
+    private static void removeBloc(Bloc toRemove){
+
+        toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
+        toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
+        GazeUtils.removeEventFilter(toRemove);
+        toRemove.setTranslateX(-10000);
+        toRemove.setOpacity(0);
+        count--;
+    }
+
+    private static EventHandler<Event> buildEvent(HiddenItemsGamesStats stats, boolean useTrail) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
 
                 if(!finished && e.getEventType().equals(MouseEvent.MOUSE_ENTERED) || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
-                    Bloc bloc = (Bloc) e.getTarget();
-
-
+                    if(! useTrail) {
+                        Bloc bloc = (Bloc) e.getTarget();
 
                     bloc.removeEventFilter(MouseEvent.ANY, enterEvent);
                     bloc.removeEventFilter(GazeEvent.ANY, enterEvent);
@@ -152,6 +162,21 @@ public class Blocs extends Application {
                     bloc.setOpacity(0);
                     count--;
 
+                    }
+                    else {
+
+                        Bloc bloc = (Bloc) e.getTarget();
+
+                        int posX = bloc.posX;
+                        int posY = bloc.posY;
+
+                        for (int i = -trail; i < trail; i++)
+                            for (int j = -trail; j < trail; j++) {
+
+                                if (Math.sqrt(i * i + j * j) < trail && posX + i >= 0 && posY + j >= 0 && posX + i < blocs.size() && posY + j < blocs.get(0).size())
+                                    removeBloc(blocs.get(posX + i).get(posY + j));
+                            }
+                    }
                     if(((float)initCount-count)/initCount >= p4w && !finished){
 
                         finished = true;
@@ -179,11 +204,13 @@ public class Blocs extends Application {
                             @Override
                             public void handle(ActionEvent actionEvent) {
                                 Utils.clear(theScene, blockRoot, choiceBox);
-                                makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, stats);
+                                makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, useTrail, stats);
                                 Utils.home(theScene, blockRoot, choiceBox, stats);
                             }
                         });
                     }
+
+
                 }
             }
         };

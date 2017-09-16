@@ -161,7 +161,7 @@ public class GazePlay extends Application {
 
                 stats = new MagicCardsGamesStats(scene);
 
-                Card.addCards(root, scene, cbxGames,3, 3, (HiddenItemsGamesStats)stats);
+                Card.addCards(root, scene, cbxGames,3, 3,  (HiddenItemsGamesStats)stats);
 
                 break;
             }
@@ -172,7 +172,7 @@ public class GazePlay extends Application {
 
                 stats = new BlocsGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 2, 2, true, 1, (HiddenItemsGamesStats)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 2, 2, true, 1,  false, (HiddenItemsGamesStats)stats);
 
                 break;
             }
@@ -183,7 +183,7 @@ public class GazePlay extends Application {
 
                 stats = new BlocsGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1, (HiddenItemsGamesStats)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1,  false, (HiddenItemsGamesStats)stats);
 
                 break;
             }
@@ -194,7 +194,7 @@ public class GazePlay extends Application {
 
                 stats = new BlocsGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 3, 3, true, 1, (HiddenItemsGamesStats)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 3, 3, true, 1, false, (HiddenItemsGamesStats)stats);
 
                 break;
             }
@@ -205,7 +205,7 @@ public class GazePlay extends Application {
 
                 stats = new ScratchcardGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 100, 100, false, 0.6f, (HiddenItemsGamesStats)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 200, 200, false, 0.7f, true, (HiddenItemsGamesStats)stats);
 
                 break;
             }
