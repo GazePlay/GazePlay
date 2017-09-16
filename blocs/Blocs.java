@@ -105,8 +105,8 @@ public class Blocs extends Application {
 
         enterEvent = buildEvent(stats, useTrail);
 
-        int width = (int)(scene.getWidth() / nbColomns);
-        int height = (int)(scene.getHeight() / nbLines);
+        double width = scene.getWidth() / nbColomns;
+        double height = scene.getHeight() / nbLines;
 
         initCount = nbColomns * nbLines;
 
@@ -153,15 +153,14 @@ public class Blocs extends Application {
                 if(!finished && e.getEventType().equals(MouseEvent.MOUSE_ENTERED) || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
                     if(! useTrail) {
+
                         Bloc bloc = (Bloc) e.getTarget();
-
-                    bloc.removeEventFilter(MouseEvent.ANY, enterEvent);
-                    bloc.removeEventFilter(GazeEvent.ANY, enterEvent);
-                    GazeUtils.removeEventFilter(bloc);
-                    bloc.setTranslateX(-10000);
-                    bloc.setOpacity(0);
-                    count--;
-
+                        bloc.removeEventFilter(MouseEvent.ANY, enterEvent);
+                        bloc.removeEventFilter(GazeEvent.ANY, enterEvent);
+                        GazeUtils.removeEventFilter(bloc);
+                        bloc.setTranslateX(-10000);
+                        bloc.setOpacity(0);
+                        count--;
                     }
                     else {
 
