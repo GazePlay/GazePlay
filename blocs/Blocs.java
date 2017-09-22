@@ -10,6 +10,8 @@ import gaze.GazeUtils;
 import gaze.SecondScreen;
 import javafx.animation.SequentialTransition;
 import javafx.application.Application;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -37,7 +39,7 @@ public class Blocs extends Application {
     private static int count;
     private static int initCount;
     private static float p4w;
-    private static boolean finished = false;
+    private static boolean finished;
     private static Scene theScene;
     private static int nColomns;
     private static int nLines;
@@ -137,13 +139,27 @@ public class Blocs extends Application {
 
     private static void RemoveAllBlocs() {
 
-        for(int i = 0 ; i < blocs.size(); i++){
-            for(int j = 0 ; j < blocs.get(0).size(); j++){
+        final Service<Void> calculateService = new Service<Void>() {
 
-                removeBloc(blocs.get(i).get(j));
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
 
-        }
-    }
+                    @Override
+                    protected Void call() throws Exception {
+                        for (int i = 0; i < blocs.size(); i++){
+                            for (int j = 0; j < blocs.get(0).size(); j++) {
+
+                                removeBloc(blocs.get(i).get(j));
+
+                            }
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+        calculateService.start();
     }
 
     private static void removeBloc(Bloc toRemove){
@@ -183,6 +199,7 @@ public class Blocs extends Application {
                                     removeBloc(blocs.get(posX + i).get(posY + j));
                             }
                     }
+
                     if(((float)initCount-count)/initCount >= p4w && !finished){
 
                         finished = true;
@@ -204,27 +221,17 @@ public class Blocs extends Application {
                             }
                         }
 
-                        System.gc();
-
-                        sequence.setOnFinished(new EventHandler<ActionEvent>() {
-
-                            @Override
-                            public void handle(ActionEvent actionEvent) {
+                        sequence.setOnFinished(event ->{
                                 Utils.clear(theScene, blockRoot, choiceBox);
                                 makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, useTrail, stats);
                                 Utils.home(theScene, blockRoot, choiceBox, stats);
-                            }
-                        });
+                            });
+                        }
                     }
-
-
                 }
-            }
-        };
+            };
+        }
     }
-
-
-}
 
 class Bloc extends Rectangle{
 
