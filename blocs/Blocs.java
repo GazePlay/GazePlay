@@ -135,6 +135,17 @@ public class Blocs extends Application {
             }
     }
 
+    private static void RemoveAllBlocs() {
+
+        for(int i = 0 ; i < blocs.size(); i++){
+            for(int j = 0 ; j < blocs.get(0).size(); j++){
+
+                removeBloc(blocs.get(i).get(j));
+
+        }
+    }
+    }
+
     private static void removeBloc(Bloc toRemove){
 
         toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
@@ -142,6 +153,7 @@ public class Blocs extends Application {
         GazeUtils.removeEventFilter(toRemove);
         toRemove.setTranslateX(-10000);
         toRemove.setOpacity(0);
+        blockRoot.getChildren().remove(toRemove);
         count--;
     }
 
@@ -155,12 +167,7 @@ public class Blocs extends Application {
                     if(! useTrail) {
 
                         Bloc bloc = (Bloc) e.getTarget();
-                        bloc.removeEventFilter(MouseEvent.ANY, enterEvent);
-                        bloc.removeEventFilter(GazeEvent.ANY, enterEvent);
-                        GazeUtils.removeEventFilter(bloc);
-                        bloc.setTranslateX(-10000);
-                        bloc.setOpacity(0);
-                        count--;
+                        removeBloc(bloc);
                     }
                     else {
 
@@ -182,6 +189,8 @@ public class Blocs extends Application {
 
                         stats.incNbGoals();
 
+
+                        /*
                         for(Node N : blockRoot.getChildren()){
 
                             //if(! (N instanceof Home) && ! (N instanceof Bravo)) {
@@ -192,12 +201,19 @@ public class Blocs extends Application {
                                 N.setOpacity(0);
                                 N.removeEventFilter(MouseEvent.ANY, enterEvent);
 
-                                //R.removeEventFilter(GazeEvent.ANY, enterEvent);
-                                //GazeUtils.removeEventFilter(R);
+                                N.removeEventFilter(GazeEvent.ANY, enterEvent);
+                                GazeUtils.removeEventFilter(N);
                             }
-                        }
+                        }*/
+
+                        RemoveAllBlocs();
 
                         SequentialTransition sequence = bravo.win();
+
+
+
+                        System.gc();
+
                         sequence.setOnFinished(new EventHandler<ActionEvent>() {
 
                             @Override
@@ -214,6 +230,8 @@ public class Blocs extends Application {
             }
         };
     }
+
+
 }
 
 class Bloc extends Rectangle{
