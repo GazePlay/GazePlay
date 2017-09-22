@@ -162,7 +162,7 @@ public class Blocs extends Application {
             @Override
             public void handle(Event e) {
 
-                if(!finished && e.getEventType().equals(MouseEvent.MOUSE_ENTERED) || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
+                if(e.getEventType().equals(MouseEvent.MOUSE_ENTERED) || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
                     if(! useTrail) {
 
@@ -189,28 +189,20 @@ public class Blocs extends Application {
 
                         stats.incNbGoals();
 
-
-                        /*
-                        for(Node N : blockRoot.getChildren()){
-
-                            //if(! (N instanceof Home) && ! (N instanceof Bravo)) {
-
-                            if(! (N instanceof Bravo)) {
-
-                                N.setTranslateX(-10000);
-                                N.setOpacity(0);
-                                N.removeEventFilter(MouseEvent.ANY, enterEvent);
-
-                                N.removeEventFilter(GazeEvent.ANY, enterEvent);
-                                GazeUtils.removeEventFilter(N);
-                            }
-                        }*/
+                        SequentialTransition sequence = bravo.win();
 
                         RemoveAllBlocs();
 
-                        SequentialTransition sequence = bravo.win();
+                        for(Node N : blockRoot.getChildren()) {
 
-
+                            if (!(N instanceof Bravo)) {
+                                N.setTranslateX(-10000);
+                                N.setOpacity(0);
+                                N.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                N.removeEventFilter(GazeEvent.ANY, enterEvent);
+                                GazeUtils.removeEventFilter(N);
+                            }
+                        }
 
                         System.gc();
 
