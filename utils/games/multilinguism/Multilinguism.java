@@ -76,7 +76,7 @@ public class Multilinguism {
             }
         }
 
-        return "eng";
+        return "fra";
     }
 
 }
