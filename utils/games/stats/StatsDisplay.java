@@ -32,6 +32,13 @@ public class StatsDisplay {
 
         Utils.clear(scene, root, cbxGames);
 
+        //to add or not a space before colon (:) according to the language
+        String colon = multilinguism.getTrad("Colon", Multilinguism.getLanguage());
+        if(colon.equals("_noSpace"))
+            colon = ": ";
+        else
+            colon = " : ";
+
         Text statistics = new Text(multilinguism.getTrad("StatsTitle", Multilinguism.getLanguage()));
 
         statistics.setX(scene.getWidth()*0.4);
@@ -39,7 +46,7 @@ public class StatsDisplay {
         statistics.setFont(new Font(60));
         statistics.setFill(new Color(1,1,1,1));
 
-        Text totalLength = new Text(multilinguism.getTrad("TotalLength", Multilinguism.getLanguage()) + " : " + convert(stats.getTotalLength()));
+        Text totalLength = new Text(multilinguism.getTrad("TotalLength", Multilinguism.getLanguage()) + colon + convert(stats.getTotalLength()));
 
         totalLength.setX(100);
         totalLength.setY(150);
@@ -49,15 +56,15 @@ public class StatsDisplay {
         Text shoots = new Text();
         if(stats instanceof ShootGamesStats) {
 
-            shoots = new Text(multilinguism.getTrad("Shoots", Multilinguism.getLanguage()) + " : " + stats.getNbGoals());
+            shoots = new Text(multilinguism.getTrad("Shoots", Multilinguism.getLanguage()) + colon + stats.getNbGoals());
         }
         else if(stats instanceof BubblesGamesStats){
 
-            shoots = new Text(multilinguism.getTrad("BubbleShoot", Multilinguism.getLanguage()) + " : " + stats.getNbGoals());
+            shoots = new Text(multilinguism.getTrad("BubbleShoot", Multilinguism.getLanguage()) + colon + stats.getNbGoals());
         }
         else if(stats instanceof HiddenItemsGamesStats) {
 
-            shoots = new Text(multilinguism.getTrad("HiddenItemsShoot", Multilinguism.getLanguage()) + " : " + stats.getNbGoals());
+            shoots = new Text(multilinguism.getTrad("HiddenItemsShoot", Multilinguism.getLanguage()) + colon + stats.getNbGoals());
         }
 
         shoots.setX(100);
@@ -65,7 +72,7 @@ public class StatsDisplay {
         shoots.setFont(new Font(20));
         shoots.setFill(new Color(1,1,1,1));
 
-        Text length = new Text(multilinguism.getTrad("Length", Multilinguism.getLanguage()) + " : " + convert(stats.getLength()));
+        Text length = new Text(multilinguism.getTrad("Length", Multilinguism.getLanguage()) + colon + convert(stats.getLength()));
 
         length.setX(100);
         length.setY(250);
@@ -76,11 +83,11 @@ public class StatsDisplay {
 
         if(stats instanceof ShootGamesStats) {
 
-            averageLength = new Text(multilinguism.getTrad("ShootaverageLength", Multilinguism.getLanguage()) + " : " + convert(stats.getAverageLength()));
+            averageLength = new Text(multilinguism.getTrad("ShootaverageLength", Multilinguism.getLanguage()) + colon + convert(stats.getAverageLength()));
         }
         else if(stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
 
-            averageLength = new Text(multilinguism.getTrad("AverageLength", Multilinguism.getLanguage()) + " : " + convert(stats.getAverageLength()));
+            averageLength = new Text(multilinguism.getTrad("AverageLength", Multilinguism.getLanguage()) + colon + convert(stats.getAverageLength()));
         }
 
         averageLength.setX(100);
@@ -92,11 +99,11 @@ public class StatsDisplay {
 
         if(stats instanceof ShootGamesStats) {
 
-            medianLength = new Text(multilinguism.getTrad("ShootmedianLength", Multilinguism.getLanguage()) + " : " + convert(stats.getMedianLength()));
+            medianLength = new Text(multilinguism.getTrad("ShootmedianLength", Multilinguism.getLanguage()) + colon + convert(stats.getMedianLength()));
         }
         else if(stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
 
-            medianLength = new Text(multilinguism.getTrad("MedianLength", Multilinguism.getLanguage()) + " : " + convert(stats.getMedianLength()));
+            medianLength = new Text(multilinguism.getTrad("MedianLength", Multilinguism.getLanguage()) + colon + convert(stats.getMedianLength()));
         }
 
         medianLength.setX(100);
@@ -104,7 +111,7 @@ public class StatsDisplay {
         medianLength.setFont(new Font(20));
         medianLength.setFill(new Color(1, 1, 1, 1));
 
-        Text standDev = new Text(multilinguism.getTrad("StandDev", Multilinguism.getLanguage()) + " : " + convert((long)stats.getSD()));
+        Text standDev = new Text(multilinguism.getTrad("StandDev", Multilinguism.getLanguage()) + colon + convert((long)stats.getSD()));
 
         standDev.setX(100);
         standDev.setY(400);
@@ -115,7 +122,7 @@ public class StatsDisplay {
 
         if(stats instanceof ShootGamesStats && !(stats instanceof BubblesGamesStats) && ((ShootGamesStats)stats).getNbUnCountedShoots()!=0) {
 
-            UncountedShoot = new Text(multilinguism.getTrad("UncountedShoot", Multilinguism.getLanguage()) + " : " + ((ShootGamesStats)stats).getNbUnCountedShoots());
+            UncountedShoot = new Text(multilinguism.getTrad("UncountedShoot", Multilinguism.getLanguage()) + colon + ((ShootGamesStats)stats).getNbUnCountedShoots());
 
             UncountedShoot.setX(scene.getWidth() / 2);
             UncountedShoot.setY(150);
