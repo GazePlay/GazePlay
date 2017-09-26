@@ -4,13 +4,17 @@ import gaze.SecondScreen;
 import gaze.TobiiGazeListener;
 import javafx.geometry.Point2D;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 public class Tobii {
 
-    private static final double screenWidth = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
+   /* private static final double screenWidth = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
     private static final double screenHeight = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
 
     private static Point2D parseTobiiOutput(String tobiiOutput) {
@@ -28,9 +32,9 @@ public class Tobii {
         Point2D point = new Point2D(x, y);
 
         return point;
-    }
+    }*/
 
-    public static void execProg(TobiiGazeListener listener) {
+    public static void oldExecProg(TobiiGazeListener listener) {
 
         Runtime runtime = Runtime.getRuntime();
 
@@ -46,22 +50,55 @@ public class Tobii {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = "";
 
-        int i = 0;
-
         try {
             while ((line = reader.readLine()) != null) {
                 // Traitement du flux de sortie de l'application si besoin est
 
          //      if(i++==100)
-         //           System.out.println(parseTobiiOutput(line));
-                Point2D gazePosition = parseTobiiOutput(line);
+                System.out.println(line);
+                //System.out.println(parseTobiiOutput(line));
+                //Point2D gazePosition = parseTobiiOutput(line);
+                Point2D gazePosition = null;
                 if(gazePosition!=null){
 
-                    listener.onGazeUpdate(gazePosition);
+                 //   listener.onGazeUpdate(gazePosition);
                 }
             }
         }catch(Exception ioe){
         ioe.printStackTrace();
+        }
+    }
+
+    public static void execProg(TobiiGazeListener listener) {
+
+        Runtime runtime = Runtime.getRuntime();
+
+        Process process = null;
+        try {
+            process = runtime.exec(new String[]{"C:\\Users\\schwab\\IdeaProjects\\GazePlay\\tobii\\GazePlay-tobii.exe"});
+        } catch (IOException e) {
+
+            System.err.println("No tobii connected");
+            return;
+        }
+
+        ReadableByteChannel standardChannel = Channels.newChannel(process.getInputStream());
+
+        int size = 1024;
+
+        ByteBuffer buffer = ByteBuffer.allocate( size );
+
+        try {
+            while(true) {
+
+                standardChannel.read(buffer);
+                buffer.flip();
+                for (int i = 0; i < buffer.limit(); i++)
+                    System.out.print((char)buffer.get());
+                buffer.clear();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -74,7 +111,7 @@ public class Tobii {
         System.out.println(parseTobiiOutput("Gaze point: 10809889523 0.371530, 0.707418"));
         System.out.println(parseTobiiOutput("Gaze point: 10817493839 INVALID"));*/
 
-        //execProg();
+        execProg(null);
 
     }
 
