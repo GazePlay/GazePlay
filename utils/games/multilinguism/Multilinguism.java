@@ -118,4 +118,4 @@ class Entry {
     }
 }
 
-enum Languages{fra,eng}
+enum Languages{fra,eng,deu}
