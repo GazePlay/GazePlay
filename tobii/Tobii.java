@@ -1,16 +1,9 @@
 package tobii;
 
-import gaze.SecondScreen;
 import gaze.TobiiGazeListener;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 
 public class Tobii {
 
@@ -19,13 +12,15 @@ public class Tobii {
 
     private static Point2D parseTobiiOutput(String tobiiOutput) {
 
+        System.out.println(tobiiOutput);
         float x = 0;
         float y = 0;
         try {
-            x = Float.valueOf(tobiiOutput.substring(24, 32))*(float)screenWidth;
-            y = Float.valueOf(tobiiOutput.substring(34, 42))*(float)screenHeight;
+            x = Float.valueOf(tobiiOutput.substring(12, 21))*(float)screenWidth;
+            y = Float.valueOf(tobiiOutput.substring(22, 29))*(float)screenHeight;
         } catch (Exception e) {
 
+            System.out.println(e);
             return null;
         }
 
@@ -34,86 +29,31 @@ public class Tobii {
         return point;
     }
 
-    public static void oldExecProg(TobiiGazeListener listener) {
-
-        Runtime runtime = Runtime.getRuntime();
-
-        Process process = null;
-        try {
-            process = runtime.exec(new String[]{"C:\\Users\\schwab\\IdeaProjects\\GazePlay\\tobii\\GazePlay-tobii.exe"});
-        } catch (IOException e) {
-
-            System.err.println("No tobii connected");
-            return;
-        }
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line = "";
-
-        try {
-            while ((line = reader.readLine()) != null) {
-                // Traitement du flux de sortie de l'application si besoin est
-
-         //      if(i++==100)
-                System.out.println(line);
-                //System.out.println(parseTobiiOutput(line));
-                //Point2D gazePosition = parseTobiiOutput(line);
-                Point2D gazePosition = null;
-                if(gazePosition!=null){
-
-                 //   listener.onGazeUpdate(gazePosition);
-                }
-            }
-        }catch(Exception ioe){
-        ioe.printStackTrace();
-        }
-    }
-
-    public static void execProgold2(TobiiGazeListener listener) {
-
-        Runtime runtime = Runtime.getRuntime();
-
-        Process process = null;
-        try {
-            process = runtime.exec(new String[]{"C:\\Users\\schwab\\IdeaProjects\\GazePlay\\tobii\\GazePlay-tobii.exe"});
-        } catch (IOException e) {
-
-            System.err.println("No tobii connected");
-            return;
-        }
-
-        ReadableByteChannel standardChannel = Channels.newChannel(process.getInputStream());
-
-        int size = 1024;
-
-        ByteBuffer buffer = ByteBuffer.allocate( size );
-
-        try {
-            while(true) {
-
-                standardChannel.read(buffer);
-                buffer.flip();
-                for (int i = 0; i < buffer.limit(); i++)
-                    System.out.print((char)buffer.get());
-                buffer.clear();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void execProg(TobiiGazeListener listener) {
         init();
 
-        while(true){
+        final Service<Void> calculateService = new Service<Void>() {
 
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+
+                    @Override
+                    protected Void call() throws Exception {
+                        while(true){
+
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            System.out.println(parseTobiiOutput(gazePosition()));
+                        }
+                    }
+                };
             }
-            System.out.println(gazePosition());
-        }
+        };
+        calculateService.start();
     }
 
     public static native void init();
