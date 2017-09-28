@@ -10,7 +10,7 @@ public class Tobii {
     private static final double screenWidth = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
     private static final double screenHeight = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
 
-    private static Point2D parseTobiiOutput(String tobiiOutput) {
+    private static Point2D parseTobiiOutput(String tobiiOutput){
 
         System.out.println(tobiiOutput);
         float x = 0;
@@ -29,8 +29,14 @@ public class Tobii {
         return point;
     }
 
-    public static void execProg(TobiiGazeListener listener) {
-        init();
+    public static void execProg(TobiiGazeListener listener){
+
+        int initialisation = init();
+
+        if(initialisation != 1) {
+            System.out.println("No Tobii detected");
+            return;
+        }
 
         final Service<Void> calculateService = new Service<Void>() {
 
@@ -40,14 +46,18 @@ public class Tobii {
 
                     @Override
                     protected Void call() throws Exception {
-                        while(true){
 
+                        Point2D point = null;
+                        while(true){
                             try {
-                                Thread.sleep(1000);
+                                Thread.sleep(100);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            System.out.println(parseTobiiOutput(gazePosition()));
+                            point = parseTobiiOutput(gazePosition());
+                            System.out.println(point);
+                            if(point != null)
+                                listener.onGazeUpdate(point);
                         }
                     }
                 };
@@ -56,13 +66,11 @@ public class Tobii {
         calculateService.start();
     }
 
-    public static native void init();
+    public static native int init();
 
     public static native String gazePosition();
 
-
     static{
-
         try {
             System.loadLibrary("tobii_stream_engine");
             System.loadLibrary("GazePlayTobiiLibrary2");
