@@ -31,6 +31,11 @@ public class Tobii {
 
     public static void execProg(TobiiGazeListener listener){
 
+        if(System.getProperty("os.name").indexOf("indow")<0) {
+
+            return;
+        }
+
         int initialisation = init();
 
         System.out.println(initialisation);
@@ -74,8 +79,10 @@ public class Tobii {
 
     static{
         try {
-            System.loadLibrary("tobii_stream_engine");
-            System.loadLibrary("GazePlayTobiiLibrary2");
+            if(System.getProperty("os.name").indexOf("indow")>0) {
+                System.loadLibrary("tobii_stream_engine");
+                System.loadLibrary("GazePlayTobiiLibrary2");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

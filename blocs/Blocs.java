@@ -117,7 +117,7 @@ public class Blocs extends Application {
         for (int i = 0; i < nbColomns; i++)
             for (int j = 0; j < nbLines; j++) {
 
-                Bloc bloc = new Bloc(i * width, j * height, width, height,i ,j);
+                Bloc bloc = new Bloc(i * width, j * height, width+1, height+1,i ,j);//width+1, height+1 to avoid spaces between blocks for Scratchcard
                 if(colors)
                     bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
                 else
