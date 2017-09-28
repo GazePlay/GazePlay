@@ -26,10 +26,9 @@ public class TobiiGazeListener {
     }
 
     public void onGazeUpdate(Point2D gazePosition){
-        //Point2D point = GazeUtils.getEyesCenterNormalized(gazeData);
 
         //System.out.println(point);
-      //  System.out.println("gazedata = " + gazePosition);
+        System.out.println("gazedata = " + gazePosition);
 
         if(secondScreen != null){
 
@@ -39,20 +38,21 @@ public class TobiiGazeListener {
 
             javafx.geometry.Point2D p = gi.getNode().sceneToLocal(gazePosition.getX(),gazePosition.getY());
 
-            //if(gi.getShape().contains(gazeData.rawCoordinates.x,gazeData.rawCoordinates.y)){
+            System.out.println("p = " + p);
+
             if(gi.getNode().contains(p)){
 
                 if(gi.isOn()){
 
                     gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), gazePosition.getX(),gazePosition.getY()));
-                    //System.out.println(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
+                    System.out.println(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
                 }
                 else {
 
                     gi.setOn(true);
                     gi.setTime((new Date()).getTime());
                     gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), gazePosition.getX(),gazePosition.getY()));
-                    //System.out.println(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
+                    System.out.println(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
                 }
             }
             else{//gaze is not on the shape
@@ -62,7 +62,7 @@ public class TobiiGazeListener {
                     gi.setOn(false);
                     gi.setTime(-1);
                     gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), gazePosition.getX(),gazePosition.getY()));
-                    //System.out.println(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
+                    System.out.println(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
                 }
                 else{//gaze was not on the shape previously
                     //nothing to do
