@@ -33,7 +33,9 @@ public class Tobii {
 
         int initialisation = init();
 
-        if(initialisation != 1) {
+        System.out.println(initialisation);
+
+        if(initialisation > 0 ) {//revoir ça
             System.out.println("No Tobii detected");
             return;
         }
