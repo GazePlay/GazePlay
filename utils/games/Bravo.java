@@ -19,6 +19,10 @@ import java.net.URL;
  */
 public class Bravo extends Rectangle{
 
+    private static int length = 600;
+    private static int nb = 5;
+
+
     public Bravo() {
 
         super(-10000, -10000, 0, 0);
@@ -60,22 +64,22 @@ public class Bravo extends Rectangle{
 
         Timeline timeline = new Timeline();
 
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(500), new KeyValue(xProperty(), XBig)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(500), new KeyValue(yProperty(), YBig)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(500), new KeyValue(widthProperty(), maxWidth)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(500), new KeyValue(heightProperty(), maxWidth)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(xProperty(), XBig)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(yProperty(), YBig)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(widthProperty(), maxWidth)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(heightProperty(), maxWidth)));
 
         sequence.getChildren().add(timeline);
 
         timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(500), new KeyValue(xProperty(), XSmall)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(500), new KeyValue(yProperty(), YSmall)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(500), new KeyValue(widthProperty(), minWidth)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(500), new KeyValue(heightProperty(), minWidth)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(xProperty(), XSmall)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(yProperty(), YSmall)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(widthProperty(), minWidth)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(heightProperty(), minWidth)));
 
         sequence.getChildren().add(timeline);
 
-        sequence.setCycleCount(6);
+        sequence.setCycleCount(5);
 
         sequence.play();
 

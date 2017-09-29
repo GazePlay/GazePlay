@@ -37,6 +37,11 @@ public class GazePlay extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        System.out.println("***********************");
+        System.out.println("GazePlay");
+        System.out.println("Operating System " + System.getProperty("os.name"));
+        System.out.println("***********************");
+
         try {
             System.setProperty("file.encoding","UTF-8");
             Field charset = Charset.class.getDeclaredField("defaultCharset");

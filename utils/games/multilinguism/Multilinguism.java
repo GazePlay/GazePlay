@@ -2,9 +2,7 @@ package utils.games.multilinguism;
 
 import gaze.Configuration.Configuration;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -18,9 +16,9 @@ public class Multilinguism {
         traductions = new HashMap<>(1000);
 
         try {
-            BufferedReader br = null;
+            InputStream is =  ClassLoader.getSystemClassLoader().getResourceAsStream("data/multilinguism/multilinguism.csv");
 
-            br = new BufferedReader(new FileReader("data/multilinguism/multilinguism.csv"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             String ligne = null;
 
