@@ -132,19 +132,7 @@ public abstract class Stats {
             @Override
             public void handle(GazeEvent e) {
 
-
-                //in heatChart, x and y are opposed
-                int x = ((int)e.getY()/heatMapPixelSize);
-                int y = ((int)e.getX()/heatMapPixelSize);
-
-                //inc(x,y);
-
-                for(int i = -trail; i<= trail; i++)
-                    for(int j = -trail; j<= trail; j++){
-
-                        if(Math.sqrt(i*i+j*j)<trail)
-                            inc(x+i,y+j);
-                    }
+                incHeatMap((int) e.getX(), (int) e.getY());
             }
         };
     }
@@ -156,22 +144,23 @@ public abstract class Stats {
             @Override
             public void handle(MouseEvent e) {
 
-
-                //in heatChart, x and y are opposed
-                int x = ((int)e.getY()/heatMapPixelSize);
-                int y = ((int)e.getX()/heatMapPixelSize);
-
-                //inc(x,y);
-
-                for(int i = -trail; i<= trail; i++)
-                    for(int j = -trail; j<= trail; j++){
-
-                        if(Math.sqrt(i*i+j*j)<trail)
-                            inc(x+i,y+j);
-                    }
-                //inc(x,y);
+                incHeatMap((int) e.getX(), (int) e.getY());
             }
         };
+    }
+
+    private void incHeatMap(int X, int Y){
+
+        //in heatChart, x and y are opposed
+        int x = Y/heatMapPixelSize;
+        int y = X/heatMapPixelSize;
+
+        for(int i = -trail; i<= trail; i++)
+            for(int j = -trail; j<= trail; j++){
+
+                if(Math.sqrt(i*i+j*j)<trail)
+                    inc(x+i,y+j);
+            }
     }
 
     private void inc(int x, int y){
