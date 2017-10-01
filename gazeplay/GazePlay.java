@@ -97,7 +97,7 @@ public class GazePlay extends Application {
 
     private void chooseGame(Number value) {
 
-        System.out.println(value);
+        System.out.println("Game number: " + value);
 
         Utils.clear(scene, root, cbxGames);
 

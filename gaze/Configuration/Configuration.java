@@ -16,7 +16,7 @@ public class Configuration {
 
     public String gazeMode = "true";
     public String eyetracker = "tobii";
-        public String language = "eng";
+    public String language = "eng";
 
     public Configuration() {
 

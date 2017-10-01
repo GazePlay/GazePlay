@@ -18,6 +18,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Created by schwab on 16/08/2017.
+ */
+
 public abstract class Stats {
 
     private final int heatMapPixelSize=5;
@@ -30,7 +34,7 @@ public abstract class Stats {
     protected long beginTime;
     protected long zeroTime;
     protected ArrayList<Integer> lengthBetweenGoals;
-    protected Scene scene;
+    protected javafx.scene.Scene scene;
     protected EventHandler<MouseEvent> recordMouseMovements;
     protected EventHandler<GazeEvent> recordGazeMovements;
 
@@ -57,10 +61,12 @@ public abstract class Stats {
         zeroTime = System.currentTimeMillis();
         lengthBetweenGoals = new ArrayList<Integer>(1000);
 
+        System.out.println("GazeUtils ON : " + GazeUtils.isOn());
+
         if(GazeUtils.isOn()){
 
             recordGazeMovements = buildRecordGazeMovements();
-            scene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+            GazeUtils.addStats(this);
         }
         else {
 
@@ -149,7 +155,7 @@ public abstract class Stats {
         };
     }
 
-    private void incHeatMap(int X, int Y){
+    public void incHeatMap(int X, int Y){
 
         //in heatChart, x and y are opposed
         int x = Y/heatMapPixelSize;

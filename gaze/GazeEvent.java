@@ -12,7 +12,7 @@ import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 
 
-public class GazeEvent extends Event {
+public class GazeEvent extends InputEvent {
 
     static IGazeListener gazeListener;
 

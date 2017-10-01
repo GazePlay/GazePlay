@@ -4,7 +4,9 @@ import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
 import gaze.Configuration.Configuration;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import tobii.Tobii;
+import utils.games.stats.Stats;
 
 import java.util.ArrayList;
 
@@ -19,7 +21,11 @@ public class GazeUtils {
 
     static final GazeManager gm = GazeManager.getInstance();
     static boolean success = gm.activate();
-    static final IGazeListener gazeListener = createGazeListener();//new TrueGazeListener(nodesEventFilter, nodesEventHandler);
+    static final IGazeListener gazeListener = createGazeListener();
+
+    static Stats stats;
+
+    static Scene scene = null;
 
     private static IGazeListener createGazeListener() {
 
@@ -37,6 +43,16 @@ public class GazeUtils {
         else
             return  new FuzzyGazeListener(nodesEventFilter, nodesEventHandler);
         return null;
+    }
+
+    public static void addStats(Stats newStats){
+
+        stats = newStats;
+    }
+
+    public static void addEventFilter(Scene gazeScene){
+
+        scene = gazeScene;
     }
 
     public static void addEventFilter(Node gs){
@@ -78,6 +94,8 @@ public class GazeUtils {
     }
 
     public static boolean isOn() {
-        return GazeManager.getInstance().activate();
+        return success;
     }
+
+
 }

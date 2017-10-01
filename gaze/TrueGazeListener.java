@@ -31,11 +31,17 @@ class TrueGazeListener implements IGazeListener {
         //Point2D point = GazeUtils.getEyesCenterNormalized(gazeData);
 
         //System.out.println(point);
-        System.out.println("gazedata = " + gazeData.rawCoordinates);
+        //System.out.println("gazedata = " + gazeData.rawCoordinates);
         if(secondScreen != null){
 
             secondScreen.light(gazeData.rawCoordinates);
         }
+
+        if(GazeUtils.stats != null) {
+
+            GazeUtils.stats.incHeatMap((int)gazeData.rawCoordinates.x, (int)gazeData.rawCoordinates.y);
+        }
+
         for(GazeInfos gi : shapesEventFilter){
 
            // System.out.println(gi.getShape().contains(gazeData.rawCoordinates.x,gazeData.rawCoordinates.y));

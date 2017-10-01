@@ -91,12 +91,12 @@ public class Tobii {
 
     public static void main(String[] argv){
 
-        System.out.println(parseTobiiOutput("Gaze point: 10809754557 0.433731, 0.719170"));
-     /*   System.out.println(parseTobiiOutput("Gaze point: 10809814527 0.372081, 0.670327"));
-        System.out.println(parseTobiiOutput("Gaze point: 10809828278 0.373068, 0.672786"));
-        System.out.println(parseTobiiOutput("Gaze point: 10809874253 0.369580, 0.700685"));
-        System.out.println(parseTobiiOutput("Gaze point: 10809889523 0.371530, 0.707418"));
-        System.out.println(parseTobiiOutput("Gaze point: 10817493839 INVALID"));*/
+        System.out.println(parseTobiiOutput("Scene point: 10809754557 0.433731, 0.719170"));
+     /*   System.out.println(parseTobiiOutput("Scene point: 10809814527 0.372081, 0.670327"));
+        System.out.println(parseTobiiOutput("Scene point: 10809828278 0.373068, 0.672786"));
+        System.out.println(parseTobiiOutput("Scene point: 10809874253 0.369580, 0.700685"));
+        System.out.println(parseTobiiOutput("Scene point: 10809889523 0.371530, 0.707418"));
+        System.out.println(parseTobiiOutput("Scene point: 10817493839 INVALID"));*/
 
         init();
 
