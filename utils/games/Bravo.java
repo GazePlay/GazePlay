@@ -19,7 +19,7 @@ import java.net.URL;
  */
 public class Bravo extends Rectangle{
 
-    private static int length = 600;
+    private static int length = 650;
     private static int nb = 5;
 
 
@@ -71,13 +71,15 @@ public class Bravo extends Rectangle{
 
         sequence.getChildren().add(timeline);
 
-        timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(xProperty(), XSmall)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(yProperty(), YSmall)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(widthProperty(), minWidth)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(heightProperty(), minWidth)));
+        Timeline timeline2 = new Timeline();
 
-        sequence.getChildren().add(timeline);
+        timeline2 = new Timeline();
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(xProperty(), XSmall)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(yProperty(), YSmall)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(widthProperty(), minWidth)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(heightProperty(), minWidth)));
+
+        sequence.getChildren().add(timeline2);
 
         sequence.setCycleCount(5);
 

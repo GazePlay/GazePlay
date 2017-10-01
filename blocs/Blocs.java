@@ -45,7 +45,7 @@ public class Blocs extends Application {
     private static boolean hasColors;
     private static Bravo bravo = new Bravo();
     private static ChoiceBox<String> choiceBox;
-    private static ArrayList<ArrayList<Bloc>> blocs;
+    private static Bloc[][] blocs;
     private static final int trail = 10;
     private static final Image[] images = Utils.images(System.getProperty("user.home") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
 
@@ -96,9 +96,7 @@ public class Blocs extends Application {
 
         blockRoot.getChildren().add(bravo);
 
-        blocs = new ArrayList<>(nbColomns);
-        for(int i = 0; i < nbLines; i++)
-            blocs.add(new ArrayList<>(nbLines));
+        blocs = new Bloc[nbColomns][nbLines];
 
         int value = (int)Math.floor(Math.random()*images.length);
 
@@ -122,7 +120,7 @@ public class Blocs extends Application {
                 else
                     bloc.setFill(Color.BLACK);
                 root.getChildren().add(bloc);
-                blocs.get(i).add(bloc);
+                blocs[i][j] = bloc;
 
                 bloc.toBack();
 
@@ -138,6 +136,9 @@ public class Blocs extends Application {
 
     private static void RemoveAllBlocs() {
 
+        int maxX = blocs.length;
+        int maxY = blocs[0].length;
+
         final Service<Void> calculateService = new Service<Void>() {
 
             @Override
@@ -146,10 +147,10 @@ public class Blocs extends Application {
 
                     @Override
                     protected Void call() throws Exception {
-                        for (int i = 0; i < blocs.size(); i++){
-                            for (int j = 0; j < blocs.get(0).size(); j++) {
+                        for (int i = 0; i < maxX; i++){
+                            for (int j = 0; j < maxY; j++) {
 
-                                removeBloc(blocs.get(i).get(j));
+                                removeBloc(blocs[i][j]);
 
                             }
                         }
@@ -163,12 +164,22 @@ public class Blocs extends Application {
 
     private static void removeBloc(Bloc toRemove){
 
+        /*
+        System.out.println("##############");
+        System.out.println("#####TO REMOVE#########");
+        System.out.println(toRemove.posX);
+        System.out.println(toRemove.posY);
+        System.out.println("##############");
+*/
+        if(toRemove==null)
+            return;
+
         toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
         toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
         GazeUtils.removeEventFilter(toRemove);
         toRemove.setTranslateX(-10000);
         toRemove.setOpacity(0);
-        blockRoot.getChildren().remove(toRemove);
+        //blockRoot.getChildren().remove(toRemove);
         count--;
     }
 
@@ -176,6 +187,9 @@ public class Blocs extends Application {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
+
+                //System.out.println("useTrail = " + useTrail);
+                //System.out.println("e.getEventType() = " + e.getEventType());
 
                 if(e.getEventType().equals(MouseEvent.MOUSE_ENTERED) || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
@@ -191,12 +205,22 @@ public class Blocs extends Application {
                         int posX = bloc.posX;
                         int posY = bloc.posY;
 
-                        for (int i = -trail; i < trail; i++)
+                       // System.out.println(bloc.posX);
+                       // System.out.println(bloc.posY);
+
+                        int maxX = blocs.length;
+                        int maxY = blocs[0].length;
+
+                        for (int i = -trail; i < trail; i++) {
                             for (int j = -trail; j < trail; j++) {
 
-                                if (Math.sqrt(i * i + j * j) < trail && posX + i >= 0 && posY + j >= 0 && posX + i < blocs.size() && posY + j < blocs.get(0).size())
-                                    removeBloc(blocs.get(posX + i).get(posY + j));
+                                //System.out.println(Math.sqrt(i * i + j * j) + " : " + maxX + ", " + maxY + ", " + (posX + i) + ", " + (posY + j));
+                                if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0 && posX + i < maxX && posY + j < maxY) {
+                                    //System.out.println("à supprimer");
+                                    removeBloc(blocs[posX + i][posY + j]);
+                                }
                             }
+                        }
                     }
 
                     if(((float)initCount-count)/initCount >= p4w && !finished){
@@ -207,7 +231,7 @@ public class Blocs extends Application {
 
                         SequentialTransition sequence = bravo.win();
 
-                        RemoveAllBlocs();
+  //                      RemoveAllBlocs();
 
                         for(Node N : blockRoot.getChildren()) {
 

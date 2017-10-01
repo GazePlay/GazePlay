@@ -69,7 +69,7 @@ public class GazeUtils {
         nodesEventHandler.add(new GazeInfos(gs));
     }
 
-    public static void removeEventFilter(Node gs){
+    public synchronized static void removeEventFilter(Node gs){
 
         int i;
 
