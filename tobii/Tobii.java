@@ -12,7 +12,7 @@ public class Tobii {
 
     private static Point2D parseTobiiOutput(String tobiiOutput){
 
-        System.out.println(tobiiOutput);
+   //     System.out.println(tobiiOutput);
         float x = 0;
         float y = 0;
         try {
@@ -20,7 +20,7 @@ public class Tobii {
             y = Float.valueOf(tobiiOutput.substring(22, 29))*(float)screenHeight;
         } catch (Exception e) {
 
-            System.out.println(e);
+     //       System.out.println(e);
             return null;
         }
 
@@ -38,9 +38,9 @@ public class Tobii {
 
         int initialisation = init();
 
-        System.out.println(initialisation);
+        System.out.println("initialisation : " + initialisation);
 
-        if(initialisation > 0 ) {//revoir ça
+        if(initialisation <= 0 ) {//revoir ça
             System.out.println("No Tobii detected");
             return;
         }
@@ -62,7 +62,7 @@ public class Tobii {
                                 e.printStackTrace();
                             }
                             point = parseTobiiOutput(gazePosition());
-                            System.out.println(point);
+                        //    System.out.println(point);
                             if(point != null)
                                 listener.onGazeUpdate(point);
                         }

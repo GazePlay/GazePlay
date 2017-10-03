@@ -28,7 +28,7 @@ public class TobiiGazeListener {
     public void onGazeUpdate(Point2D gazePosition){
 
         //System.out.println(point);
-        System.out.println("gazedata = " + gazePosition);
+      //  System.out.println("gazedata = " + gazePosition);
 
         if(secondScreen != null){
 
@@ -38,7 +38,7 @@ public class TobiiGazeListener {
 
             javafx.geometry.Point2D p = gi.getNode().sceneToLocal(gazePosition.getX(),gazePosition.getY());
 
-            System.out.println("p = " + p);
+        //    System.out.println("p = " + p);
 
             if(gi.getNode().contains(p)){
 
