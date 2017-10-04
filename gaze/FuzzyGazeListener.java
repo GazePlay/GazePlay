@@ -8,6 +8,8 @@ import java.util.Date;
 
 /**
  * Created by schwab on 16/08/2016.
+ *
+ * may be deprecated
  */
 class FuzzyGazeListener implements IGazeListener {
 
