@@ -4,6 +4,7 @@ import gaze.TobiiGazeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
+import utils.games.Utils;
 
 public class Tobii {
 
@@ -83,11 +84,19 @@ public class Tobii {
     static{
         try {
             if(System.getProperty("os.name").indexOf("indow")>0) {
-                System.loadLibrary("tobii_stream_engine");
-                System.loadLibrary("GazePlayTobiiLibrary2");
+                System.load(Utils.getDllFolder()+"tobii_stream_engine.dll");
+                System.load(Utils.getDllFolder()+"GazePlayTobiiLibrary2.dll");
+                //System.loadLibrary("tobii_stream_engine");
+               // System.loadLibrary("GazePlayTobiiLibrary2");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (java.lang.UnsatisfiedLinkError e) {
+            System.out.println("******************************************************");
+            System.out.println("Please put appropriate DLLs in DLL folder :");
+            System.out.println("tobii_stream_engine.dll and GazePlayTobiiLibrary2.dll");
+            System.out.println("should be in");
+            System.out.println(Utils.getDllFolder());
+            System.out.println("******************************************************");
+            System.exit(0);
         }
     }
 

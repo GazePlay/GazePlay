@@ -296,6 +296,15 @@ public class Utils {
 
     /**
      *
+     * @return DLL directory for GazePlay : in the default directory of GazePlay, a folder called DLL
+     */
+    public static String getDllFolder(){
+
+        return getGazePlayFolder() + "DLL" + FILESEPARATOR;
+    }
+
+    /**
+     *
      * @return Temp directory for GazePlay : in the default directory of GazePlay, a folder called Temp
      */
     public static String getTempFolder(){
@@ -436,5 +445,4 @@ public class Utils {
 
         return out;
     }
-
 }
