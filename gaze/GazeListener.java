@@ -37,5 +37,58 @@ public abstract class GazeListener {
 
     public void onGazeUpdate(Point2D gazePosition){
 
+        //System.out.println(point);
+        //  System.out.println("gazedata = " + gazePosition);
+
+        if(secondScreen != null){
+
+            secondScreen.light(gazePosition);
+        }
+
+        if(GazeUtils.stats != null) {
+
+            GazeUtils.stats.incHeatMap((int)gazePosition.getX(), (int)gazePosition.getY());
+        }
+
+        for(GazeInfos gi : shapesEventFilter){
+
+            javafx.geometry.Point2D p = gi.getNode().sceneToLocal(gazePosition.getX(),gazePosition.getY());
+
+            //    System.out.println("p = " + p);
+
+            if(gi.getNode().contains(p)){
+
+                if(gi.isOn()){
+
+                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), gazePosition.getX(),gazePosition.getY()));
+                    System.out.println(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
+                }
+                else {
+
+                    gi.setOn(true);
+                    gi.setTime((new Date()).getTime());
+                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), gazePosition.getX(),gazePosition.getY()));
+                    System.out.println(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
+                }
+            }
+            else{//gaze is not on the shape
+
+                if(gi.isOn()){//gaze was on the shape previously
+
+                    gi.setOn(false);
+                    gi.setTime(-1);
+                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), gazePosition.getX(),gazePosition.getY()));
+                    System.out.println(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
+                }
+                else{//gaze was not on the shape previously
+                    //nothing to do
+
+                }
+
+            }
+        }
+
+
+
     }
 }

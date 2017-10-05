@@ -2,6 +2,7 @@ package gaze;
 
 import com.theeyetribe.clientsdk.IGazeListener;
 import com.theeyetribe.clientsdk.data.GazeData;
+import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,25 +10,32 @@ import java.util.Date;
 /**
  * Created by schwab on 16/08/2016.
  */
-class TrueGazeListener implements IGazeListener {
+class EyeTribeGazeListener extends GazeListener implements IGazeListener {
 
-    private static ArrayList<GazeInfos> shapesEventFilter;
-    private static ArrayList<GazeInfos> shapesEventHandler;
-    private static SecondScreen secondScreen;
 
-    public TrueGazeListener(SecondScreen secondScreen){
-
-        this.secondScreen = secondScreen;
+    public EyeTribeGazeListener() {
     }
 
-    public TrueGazeListener(ArrayList<GazeInfos> shapesEventFilter, ArrayList<GazeInfos> shapesEventHandler) {
+    public EyeTribeGazeListener(SecondScreen secondScreen) {
+        super(secondScreen);
+    }
 
-        this.shapesEventFilter = shapesEventFilter;
-        this.shapesEventHandler = shapesEventHandler;
+    public EyeTribeGazeListener(ArrayList<GazeInfos> shapesEventFilter, ArrayList<GazeInfos> shapesEventHandler) {
+        super(shapesEventFilter, shapesEventHandler);
+    }
+
+    public EyeTribeGazeListener(SecondScreen secondScreen, ArrayList<GazeInfos> shapesEventFilter, ArrayList<GazeInfos> shapesEventHandler) {
+        super(secondScreen, shapesEventFilter, shapesEventHandler);
     }
 
     @Override
     public void onGazeUpdate(GazeData gazeData){
+
+        Point2D point = new Point2D(gazeData.rawCoordinates.x, gazeData.rawCoordinates.y);
+        super.onGazeUpdate(point);
+    }
+/*
+    public void onGazeUpdateold(GazeData gazeData){
         //Point2D point = GazeUtils.getEyesCenterNormalized(gazeData);
 
         //System.out.println(point);
@@ -82,5 +90,5 @@ class TrueGazeListener implements IGazeListener {
             }
         }
 
-    }
+    }*/
 }

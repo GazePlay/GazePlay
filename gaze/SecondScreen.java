@@ -12,7 +12,6 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import tobii.Tobii;
 
 /**
  * Created by schwab on 10/09/2016.
@@ -66,7 +65,7 @@ public class SecondScreen {
             Tobii.execProg(sc);
         else*/
             if (config.gazeMode.equals("true"))
-            gazeListener = new TrueGazeListener(sc);
+            gazeListener = new EyeTribeGazeListener(sc);
         else
             gazeListener = new FuzzyGazeListener(sc);
 

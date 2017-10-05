@@ -39,7 +39,7 @@ public class GazeUtils {
         }
         else
         if(config.gazeMode.equals("true"))
-            return new TrueGazeListener(nodesEventFilter, nodesEventHandler);
+            return new EyeTribeGazeListener(nodesEventFilter, nodesEventHandler);
         else
             return  new FuzzyGazeListener(nodesEventFilter, nodesEventHandler);
         return null;
