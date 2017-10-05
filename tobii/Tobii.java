@@ -9,6 +9,7 @@ public class Tobii {
 
     private static final double screenWidth = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
     private static final double screenHeight = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
+    private static boolean init = false;
 
     private static Point2D parseTobiiOutput(String tobiiOutput){
 
@@ -44,6 +45,8 @@ public class Tobii {
             System.out.println("No Tobii detected");
             return;
         }
+
+        init = true;
 
         final Service<Void> calculateService = new Service<Void>() {
 
@@ -86,7 +89,11 @@ public class Tobii {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public static boolean isInit() {
+
+        return init;
     }
 
     public static void main(String[] argv){

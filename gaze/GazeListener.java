@@ -37,7 +37,8 @@ public abstract class GazeListener {
 
     public void onGazeUpdate(Point2D gazePosition){
 
-        //System.out.println(point);
+        System.out.println(gazePosition);
+        System.out.println(GazeUtils.stats);
         //  System.out.println("gazedata = " + gazePosition);
 
         if(secondScreen != null){

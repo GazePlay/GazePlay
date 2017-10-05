@@ -1,9 +1,6 @@
 package gaze;
 
-import javafx.geometry.Point2D;
-
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by schwab on 13/09/2017.

@@ -94,7 +94,7 @@ public class GazeUtils {
     }
 
     public static boolean isOn() {
-        return success;
+        return Tobii.isInit() || success;
     }
 
 
