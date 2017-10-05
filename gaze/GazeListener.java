@@ -37,8 +37,8 @@ public abstract class GazeListener {
 
     public void onGazeUpdate(Point2D gazePosition){
 
-        System.out.println(gazePosition);
-        System.out.println(GazeUtils.stats);
+        //System.out.println(gazePosition);
+        //System.out.println(GazeUtils.stats);
         //  System.out.println("gazedata = " + gazePosition);
 
         if(secondScreen != null){
@@ -62,14 +62,14 @@ public abstract class GazeListener {
                 if(gi.isOn()){
 
                     gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), gazePosition.getX(),gazePosition.getY()));
-                    System.out.println(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
+                   // System.out.println(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
                 }
                 else {
 
                     gi.setOn(true);
                     gi.setTime((new Date()).getTime());
                     gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), gazePosition.getX(),gazePosition.getY()));
-                    System.out.println(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
+                    //System.out.println(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
                 }
             }
             else{//gaze is not on the shape
@@ -79,7 +79,7 @@ public abstract class GazeListener {
                     gi.setOn(false);
                     gi.setTime(-1);
                     gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), gazePosition.getX(),gazePosition.getY()));
-                    System.out.println(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
+                   // System.out.println(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
                 }
                 else{//gaze was not on the shape previously
                     //nothing to do
