@@ -42,39 +42,43 @@ public class Tobii {
 
         System.out.println("initialisation : " + initialisation);
 
-        if(initialisation <= 0 ) {//revoir ça
-            System.out.println("No Tobii detected");
+        if(initialisation > 0 ) { // init is done : Tobii available
+
+            System.out.println("Tobii detected : YES");
+
+            init = true;
+
+            final Service<Void> calculateService = new Service<Void>() {
+
+                @Override
+                protected Task<Void> createTask() {
+                    return new Task<Void>() {
+
+                        @Override
+                        protected Void call() throws Exception {
+
+                            Point2D point = null;
+                            while(true){
+                                try {
+                                    Thread.sleep(100);//sleep is mandatory to avoid too much calls to gazePosition()
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                point = parseTobiiOutput(gazePosition());
+                                System.out.println(Utils.now());
+                                if(point != null)
+                                    listener.onGazeUpdate(point);
+                            }
+                        }
+                    };
+                }
+            };
+            calculateService.start();
+        }
+        else{ //init was not done (no tobii available)
+            System.out.println("Tobii detected : NO");
             return;
         }
-
-        init = true;
-
-        final Service<Void> calculateService = new Service<Void>() {
-
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<Void>() {
-
-                    @Override
-                    protected Void call() throws Exception {
-
-                        Point2D point = null;
-                        while(true){
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            point = parseTobiiOutput(gazePosition());
-                        //    System.out.println(point);
-                            if(point != null)
-                                listener.onGazeUpdate(point);
-                        }
-                    }
-                };
-            }
-        };
-        calculateService.start();
     }
 
     public static native int init();
