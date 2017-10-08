@@ -43,7 +43,7 @@ public class Blocs extends Application {
     private static int nColomns;
     private static int nLines;
     private static boolean hasColors;
-    private static Bravo bravo = new Bravo();
+    private static Bravo bravo = Bravo.getBravo();
     private static ChoiceBox<String> choiceBox;
     private static Bloc[][] blocs;
     private static final int trail = 10;
@@ -94,7 +94,7 @@ public class Blocs extends Application {
 
         choiceBox = cbxGames;
 
-        blockRoot.getChildren().add(bravo);
+//        blockRoot.getChildren().add(Bravo.getBravo());
 
         blocs = new Bloc[nbColomns][nbLines];
 
@@ -218,6 +218,7 @@ public class Blocs extends Application {
                                 if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0 && posX + i < maxX && posY + j < maxY) {
                                     //System.out.println("à supprimer");
                                     removeBloc(blocs[posX + i][posY + j]);
+                                    blocs[posX + i][posY + j] = null;
                                 }
                             }
                         }
@@ -231,7 +232,7 @@ public class Blocs extends Application {
 
                         SequentialTransition sequence = bravo.win();
 
-  //                      RemoveAllBlocs();
+                        //RemoveAllBlocs();
 
                         for(Node N : blockRoot.getChildren()) {
 

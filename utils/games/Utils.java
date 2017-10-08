@@ -38,8 +38,6 @@ public class Utils {
 
     private static final String tempFolder = "temp";
 
-    private static final Bravo bravo = new Bravo();
-
     public static Image[] getImages(String folder) {
 
         return getImages(folder, -1);
@@ -106,7 +104,7 @@ public class Utils {
 
         root.getChildren().remove(0, root.getChildren().size());
 
-        root.getChildren().add(bravo);
+        root.getChildren().add(Bravo.getBravo());
 
 
     }
@@ -444,5 +442,10 @@ public class Utils {
         }
 
         return out;
+    }
+
+    public static void copyFromJar(String FilePath, String destinationPath){
+
+
     }
 }

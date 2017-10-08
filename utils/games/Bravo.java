@@ -21,21 +21,21 @@ public class Bravo extends Rectangle{
 
     private static int length = 650;
     private static int nb = 5;
+    private static Bravo bravo;
 
-
-    public Bravo() {
+    private Bravo() {
 
         super(-10000, -10000, 0, 0);
         setFill(new ImagePattern(new Image("data/common/images/bravo.png")));
     }
-/*
-    public static Rectangle buildBravo() {
 
-        Rectangle R = new Rectangle(-10000, -10000, 0, 0);
-        R.setFill(new ImagePattern(new Image("file:data/common/images/bravo.png")));
-        return R;
+    public static Bravo getBravo(){
+
+        if(bravo == null)
+            bravo = new Bravo();
+        return bravo;
     }
-*/
+
     public SequentialTransition win(){
 
         Screen screen = Screen.getScreens().get(0);
@@ -58,7 +58,7 @@ public class Bravo extends Rectangle{
 
         this.setVisible(true);
 
-        //this.toFront(); // bug when it is uncommented (with bloc at least).
+        this.toFront(); // bug when it is uncommented (with bloc at least).
 
         SequentialTransition sequence = new SequentialTransition();
 

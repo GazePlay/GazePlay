@@ -12,9 +12,12 @@ Le logiciel est fourni avec des images par défaut mais il est facile de mettre 
 
 ## Système requis
 
-GazePlay fonctionne sous Windows, MacOs et Linux. Il est utilisable par tout occulomètre capable de diriger la souris.
+GazePlay fonctionne sous Windows, MacOs et Linux.
 
-Il a est également complètement compatible avec un Eye Tribe sur Windows et MacOs.
+Il est utilisable par tout occulomètre (Eye-tracker) capable de diriger la souris mais également avec
+
+- Tobii EyeX, Tobii 4C (Windows)
+- Eye Tribe Tracker (Windows, MacOs)
 
 ## Principe
 
@@ -27,8 +30,6 @@ Ces jeux offrent au moins deux avantages à l'individu :
 1) le divertir ;
 
 2) lui permettre d'entraîner son regard afin de lui offrir la possibilité d'acquérir des interactions plus complexes. Il s’agit ainsi d’une première étape visant la possibilité de mettre en place une véritable communication basée sur des pictogrammes par exemple.
-
-GazePlay intègre des statistiques destinées à vérifier les progrès du joueur.
 
 ## Jeux
 
@@ -95,6 +96,12 @@ Dans le cas contraire, il est probable que vous n'ayez pas de machine virtuelle 
 
 En cas de problème, didier.schwab à univ tiret grenoble tiret alpes point fr (remplacer le à par @ et le point par .).
 
+## Installation d'un Tobii EyeX ou un Tobii 4C
+
+Ces deux modèles sont seulement compatibles Windows. 
+
+ *C:\Users\NomUtilisateur\Documents\GazePlay\DLL*
+
 ## Modifier les images
 
 Quel que soit le système d'exploitation, le logiciel cherche dans le répertoire de l'utilisateur un répertoire nommé *GazePlay*. Par exemple, le nom de l'utilisateur est *NomUtilisateur*
@@ -122,7 +129,7 @@ Dans ce répertoire, il faudra créer un répertoire *images* dans lequel vous a
 
 ![Statistiques](README/images/statistics.jpg) 
 
-L'ensemble des statistiques sont enregistrés dans le répertoire de GazePlay. Dans un répertoire *statistics*, les statistiques sont classées par jeu puis par date. Trois fichiers sont enregistrés :
+Les statistiques sont enregistrées dans le répertoire de GazePlay. Dans un répertoire *statistics*, les statistiques sont classées par jeu puis par date. Trois fichiers sont enregistrés :
 1) *heatmap.csv* : La carte de chaleur sous forme brute. Ce fichier csv peut-être ouvert avec un tableur comme LibreOffice.org Calc, logiciel libre et gratuit ou les classiques Microsoft Excel, Apple Numbers,...).
 2) *heatmap.png* : La carte de chaleur sous forme d'image.
 3) *info-game.csv* : Les statistiques de la partie dans un fichier csv. 

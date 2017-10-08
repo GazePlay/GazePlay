@@ -49,7 +49,7 @@ public class Card extends Parent {
     private Group root;
     ProgressIndicator indicator;
     HiddenItemsGamesStats stats;
-    Bravo bravo = new Bravo();
+    Bravo bravo = Bravo.getBravo();
 
     final static Image[] images = Utils.images(Utils.getImagesFolder()+"magiccards"+Utils.FILESEPARATOR);
 
@@ -77,11 +77,9 @@ public class Card extends Parent {
         indicator.setMinWidth(width*0.9);
         indicator.setMinHeight(width*0.9);
         indicator.setOpacity(0);
-        // indicator.progressProperty().bind(slider.valueProperty().divide(127.0));
         this.getChildren().add(indicator);
-        //indicator.setTranslateX(-15);
 
-        this.getChildren().add(bravo);
+        //this.getChildren().add(bravo);
 
         GazeUtils.addEventFilter(card);
 
