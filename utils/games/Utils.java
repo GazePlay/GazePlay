@@ -444,8 +444,21 @@ public class Utils {
         return out;
     }
 
-    public static void copyFromJar(String FilePath, String destinationPath){
+    public static boolean copyFromJar(String FilePath, String destinationPath){
 
-
+        try{
+            InputStream sourceFile = ClassLoader.getSystemResourceAsStream(FilePath);
+            OutputStream destinationFile = new FileOutputStream(destinationPath);
+            // Lecture par segment de 0.5Mo
+            byte buffer[] = new byte[512 * 1024];
+            int nbLecture;
+            while ((nbLecture = sourceFile.read(buffer)) != -1){
+                destinationFile.write(buffer, 0, nbLecture);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+            return false; // Erreur
+        }
+        return true; // Résultat OK
     }
 }

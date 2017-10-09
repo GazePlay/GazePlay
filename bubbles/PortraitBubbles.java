@@ -13,7 +13,6 @@ import javafx.stage.WindowEvent;
  */
 public class PortraitBubbles extends Application {
 
-
     public static void main(String[] args) {
 
         Application.launch(PortraitBubbles.class, args);
