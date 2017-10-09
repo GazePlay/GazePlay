@@ -98,7 +98,7 @@ En cas de problème, didier.schwab à univ tiret grenoble tiret alpes point fr (
 
 ## Installation d'un eye-tracker Tobii EyeX ou 4C
 
-Ces deux modèles sont seulement compatibles Windows. Téléchargez le fichier [GazePlay-tobii-setup.jar](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) et double-cliquez dessus. L'installation ne devrait pas prendre plus d'une dizaine de secondes.
+Ces deux modèles sont uniquement compatibles Windows. Téléchargez le fichier [GazePlay-tobii-setup.jar](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-tobii-setup-V1/GazePlay-tobii-setup.jar) et double-cliquez dessus. L'installation ne devrait pas prendre plus d'une dizaine de secondes.
 
 Pour information, l'installation consiste à copier dans le répertoire par défaut de *GazePlay* un répertoire *DLL* dans lequel deux fichiers nommés *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll* sont installés.
 
