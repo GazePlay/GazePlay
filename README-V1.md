@@ -16,8 +16,8 @@ GazePlay fonctionne sous Windows, MacOs et Linux.
 
 Il est utilisable par tout occulomètre (Eye-tracker) capable de diriger la souris mais également avec
 
-- Tobii EyeX, Tobii 4C (Windows)
-- Eye Tribe Tracker (Windows, MacOs)
+- Tobii : modèles *Tobii EyeX* et *Tobii 4C* (compatibles Windows)
+- Eye Tribe : modèle *Eye Tribe Tracker* (compatibles Windows et MacOs X)
 
 ## Principe
 
@@ -98,7 +98,9 @@ En cas de problème, didier.schwab à univ tiret grenoble tiret alpes point fr (
 
 ## Installation d'un eye-tracker Tobii EyeX ou 4C
 
-Ces deux modèles sont uniquement compatibles Windows. Téléchargez le fichier [GazePlay-tobii-setup.jar](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-tobii-setup-V1/GazePlay-tobii-setup.jar) et double-cliquez dessus. L'installation ne devrait pas prendre plus d'une dizaine de secondes.
+Notez-bien que ces deux modèles sont uniquement compatibles Windows. GazePlay ne permet pas de les utiliser avec un autre système d'exploitation ou sur des ordinateurs dont les caractéristiques matérielles ne permettent pas d'utiliser ces modèles.
+
+Téléchargez le fichier [GazePlay-tobii-setup.jar](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-tobii-setup-V1/GazePlay-tobii-setup.jar) et double-cliquez dessus. L'installation ne devrait pas prendre plus d'une dizaine de secondes.
 
 Pour information, l'installation consiste à copier dans le répertoire par défaut de *GazePlay* un répertoire *DLL* dans lequel deux fichiers nommés *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll* sont installés.
 
