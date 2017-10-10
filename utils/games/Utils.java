@@ -38,6 +38,8 @@ public class Utils {
 
     private static final String tempFolder = "temp";
 
+    public static Home home;
+
     public static Image[] getImages(String folder) {
 
         return getImages(folder, -1);
@@ -116,7 +118,7 @@ public class Utils {
         double X = scene.getWidth() * 0.9;
         double Y = scene.getHeight() - height * 1.1;
 
-        Home home = new Home(X, Y, width, height);
+        home = new Home(X, Y, width, height);
 
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
             @Override

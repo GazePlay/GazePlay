@@ -6,20 +6,17 @@ import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
-import java.net.URL;
 
 /**
  * Created by schwab on 30/10/2016.
  */
 public class Bravo extends Rectangle{
 
-    private static int length = 650;
+    private static int duration = 650;
+    private static int apparitionDuration = 2000;
     private static int nb = 5;
     private static Bravo bravo;
 
@@ -58,30 +55,37 @@ public class Bravo extends Rectangle{
 
         this.setVisible(true);
 
-        this.toFront(); // bug when it is uncommented (with bloc at least).
-
-        SequentialTransition sequence = new SequentialTransition();
+        //this.toFront(); // bug when it is uncommented (with bloc at least).
 
         Timeline timeline = new Timeline();
 
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(xProperty(), XBig)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(yProperty(), YBig)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(widthProperty(), maxWidth)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(heightProperty(), maxWidth)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(opacityProperty(), 0)));
 
-        sequence.getChildren().add(timeline);
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(apparitionDuration), new KeyValue(opacityProperty(), 1)));
+
+        timeline.play();
+
+        SequentialTransition sequence = new SequentialTransition();
 
         Timeline timeline2 = new Timeline();
 
-        timeline2 = new Timeline();
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(xProperty(), XSmall)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(yProperty(), YSmall)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(widthProperty(), minWidth)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(heightProperty(), minWidth)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(duration), new KeyValue(xProperty(), XBig)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(duration), new KeyValue(yProperty(), YBig)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(duration), new KeyValue(widthProperty(), maxWidth)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(duration), new KeyValue(heightProperty(), maxWidth)));
 
         sequence.getChildren().add(timeline2);
 
-        sequence.setCycleCount(5);
+        Timeline timeline3 = new Timeline();
+
+        timeline3.getKeyFrames().add(new KeyFrame(new Duration(duration), new KeyValue(xProperty(), XSmall)));
+        timeline3.getKeyFrames().add(new KeyFrame(new Duration(duration), new KeyValue(yProperty(), YSmall)));
+        timeline3.getKeyFrames().add(new KeyFrame(new Duration(duration), new KeyValue(widthProperty(), minWidth)));
+        timeline3.getKeyFrames().add(new KeyFrame(new Duration(duration), new KeyValue(heightProperty(), minWidth)));
+
+        sequence.getChildren().add(timeline3);
+
+        sequence.setCycleCount(nb);
 
         sequence.play();
 

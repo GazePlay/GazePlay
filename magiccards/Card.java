@@ -183,6 +183,7 @@ public class Card extends Parent {
 
 
                                         SequentialTransition sequence = bravo.win();
+                                        bravo.toFront();
                                         sequence.setOnFinished(new EventHandler<ActionEvent>() {
 
                                             @Override

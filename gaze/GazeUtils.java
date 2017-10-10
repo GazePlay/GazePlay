@@ -73,7 +73,7 @@ public class GazeUtils {
 
         int i;
 
-        for(i = 0; i < nodesEventFilter.size() && ! nodesEventFilter.get(i).getNode().equals(gs); i++);
+        for(i = 0; i < nodesEventFilter.size() && nodesEventFilter.get(i).getNode() != null && ! nodesEventFilter.get(i).getNode().equals(gs); i++);
 
         if(i < nodesEventFilter.size()){
 

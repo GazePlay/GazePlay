@@ -26,6 +26,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import utils.games.Bravo;
+import utils.games.Home;
 import utils.games.Utils;
 import utils.games.stats.HiddenItemsGamesStats;
 
@@ -93,8 +94,6 @@ public class Blocs extends Application {
         theScene = scene;
 
         choiceBox = cbxGames;
-
-//        blockRoot.getChildren().add(Bravo.getBravo());
 
         blocs = new Bloc[nbColomns][nbLines];
 
@@ -230,22 +229,11 @@ public class Blocs extends Application {
 
                         stats.incNbGoals();
 
-                        SequentialTransition sequence = bravo.win();
+                        RemoveAllBlocs();
 
-                        //RemoveAllBlocs();
+                       Utils.home.setVisible(false);
 
-                        for(Node N : blockRoot.getChildren()) {
-
-                            if (!(N instanceof Bravo)) {
-                                N.setTranslateX(-10000);
-                                N.setOpacity(0);
-                                N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                N.removeEventFilter(GazeEvent.ANY, enterEvent);
-                                GazeUtils.removeEventFilter(N);
-                            }
-                        }
-
-                        sequence.setOnFinished(event ->{
+                        bravo.win().setOnFinished(event ->{
                                 Utils.clear(theScene, blockRoot, choiceBox);
                                 makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, useTrail, stats);
                                 Utils.home(theScene, blockRoot, choiceBox, stats);
