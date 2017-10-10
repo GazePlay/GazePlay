@@ -55,11 +55,11 @@ public class Bravo extends Rectangle{
 
         this.setVisible(true);
 
+        this.setOpacity(0);
+
         //this.toFront(); // bug when it is uncommented (with bloc at least).
 
         Timeline timeline = new Timeline();
-
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(opacityProperty(), 0)));
 
         timeline.getKeyFrames().add(new KeyFrame(new Duration(apparitionDuration), new KeyValue(opacityProperty(), 1)));
 
