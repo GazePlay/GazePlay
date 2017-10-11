@@ -12,9 +12,12 @@ Le logiciel est fourni avec des images par défaut mais il est facile de mettre 
 
 ## Système requis
 
-GazePlay fonctionne sous Windows, MacOs et Linux. Il est utilisable par tout occulomètre capable de diriger la souris.
+GazePlay fonctionne sous Windows, MacOs et Linux.
 
-Il a est également complètement compatible avec un Eye Tribe sur Windows et MacOs.
+Il est utilisable par tout occulomètre (Eye-tracker) capable de diriger la souris mais également avec
+
+- Tobii : modèles *Tobii EyeX* et *Tobii 4C* (compatibles Windows)
+- Eye Tribe : modèle *Eye Tribe Tracker* (compatibles Windows et MacOs X)
 
 ## Principe
 
@@ -27,8 +30,6 @@ Ces jeux offrent au moins deux avantages à l'individu :
 1) le divertir ;
 
 2) lui permettre d'entraîner son regard afin de lui offrir la possibilité d'acquérir des interactions plus complexes. Il s’agit ainsi d’une première étape visant la possibilité de mettre en place une véritable communication basée sur des pictogrammes par exemple.
-
-GazePlay intègre des statistiques destinées à vérifier les progrès du joueur.
 
 ## Jeux
 
@@ -81,7 +82,7 @@ Des bulles contenant des portraits remontent lentement à la surface et exploser
 
 ## Téléchargements
 
-[Dernière Version](https://github.com/schwabdidier/GazePlay/releases/download/v1-beta-candidate-5/GazePlay-beta-5.jar   )
+[Dernière Version](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0-release-candidate-1/GazePlay-V1.0-candidate-1.jar)
 
 ## Installation
 
@@ -94,6 +95,14 @@ Dans le cas contraire, il est probable que vous n'ayez pas de machine virtuelle 
 [Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
 
 En cas de problème, didier.schwab à univ tiret grenoble tiret alpes point fr (remplacer le à par @ et le point par .).
+
+## Installation d'un eye-tracker Tobii EyeX ou 4C
+
+Notez-bien que ces deux modèles sont uniquement compatibles Windows. GazePlay ne permet pas de les utiliser avec un autre système d'exploitation ou sur des ordinateurs dont les caractéristiques matérielles ne permettent pas d'utiliser ces modèles.
+
+Téléchargez le fichier [GazePlay-tobii-setup.jar](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-tobii-setup-V1/GazePlay-tobii-setup.jar) et double-cliquez dessus. L'installation ne devrait pas prendre plus d'une dizaine de secondes.
+
+Pour information, l'installation consiste à copier dans le répertoire par défaut de *GazePlay* un répertoire *DLL* dans lequel deux fichiers nommés *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll* sont installés.
 
 ## Modifier les images
 
@@ -122,7 +131,7 @@ Dans ce répertoire, il faudra créer un répertoire *images* dans lequel vous a
 
 ![Statistiques](README/images/statistics.jpg) 
 
-L'ensemble des statistiques sont enregistrés dans le répertoire de GazePlay. Dans un répertoire *statistics*, les statistiques sont classées par jeu puis par date. Trois fichiers sont enregistrés :
+Les statistiques sont enregistrées dans le répertoire de GazePlay. Dans un répertoire *statistics*, les statistiques sont classées par jeu puis par date. Trois fichiers sont enregistrés :
 1) *heatmap.csv* : La carte de chaleur sous forme brute. Ce fichier csv peut-être ouvert avec un tableur comme LibreOffice.org Calc, logiciel libre et gratuit ou les classiques Microsoft Excel, Apple Numbers,...).
 2) *heatmap.png* : La carte de chaleur sous forme d'image.
 3) *info-game.csv* : Les statistiques de la partie dans un fichier csv. 
