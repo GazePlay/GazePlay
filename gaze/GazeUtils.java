@@ -69,15 +69,21 @@ public class GazeUtils {
         nodesEventHandler.add(new GazeInfos(gs));
     }
 
-    public synchronized static void removeEventFilter(Node gs){
+    public static void removeEventFilter(Node gs){
 
         int i;
 
-        for(i = 0; i < nodesEventFilter.size() && nodesEventFilter.get(i).getNode() != null && ! nodesEventFilter.get(i).getNode().equals(gs); i++);
+        try{
+            for(i = 0; i < nodesEventFilter.size() && nodesEventFilter.get(i).getNode() != null && ! nodesEventFilter.get(i).getNode().equals(gs); i++);
 
-        if(i < nodesEventFilter.size()){
+            if(i < nodesEventFilter.size()){
 
-            nodesEventFilter.remove(i);
+                nodesEventFilter.remove(i);
+            }
+        }
+        catch(Exception e){
+
+
         }
     }
 
