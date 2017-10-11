@@ -14,7 +14,7 @@ public class Tobii {
 
     private static Point2D parseTobiiOutput(String tobiiOutput){
 
-   //     System.out.println(tobiiOutput);
+        //     System.out.println(tobiiOutput);
         float x = 0;
         float y = 0;
         try {
@@ -22,7 +22,7 @@ public class Tobii {
             y = Float.valueOf(tobiiOutput.substring(22, 29))*(float)screenHeight;
         } catch (Exception e) {
 
-     //       System.out.println(e);
+            //       System.out.println(e);
             return null;
         }
 
@@ -59,15 +59,16 @@ public class Tobii {
 
                             Point2D point = null;
                             while(true){
+
                                 try {
-                                    Thread.sleep(100);//sleep is mandatory to avoid too much calls to gazePosition()
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                                    Thread.sleep(10);//sleep is mandatory to avoid too much calls to gazePosition()
+                                    point = parseTobiiOutput(gazePosition());
+                                   // System.out.println("Tobii : " + Utils.now() + " " + point);
+                                    if(point != null)
+                                        listener.onGazeUpdate(point);
+                                } catch (Exception e) {
+                                  //  e.printStackTrace();
                                 }
-                                point = parseTobiiOutput(gazePosition());
-                                System.out.println(Utils.now());
-                                if(point != null)
-                                    listener.onGazeUpdate(point);
                             }
                         }
                     };
@@ -91,7 +92,7 @@ public class Tobii {
                 System.load(Utils.getDllFolder()+"tobii_stream_engine.dll");
                 System.load(Utils.getDllFolder()+"GazePlayTobiiLibrary2.dll");
                 //System.loadLibrary("tobii_stream_engine");
-               // System.loadLibrary("GazePlayTobiiLibrary2");
+                // System.loadLibrary("GazePlayTobiiLibrary2");
             }
         } catch (java.lang.UnsatisfiedLinkError e) {
             System.out.println("******************************************************");
