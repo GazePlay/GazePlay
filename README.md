@@ -104,7 +104,7 @@ Téléchargez le fichier [GazePlay-tobii-setup.jar](https://github.com/schwabdid
 
 Pour information, l'installation consiste à copier dans le répertoire par défaut de *GazePlay* un répertoire *DLL* dans lequel deux fichiers nommés *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll* sont installés.
 
-#Répertoire par défaut de GazePlay
+##Répertoire par défaut de GazePlay
 
 Quel que soit le système d'exploitation, le logiciel cherche dans le répertoire de l'utilisateur un répertoire nommé *GazePlay*. Par exemple, le nom de l'utilisateur est *NomUtilisateur*
 
@@ -114,14 +114,14 @@ Quel que soit le système d'exploitation, le logiciel cherche dans le répertoir
 
 * Sous **Linux** /home/NomUtilisateur/GazePlay
 
-#Fichier de configuration
+##Fichier de configuration
 
 Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faut créer un fichier texte dont le nom est GazePlay.properties s'il n'existe pas déjà.
 
 Dans ce fichier, deux propriétés peuvent être activées. Si elles ne sont pas activées ou si la valeur indiquée n'existe pas, une valeur par défaut est utilisée.
 
 1) La langue : language qui peut prendre 3 valeurs 
-    * fra pour français
+    * fra * pour français
     * eng pour anglais
     * deu pour allemand. 
     

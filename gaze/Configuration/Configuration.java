@@ -23,7 +23,7 @@ public class Configuration {
         final Properties prop = new Properties();
         InputStream input = null;
 
-        String configPath = Utils.getGazePlayFolder()+"TET.properties";
+        String configPath = Utils.getGazePlayFolder()+"GazePlay.properties";
 
         try {
             input = new FileInputStream(configPath);
