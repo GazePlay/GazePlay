@@ -82,7 +82,7 @@ Des bulles contenant des portraits remontent lentement à la surface et exploser
 
 ## Téléchargements
 
-[Dernière Version](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0-release-candidate-1/GazePlay-V1.0-candidate-1.jar)
+[Dernière Version](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.1-release-candidate-1/GazePlay-V1.01-candidate-1.jar)
 
 ## Installation
 

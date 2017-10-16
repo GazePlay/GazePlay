@@ -39,6 +39,7 @@ public class GazePlay extends Application {
 
         System.out.println("***********************");
         System.out.println("GazePlay");
+        System.out.println("Version : 1.01 (2017-10-16)");
         System.out.println("Operating System " + System.getProperty("os.name"));
         System.out.println("***********************");
 
