@@ -121,6 +121,7 @@ Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faut cr
 Dans ce fichier, deux propriétés peuvent être activées. Si elles ne sont pas activées ou si la valeur indiquée n'existe pas, une valeur par défaut est utilisée.
 
 1) La langue : language qui peut prendre 3 valeurs 
+
     * fra * pour français
     * eng pour anglais
     * deu pour allemand. 
@@ -130,6 +131,7 @@ Dans ce fichier, deux propriétés peuvent être activées. Si elles ne sont pas
     Par défaut, la valeur est fra (français).
     
 2) L'occulomètre : EyeTracker qui peut prendre 3 valeurs
+
     * none : à choisir lorsque l'on utilise un eye-tracker capable de diriger la souris
     * tobii : à choisir lorsque l'on utilise un Tobii 4C ou un Tobii EyeX
     * eye-tribe : à choisir lorsque l'on utilise un tracker de chez Eye-tribe
