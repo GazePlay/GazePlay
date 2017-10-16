@@ -253,7 +253,7 @@ public class Utils {
         }
         else{
 
-            System.out.println("folder doesn't exit : " + folder);
+            System.out.println("folder doesn't exist : " + folder);
 
             Image[] defaultImages = new Image[10];
             defaultImages[0] = new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/animal-807308_1920.png"));
