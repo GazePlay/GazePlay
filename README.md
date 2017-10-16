@@ -122,9 +122,9 @@ Dans ce fichier, deux propriétés peuvent être activées. Si elles ne sont pas
 
 1) La langue : language qui peut prendre 3 valeurs 
 
-    * fra * pour français
-    * eng pour anglais
-    * deu pour allemand. 
+    1) fra pour français
+    2) eng pour anglais
+    3) deu pour allemand. 
     
     Par exemple, pour le jeu en anglais, la propriété doit être language = eng.
         
@@ -132,9 +132,11 @@ Dans ce fichier, deux propriétés peuvent être activées. Si elles ne sont pas
     
 2) L'occulomètre : EyeTracker qui peut prendre 3 valeurs
 
-    * none : à choisir lorsque l'on utilise un eye-tracker capable de diriger la souris
-    * tobii : à choisir lorsque l'on utilise un Tobii 4C ou un Tobii EyeX
-    * eye-tribe : à choisir lorsque l'on utilise un tracker de chez Eye-tribe
+    1) none : à choisir lorsque l'on utilise un eye-tracker capable de diriger la souris
+    2) tobii : à choisir lorsque l'on utilise un Tobii 4C ou un Tobii EyeX
+    3) eye-tribe : à choisir lorsque l'on utilise un tracker de chez Eye-tribe
+
+    Par exemple, pour un 4C ou un EyeX, mettre EyeTracker=tobii
 
 ## Modifier les images
 
