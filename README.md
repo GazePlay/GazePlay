@@ -116,7 +116,7 @@ Quel que soit le système d'exploitation, le logiciel cherche dans le répertoir
 
 ##Fichier de configuration
 
-Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faut créer un fichier texte dont le nom est TET.properties s'il n'existe pas déjà.
+Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faut créer un fichier texte dont le nom est GazePlay.properties s'il n'existe pas déjà.
 
 Dans ce fichier, deux propriétés peuvent être activées. Si elles ne sont pas activées ou si la valeur indiquée n'existe pas, une valeur par défaut est utilisée.
 
