@@ -104,7 +104,7 @@ Téléchargez le fichier [GazePlay-tobii-setup.jar](https://github.com/schwabdid
 
 Pour information, l'installation consiste à copier dans le répertoire par défaut de *GazePlay* un répertoire *DLL* dans lequel deux fichiers nommés *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll* sont installés.
 
-## Modifier les images
+##Répertoire par défaut de GazePlay
 
 Quel que soit le système d'exploitation, le logiciel cherche dans le répertoire de l'utilisateur un répertoire nommé *GazePlay*. Par exemple, le nom de l'utilisateur est *NomUtilisateur*
 
@@ -114,7 +114,29 @@ Quel que soit le système d'exploitation, le logiciel cherche dans le répertoir
 
 * Sous **Linux** /home/NomUtilisateur/GazePlay
 
-Dans ce répertoire, il faudra créer un répertoire *images* dans lequel vous aurez à créer 3 autres répertoires :
+##Fichier de configuration
+
+Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faut créer un fichier texte dont le nom est TET.properties s'il n'existe pas déjà.
+
+Dans ce fichier, deux propriétés peuvent être activées. Si elles ne sont pas activées ou si la valeur indiquée n'existe pas, une valeur par défaut est utilisée.
+
+1) La langue : language qui peut prendre 3 valeurs 
+    * fra pour français
+    * eng pour anglais
+    * deu pour allemand. 
+    
+    Par exemple, pour le jeu en anglais, la propriété doit être language = eng.
+        
+    Par défaut, la valeur est fra (français).
+    
+2) L'occulomètre : EyeTracker qui peut prendre 3 valeurs
+    * none : à choisir lorsque l'on utilise un eye-tracker capable de diriger la souris
+    * tobii : à choisir lorsque l'on utilise un Tobii 4C ou un Tobii EyeX
+    * eye-tribe : à choisir lorsque l'on utilise un tracker de chez Eye-tribe
+
+## Modifier les images
+
+Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faudra créer un répertoire *images* dans lequel vous aurez à créer 3 autres répertoires :
 
 1) *portraits* : contient les images utilisées par *tartes à la crème*, *ninja* et *bulles portrait*. Il vaut mieux choisir des images relativement petites (300x300 pixels).
 
