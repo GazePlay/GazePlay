@@ -1,5 +1,6 @@
 package tobii.installation;
 
+import gaze.Configuration.Configuration;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -33,13 +34,16 @@ public class TobiiSetup  extends Application {
             returnValue = bool1 && bool2;
         }
 
+        Configuration C = new Configuration("tobii");
+        C.saveConfig();
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Tobii Eye-Tracker Set Up");
         alert.setHeaderText(null);
         if(returnValue)
             alert.setContentText("Installation Ok !!");
         else
-            alert.setContentText("Installation not done (Sorry, Tobii trackers only designed for Windows).");
+            alert.setContentText("Installation not done\n\nSorry, Tobii trackers only designed for Windows.");
 
         alert.showAndWait();
     }

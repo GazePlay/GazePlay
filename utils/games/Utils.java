@@ -396,6 +396,7 @@ public class Utils {
             PrintWriter out = new PrintWriter(F);
 
             out.println(S);
+            out.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

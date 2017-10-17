@@ -21,7 +21,7 @@ public class Configuration {
 
     public String gazeMode = "true";
     public String eyetracker = "tobii";
-    public String language = "eng";
+    public String language = "fra";
 
     private String configPath = Utils.getGazePlayFolder()+"GazePlay.properties";
 
@@ -66,6 +66,11 @@ public class Configuration {
 
         this.eyetracker=eyetracker;
         this.language=language;
+    }
+
+    public Configuration(String eyetracker) {
+
+        this.eyetracker=eyetracker;
     }
 
     public void saveConfig(){
