@@ -100,7 +100,7 @@ En cas de problème, didier.schwab à univ tiret grenoble tiret alpes point fr (
 
 Notez-bien que ces deux modèles sont uniquement compatibles Windows (version 7, 8 et 10). GazePlay ne permet pas de les utiliser avec un autre système d'exploitation ou sur des ordinateurs dont les caractéristiques matérielles ne permettent pas d'utiliser ces modèles.
 
-Téléchargez le fichier [GazePlay-tobii-setup.jar](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-tobii-setup-V1/GazePlay-tobii-setup.jar) et double-cliquez dessus. L'installation ne devrait pas prendre plus d'une dizaine de secondes.
+Téléchargez le fichier [GazePlay-tobii-setup-1.01.jar](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-tobii-setup-V1.01/GazePlay-tobii-setup-1.01.jar) et double-cliquez dessus. L'installation ne devrait pas prendre plus d'une dizaine de secondes.
 
 Pour information, l'installation consiste à copier dans le répertoire par défaut de *GazePlay* un répertoire *DLL* dans lequel deux fichiers nommés *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll* sont installés.
 
@@ -113,30 +113,6 @@ Quel que soit le système d'exploitation, le logiciel cherche dans le répertoir
 * Sous **MacOs** /Users/NomUtilisateur/GazePlay
 
 * Sous **Linux** /home/NomUtilisateur/GazePlay
-
-## Fichier de configuration
-
-Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faut créer un fichier texte dont le nom est GazePlay.properties s'il n'existe pas déjà.
-
-Dans ce fichier, deux propriétés peuvent être activées. Si elles ne sont pas activées ou si la valeur indiquée n'existe pas, une valeur par défaut est utilisée.
-
-1) La langue : language qui peut prendre 3 valeurs 
-
-    1) fra pour français
-    2) eng pour anglais
-    3) deu pour allemand. 
-    
-    Par exemple, pour le jeu en anglais, la propriété doit être language = eng.
-        
-    Par défaut, la valeur est fra (français).
-    
-2) L'occulomètre : EyeTracker qui peut prendre 3 valeurs
-
-    1) none : à choisir lorsque l'on utilise un eye-tracker capable de diriger la souris
-    2) tobii : à choisir lorsque l'on utilise un Tobii 4C ou un Tobii EyeX
-    3) eye-tribe : à choisir lorsque l'on utilise un tracker de chez Eye-tribe
-
-    Par exemple, pour un 4C ou un EyeX, mettre EyeTracker=tobii
 
 ## Modifier les images
 
@@ -173,3 +149,33 @@ Contact : Didier Schwab didier.schwab à univ-grenoble-alpes point fr (remplacer
 Nous y publions les dernieres informations comme les mises à jour par exemple.
 
 [Facebook](https://www.facebook.com/GazePlay.root/)
+
+## Utilisateurs avancés
+
+La suite concerne uniquement les utilisateurs avancés, développeurs du logiciel en particulier.
+
+### Fichier de configuration
+
+Ce fichier sera bientôt généré à partir de l'interface.
+
+Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faut créer un fichier texte dont le nom est GazePlay.properties s'il n'existe pas déjà.
+
+Dans ce fichier, deux propriétés peuvent être activées. Si elles ne sont pas activées ou si la valeur indiquée n'existe pas, une valeur par défaut est utilisée.
+
+1) La langue : language qui peut prendre 3 valeurs 
+
+    1) fra pour français
+    2) eng pour anglais
+    3) deu pour allemand. 
+    
+    Par exemple, pour le jeu en anglais, la propriété doit être language = eng.
+        
+    Par défaut, la valeur est fra (français).
+    
+2) L'occulomètre : EyeTracker qui peut prendre 3 valeurs
+
+    1) none : à choisir lorsque l'on utilise un eye-tracker capable de diriger la souris
+    2) tobii : à choisir lorsque l'on utilise un Tobii 4C ou un Tobii EyeX
+    3) eye-tribe : à choisir lorsque l'on utilise un tracker de chez Eye-tribe
+
+    Par exemple, pour un 4C ou un EyeX, mettre EyeTracker=tobii
