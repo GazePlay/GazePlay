@@ -167,3 +167,9 @@ Les statistiques sont enregistrées dans le répertoire de GazePlay. Dans un ré
 Ce logiciel est destiné à être amélioré. Toute personne peut contribuer par ses idées d'amélioration. Il est évidement également possible de contribuer par ses talents de graphiste ou d'informaticien pour créer de nouveaux jeux/améliorer les existants.
 
 Contact : Didier Schwab didier.schwab à univ-grenoble-alpes point fr (remplacer le à par @ et le point par .).
+
+##Rejoignez notre groupe facebook
+
+Nous y publions les dernieres informations comme les mises à jour par exemple.
+
+[Facebook](https://www.facebook.com/GazePlay.root/)
