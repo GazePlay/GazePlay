@@ -1,11 +1,9 @@
 package tobii.installation;
 
-import gaze.Configuration.Configuration;
+import gaze.configuration.Configuration;
 import javafx.application.Application;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import magiccards.MagicCards;
 import utils.games.Utils;
 
 import java.io.File;

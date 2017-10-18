@@ -1,10 +1,9 @@
 package utils.games.multilinguism;
 
-import gaze.Configuration.Configuration;
+import gaze.configuration.Configuration;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class Multilinguism {
 

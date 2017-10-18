@@ -3,7 +3,7 @@ package gaze;
 import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
 import com.theeyetribe.clientsdk.data.Point2D;
-import gaze.Configuration.Configuration;
+import gaze.configuration.Configuration;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;

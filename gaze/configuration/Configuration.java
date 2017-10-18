@@ -1,4 +1,4 @@
-package gaze.Configuration;
+package gaze.configuration;
 
 
 import utils.games.Utils;
@@ -20,7 +20,7 @@ public class Configuration {
     private static String Language = "Language";
 
     public String gazeMode = "true";
-    public String eyetracker = "tobii";
+    public String eyetracker = "none";
     public String language = "fra";
 
     private String configPath = Utils.getGazePlayFolder()+"GazePlay.properties";

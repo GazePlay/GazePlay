@@ -99,7 +99,7 @@ import javax.imageio.stream.FileImageOutputStream;
  * multiplied by the xInterval, shifted by the xOffset of 1.0. The y-values are 
  * calculated in the same way to give a range of values from 0.0 to 6.0. 
  * 
- * <h3>Configuration</h3>
+ * <h3>configuration</h3>
  * <p>
  * This step is optional. By default the heat chart will be generated without a 
  * title or labels on the axis, and the colouring of the heat map will be in 

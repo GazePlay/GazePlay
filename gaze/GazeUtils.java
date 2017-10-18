@@ -2,7 +2,7 @@ package gaze;
 
 import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
-import gaze.Configuration.Configuration;
+import gaze.configuration.Configuration;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import tobii.Tobii;
