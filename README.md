@@ -82,7 +82,7 @@ Des bulles contenant des portraits remontent lentement à la surface et exploser
 
 ## Téléchargements
 
-[Dernière Version](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.1-release-candidate-1/GazePlay-V1.01-candidate-1.jar)
+[Dernière Version](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.3/GazePlay-V1.0.3.jar)
 
 ## Installation
 
@@ -100,7 +100,7 @@ En cas de problème, didier.schwab à univ tiret grenoble tiret alpes point fr (
 
 Notez-bien que ces deux modèles sont uniquement compatibles Windows (version 7, 8 et 10). GazePlay ne permet pas de les utiliser avec un autre système d'exploitation ou sur des ordinateurs dont les caractéristiques matérielles ne permettent pas d'utiliser ces modèles.
 
-Téléchargez le fichier [GazePlay-tobii-setup-1.03.jar](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.3/GazePlay-V1.0.3.jar) et double-cliquez dessus. L'installation ne devrait pas prendre plus d'une dizaine de secondes.
+Téléchargez la dernière version du fichier en cliquant sur le lien suivant [GazePlay-tobii-setup](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-tobii-setup-V1.01/GazePlay-tobii-setup-1.01.jar) et double-cliquez dessus. L'installation ne devrait pas prendre plus d'une dizaine de secondes.
 
 Pour information, l'installation consiste à copier dans le répertoire par défaut de *GazePlay* un répertoire *DLL* dans lequel deux fichiers nommés *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll* sont installés.
 
