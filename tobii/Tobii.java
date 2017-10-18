@@ -101,7 +101,7 @@ public class Tobii {
             System.out.println("should be in");
             System.out.println(Utils.getDllFolder());
             System.out.println("******************************************************");
-            System.exit(0);
+            //System.exit(0);
         }
     }
 
