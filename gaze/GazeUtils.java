@@ -31,7 +31,7 @@ public class GazeUtils {
 
         Configuration config = new Configuration();
 
-        System.out.println(config.eyetracker);
+        System.out.println("Eye-tracker = " + config.eyetracker);
 
         if (config.eyetracker.equals("tobii")) {
 

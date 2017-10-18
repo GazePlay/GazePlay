@@ -96,6 +96,7 @@ public class Tobii {
             }
         } catch (java.lang.UnsatisfiedLinkError e) {
             System.out.println("******************************************************");
+            System.out.println("If you wish to Use a Tobii 4C or a Tobii EyeX");
             System.out.println("Please put appropriate DLLs in DLL folder :");
             System.out.println("tobii_stream_engine.dll and GazePlayTobiiLibrary2.dll");
             System.out.println("should be in");
