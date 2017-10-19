@@ -7,7 +7,7 @@ public class BlocsGamesStats extends HiddenItemsGamesStats {
     public BlocsGamesStats(Scene scene) {
 
         super(scene);
-        gameName="blocs";
+        gameName= "blocs";
     }
 
 
