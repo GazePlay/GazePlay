@@ -73,14 +73,14 @@
 						</manifest>
 						<manifestEntries>
 							<Implementation-Title>GazePlay</Implementation-Title>
-							<Implementation-Version>beta-6</Implementation-Version>
+							<Implementation-Version>${project.version}</Implementation-Version>
 							<JavaFX-Version>8.0</JavaFX-Version>
 							<Created-By>JavaFX Packager</Created-By>
 							<Implementation-Vendor>Univ. Grenoble Alpes - LIG - GETALP</Implementation-Vendor>
 							<Main-Class>gazeplay.GazePlay</Main-Class>
+							<Build-Time>${maven.build.timestamp}</Build-Time>
 							<Built-By></Built-By>
 							<Created-By></Created-By>
-							<Build-Jdk></Build-Jdk>
 						</manifestEntries>
 					</archive>
 				</configuration>
@@ -111,9 +111,9 @@
 							<Created-By>JavaFX Packager</Created-By>
 							<Implementation-Vendor>Univ. Grenoble Alpes - LIG - GETALP</Implementation-Vendor>
 							<Main-Class>gazeplay.GazePlay</Main-Class>
+							<Build-Time>${maven.build.timestamp}</Build-Time>
 							<Built-By></Built-By>
 							<Created-By></Created-By>
-							<Build-Jdk></Build-Jdk>
 						</manifestEntries>
 					</archive>
 				</configuration>

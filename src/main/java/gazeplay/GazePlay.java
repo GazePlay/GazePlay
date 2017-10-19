@@ -18,8 +18,13 @@ import utils.games.Utils;
 import utils.games.stats.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Enumeration;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 /**
  * Created by schwab on 17/12/2016.
@@ -33,13 +38,36 @@ public class GazePlay extends Application {
     public static void main(String[] args) {
         Application.launch(GazePlay.class, args);
     }
+    
+    private String findVersionInfo() throws IOException {
+        Enumeration<URL> resources = getClass().getClassLoader().getResources("META-INF/MANIFEST.MF");
+        while (resources.hasMoreElements()) {
+			URL manifestUrl = resources.nextElement();
+			Manifest manifest = new Manifest(manifestUrl.openStream());
+			Attributes mainAttributes = manifest.getMainAttributes();
+			String implementationTitle = mainAttributes.getValue("Implementation-Title");
+			if (implementationTitle.equals("GazePlay")) {
+				String implementationVersion = mainAttributes.getValue("Implementation-Version");
+                String buildTime = mainAttributes.getValue("Build-Time");
+				return implementationVersion + " (" + buildTime + ")";
+			}
+        }
+        return null;
+    }
 
     @Override
     public void start(Stage primaryStage) {
 
+        String versionInfo;
+        try {
+            versionInfo = findVersionInfo();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load the version info", e);
+        }
+
         System.out.println("***********************");
         System.out.println("GazePlay");
-        System.out.println("Version : 1.0.3 (2017-10-18)");
+        System.out.println("Version : " + versionInfo);
         System.out.println("Operating System " + System.getProperty("os.name"));
         System.out.println("***********************");
 
