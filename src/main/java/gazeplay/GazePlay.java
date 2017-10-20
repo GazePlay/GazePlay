@@ -46,13 +46,13 @@ public class GazePlay extends Application {
 			Manifest manifest = new Manifest(manifestUrl.openStream());
 			Attributes mainAttributes = manifest.getMainAttributes();
 			String implementationTitle = mainAttributes.getValue("Implementation-Title");
-			if (implementationTitle.equals("GazePlay")) {
+            if(implementationTitle!=null && implementationTitle.equals("GazePlay")) {
 				String implementationVersion = mainAttributes.getValue("Implementation-Version");
                 String buildTime = mainAttributes.getValue("Build-Time");
 				return implementationVersion + " (" + buildTime + ")";
 			}
         }
-        return null;
+        return "Current Version";
     }
 
     @Override
