@@ -16,7 +16,8 @@ Le logiciel est fourni avec des images par défaut mais il est facile de mettre 
 
 ## Accès rapide
 
-[Tutos vidéos](README/tutorials.md) [Installation](README/installation.md) [jeux](README/jeux.md) [statistiques](README/statistiques.md)
+[Tutos vidéos](README/tutorials.md) [Installation](README/installation.md)
+[jeux](README/jeux.md) [statistiques](README/statistiques.md)
 
 ## Système requis
 
