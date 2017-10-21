@@ -1,4 +1,4 @@
-[Retour](README.md)
+[Retour](../README.md)
 
 # Installer GazePlay en une minute
 
@@ -8,4 +8,4 @@
 
 [![Utiliser ses images préférées](https://i.ytimg.com/vi/yMjBgVmhXV8/maxresdefault.jpg)](https://youtu.be/8CMBjN_a0vQ)
 
-[Retour](README.md)
+[Retour](../README.md)

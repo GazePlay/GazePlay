@@ -1,4 +1,4 @@
-[Retour](README.md)
+[Retour](../README.md)
 
 # Installation
 
@@ -21,4 +21,4 @@ Téléchargez la dernière version du fichier en cliquant sur le lien suivant [G
 
 Pour information, l'installation consiste à copier dans le répertoire par défaut de *GazePlay* un répertoire *DLL* dans lequel deux fichiers nommés *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll* sont installés.
 
-[Retour](README.md)
+[Retour](../README.md)

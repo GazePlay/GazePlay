@@ -1,4 +1,4 @@
-[Retour](README.md)
+[Retour](../README.md)
 
 # Statistiques
 
@@ -14,4 +14,4 @@ Les statistiques sont enregistrées dans le répertoire de GazePlay. Dans un ré
 2) *heatmap.png* : La carte de chaleur sous forme d'image.
 3) *info-game.csv* : Les statistiques de la partie dans un fichier csv.
 
-[Retour](README.md) 
+[Retour](../README.md) 

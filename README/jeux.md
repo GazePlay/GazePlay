@@ -1,4 +1,4 @@
-[Retour](README.md)
+[Retour](../README.md)
 
 # Jeux
 
@@ -49,4 +49,4 @@ Des bulles contenant des portraits remontent lentement à la surface et exploser
 
 ![Portrait Bubbles](README/images/portrait-bubbles.jpg)
 
-[Retour](README.md)
+[Retour](../README.md)
