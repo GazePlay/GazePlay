@@ -1,10 +1,10 @@
 # GazePlay
 
+* Read this in other languages: [English](README/README.en.md) [French](README.md)
+
 ## Téléchargement/Download
 
 [Version 1.0.4 (5,7 Mo)](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.4/GazePlay-1.0.4.jar)
-
-* Read this in other languages: [English](README/README.en.md) [French](README.md)
 
 <!--Gazeplay est un logiciel **gratuit** qui rassemble plusieurs mini-jeux jouables grâce à un occulomètre (*Eye-tracker*). La dernière version compte 12 jeux.
 
@@ -84,17 +84,14 @@ Des bulles contenant des portraits remontent lentement à la surface et exploser
 
 ![Portrait Bubbles](README/images/portrait-bubbles.jpg)
 
-## Téléchargements
-
-[Dernière Version](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.3/GazePlay-V1.0.3.jar)
-
 ## Installation
 
-Copiez-collez ou déplacez le fichier téléchargé sur votre disque dur à l'endroit que vous préférez. Le bureau sera parfait.
+Copiez-collez ou déplacez le fichier téléchargé à partir de ce [lien (Version 1.0.4)](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.4/GazePlay-1.0.4.jar)
+sur votre disque dur à l'endroit que vous préférez. Le bureau sera parfait.
 
 Double cliquez sur le fichier. Si tout se passe bien, le logiciel se lance.
 
-Dans le cas contraire, il est probable que vous n'ayez pas de machine virtuelle Java installée.
+Dans le cas contraire, il est probable qu'aucune machine virtuelle Java ne soit installée.
 
 [Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
 
