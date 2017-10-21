@@ -14,6 +14,10 @@ Le logiciel est fourni avec des images par défaut mais il est facile de mettre 
 
 [![Vidéo de présentation](https://i.ytimg.com/vi/yMjBgVmhXV8/maxresdefault.jpg)](https://www.youtube.com/embed/yMjBgVmhXV8)
 
+## Accès rapide
+
+[Les tutos](README/tutorials.md) [Installation](README/installation.md)
+
 ## Système requis
 
 GazePlay fonctionne sous Windows, MacOs et Linux.
@@ -34,76 +38,6 @@ Ces jeux offrent au moins deux avantages à l'individu :
 1) le divertir ;
 
 2) lui permettre d'entraîner son regard afin de lui offrir la possibilité d'acquérir des interactions plus complexes. Il s’agit ainsi d’une première étape visant la possibilité de mettre en place une véritable communication basée sur des pictogrammes par exemple.
-
-## Jeux
-
-Ils sont actuellement 12 jeux (dont 6 variantes).
-
-<!-- ![Écran principal GazePlay](README/images/gazePlay.jpg "Écran principal GazePlay") -->
-
-### Tartes à la crème
-
-Le joueur lance une tarte à la crème sur la cible statique lorsqu'il la regarde.
-
-![Jeu des tartes à la crème](README/images/CreamPie.jpg)
-
-### Ninja
-
-La cible suit des mouvements aléatoires et explose lorsque le joueur la regarde.
-
-![Ninja](README/images/ninja-1.jpg)
-
-### Cartes magiques
-
-Plusieurs cartes sont affichées et le joueur doit les regarder pour les retourner. L'une de ces cartes comporte une image.
-Une récompense est offerte au joueur lorsqu'il l'a trouvée.
-
-![magic-card-2](README/images/magic-card-2.jpg)
-
-### Blocs
-
-Une grande image est cachée par des blocs de couleur que le joueur doit regarder pour les faire disparaître. Lorsque l'ensemble des blocs ont disparu, la récompense est offerte.
-
-![blocs](README/images/blocs.jpg)
-
-### Cartes à gratter
-
-Une grande image est cachée dans une carte à gratter. Le joueur gratte la carte grâce à son regard. Lorsque une grande partie de la carte a été grattée, l'image est affichée et la récompense offerte.
-
-![Scratchcard](README/images/Scratchcard.jpg)
-
-### Bulles
-
-Des bulles de couleur remontent lentement à la surface et exploser lorsque le joueur les regarde.
-
-![Colored Bubbles](README/images/colored-bubbles.jpg)
-
-### Bulles Portrait
-
-Des bulles contenant des portraits remontent lentement à la surface et exploser lorsque le joueur les regarde.
-
-![Portrait Bubbles](README/images/portrait-bubbles.jpg)
-
-## Installation
-
-Copiez-collez ou déplacez le fichier téléchargé à partir de ce [lien (Version 1.0.4)](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.4/GazePlay-1.0.4.jar)
-sur votre disque dur à l'endroit que vous préférez. Le bureau sera parfait.
-
-Double cliquez sur le fichier. Si tout se passe bien, le logiciel se lance.
-
-Dans le cas contraire, il est probable qu'aucune machine virtuelle Java ne soit installée.
-
-[Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
-
-En cas de problème, didier.schwab à univ tiret grenoble tiret alpes point fr (remplacer le à par @ et le point par .).
-
-## Installation d'un eye-tracker Tobii EyeX ou 4C
-
-Notez-bien que ces deux modèles sont uniquement compatibles Windows (version 7, 8 et 10). GazePlay ne permet pas de les utiliser avec un autre système d'exploitation ou sur des ordinateurs dont les caractéristiques matérielles ne permettent pas d'utiliser ces modèles.
-
-Téléchargez la dernière version du fichier en cliquant sur le lien suivant [GazePlay-tobii-setup](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-tobii-setup-V1.01/GazePlay-tobii-setup-1.01.jar) et double-cliquez dessus. L'installation ne devrait pas prendre plus d'une dizaine de secondes.
-
-Pour information, l'installation consiste à copier dans le répertoire par défaut de *GazePlay* un répertoire *DLL* dans lequel deux fichiers nommés *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll* sont installés.
 
 ## Répertoire par défaut de GazePlay
 
@@ -127,27 +61,13 @@ Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faudra 
 
 3) *blocs* : contient les images utilisées par *blocs* et par *cartes à gratter*. Choisir des images assez grandes (idéalement au moins la taille de l'écran).
 
-## Statistiques
-
-À la fin d'une partie, ses statistiques sont affichées. Elles intègrent deux diagrammes cliquables :
-
-1) Un diagramme en ligne qui présente le temps pour chaque coup (suivant les jeux, temps pour cibler un portrait, temps pour trouver/dévoiler l'image,...). Le diagramme présente également la moyenne et l'écart-type sur la partie.
-2) Une carte de chaleur qui indique les zones de l'écran où les yeux sont passés pendant la partie. Plus la zone est rouge plus les yeux sont passés sur la zone. 
-
-![Statistiques](README/images/statistics.jpg) 
-
-Les statistiques sont enregistrées dans le répertoire de GazePlay. Dans un répertoire *statistics*, les statistiques sont classées par jeu puis par date. Trois fichiers sont enregistrés :
-1) *heatmap.csv* : La carte de chaleur sous forme brute. Ce fichier csv peut-être ouvert avec un tableur comme LibreOffice.org Calc, logiciel libre et gratuit ou les classiques Microsoft Excel, Apple Numbers,...).
-2) *heatmap.png* : La carte de chaleur sous forme d'image.
-3) *info-game.csv* : Les statistiques de la partie dans un fichier csv. 
-
 ## Contributions
 
 Ce logiciel est destiné à être amélioré. Toute personne peut contribuer par ses idées d'amélioration. Il est évidement également possible de contribuer par ses talents de graphiste ou d'informaticien pour créer de nouveaux jeux/améliorer les existants.
 
 Contact : Didier Schwab didier.schwab à univ-grenoble-alpes point fr (remplacer le à par @ et le point par .).
 
-## Rejoignez notre groupe facebook
+## Rejoignez notre groupe Facebook
 
 Nous y publions les dernieres informations comme les mises à jour par exemple.
 
