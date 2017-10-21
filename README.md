@@ -117,7 +117,9 @@ Quel que soit le système d'exploitation, le logiciel cherche dans le répertoir
 
 ## Modifier les images
 
-Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faudra créer un répertoire *images* dans lequel vous aurez à créer 3 autres répertoires :
+Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faudra créer un répertoire *files* dans lequel on mettra un répertoire *images*.
+ 
+*images* peut contenir 3 autres répertoires :
 
 1) *portraits* : contient les images utilisées par *tartes à la crème*, *ninja* et *bulles portrait*. Il vaut mieux choisir des images relativement petites (300x300 pixels).
 
