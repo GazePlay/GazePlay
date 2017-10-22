@@ -17,15 +17,6 @@ import ninja.Ninja;
 import utils.games.Utils;
 import utils.games.stats.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.Enumeration;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
-
 /**
  * Created by schwab on 17/12/2016.
  */
@@ -33,58 +24,11 @@ public class GazePlay extends Application {
 
     private Scene scene;
     private Group root;
-    private static ChoiceBox<String> cbxGames;
 
-    public static void main(String[] args) {
-        Application.launch(GazePlay.class, args);
-    }
-    
-    private String findVersionInfo() throws IOException {
-        Enumeration<URL> resources = getClass().getClassLoader().getResources("META-INF/MANIFEST.MF");
-        while (resources.hasMoreElements()) {
-			URL manifestUrl = resources.nextElement();
-			Manifest manifest = new Manifest(manifestUrl.openStream());
-			Attributes mainAttributes = manifest.getMainAttributes();
-			String implementationTitle = mainAttributes.getValue("Implementation-Title");
-            if(implementationTitle!=null && implementationTitle.equals("GazePlay")) {
-				String implementationVersion = mainAttributes.getValue("Implementation-Version");
-                String buildTime = mainAttributes.getValue("Build-Time");
-				return implementationVersion + " (" + buildTime + ")";
-			}
-        }
-        return "Current Version";
-    }
+    private ChoiceBox<String> cbxGames;
 
     @Override
     public void start(Stage primaryStage) {
-
-        String versionInfo;
-        try {
-            versionInfo = findVersionInfo();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load the version info", e);
-        }
-
-        System.out.println("***********************");
-        System.out.println("GazePlay");
-        System.out.println("Version : " + versionInfo);
-        System.out.println("Operating System " + System.getProperty("os.name"));
-        System.out.println("***********************");
-
-        try {
-            System.setProperty("file.encoding","UTF-8");
-            Field charset = Charset.class.getDeclaredField("defaultCharset");
-            charset.setAccessible(true);
-            charset.set(null,null);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        //creation of GazePlay default folder if it does not exist.
-        (new File(Utils.getGazePlayFolder())).mkdir();
-
         primaryStage.setTitle("GazePlay");
 
         primaryStage.setFullScreen(true);
@@ -100,8 +44,8 @@ public class GazePlay extends Application {
         cbxGames.setScaleX(2);
         cbxGames.setScaleY(2);
 
-        cbxGames.setTranslateX(scene.getWidth()*0.9/2);
-        cbxGames.setTranslateY(scene.getHeight()*0.9/2);
+        cbxGames.setTranslateX(scene.getWidth() * 0.9 / 2);
+        cbxGames.setTranslateY(scene.getHeight() * 0.9 / 2);
 
         cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -115,13 +59,13 @@ public class GazePlay extends Application {
 
         Utils.addButtons(scene, root, cbxGames);
 
-        primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
-        
+        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
+
         primaryStage.setScene(scene);
 
         primaryStage.show();
 
-       // SecondScreen secondScreen = SecondScreen.launch();
+        // SecondScreen secondScreen = SecondScreen.launch();
     }
 
     private void chooseGame(Number value) {
@@ -132,119 +76,119 @@ public class GazePlay extends Application {
 
         Stats stats = null;
 
-        switch (value.intValue()){
+        switch (value.intValue()) {
 
-            case 0 : {
+            case 0: {
 
                 System.out.println("Creampie");
 
                 stats = new CreampieStats(scene);
 
-                CreamPie.launch(root, scene, (CreampieStats)stats);
+                CreamPie.launch(root, scene, (CreampieStats) stats);
 
                 break;
             }
 
-            case 1 : {
+            case 1: {
 
                 System.out.println("Ninja Portraits");
 
                 stats = new NinjaStats(scene);
 
-                Ninja.launch(root, scene, (ShootGamesStats)stats);
+                Ninja.launch(root, scene, (ShootGamesStats) stats);
 
                 break;
             }
 
-            case 2 :{
+            case 2: {
 
                 System.out.println("Magic Cards (2x2)");
 
                 stats = new MagicCardsGamesStats(scene);
 
-                Card.addCards(root, scene, cbxGames,2, 2, (HiddenItemsGamesStats)stats);
+                Card.addCards(root, scene, cbxGames, 2, 2, (HiddenItemsGamesStats) stats);
 
                 break;
             }
 
-            case 3 : {
+            case 3: {
 
                 System.out.println("Magic Cards (2x3)");
 
                 stats = new MagicCardsGamesStats(scene);
 
-                Card.addCards(root, scene, cbxGames,2, 3, (HiddenItemsGamesStats)stats);
+                Card.addCards(root, scene, cbxGames, 2, 3, (HiddenItemsGamesStats) stats);
 
                 break;
             }
 
-            case 4 : {
+            case 4: {
 
                 System.out.println("Magic Cards (3x2)");
 
                 stats = new MagicCardsGamesStats(scene);
 
-                Card.addCards(root, scene, cbxGames,3, 2, (HiddenItemsGamesStats)stats);
+                Card.addCards(root, scene, cbxGames, 3, 2, (HiddenItemsGamesStats) stats);
 
                 break;
             }
 
-            case 5 : {
+            case 5: {
 
                 System.out.println("Magic Cards (3x3)");
 
                 stats = new MagicCardsGamesStats(scene);
 
-                Card.addCards(root, scene, cbxGames,3, 3,  (HiddenItemsGamesStats)stats);
+                Card.addCards(root, scene, cbxGames, 3, 3, (HiddenItemsGamesStats) stats);
 
                 break;
             }
 
-            case 6 :{
+            case 6: {
 
                 System.out.println("blocks (2x2)");
 
                 stats = new BlocsGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 2, 2, true, 1,  false, (HiddenItemsGamesStats)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 2, 2, true, 1, false, (HiddenItemsGamesStats) stats);
 
                 break;
             }
 
-            case 7 : {
+            case 7: {
 
                 System.out.println("blocks (2x3)");
 
                 stats = new BlocsGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1,  false, (HiddenItemsGamesStats)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1, false, (HiddenItemsGamesStats) stats);
 
                 break;
             }
 
-            case 8 : {
+            case 8: {
 
                 System.out.println("blocks (3x3)");
 
                 stats = new BlocsGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 3, 3, true, 1, false, (HiddenItemsGamesStats)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 3, 3, true, 1, false, (HiddenItemsGamesStats) stats);
 
                 break;
             }
 
-            case 9 : {
+            case 9: {
 
                 System.out.println("Carte à gratter");
 
                 stats = new ScratchcardGamesStats(scene);
 
-                Blocs.makeBlocks(scene, root, cbxGames, 100, 100, false, 0.6f, true, (HiddenItemsGamesStats)stats);
+                Blocs.makeBlocks(scene, root, cbxGames, 100, 100, false, 0.6f, true, (HiddenItemsGamesStats) stats);
 
                 break;
             }
 
-            case 10 : {
+            case 10: {
 
                 System.out.println("Colored Bubbles");
 
@@ -255,18 +199,18 @@ public class GazePlay extends Application {
                 break;
             }
 
-            case 11 : {
+            case 11: {
 
                 System.out.println("Portrait Bubbles");
 
                 stats = new BubblesGamesStats(scene);
 
-                Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT, (BubblesGamesStats)stats);
+                Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT, (BubblesGamesStats) stats);
 
                 break;
             }
 
-            default : {
+            default: {
 
                 System.out.println("No selection");
 
