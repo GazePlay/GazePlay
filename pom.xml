@@ -31,7 +31,11 @@
 			<artifactId>rxtx</artifactId>
 			<version>2.1.7</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.theeyetribe</groupId>
+			<artifactId>eyetribe-java</artifactId>
+			<version>0.9.77</version>
+		</dependency>
 
 	</dependencies>
 
@@ -149,5 +153,16 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>bintray</id>
+			<name>bintray</name>
+			<url>http://jcenter.bintray.com</url>
+		</repository>
+	</repositories>
 
 </project>
