@@ -38,6 +38,8 @@ public class Utils {
 
     private static final String tempFolder = "temp";
 
+    private static String filesFolder = getGazePlayFolder() + "files" +FILESEPARATOR;
+
     public static Home home;
 
     public static Image[] getImages(String folder) {
@@ -314,22 +316,33 @@ public class Utils {
 
     /**
      *
-     * @return images directory for GazePlay : in the default directory of GazePlay, in a folder called files another folder called images
+     * @return images directory for GazePlay : in the default directory of GazePlay, in a folder called files
      */
 
-    public static String getImagesFolder(){
+    public static String getFilesFolder(){
 
-        return getGazePlayFolder() + "files" +FILESEPARATOR + "images" + FILESEPARATOR;
+        System.out.println("filesFolder : " + filesFolder);
+        return filesFolder;
     }
 
     /**
      *
-     * @return sounds directory for GazePlay : in the default directory of GazePlay, in a folder called files another folder called sounds
+     * @return images directory for GazePlay : in the files directory another folder called images
+     */
+
+    public static String getImagesFolder(){
+
+        return getFilesFolder() + "images" + FILESEPARATOR;
+    }
+
+    /**
+     *
+     * @return sounds directory for GazePlay : in the files directory another folder called sounds
      */
 
     public static String getSoundsFolder(){
 
-        return getGazePlayFolder() + "files" + FILESEPARATOR + "sounds" + FILESEPARATOR;
+        return getFilesFolder() + "sounds" + FILESEPARATOR;
     }
 
     /**
