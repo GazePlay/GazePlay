@@ -64,8 +64,8 @@ public class Pictos extends Parent {
         currentPictos.add(R1);
         currentPictos.add(R2);
 
-        //System.out.println(scene.getWidth());
-        //System.out.println(scene.getHeight());
+        //log.info(scene.getWidth());
+        //log.info(scene.getHeight());
         double imagesWidth = scene.getWidth() / 2 - min_X / 2 - sep / 2;
         double imagesHeight = scene.getHeight() - min_Y * 2;
 
@@ -141,8 +141,8 @@ public class Pictos extends Parent {
 
                 Rectangle target = (Rectangle) e.getTarget();
 
-                //System.out.println("Rectangle " + Target.getTranslateX());
-                //System.out.println(e.getEventType());
+                //log.info("Rectangle " + Target.getTranslateX());
+                //log.info(e.getEventType());
 
                 if (found) {
 
@@ -151,7 +151,7 @@ public class Pictos extends Parent {
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    //System.out.println("ENTRÉE");
+                    //log.info("ENTRÉE");
                     entry = (new Date()).getTime();
 
                     int i;
@@ -162,14 +162,14 @@ public class Pictos extends Parent {
 
                 } else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
 
-                    //System.out.println("MOVE");
+                    //log.info("MOVE");
 
                     long now = (new Date()).getTime();
 
 
                     if (entry != -1 && (now - entry) > min_time) {
 
-                        //System.out.println("GAGNÉ");
+                        //log.info("GAGNÉ");
 
                         found = true;
 
@@ -206,7 +206,7 @@ public class Pictos extends Parent {
 
                         timeline.play();
 
-                        //System.out.println("DESSUS " + (now - entry));
+                        //log.info("DESSUS " + (now - entry));
 
                     }
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
@@ -221,7 +221,7 @@ public class Pictos extends Parent {
                     timeline.play();
 
 
-                    //System.out.println("SORTIE");
+                    //log.info("SORTIE");
                     entry = -1;
                 }
             }

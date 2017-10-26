@@ -7,10 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by schwab on 15/08/2016.
  */
+@Slf4j
 public class TestGaze extends Application {
 
     public static void main(String[] args) {
@@ -29,14 +31,14 @@ public class TestGaze extends Application {
 
         c.addEventFilter(
                 GazeEvent.GAZE_ENTERED,
-                event -> System.out.println(
+                event -> log.info(
                         "Field filtered strike: " + event.getEventType()
                 )
         );
 
         c.addEventHandler(
                 GazeEvent.GAZE_ENTERED,
-                event -> System.out.println(
+                event -> log.info(
                         "Field handled strike: " + event.getEventType()
                 )
         );

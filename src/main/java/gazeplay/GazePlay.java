@@ -9,6 +9,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import lombok.extern.slf4j.Slf4j;
 import utils.games.Utils;
 import utils.games.stats.Stats;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Created by schwab on 17/12/2016.
  */
+@Slf4j
 public class GazePlay extends Application {
 
     private Scene scene;
@@ -77,7 +79,7 @@ public class GazePlay extends Application {
     private void chooseGame(int gameIndex) {
         Utils.clear(scene, root, cbxGames);
 
-        System.out.println("Game number: " + gameIndex);
+        log.info("Game number: " + gameIndex);
 
         if (gameIndex == -1) {
             return;
@@ -85,7 +87,7 @@ public class GazePlay extends Application {
 
         GameSpec selectedGameSpec = games.get(gameIndex);
 
-        System.out.println(selectedGameSpec.getLabel());
+        log.info(selectedGameSpec.getLabel());
 
         Stats stats = selectedGameSpec.launch(scene, root, cbxGames);
 

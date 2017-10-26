@@ -138,7 +138,7 @@ public class Choices extends Parent {
 
                 else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
 
-                    //System.out.println("MOVE");
+                    //log.info("MOVE");
 
                     long now = (new Date()).getTime();
 

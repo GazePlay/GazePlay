@@ -16,6 +16,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import lombok.extern.slf4j.Slf4j;
 import org.tc33.jheatchart.HeatChart;
 import utils.games.stats.Stats;
 import utils.games.stats.StatsDisplay;
@@ -31,6 +32,7 @@ import java.util.Date;
 /**
  * Created by schwab on 23/12/2016.
  */
+@Slf4j
 public class Utils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
@@ -128,7 +130,7 @@ public class Utils {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    System.out.println("stats = " + stats);
+                    log.info("stats = " + stats);
 
                     if (stats == null) {
 
@@ -221,7 +223,7 @@ public class Utils {
             }
             br.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
 
         MenuItem MenuLicence = new MenuItem(licence.toString());
@@ -259,13 +261,13 @@ public class Utils {
             }
             else {
 
-                System.out.println("No image in folder : " + folder);
+                log.info("No image in folder : " + folder);
                 return defaultImage();
             }
         }
         else{
 
-            System.out.println("Folder doesn't exist : " + folder);
+            log.info("Folder doesn't exist : " + folder);
             return defaultImage();
         }
 
@@ -297,7 +299,7 @@ public class Utils {
             MediaPlayer mp = new MediaPlayer(media);
             mp.play();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
     }
 
@@ -335,7 +337,7 @@ public class Utils {
 
     public static String getFilesFolder(){
 
-        System.out.println("filesFolder : " + filesFolder);
+        log.info("filesFolder : " + filesFolder);
         return filesFolder;
     }
 
@@ -425,7 +427,7 @@ public class Utils {
             out.println(S);
             out.flush();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
     }
 
@@ -451,7 +453,7 @@ public class Utils {
         try {
             map.saveToFile(saveFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
     }
 
@@ -468,7 +470,7 @@ public class Utils {
             out = new PrintWriter(folder+ Utils.now()+"-info-game.csv");
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
 
         return out;
@@ -486,7 +488,7 @@ public class Utils {
                 destinationFile.write(buffer, 0, nbLecture);
             }
         } catch (IOException e){
-            e.printStackTrace();
+            log.error("Exception", e);
             return false; // Erreur
         }
         return true; // Résultat OK

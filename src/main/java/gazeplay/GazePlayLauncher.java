@@ -1,6 +1,8 @@
 package gazeplay;
 
 import javafx.application.Application;
+import lombok.extern.slf4j.Slf4j;
+import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 import utils.games.Utils;
 
 import java.io.File;
@@ -12,9 +14,13 @@ import java.util.Enumeration;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+@Slf4j
 public class GazePlayLauncher {
 
     public static void main(String[] args) {
+        SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
+
+        Thread.currentThread().setUncaughtExceptionHandler(new GazePlayUncaughtExceptionHandler());
 
         String versionInfo;
         try {
@@ -23,11 +29,11 @@ public class GazePlayLauncher {
             throw new RuntimeException("Failed to load the version info", e);
         }
 
-        System.out.println("***********************");
-        System.out.println("GazePlay");
-        System.out.println("Version : " + versionInfo);
-        System.out.println("Operating System " + System.getProperty("os.name"));
-        System.out.println("***********************");
+        log.info("***********************");
+        log.info("GazePlay");
+        log.info("Version : " + versionInfo);
+        log.info("Operating System " + System.getProperty("os.name"));
+        log.info("***********************");
 
         try {
             System.setProperty("file.encoding", "UTF-8");
@@ -35,14 +41,14 @@ public class GazePlayLauncher {
             charset.setAccessible(true);
             charset.set(null, null);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
 
         // creation of GazePlay default folder if it does not exist.
         File gazePlayFolder = new File(Utils.getGazePlayFolder());
         if (!gazePlayFolder.exists()) {
             boolean gazePlayFolderCreated = gazePlayFolder.mkdir();
-            System.out.println("gazePlayFolderCreated = " + gazePlayFolderCreated);
+            log.info("gazePlayFolderCreated = " + gazePlayFolderCreated);
         }
 
         Application.launch(GazePlay.class, args);
@@ -65,4 +71,11 @@ public class GazePlayLauncher {
         return "Current Version";
     }
 
+    @Slf4j
+    private static class GazePlayUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
+        @Override
+        public void uncaughtException(Thread t, Throwable e) {
+            log.error("uncaughtException", e);
+        }
+    }
 }

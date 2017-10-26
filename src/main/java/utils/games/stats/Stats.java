@@ -5,6 +5,7 @@ import gaze.GazeUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import lombok.extern.slf4j.Slf4j;
 import utils.games.Utils;
 
 import java.io.File;
@@ -21,7 +22,7 @@ import java.util.Collections;
 /**
  * Created by schwab on 16/08/2017.
  */
-
+@Slf4j
 public abstract class Stats {
 
     private final int heatMapPixelSize=5;
@@ -61,7 +62,7 @@ public abstract class Stats {
         zeroTime = System.currentTimeMillis();
         lengthBetweenGoals = new ArrayList<Integer>(1000);
 
-        System.out.println("GazeUtils ON : " + GazeUtils.isOn());
+        log.info("GazeUtils ON : " + GazeUtils.isOn());
 
         if(GazeUtils.isOn()){
 
@@ -84,7 +85,7 @@ public abstract class Stats {
             out = new PrintWriter(file);
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
 
         for(int i = 0; i < heatMap.length; i++){
@@ -109,7 +110,7 @@ public abstract class Stats {
         try {
             Files.copy(HeatMapPath, dest, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
     }
 

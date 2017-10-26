@@ -1,10 +1,12 @@
 package utils.games.multilinguism;
 
 import gaze.configuration.Configuration;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.util.HashMap;
 
+@Slf4j
 public class Multilinguism {
 
     private static Multilinguism multilinguism;
@@ -36,7 +38,7 @@ public class Multilinguism {
                     String key = data[0];
                     for (int i = 1; i < data.length; i++){
 
-                        //System.out.println(key + ", " + languages[i] + ", " +data[i]);
+                        //log.info(key + ", " + languages[i] + ", " +data[i]);
                         traductions.put(new Entry(key, languages[i]), data[i]);
                     }
                 }
@@ -44,7 +46,7 @@ public class Multilinguism {
             br.close();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
     }
 

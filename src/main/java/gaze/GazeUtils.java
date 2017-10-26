@@ -5,6 +5,7 @@ import com.theeyetribe.clientsdk.IGazeListener;
 import gaze.configuration.Configuration;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import lombok.extern.slf4j.Slf4j;
 import tobii.Tobii;
 import utils.games.stats.Stats;
 
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by schwab on 16/08/2016.
  */
+@Slf4j
 public class GazeUtils {
 
     static ArrayList<GazeInfos> nodesEventFilter = new ArrayList<GazeInfos>(100);
@@ -31,7 +33,7 @@ public class GazeUtils {
 
         Configuration config = new Configuration();
 
-        System.out.println("Eye-tracker = " + config.eyetracker);
+        log.info("Eye-tracker = " + config.eyetracker);
 
         if (config.eyetracker.equals("tobii")) {
 

@@ -1,6 +1,7 @@
 package gaze.configuration;
 
 
+import lombok.extern.slf4j.Slf4j;
 import utils.games.Utils;
 
 import java.io.File;
@@ -12,7 +13,7 @@ import java.util.Properties;
 /**
  * Created by schwab on 24/10/2016.
  */
-
+@Slf4j
 public class Configuration {
 
     private static String GazeMode = "GazeMode";
@@ -49,13 +50,13 @@ public class Configuration {
                 language = buffer.toLowerCase();
 
         } catch (final IOException ex) {
-            System.out.println(configPath + " not found");
+            log.info(configPath + " not found");
         } finally {
             if (input != null) {
                 try {
                     input.close();
                 } catch (final IOException e) {
-                    e.printStackTrace();
+                    log.error("Exception", e);
                 }
             }
         }
