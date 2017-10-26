@@ -12,8 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
-import utils.games.stats.Stats;
-import utils.games.stats.StatsDisplay;
+import net.gazeplay.utils.stats.Stats;
+import net.gazeplay.utils.stats.StatsDisplay;
 
 @Slf4j
 public class HomeUtils {

@@ -1,4 +1,4 @@
-package utils.games.stats;
+package net.gazeplay.utils.stats;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;

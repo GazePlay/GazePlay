@@ -1,7 +1,7 @@
 package net.gazeplay.games.bubbles;
 
 import javafx.scene.Scene;
-import utils.games.stats.ShootGamesStats;
+import net.gazeplay.utils.stats.ShootGamesStats;
 
 public class BubblesGamesStats extends ShootGamesStats {
 

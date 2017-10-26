@@ -1,4 +1,4 @@
-package utils.games.stats;
+package net.gazeplay.utils.stats;
 
 import gaze.GazeEvent;
 import gaze.GazeUtils;

@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import utils.games.HomeUtils;
-import utils.games.stats.Stats;
+import net.gazeplay.utils.stats.Stats;
 
 import java.util.List;
 import java.util.stream.Collectors;

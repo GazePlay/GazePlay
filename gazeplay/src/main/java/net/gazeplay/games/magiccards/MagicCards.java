@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import utils.games.stats.HiddenItemsGamesStats;
+import net.gazeplay.utils.stats.HiddenItemsGamesStats;
 
 /**
  * Created by schwab on 17/09/2016.

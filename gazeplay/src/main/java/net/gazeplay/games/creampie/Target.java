@@ -13,8 +13,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
 import utils.games.Portrait;
-import utils.games.stats.ShootGamesStats;
-import utils.games.stats.Stats;
+import net.gazeplay.utils.stats.ShootGamesStats;
+import net.gazeplay.utils.stats.Stats;
 
 /**
  * Created by schwab on 26/12/2016.

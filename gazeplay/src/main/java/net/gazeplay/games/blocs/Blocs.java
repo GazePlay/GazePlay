@@ -26,7 +26,7 @@ import javafx.stage.WindowEvent;
 import utils.games.Bravo;
 import utils.games.HomeUtils;
 import utils.games.Utils;
-import utils.games.stats.HiddenItemsGamesStats;
+import net.gazeplay.utils.stats.HiddenItemsGamesStats;
 
 public class Blocs extends Application {
 

@@ -12,8 +12,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.stage.Screen;
 import utils.games.Portrait;
 import javafx.util.Duration;
-import utils.games.stats.ShootGamesStats;
-import utils.games.stats.Stats;
+import net.gazeplay.utils.stats.ShootGamesStats;
+import net.gazeplay.utils.stats.Stats;
 import utils.games.Utils;
 
 import java.util.ArrayList;

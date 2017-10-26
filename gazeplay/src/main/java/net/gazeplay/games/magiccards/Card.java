@@ -25,7 +25,7 @@ import utils.games.Bravo;
 import utils.games.Home;
 import utils.games.HomeUtils;
 import utils.games.Utils;
-import utils.games.stats.HiddenItemsGamesStats;
+import net.gazeplay.utils.stats.HiddenItemsGamesStats;
 
 /**
  * Created by schwab on 17/09/2016.

@@ -11,8 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import utils.games.stats.ShootGamesStats;
-import utils.games.stats.Stats;
+import net.gazeplay.utils.stats.ShootGamesStats;
+import net.gazeplay.utils.stats.Stats;
 
 public class CreamPie extends Application {
 

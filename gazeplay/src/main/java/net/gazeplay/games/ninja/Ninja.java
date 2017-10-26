@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import utils.games.stats.ShootGamesStats;
+import net.gazeplay.utils.stats.ShootGamesStats;
 
 /**
  * Created by schwab on 26/12/2016.

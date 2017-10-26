@@ -7,7 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
 import tobii.Tobii;
-import utils.games.stats.Stats;
+import net.gazeplay.utils.stats.Stats;
 
 import java.util.ArrayList;
 

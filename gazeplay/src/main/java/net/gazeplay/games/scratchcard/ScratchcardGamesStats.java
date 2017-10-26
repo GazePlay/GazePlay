@@ -1,7 +1,7 @@
 package net.gazeplay.games.scratchcard;
 
 import javafx.scene.Scene;
-import utils.games.stats.HiddenItemsGamesStats;
+import net.gazeplay.utils.stats.HiddenItemsGamesStats;
 
 public class ScratchcardGamesStats extends HiddenItemsGamesStats {
 

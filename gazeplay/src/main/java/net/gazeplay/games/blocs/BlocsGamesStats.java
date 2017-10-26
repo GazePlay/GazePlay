@@ -1,7 +1,7 @@
 package net.gazeplay.games.blocs;
 
 import javafx.scene.Scene;
-import utils.games.stats.HiddenItemsGamesStats;
+import net.gazeplay.utils.stats.HiddenItemsGamesStats;
 
 public class BlocsGamesStats extends HiddenItemsGamesStats {
 
