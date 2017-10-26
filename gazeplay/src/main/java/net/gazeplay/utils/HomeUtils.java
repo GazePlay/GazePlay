@@ -1,4 +1,4 @@
-package utils.games;
+package net.gazeplay.utils;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -14,6 +14,7 @@ import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.utils.stats.Stats;
 import net.gazeplay.utils.stats.StatsDisplay;
+import utils.games.Utils;
 
 @Slf4j
 public class HomeUtils {

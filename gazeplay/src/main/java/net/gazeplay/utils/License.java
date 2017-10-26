@@ -1,4 +1,4 @@
-package utils.games;
+package net.gazeplay.utils;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;

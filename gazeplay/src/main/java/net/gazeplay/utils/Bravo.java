@@ -1,4 +1,4 @@
-package utils.games;
+package net.gazeplay.utils;
 
 import com.sun.glass.ui.Screen;
 import javafx.animation.KeyFrame;
@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import utils.games.Utils;
 
 /**
  * Created by schwab on 30/10/2016.

@@ -23,8 +23,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import utils.games.Bravo;
-import utils.games.HomeUtils;
+import net.gazeplay.utils.Bravo;
+import net.gazeplay.utils.HomeUtils;
 import utils.games.Utils;
 import net.gazeplay.utils.stats.HiddenItemsGamesStats;
 

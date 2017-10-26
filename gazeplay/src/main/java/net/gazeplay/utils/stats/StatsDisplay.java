@@ -17,8 +17,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
-import utils.games.HeatMapUtils;
-import utils.games.HomeUtils;
+import net.gazeplay.utils.HeatMapUtils;
+import net.gazeplay.utils.HomeUtils;
 import net.gazeplay.utils.multilinguism.Multilinguism;
 
 import java.util.ArrayList;

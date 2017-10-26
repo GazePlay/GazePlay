@@ -1,8 +1,9 @@
-package utils.games;
+package net.gazeplay.utils;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import utils.games.Utils;
 
 /**
  * Created by schwab on 12/08/2016.

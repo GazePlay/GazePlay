@@ -1,7 +1,8 @@
-package utils.games;
+package net.gazeplay.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.tc33.jheatchart.HeatChart;
+import utils.games.Utils;
 
 import java.io.File;
 import java.io.IOException;

@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
-import utils.games.HomeUtils;
+import net.gazeplay.utils.HomeUtils;
 import net.gazeplay.utils.stats.Stats;
 
 import java.util.List;

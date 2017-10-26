@@ -10,7 +10,7 @@ import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Screen;
-import utils.games.Portrait;
+import net.gazeplay.utils.Portrait;
 import javafx.util.Duration;
 import net.gazeplay.utils.stats.ShootGamesStats;
 import net.gazeplay.utils.stats.Stats;

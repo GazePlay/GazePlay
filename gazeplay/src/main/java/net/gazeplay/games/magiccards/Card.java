@@ -21,9 +21,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import utils.games.Bravo;
-import utils.games.Home;
-import utils.games.HomeUtils;
+import net.gazeplay.utils.Bravo;
+import net.gazeplay.utils.Home;
+import net.gazeplay.utils.HomeUtils;
 import utils.games.Utils;
 import net.gazeplay.utils.stats.HiddenItemsGamesStats;
 
