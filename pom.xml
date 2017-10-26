@@ -17,6 +17,7 @@
 		<module>gazeplay-commons</module>
 		<module>gazeplay</module>
 		<module>gazeplay-tobii-setup</module>
+		<module>gazeplay-side-projects</module>
 	</modules>
 
 

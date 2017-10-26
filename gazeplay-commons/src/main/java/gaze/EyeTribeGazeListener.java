@@ -5,7 +5,6 @@ import com.theeyetribe.clientsdk.data.GazeData;
 import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by schwab on 16/08/2016.
