@@ -1,4 +1,4 @@
-package blocs;
+package net.gazeplay.games.blocs;
 
 /**
  * Created by schwab on 29/10/2016.
