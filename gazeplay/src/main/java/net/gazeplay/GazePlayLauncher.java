@@ -16,6 +16,8 @@ import java.util.jar.Manifest;
 
 @Slf4j
 public class GazePlayLauncher {
+    
+    private static final String artifactId = "gazeplay";
 
     public static void main(String[] args) {
         SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
@@ -24,7 +26,7 @@ public class GazePlayLauncher {
 
         String versionInfo;
         try {
-            versionInfo = findVersionInfo("GazePlay");
+            versionInfo = findVersionInfo(artifactId);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load the version info", e);
         }

@@ -101,7 +101,7 @@
 							<addClasspath>true</addClasspath>
 						</manifest>
 						<manifestEntries>
-							<Implementation-Title>GazePlay</Implementation-Title>
+							<Implementation-Title>${project.artifactId}</Implementation-Title>
 							<Implementation-Version>${project.version}</Implementation-Version>
 							<JavaFX-Version>8.0</JavaFX-Version>
 							<Created-By>JavaFX Packager</Created-By>
@@ -134,7 +134,7 @@
 							<addClasspath>false</addClasspath>
 						</manifest>
 						<manifestEntries>
-							<Implementation-Title>GazePlay</Implementation-Title>
+							<Implementation-Title>${project.artifactId}</Implementation-Title>
 							<Implementation-Version>${project.version}</Implementation-Version>
 							<JavaFX-Version>8.0</JavaFX-Version>
 							<Created-By>JavaFX Packager</Created-By>
