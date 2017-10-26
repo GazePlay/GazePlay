@@ -18,7 +18,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.util.Duration;
-import utils.games.stats.BubblesGamesStats;
 import utils.games.Utils;
 
 import java.util.ArrayList;
