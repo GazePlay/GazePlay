@@ -76,7 +76,7 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<configuration>
 					<vendor>schwabdidier</vendor>
-					<mainClass>gazeplay.GazePlayLauncher</mainClass>
+					<mainClass>net.gazeplay.GazePlayLauncher</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -122,7 +122,7 @@
 							<addClasspath>false</addClasspath>
 						</manifest>
 						<manifestEntries>
-							<Implementation-Title>GazePlay</Implementation-Title>
+							<Implementation-Title>gazeplay-tobii-setup</Implementation-Title>
 							<Implementation-Version>${project.version}</Implementation-Version>
 							<JavaFX-Version>8.0</JavaFX-Version>
 							<Created-By>JavaFX Packager</Created-By>

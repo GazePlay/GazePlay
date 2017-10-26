@@ -1,4 +1,4 @@
-package gazeplay;
+package net.gazeplay;
 
 import blocs.Blocs;
 import bubbles.Bubble;

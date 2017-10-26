@@ -1,4 +1,4 @@
-package gazeplay;
+package net.gazeplay;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;

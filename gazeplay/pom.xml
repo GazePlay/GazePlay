@@ -88,7 +88,7 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<configuration>
 					<vendor>schwabdidier</vendor>
-					<mainClass>gazeplay.GazePlayLauncher</mainClass>
+					<mainClass>net.gazeplay.GazePlayLauncher</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -106,7 +106,7 @@
 							<JavaFX-Version>8.0</JavaFX-Version>
 							<Created-By>JavaFX Packager</Created-By>
 							<Implementation-Vendor>Univ. Grenoble Alpes - LIG - GETALP</Implementation-Vendor>
-							<Main-Class>gazeplay.GazePlayLauncher</Main-Class>
+							<Main-Class>net.gazeplay.GazePlayLauncher</Main-Class>
 							<Build-Time>${maven.build.timestamp}</Build-Time>
 							<Built-By></Built-By>
 							<Created-By></Created-By>
@@ -139,7 +139,7 @@
 							<JavaFX-Version>8.0</JavaFX-Version>
 							<Created-By>JavaFX Packager</Created-By>
 							<Implementation-Vendor>Univ. Grenoble Alpes - LIG - GETALP</Implementation-Vendor>
-							<Main-Class>gazeplay.GazePlayLauncher</Main-Class>
+							<Main-Class>net.gazeplay.GazePlayLauncher</Main-Class>
 							<Build-Time>${maven.build.timestamp}</Build-Time>
 							<Built-By></Built-By>
 							<Created-By></Created-By>

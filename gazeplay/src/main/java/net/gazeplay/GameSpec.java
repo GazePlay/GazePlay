@@ -1,4 +1,4 @@
-package gazeplay;
+package net.gazeplay;
 
 import javafx.scene.Group;
 import javafx.scene.Scene;
