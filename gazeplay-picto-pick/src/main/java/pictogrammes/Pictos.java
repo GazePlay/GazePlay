@@ -229,32 +229,35 @@ public class Pictos extends Parent {
 		};
 
 	}
-}
 
-class Picto {
 
-	Rectangle rectangle;
+	class Picto {
 
-	AudioClip sound;
+		Rectangle rectangle;
 
-	public Picto(String name) {
+		AudioClip sound;
 
-		this.rectangle = new Rectangle();
+		public Picto(String name) {
 
-		String soundResourceName = "pictogrammes/sounds/" + name + ".m4a";
-		URL soundSourceResource = getClass().getClassLoader().getResource(soundResourceName);
-		if (soundSourceResource == null) {
-			throw new RuntimeException("Resource not found : " + soundResourceName);
+			this.rectangle = new Rectangle();
+
+			String soundResourceName = "pictogrammes/sounds/" + name + ".m4a";
+			URL soundSourceResource = getClass().getClassLoader().getResource(soundResourceName);
+			if (soundSourceResource == null) {
+				throw new RuntimeException("Resource not found : " + soundResourceName);
+			}
+
+			this.sound = new AudioClip(soundSourceResource.toExternalForm());
+
+			String imageResourceName = "pictogrammes/images/" + name + ".jpg";
+			URL imageResource = getClass().getClassLoader().getResource(imageResourceName);
+			if (imageResource == null) {
+				throw new RuntimeException("Resource not found : " + imageResourceName);
+			}
+			rectangle.setFill(new ImagePattern(new Image(imageResource.toExternalForm()), 0, 0, 1, 1, true));
 		}
 
-		this.sound = new AudioClip(soundSourceResource.toExternalForm());
-
-		String imageResourceName = "pictogrammes/images/" + name + ".jpg";
-		URL imageResource = getClass().getClassLoader().getResource(imageResourceName);
-		if (imageResource == null) {
-			throw new RuntimeException("Resource not found : " + imageResourceName);
-		}
-		rectangle.setFill(new ImagePattern(new Image(imageResource.toExternalForm()), 0, 0, 1, 1, true));
 	}
+
 
 }
