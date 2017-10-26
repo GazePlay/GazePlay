@@ -21,6 +21,7 @@ public class ChangeInstru extends Parent {
     private RadioButton rb_orgue;
 
     public ChangeInstru(Instru instru){
+        
 
         this.instru = instru;
         GridPane gridpane = new GridPane();
