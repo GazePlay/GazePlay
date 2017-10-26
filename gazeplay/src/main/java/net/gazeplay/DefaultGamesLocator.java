@@ -6,6 +6,7 @@ import net.gazeplay.games.magiccards.Card;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
+import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import ninja.Ninja;
 import utils.games.stats.*;
 
