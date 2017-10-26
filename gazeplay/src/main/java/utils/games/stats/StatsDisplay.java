@@ -19,7 +19,7 @@ import javafx.scene.text.Text;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 import utils.games.HeatMapUtils;
 import utils.games.HomeUtils;
-import utils.games.multilinguism.Multilinguism;
+import net.gazeplay.utils.multilinguism.Multilinguism;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;

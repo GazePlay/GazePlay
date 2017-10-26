@@ -1,4 +1,4 @@
-package utils.games.multilinguism;
+package net.gazeplay.utils.multilinguism;
 
 import gaze.configuration.Configuration;
 import lombok.extern.slf4j.Slf4j;
