@@ -1,4 +1,4 @@
-package ninja;
+package net.gazeplay.games.ninja;
 
 import gaze.GazeEvent;
 import gaze.GazeUtils;

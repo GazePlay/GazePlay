@@ -1,4 +1,4 @@
-package ninja;
+package net.gazeplay.games.ninja;
 
 import gaze.SecondScreen;
 import javafx.application.Application;
@@ -15,7 +15,7 @@ import utils.games.stats.ShootGamesStats;
 public class Ninja extends Application {
 
         public static void main(String[] args) {
-            Application.launch(ninja.Ninja.class, args);
+            Application.launch(net.gazeplay.games.ninja.Ninja.class, args);
         }
 
         @Override

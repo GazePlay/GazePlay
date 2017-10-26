@@ -9,7 +9,8 @@ import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
-import ninja.Ninja;
+import net.gazeplay.games.ninja.Ninja;
+import net.gazeplay.games.ninja.NinjaStats;
 import utils.games.stats.*;
 
 import java.util.ArrayList;
