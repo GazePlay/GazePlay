@@ -1,17 +1,24 @@
 package sample;
 
-import javafx.animation.*;
+import javafx.animation.FillTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.*;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventTarget;
+import javafx.event.EventType;
 import javafx.scene.Scene;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Random;
 
+@Slf4j
 public class LightningSimulator extends Application {
     private static final int FIELD_SIZE = 10;
 
@@ -29,14 +36,14 @@ public class LightningSimulator extends Application {
 
         field.addEventFilter(
                 LightningEvent.PLASMA_STRIKE,
-                event -> System.out.println(
+                event -> log.info(
                         "Field filtered strike: " + event.getI() + ", " + event.getJ()
                 )
         );
 
         field.addEventHandler(
                 LightningEvent.PLASMA_STRIKE,
-                event -> System.out.println(
+                event -> log.info(
                         "Field handled strike: " + event.getI() + ", " + event.getJ()
                 )
         );
@@ -142,7 +149,7 @@ public class LightningSimulator extends Application {
             LightningReactor reactor = (LightningReactor) event.getTarget();
             reactor.strike();
 
-            System.out.println("Reactor received strike: " + reactor.getI() + ", " + reactor.getJ());
+            log.info("Reactor received strike: " + reactor.getI() + ", " + reactor.getJ());
 
 
             // event.consume();  if event is consumed the handler for the parent node will not be invoked.

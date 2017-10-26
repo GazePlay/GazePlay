@@ -164,11 +164,11 @@ public class Blocs extends Application {
     private static void removeBloc(Bloc toRemove){
 
         /*
-        System.out.println("##############");
-        System.out.println("#####TO REMOVE#########");
-        System.out.println(toRemove.posX);
-        System.out.println(toRemove.posY);
-        System.out.println("##############");
+        log.info("##############");
+        log.info("#####TO REMOVE#########");
+        log.info(toRemove.posX);
+        log.info(toRemove.posY);
+        log.info("##############");
 */
         if(toRemove==null)
             return;
@@ -187,8 +187,8 @@ public class Blocs extends Application {
             @Override
             public void handle(Event e) {
 
-                //System.out.println("useTrail = " + useTrail);
-                //System.out.println("e.getEventType() = " + e.getEventType());
+                //log.info("useTrail = " + useTrail);
+                //log.info("e.getEventType() = " + e.getEventType());
 
                 if(e.getEventType().equals(MouseEvent.MOUSE_ENTERED) || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
@@ -204,8 +204,8 @@ public class Blocs extends Application {
                         int posX = bloc.posX;
                         int posY = bloc.posY;
 
-                       // System.out.println(bloc.posX);
-                       // System.out.println(bloc.posY);
+                       // log.info(bloc.posX);
+                       // log.info(bloc.posY);
 
                         int maxX = blocs.length;
                         int maxY = blocs[0].length;
@@ -213,9 +213,9 @@ public class Blocs extends Application {
                         for (int i = -trail; i < trail; i++) {
                             for (int j = -trail; j < trail; j++) {
 
-                                //System.out.println(Math.sqrt(i * i + j * j) + " : " + maxX + ", " + maxY + ", " + (posX + i) + ", " + (posY + j));
+                                //log.info(Math.sqrt(i * i + j * j) + " : " + maxX + ", " + maxY + ", " + (posX + i) + ", " + (posY + j));
                                 if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0 && posX + i < maxX && posY + j < maxY) {
-                                    //System.out.println("à supprimer");
+                                    //log.info("à supprimer");
                                     removeBloc(blocs[posX + i][posY + j]);
                                     blocs[posX + i][posY + j] = null;
                                 }

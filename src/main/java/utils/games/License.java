@@ -3,7 +3,6 @@ package utils.games;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
@@ -14,7 +13,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -23,6 +22,7 @@ import java.io.IOException;
 /**
  * Created by schwab on 22/12/2016.
  */
+@Slf4j
 public class License extends Rectangle{
 
     public License(double X, double Y, double width, double height, Scene scene, Group root, ChoiceBox<String> cbxGames, String language){
@@ -72,7 +72,7 @@ public class License extends Rectangle{
             }
             br.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
 
         text.setText(licence.toString());
@@ -105,7 +105,7 @@ public class License extends Rectangle{
             }
             br.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
 
         text.setText(licence.toString());

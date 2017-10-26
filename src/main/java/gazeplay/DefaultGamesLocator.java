@@ -3,6 +3,7 @@ package gazeplay;
 import blocs.Blocs;
 import bubbles.Bubble;
 import creampie.CreamPie;
+import lombok.extern.slf4j.Slf4j;
 import magiccards.Card;
 import ninja.Ninja;
 import utils.games.stats.*;
@@ -10,6 +11,7 @@ import utils.games.stats.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class DefaultGamesLocator implements GamesLocator {
 
 
@@ -91,7 +93,7 @@ public class DefaultGamesLocator implements GamesLocator {
         }));
 
 
-        System.out.println("Games found : " + result.size());
+        log.info("Games found : " + result.size());
 
         return result;
     }

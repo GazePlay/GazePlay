@@ -4,6 +4,7 @@ import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
 import com.theeyetribe.clientsdk.data.GazeData;
 import com.theeyetribe.clientsdk.utils.GazeUtils;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by schwab on 13/08/2016.
@@ -19,11 +20,11 @@ public class TETSimple {
     }
 }
 
+@Slf4j
 class GazeListener implements IGazeListener {
 
     @Override
-    public void onGazeUpdate(GazeData gazeData)
-    {
-        System.out.println(GazeUtils.getEyesCenterNormalized(gazeData));
+    public void onGazeUpdate(GazeData gazeData) {
+        log.info("" + GazeUtils.getEyesCenterNormalized(gazeData));
     }
 }

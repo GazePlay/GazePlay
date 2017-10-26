@@ -12,10 +12,12 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by schwab on 10/09/2016.
  */
+@Slf4j
 public class SecondScreen {
 
     private static final int pixelWidth = 20;
@@ -40,8 +42,8 @@ public class SecondScreen {
 
         Screen screen1 = screens.get(0);
         Screen screen2 = screens.get(1);
-        System.out.println(screen1.getBounds());
-        System.out.println(screen2.getBounds());
+        log.info("screen1.getBounds() = " + screen1.getBounds());
+        log.info("screen2.getBounds() = " + screen2.getBounds());
         Stage stage2 = new Stage();
         stage2.setScene(new Scene(new Label("primary")));
         stage2.setX(screen2.getVisualBounds().getMinX());

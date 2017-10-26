@@ -6,6 +6,7 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
 
-
+@Slf4j
 public class ArduinoSerialCommunication implements SerialPortEventListener {
     SerialPort serialPort;
     /** The port we're normally going to use. */
@@ -51,17 +52,17 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
         //First, Find an instance of serial port as set in PORT_NAMES.
         while (portEnum.hasMoreElements()) {
             CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
-            System.out.println(currPortId.getName());
+            log.info(currPortId.getName());
             for (String portName : PORT_NAMES) {
                 if (currPortId.getName().equals(portName)) {
-                    System.out.println("Found : " + portName);
+                    log.info("Found : " + portName);
                     portId = currPortId;
                     break;
                 }
             }
         }
         if (portId == null) {
-            System.out.println("Could not find COM port.");
+            log.info("Could not find COM port.");
             System.exit(0);
         }
 
@@ -83,8 +84,7 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
             serialPort.addEventListener(this);
             serialPort.notifyOnDataAvailable(true);
         } catch (Exception e) {
-            System.err.println("error 1 " + e.toString());
-            e.printStackTrace(System.err);
+            log.error("error 1 " + e.toString(), e);
             System.exit(0);
         }
     }
@@ -103,10 +103,10 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
     public void sendArduino(String s){
 
         try {
-            System.out.println("Envoi : " + s);
+            log.info("Envoi : " + s);
             output.write(s.getBytes());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Exception", e);
         }
 /*
         PrintWriter writer = new PrintWriter(output);
@@ -122,9 +122,9 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine=input.readLine();
-                System.out.println("Reçoit : " + inputLine);
+                log.info("Reçoit : " + inputLine);
             } catch (Exception e) {
-                System.err.println("error 2 " + e.toString());
+                log.error("error 2 " + e.toString());
             }
         }
         // Ignore all the other eventTypes, but you should consider the other ones.
@@ -134,7 +134,7 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
         ArduinoSerialCommunication arduino = new ArduinoSerialCommunication();
         arduino.initialize();
 
-        System.out.println("Started");
+        log.info("Started");
 
         while(true) {
             arduino.sendArduino("L");

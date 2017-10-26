@@ -55,7 +55,7 @@ public class Hand extends Parent {
 
         this.getChildren().add(hand);
 
-        //System.out.println(ClassLoader.getSystemResourceAsStream("data/creampie/images/hand.png"));
+        //log.info(ClassLoader.getSystemResourceAsStream("data/creampie/images/hand.png"));
 
         //background = new ImageView(new Image(ClassLoader.getSystemResourceAsStream("data/creampie/images/hand.png")));
        // background.setFitHeight(maxSize);
