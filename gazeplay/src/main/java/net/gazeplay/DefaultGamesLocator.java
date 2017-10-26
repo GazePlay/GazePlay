@@ -11,7 +11,7 @@ import net.gazeplay.games.magiccards.Card;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
-import utils.games.stats.ScratchcardGamesStats;
+import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 
 import java.util.ArrayList;
 import java.util.List;
