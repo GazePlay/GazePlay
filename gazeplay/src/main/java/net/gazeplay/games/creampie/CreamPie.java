@@ -1,4 +1,4 @@
-package creampie;
+package net.gazeplay.games.creampie;
 
 /**
  * Created by schwab on 12/08/2016.
@@ -17,7 +17,7 @@ import utils.games.stats.Stats;
 public class CreamPie extends Application {
 
     public static void main(String[] args) {
-        Application.launch(creampie.CreamPie.class, args);
+        Application.launch(net.gazeplay.games.creampie.CreamPie.class, args);
     }
 
     @Override

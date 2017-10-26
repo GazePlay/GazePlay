@@ -1,8 +1,9 @@
 package net.gazeplay;
 
-import creampie.CreamPie;
+import net.gazeplay.games.creampie.CreamPie;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
+import net.gazeplay.games.creampie.CreampieStats;
 import net.gazeplay.games.magiccards.Card;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;

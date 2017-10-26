@@ -1,4 +1,4 @@
-package creampie;
+package net.gazeplay.games.creampie;
 
 import gaze.GazeEvent;
 import gaze.GazeUtils;
@@ -65,7 +65,7 @@ public class Target extends Portrait {
 
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
-        hand.fireEvent(new creampie.event.TouchEvent(getCenterX(), getCenterY()));
+        hand.fireEvent(new net.gazeplay.games.creampie.event.TouchEvent(getCenterX(), getCenterY()));
 
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();

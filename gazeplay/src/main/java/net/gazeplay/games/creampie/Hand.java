@@ -1,6 +1,6 @@
-package creampie;
+package net.gazeplay.games.creampie;
 
-import creampie.event.TouchEvent;
+import net.gazeplay.games.creampie.event.TouchEvent;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
@@ -8,14 +8,10 @@ import javafx.animation.Timeline;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import utils.games.Utils;
-
-import java.net.URL;
 
 /**
  * Created by schwab on 17/08/2016.

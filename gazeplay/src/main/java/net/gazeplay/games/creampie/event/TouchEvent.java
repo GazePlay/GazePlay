@@ -1,4 +1,4 @@
-package creampie.event;
+package net.gazeplay.games.creampie.event;
 
 import gaze.GazeEvent;
 import javafx.event.Event;
