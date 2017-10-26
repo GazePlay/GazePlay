@@ -2,7 +2,7 @@ package net.gazeplay;
 
 import creampie.CreamPie;
 import lombok.extern.slf4j.Slf4j;
-import magiccards.Card;
+import net.gazeplay.games.magiccards.Card;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;

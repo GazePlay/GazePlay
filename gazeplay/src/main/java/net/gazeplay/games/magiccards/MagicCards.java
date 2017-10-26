@@ -1,4 +1,4 @@
-package magiccards;
+package net.gazeplay.games.magiccards;
 
 import gaze.SecondScreen;
 import javafx.application.Application;
