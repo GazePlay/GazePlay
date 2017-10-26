@@ -1,4 +1,4 @@
-package bubbles;
+package net.gazeplay.games.bubbles;
 
 import gaze.GazeEvent;
 import gaze.GazeUtils;

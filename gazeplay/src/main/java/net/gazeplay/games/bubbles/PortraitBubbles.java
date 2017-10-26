@@ -1,4 +1,4 @@
-package bubbles;
+package net.gazeplay.games.bubbles;
 
 import gaze.SecondScreen;
 import javafx.application.Application;
