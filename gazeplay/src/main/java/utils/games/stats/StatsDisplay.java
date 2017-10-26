@@ -16,7 +16,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import utils.games.Utils;
+import utils.games.HeatMapUtils;
+import utils.games.HomeUtils;
 import utils.games.multilinguism.Multilinguism;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class StatsDisplay {
 
         stats.stop();
 
-        Utils.clear(scene, root, cbxGames);
+        HomeUtils.clear(scene, root, cbxGames);
 
         //to add or not a space before colon (:) according to the language
         String colon = multilinguism.getTrad("Colon", Multilinguism.getLanguage());
@@ -143,7 +144,7 @@ public class StatsDisplay {
 
         stats.saveStats();
 
-        Utils.home(scene, root, cbxGames, null);
+        HomeUtils.home(scene, root, cbxGames, null);
     }
 
     static LineChart<String,Number> buildLineChart(Stats stats, Scene scene) {
@@ -227,11 +228,11 @@ public class StatsDisplay {
 
     private static Rectangle BuildHeatChart(Stats stats, Scene scene){
 
-        Utils.buildHeatMap(stats.getHeatMap());
+        HeatMapUtils.buildHeatMap(stats.getHeatMap());
 
         Rectangle heatMap = new Rectangle();
 
-        heatMap.setFill(new ImagePattern(new Image("file:" + Utils.getHeatMapPath()),0,0,1,1, true));
+        heatMap.setFill(new ImagePattern(new Image("file:" + HeatMapUtils.getHeatMapPath()),0,0,1,1, true));
 
         EventHandler<Event> openHeatMapEvent = openHeatMap(heatMap, scene);
 

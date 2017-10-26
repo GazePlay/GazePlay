@@ -37,11 +37,11 @@ public class License extends Rectangle{
 
                 if(e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    Utils.clear(scene, root, cbxGames);
+                    HomeUtils.clear(scene, root, cbxGames);
 
                     root.getChildren().add(licence(width, height));
 
-                    Utils.home(scene, root, cbxGames, null);
+                    HomeUtils.home(scene, root, cbxGames, null);
                 }
             }
         };

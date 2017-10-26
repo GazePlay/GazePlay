@@ -8,14 +8,12 @@ import com.sun.glass.ui.Screen;
 import gaze.GazeEvent;
 import gaze.GazeUtils;
 import gaze.SecondScreen;
-import javafx.animation.SequentialTransition;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
@@ -26,11 +24,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import utils.games.Bravo;
-import utils.games.Home;
+import utils.games.HomeUtils;
 import utils.games.Utils;
 import utils.games.stats.HiddenItemsGamesStats;
-
-import java.util.ArrayList;
 
 public class Blocs extends Application {
 
@@ -231,12 +227,12 @@ public class Blocs extends Application {
 
                         RemoveAllBlocs();
 
-                       Utils.home.setVisible(false);
+                       HomeUtils.home.setVisible(false);
 
                         bravo.win().setOnFinished(event ->{
-                                Utils.clear(theScene, blockRoot, choiceBox);
+                            HomeUtils.clear(theScene, blockRoot, choiceBox);
                                 makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, useTrail, stats);
-                                Utils.home(theScene, blockRoot, choiceBox, stats);
+                            HomeUtils.home(theScene, blockRoot, choiceBox, stats);
                             });
                         }
                     }

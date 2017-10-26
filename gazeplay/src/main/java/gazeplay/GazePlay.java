@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
-import utils.games.Utils;
+import utils.games.HomeUtils;
 import utils.games.stats.Stats;
 
 import java.util.List;
@@ -65,7 +65,7 @@ public class GazePlay extends Application {
 
         root.getChildren().add(cbxGames);
 
-        Utils.addButtons(scene, root, cbxGames);
+        HomeUtils.addButtons(scene, root, cbxGames);
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
@@ -77,7 +77,7 @@ public class GazePlay extends Application {
     }
 
     private void chooseGame(int gameIndex) {
-        Utils.clear(scene, root, cbxGames);
+        HomeUtils.clear(scene, root, cbxGames);
 
         log.info("Game number: " + gameIndex);
 
@@ -91,7 +91,7 @@ public class GazePlay extends Application {
 
         Stats stats = selectedGameSpec.launch(scene, root, cbxGames);
 
-        Utils.home(scene, root, cbxGames, stats);
+        HomeUtils.home(scene, root, cbxGames, stats);
     }
 
 

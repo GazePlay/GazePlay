@@ -23,6 +23,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import utils.games.Bravo;
 import utils.games.Home;
+import utils.games.HomeUtils;
 import utils.games.Utils;
 import utils.games.stats.HiddenItemsGamesStats;
 
@@ -188,9 +189,9 @@ public class Card extends Parent {
 
                                             @Override
                                             public void handle(ActionEvent actionEvent) {
-                                                Utils.clear(scene, root, choiceBox);
+                                                HomeUtils.clear(scene, root, choiceBox);
                                                 Card.addCards(root, scene, choiceBox, nbLines, nbColumns,  stats);
-                                                Utils.home(scene, root, choiceBox, stats);
+                                                HomeUtils.home(scene, root, choiceBox, stats);
                                                 stats.start();
                                             }
                                         });

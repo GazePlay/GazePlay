@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import lombok.extern.slf4j.Slf4j;
+import utils.games.HeatMapUtils;
 import utils.games.Utils;
 
 import java.io.File;
@@ -104,7 +105,7 @@ public abstract class Stats {
 
     public void savePNGHeatMap(File destination){
 
-        Path HeatMapPath = Paths.get(Utils.getHeatMapPath());
+        Path HeatMapPath = Paths.get(HeatMapUtils.getHeatMapPath());
         Path dest= Paths.get(destination.getAbsolutePath());
 
         try {

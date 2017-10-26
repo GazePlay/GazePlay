@@ -4,7 +4,7 @@
 
 
 	<groupId>com.github.schwabdidier</groupId>
-	<artifactId>gazeplay</artifactId>
+	<artifactId>gazeplay-commons</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.5</version>
 
@@ -16,10 +16,10 @@
 	</parent>
 
 	<dependencies>
+
 		<dependency>
-			<groupId>com.github.schwabdidier</groupId>
-			<artifactId>gazeplay-commons</artifactId>
-			<version>1.0.5</version>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
 		</dependency>
 		
 		<dependency>

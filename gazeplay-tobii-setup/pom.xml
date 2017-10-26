@@ -4,7 +4,7 @@
 
 
 	<groupId>com.github.schwabdidier</groupId>
-	<artifactId>gazeplay</artifactId>
+	<artifactId>gazeplay-tobii-setup</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.5</version>
 
@@ -27,18 +27,6 @@
 			<artifactId>javafx</artifactId>
 			<scope>system</scope>
 			<systemPath>${java.home}/lib/ext/jfxrt.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.rxtx</groupId>
-			<artifactId>rxtx</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.theeyetribe</groupId>
-			<artifactId>eyetribe-java</artifactId>
 		</dependency>
 
 		<dependency>
@@ -106,7 +94,7 @@
 							<JavaFX-Version>8.0</JavaFX-Version>
 							<Created-By>JavaFX Packager</Created-By>
 							<Implementation-Vendor>Univ. Grenoble Alpes - LIG - GETALP</Implementation-Vendor>
-							<Main-Class>gazeplay.GazePlayLauncher</Main-Class>
+							<Main-Class>tobii.installation.TobiiSetup</Main-Class>
 							<Build-Time>${maven.build.timestamp}</Build-Time>
 							<Built-By></Built-By>
 							<Created-By></Created-By>
@@ -139,7 +127,7 @@
 							<JavaFX-Version>8.0</JavaFX-Version>
 							<Created-By>JavaFX Packager</Created-By>
 							<Implementation-Vendor>Univ. Grenoble Alpes - LIG - GETALP</Implementation-Vendor>
-							<Main-Class>gazeplay.GazePlayLauncher</Main-Class>
+							<Main-Class>tobii.installation.TobiiSetup</Main-Class>
 							<Build-Time>${maven.build.timestamp}</Build-Time>
 							<Built-By></Built-By>
 							<Created-By></Created-By>
