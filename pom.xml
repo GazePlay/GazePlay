@@ -7,6 +7,14 @@
 	<artifactId>gazeplay-project</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.5</version>
+	
+	<licenses>
+		<license>
+			<name>GNU General Public License (GPL) version 3.0</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+		</license>
+	</licenses>
+	
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
