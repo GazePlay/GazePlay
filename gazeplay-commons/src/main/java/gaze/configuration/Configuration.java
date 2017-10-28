@@ -1,6 +1,7 @@
 package gaze.configuration;
 
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import utils.games.Utils;
 
@@ -13,6 +14,7 @@ import java.util.Properties;
 /**
  * Created by schwab on 24/10/2016.
  */
+@ToString
 @Slf4j
 public class Configuration {
 

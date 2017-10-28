@@ -20,6 +20,7 @@ public class GazePlayLauncher {
     private static final String artifactId = "gazeplay";
 
     public static void main(String[] args) {
+
         SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
 
         Thread.currentThread().setUncaughtExceptionHandler(new GazePlayUncaughtExceptionHandler());

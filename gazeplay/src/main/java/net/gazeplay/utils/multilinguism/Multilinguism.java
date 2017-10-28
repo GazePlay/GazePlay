@@ -116,5 +116,3 @@ class Entry {
         return result;
     }
 }
-
-enum Languages{fra,eng,deu}

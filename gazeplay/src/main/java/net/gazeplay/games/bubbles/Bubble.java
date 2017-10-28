@@ -39,7 +39,7 @@ public class Bubble extends Parent {
 
     private ArrayList<Circle> fragments = new ArrayList(nbFragments);
 
-    private final static Image[] photos = Utils.images(System.getProperties().getProperty("user.home")+ Utils.FILESEPARATOR +"GazePlay"+ Utils.FILESEPARATOR +"files"+ Utils.FILESEPARATOR +"images"+ Utils.FILESEPARATOR +"portraits");
+    private final static Image[] photos = Utils.images(System.getProperties().getProperty("user.config")+ Utils.FILESEPARATOR +"GazePlay"+ Utils.FILESEPARATOR +"files"+ Utils.FILESEPARATOR +"images"+ Utils.FILESEPARATOR +"portraits");
 
     EventHandler<Event> enterEvent;
     Scene scene;

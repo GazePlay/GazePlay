@@ -87,8 +87,6 @@ public class HomeUtils {
 
 	}
 
-
-
 	public static void addButtons(Scene scene, Group root, ChoiceBox<String> cbxGames) {
 
 		double width = scene.getWidth() / 10;
@@ -118,6 +116,8 @@ public class HomeUtils {
 		};
 
 		exit.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+
+		root.getChildren().add(ConfigurationDisplay.addConfig(scene, root, cbxGames));
 
 		root.getChildren().add(exit);
 

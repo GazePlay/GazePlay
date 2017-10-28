@@ -30,8 +30,6 @@ public class Utils {
 
     private static String filesFolder = getGazePlayFolder() + "files" +FILESEPARATOR;
 
-
-
     public static Image[] getImages(String folder) {
 
         return getImages(folder, -1);

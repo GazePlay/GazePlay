@@ -33,9 +33,12 @@ public class GazePlay extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         primaryStage.setTitle("GazePlay");
 
         primaryStage.setFullScreen(true);
+
+        //scene.getStylesheets().add("file://resources/data/stylesheets/main.css");
 
         games = gamesLocator.listGames();
 
