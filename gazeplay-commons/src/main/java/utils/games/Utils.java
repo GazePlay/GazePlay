@@ -1,5 +1,7 @@
 package utils.games;
 
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -194,6 +196,38 @@ public class Utils {
 
         return getGazePlayFolder() + "DLL" + FILESEPARATOR;
     }
+
+    /**
+     *
+     * @return styles directory for GazePlay : in the default directory of GazePlay, a folder called styles
+     */
+    public static String getStylesFolder(){
+
+        return getGazePlayFolder() + "styles" + FILESEPARATOR;
+    }
+
+    /**
+     *
+     * @return CSS files found in the styles folder
+     */
+    public static ObservableList<String> addStylesheets(ObservableList<String> styleSheets){
+
+        File F = new File(getStylesFolder());
+
+        if(F.exists()){
+
+            File[] Tfiles = F.listFiles();
+            for(int i = 0 ; i < Tfiles.length ; i++) {
+
+                if(Tfiles[i].toString().endsWith(".css"))
+                    styleSheets.add("file://" + Tfiles[i].toString());
+            }
+        }
+
+        return styleSheets;
+    }
+
+
 
     /**
      *

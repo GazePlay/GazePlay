@@ -9,7 +9,6 @@
     -fx-font-family: 'sans-serif';
     -fx-base: rgb(32, 45, 47);
     -fx-background: white;
-    -fx-background-color:yellow;
 }
 
 .progress-indicator{
@@ -31,18 +30,23 @@
    .choice-box .context-menu {
 
        -fx-font-weight: bold;
-       -fx-background-color: yellow;
+       -fx-background-color: linear-gradient(#ff5400, #be1d00);
+       -fx-text-fill: black;
+       -fx-background-radius: 30;
+       -fx-background-insets: 0;
    }
 /* Focused item background color in the list*/
    .choice-box .menu-item:focused {
 
-       -fx-font-size: 20pt;
-       -fx-background-color: red;
+       -fx-font-size: 25pt;
+       -fx-background-color: linear-gradient(#98fb98, #008000);
+       -fx-background-radius: 30;
+       -fx-background-insets: 0;
    }
 /* Text color of non-focused items in the list*/
    .choice-box .menu-item > .label {
 
-       -fx-text-fill: red;
+       -fx-text-fill: black;
    }
 /* Text color of focused item in the list*/
    .choice-box .menu-item:focused > .label {

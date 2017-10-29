@@ -12,6 +12,7 @@ import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.utils.HomeUtils;
 import net.gazeplay.utils.stats.Stats;
+import utils.games.Utils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,7 +45,12 @@ public class GazePlay extends Application {
 
         scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
-        scene.getStylesheets().add("data/stylesheets/main.css");
+        Utils.addStylesheets(scene.getStylesheets());
+
+        log.info(scene.getStylesheets().toString());
+
+        if(scene.getStylesheets().isEmpty())
+            scene.getStylesheets().add("data/stylesheets/main-green.css");
 
         cbxGames = new ChoiceBox<>();
 

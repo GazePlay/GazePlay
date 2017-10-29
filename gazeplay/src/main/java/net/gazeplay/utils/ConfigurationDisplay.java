@@ -89,10 +89,6 @@ public class ConfigurationDisplay extends Rectangle {
         languageBox.setPrefWidth(prefWidth);
         languageBox.setPrefHeight(prefHeight);
 
-        log.info(languageBox.getStyleClass()+"");
-        languageBox.getStyleClass().add("round-red");
-        log.info(languageBox.getStyleClass()+"");
-
         root.getChildren().add(languageBox);
 
         languageBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
