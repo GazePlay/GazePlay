@@ -78,6 +78,17 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>target/generated-resources</directory>
+			</resource>
+			<resource>
+				<directory>target/generated-sources/license</directory>
+			</resource>
+		</resources>
 		<plugins>
 		</plugins>
 	</build>
