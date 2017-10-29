@@ -1,6 +1,6 @@
 GAZEPLAY Copyright (C) 2016-2017 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
 
-Version : 1.0.5 (2017-??-??)
+Version : ${project.version} (${build.date})
 
 contact : didier.schwab@univ-grenoble-alpes.fr
 

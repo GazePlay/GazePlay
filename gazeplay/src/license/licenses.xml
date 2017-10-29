@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<licenseSummary xmlns="http://mojo.codehaus.org/"
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xsi:schemaLocation="http://mojo.codehaus.org/ licenses.xsd">
+	<dependencies>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<licenses>
+				<license>
+					<name>Apache License 2.0</name>
+					<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+					<distribution>repo</distribution>
+				</license>
+			</licenses>
+		</dependency>
+	</dependencies>
+</licenseSummary>
