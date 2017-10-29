@@ -7,14 +7,14 @@
 	<artifactId>gazeplay-project</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.5</version>
-	
+
 	<licenses>
 		<license>
 			<name>GNU General Public License (GPL) version 3.0</name>
 			<url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
 		</license>
 	</licenses>
-	
+
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -68,7 +68,7 @@
 				<version>1.2.1</version>
 			</dependency>
 
-			
+
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
@@ -133,6 +133,23 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<sortArtifactByName>true</sortArtifactByName>
+					<useMissingFile>true</useMissingFile>
+					<useRepositoryMissingFiles>true</useRepositoryMissingFiles>
+				</configuration>
+				<executions>
+					<execution>
+						<id>download-licenses</id>
+						<goals>
+							<goal>download-licenses</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -174,6 +191,11 @@
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>build-helper-maven-plugin</artifactId>
 					<version>3.0.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>1.14</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
