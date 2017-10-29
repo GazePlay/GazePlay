@@ -45,15 +45,13 @@ public class StatsDisplay {
 
         statistics.setX(scene.getWidth()*0.4);
         statistics.setY(60);
-        statistics.setFont(new Font(60));
-        statistics.setFill(new Color(1,1,1,1));
+        statistics.setId("title");
 
         Text totalLength = new Text(multilinguism.getTrad("TotalLength", Multilinguism.getLanguage()) + colon + convert(stats.getTotalLength()));
 
         totalLength.setX(100);
         totalLength.setY(150);
-        totalLength.setFont(new Font(20));
-        totalLength.setFill(new Color(1,1,1,1));
+        totalLength.setId("item");
 
         Text shoots = new Text();
         if(stats instanceof ShootGamesStats) {
@@ -71,15 +69,13 @@ public class StatsDisplay {
 
         shoots.setX(100);
         shoots.setY(200);
-        shoots.setFont(new Font(20));
-        shoots.setFill(new Color(1,1,1,1));
+        shoots.setId("item");
 
         Text length = new Text(multilinguism.getTrad("Length", Multilinguism.getLanguage()) + colon + convert(stats.getLength()));
 
         length.setX(100);
         length.setY(250);
-        length.setFont(new Font(20));
-        length.setFill(new Color(1,1,1,1));
+        length.setId("item");
 
         Text averageLength = new Text();
 
@@ -94,8 +90,7 @@ public class StatsDisplay {
 
         averageLength.setX(100);
         averageLength.setY(300);
-        averageLength.setFont(new Font(20));
-        averageLength.setFill(new Color(1, 1, 1, 1));
+        averageLength.setId("item");
 
         Text medianLength = new Text();
 
@@ -110,15 +105,13 @@ public class StatsDisplay {
 
         medianLength.setX(100);
         medianLength.setY(350);
-        medianLength.setFont(new Font(20));
-        medianLength.setFill(new Color(1, 1, 1, 1));
+        medianLength.setId("item");
 
         Text standDev = new Text(multilinguism.getTrad("StandDev", Multilinguism.getLanguage()) + colon + convert((long)stats.getSD()));
 
         standDev.setX(100);
         standDev.setY(400);
-        standDev.setFont(new Font(20));
-        standDev.setFill(new Color(1,1,1,1));
+        standDev.setId("item");
 
         Text UncountedShoot = new Text();
 
@@ -128,8 +121,7 @@ public class StatsDisplay {
 
             UncountedShoot.setX(scene.getWidth() / 2);
             UncountedShoot.setY(150);
-            UncountedShoot.setFont(new Font(20));
-            UncountedShoot.setFill(new Color(1, 1, 1, 1));
+            UncountedShoot.setId("item");
         }
 
         LineChart<String,Number> chart = buildLineChart(stats, scene);
