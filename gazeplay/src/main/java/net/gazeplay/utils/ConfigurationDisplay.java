@@ -16,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.utils.multilinguism.Languages;
+import net.gazeplay.utils.multilinguism.Multilinguism;
 
 
 /**
@@ -67,6 +68,15 @@ public class ConfigurationDisplay extends Rectangle {
 
     private static void buildConfig(Scene scene, Group root, ChoiceBox cbxGames) {
 
+        Multilinguism multilinguism = Multilinguism.getMultilinguism();
+
+        //to add or not a space before colon (:) according to the language
+        String colon = multilinguism.getTrad("Colon", Multilinguism.getLanguage());
+        if(colon.equals("_noSpace"))
+            colon = ": ";
+        else
+            colon = " : ";
+
         log.info("ConfigurationDisplay");
         HomeUtils.clear(scene, root, cbxGames);
         HomeUtils.home(scene, root, cbxGames, null);
@@ -74,22 +84,30 @@ public class ConfigurationDisplay extends Rectangle {
         Configuration C = new Configuration();
         log.info(C.toString());
 
-        Text Configuration = new Text("Configuration");
+        Text Configuration = new Text(multilinguism.getTrad("ConfigTitle", Multilinguism.getLanguage()));
         Configuration.setX(scene.getWidth()*0.4);
         Configuration.setY(60);
         Configuration.setId("title");
 
-        Text language = new Text("Language");
+        Text language = new Text(multilinguism.getTrad("Lang", Multilinguism.getLanguage()) + colon);
         language.setX(100);
-        language.setY(110);
+        language.setY(120);
         language.setId("item");
         buildLanguageMenu(C,root,250,100);
 
-        Text eyeTracker = new Text("Eye-Tracker");
+        Text eyeTracker = new Text(multilinguism.getTrad("EyeTracker", Multilinguism.getLanguage()) + colon);
         eyeTracker.setX(100);
-        eyeTracker.setY(210);
+        eyeTracker.setY(220);
         eyeTracker.setId("item");
         buildEyeTrackerMenu(C,root,250,200);
+
+        Text fileDir = new Text(multilinguism.getTrad("FileDir", Multilinguism.getLanguage()) + colon);
+        eyeTracker.setX(100);
+        eyeTracker.setY(320);
+        eyeTracker.setId("item");
+        buildEyeTrackerMenu(C,root,250,300);
+
+
 
         root.getChildren().addAll(Configuration,language, eyeTracker);
     }
