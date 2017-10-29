@@ -1,6 +1,51 @@
-#round-red {
+/**
+ * Created by schwab on 28/10/2017.
+ *
+ * Inspired by http://fxexperience.com/2011/12/styling-fx-buttons-with-css/
+ */
+
+.root{
+    -fx-font-size: 11pt;
+    -fx-font-family: 'sans-serif';
+    -fx-base: rgb(32, 45, 47);
+    -fx-background: white;
+    -fx-background-color:yellow;
+}
+
+.progress-indicator{
+
+    -fx-control-inner-background: palegreen;
+    -fx-progress-color:blue;
+}
+
+.choice-box {
     -fx-background-color: linear-gradient(#ff5400, #be1d00);
     -fx-background-radius: 30;
     -fx-background-insets: 0;
     -fx-text-fill: white;
+    -fx-mark-color: orange;
+    -fx-alignment: baseline-center;
 }
+
+/* Background color of the whole context menu*/
+   .choice-box .context-menu {
+
+       -fx-font-weight: bold;
+       -fx-background-color: yellow;
+   }
+/* Focused item background color in the list*/
+   .choice-box .menu-item:focused {
+
+       -fx-font-size: 20pt;
+       -fx-background-color: red;
+   }
+/* Text color of non-focused items in the list*/
+   .choice-box .menu-item > .label {
+
+       -fx-text-fill: red;
+   }
+/* Text color of focused item in the list*/
+   .choice-box .menu-item:focused > .label {
+
+       -fx-text-fill: black;
+   }

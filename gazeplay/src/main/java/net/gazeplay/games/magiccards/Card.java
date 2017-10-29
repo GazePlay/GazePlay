@@ -112,7 +112,7 @@ public class Card extends Parent {
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    indicator.setOpacity(0.5);
+                    indicator.setOpacity(1);
                     indicator.setProgress(0);
 
                     SequentialTransition sequence = new SequentialTransition();

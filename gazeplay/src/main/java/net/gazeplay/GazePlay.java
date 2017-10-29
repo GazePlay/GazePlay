@@ -38,13 +38,13 @@ public class GazePlay extends Application {
 
         primaryStage.setFullScreen(true);
 
-        //scene.getStylesheets().add("file://resources/data/stylesheets/main.css");
-
         games = gamesLocator.listGames();
 
         root = new Group();
 
         scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
+
+        scene.getStylesheets().add("data/stylesheets/main.css");
 
         cbxGames = new ChoiceBox<>();
 
