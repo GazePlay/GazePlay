@@ -13,8 +13,10 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.utils.multilinguism.Languages;
+
 
 /**
  * Created by schwab on 28/10/2017.
@@ -72,8 +74,24 @@ public class ConfigurationDisplay extends Rectangle {
         Configuration C = new Configuration();
         log.info(C.toString());
 
-        buildLanguageMenu(C,root,100,100);
-        buildEyeTrackerMenu(C,root,100,200);
+        Text Configuration = new Text("Configuration");
+        Configuration.setX(scene.getWidth()*0.4);
+        Configuration.setY(60);
+        Configuration.setId("title");
+
+        Text language = new Text("Language");
+        language.setX(100);
+        language.setY(110);
+        language.setId("item");
+        buildLanguageMenu(C,root,250,100);
+
+        Text eyeTracker = new Text("Eye-Tracker");
+        eyeTracker.setX(100);
+        eyeTracker.setY(210);
+        eyeTracker.setId("item");
+        buildEyeTrackerMenu(C,root,250,200);
+
+        root.getChildren().addAll(Configuration,language, eyeTracker);
     }
 
     private static void buildLanguageMenu(Configuration C, Group root, double posX, double posY){
