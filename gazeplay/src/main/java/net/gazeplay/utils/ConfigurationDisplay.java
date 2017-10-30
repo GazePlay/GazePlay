@@ -111,12 +111,12 @@ public class ConfigurationDisplay extends Rectangle {
         fileDir.setX(100);
         fileDir.setY(300);
         fileDir.setId("item");
-        buildFileChooserMenu(scene, C,root,250,305);
+        buildDirectoryChooserMenu(scene, C,root,250,305);
 
         root.getChildren().addAll(Configuration, language, eyeTracker, fileDir);
     }
 
-    private static void buildFileChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
+    private static void buildDirectoryChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
 
         Button buttonLoad = new Button(C.filedir);
 
