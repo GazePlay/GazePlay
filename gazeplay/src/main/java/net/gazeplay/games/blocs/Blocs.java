@@ -44,7 +44,7 @@ public class Blocs extends Application {
     private static ChoiceBox<String> choiceBox;
     private static Bloc[][] blocs;
     private static final int trail = 10;
-    private static final Image[] images = Utils.images(System.getProperty("user.config") +Utils.FILESEPARATOR+ "GazePlay"+Utils.FILESEPARATOR+"files"+Utils.FILESEPARATOR+"images"+Utils.FILESEPARATOR+"blocs"+Utils.FILESEPARATOR);
+    private static Image[] images = Utils.images(Utils.getImagesFolder()+"blocs"+Utils.FILESEPARATOR);
 
     public static void main(String[] args) {Application.launch(args);
     }

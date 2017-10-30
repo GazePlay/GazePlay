@@ -21,12 +21,13 @@ public class Configuration {
     private static String GazeMode = "GazeMode";
     private static String EyeTracker = "EyeTracker";
     private static String Language = "Language";
+    private static String FileDir = "FileDir";
+    private static String configPath = Utils.getGazePlayFolder()+"GazePlay.properties";
 
     public String gazeMode = "true";
     public String eyetracker = "none";
     public String language = "fra";
-
-    private String configPath = Utils.getGazePlayFolder()+"GazePlay.properties";
+    public String filedir = Utils.getGazePlayFolder() + "files" + Utils.FILESEPARATOR;
 
     public Configuration() {
 
@@ -51,6 +52,10 @@ public class Configuration {
             if(buffer!=null)
                 language = buffer.toLowerCase();
 
+            buffer = prop.getProperty(FileDir);
+            if(buffer!=null)
+                filedir = buffer;
+
         } catch (final IOException ex) {
             log.info(configPath + " not found");
         } finally {
@@ -62,7 +67,6 @@ public class Configuration {
                 }
             }
         }
-
     }
 
     public Configuration(String eyetracker, String language) {
@@ -82,12 +86,17 @@ public class Configuration {
         sb.append(EyeTracker);
         sb.append('=');
         sb.append(eyetracker);
-        sb.append('\n');
+        sb.append(Utils.LINESEPARATOR);
 
         sb.append(Language);
         sb.append('=');
         sb.append(language);
-        sb.append('\n');
+        sb.append(Utils.LINESEPARATOR);
+
+        sb.append(FileDir);
+        sb.append('=');
+        sb.append(filedir);
+        sb.append(Utils.LINESEPARATOR);
 
         Utils.save(sb.toString(), new File(configPath));
     }

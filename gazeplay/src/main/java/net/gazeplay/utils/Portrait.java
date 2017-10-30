@@ -14,7 +14,7 @@ public class Portrait extends Circle {
     protected static final int maxY = 500;
     protected int radius = 100;
 
-    private final static Image[] photos = Utils.images(Utils.getImagesFolder() + "portraits");
+    private static Image[] photos = Utils.images(Utils.getImagesFolder() + "portraits");
 
     public Portrait(int radius) {
 
@@ -45,6 +45,4 @@ public class Portrait extends Circle {
 
         return (int)(Math.random()*maxY*2/3)+radius;
     }
-
 }
-

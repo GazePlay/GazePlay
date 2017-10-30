@@ -21,10 +21,17 @@
     -fx-background-color: linear-gradient(#ff5400, #be1d00);
     -fx-background-radius: 30;
     -fx-background-insets: 0;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-mark-color: orange;
     -fx-alignment: baseline-center;
 }
+
+/* Selected item text color on the control itself */
+   .choice-box > .label {
+
+       -fx-text-fill: black;
+       -fx-font-weight: bold;
+   }
 
 /* Background color of the whole context menu*/
 .choice-box .context-menu {
@@ -38,6 +45,7 @@
 /* Focused item background color in the list*/
 .choice-box .menu-item:focused {
 
+    -fx-text-fill: black;
     -fx-font-size: 25pt;
     -fx-background-color: linear-gradient(#98fb98, #008000);
     -fx-background-radius: 30;
@@ -46,12 +54,20 @@
 /* Text color of non-focused items in the list*/
 .choice-box .menu-item > .label {
 
-    -fx-text-fill: black;
+    -fx-text-fill: white;
 }
 /* Text color of focused item in the list*/
 .choice-box .menu-item:focused > .label {
 
     -fx-text-fill: black;
+}
+.button{
+
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(#ff5400, #be1d00);
+    -fx-text-fill: black;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
 }
 
 #title{

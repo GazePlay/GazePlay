@@ -52,7 +52,7 @@ public class Card extends Parent {
     HiddenItemsGamesStats stats;
     Bravo bravo = Bravo.getBravo();
 
-    final static Image[] images = Utils.images(Utils.getImagesFolder()+"magiccards"+Utils.FILESEPARATOR);
+    private static Image[] images = Utils.images(Utils.getImagesFolder()+"magiccards"+Utils.FILESEPARATOR);
 
     EventHandler<Event> enterEvent;
     boolean anniOff = true;

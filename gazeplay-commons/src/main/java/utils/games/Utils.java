@@ -1,5 +1,6 @@
 package utils.games;
 
+import gaze.configuration.Configuration;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 import javafx.scene.control.Menu;
@@ -26,11 +27,9 @@ import java.util.Date;
 public class Utils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
-
+    public static final String LINESEPARATOR = System.getProperties().getProperty("line.separator");
 
     private static final String tempFolder = "temp";
-
-    private static String filesFolder = getGazePlayFolder() + "files" +FILESEPARATOR;
 
     public static Image[] getImages(String folder) {
 
@@ -45,9 +44,7 @@ public class Utils {
 
         for (String imagePath : directory.list()) {
 
-            String fileSeparator = System.getProperties().getProperty("file.separator");
-
-            String file = "file:" + directory.getAbsoluteFile() + fileSeparator + imagePath;
+            String file = "file:" + directory.getAbsoluteFile() + FILESEPARATOR + imagePath;
 
             if (file.indexOf("\\.") < 0 && isImage(file)) //Problems with files starting with a point on Windows
                 images.add(new Image(file));
@@ -127,12 +124,15 @@ public class Utils {
 
     public static Image[] images(String folder){
 
+        log.debug("Try to find images in folder : " + folder);
+
         if((new File(folder)).exists()) {
 
             Image[] T = getImages(folder);
 
             if(T.length!=0) {
 
+                log.debug("I found images in folder : " + folder);
                 return T;
             }
             else {
@@ -166,7 +166,6 @@ public class Utils {
     }
 
     public static void playSound(String ressource) {
-
 
         URL url = ClassLoader.getSystemResource(ressource);
         String path = url.toString();
@@ -227,8 +226,6 @@ public class Utils {
         return styleSheets;
     }
 
-
-
     /**
      *
      * @return Temp directory for GazePlay : in the default directory of GazePlay, a folder called Temp
@@ -240,10 +237,12 @@ public class Utils {
 
     /**
      *
-     * @return images directory for GazePlay : in the default directory of GazePlay, in a folder called files
+     * @return images directory for GazePlay : by default in the default directory of GazePlay, in a folder called files but can be configured through interface and/or GazePlay.properties file
      */
 
     public static String getFilesFolder(){
+
+        String filesFolder = new Configuration().filedir;
 
         log.info("filesFolder : " + filesFolder);
         return filesFolder;
@@ -256,6 +255,7 @@ public class Utils {
 
     public static String getImagesFolder(){
 
+        log.info("filesFolder : " + getFilesFolder());
         return getFilesFolder() + "images" + FILESEPARATOR;
     }
 
@@ -288,7 +288,6 @@ public class Utils {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         return dateFormat.format(date);
-
     }
 
     /**
@@ -312,7 +311,6 @@ public class Utils {
         DateFormat dateFormat = new SimpleDateFormat("HH:MM:ss");
         Date date = new Date();
         return dateFormat.format(date);
-
     }
 
     /**
@@ -338,9 +336,6 @@ public class Utils {
             log.error("Exception", e);
         }
     }
-
-
-
 
     public static PrintWriter getInfoStatsFile(String folder) {
 

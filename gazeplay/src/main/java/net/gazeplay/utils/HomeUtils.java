@@ -56,7 +56,7 @@ public class HomeUtils {
 	}
 
 
-	private static void goHome(Scene scene, Group root, ChoiceBox<String> cbxGames) {
+	public static void goHome(Scene scene, Group root, ChoiceBox<String> cbxGames) {
 
 		clear(scene, root, cbxGames);
 

@@ -58,7 +58,19 @@ public class GazePlay extends Application {
 
         cbxGames.getItems().addAll(gamesLabels);
 
-        cbxGames.setScaleX(2);
+        cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
+                chooseGame(newValue.intValue());
+            }
+        });
+
+      ///  root.getChildren().add(cbxGames);
+
+        HomeUtils.goHome(scene,root, cbxGames);
+
+      /*  cbxGames.setScaleX(2);
         cbxGames.setScaleY(2);
 
         cbxGames.setTranslateX(scene.getWidth() * 0.9 / 2);
@@ -74,7 +86,7 @@ public class GazePlay extends Application {
 
         root.getChildren().add(cbxGames);
 
-        HomeUtils.addButtons(scene, root, cbxGames);
+        HomeUtils.addButtons(scene, root, cbxGames);*/
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
@@ -102,6 +114,4 @@ public class GazePlay extends Application {
 
         HomeUtils.home(scene, root, cbxGames, stats);
     }
-
-
 }
