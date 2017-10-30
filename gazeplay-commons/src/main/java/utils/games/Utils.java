@@ -46,7 +46,7 @@ public class Utils {
 
             String file = "file:" + directory.getAbsoluteFile() + FILESEPARATOR + imagePath;
 
-            if (file.indexOf("\\.") < 0 && isImage(file)) //Problems with files starting with a point on Windows
+            if (!imagePath.startsWith(".") && isImage(file)) //Problems with files starting with a point on Windows
                 images.add(new Image(file));
         }
 
