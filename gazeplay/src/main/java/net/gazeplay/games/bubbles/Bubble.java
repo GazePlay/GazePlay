@@ -39,7 +39,7 @@ public class Bubble extends Parent {
 
     private ArrayList<Circle> fragments = new ArrayList(nbFragments);
 
-    private static Image[] photos = Utils.images(Utils.getImagesFolder()+"portraits"+Utils.FILESEPARATOR);
+    private static Image[] photos;
 
     EventHandler<Event> enterEvent;
     Scene scene;
@@ -48,6 +48,8 @@ public class Bubble extends Parent {
     public static final int COLOR = 1;
 
     public Bubble(Scene scene, Group root, int type, BubblesGamesStats stats) {
+
+        photos = Utils.images(Utils.getImagesFolder()+"portraits"+Utils.FILESEPARATOR);
 
         this.scene = scene;
 

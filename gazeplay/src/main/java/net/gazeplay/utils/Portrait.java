@@ -14,13 +14,14 @@ public class Portrait extends Circle {
     protected static final int maxY = 500;
     protected int radius = 100;
 
-    private static Image[] photos = Utils.images(Utils.getImagesFolder() + "portraits");
+    private static Image[] photos;
 
     public Portrait(int radius) {
 
         super(radius);
         this.setPosition(newX(),newY());
         this.radius = radius;
+        photos = Utils.images(Utils.getImagesFolder() + "portraits");
         setFill(new ImagePattern(newPhoto(),0,0,1,1, true));
     }
 

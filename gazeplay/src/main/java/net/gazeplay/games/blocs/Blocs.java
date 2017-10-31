@@ -44,7 +44,7 @@ public class Blocs extends Application {
     private static ChoiceBox<String> choiceBox;
     private static Bloc[][] blocs;
     private static final int trail = 10;
-    private static Image[] images = Utils.images(Utils.getImagesFolder()+"blocs"+Utils.FILESEPARATOR);
+    private static Image[] images;
 
     public static void main(String[] args) {Application.launch(args);
     }
@@ -74,6 +74,8 @@ public class Blocs extends Application {
     }
 
     public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns, boolean colors, float percents4Win, boolean useTrail, HiddenItemsGamesStats stats){
+
+        images = Utils.images(Utils.getImagesFolder()+"blocs"+Utils.FILESEPARATOR);
 
         finished = false;
 

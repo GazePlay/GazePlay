@@ -52,7 +52,7 @@ public class Card extends Parent {
     HiddenItemsGamesStats stats;
     Bravo bravo = Bravo.getBravo();
 
-    private static Image[] images = Utils.images(Utils.getImagesFolder()+"magiccards"+Utils.FILESEPARATOR);
+    private static Image[] images;
 
     EventHandler<Event> enterEvent;
     boolean anniOff = true;
@@ -233,6 +233,7 @@ public class Card extends Parent {
 
     public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbLines, int nbColumns, HiddenItemsGamesStats stats) {
 
+        images = Utils.images(Utils.getImagesFolder()+"magiccards"+Utils.FILESEPARATOR);
         double cardHeight = computeCardHeight(scene, nbLines);
         double cardWidth = cardHeight * cardRatio;
         double width = computeCardWidth(scene, nbColumns) - cardWidth;
