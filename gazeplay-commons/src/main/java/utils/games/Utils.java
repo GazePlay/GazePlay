@@ -255,8 +255,7 @@ public class Utils {
 
     public static String getImagesFolder(){
 
-        log.info("filesFolder : " + getFilesFolder());
-        return getFilesFolder() + "images" + FILESEPARATOR;
+        return getFilesFolder() + FILESEPARATOR + "images" + FILESEPARATOR;
     }
 
     /**
@@ -369,5 +368,21 @@ public class Utils {
 			IOUtils.closeQuietly(sourceFile);
 		}
         return true; // Résultat OK
+    }
+
+    public static String convertWindowsPath(String path){
+
+        path = path.replace("\\", "/");
+        path = path.replaceAll("\\\\", "/");
+        return path;
+    }
+
+    /**
+     *
+     * @return true if the operating system is a Windows
+     */
+    public static boolean isWindows() {
+
+        return System.getProperty("os.name").indexOf("indow")>0;
     }
 }

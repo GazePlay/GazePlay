@@ -23,6 +23,7 @@ import net.gazeplay.utils.multilinguism.Multilinguism;
 import utils.games.Utils;
 
 import java.io.File;
+import java.io.IOException;
 
 
 /**
@@ -126,7 +127,14 @@ public class ConfigurationDisplay extends Rectangle {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 File file = directoryChooser.showDialog(scene.getWindow());
                 buttonLoad.setText(file.toString()+ Utils.FILESEPARATOR);
+                File F = new File( file.toString());
                 C.filedir = file.toString()+ Utils.FILESEPARATOR;
+
+                if(Utils.isWindows()){
+
+                    C.filedir = Utils.convertWindowsPath(C.filedir);
+                }
+
                 log.info(C.toString());
                 C.saveConfig();
             }
