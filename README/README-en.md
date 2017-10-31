@@ -1,6 +1,6 @@
 # GazePlay <!--[![build status](https://secure.travis-ci.org/schwabdidier/GazePlay.png)](http://travis-ci.org/schwabdidier/GazePlay) -->
 
-* Read this in other languages: [Français](README.md)
+* Read this in other languages: [Français](../README.md)
 
 ## Download
 
