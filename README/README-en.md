@@ -6,7 +6,7 @@
 
 [Stable 1.0.4](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.4/GazePlay-1.0.4.jar)
 
-[Evolution Version](README/dev-en.md)
+[Evolution Version](dev-en.md)
 
 Software comes with default images but it is easy to add personnal images expecially the children favorite.
 
@@ -16,9 +16,9 @@ Software comes with default images but it is easy to add personnal images expeci
 
 ## Quick Access
 
-[Tutos videos](README/tutorials.md) [Installation](README/installation-en.md)
+[Tutos videos](tutorials.md) [Installation](installation-en.md)
 
-[jeux](README/jeux-en.md) [statistiques](README/statistiques-en.md)
+[jeux](jeux-en.md) [statistiques](statistiques-en.md)
 
 ## System Requirement  
 
@@ -80,26 +80,5 @@ We publish there last information like updates for instance.
 
 ## Advanced Users
 
-[Utilisateurs avancés](README/avances.md)
+[Utilisateurs avancés](avances.md)
 
-## Games
-
-There are currently 12 games (including 6 variants).
-
-### Cream Pies
-
-Gamer throw a cream pie on the target when gaze look it.
-
-### Ninja
-
-
-
-### Magic cards
-
-### Blocs
-
-### Scratchcard
-
-### Bubbles
-
-## Downloads
