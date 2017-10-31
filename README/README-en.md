@@ -1,16 +1,35 @@
-# GazePlay
+# GazePlay [![build status](https://secure.travis-ci.org/schwabdidier/GazePlay.png)](http://travis-ci.org/schwabdidier/GazePlay) 
 
-* Read this in other languages: [English](README-en.md) [French](../README.md)
+* Read this in other languages: [Français](README.md)
 
-Gazeplay is a **free** software which gather several mini-games playable with an eye-tracker.
-Last version includes 12 games.
+## Download
 
+[Stable 1.0.4](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.4/GazePlay-1.0.4.jar)
+
+[Evolution Version](README/dev-en.md)
+
+Software comes with default images but it is easy to add personnal images expecially the children favorite.
+
+## Video of presentation
+
+[![Video of presentation](https://i.ytimg.com/vi/yMjBgVmhXV8/maxresdefault.jpg)](https://youtu.be/kcxAnSBx5G0)
+
+## Quick Access
+
+[Tutos videos](README/tutorials.md) [Installation](README/installation-en.md)
+
+[jeux](README/jeux-en.md) [statistiques](README/statistiques-en.md)
 
 ## System Requirement  
 
-GazePlay works on Windows, MacOs and Linux. It is usable with all eye-tracker able to control mouse cursor.
+GazePlay works on Windows, MacOs and Linux.
+
+It is usable with all eye-tracker able to control mouse cursor and with:
 
 It is fully compatible with Eye tribe's Eye tracker.
+
+- Tobii : *Tobii EyeX* et *Tobii 4C* (Windows)
+- Eye Tribe : *Eye Tribe Tracker* (Windows and MacOs X)
 
 ## Principe
 
@@ -22,6 +41,46 @@ These games should offer at least two advantages to the individual:
 1) Allowing him to train his gaze in order to offer him the possibility of acquiring more complex interactions.
 
 2) To entertain him.
+
+## Default directory of GazePlay
+
+For all operating systems, software default directory is called *GazePlay* and is in the user directory. For instance, if the user name is *NomUtilisateur*, the path to the directory will be:
+
+* On **Windows** C:\Users\NomUtilisateur\Documents
+
+* On **MacOs** /Users/NomUtilisateur/GazePlay
+
+* On **Linux** /home/NomUtilisateur/GazePlay
+
+## Change images
+
+In a directory called *XXX* (the name you wish), another directory where you will put a directory called *images*.
+ 
+*images* can have 3 other directories :
+
+1) *portraits* : images used by *creampie*, *ninja* and *bubles portrait*. Images should be small (300x300 pixels).
+
+2) *magiccards* : images used by *magic cards*. You can use all image sizes.
+
+3) *blocs* : images used by *blocs* and *Scratchcard*. Choose big images (the best is at least screen size).
+
+Vous can have as much directory *XXX* as you wish and change the selected one thanks to the configuration interface.
+
+## Contributions
+
+This software will be improved. Everyone can contribute be it with ideas or code.
+
+Contact : didier.schwab at univ dash grenoble dash alpes dot fr (replace at with @ dash with - and dot with .). 
+
+## Join our Facebook Group
+
+We publish there last information like updates for instance.
+
+[Facebook](https://www.facebook.com/GazePlay.root/)
+
+## Advanced Users
+
+[Utilisateurs avancés](README/avances.md)
 
 ## Games
 
