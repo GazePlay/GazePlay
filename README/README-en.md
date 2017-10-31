@@ -1,6 +1,6 @@
 # GazePlay
 
-* Read this in other languages: [English](README.en.md) [French](../README.md)
+* Read this in other languages: [English](README-en.md) [French](../README.md)
 
 Gazeplay is a **free** software which gather several mini-games playable with an eye-tracker.
 Last version includes 12 games.
