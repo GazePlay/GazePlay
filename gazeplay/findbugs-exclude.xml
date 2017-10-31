@@ -1,0 +1,6 @@
+<FindBugsFilter>
+    <Match>
+        <Package name="~.*"/>
+        <Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2, DLS_DEAD_LOCAL_STORE, ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD, NP_NULL_PARAM_DEREF_NONVIRTUAL, DM_DEFAULT_ENCODING"/>
+    </Match>
+</FindBugsFilter>
