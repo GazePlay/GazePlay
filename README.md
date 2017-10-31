@@ -4,7 +4,9 @@
 
 ## Téléchargement/Download
 
-[Version 1.0.4 (5,7 Mo)](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.4/GazePlay-1.0.4.jar)
+[Version stable 1.0.4](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.4/GazePlay-1.0.4.jar)
+
+[Versions Évolution](README/dev.md)
 
 <!--Gazeplay est un logiciel **gratuit** qui rassemble plusieurs mini-jeux jouables grâce à un occulomètre (*Eye-tracker*). La dernière version compte 12 jeux.
 
