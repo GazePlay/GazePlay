@@ -3,6 +3,7 @@ package net.gazeplay.utils;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
 import utils.games.Utils;
 
 /**
@@ -10,9 +11,17 @@ import utils.games.Utils;
  */
 public class Portrait extends Circle {
 
-    protected static final int maxX = 1000;
-    protected static final int maxY = 500;
-    protected int radius = 100;
+ //   protected static final int maxX = 1000;
+ //   protected static final int maxY = 500;
+
+    protected int radius = initRadius;
+
+    protected static final int initRadius = 100;
+
+    protected static final double maxX = Screen.getPrimary().getBounds().getMaxX() - 2*initRadius;
+    protected static final double maxY = Screen.getPrimary().getBounds().getMaxY() - 2*initRadius;
+
+
 
     private static Image[] photos;
 
