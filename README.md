@@ -55,7 +55,7 @@ Quel que soit le système d'exploitation, le logiciel cherche dans le répertoir
 
 ## Modifier les images
 
-Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faudra créer un répertoire *files* dans lequel on mettra un répertoire *images*.
+Il faut créer un répertoire XXX dans lequel il faut mettre un répertoire nommé *images*.
  
 *images* peut contenir 3 autres répertoires :
 
@@ -64,6 +64,8 @@ Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faudra 
 2) *magiccards* : contient les images utilisées par *cartes magique*. Toutes les tailles d'image conviennent.
 
 3) *blocs* : contient les images utilisées par *blocs* et par *cartes à gratter*. Choisir des images assez grandes (idéalement au moins la taille de l'écran).
+
+Vous pouvez avoir autant de répertoires XXX que vous voulez et changer par l'interface de configuration.
 
 ## Contributions
 
