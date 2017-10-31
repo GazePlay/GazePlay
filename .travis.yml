@@ -2,5 +2,13 @@ dist: trusty
 sudo: required
 language: java
 jdk: openjdk8
+matrix:
+  include:
+    - #dist: trusty
+      jdk: oraclejdk8
+    - #dist: trusty
+      jdk: openjdk8
+before_install:
+  - sudo apt-get install -y openjfx
 script:
 - mvn clean install -Dfindbugs.skip=false
