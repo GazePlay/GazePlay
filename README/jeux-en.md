@@ -11,38 +11,37 @@ Player throws a cream pie on the target when gaze look it.
 
 ## Ninja
 
-La cible suit des mouvements aléatoires et explose lorsque le joueur la regarde.
+Target perfoms a random walk  and explode when player look it.
 
 ![Ninja](images/ninja-1.jpg)
 
 ## Magic Cards
 
-Plusieurs cartes sont affichées et le joueur doit les regarder pour les retourner. L'une de ces cartes comporte une image.
-Une récompense est offerte au joueur lorsqu'il l'a trouvée.
+Several cards are displayed. When the player stares one card, it is turn. One of the card hide an image. A reward is given to the player when (s)he finds it.
 
 ![magic-card-2](images/magic-card-2.jpg)
 
 ## Blocs
 
-Une grande image est cachée par des blocs de couleur que le joueur doit regarder pour les faire disparaître. Lorsque l'ensemble des blocs ont disparu, la récompense est offerte.
+A big image is hidden by colored blocs. The player looks at a block to destroy it. When all blocs have disappeared, a reward is shown.
 
 ![blocs](images/blocs.jpg)
 
 ## Scratchcard
 
-Une grande image est cachée dans une carte à gratter. Le joueur gratte la carte grâce à son regard. Lorsque une grande partie de la carte a été grattée, l'image est affichée et la récompense offerte.
+A big image is hidden under a scratchcard. With his/her gaze, the player scratches the card. When most of the image is shown, a reward is displayed.
 
 ![Scratchcard](images/Scratchcard.jpg)
 
 ## Colored Bubbles
 
-Des bulles de couleur remontent lentement à la surface et exploser lorsque le joueur les regarde.
+Some colored bobbles come from the deep sea and explode when player look at them.
 
 ![Colored Bubbles](images/colored-bubbles.jpg)
 
 ## Portrait Bubbles
 
-Des bulles contenant des portraits remontent lentement à la surface et exploser lorsque le joueur les regarde.
+Some bobbles with images come from the deep sea and explode when player look at them.
 
 ![Portrait Bubbles](images/portrait-bubbles.jpg)
 
