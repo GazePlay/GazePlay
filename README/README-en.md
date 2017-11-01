@@ -16,7 +16,7 @@ Software comes with default images but it is easy to add personnal images expeci
 
 ## Quick Access
 
-[Tutos videos](tutorials.md) [Installation](installation-en.md)
+[Tutos videos](tutorials-en.md) [Installation](installation-en.md)
 
 [jeux](jeux-en.md) [statistiques](statistiques-en.md)
 
