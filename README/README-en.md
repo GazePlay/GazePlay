@@ -31,7 +31,7 @@ It is fully compatible with Eye tribe's Eye tracker.
 - Tobii : *Tobii EyeX* et *Tobii 4C* (Windows)
 - Eye Tribe : *Eye Tribe Tracker* (Windows and MacOs X)
 
-## Principe
+## Principle
 
 Many poly-disabled people are not able to use their limbs (hands, feet) or their voices in a precise way. Tools and games on digital terminals are thus inaccessible to them. In many cases, gaze is the most direct way that enable them to interact.
 

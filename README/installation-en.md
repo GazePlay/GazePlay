@@ -1,4 +1,4 @@
-[Retour](README-en.md)
+[Back](README-en.md)
 
 # Installation
 
@@ -21,4 +21,4 @@ Download last version of the Tobii setup and double click on it. Installation wo
 
 For information, installation process simply copy in the default directory of GazePlay a directory called *DLL* with two files called *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll*.
 
-[Retour](README-en.md)
+[Back](README-en.md)
