@@ -1,11 +1,10 @@
-[Retour](../README.md)
+[Retour](README-en.md)
 
-# Statistiques
+# Statistics
 
-À la fin d'une partie, ses statistiques sont affichées. Elles intègrent deux diagrammes cliquables :
-
-1) Un diagramme en ligne qui présente le temps pour chaque coup (suivant les jeux, temps pour cibler un portrait, temps pour trouver/dévoiler l'image,...). Le diagramme présente également la moyenne et l'écart-type sur la partie.
-2) Une carte de chaleur qui indique les zones de l'écran où les yeux sont passés pendant la partie. Plus la zone est rouge plus les yeux sont passés sur la zone. 
+At the end of a game, its statistics are shown. The provide two clicable diagrams:
+1) a line diagram which shows time for each movement (according to the game, time to shoot a portrait, time to find an image,...). The diagram also shows average and standard deviation during the whole game.
+2) a heatmap which shows screen parts where the player looked during the game. Plus la zone est rouge plus les yeux sont passés sur la zone. 
 
 ![Statistiques](images/statistics.jpg) 
 
@@ -14,4 +13,4 @@ Les statistiques sont enregistrées dans le répertoire de GazePlay. Dans un ré
 2) *heatmap.png* : La carte de chaleur sous forme d'image.
 3) *info-game.csv* : Les statistiques de la partie dans un fichier csv.
 
-[Retour](../README.md) 
+[Retour](README-en.md) 

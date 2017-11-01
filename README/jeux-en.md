@@ -5,19 +5,19 @@
 There are currently 12 games (including 6 variants).
 ## Cream Pies
 
-Player throws a cream pie on the target when gaze look it.
+Player throws a cream pie on the target when gaze looks at it.
 
 ![Creampie](images/CreamPie.jpg)
 
 ## Ninja
 
-Target perfoms a random walk  and explode when player look it.
+Target perfoms a random walk  and explode when player looks at it.
 
 ![Ninja](images/ninja-1.jpg)
 
 ## Magic Cards
 
-Several cards are displayed. When the player stares one card, it is turn. One of the card hide an image. A reward is given to the player when (s)he finds it.
+Several cards are displayed. When the player stares one card, it is turned. One of the card hides an image. A reward is given to the player when (s)he finds the image.
 
 ![magic-card-2](images/magic-card-2.jpg)
 
