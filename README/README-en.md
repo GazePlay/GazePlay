@@ -82,3 +82,6 @@ We publish there last information like updates for instance.
 
 [Utilisateurs avancés](avances.md)
 
+## Total Downloads
+
+[Total Downloads](http://www.somsubhra.com/github-release-stats/?username=schwabdidier&repository=GazePlay)

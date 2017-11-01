@@ -82,3 +82,7 @@ Nous y publions les dernieres informations comme les mises à jour par exemple.
 ## Utilisateurs avancés
 
 [Utilisateurs avancés](README/avances.md)
+
+## Compteur de téléchargement
+
+[Compteur de téléchargement](http://www.somsubhra.com/github-release-stats/?username=schwabdidier&repository=GazePlay)
