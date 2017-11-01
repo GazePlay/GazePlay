@@ -1,38 +1,13 @@
 [Back](README-en.md)
 
-## Games
+# Games
 
 There are currently 12 games (including 6 variants).
+## Cream Pies
 
-### Cream Pies
+Player throws a cream pie on the target when gaze look it.
 
-Gamer throw a cream pie on the target when gaze look it.
-
-### Ninja
-
-
-
-### Magic cards
-
-### Blocs
-
-### Scratchcard
-
-### Bubbles
-
-## Downloads
-
-# Jeux
-
-Ils sont actuellement 12 jeux (dont 6 variantes).
-
-<!-- ![Écran principal GazePlay](README/images/gazePlay.jpg "Écran principal GazePlay") -->
-
-## Tartes à la crème
-
-Le joueur lance une tarte à la crème sur la cible statique lorsqu'il la regarde.
-
-![Jeu des tartes à la crème](images/CreamPie.jpg)
+![Creampie](images/CreamPie.jpg)
 
 ## Ninja
 
@@ -40,7 +15,7 @@ La cible suit des mouvements aléatoires et explose lorsque le joueur la regarde
 
 ![Ninja](images/ninja-1.jpg)
 
-## Cartes magiques
+## Magic Cards
 
 Plusieurs cartes sont affichées et le joueur doit les regarder pour les retourner. L'une de ces cartes comporte une image.
 Une récompense est offerte au joueur lorsqu'il l'a trouvée.
@@ -53,19 +28,19 @@ Une grande image est cachée par des blocs de couleur que le joueur doit regarde
 
 ![blocs](images/blocs.jpg)
 
-## Cartes à gratter
+## Scratchcard
 
 Une grande image est cachée dans une carte à gratter. Le joueur gratte la carte grâce à son regard. Lorsque une grande partie de la carte a été grattée, l'image est affichée et la récompense offerte.
 
 ![Scratchcard](images/Scratchcard.jpg)
 
-## Bulles
+## Colored Bubbles
 
 Des bulles de couleur remontent lentement à la surface et exploser lorsque le joueur les regarde.
 
 ![Colored Bubbles](images/colored-bubbles.jpg)
 
-## Bulles Portrait
+## Portrait Bubbles
 
 Des bulles contenant des portraits remontent lentement à la surface et exploser lorsque le joueur les regarde.
 
