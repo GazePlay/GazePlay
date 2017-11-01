@@ -38,64 +38,63 @@ public class GazeUtils {
         if (config.eyetracker.equals("tobii")) {
 
             Tobii.execProg(new TobiiGazeListener(nodesEventFilter, nodesEventHandler));
-        }
-        else
-        if(config.gazeMode.equals("true"))
+        } else if (config.gazeMode.equals("true"))
             return new EyeTribeGazeListener(nodesEventFilter, nodesEventHandler);
         else
-            return  new FuzzyGazeListener(nodesEventFilter, nodesEventHandler);
+            return new FuzzyGazeListener(nodesEventFilter, nodesEventHandler);
         return null;
     }
 
-    public static void addStats(Stats newStats){
+    public static void addStats(Stats newStats) {
 
         stats = newStats;
     }
 
-    public static void addEventFilter(Scene gazeScene){
+    public static void addEventFilter(Scene gazeScene) {
 
         scene = gazeScene;
     }
 
-    public static void addEventFilter(Node gs){
+    public static void addEventFilter(Node gs) {
 
         gm.addGazeListener(gazeListener);
 
         nodesEventFilter.add(new GazeInfos(gs));
     }
 
-    public static void addEventHandler(Node gs){
+    public static void addEventHandler(Node gs) {
 
         gm.addGazeListener(gazeListener);
 
         nodesEventHandler.add(new GazeInfos(gs));
     }
 
-    public static void removeEventFilter(Node gs){
+    public static void removeEventFilter(Node gs) {
 
         int i;
 
-        try{
-            for(i = 0; i < nodesEventFilter.size() && nodesEventFilter.get(i).getNode() != null && ! nodesEventFilter.get(i).getNode().equals(gs); i++);
+        try {
+            for (i = 0; i < nodesEventFilter.size() && nodesEventFilter.get(i).getNode() != null
+                    && !nodesEventFilter.get(i).getNode().equals(gs); i++)
+                ;
 
-            if(i < nodesEventFilter.size()){
+            if (i < nodesEventFilter.size()) {
 
                 nodesEventFilter.remove(i);
             }
-        }
-        catch(Exception e){
-
+        } catch (Exception e) {
 
         }
     }
 
-    public static void removeEventHandler(Node gs){
+    public static void removeEventHandler(Node gs) {
 
         int i;
 
-        for(i = 0; i < nodesEventHandler.size() && ! nodesEventHandler.get(i).getNode().equals(gs); i++);
+        for (i = 0; i < nodesEventHandler.size() && !nodesEventHandler.get(i).getNode().equals(gs); i++)
+            ;
 
-        if(i < nodesEventHandler.size()){
+        if (i < nodesEventHandler.size()) {
 
             nodesEventHandler.remove(i);
         }

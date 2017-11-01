@@ -13,11 +13,9 @@ import javafx.stage.WindowEvent;
  */
 public class ColoredBubbles extends Application {
 
-
     public static void main(String[] args) {
         Application.launch(ColoredBubbles.class, args);
     }
-
 
     @Override
     public void start(Stage primaryStage) {
@@ -27,15 +25,13 @@ public class ColoredBubbles extends Application {
 
         Group root = new Group();
         Scene scene = new Scene(root, 1200, 700, Color.BLACK);
-        primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
+        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
         primaryStage.setScene(scene);
         Bubble bubble = new Bubble(scene, root, Bubble.COLOR, null);
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();
 
-
     }
-
 
 }

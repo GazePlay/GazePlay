@@ -29,24 +29,12 @@ public class TestGaze extends Application {
 
         root.getChildren().add(c);
 
-        c.addEventFilter(
-                GazeEvent.GAZE_ENTERED,
-                event -> log.info(
-                        "Field filtered strike: " + event.getEventType()
-                )
-        );
+        c.addEventFilter(GazeEvent.GAZE_ENTERED, event -> log.info("Field filtered strike: " + event.getEventType()));
 
-        c.addEventHandler(
-                GazeEvent.GAZE_ENTERED,
-                event -> log.info(
-                        "Field handled strike: " + event.getEventType()
-                )
-        );
+        c.addEventHandler(GazeEvent.GAZE_ENTERED, event -> log.info("Field handled strike: " + event.getEventType()));
 
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
 
         c.fireEvent(new GazeEvent());
 

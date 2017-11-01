@@ -12,12 +12,13 @@ public class Multilinguism {
     private static Multilinguism multilinguism;
     private HashMap<Entry, String> traductions;
 
-    private Multilinguism(){
+    private Multilinguism() {
 
         traductions = new HashMap<>(1000);
 
         try {
-            InputStream is =  ClassLoader.getSystemClassLoader().getResourceAsStream("data/multilinguism/multilinguism.csv");
+            InputStream is = ClassLoader.getSystemClassLoader()
+                    .getResourceAsStream("data/multilinguism/multilinguism.csv");
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
@@ -25,20 +26,19 @@ public class Multilinguism {
 
             boolean firstline = true;
 
-            String[] languages = null, data = null ;
+            String[] languages = null, data = null;
 
-            while ((ligne = br.readLine()) != null){
-                if(firstline) {
+            while ((ligne = br.readLine()) != null) {
+                if (firstline) {
                     // Retourner la ligne dans un tableau
                     languages = ligne.split(",");
                     firstline = false;
-                }
-                else {
+                } else {
                     data = ligne.split(",");
                     String key = data[0];
-                    for (int i = 1; i < data.length; i++){
+                    for (int i = 1; i < data.length; i++) {
 
-                        //log.info(key + ", " + languages[i] + ", " +data[i]);
+                        // log.info(key + ", " + languages[i] + ", " +data[i]);
                         traductions.put(new Entry(key, languages[i]), data[i]);
                     }
                 }
@@ -50,15 +50,15 @@ public class Multilinguism {
         }
     }
 
-    public static Multilinguism getMultilinguism(){
+    public static Multilinguism getMultilinguism() {
 
-        if(multilinguism == null)
+        if (multilinguism == null)
             multilinguism = new Multilinguism();
 
         return multilinguism;
     }
 
-    public String getTrad(String key, String language){
+    public String getTrad(String key, String language) {
 
         return traductions.get(new Entry(key, language));
     }
@@ -67,9 +67,9 @@ public class Multilinguism {
 
         String language = (new Configuration()).language;
 
-        for(Languages l : Languages.values()){
+        for (Languages l : Languages.values()) {
 
-            if(l.toString().equals(language)){
+            if (l.toString().equals(language)) {
 
                 return language;
             }
@@ -92,20 +92,20 @@ class Entry {
 
     @Override
     public String toString() {
-        return "Entry{" +
-                "key='" + key + '\'' +
-                ", language='" + language + '\'' +
-                '}';
+        return "Entry{" + "key='" + key + '\'' + ", language='" + language + '\'' + '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Entry entry = (Entry) o;
 
-        if (!key.equals(entry.key)) return false;
+        if (!key.equals(entry.key))
+            return false;
         return language.equals(entry.language);
     }
 

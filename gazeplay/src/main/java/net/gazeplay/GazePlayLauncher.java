@@ -16,7 +16,7 @@ import java.util.jar.Manifest;
 
 @Slf4j
 public class GazePlayLauncher {
-    
+
     private static final String artifactId = "gazeplay";
 
     public static void main(String[] args) {
@@ -57,9 +57,9 @@ public class GazePlayLauncher {
         Application.launch(GazePlay.class, args);
     }
 
-
     private static String findVersionInfo(String applicationName) throws IOException {
-        Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources("META-INF/MANIFEST.MF");
+        Enumeration<URL> resources = Thread.currentThread().getContextClassLoader()
+                .getResources("META-INF/MANIFEST.MF");
         while (resources.hasMoreElements()) {
             URL manifestUrl = resources.nextElement();
             Manifest manifest = new Manifest(manifestUrl.openStream());

@@ -43,13 +43,14 @@ public class GazePlay extends Application {
 
         root = new Group();
 
-        scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
+        scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(),
+                com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
         Utils.addStylesheets(scene.getStylesheets());
 
         log.info(scene.getStylesheets().toString());
 
-        if(scene.getStylesheets().isEmpty())
+        if (scene.getStylesheets().isEmpty())
             scene.getStylesheets().add("data/stylesheets/main-orange.css");
 
         cbxGames = new ChoiceBox<>();
@@ -66,27 +67,26 @@ public class GazePlay extends Application {
             }
         });
 
-      //  root.getChildren().add(cbxGames);
+        // root.getChildren().add(cbxGames);
 
-        HomeUtils.goHome(scene,root, cbxGames);
+        HomeUtils.goHome(scene, root, cbxGames);
 
-      /*  cbxGames.setScaleX(2);
-        cbxGames.setScaleY(2);
-
-        cbxGames.setTranslateX(scene.getWidth() * 0.9 / 2);
-        cbxGames.setTranslateY(scene.getHeight() * 0.9 / 2);
-
-        cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-
-                chooseGame(newValue.intValue());
-            }
-        });
-
-        root.getChildren().add(cbxGames);
-
-        HomeUtils.addButtons(scene, root, cbxGames);*/
+        /*
+         * cbxGames.setScaleX(2); cbxGames.setScaleY(2);
+         * 
+         * cbxGames.setTranslateX(scene.getWidth() * 0.9 / 2); cbxGames.setTranslateY(scene.getHeight() * 0.9 / 2);
+         * 
+         * cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+         * 
+         * @Override public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
+         * {
+         * 
+         * chooseGame(newValue.intValue()); } });
+         * 
+         * root.getChildren().add(cbxGames);
+         * 
+         * HomeUtils.addButtons(scene, root, cbxGames);
+         */
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 

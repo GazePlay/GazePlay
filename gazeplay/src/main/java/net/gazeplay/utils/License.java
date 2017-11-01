@@ -23,19 +23,20 @@ import java.io.IOException;
  * Created by schwab on 22/12/2016.
  */
 @Slf4j
-public class License extends Rectangle{
+public class License extends Rectangle {
 
-    public License(double X, double Y, double width, double height, Scene scene, Group root, ChoiceBox<String> cbxGames, String language){
+    public License(double X, double Y, double width, double height, Scene scene, Group root, ChoiceBox<String> cbxGames,
+            String language) {
 
         super(X, Y, width, height);
 
-        this.setFill(new ImagePattern(new Image("data/common/images/license.png"),0,0,1,1, true));
+        this.setFill(new ImagePattern(new Image("data/common/images/license.png"), 0, 0, 1, 1, true));
 
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
             @Override
             public void handle(javafx.event.Event e) {
 
-                if(e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
                     HomeUtils.clear(scene, root, cbxGames);
 
@@ -54,11 +55,11 @@ public class License extends Rectangle{
 
         Text text = new Text();
 
-        text.setX(width*0.1);
-        text.setY(height*0.1);
+        text.setX(width * 0.1);
+        text.setY(height * 0.1);
         text.setFont(new Font(20));
 
-        text.setFill(new Color(1,1,1,1));
+        text.setFill(new Color(1, 1, 1, 1));
 
         StringBuilder licence = new StringBuilder(10000);
         String line;
@@ -87,11 +88,11 @@ public class License extends Rectangle{
 
         Text text = new Text();
 
-        text.setX(width*0.1);
-        text.setY(height*0.1);
+        text.setX(width * 0.1);
+        text.setY(height * 0.1);
         text.setFont(new Font(20));
 
-        text.setFill(new Color(1,1,1,1));
+        text.setFill(new Color(1, 1, 1, 1));
 
         StringBuilder licence = new StringBuilder(10000);
         String line;
@@ -115,11 +116,10 @@ public class License extends Rectangle{
         sp.setFitToWidth(true);
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         sp.setVmax(height);
-        //sp.setPrefSize(width*0.8, height*0.8);
+        // sp.setPrefSize(width*0.8, height*0.8);
 
         return sp;
 
     }
-
 
 }

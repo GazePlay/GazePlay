@@ -35,12 +35,13 @@ public class Card extends Parent {
     protected static final float cardRatio = 0.75f;
     protected static final int minHeight = 30;
     protected static final float zoom_factor = 1.1f;
-    protected static final double min_time = 500;//Math.sqrt(2)*1000;//0.5*1000;
+    protected static final double min_time = 500;// Math.sqrt(2)*1000;//0.5*1000;
     private Rectangle card;
     private boolean winner;
     private Image image;
-    private boolean toTurn = false;//true if the card is about to be turned (ie player gaze is on it and progress bar is increasing)
-    private boolean turned = false;//true if the card has been turned
+    private boolean toTurn = false;// true if the card is about to be turned (ie player gaze is on it and progress bar
+                                   // is increasing)
+    private boolean turned = false;// true if the card has been turned
     int nbLines;
     int nbColumns;
     private double initWidth;
@@ -57,30 +58,31 @@ public class Card extends Parent {
     EventHandler<Event> enterEvent;
     boolean anniOff = true;
 
-    public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image, boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGamesStats stats){
+    public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image,
+            boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGamesStats stats) {
 
-        this.winner = winner;//true if it is the good card
-        this.initWidth=width;
-        this.initHeight=height;
+        this.winner = winner;// true if it is the good card
+        this.initWidth = width;
+        this.initHeight = height;
         this.scene = scene;
         this.choiceBox = choiceBox;
-        this.root=root;
-        this.nbLines=nbLines;
-        this.nbColumns=nbColumns;
+        this.root = root;
+        this.nbLines = nbLines;
+        this.nbColumns = nbColumns;
         this.stats = stats;
         card = new Rectangle(x, y, width, height);
-        card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"),0,0,1,1, true));
+        card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
         this.getChildren().add(card);
         this.image = image;
         indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(card.getX()+width*0.05);
-        indicator.setTranslateY(card.getY()+height*0.2);
-        indicator.setMinWidth(width*0.9);
-        indicator.setMinHeight(width*0.9);
+        indicator.setTranslateX(card.getX() + width * 0.05);
+        indicator.setTranslateY(card.getY() + height * 0.2);
+        indicator.setMinWidth(width * 0.9);
+        indicator.setMinHeight(width * 0.9);
         indicator.setOpacity(0);
         this.getChildren().add(indicator);
 
-        //this.getChildren().add(bravo);
+        // this.getChildren().add(bravo);
 
         GazeUtils.addEventFilter(card);
 
@@ -95,11 +97,11 @@ public class Card extends Parent {
         Application.launch(MagicCards.class, args);
     }
 
-    private void enter(){
+    private void enter() {
 
         Timeline timeline = new Timeline();
 
-        card.setFill(new ImagePattern(image,0,0,1,1, true));
+        card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
     }
 
     private EventHandler<Event> buildEvent() {
@@ -107,7 +109,7 @@ public class Card extends Parent {
             @Override
             public void handle(Event e) {
 
-                if(turned)
+                if (turned)
                     return;
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
@@ -119,14 +121,19 @@ public class Card extends Parent {
 
                     Timeline timelineCard = new Timeline();
 
-                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.xProperty(), card.getX() - (initWidth*zoom_factor - initWidth)/2)));
-                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.yProperty(), card.getY() - (initHeight*zoom_factor - initHeight)/2)));
-                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth*zoom_factor)));
-                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight*zoom_factor)));
+                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
+                            new KeyValue(card.xProperty(), card.getX() - (initWidth * zoom_factor - initWidth) / 2)));
+                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
+                            new KeyValue(card.yProperty(), card.getY() - (initHeight * zoom_factor - initHeight) / 2)));
+                    timelineCard.getKeyFrames().add(
+                            new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth * zoom_factor)));
+                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
+                            new KeyValue(card.heightProperty(), initHeight * zoom_factor)));
 
                     Timeline timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(min_time), new KeyValue(indicator.progressProperty(), 1)));
+                    timelineProgressBar.getKeyFrames()
+                            .add(new KeyFrame(new Duration(min_time), new KeyValue(indicator.progressProperty(), 1)));
 
                     sequence.getChildren().addAll(timelineCard, timelineProgressBar);
 
@@ -139,7 +146,7 @@ public class Card extends Parent {
                         @Override
                         public void handle(ActionEvent actionEvent) {
 
-                            if(!toTurn){// la carte n'est plus à tourner quand l'évènement est terminé.
+                            if (!toTurn) {// la carte n'est plus à tourner quand l'évènement est terminé.
 
                                 return;
                             }
@@ -161,27 +168,33 @@ public class Card extends Parent {
 
                                 Timeline timeline = new Timeline();
 
-                                for (Node N : root.getChildren()) {//clear all but image and reward
+                                for (Node N : root.getChildren()) {// clear all but image and reward
 
-                                    if ((N instanceof Card && card != ((Card) N).getCard() && !(N instanceof Bravo)) || (N instanceof Home)) {//we put outside screen Home and cards
+                                    if ((N instanceof Card && card != ((Card) N).getCard() && !(N instanceof Bravo))
+                                            || (N instanceof Home)) {// we put outside screen Home and cards
 
                                         N.setTranslateX(-10000);
                                         N.setOpacity(0);
                                         N.removeEventFilter(MouseEvent.ANY, enterEvent);
                                         N.removeEventFilter(GazeEvent.ANY, enterEvent);
-                                    } else {//we keep only Bravo and winning card
+                                    } else {// we keep only Bravo and winning card
                                     }
                                 }
 
-                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth() * final_zoom)));
-                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight() * final_zoom)));
-                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(), (scene.getWidth() - card.getWidth() * final_zoom) / 2)));
-                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), (scene.getHeight() - card.getHeight() * final_zoom) / 2)));
+                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
+                                        new KeyValue(card.widthProperty(), card.getWidth() * final_zoom)));
+                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
+                                        new KeyValue(card.heightProperty(), card.getHeight() * final_zoom)));
+                                timeline.getKeyFrames()
+                                        .add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(),
+                                                (scene.getWidth() - card.getWidth() * final_zoom) / 2)));
+                                timeline.getKeyFrames()
+                                        .add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(),
+                                                (scene.getHeight() - card.getHeight() * final_zoom) / 2)));
 
                                 timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
                                     @Override
                                     public void handle(ActionEvent actionEvent) {
-
 
                                         SequentialTransition sequence = bravo.win();
                                         bravo.toFront();
@@ -190,7 +203,7 @@ public class Card extends Parent {
                                             @Override
                                             public void handle(ActionEvent actionEvent) {
                                                 HomeUtils.clear(scene, root, choiceBox);
-                                                Card.addCards(root, scene, choiceBox, nbLines, nbColumns,  stats);
+                                                Card.addCards(root, scene, choiceBox, nbLines, nbColumns, stats);
                                                 HomeUtils.home(scene, root, choiceBox, stats);
                                                 stats.start();
                                             }
@@ -200,11 +213,12 @@ public class Card extends Parent {
 
                                 timeline.play();
 
-                            } else {//bad card
+                            } else {// bad card
 
                                 Timeline timeline = new Timeline();
 
-                                timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(card.opacityProperty(), 0)));
+                                timeline.getKeyFrames()
+                                        .add(new KeyFrame(new Duration(2000), new KeyValue(card.opacityProperty(), 0)));
 
                                 timeline.play();
 
@@ -218,10 +232,14 @@ public class Card extends Parent {
 
                     Timeline timeline = new Timeline();
 
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.xProperty(), card.getX() + (initWidth*zoom_factor - initWidth)/2)));
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.yProperty(), card.getY() + (initHeight*zoom_factor - initHeight)/2)));
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth)));
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight)));
+                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+                            new KeyValue(card.xProperty(), card.getX() + (initWidth * zoom_factor - initWidth) / 2)));
+                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+                            new KeyValue(card.yProperty(), card.getY() + (initHeight * zoom_factor - initHeight) / 2)));
+                    timeline.getKeyFrames()
+                            .add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth)));
+                    timeline.getKeyFrames()
+                            .add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight)));
 
                     timeline.play();
                     indicator.setOpacity(0);
@@ -231,27 +249,30 @@ public class Card extends Parent {
         };
     }
 
-    public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbLines, int nbColumns, HiddenItemsGamesStats stats) {
+    public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbLines, int nbColumns,
+            HiddenItemsGamesStats stats) {
 
-        images = Utils.images(Utils.getImagesFolder()+"magiccards"+Utils.FILESEPARATOR);
+        images = Utils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
         double cardHeight = computeCardHeight(scene, nbLines);
         double cardWidth = cardHeight * cardRatio;
         double width = computeCardWidth(scene, nbColumns) - cardWidth;
 
-        int winner = (int)(nbColumns * nbLines * Math.random());
+        int winner = (int) (nbColumns * nbLines * Math.random());
         int k = 0;
         Card winCard = null;
 
+        for (int i = 0; i < nbColumns; i++)
+            for (int j = 0; j < nbLines; j++) {
 
-        for (int i = 0 ; i < nbColumns ; i++)
-            for (int j = 0 ; j < nbLines ; j++){
-
-                if(k++==winner) {
-                    winCard = new Card(nbColumns,  nbLines, width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, getRandomImage(), true, scene, root, cbxGames, stats);
+                if (k++ == winner) {
+                    winCard = new Card(nbColumns, nbLines, width / 2 + (width + cardWidth) * i,
+                            minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, getRandomImage(), true,
+                            scene, root, cbxGames, stats);
                     root.getChildren().add(winCard);
-                }
-                else {
-                    Card card = new Card(nbColumns,  nbLines, width / 2 + (width + cardWidth) * i, minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, new Image("data/magiccards/images/error.png"), false, scene, root, cbxGames, stats);
+                } else {
+                    Card card = new Card(nbColumns, nbLines, width / 2 + (width + cardWidth) * i,
+                            minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight,
+                            new Image("data/magiccards/images/error.png"), false, scene, root, cbxGames, stats);
                     root.getChildren().add(card);
                 }
             }
@@ -261,25 +282,23 @@ public class Card extends Parent {
 
     private static Image getRandomImage() {
 
-        int value = (int)Math.floor(Math.random()*images.length);
+        int value = (int) Math.floor(Math.random() * images.length);
 
         return images[value];
     }
 
-    private static double computeCardHeight(Scene scene, int nbLines ){
+    private static double computeCardHeight(Scene scene, int nbLines) {
 
-        return scene.getHeight()*0.9/ nbLines;
+        return scene.getHeight() * 0.9 / nbLines;
     }
 
-    private static double computeCardWidth(Scene scene, int nbColumns){
+    private static double computeCardWidth(Scene scene, int nbColumns) {
 
-        return scene.getWidth()/ nbColumns;
+        return scene.getWidth() / nbColumns;
     }
 
     public Rectangle getCard() {
         return card;
     }
-
-
 
 }

@@ -8,8 +8,7 @@ public class MagicCardsGamesStats extends HiddenItemsGamesStats {
     public MagicCardsGamesStats(Scene scene) {
 
         super(scene);
-        gameName="MagicCards";
+        gameName = "MagicCards";
     }
-
 
 }

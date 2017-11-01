@@ -15,10 +15,11 @@ import javafx.scene.text.Text;
  */
 public class Touche extends Parent {
 
-    public String lettre;//lettre de la touche, c'est une variable public pour qu'elle puisse être lue depuis les autres classes
-    private int positionX = 0;//abscisse
-    private int positionY = 0;//ordonnée de la touche
-    private int note = 0;//note correspond au numéro MIDI de la note qui doit être jouée quand on appuie sur la touche
+    public String lettre;// lettre de la touche, c'est une variable public pour qu'elle puisse être lue depuis les
+                         // autres classes
+    private int positionX = 0;// abscisse
+    private int positionY = 0;// ordonnée de la touche
+    private int note = 0;// note correspond au numéro MIDI de la note qui doit être jouée quand on appuie sur la touche
     private Instru instru;
 
     Rectangle fond_touche;
@@ -34,22 +35,21 @@ public class Touche extends Parent {
         fond_touche = new Rectangle(75, 75, Color.WHITESMOKE);
         fond_touche.setArcHeight(10);
         fond_touche.setArcWidth(10);
-        this.getChildren().add(fond_touche);//ajout du rectangle de fond de la touche
+        this.getChildren().add(fond_touche);// ajout du rectangle de fond de la touche
 
         lettre_touche = new Text(lettre);
         lettre_touche.setFont(new Font(25));
         lettre_touche.setFill(Color.GREY);
         lettre_touche.setX(25);
         lettre_touche.setY(45);
-        this.getChildren().add(lettre_touche);//ajout de la lettre de la touche
+        this.getChildren().add(lettre_touche);// ajout de la lettre de la touche
 
-       /* Light.Distant light = new Light.Distant();
-        light.setAzimuth(-45.0);
-        Lighting li = new Lighting();
-        li.setLight(light);
-        fond_touche.setEffect(li);*/
+        /*
+         * Light.Distant light = new Light.Distant(); light.setAzimuth(-45.0); Lighting li = new Lighting();
+         * li.setLight(light); fond_touche.setEffect(li);
+         */
 
-        this.setTranslateX(positionX);//positionnement de la touche sur le clavier
+        this.setTranslateX(positionX);// positionnement de la touche sur le clavier
         this.setTranslateY(positionY);
 
         this.setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -85,6 +85,5 @@ public class Touche extends Parent {
         this.setTranslateY(positionY);
         instru.note_off(note);
     }
-
 
 }

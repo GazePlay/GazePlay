@@ -5,7 +5,7 @@ import utils.games.Utils;
 
 import java.io.PrintWriter;
 
-public class ShootGamesStats extends Stats{
+public class ShootGamesStats extends Stats {
 
     protected int nbUnCountedShoots;
 
@@ -16,14 +16,14 @@ public class ShootGamesStats extends Stats{
         nbUnCountedShoots = 0;
     }
 
-    public void incNbGoals(){
+    public void incNbGoals() {
 
         long last = System.currentTimeMillis() - beginTime;
-        if(last>100) {
+        if (last > 100) {
             nbGoals++;
             length += last;
             lengthBetweenGoals.add((new Long(last)).intValue());
-        }else{
+        } else {
 
             nbUnCountedShoots++;
         }
@@ -34,7 +34,7 @@ public class ShootGamesStats extends Stats{
     }
 
     @Override
-    public void saveStats(){
+    public void saveStats() {
 
         super.saveStats();
 
@@ -56,7 +56,7 @@ public class ShootGamesStats extends Stats{
         out.print(',');
         out.print("Uncounted Shoots");
         out.print(',');
-        for(int i = 0; i < lengthBetweenGoals.size(); i++) {
+        for (int i = 0; i < lengthBetweenGoals.size(); i++) {
             out.print("shoot ");
             out.print(i);
             out.print(',');
@@ -84,6 +84,5 @@ public class ShootGamesStats extends Stats{
 
         out.flush();
     }
-
 
 }

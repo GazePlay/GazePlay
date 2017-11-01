@@ -15,15 +15,16 @@ public class Son extends Parent {
     public Slider slider;
     private Clavier clavier;
 
-    public Son(Clavier clavier){
+    public Son(Clavier clavier) {
 
-        this.clavier=clavier;
+        this.clavier = clavier;
 
         slider = new Slider(0, 127, 60);
         slider.setOrientation(Orientation.VERTICAL);
         slider.setTranslateY(35);
-        slider.valueProperty().addListener(new ChangeListener(){
-            @Override public void changed(ObservableValue o, Object oldVal, Object newVal){
+        slider.valueProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue o, Object oldVal, Object newVal) {
                 clavier.requestFocus();
             }
         });

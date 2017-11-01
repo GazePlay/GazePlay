@@ -29,13 +29,14 @@ public class CreamPie extends Application {
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
+        Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(),
+                com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
         Stats stats = new ShootGamesStats(scene);
 
-        launch(root, scene, (ShootGamesStats)stats);
+        launch(root, scene, (ShootGamesStats) stats);
 
-        primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
+        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
         primaryStage.setScene(scene);
 
@@ -44,7 +45,7 @@ public class CreamPie extends Application {
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void launch(Group root, javafx.scene.Scene scene, ShootGamesStats stats){
+    public static void launch(Group root, javafx.scene.Scene scene, ShootGamesStats stats) {
 
         Hand hand = new Hand(scene);
 

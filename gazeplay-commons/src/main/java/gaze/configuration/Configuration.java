@@ -1,6 +1,5 @@
 package gaze.configuration;
 
-
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import utils.games.Utils;
@@ -22,7 +21,7 @@ public class Configuration {
     private static String EyeTracker = "EyeTracker";
     private static String Language = "Language";
     private static String FileDir = "FileDir";
-    private static String configPath = Utils.getGazePlayFolder()+"GazePlay.properties";
+    private static String configPath = Utils.getGazePlayFolder() + "GazePlay.properties";
 
     public String gazeMode = "true";
     public String eyetracker = "none";
@@ -41,19 +40,19 @@ public class Configuration {
             prop.load(input);
 
             String buffer = prop.getProperty(GazeMode);
-            if(buffer!=null)
+            if (buffer != null)
                 gazeMode = buffer.toLowerCase();
 
             buffer = prop.getProperty(EyeTracker);
-            if(buffer!=null)
+            if (buffer != null)
                 eyetracker = buffer.toLowerCase();
 
             buffer = prop.getProperty(Language);
-            if(buffer!=null)
+            if (buffer != null)
                 language = buffer.toLowerCase();
 
             buffer = prop.getProperty(FileDir);
-            if(buffer!=null)
+            if (buffer != null)
                 filedir = buffer;
 
         } catch (final IOException ex) {
@@ -71,16 +70,16 @@ public class Configuration {
 
     public Configuration(String eyetracker, String language) {
 
-        this.eyetracker=eyetracker;
-        this.language=language;
+        this.eyetracker = eyetracker;
+        this.language = language;
     }
 
     public Configuration(String eyetracker) {
 
-        this.eyetracker=eyetracker;
+        this.eyetracker = eyetracker;
     }
 
-    public void saveConfig(){
+    public void saveConfig() {
 
         StringBuilder sb = new StringBuilder(1000);
         sb.append(EyeTracker);

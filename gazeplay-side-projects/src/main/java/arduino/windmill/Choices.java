@@ -31,11 +31,11 @@ public class Choices extends Parent {
     private final int min_Y = 50;
     private final int sep = 100;
 
-    private final double min_time = 500;//Math.sqrt(2) * 1000;
+    private final double min_time = 500;// Math.sqrt(2) * 1000;
     private final float zoom_factor = 1.1f;
     private final float strokeFactor = 0.01f;
 
-    String current ="";
+    String current = "";
 
     long entry = -1;
 
@@ -101,7 +101,6 @@ public class Choices extends Parent {
         choices.put("non", new Choice("non"));
     }
 
-
     private EventHandler<Event> buildEvent() {
         return new EventHandler<Event>() {
             @Override
@@ -114,14 +113,16 @@ public class Choices extends Parent {
                     entry = (new Date()).getTime();
 
                     int i;
-                    for (i = 0; i < currentChoice.size() && !target.equals(currentChoice.get(i).rectangle); i++) ;
+                    for (i = 0; i < currentChoice.size() && !target.equals(currentChoice.get(i).rectangle); i++)
+                        ;
 
                     if (i < currentChoice.size())
                         currentChoice.get(i).sound.play();
 
                     Timeline timeline = new Timeline();
 
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.RED)));
+                    timeline.getKeyFrames()
+                            .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.RED)));
 
                     timeline.play();
 
@@ -129,7 +130,8 @@ public class Choices extends Parent {
 
                     Timeline timeline = new Timeline();
 
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.BLACK)));
+                    timeline.getKeyFrames()
+                            .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.BLACK)));
 
                     timeline.play();
 
@@ -138,7 +140,7 @@ public class Choices extends Parent {
 
                 else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
 
-                    //log.info("MOVE");
+                    // log.info("MOVE");
 
                     long now = (new Date()).getTime();
 
@@ -146,20 +148,19 @@ public class Choices extends Parent {
 
                         for (Choice P : currentChoice) {
 
-                            if (P.rectangle.equals(target)){
+                            if (P.rectangle.equals(target)) {
 
-                                if(P.name.equals("oui")){
+                                if (P.name.equals("oui")) {
 
-                                    if(!current.equals("oui")) {
+                                    if (!current.equals("oui")) {
 
                                         arduino.sendArduino("M");
                                         current = "oui";
                                     }
-                                }
-                                else if(!current.equals("non")){
+                                } else if (!current.equals("non")) {
 
                                     arduino.sendArduino("L");
-                                    current="non";
+                                    current = "non";
                                 }
                             }
 

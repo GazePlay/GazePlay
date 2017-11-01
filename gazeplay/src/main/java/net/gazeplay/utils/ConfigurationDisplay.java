@@ -25,7 +25,6 @@ import utils.games.Utils;
 import java.io.File;
 import java.io.IOException;
 
-
 /**
  * Created by schwab on 28/10/2017.
  */
@@ -37,7 +36,6 @@ public class ConfigurationDisplay extends Rectangle {
 
     private static double prefWidth = 200;
     private static double prefHeight = 25;
-
 
     private ConfigurationDisplay(double X, double Y, double width, double heigth) {
 
@@ -77,9 +75,9 @@ public class ConfigurationDisplay extends Rectangle {
 
         Multilinguism multilinguism = Multilinguism.getMultilinguism();
 
-        //to add or not a space before colon (:) according to the language
+        // to add or not a space before colon (:) according to the language
         String colon = multilinguism.getTrad("Colon", Multilinguism.getLanguage());
-        if(colon.equals("_noSpace"))
+        if (colon.equals("_noSpace"))
             colon = ": ";
         else
             colon = " : ";
@@ -92,7 +90,7 @@ public class ConfigurationDisplay extends Rectangle {
         log.info(C.toString());
 
         Text Configuration = new Text(multilinguism.getTrad("ConfigTitle", Multilinguism.getLanguage()));
-        Configuration.setX(scene.getWidth()*0.4);
+        Configuration.setX(scene.getWidth() * 0.4);
         Configuration.setY(60);
         Configuration.setId("title");
 
@@ -100,19 +98,19 @@ public class ConfigurationDisplay extends Rectangle {
         language.setX(100);
         language.setY(100);
         language.setId("item");
-        buildLanguageMenu(C,root,250,105);
+        buildLanguageMenu(C, root, 250, 105);
 
         Text eyeTracker = new Text(multilinguism.getTrad("EyeTracker", Multilinguism.getLanguage()) + colon);
         eyeTracker.setX(100);
         eyeTracker.setY(200);
         eyeTracker.setId("item");
-        buildEyeTrackerMenu(C,root,250,205);
+        buildEyeTrackerMenu(C, root, 250, 205);
 
         Text fileDir = new Text(multilinguism.getTrad("FileDir", Multilinguism.getLanguage()) + colon);
         fileDir.setX(100);
         fileDir.setY(300);
         fileDir.setId("item");
-        buildDirectoryChooserMenu(scene, C,root,250,305);
+        buildDirectoryChooserMenu(scene, C, root, 250, 305);
 
         root.getChildren().addAll(Configuration, language, eyeTracker, fileDir);
     }
@@ -121,16 +119,16 @@ public class ConfigurationDisplay extends Rectangle {
 
         Button buttonLoad = new Button(C.filedir);
 
-        buttonLoad.setOnAction(new EventHandler<ActionEvent>(){
+        buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 File file = directoryChooser.showDialog(scene.getWindow());
-                buttonLoad.setText(file.toString()+ Utils.FILESEPARATOR);
-                File F = new File( file.toString());
-                C.filedir = file.toString()+ Utils.FILESEPARATOR;
+                buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
+                File F = new File(file.toString());
+                C.filedir = file.toString() + Utils.FILESEPARATOR;
 
-                if(Utils.isWindows()){
+                if (Utils.isWindows()) {
 
                     C.filedir = Utils.convertWindowsPath(C.filedir);
                 }
@@ -146,10 +144,9 @@ public class ConfigurationDisplay extends Rectangle {
         root.getChildren().add(buttonLoad);
     }
 
-    private static void buildLanguageMenu(Configuration C, Group root, double posX, double posY){
+    private static void buildLanguageMenu(Configuration C, Group root, double posX, double posY) {
         ChoiceBox languageBox = new ChoiceBox();
         Languages[] TLanguages = Languages.values();
-
 
         int firstPos = 1;
 
@@ -173,14 +170,14 @@ public class ConfigurationDisplay extends Rectangle {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
-                C.language=TLanguages[newValue.intValue()].toString();
+                C.language = TLanguages[newValue.intValue()].toString();
                 log.info(C.toString());
                 C.saveConfig();
             }
         });
     }
 
-    private static void buildEyeTrackerMenu(Configuration C, Group root, double posX, double posY){
+    private static void buildEyeTrackerMenu(Configuration C, Group root, double posX, double posY) {
         ChoiceBox EyeTrackersBox = new ChoiceBox();
         EyeTrackers[] TEyeTrackers = EyeTrackers.values();
 
@@ -205,7 +202,7 @@ public class ConfigurationDisplay extends Rectangle {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
-                C.eyetracker=TEyeTrackers[newValue.intValue()].toString();
+                C.eyetracker = TEyeTrackers[newValue.intValue()].toString();
                 log.info(C.toString());
                 C.saveConfig();
             }

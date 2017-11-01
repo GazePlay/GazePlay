@@ -11,7 +11,7 @@ public class BubblesGamesStats extends ShootGamesStats {
         this.gameName = "bubbles";
     }
 
-    public void incNbGoals(){
+    public void incNbGoals() {
 
         long last = System.currentTimeMillis() - beginTime;
         nbGoals++;

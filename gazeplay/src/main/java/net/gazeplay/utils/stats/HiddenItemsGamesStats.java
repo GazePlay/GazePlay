@@ -5,7 +5,7 @@ import utils.games.Utils;
 
 import java.io.PrintWriter;
 
-public class HiddenItemsGamesStats extends Stats{
+public class HiddenItemsGamesStats extends Stats {
 
     public HiddenItemsGamesStats(Scene scene) {
 
@@ -13,7 +13,7 @@ public class HiddenItemsGamesStats extends Stats{
     }
 
     @Override
-    public void saveStats(){
+    public void saveStats() {
 
         super.saveStats();
 
@@ -33,7 +33,7 @@ public class HiddenItemsGamesStats extends Stats{
         out.print(',');
         out.print("Standard Déviation");
         out.print(',');
-        for(int i = 0; i < lengthBetweenGoals.size(); i++) {
+        for (int i = 0; i < lengthBetweenGoals.size(); i++) {
             out.print("shoot ");
             out.print(i);
             out.print(",");
@@ -59,6 +59,5 @@ public class HiddenItemsGamesStats extends Stats{
 
         out.flush();
     }
-
 
 }
