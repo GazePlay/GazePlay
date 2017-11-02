@@ -1,6 +1,6 @@
 package melordi;/**
- * Created by schwab on 09/08/2016.
- */
+                * Created by schwab on 09/08/2016.
+                */
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -22,10 +22,10 @@ public class Melordi extends Application {
 
         Instru mon_instru = new Instru();
 
-        Clavier mon_clavier = new Clavier(mon_instru);//on créé un objet clavier
+        Clavier mon_clavier = new Clavier(mon_instru);// on créé un objet clavier
         ChangeInstru instrus = new ChangeInstru(mon_instru);
 
-        root.getChildren().add(mon_clavier);//on l'ajoute à notre groupe root
+        root.getChildren().add(mon_clavier);// on l'ajoute à notre groupe root
         root.getChildren().add(instrus);
 
         Son mon_son = new Son(mon_clavier);

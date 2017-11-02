@@ -14,33 +14,34 @@ import net.gazeplay.utils.stats.ShootGamesStats;
  */
 public class Ninja extends Application {
 
-        public static void main(String[] args) {
-            Application.launch(net.gazeplay.games.ninja.Ninja.class, args);
-        }
+    public static void main(String[] args) {
+        Application.launch(net.gazeplay.games.ninja.Ninja.class, args);
+    }
 
-        @Override
-        public void start(Stage primaryStage) {
+    @Override
+    public void start(Stage primaryStage) {
 
-            primaryStage.setTitle("Ninja Portraits");
+        primaryStage.setTitle("Ninja Portraits");
 
-            primaryStage.setFullScreen(true);
+        primaryStage.setFullScreen(true);
 
-            Group root = new Group();
+        Group root = new Group();
 
-            Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
+        Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(),
+                com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
-            ShootGamesStats stats = new ShootGamesStats(scene);
+        ShootGamesStats stats = new ShootGamesStats(scene);
 
-            launch(root, scene, stats);
+        launch(root, scene, stats);
 
-            primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
+        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
-            primaryStage.setScene(scene);
+        primaryStage.setScene(scene);
 
-            primaryStage.show();
+        primaryStage.show();
 
-            SecondScreen secondScreen = SecondScreen.launch();
-        }
+        SecondScreen secondScreen = SecondScreen.launch();
+    }
 
     public static void launch(Group root, javafx.scene.Scene scene, ShootGamesStats stats) {
 

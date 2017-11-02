@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by schwab on 13/09/2017.
  */
-public class TobiiGazeListener extends GazeListener{
+public class TobiiGazeListener extends GazeListener {
     public TobiiGazeListener() {
     }
 
@@ -17,7 +17,8 @@ public class TobiiGazeListener extends GazeListener{
         super(shapesEventFilter, shapesEventHandler);
     }
 
-    public TobiiGazeListener(SecondScreen secondScreen, ArrayList<GazeInfos> shapesEventFilter, ArrayList<GazeInfos> shapesEventHandler) {
+    public TobiiGazeListener(SecondScreen secondScreen, ArrayList<GazeInfos> shapesEventFilter,
+            ArrayList<GazeInfos> shapesEventHandler) {
         super(secondScreen, shapesEventFilter, shapesEventHandler);
     }
 }

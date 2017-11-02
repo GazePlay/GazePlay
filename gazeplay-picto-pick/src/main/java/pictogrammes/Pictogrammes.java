@@ -11,7 +11,7 @@ import javafx.stage.WindowEvent;
 /**
  * Created by schwab on 23/08/2016.
  */
-public class Pictogrammes  extends Application {
+public class Pictogrammes extends Application {
 
     public static void main(String[] args) {
         Application.launch(pictogrammes.Pictogrammes.class, args);
@@ -19,7 +19,6 @@ public class Pictogrammes  extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
 
         primaryStage.setTitle("Pictogrammes");
 
@@ -32,7 +31,7 @@ public class Pictogrammes  extends Application {
 
         root.getChildren().add(pictos);
 
-        primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
+        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
         primaryStage.setScene(scene);
 

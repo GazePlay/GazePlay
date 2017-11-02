@@ -19,126 +19,122 @@ import utils.games.Utils;
 @Slf4j
 public class HomeUtils {
 
-	public static Home home;
+    public static Home home;
 
-	public static void home(Scene scene, Group root, ChoiceBox<String> cbxGames, Stats stats) {
+    public static void home(Scene scene, Group root, ChoiceBox<String> cbxGames, Stats stats) {
 
-		double width = scene.getWidth() / 10;
-		double height = width;
-		double X = scene.getWidth() * 0.9;
-		double Y = scene.getHeight() - height * 1.1;
+        double width = scene.getWidth() / 10;
+        double height = width;
+        double X = scene.getWidth() * 0.9;
+        double Y = scene.getHeight() - height * 1.1;
 
-		home = new Home(X, Y, width, height);
+        home = new Home(X, Y, width, height);
 
-		EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
-			@Override
-			public void handle(javafx.event.Event e) {
+        EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
+            @Override
+            public void handle(javafx.event.Event e) {
 
-				if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-					log.info("stats = " + stats);
+                    log.info("stats = " + stats);
 
-					if (stats == null) {
+                    if (stats == null) {
 
-						goHome(scene, root, cbxGames);
-					}
-					else{
+                        goHome(scene, root, cbxGames);
+                    } else {
 
-						StatsDisplay.displayStats(stats, scene, root, cbxGames);
-					}
-				}
-			}
-		};
+                        StatsDisplay.displayStats(stats, scene, root, cbxGames);
+                    }
+                }
+            }
+        };
 
-		home.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+        home.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
-		root.getChildren().add(home);
-	}
+        root.getChildren().add(home);
+    }
 
+    public static void goHome(Scene scene, Group root, ChoiceBox<String> cbxGames) {
 
-	public static void goHome(Scene scene, Group root, ChoiceBox<String> cbxGames) {
+        clear(scene, root, cbxGames);
 
-		clear(scene, root, cbxGames);
+        if (cbxGames != null) {
+            cbxGames.getSelectionModel().clearSelection();
+            root.getChildren().add(cbxGames);
 
-		if (cbxGames != null) {
-			cbxGames.getSelectionModel().clearSelection();
-			root.getChildren().add(cbxGames);
+            cbxGames.setTranslateX(scene.getWidth() * 0.9 / 2);
+            cbxGames.setTranslateY(scene.getHeight() * 0.9 / 2);
 
-			cbxGames.setTranslateX(scene.getWidth() * 0.9 / 2);
-			cbxGames.setTranslateY(scene.getHeight() * 0.9 / 2);
+            addButtons(scene, root, cbxGames);
+        }
+    }
 
-			addButtons(scene, root, cbxGames);
-		}
-	}
+    public static void clear(Scene scene, Group root, ChoiceBox<String> cbxGames) {
 
-	public static void clear(Scene scene, Group root, ChoiceBox<String> cbxGames) {
+        scene.setFill(Color.BLACK);
 
-		scene.setFill(Color.BLACK);
+        for (Node N : root.getChildren()) {
 
-		for (Node N : root.getChildren()) {
+            N.setTranslateX(-10000);
+        }
 
-			N.setTranslateX(-10000);
-		}
+        root.getChildren().remove(0, root.getChildren().size());
 
-		root.getChildren().remove(0, root.getChildren().size());
+        root.getChildren().add(Bravo.getBravo());
 
-		root.getChildren().add(Bravo.getBravo());
+    }
 
+    public static void addButtons(Scene scene, Group root, ChoiceBox<String> cbxGames) {
 
-	}
+        double width = scene.getWidth() / 10;
+        double heigth = width;
+        double XExit = scene.getWidth() * 0.9;
+        double XLicence = scene.getWidth() * 0.0;
+        double Y = scene.getHeight() - heigth * 1.1;
 
-	public static void addButtons(Scene scene, Group root, ChoiceBox<String> cbxGames) {
+        // License license = new License(XLicence, Y, width, heigth, scene, root, cbxGames);
 
-		double width = scene.getWidth() / 10;
-		double heigth = width;
-		double XExit = scene.getWidth() * 0.9;
-		double XLicence = scene.getWidth() * 0.0;
-		double Y = scene.getHeight() - heigth * 1.1;
+        // root.getChildren().add(license);
 
-		//  License license = new License(XLicence, Y, width, heigth, scene, root, cbxGames);
+        Rectangle exit = new Rectangle(XExit, Y, width, heigth);
 
-		// root.getChildren().add(license);
+        exit.setFill(new ImagePattern(new Image("data/common/images/power-off.png"), 0, 0, 1, 1, true));
 
-		Rectangle exit = new Rectangle(XExit, Y, width, heigth);
+        EventHandler<javafx.event.Event> homeEvent = new EventHandler<javafx.event.Event>() {
+            @Override
+            public void handle(javafx.event.Event e) {
 
-		exit.setFill(new ImagePattern(new Image("data/common/images/power-off.png"), 0, 0, 1, 1, true));
+                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-		EventHandler<javafx.event.Event> homeEvent = new EventHandler<javafx.event.Event>() {
-			@Override
-			public void handle(javafx.event.Event e) {
+                    System.exit(0);
 
-				if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                }
+            }
+        };
 
-					System.exit(0);
+        exit.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
-				}
-			}
-		};
+        root.getChildren().add(ConfigurationDisplay.addConfig(scene, root, cbxGames));
 
-		exit.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+        root.getChildren().add(exit);
 
-		root.getChildren().add(ConfigurationDisplay.addConfig(scene, root, cbxGames));
+        root.getChildren().add(logo(scene));
 
-		root.getChildren().add(exit);
+        root.getChildren().add(Utils.BuildLicence());
+    }
 
-		root.getChildren().add(logo(scene));
+    public static Node logo(Scene scene) {
 
-		root.getChildren().add(Utils.BuildLicence());
-	}
+        double width = scene.getWidth() * 0.5;
+        double height = scene.getHeight() * 0.2;
 
-	public static Node logo(Scene scene) {
+        double posY = scene.getHeight() * 0.1;
+        double posX = (scene.getWidth() - width) / 2;
 
-		double width = scene.getWidth()*0.5;
-		double height = scene.getHeight()*0.2;
+        Rectangle logo = new Rectangle(posX, posY, width, height);
+        logo.setFill(new ImagePattern(new Image("data/common/images/gazeplay.jpg"), 0, 0, 1, 1, true));
 
-		double posY = scene.getHeight()*0.1;
-		double posX = (scene.getWidth() - width)/2;
-
-		Rectangle logo = new Rectangle(posX,posY, width,height);
-		logo.setFill(new ImagePattern(new Image("data/common/images/gazeplay.jpg"),0,0,1,1, true));
-
-		return logo;
-	}
-
+        return logo;
+    }
 
 }

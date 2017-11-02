@@ -26,11 +26,11 @@ public class PortraitBubbles extends Application {
 
         Group root = new Group();
         Scene scene = new Scene(root, 1200, 700, Color.BLACK);
-        primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
+        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
         primaryStage.setScene(scene);
 
-        Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT,null);
+        Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT, null);
 
         primaryStage.show();
 

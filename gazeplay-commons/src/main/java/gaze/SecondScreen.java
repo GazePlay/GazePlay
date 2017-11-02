@@ -63,10 +63,10 @@ public class SecondScreen {
 
         Configuration config = new Configuration();
 
-   /*     if (config.eyetracker.equals("tobii"))
-            Tobii.execProg(sc);
-        else*/
-            if (config.gazeMode.equals("true"))
+        /*
+         * if (config.eyetracker.equals("tobii")) Tobii.execProg(sc); else
+         */
+        if (config.gazeMode.equals("true"))
             gazeListener = new EyeTribeGazeListener(sc);
         else
             gazeListener = new FuzzyGazeListener(sc);
@@ -78,7 +78,6 @@ public class SecondScreen {
 
         int width = (int) RScreen.getWidth();
         int height = (int) RScreen.getHeight();
-
 
         T = new Lighting[width / pixelWidth][height / pixelWidth];
         for (int i = 0; i < T.length; i++)

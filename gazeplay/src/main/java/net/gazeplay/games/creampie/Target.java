@@ -43,7 +43,9 @@ public class Target extends Portrait {
             @Override
             public void handle(Event e) {
 
-                if((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)  && anniOff) {
+                if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED
+                        || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)
+                        && anniOff) {
 
                     anniOff = false;
                     stats.incNbGoals();
@@ -61,7 +63,7 @@ public class Target extends Portrait {
         stats.start();
     }
 
-    private void enter(){
+    private void enter() {
 
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
@@ -70,16 +72,19 @@ public class Target extends Portrait {
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
 
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(radiusProperty(), getRadius()*1.6)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(rotateProperty(), getRotate()+(360*3))));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(visibleProperty(),false)));
+        timeline.getKeyFrames()
+                .add(new KeyFrame(new Duration(2000), new KeyValue(radiusProperty(), getRadius() * 1.6)));
+        timeline.getKeyFrames()
+                .add(new KeyFrame(new Duration(2000), new KeyValue(rotateProperty(), getRotate() + (360 * 3))));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(visibleProperty(), false)));
 
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(radiusProperty(), radius)));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(centerXProperty(), newX())));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(centerYProperty(), newY())));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fillProperty(), new ImagePattern(newPhoto(), 0, 0, 1,1, true))));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(rotateProperty(), 0)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000),new KeyValue(visibleProperty(),true)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),
+                new KeyValue(fillProperty(), new ImagePattern(newPhoto(), 0, 0, 1, 1, true))));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(rotateProperty(), 0)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(visibleProperty(), true)));
 
         SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
         sequence.play();

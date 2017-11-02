@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsDisplay {
 
-    public static void displayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames){
+    public static void displayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames) {
 
         Multilinguism multilinguism = Multilinguism.getMultilinguism();
 
@@ -34,44 +34,47 @@ public class StatsDisplay {
 
         HomeUtils.clear(scene, root, cbxGames);
 
-        //to add or not a space before colon (:) according to the language
+        // to add or not a space before colon (:) according to the language
         String colon = multilinguism.getTrad("Colon", Multilinguism.getLanguage());
-        if(colon.equals("_noSpace"))
+        if (colon.equals("_noSpace"))
             colon = ": ";
         else
             colon = " : ";
 
         Text statistics = new Text(multilinguism.getTrad("StatsTitle", Multilinguism.getLanguage()));
 
-        statistics.setX(scene.getWidth()*0.4);
+        statistics.setX(scene.getWidth() * 0.4);
         statistics.setY(60);
         statistics.setId("title");
 
-        Text totalLength = new Text(multilinguism.getTrad("TotalLength", Multilinguism.getLanguage()) + colon + convert(stats.getTotalLength()));
+        Text totalLength = new Text(multilinguism.getTrad("TotalLength", Multilinguism.getLanguage()) + colon
+                + convert(stats.getTotalLength()));
 
         totalLength.setX(100);
         totalLength.setY(150);
         totalLength.setId("item");
 
         Text shoots = new Text();
-        if(stats instanceof ShootGamesStats) {
+        if (stats instanceof ShootGamesStats) {
 
-            shoots = new Text(multilinguism.getTrad("Shoots", Multilinguism.getLanguage()) + colon + stats.getNbGoals());
-        }
-        else if(stats instanceof BubblesGamesStats){
+            shoots = new Text(
+                    multilinguism.getTrad("Shoots", Multilinguism.getLanguage()) + colon + stats.getNbGoals());
+        } else if (stats instanceof BubblesGamesStats) {
 
-            shoots = new Text(multilinguism.getTrad("BubbleShoot", Multilinguism.getLanguage()) + colon + stats.getNbGoals());
-        }
-        else if(stats instanceof HiddenItemsGamesStats) {
+            shoots = new Text(
+                    multilinguism.getTrad("BubbleShoot", Multilinguism.getLanguage()) + colon + stats.getNbGoals());
+        } else if (stats instanceof HiddenItemsGamesStats) {
 
-            shoots = new Text(multilinguism.getTrad("HiddenItemsShoot", Multilinguism.getLanguage()) + colon + stats.getNbGoals());
+            shoots = new Text(multilinguism.getTrad("HiddenItemsShoot", Multilinguism.getLanguage()) + colon
+                    + stats.getNbGoals());
         }
 
         shoots.setX(100);
         shoots.setY(200);
         shoots.setId("item");
 
-        Text length = new Text(multilinguism.getTrad("Length", Multilinguism.getLanguage()) + colon + convert(stats.getLength()));
+        Text length = new Text(
+                multilinguism.getTrad("Length", Multilinguism.getLanguage()) + colon + convert(stats.getLength()));
 
         length.setX(100);
         length.setY(250);
@@ -79,13 +82,14 @@ public class StatsDisplay {
 
         Text averageLength = new Text();
 
-        if(stats instanceof ShootGamesStats) {
+        if (stats instanceof ShootGamesStats) {
 
-            averageLength = new Text(multilinguism.getTrad("ShootaverageLength", Multilinguism.getLanguage()) + colon + convert(stats.getAverageLength()));
-        }
-        else if(stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
+            averageLength = new Text(multilinguism.getTrad("ShootaverageLength", Multilinguism.getLanguage()) + colon
+                    + convert(stats.getAverageLength()));
+        } else if (stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
 
-            averageLength = new Text(multilinguism.getTrad("AverageLength", Multilinguism.getLanguage()) + colon + convert(stats.getAverageLength()));
+            averageLength = new Text(multilinguism.getTrad("AverageLength", Multilinguism.getLanguage()) + colon
+                    + convert(stats.getAverageLength()));
         }
 
         averageLength.setX(100);
@@ -94,20 +98,22 @@ public class StatsDisplay {
 
         Text medianLength = new Text();
 
-        if(stats instanceof ShootGamesStats) {
+        if (stats instanceof ShootGamesStats) {
 
-            medianLength = new Text(multilinguism.getTrad("ShootmedianLength", Multilinguism.getLanguage()) + colon + convert(stats.getMedianLength()));
-        }
-        else if(stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
+            medianLength = new Text(multilinguism.getTrad("ShootmedianLength", Multilinguism.getLanguage()) + colon
+                    + convert(stats.getMedianLength()));
+        } else if (stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
 
-            medianLength = new Text(multilinguism.getTrad("MedianLength", Multilinguism.getLanguage()) + colon + convert(stats.getMedianLength()));
+            medianLength = new Text(multilinguism.getTrad("MedianLength", Multilinguism.getLanguage()) + colon
+                    + convert(stats.getMedianLength()));
         }
 
         medianLength.setX(100);
         medianLength.setY(350);
         medianLength.setId("item");
 
-        Text standDev = new Text(multilinguism.getTrad("StandDev", Multilinguism.getLanguage()) + colon + convert((long)stats.getSD()));
+        Text standDev = new Text(
+                multilinguism.getTrad("StandDev", Multilinguism.getLanguage()) + colon + convert((long) stats.getSD()));
 
         standDev.setX(100);
         standDev.setY(400);
@@ -115,57 +121,59 @@ public class StatsDisplay {
 
         Text UncountedShoot = new Text();
 
-        if(stats instanceof ShootGamesStats && !(stats instanceof BubblesGamesStats) && ((ShootGamesStats)stats).getNbUnCountedShoots()!=0) {
+        if (stats instanceof ShootGamesStats && !(stats instanceof BubblesGamesStats)
+                && ((ShootGamesStats) stats).getNbUnCountedShoots() != 0) {
 
-            UncountedShoot = new Text(multilinguism.getTrad("UncountedShoot", Multilinguism.getLanguage()) + colon + ((ShootGamesStats)stats).getNbUnCountedShoots());
+            UncountedShoot = new Text(multilinguism.getTrad("UncountedShoot", Multilinguism.getLanguage()) + colon
+                    + ((ShootGamesStats) stats).getNbUnCountedShoots());
 
             UncountedShoot.setX(scene.getWidth() / 2);
             UncountedShoot.setY(150);
             UncountedShoot.setId("item");
         }
 
-        LineChart<String,Number> chart = buildLineChart(stats, scene);
+        LineChart<String, Number> chart = buildLineChart(stats, scene);
 
         Rectangle heatChart = BuildHeatChart(stats, scene);
 
-        heatChart.setX(scene.getWidth()*5/9);
-        heatChart.setY(scene.getHeight()/2+15);
-        heatChart.setWidth(scene.getWidth()*0.35);
-        heatChart.setHeight(scene.getHeight()*0.35);
+        heatChart.setX(scene.getWidth() * 5 / 9);
+        heatChart.setY(scene.getHeight() / 2 + 15);
+        heatChart.setWidth(scene.getWidth() * 0.35);
+        heatChart.setHeight(scene.getHeight() * 0.35);
 
-        root.getChildren().addAll(statistics, shoots, totalLength, length, averageLength, medianLength, standDev, UncountedShoot, chart, heatChart);
+        root.getChildren().addAll(statistics, shoots, totalLength, length, averageLength, medianLength, standDev,
+                UncountedShoot, chart, heatChart);
 
         stats.saveStats();
 
         HomeUtils.home(scene, root, cbxGames, null);
     }
 
-    static LineChart<String,Number> buildLineChart(Stats stats, Scene scene) {
+    static LineChart<String, Number> buildLineChart(Stats stats, Scene scene) {
 
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
 
-        LineChart<String,Number> lineChart =
-                new LineChart<String,Number>(xAxis,yAxis);
+        LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
 
         // lineChart.setTitle("Réaction");
-        //defining a series
+        // defining a series
         XYChart.Series series = new XYChart.Series();
-        //series.setName("Temps de réaction");
+        // series.setName("Temps de réaction");
 
         XYChart.Series average = new XYChart.Series();
 
         XYChart.Series sdp = new XYChart.Series();
 
         XYChart.Series sdm = new XYChart.Series();
-        //populating the series with data
+        // populating the series with data
 
         ArrayList<Integer> shoots = null;
 
-        if(stats instanceof BubblesGamesStats){
+        if (stats instanceof BubblesGamesStats) {
 
             shoots = stats.getSortedLengthBetweenGoals();
-        }else{
+        } else {
 
             shoots = stats.getLengthBetweenGoals();
         }
@@ -174,24 +182,24 @@ public class StatsDisplay {
 
         int i = 0;
 
-        average.getData().add(new XYChart.Data(0+"", stats.getAverageLength()));
-        sdp.getData().add(new XYChart.Data(0+"", stats.getAverageLength()+sd));
-        sdm.getData().add(new XYChart.Data(0+"", stats.getAverageLength()-sd));
+        average.getData().add(new XYChart.Data(0 + "", stats.getAverageLength()));
+        sdp.getData().add(new XYChart.Data(0 + "", stats.getAverageLength() + sd));
+        sdm.getData().add(new XYChart.Data(0 + "", stats.getAverageLength() - sd));
 
-        for(Integer I: shoots){
+        for (Integer I : shoots) {
 
             i++;
-            series.getData().add(new XYChart.Data(i+"", I.intValue()));
-            average.getData().add(new XYChart.Data(i+"", stats.getAverageLength()));
+            series.getData().add(new XYChart.Data(i + "", I.intValue()));
+            average.getData().add(new XYChart.Data(i + "", stats.getAverageLength()));
 
-            sdp.getData().add(new XYChart.Data(i+"", stats.getAverageLength()+sd));
-            sdm.getData().add(new XYChart.Data(i+"", stats.getAverageLength()-sd));
+            sdp.getData().add(new XYChart.Data(i + "", stats.getAverageLength() + sd));
+            sdm.getData().add(new XYChart.Data(i + "", stats.getAverageLength() - sd));
         }
 
         i++;
-        average.getData().add(new XYChart.Data(i+"", stats.getAverageLength()));
-        sdp.getData().add(new XYChart.Data(i+"", stats.getAverageLength()+sd));
-        sdm.getData().add(new XYChart.Data(i+"", stats.getAverageLength()-sd));
+        average.getData().add(new XYChart.Data(i + "", stats.getAverageLength()));
+        sdp.getData().add(new XYChart.Data(i + "", stats.getAverageLength() + sd));
+        sdm.getData().add(new XYChart.Data(i + "", stats.getAverageLength() - sd));
 
         lineChart.setCreateSymbols(false);
 
@@ -211,21 +219,21 @@ public class StatsDisplay {
 
         lineChart.setLegendVisible(false);
 
-        lineChart.setTranslateX(scene.getWidth()*1/10);
-        lineChart.setTranslateY(scene.getHeight()/2);
-        lineChart.setMaxWidth(scene.getWidth()*0.4);
-        lineChart.setMaxHeight(scene.getHeight()*0.4);
+        lineChart.setTranslateX(scene.getWidth() * 1 / 10);
+        lineChart.setTranslateY(scene.getHeight() / 2);
+        lineChart.setMaxWidth(scene.getWidth() * 0.4);
+        lineChart.setMaxHeight(scene.getHeight() * 0.4);
 
         return lineChart;
     }
 
-    private static Rectangle BuildHeatChart(Stats stats, Scene scene){
+    private static Rectangle BuildHeatChart(Stats stats, Scene scene) {
 
         HeatMapUtils.buildHeatMap(stats.getHeatMap());
 
         Rectangle heatMap = new Rectangle();
 
-        heatMap.setFill(new ImagePattern(new Image("file:" + HeatMapUtils.getHeatMapPath()),0,0,1,1, true));
+        heatMap.setFill(new ImagePattern(new Image("file:" + HeatMapUtils.getHeatMapPath()), 0, 0, 1, 1, true));
 
         EventHandler<Event> openHeatMapEvent = openHeatMap(heatMap, scene);
 
@@ -234,7 +242,7 @@ public class StatsDisplay {
         return heatMap;
     }
 
-    private static EventHandler<Event> closeLineChart(LineChart<String,Number> lineChart, Scene scene){
+    private static EventHandler<Event> closeLineChart(LineChart<String, Number> lineChart, Scene scene) {
 
         return new EventHandler<Event>() {
 
@@ -243,15 +251,15 @@ public class StatsDisplay {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    lineChart.setTranslateX(scene.getWidth()*1/10);
-                    lineChart.setTranslateY(scene.getHeight()/2);
-                    lineChart.setMinWidth(scene.getWidth()*0.4);
-                    lineChart.setMinHeight(scene.getHeight()*0.4);
+                    lineChart.setTranslateX(scene.getWidth() * 1 / 10);
+                    lineChart.setTranslateY(scene.getHeight() / 2);
+                    lineChart.setMinWidth(scene.getWidth() * 0.4);
+                    lineChart.setMinHeight(scene.getHeight() * 0.4);
 
-                  /*  lineChart.setTranslateX(scene.getWidth()*1/9);
-                    lineChart.setTranslateY(scene.getHeight()/2+15);
-                    lineChart.setMinWidth(scene.getWidth()*0.35);
-                    lineChart.setMinHeight(scene.getHeight()*0.35);*/
+                    /*
+                     * lineChart.setTranslateX(scene.getWidth()*1/9); lineChart.setTranslateY(scene.getHeight()/2+15);
+                     * lineChart.setMinWidth(scene.getWidth()*0.35); lineChart.setMinHeight(scene.getHeight()*0.35);
+                     */
 
                     lineChart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
@@ -263,7 +271,7 @@ public class StatsDisplay {
         };
     }
 
-    private static EventHandler<Event> openLineChart(LineChart<String,Number> lineChart, Scene scene){
+    private static EventHandler<Event> openLineChart(LineChart<String, Number> lineChart, Scene scene) {
 
         return new EventHandler<Event>() {
 
@@ -272,10 +280,10 @@ public class StatsDisplay {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    lineChart.setTranslateX(scene.getWidth()*0.05);
-                    lineChart.setTranslateY(scene.getHeight()*0.05);
-                    lineChart.setMinWidth(scene.getWidth()*0.9);
-                    lineChart.setMinHeight(scene.getHeight()*0.9);
+                    lineChart.setTranslateX(scene.getWidth() * 0.05);
+                    lineChart.setTranslateY(scene.getHeight() * 0.05);
+                    lineChart.setMinWidth(scene.getWidth() * 0.9);
+                    lineChart.setMinHeight(scene.getHeight() * 0.9);
 
                     lineChart.toFront();
 
@@ -288,31 +296,7 @@ public class StatsDisplay {
         };
     }
 
-    private static EventHandler<Event> closeHeatMap(Rectangle heatMap, Scene scene){
-
-        return new EventHandler<Event>() {
-
-        @Override
-        public void handle(Event e) {
-
-            if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
-                heatMap.setX(scene.getWidth()*5/9);
-                heatMap.setY(scene.getHeight()/2+15);
-                heatMap.setWidth(scene.getWidth()*0.35);
-                heatMap.setHeight(scene.getHeight()*0.35);
-
-                heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
-
-                heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMap(heatMap, scene));
-
-            }
-        }
-
-        };
-    }
-
-    private static EventHandler<Event> openHeatMap(Rectangle heatMap, Scene scene){
+    private static EventHandler<Event> closeHeatMap(Rectangle heatMap, Scene scene) {
 
         return new EventHandler<Event>() {
 
@@ -321,10 +305,34 @@ public class StatsDisplay {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    heatMap.setX(scene.getWidth()*0.05);
-                    heatMap.setY(scene.getHeight()*0.05);
-                    heatMap.setWidth(scene.getWidth()*0.9);
-                    heatMap.setHeight(scene.getHeight()*0.9);
+                    heatMap.setX(scene.getWidth() * 5 / 9);
+                    heatMap.setY(scene.getHeight() / 2 + 15);
+                    heatMap.setWidth(scene.getWidth() * 0.35);
+                    heatMap.setHeight(scene.getHeight() * 0.35);
+
+                    heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+
+                    heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMap(heatMap, scene));
+
+                }
+            }
+
+        };
+    }
+
+    private static EventHandler<Event> openHeatMap(Rectangle heatMap, Scene scene) {
+
+        return new EventHandler<Event>() {
+
+            @Override
+            public void handle(Event e) {
+
+                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+
+                    heatMap.setX(scene.getWidth() * 0.05);
+                    heatMap.setY(scene.getHeight() * 0.05);
+                    heatMap.setWidth(scene.getWidth() * 0.9);
+                    heatMap.setHeight(scene.getHeight() * 0.9);
 
                     heatMap.toFront();
 
@@ -355,23 +363,23 @@ public class StatsDisplay {
 
         StringBuilder builder = new StringBuilder(1000);
 
-        if(days>0) {
+        if (days > 0) {
             builder.append(days);
             builder.append(" d ");
         }
-        if(hours>0) {
+        if (hours > 0) {
             builder.append(hours);
             builder.append(" h ");
         }
-        if(minutes>0) {
+        if (minutes > 0) {
             builder.append(minutes);
             builder.append(" m ");
         }
-        if(seconds>0) {
+        if (seconds > 0) {
             builder.append(seconds);
             builder.append(" s ");
         }
-        if(totalTime>0) {
+        if (totalTime > 0) {
             builder.append(totalTime);
             builder.append(" ms");
         }

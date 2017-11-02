@@ -19,7 +19,7 @@ class FuzzyGazeListener implements IGazeListener {
     private static long outTime = 0;
     private static final int maxOutLength = 300;
 
-    public FuzzyGazeListener(SecondScreen secondScreen){
+    public FuzzyGazeListener(SecondScreen secondScreen) {
 
         this.secondScreen = secondScreen;
     }
@@ -31,63 +31,58 @@ class FuzzyGazeListener implements IGazeListener {
     }
 
     @Override
-    public void onGazeUpdate(GazeData gazeData){
-        //Point2D point = GazeUtils.getEyesCenterNormalized(gazeData);
+    public void onGazeUpdate(GazeData gazeData) {
+        // Point2D point = GazeUtils.getEyesCenterNormalized(gazeData);
 
-        //log.info(point);
-        //log.info("gazedata = " + gazeData.rawCoordinates);
+        // log.info(point);
+        // log.info("gazedata = " + gazeData.rawCoordinates);
 
-        if(secondScreen != null){
+        if (secondScreen != null) {
 
             secondScreen.light(gazeData.rawCoordinates);
         }
-        for(GazeInfos gi : shapesEventFilter){
+        for (GazeInfos gi : shapesEventFilter) {
 
-           // log.info(gi.getShape().contains(gazeData.rawCoordinates.x,gazeData.rawCoordinates.y));
-           // log.info(gi.getShape().sceneToLocal(gazeData.rawCoordinates.x,gazeData.rawCoordinates.y));
+            // log.info(gi.getShape().contains(gazeData.rawCoordinates.x,gazeData.rawCoordinates.y));
+            // log.info(gi.getShape().sceneToLocal(gazeData.rawCoordinates.x,gazeData.rawCoordinates.y));
 
-            javafx.geometry.Point2D p = gi.getNode().sceneToLocal(gazeData.rawCoordinates.x,gazeData.rawCoordinates.y);
+            javafx.geometry.Point2D p = gi.getNode().sceneToLocal(gazeData.rawCoordinates.x, gazeData.rawCoordinates.y);
 
-
-            //if(gi.getShape().contains(gazeData.rawCoordinates.x,gazeData.rawCoordinates.y)){
-            if(gi.getNode().contains(p)){
+            // if(gi.getShape().contains(gazeData.rawCoordinates.x,gazeData.rawCoordinates.y)){
+            if (gi.getNode().contains(p)) {
 
                 outTime = 0;
 
-                if(gi.isOn()){
+                if (gi.isOn()) {
 
                     gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime()));
-                    //log.info(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
-                }
-                else {
+                    // log.info(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
+                } else {
 
                     gi.setOn(true);
                     gi.setTime((new Date()).getTime());
                     gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED));
-                    //log.info(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
+                    // log.info(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
                 }
-            }
-            else{//gaze is not on the shape
+            } else {// gaze is not on the shape
 
                 long now = (new Date()).getTime();
 
-                if(gi.isOn()){//gaze was on the shape previously
+                if (gi.isOn()) {// gaze was on the shape previously
 
-                    if(outTime == 0){
+                    if (outTime == 0) {
 
                         outTime = now;
-                    }
-                    else if(now - outTime < maxOutLength){//out but not enough
+                    } else if (now - outTime < maxOutLength) {// out but not enough
 
                     } else { // out for a sufficient length
                         gi.setOn(false);
                         gi.setTime(-1);
                         gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED));
-                        //log.info(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
+                        // log.info(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
                     }
-                }
-                else{//gaze was not on the shape previously
-                    //nothing to do
+                } else {// gaze was not on the shape previously
+                        // nothing to do
 
                 }
 

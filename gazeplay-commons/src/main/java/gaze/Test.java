@@ -12,7 +12,6 @@ import javafx.stage.Stage;
  */
 public class Test extends Application {
 
-
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Test");
@@ -23,8 +22,7 @@ public class Test extends Application {
 
         Scene scene = new Scene(root, 1200, 700, Color.BLACK);
 
-
-        Circle circle = new Circle(200,300, 100, Color.YELLOW);
+        Circle circle = new Circle(200, 300, 100, Color.YELLOW);
 
         root.getChildren().add(circle);
 

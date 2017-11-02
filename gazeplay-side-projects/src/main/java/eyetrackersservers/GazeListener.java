@@ -10,11 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class GazeListener implements IGazeListener {
 
-    public GazeListener(){
+    public GazeListener() {
     }
 
     @Override
-    public void onGazeUpdate(GazeData gazeData){
+    public void onGazeUpdate(GazeData gazeData) {
 
         log.info("gazedata = " + gazeData.rawCoordinates);
     }

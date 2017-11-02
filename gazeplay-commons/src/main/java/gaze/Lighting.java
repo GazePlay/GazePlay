@@ -29,13 +29,12 @@ public class Lighting extends Parent {
 
     public Lighting(int x, int y, int pixelWidth, int lightingLength, Color lightingColor) {
 
-
         X = x;
         Y = y;
         this.lightingLength = lightingLength * 1000;
         this.lightingColor = lightingColor;
-        pixel = new Rectangle(x,y,pixelWidth,pixelWidth);
-        //pixel.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+        pixel = new Rectangle(x, y, pixelWidth, pixelWidth);
+        // pixel.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
         pixel.setFill(Color.BLACK);
         this.getChildren().add(pixel);
 
@@ -43,7 +42,8 @@ public class Lighting extends Parent {
             @Override
             public void handle(Event e) {
 
-                if((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)) {
+                if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED
+                        || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)) {
 
                     enter();
                 }
@@ -56,18 +56,18 @@ public class Lighting extends Parent {
 
     }
 
-    public void enter(){
+    public void enter() {
 
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
 
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pixel.fillProperty(), lightingColor)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(lightingLength),new KeyValue(pixel.fillProperty(), Color.BLACK)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(pixel.fillProperty(), lightingColor)));
+        timeline2.getKeyFrames()
+                .add(new KeyFrame(new Duration(lightingLength), new KeyValue(pixel.fillProperty(), Color.BLACK)));
 
         SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
 
         sequence.play();
     }
-
 
 }

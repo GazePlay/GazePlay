@@ -11,7 +11,6 @@ import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Synthesizer;
 
-
 public class Instru {
 
     public int volume = 100;
@@ -22,7 +21,7 @@ public class Instru {
     public Instru() {
 
         try {
-            //On récupère le synthétiseur, on l'ouvre et on obtient un canal
+            // On récupère le synthétiseur, on l'ouvre et on obtient un canal
             synthetiseur = MidiSystem.getSynthesizer();
             synthetiseur.open();
         } catch (MidiUnavailableException ex) {
@@ -30,21 +29,21 @@ public class Instru {
         }
         canal = synthetiseur.getChannels()[0];
 
-        //On initialise l'instrument 0 (le piano) pour le canal
+        // On initialise l'instrument 0 (le piano) pour le canal
         canal.programChange(0);
     }
 
-    //Joue la note dont le numéro est en paramètre
+    // Joue la note dont le numéro est en paramètre
     public void note_on(int note) {
         canal.noteOn(note, volume);
     }
 
-    //Arrête de jouer la note dont le numéro est en paramètre
+    // Arrête de jouer la note dont le numéro est en paramètre
     public void note_off(int note) {
         canal.noteOff(note);
     }
 
-    //Set le type d'instrument dont le numéro MIDI est précisé en paramètre
+    // Set le type d'instrument dont le numéro MIDI est précisé en paramètre
     public void set_instrument(int instru) {
         canal.programChange(instru);
     }

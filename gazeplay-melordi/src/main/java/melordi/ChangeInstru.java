@@ -14,19 +14,17 @@ import javafx.scene.layout.GridPane;
  */
 public class ChangeInstru extends Parent {
 
-
     private Instru instru;
     private RadioButton rb_piano;
     private RadioButton rb_guitare;
     private RadioButton rb_orgue;
 
-    public ChangeInstru(Instru instru){
-        
+    public ChangeInstru(Instru instru) {
 
         this.instru = instru;
         GridPane gridpane = new GridPane();
 
-        //création des images des 3 instruments
+        // création des images des 3 instruments
         ImageView piano = new ImageView(new Image(ChangeInstru.class.getResourceAsStream("images/piano.png")));
         piano.setFitHeight(50);
         piano.setPreserveRatio(true);
@@ -37,13 +35,13 @@ public class ChangeInstru extends Parent {
         orgue.setFitHeight(50);
         orgue.setPreserveRatio(true);
 
-        //on ajoute nos images à notre layout
+        // on ajoute nos images à notre layout
         gridpane.add(piano, 1, 0);
         gridpane.add(guitare, 1, 1);
         gridpane.add(orgue, 1, 2);
         gridpane.setVgap(15);
 
-        //création des boutons radio
+        // création des boutons radio
         ToggleGroup groupe = new ToggleGroup();
         rb_piano = new RadioButton();
         rb_guitare = new RadioButton();
@@ -54,21 +52,21 @@ public class ChangeInstru extends Parent {
         rb_piano.setFocusTraversable(false);
         rb_guitare.setFocusTraversable(false);
         rb_orgue.setFocusTraversable(false);
-        rb_piano.setSelected(true);//le piano est l'instrument sélectionné par défaut
+        rb_piano.setSelected(true);// le piano est l'instrument sélectionné par défaut
 
-        //ajout d'un ChangeListener au groupe de boutons radio
-        groupe.selectedToggleProperty().addListener(new ChangeListener(){
+        // ajout d'un ChangeListener au groupe de boutons radio
+        groupe.selectedToggleProperty().addListener(new ChangeListener() {
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                if(newValue.equals(rb_piano))
-                    instru.set_instrument(0);//numéro MIDI du piano = 0
-                else if(newValue.equals(rb_guitare))
-                    instru.set_instrument(26);//numéro MIDI de la guitare = 26
+                if (newValue.equals(rb_piano))
+                    instru.set_instrument(0);// numéro MIDI du piano = 0
+                else if (newValue.equals(rb_guitare))
+                    instru.set_instrument(26);// numéro MIDI de la guitare = 26
                 else
-                    instru.set_instrument(16);//numéro MIDI de l'orgue = 16
+                    instru.set_instrument(16);// numéro MIDI de l'orgue = 16
             }
         });
 
-        //on ajoute les boutons radio au layout
+        // on ajoute les boutons radio au layout
         gridpane.add(rb_piano, 0, 0);
         gridpane.add(rb_guitare, 0, 1);
         gridpane.add(rb_orgue, 0, 2);

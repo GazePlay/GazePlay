@@ -11,22 +11,17 @@ import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 
-
 public class GazeEvent extends InputEvent {
 
     static IGazeListener gazeListener;
 
-    public static final EventType<GazeEvent> ANY =
-            new EventType<GazeEvent>(Event.ANY, "GAZE");
+    public static final EventType<GazeEvent> ANY = new EventType<GazeEvent>(Event.ANY, "GAZE");
 
-    public static final EventType<GazeEvent> GAZE_ENTERED =
-            new EventType<>(GazeEvent.ANY, "GAZE_ENTERED");
+    public static final EventType<GazeEvent> GAZE_ENTERED = new EventType<>(GazeEvent.ANY, "GAZE_ENTERED");
 
-    public static final EventType<GazeEvent> GAZE_EXITED =
-            new EventType<>(GazeEvent.ANY, "GAZE_EXITED");
+    public static final EventType<GazeEvent> GAZE_EXITED = new EventType<>(GazeEvent.ANY, "GAZE_EXITED");
 
-    public static final EventType<GazeEvent> GAZE_MOVED =
-            new EventType<>(GazeEvent.ANY, "GAZE_MOVED");
+    public static final EventType<GazeEvent> GAZE_MOVED = new EventType<>(GazeEvent.ANY, "GAZE_MOVED");
 
     private long time;
 
@@ -35,8 +30,8 @@ public class GazeEvent extends InputEvent {
     private double Y;
 
     /**
-     * Creates a new {@code LightningEvent} with an event type of {@code PLASMA_STRIKE}.
-     * The source and Target of the event is set to {@code NULL_SOURCE_TARGET}.
+     * Creates a new {@code LightningEvent} with an event type of {@code PLASMA_STRIKE}. The source and Target of the
+     * event is set to {@code NULL_SOURCE_TARGET}.
      */
     public GazeEvent() {
         super(GAZE_ENTERED);
@@ -64,13 +59,14 @@ public class GazeEvent extends InputEvent {
     }
 
     /**
-     * Construct a new {@code LightningEvent} with the specified event source and Target.
-     * If the source or Target is set to {@code null}, it is replaced by the
-     * {@code NULL_SOURCE_TARGET} value. All LightningEvents have their type set to
-     * {@code PLASMA_STRIKE}.
+     * Construct a new {@code LightningEvent} with the specified event source and Target. If the source or Target is set
+     * to {@code null}, it is replaced by the {@code NULL_SOURCE_TARGET} value. All LightningEvents have their type set
+     * to {@code PLASMA_STRIKE}.
      *
-     * @param source the event source which sent the event
-     * @param target the event Target to associate with the event
+     * @param source
+     *            the event source which sent the event
+     * @param target
+     *            the event Target to associate with the event
      */
     public GazeEvent(Object source, EventTarget target) {
         super(source, target, GAZE_ENTERED);
@@ -86,12 +82,12 @@ public class GazeEvent extends InputEvent {
         return (EventType<? extends GazeEvent>) super.getEventType();
     }
 
-    public double getX(){
+    public double getX() {
 
         return X;
     }
 
-    public double getY(){
+    public double getY() {
 
         return Y;
     }

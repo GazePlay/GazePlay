@@ -26,8 +26,6 @@ public class Hand extends Parent {
 
     private Scene scene;
 
-
-
     private double handTranslateX = 0;
     private double handTranslateY = 0;
     private double pieTranslateX = 0;
@@ -37,10 +35,10 @@ public class Hand extends Parent {
 
         this.scene = scene;
 
-        handTranslateX = (scene.getWidth()-maxSize)/2;
-        handTranslateY = scene.getHeight()-maxSize;
-        pieTranslateX = (scene.getWidth()-size)/2;
-        pieTranslateY = scene.getHeight()-maxSize;
+        handTranslateX = (scene.getWidth() - maxSize) / 2;
+        handTranslateY = scene.getHeight() - maxSize;
+        pieTranslateX = (scene.getWidth() - size) / 2;
+        pieTranslateY = scene.getHeight() - maxSize;
 
         hand = new Rectangle(0, 0, maxSize, maxSize);
 
@@ -51,16 +49,15 @@ public class Hand extends Parent {
 
         this.getChildren().add(hand);
 
-        //log.info(ClassLoader.getSystemResourceAsStream("data/creampie/images/hand.png"));
+        // log.info(ClassLoader.getSystemResourceAsStream("data/creampie/images/hand.png"));
 
-        //background = new ImageView(new Image(ClassLoader.getSystemResourceAsStream("data/creampie/images/hand.png")));
-       // background.setFitHeight(maxSize);
-       // background.setPreserveRatio(true);
+        // background = new ImageView(new
+        // Image(ClassLoader.getSystemResourceAsStream("data/creampie/images/hand.png")));
+        // background.setFitHeight(maxSize);
+        // background.setPreserveRatio(true);
 
-
-
-        //pie = new ImageView(new Image("file:data/creampie/images/gateau.png"));
-        //pie = new ImageView(new Image(ClassLoader.getSystemResourceAsStream("data/creampie/images/gateau.png")));
+        // pie = new ImageView(new Image("file:data/creampie/images/gateau.png"));
+        // pie = new ImageView(new Image(ClassLoader.getSystemResourceAsStream("data/creampie/images/gateau.png")));
 
         pie = new Rectangle(0, 0, size, size);
 
@@ -72,9 +69,8 @@ public class Hand extends Parent {
         this.getChildren().add(pie);
         pie.toBack();
 
-        //pie.setFitHeight(size);
-        //pie.setPreserveRatio(true);
-
+        // pie.setFitHeight(size);
+        // pie.setPreserveRatio(true);
 
         this.addEventHandler(TouchEvent.TOUCH, (TouchEvent te) -> touch(te));
     }
@@ -84,22 +80,29 @@ public class Hand extends Parent {
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
 
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(200),new KeyValue(hand.heightProperty(),size)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(200),new KeyValue(hand.widthProperty(), size)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(pie.translateXProperty(),te.x-maxSize)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(pie.translateYProperty(),te.y-maxSize)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(pie.heightProperty(),maxSize*2)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(pie.widthProperty(), maxSize*2)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),new KeyValue(pie.rotateProperty(), pie.getRotate()+360)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(200), new KeyValue(hand.heightProperty(), size)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(200), new KeyValue(hand.widthProperty(), size)));
+        timeline.getKeyFrames()
+                .add(new KeyFrame(new Duration(2000), new KeyValue(pie.translateXProperty(), te.x - maxSize)));
+        timeline.getKeyFrames()
+                .add(new KeyFrame(new Duration(2000), new KeyValue(pie.translateYProperty(), te.y - maxSize)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(pie.heightProperty(), maxSize * 2)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(pie.widthProperty(), maxSize * 2)));
+        timeline.getKeyFrames()
+                .add(new KeyFrame(new Duration(2000), new KeyValue(pie.rotateProperty(), pie.getRotate() + 360)));
 
-       timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(hand.heightProperty(),maxSize)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(hand.widthProperty(), maxSize)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pie.heightProperty(),size)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pie.widthProperty(), size)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(hand.translateXProperty(),handTranslateX)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(hand.translateYProperty(),handTranslateY)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pie.translateXProperty(),pieTranslateX)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),new KeyValue(pie.translateYProperty(),pieTranslateY)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(hand.heightProperty(), maxSize)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(hand.widthProperty(), maxSize)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(pie.heightProperty(), size)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(pie.widthProperty(), size)));
+        timeline2.getKeyFrames()
+                .add(new KeyFrame(new Duration(1), new KeyValue(hand.translateXProperty(), handTranslateX)));
+        timeline2.getKeyFrames()
+                .add(new KeyFrame(new Duration(1), new KeyValue(hand.translateYProperty(), handTranslateY)));
+        timeline2.getKeyFrames()
+                .add(new KeyFrame(new Duration(1), new KeyValue(pie.translateXProperty(), pieTranslateX)));
+        timeline2.getKeyFrames()
+                .add(new KeyFrame(new Duration(1), new KeyValue(pie.translateYProperty(), pieTranslateY)));
 
         SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
 

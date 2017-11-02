@@ -21,21 +21,20 @@ public class WindMill extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-
         primaryStage.setTitle("WindMill");
 
         primaryStage.setFullScreen(true);
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(), Color.BLACK);
-
+        Scene scene = new Scene(root, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
+                Color.BLACK);
 
         Choices pictos = new Choices(scene);
 
         root.getChildren().add(pictos);
 
-        primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
+        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
         primaryStage.setScene(scene);
 

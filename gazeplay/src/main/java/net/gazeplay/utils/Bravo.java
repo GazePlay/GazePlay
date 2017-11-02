@@ -14,7 +14,7 @@ import utils.games.Utils;
 /**
  * Created by schwab on 30/10/2016.
  */
-public class Bravo extends Rectangle{
+public class Bravo extends Rectangle {
 
     private static int duration = 650;
     private static int apparitionDuration = 2000;
@@ -27,25 +27,25 @@ public class Bravo extends Rectangle{
         setFill(new ImagePattern(new Image("data/common/images/bravo.png")));
     }
 
-    public static Bravo getBravo(){
+    public static Bravo getBravo() {
 
-        if(bravo == null)
+        if (bravo == null)
             bravo = new Bravo();
         return bravo;
     }
 
-    public SequentialTransition win(){
+    public SequentialTransition win() {
 
         Screen screen = Screen.getScreens().get(0);
 
-        int XBig = screen.getWidth()/4;
-        int YBig = screen.getHeight()/8;
+        int XBig = screen.getWidth() / 4;
+        int YBig = screen.getHeight() / 8;
 
-        int XSmall = screen.getWidth()/3;
-        int YSmall = screen.getWidth()/6;
+        int XSmall = screen.getWidth() / 3;
+        int YSmall = screen.getWidth() / 6;
 
-        int minWidth = screen.getWidth()/3;
-        int maxWidth = screen.getWidth()/2;
+        int minWidth = screen.getWidth() / 3;
+        int maxWidth = screen.getWidth() / 2;
 
         setX(XSmall);
         setY(YSmall);
@@ -58,7 +58,7 @@ public class Bravo extends Rectangle{
 
         this.setOpacity(0);
 
-        //this.toFront(); // bug when it is uncommented (with bloc at least).
+        // this.toFront(); // bug when it is uncommented (with bloc at least).
 
         Timeline timeline = new Timeline();
 
@@ -91,9 +91,8 @@ public class Bravo extends Rectangle{
         sequence.play();
 
         Utils.playSound("data/common/sounds/applause.mp3");
-        
+
         return sequence;
     }
-
 
 }

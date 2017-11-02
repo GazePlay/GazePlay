@@ -16,7 +16,7 @@ public class Tobii {
 
     private static Point2D parseTobiiOutput(String tobiiOutput) {
 
-        //     log.info(tobiiOutput);
+        // log.info(tobiiOutput);
         float x = 0;
         float y = 0;
         try {
@@ -24,7 +24,7 @@ public class Tobii {
             y = Float.valueOf(tobiiOutput.substring(22, 29)) * (float) screenHeight;
         } catch (Exception e) {
 
-            //       log.info(e);
+            // log.info(e);
             return null;
         }
 
@@ -63,13 +63,13 @@ public class Tobii {
                             while (true) {
 
                                 try {
-                                    Thread.sleep(10);//sleep is mandatory to avoid too much calls to gazePosition()
+                                    Thread.sleep(10);// sleep is mandatory to avoid too much calls to gazePosition()
                                     point = parseTobiiOutput(gazePosition());
                                     // log.info("Tobii : " + Utils.now() + " " + point);
                                     if (point != null)
                                         listener.onGazeUpdate(point);
                                 } catch (Exception e) {
-                                    //  log.error("Exception", e);
+                                    // log.error("Exception", e);
                                 }
                             }
                         }
@@ -77,7 +77,7 @@ public class Tobii {
                 }
             };
             calculateService.start();
-        } else { //init was not done (no tobii available)
+        } else { // init was not done (no tobii available)
             log.info("Tobii detected : NO");
             return;
         }
@@ -92,7 +92,7 @@ public class Tobii {
             if (System.getProperty("os.name").indexOf("indow") > 0) {
                 System.load(Utils.getDllFolder() + "tobii_stream_engine.dll");
                 System.load(Utils.getDllFolder() + "GazePlayTobiiLibrary2.dll");
-                //System.loadLibrary("tobii_stream_engine");
+                // System.loadLibrary("tobii_stream_engine");
                 // System.loadLibrary("GazePlayTobiiLibrary2");
             }
         } catch (java.lang.UnsatisfiedLinkError e) {
@@ -103,7 +103,7 @@ public class Tobii {
             log.info("should be in");
             log.info(Utils.getDllFolder());
             log.info("******************************************************");
-            //System.exit(0);
+            // System.exit(0);
         }
     }
 
@@ -115,11 +115,13 @@ public class Tobii {
     public static void main(String[] argv) {
 
         log.info("" + parseTobiiOutput("Scene point: 10809754557 0.433731, 0.719170"));
-     /*   log.info(parseTobiiOutput("Scene point: 10809814527 0.372081, 0.670327"));
-        log.info(parseTobiiOutput("Scene point: 10809828278 0.373068, 0.672786"));
-        log.info(parseTobiiOutput("Scene point: 10809874253 0.369580, 0.700685"));
-        log.info(parseTobiiOutput("Scene point: 10809889523 0.371530, 0.707418"));
-        log.info(parseTobiiOutput("Scene point: 10817493839 INVALID"));*/
+        /*
+         * log.info(parseTobiiOutput("Scene point: 10809814527 0.372081, 0.670327"));
+         * log.info(parseTobiiOutput("Scene point: 10809828278 0.373068, 0.672786"));
+         * log.info(parseTobiiOutput("Scene point: 10809874253 0.369580, 0.700685"));
+         * log.info(parseTobiiOutput("Scene point: 10809889523 0.371530, 0.707418"));
+         * log.info(parseTobiiOutput("Scene point: 10817493839 INVALID"));
+         */
 
         init();
 
@@ -128,8 +130,6 @@ public class Tobii {
             log.info(gazePosition());
         }
 
-
     }
-
 
 }

@@ -12,7 +12,7 @@ import net.gazeplay.utils.stats.HiddenItemsGamesStats;
 /**
  * Created by schwab on 17/09/2016.
  */
-public class MagicCards  extends Application {
+public class MagicCards extends Application {
 
     @Override
     public void start(Stage primaryStage) {
@@ -23,13 +23,14 @@ public class MagicCards  extends Application {
 
         Group root = new Group();
 
-        Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(), com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
+        Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(),
+                com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
         HiddenItemsGamesStats stats = new HiddenItemsGamesStats(scene);
 
-        Card.addCards(root, scene, null,2, 2, stats);
+        Card.addCards(root, scene, null, 2, 2, stats);
 
-        primaryStage.setOnCloseRequest((WindowEvent we)-> System.exit(0));
+        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
         primaryStage.setScene(scene);
 
