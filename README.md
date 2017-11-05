@@ -86,3 +86,13 @@ Nous y publions les dernieres informations comme les mises à jour par exemple.
 ## Compteur de téléchargement
 
 [Compteur de téléchargement](http://www.somsubhra.com/github-release-stats/?username=schwabdidier&repository=GazePlay)
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-109236598-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-109236598-1');
+</script>
