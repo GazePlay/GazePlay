@@ -4,9 +4,9 @@
 
 ## Download
 
-[Stable 1.0.4](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.4/GazePlay-1.0.4.jar)
+[Stable 1.0.5](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.5/gazeplay-1.0.5.jar)
 
-[Evolution Version](dev-en.md)
+<!--[Evolution Version](dev-en.md)-->
 
 Software comes with default images but it is easy to add personnal images expecially the children favorite.
 
