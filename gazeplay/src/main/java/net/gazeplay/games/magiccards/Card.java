@@ -2,6 +2,7 @@ package net.gazeplay.games.magiccards;
 
 import gaze.GazeEvent;
 import gaze.GazeUtils;
+import gaze.configuration.Configuration;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
@@ -35,7 +36,7 @@ public class Card extends Parent {
     protected static final float cardRatio = 0.75f;
     protected static final int minHeight = 30;
     protected static final float zoom_factor = 1.1f;
-    protected static final double min_time = 500;// Math.sqrt(2)*1000;//0.5*1000;
+    protected static double min_time;
     private Rectangle card;
     private boolean winner;
     private Image image;
@@ -61,6 +62,7 @@ public class Card extends Parent {
     public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image,
             boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGamesStats stats) {
 
+        min_time = new Configuration().fixationlength;
         this.winner = winner;// true if it is the good card
         this.initWidth = width;
         this.initHeight = height;
@@ -95,13 +97,6 @@ public class Card extends Parent {
 
     public static void main(String[] args) {
         Application.launch(MagicCards.class, args);
-    }
-
-    private void enter() {
-
-        Timeline timeline = new Timeline();
-
-        card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
     }
 
     private EventHandler<Event> buildEvent() {

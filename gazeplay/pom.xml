@@ -6,12 +6,12 @@
 	<groupId>com.github.schwabdidier</groupId>
 	<artifactId>gazeplay</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.6-SNAPSHOT</version>
 
 	<parent>
 		<groupId>com.github.schwabdidier</groupId>
 		<artifactId>gazeplay-project</artifactId>
-		<version>1.0.5-SNAPSHOT</version>
+		<version>1.0.6-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>com.github.schwabdidier</groupId>
 			<artifactId>gazeplay-commons</artifactId>
-			<version>1.0.5-SNAPSHOT</version>
+			<version>1.0.6-SNAPSHOT</version>
 		</dependency>
 
 

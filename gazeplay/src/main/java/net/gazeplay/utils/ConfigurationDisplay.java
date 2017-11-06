@@ -17,13 +17,16 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.utils.multilinguism.Languages;
 import net.gazeplay.utils.multilinguism.Multilinguism;
 import utils.games.Utils;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by schwab on 28/10/2017.
@@ -127,25 +130,56 @@ public class ConfigurationDisplay extends Rectangle {
         root.getChildren().addAll(Configuration, language, eyeTracker, fileDir, styleFile, fixLength);
     }
 
-    private static void buildFixLengthChooserMenu(Scene scene, Configuration c, Group root, int i, int i1) {
+    private static void buildFixLengthChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
+
+        ChoiceBox FixLengthBox = new ChoiceBox();
+
+        int i = 300;
+
+        FixLengthBox.getItems().add(new Double((double) C.fixationlength) / 1000);
+        while (i <= 1000) {
+
+            FixLengthBox.getItems().add(new Double(((double) i) / 1000));
+            i = i + 100;
+        }
+
+        FixLengthBox.getSelectionModel().select(0);
+        FixLengthBox.setTranslateX(posX);
+        FixLengthBox.setTranslateY(posY);
+        FixLengthBox.setPrefWidth(prefWidth);
+        FixLengthBox.setPrefHeight(prefHeight);
+
+        root.getChildren().add(FixLengthBox);
+
+        FixLengthBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
+                C.fixationlength = (int) (1000
+                        * (double) FixLengthBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
+                // TLengths[newValue.intValue()].toString();
+                log.info(C.toString());
+                C.saveConfig();
+            }
+        });
     }
 
     private static void buildStyleChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
 
-        Button buttonLoad = new Button(C.filedir);
+        Button buttonLoad = new Button(C.cssfile);
 
         buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                DirectoryChooser directoryChooser = new DirectoryChooser();
-                File file = directoryChooser.showDialog(scene.getWindow());
-                buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
+                FileChooser fileChooser = new FileChooser();
+                File file = fileChooser.showOpenDialog(scene.getWindow());
+                buttonLoad.setText(file.toString());
                 File F = new File(file.toString());
-                C.filedir = file.toString() + Utils.FILESEPARATOR;
+                C.cssfile = file.toString();
 
                 if (Utils.isWindows()) {
 
-                    C.filedir = Utils.convertWindowsPath(C.filedir);
+                    C.cssfile = Utils.convertWindowsPath(C.cssfile);
                 }
 
                 log.info(C.toString());

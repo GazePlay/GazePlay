@@ -213,7 +213,7 @@ public class Utils {
      *
      * @return CSS files found in the styles folder
      */
-    public static ObservableList<String> addStylesheets(ObservableList<String> styleSheets) {
+    public static void addStylesheets(ObservableList<String> styleSheets) {
 
         File F = new File(getStylesFolder());
 
@@ -226,8 +226,6 @@ public class Utils {
                     styleSheets.add("file://" + Tfiles[i].toString());
             }
         }
-
-        return styleSheets;
     }
 
     /**

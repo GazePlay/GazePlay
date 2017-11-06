@@ -23,15 +23,14 @@ public class Configuration {
     private static String FILEDIR = "FILEDIR";
     private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
     private static String FIXATIONLENGTH = "FixationLength";
-    private static String CSSFILE ="CssFile";
-
+    private static String CSSFILE = "CssFile";
 
     public String gazeMode = "true";
     public String eyetracker = "none";
     public String language = "fra";
     public String filedir = Utils.getGazePlayFolder() + "files" + Utils.FILESEPARATOR;
-    private double fixationlength=0.5;
-    private String cssfile="";
+    public int fixationlength = 500;
+    public String cssfile = "";
 
     public Configuration() {
 
@@ -63,7 +62,7 @@ public class Configuration {
             buffer = prop.getProperty(FIXATIONLENGTH);
             if (buffer != null) {
                 try {
-                    fixationlength = Double.valueOf(buffer);
+                    fixationlength = Integer.valueOf(buffer);
                 } catch (NumberFormatException e) {
                     log.info("NumberFormatException " + buffer);
                 }
