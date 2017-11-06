@@ -112,7 +112,51 @@ public class ConfigurationDisplay extends Rectangle {
         fileDir.setId("item");
         buildDirectoryChooserMenu(scene, C, root, 250, 305);
 
-        root.getChildren().addAll(Configuration, language, eyeTracker, fileDir);
+        Text styleFile = new Text(multilinguism.getTrad("LayoutFile", Multilinguism.getLanguage()) + colon);
+        styleFile.setX(100);
+        styleFile.setY(400);
+        styleFile.setId("item");
+        buildStyleChooserMenu(scene, C, root, 250, 405);
+
+        Text fixLength = new Text(multilinguism.getTrad("FixationLength", Multilinguism.getLanguage()) + colon);
+        fixLength.setX(100);
+        fixLength.setY(500);
+        fixLength.setId("item");
+        buildFixLengthChooserMenu(scene, C, root, 250, 505);
+
+        root.getChildren().addAll(Configuration, language, eyeTracker, fileDir, styleFile, fixLength);
+    }
+
+    private static void buildFixLengthChooserMenu(Scene scene, Configuration c, Group root, int i, int i1) {
+    }
+
+    private static void buildStyleChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
+
+        Button buttonLoad = new Button(C.filedir);
+
+        buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                DirectoryChooser directoryChooser = new DirectoryChooser();
+                File file = directoryChooser.showDialog(scene.getWindow());
+                buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
+                File F = new File(file.toString());
+                C.filedir = file.toString() + Utils.FILESEPARATOR;
+
+                if (Utils.isWindows()) {
+
+                    C.filedir = Utils.convertWindowsPath(C.filedir);
+                }
+
+                log.info(C.toString());
+                C.saveConfig();
+            }
+        });
+
+        buttonLoad.setTranslateX(posX);
+        buttonLoad.setTranslateY(posY);
+
+        root.getChildren().add(buttonLoad);
     }
 
     private static void buildDirectoryChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {

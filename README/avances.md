@@ -12,13 +12,13 @@ Dans le répertoire par défaut de GazePlay (voir section ci-dessus), il faut cr
 
 Dans ce fichier, deux propriétés peuvent être activées. Si elles ne sont pas activées ou si la valeur indiquée n'existe pas, une valeur par défaut est utilisée.
 
-1) La langue : language qui peut prendre 3 valeurs 
+1) La langue : LANGUAGE qui peut prendre 3 valeurs 
 
     1) fra pour français
     2) eng pour anglais
     3) deu pour allemand. 
     
-    Par exemple, pour le jeu en anglais, la propriété doit être language = eng.
+    Par exemple, pour le jeu en anglais, la propriété doit être LANGUAGE = eng.
         
     Par défaut, la valeur est fra (français).
     

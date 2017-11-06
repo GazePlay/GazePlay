@@ -1,6 +1,6 @@
 dist: trusty
 sudo: false
-language: java
+LANGUAGE: java
 jdk: openjdk8
 matrix:
   include:
