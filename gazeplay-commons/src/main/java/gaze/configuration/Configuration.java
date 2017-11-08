@@ -62,7 +62,7 @@ public class Configuration {
             buffer = prop.getProperty(FIXATIONLENGTH);
             if (buffer != null) {
                 try {
-                    fixationlength = Integer.valueOf(buffer);
+                    fixationlength = Integer.parseInt(buffer);
                 } catch (NumberFormatException e) {
                     log.info("NumberFormatException " + buffer);
                 }
