@@ -14,6 +14,8 @@ public class HeatMapUtils {
 
     public static void buildHeatMap(double[][] data) {
 
+        log.info(String.format("Heatmap size: %3d X %3d", data[0].length,data.length));
+
         // Step 1: Create our heat map chart using our data.
         HeatChart map = new HeatChart(data);
 

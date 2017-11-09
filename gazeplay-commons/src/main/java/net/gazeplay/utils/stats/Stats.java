@@ -189,8 +189,8 @@ public abstract class Stats {
 
     @Override
     public String toString() {
-        return "Stats{" + "nbShoots=" + getNbGoals() + ", length=" + getLength() + ", average length="
-                + getAverageLength() + ", zero time =" + getTotalLength() + '}' + lengthBetweenGoals;
+        return "Stats{" + "nbShoots = " + getNbGoals() + ", length = " + getLength() + ", average length = "
+                + getAverageLength() + ", zero time = " + getTotalLength() + '}' + lengthBetweenGoals;
     }
 
     public long getLength() {
