@@ -32,10 +32,12 @@ public class GazePlayLauncher {
             throw new RuntimeException("Failed to load the version info", e);
         }
 
+        for(int i = 0; i<5;i++)
+            log.info("");
         log.info("***********************");
         log.info("GazePlay");
         log.info("Version : " + versionInfo);
-        log.info("Operating System " + System.getProperty("os.name"));
+        Utils.logSystemProperties();
         log.info("***********************");
 
         try {

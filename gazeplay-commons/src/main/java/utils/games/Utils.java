@@ -16,9 +16,11 @@ import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 
 /**
  * Created by schwab on 23/12/2016.
@@ -387,5 +389,14 @@ public class Utils {
     public static boolean isWindows() {
 
         return System.getProperty("os.name").indexOf("indow") > 0;
+    }
+
+    public static void logSystemProperties() {
+
+        Enumeration<?> E = System.getProperties().propertyNames();
+        while(E.hasMoreElements()) {
+            String element = (String)E.nextElement();
+            log.info(String.format("%s: %s", element , System.getProperty(element)));
+        }
     }
 }
