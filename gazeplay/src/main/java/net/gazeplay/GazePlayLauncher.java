@@ -32,13 +32,13 @@ public class GazePlayLauncher {
             throw new RuntimeException("Failed to load the version info", e);
         }
 
-        for(int i = 0; i<5;i++)
-            log.info("");
-        log.info("***********************");
+        for (int i = 0; i < 5; i++)
+            log.info("***********************");
         log.info("GazePlay");
         log.info("Version : " + versionInfo);
         Utils.logSystemProperties();
-        log.info("***********************");
+        for (int i = 0; i < 5; i++)
+            log.info("***********************");
 
         try {
             System.setProperty("file.encoding", "UTF-8");

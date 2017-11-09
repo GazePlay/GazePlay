@@ -47,6 +47,9 @@ public class GazePlay extends Application {
         scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(),
                 com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
+        log.info(String.format("Screen : %3d X %3d", com.sun.glass.ui.Screen.getScreens().get(0).getWidth(),
+                com.sun.glass.ui.Screen.getScreens().get(0).getHeight()));
+
         Utils.addStylesheets(scene.getStylesheets());
 
         log.info(scene.getStylesheets().toString());

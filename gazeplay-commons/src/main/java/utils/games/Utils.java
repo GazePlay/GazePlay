@@ -394,9 +394,9 @@ public class Utils {
     public static void logSystemProperties() {
 
         Enumeration<?> E = System.getProperties().propertyNames();
-        while(E.hasMoreElements()) {
-            String element = (String)E.nextElement();
-            log.info(String.format("%s: %s", element , System.getProperty(element)));
+        while (E.hasMoreElements()) {
+            String element = (String) E.nextElement();
+            log.info(String.format("%s: %s", element, System.getProperty(element)));
         }
     }
 }
