@@ -39,6 +39,7 @@
 		<module>gazeplay-side-projects</module>
 		<module>gazeplay-picto-pick</module>
 		<module>gazeplay-melordi</module>
+		<module>gazeplay-dist</module>
 	</modules>
 
 
