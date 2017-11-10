@@ -5,6 +5,7 @@ import gaze.GazeUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Screen;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.utils.HeatMapUtils;
 import utils.games.Utils;
@@ -26,7 +27,7 @@ import java.util.Collections;
 @Slf4j
 public abstract class Stats {
 
-    private final int heatMapPixelSize = 5;
+    private final int heatMapPixelSize = ComputeHeatMapPixelSize();
     private final int trail = 10;
 
     protected String gameName;
@@ -74,7 +75,19 @@ public abstract class Stats {
             recordMouseMovements = buildRecordMouseMovements();
             scene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
         }
+
         heatMap = new double[(int) scene.getHeight() / heatMapPixelSize][(int) scene.getWidth() / heatMapPixelSize];
+    }
+
+    /**
+     *
+     * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (200)
+     */
+    private int ComputeHeatMapPixelSize() {
+
+        return (int) Screen.getPrimary().getBounds().getWidth()/200;
+
+
     }
 
     protected void saveRawHeatMap(File file) {
