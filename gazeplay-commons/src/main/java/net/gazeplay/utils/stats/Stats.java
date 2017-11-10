@@ -85,7 +85,7 @@ public abstract class Stats {
      */
     private int ComputeHeatMapPixelSize() {
 
-        return (int) Screen.getPrimary().getBounds().getWidth()/200;
+        return (int) Screen.getPrimary().getBounds().getWidth()/400;
 
 
     }

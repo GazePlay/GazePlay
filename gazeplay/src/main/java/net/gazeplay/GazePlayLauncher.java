@@ -37,6 +37,7 @@ public class GazePlayLauncher {
         log.info("GazePlay");
         log.info("Version : " + versionInfo);
         Utils.logSystemProperties();
+        log.info("Max Memory: " + Runtime.getRuntime().maxMemory());
         for (int i = 0; i < 5; i++)
             log.info("***********************");
 
