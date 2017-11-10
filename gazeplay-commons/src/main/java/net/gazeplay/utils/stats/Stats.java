@@ -171,8 +171,8 @@ public abstract class Stats {
     public void incHeatMap(int X, int Y) {
 
         // in heatChart, x and y are opposed
-        int x = (int)(Y / heatMapPixelSize);
-        int y = (int)(X / heatMapPixelSize);
+        int x = (int) (Y / heatMapPixelSize);
+        int y = (int) (X / heatMapPixelSize);
 
         for (int i = -trail; i <= trail; i++)
             for (int j = -trail; j <= trail; j++) {
