@@ -1,17 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 
 	<groupId>com.github.schwabdidier</groupId>
 	<artifactId>gazeplay-picto-pick</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.6-SNAPSHOT</version>
 
 	<parent>
 		<groupId>com.github.schwabdidier</groupId>
 		<artifactId>gazeplay-project</artifactId>
-		<version>1.0.5-SNAPSHOT</version>
+		<version>1.0.6-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -19,7 +18,7 @@
 		<dependency>
 			<groupId>com.github.schwabdidier</groupId>
 			<artifactId>gazeplay-commons</artifactId>
-			<version>1.0.5-SNAPSHOT</version>
+			<version>1.0.6-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -113,8 +112,8 @@
 							<Implementation-Vendor>Univ. Grenoble Alpes - LIG - GETALP</Implementation-Vendor>
 							<Main-Class>pictogrammes.Pictogrammes</Main-Class>
 							<Build-Time>${maven.build.timestamp}</Build-Time>
-							<Built-By></Built-By>
-							<Created-By></Created-By>
+							<Built-By />
+							<Created-By />
 						</manifestEntries>
 					</archive>
 				</configuration>
@@ -146,8 +145,8 @@
 							<Implementation-Vendor>Univ. Grenoble Alpes - LIG - GETALP</Implementation-Vendor>
 							<Main-Class>pictogrammes.Pictogrammes</Main-Class>
 							<Build-Time>${maven.build.timestamp}</Build-Time>
-							<Built-By></Built-By>
-							<Created-By></Created-By>
+							<Built-By />
+							<Created-By />
 						</manifestEntries>
 					</archive>
 				</configuration>
