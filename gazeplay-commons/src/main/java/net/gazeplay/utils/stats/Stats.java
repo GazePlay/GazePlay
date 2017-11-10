@@ -27,7 +27,7 @@ import java.util.Collections;
 @Slf4j
 public abstract class Stats {
 
-    private final int heatMapPixelSize = ComputeHeatMapPixelSize();
+    private final double heatMapPixelSize = ComputeHeatMapPixelSize();
     private final int trail = 10;
 
     protected String gameName;
@@ -76,17 +76,16 @@ public abstract class Stats {
             scene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
         }
 
-        heatMap = new double[(int) scene.getHeight() / heatMapPixelSize][(int) scene.getWidth() / heatMapPixelSize];
+        heatMap = new double[(int) (scene.getHeight() / heatMapPixelSize)][(int) (scene.getWidth() / heatMapPixelSize)];
     }
 
     /**
      *
-     * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (200)
+     * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400)
      */
-    private int ComputeHeatMapPixelSize() {
+    private double ComputeHeatMapPixelSize() {
 
-        return (int) Screen.getPrimary().getBounds().getWidth()/400;
-
+        return Screen.getPrimary().getBounds().getWidth() / 400;
 
     }
 
@@ -172,8 +171,8 @@ public abstract class Stats {
     public void incHeatMap(int X, int Y) {
 
         // in heatChart, x and y are opposed
-        int x = Y / heatMapPixelSize;
-        int y = X / heatMapPixelSize;
+        int x = (int)(Y / heatMapPixelSize);
+        int y = (int)(X / heatMapPixelSize);
 
         for (int i = -trail; i <= trail; i++)
             for (int j = -trail; j <= trail; j++) {

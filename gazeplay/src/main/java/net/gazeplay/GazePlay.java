@@ -50,6 +50,10 @@ public class GazePlay extends Application {
         log.info(String.format("Screen size: %3d X %3d", com.sun.glass.ui.Screen.getScreens().get(0).getWidth(),
                 com.sun.glass.ui.Screen.getScreens().get(0).getHeight()));
 
+        //end of System information
+        for (int i = 0; i < 5; i++)
+            log.info("***********************");
+
         Utils.addStylesheets(scene.getStylesheets());
 
         log.info(scene.getStylesheets().toString());

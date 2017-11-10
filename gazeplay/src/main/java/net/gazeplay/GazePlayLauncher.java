@@ -38,8 +38,6 @@ public class GazePlayLauncher {
         log.info("Version : " + versionInfo);
         Utils.logSystemProperties();
         log.info("Max Memory: " + Runtime.getRuntime().maxMemory());
-        for (int i = 0; i < 5; i++)
-            log.info("***********************");
 
         try {
             System.setProperty("file.encoding", "UTF-8");
