@@ -1,5 +1,5 @@
 package gaze;
 
 public enum EyeTrackers {
-    none, tobii, eyetribe
+    mouse_control, tobii_eyeX_4C, eyetribe
 }
