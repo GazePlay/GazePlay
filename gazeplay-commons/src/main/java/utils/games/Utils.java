@@ -83,7 +83,7 @@ public class Utils {
 
         String mimetype = new MimetypesFileTypeMap().getContentType(file);
 
-        return mimetype.startsWith("image/");
+        return mimetype.startsWith("images/");
     }
 
     public static MenuBar BuildLicence() {
@@ -134,7 +134,7 @@ public class Utils {
                 return T;
             } else {
 
-                log.info("No image in folder : " + folder);
+                log.info("No images in folder : " + folder);
                 return defaultImage();
             }
         } else {

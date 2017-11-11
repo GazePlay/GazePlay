@@ -4,7 +4,9 @@ import gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -24,10 +26,11 @@ public class ColoredBubbles extends Application {
         primaryStage.setFullScreen(true);
 
         Group root = new Group();
-        Scene scene = new Scene(root, 1200, 700, Color.BLACK);
+        Scene scene = new Scene(root, 1200, 700);
+        scene.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
         primaryStage.setScene(scene);
-        Bubble bubble = new Bubble(scene, root, Bubble.COLOR, null);
+        Bubble bubble = new Bubble(scene, root, Bubble.COLOR, null, true);
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();

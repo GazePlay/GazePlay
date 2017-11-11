@@ -1,5 +1,7 @@
 package net.gazeplay;
 
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
@@ -86,13 +88,13 @@ public class DefaultGamesLocator implements GamesLocator {
 
         result.add(new GameSpec("Colored Bubbles", (gameSpec, scene, root, cbxGames) -> {
             BubblesGamesStats stats = new BubblesGamesStats(scene);
-            Bubble bubble = new Bubble(scene, root, Bubble.COLOR, stats);
+            Bubble bubble = new Bubble(scene, root, Bubble.COLOR, stats,  true);
             return stats;
         }));
 
         result.add(new GameSpec("Portrait Bubbles", (gameSpec, scene, root, cbxGames) -> {
             BubblesGamesStats stats = new BubblesGamesStats(scene);
-            Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT, stats);
+            Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT, stats, false);
             return stats;
         }));
 

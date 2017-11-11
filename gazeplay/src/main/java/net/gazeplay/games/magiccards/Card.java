@@ -163,7 +163,7 @@ public class Card extends Parent {
 
                                 Timeline timeline = new Timeline();
 
-                                for (Node N : root.getChildren()) {// clear all but image and reward
+                                for (Node N : root.getChildren()) {// clear all but images and reward
 
                                     if ((N instanceof Card && card != ((Card) N).getCard() && !(N instanceof Bravo))
                                             || (N instanceof Home)) {// we put outside screen Home and cards

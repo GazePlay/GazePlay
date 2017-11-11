@@ -47,11 +47,14 @@ public class Bubble extends Parent {
     public static final int PORTRAIT = 0;
     public static final int COLOR = 1;
 
-    public Bubble(Scene scene, Group root, int type, BubblesGamesStats stats) {
+    public Bubble(Scene scene, Group root, int type, BubblesGamesStats stats, boolean image) {
 
         photos = Utils.images(Utils.getImagesFolder() + "portraits" + Utils.FILESEPARATOR);
 
         this.scene = scene;
+
+        if(image)
+            scene.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
 
         this.type = type;
 
@@ -190,7 +193,7 @@ public class Bubble extends Parent {
         C.setRadius(radius);
 
         if (type == COLOR)
-            C.setFill(new Color(Math.random(), Math.random(), Math.random(), 0.7));
+            C.setFill(new Color(Math.random(), Math.random(), Math.random(), 0.9));
         else
             C.setFill(new ImagePattern(newPhoto(), 0, 0, 1, 1, true));
 

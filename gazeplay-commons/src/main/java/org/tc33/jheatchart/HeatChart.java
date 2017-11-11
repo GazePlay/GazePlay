@@ -106,10 +106,10 @@ import javax.imageio.stream.FileImageOutputStream;
  * used in any number of ways, most notably it can be inserted into a Swing component, for use in a GUI
  * application.</li>
  * <li><strong>saveToFile(File)</strong> - The chart will be saved to the file system at the file location specified as
- * a parameter. The image format that the image will be saved in is derived from the extension of the file name.</li>
+ * a parameter. The images format that the images will be saved in is derived from the extension of the file name.</li>
  * </ul>
  * 
- * <strong>Note:</strong> The chart image will not actually be created until either saveToFile(File) or getChartImage()
+ * <strong>Note:</strong> The chart images will not actually be created until either saveToFile(File) or getChartImage()
  * are called, and will be regenerated on each successive call.
  */
 public class HeatChart {
@@ -603,7 +603,7 @@ public class HeatChart {
      * Returns the width of the chart in pixels as calculated according to the cell dimensions, chart margin and other
      * size settings.
      * 
-     * @return the width in pixels of the chart image to be generated.
+     * @return the width in pixels of the chart images to be generated.
      * @deprecated As of release 0.6, replaced by {@link #getChartSize()}
      */
     @Deprecated
@@ -615,7 +615,7 @@ public class HeatChart {
      * Returns the height of the chart in pixels as calculated according to the cell dimensions, chart margin and other
      * size settings.
      * 
-     * @return the height in pixels of the chart image to be generated.
+     * @return the height in pixels of the chart images to be generated.
      * @deprecated As of release 0.6, replaced by {@link #getChartSize()}
      */
     @Deprecated
@@ -627,7 +627,7 @@ public class HeatChart {
      * Returns the size of the chart in pixels as calculated according to the cell dimensions, chart margin and other
      * size settings.
      * 
-     * @return the size in pixels of the chart image to be generated.
+     * @return the size in pixels of the chart images to be generated.
      * @since 0.6
      */
     public Dimension getChartSize() {
@@ -747,7 +747,7 @@ public class HeatChart {
 
     /**
      * Sets the colour to be used on the background of the chart. A transparent background can be set by setting a
-     * background colour with an alpha value. The transparency will only be effective when the image is saved as a png
+     * background colour with an alpha value. The transparency will only be effective when the images is saved as a png
      * or gif.
      * 
      * <p>
@@ -1165,7 +1165,7 @@ public class HeatChart {
 
     /**
      * Generates a new chart <code>Image</code> based upon the currently held settings and then attempts to save that
-     * image to disk, to the location provided as a File parameter. The image type of the saved file will equal the
+     * images to disk, to the location provided as a File parameter. The images type of the saved file will equal the
      * extension of the filename provided, so it is essential that a suitable extension be included on the file name.
      * 
      * <p>
@@ -1173,11 +1173,11 @@ public class HeatChart {
      * 
      * <p>
      * No chart will be generated until this or the related <code>getChartImage()</code> method are called. All
-     * successive calls will result in the generation of a new chart image, no caching is used.
+     * successive calls will result in the generation of a new chart images, no caching is used.
      * 
      * @param outputFile
-     *            the file location that the generated image file should be written to. The File must have a suitable
-     *            filename, with an extension of a valid image format (as supported by <code>ImageIO</code>).
+     *            the file location that the generated images file should be written to. The File must have a suitable
+     *            filename, with an extension of a valid images format (as supported by <code>ImageIO</code>).
      * @throws IOException
      *             if the output file's filename has no extension or if there the file is unable to written to. Reasons
      *             for this include a non-existant file location (check with the File exists() method on the parent
@@ -1216,7 +1216,7 @@ public class HeatChart {
         iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
         iwp.setCompressionQuality(quality);
 
-        // Output the image.
+        // Output the images.
         FileImageOutputStream output = new FileImageOutputStream(outputFile);
         writer.setOutput(output);
         IIOImage image = new IIOImage(chart, null, null);
@@ -1227,26 +1227,26 @@ public class HeatChart {
 
     /**
      * Generates and returns a new chart <code>Image</code> configured according to this object's currently held
-     * settings. The given parameter determines whether transparency should be enabled for the generated image.
+     * settings. The given parameter determines whether transparency should be enabled for the generated images.
      * 
      * <p>
      * No chart will be generated until this or the related <code>saveToFile(File)</code> method are called. All
-     * successive calls will result in the generation of a new chart image, no caching is used.
+     * successive calls will result in the generation of a new chart images, no caching is used.
      * 
      * @param alpha
      *            whether to enable transparency.
-     * @return A newly generated chart <code>Image</code>. The returned image is a <code>BufferedImage</code>.
+     * @return A newly generated chart <code>Image</code>. The returned images is a <code>BufferedImage</code>.
      */
     public Image getChartImage(boolean alpha) {
         // Calculate all unknown dimensions.
         measureComponents();
         updateCoordinates();
 
-        // Determine image type based upon whether require alpha or not.
+        // Determine images type based upon whether require alpha or not.
         // Using BufferedImage.TYPE_INT_ARGB seems to break on jpg.
         int imageType = (alpha ? BufferedImage.TYPE_4BYTE_ABGR : BufferedImage.TYPE_3BYTE_BGR);
 
-        // Create our chart image which we will eventually draw everything on.
+        // Create our chart images which we will eventually draw everything on.
         BufferedImage chartImage = new BufferedImage(chartSize.width, chartSize.height, imageType);
         Graphics2D chartGraphics = chartImage.createGraphics();
 
@@ -1260,7 +1260,7 @@ public class HeatChart {
         // Draw the title.
         drawTitle(chartGraphics);
 
-        // Draw the heatmap image.
+        // Draw the heatmap images.
         drawHeatMap(chartGraphics, zValues);
 
         // Draw the axis labels.
@@ -1279,13 +1279,13 @@ public class HeatChart {
 
     /**
      * Generates and returns a new chart <code>Image</code> configured according to this object's currently held
-     * settings. By default the image is generated with no transparency.
+     * settings. By default the images is generated with no transparency.
      * 
      * <p>
      * No chart will be generated until this or the related <code>saveToFile(File)</code> method are called. All
-     * successive calls will result in the generation of a new chart image, no caching is used.
+     * successive calls will result in the generation of a new chart images, no caching is used.
      * 
-     * @return A newly generated chart <code>Image</code>. The returned image is a <code>BufferedImage</code>.
+     * @return A newly generated chart <code>Image</code>. The returned images is a <code>BufferedImage</code>.
      */
     public Image getChartImage() {
         return getChartImage(false);
@@ -1428,7 +1428,7 @@ public class HeatChart {
     }
 
     /*
-     * Creates the actual heatmap element as an image, that can then be drawn onto a chart.
+     * Creates the actual heatmap element as an images, that can then be drawn onto a chart.
      */
     private void drawHeatMap(Graphics2D chartGraphics, double[][] data) {
         // Calculate the available size for the heatmap.

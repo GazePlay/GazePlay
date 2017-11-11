@@ -54,12 +54,12 @@ public class GazePlay extends Application {
         for (int i = 0; i < 5; i++)
             log.info("***********************");
 
-        Utils.addStylesheets(scene.getStylesheets());
-
         log.info(scene.getStylesheets().toString());
 
         if (scene.getStylesheets().isEmpty())
             scene.getStylesheets().add("data/stylesheets/main-orange.css");
+
+        Utils.addStylesheets(scene.getStylesheets());
 
         cbxGames = new ChoiceBox<>();
 

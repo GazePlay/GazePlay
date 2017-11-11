@@ -189,7 +189,7 @@ public class ConfigurationDisplay extends Rectangle {
 
                 scene.getStylesheets().remove(0);
 
-                scene.getStylesheets().add("file://"+C.cssfile);
+                scene.getStylesheets().add("file://" + C.cssfile);
 
                 log.info(scene.getStylesheets().toString());
             }
