@@ -184,6 +184,14 @@ public class ConfigurationDisplay extends Rectangle {
 
                 log.info(C.toString());
                 C.saveConfig();
+
+                log.info(scene.getStylesheets().toString());
+
+                scene.getStylesheets().remove(0);
+
+                scene.getStylesheets().add("file://"+C.cssfile);
+
+                log.info(scene.getStylesheets().toString());
             }
         });
 
