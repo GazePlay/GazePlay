@@ -185,8 +185,10 @@ public class ConfigurationDisplay extends Rectangle {
         }
         if (C.cssfile.indexOf("orange") > 0) {
             themesBox.getSelectionModel().select(0);
-        } else
+        } else if (C.cssfile.indexOf("green") > 0) {
             themesBox.getSelectionModel().select(1);
+        }
+        else themesBox.getSelectionModel().select(2);
         themesBox.setTranslateX(posX);
         themesBox.setTranslateY(posY);
         themesBox.setPrefWidth(prefWidth);
@@ -201,6 +203,9 @@ public class ConfigurationDisplay extends Rectangle {
 
                 if (TThemes[newValue.intValue()].toString().equals("green"))
                     C.cssfile = "data/stylesheets/main-green.css";
+                else
+                if (TThemes[newValue.intValue()].toString().equals("blue"))
+                    C.cssfile = "data/stylesheets/main-blue.css";
                 else
                     C.cssfile = "data/stylesheets/main-orange.css";
                 log.info(C.toString());

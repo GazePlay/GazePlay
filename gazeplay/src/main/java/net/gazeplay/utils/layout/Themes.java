@@ -2,5 +2,5 @@ package net.gazeplay.utils.layout;
 
 public enum Themes {
 
-    orange, green;
+    orange, green, blue;
 }
