@@ -187,11 +187,10 @@ public class ConfigurationDisplay extends Rectangle {
             themesBox.getSelectionModel().select(0);
         } else if (C.cssfile.indexOf("green") > 0) {
             themesBox.getSelectionModel().select(1);
+        } else if (C.cssfile.indexOf("light-blue") > 0) {
+            themesBox.getSelectionModel().select(2);
         } else
-            if (C.cssfile.indexOf("light-blue") > 0) {
-                themesBox.getSelectionModel().select(2);
-            }else
-                themesBox.getSelectionModel().select(3);
+            themesBox.getSelectionModel().select(3);
         themesBox.setTranslateX(posX);
         themesBox.setTranslateY(posY);
         themesBox.setPrefWidth(prefWidth);

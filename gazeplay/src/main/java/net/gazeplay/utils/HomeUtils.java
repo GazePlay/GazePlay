@@ -120,7 +120,7 @@ public class HomeUtils {
 
         root.getChildren().add(logo(scene));
 
-        root.getChildren().add(Utils.BuildLicence());
+        root.getChildren().add(Utils.buildLicence());
     }
 
     public static Node logo(Scene scene) {

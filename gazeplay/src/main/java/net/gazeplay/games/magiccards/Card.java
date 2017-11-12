@@ -57,7 +57,6 @@ public class Card extends Parent {
     private static Image[] images;
 
     EventHandler<Event> enterEvent;
-    boolean anniOff = true;
 
     public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image,
             boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGamesStats stats) {
@@ -116,8 +115,9 @@ public class Card extends Parent {
 
                     Timeline timelineCard = new Timeline();
 
-                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(indicator.progressProperty(), 0)));
-                   timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
+                    timelineCard.getKeyFrames()
+                            .add(new KeyFrame(new Duration(1), new KeyValue(indicator.progressProperty(), 0)));
+                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
                             new KeyValue(card.xProperty(), card.getX() - (initWidth * zoom_factor - initWidth) / 2)));
                     timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
                             new KeyValue(card.yProperty(), card.getY() - (initHeight * zoom_factor - initHeight) / 2)));

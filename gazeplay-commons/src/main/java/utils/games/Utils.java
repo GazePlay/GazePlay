@@ -48,8 +48,16 @@ public class Utils {
 
             String file = "file:" + directory.getAbsoluteFile() + FILESEPARATOR + imagePath;
 
-            if (!imagePath.startsWith(".") && isImage(file)) // Problems with files starting with a point on Windows
+            log.info(file);
+
+            if (!imagePath.startsWith(".") && isImage(file)) { // Problems with files starting with a point on Windows
+
                 images.add(new Image(file));
+                log.info("Added");
+            } else {
+
+                log.info("Not added");
+            }
         }
 
         Image[] Timages = obj2im(images.toArray());
@@ -83,10 +91,12 @@ public class Utils {
 
         String mimetype = new MimetypesFileTypeMap().getContentType(file);
 
-        return mimetype.startsWith("images/");
+        log.info("Mimetype " + mimetype);
+
+        return mimetype.startsWith("image");
     }
 
-    public static MenuBar BuildLicence() {
+    public static MenuBar buildLicence() {
 
         MenuBar menuBar = new MenuBar();
 
@@ -130,11 +140,11 @@ public class Utils {
 
             if (T.length != 0) {
 
-                log.debug("I found images in folder : " + folder);
+                log.debug("I found " + T.length + " images in folder : " + folder);
                 return T;
             } else {
 
-                log.info("No images in folder : " + folder);
+                log.info("No image in folder : " + folder);
                 return defaultImage();
             }
         } else {

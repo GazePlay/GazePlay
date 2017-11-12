@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -98,6 +99,11 @@ public abstract class Stats {
 
         } catch (FileNotFoundException e) {
             log.error("Exception", e);
+            return;
+        } finally {
+
+            if (out != null)
+                out.close();
         }
 
         for (int i = 0; i < heatMap.length; i++) {
@@ -269,7 +275,8 @@ public abstract class Stats {
     }
 
     public double[][] getHeatMap() {
-        return heatMap;
+
+        return heatMap.clone();
     }
 
     public void stop() {
@@ -288,7 +295,7 @@ public abstract class Stats {
         long last = System.currentTimeMillis() - beginTime;
         nbGoals++;
         length += last;
-        lengthBetweenGoals.add((new Long(last)).intValue());
+        lengthBetweenGoals.add((int) last);
     }
 
     public ArrayList<Integer> getSortedLengthBetweenGoals() {
