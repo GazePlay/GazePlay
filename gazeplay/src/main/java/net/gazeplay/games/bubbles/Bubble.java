@@ -53,7 +53,7 @@ public class Bubble extends Parent {
 
         this.scene = scene;
 
-        if(image)
+        if (image)
             scene.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
 
         this.type = type;

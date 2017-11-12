@@ -19,14 +19,12 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.utils.layout.Themes;
 import net.gazeplay.utils.multilinguism.Languages;
 import net.gazeplay.utils.multilinguism.Multilinguism;
 import utils.games.Utils;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by schwab on 28/10/2017.
@@ -119,7 +117,7 @@ public class ConfigurationDisplay extends Rectangle {
         styleFile.setX(100);
         styleFile.setY(400);
         styleFile.setId("item");
-        buildStyleChooserMenu(scene, C, root, 250, 405);
+        buildStyleChooser(scene, C, root, 250, 405);
 
         Text fixLength = new Text(multilinguism.getTrad("FixationLength", Multilinguism.getLanguage()) + colon);
         fixLength.setX(100);
@@ -164,7 +162,71 @@ public class ConfigurationDisplay extends Rectangle {
         });
     }
 
-    private static void buildStyleChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
+    /**
+     *
+     * Fonction to use to permit to user to select between several theme
+     *
+     * @param scene
+     * @param C
+     * @param root
+     * @param posX
+     * @param posY
+     */
+
+    private static void buildStyleChooser(Scene scene, Configuration C, Group root, int posX, int posY) {
+
+        ChoiceBox themesBox = new ChoiceBox();
+        Themes[] TThemes = Themes.values();
+
+        int firstPos = 1;
+
+        for (int i = 0; i < TThemes.length; i++) {
+            themesBox.getItems().add(TThemes[i]);
+        }
+        if (C.cssfile.indexOf("orange") > 0) {
+            themesBox.getSelectionModel().select(0);
+        } else
+            themesBox.getSelectionModel().select(1);
+        themesBox.setTranslateX(posX);
+        themesBox.setTranslateY(posY);
+        themesBox.setPrefWidth(prefWidth);
+        themesBox.setPrefHeight(prefHeight);
+        root.getChildren().add(themesBox);
+
+        themesBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
+                log.info(newValue + "");
+
+                if (TThemes[newValue.intValue()].toString().equals("green"))
+                    C.cssfile = "data/stylesheets/main-green.css";
+                else
+                    C.cssfile = "data/stylesheets/main-orange.css";
+                log.info(C.toString());
+                C.saveConfig();
+
+                scene.getStylesheets().remove(0);
+
+                scene.getStylesheets().add(C.cssfile);
+
+                log.info(scene.getStylesheets().toString());
+            }
+        });
+    }
+
+    /**
+     *
+     * Fonction to use to permit to user to choose his/her own css file
+     *
+     * @param scene
+     * @param C
+     * @param root
+     * @param posX
+     * @param posY
+     */
+
+    private static void buildStyleFileChooser(Scene scene, Configuration C, Group root, int posX, int posY) {
 
         Button buttonLoad = new Button(C.cssfile);
 
@@ -237,10 +299,11 @@ public class ConfigurationDisplay extends Rectangle {
         int firstPos = 1;
 
         for (int i = 0; i < TLanguages.length; i++) {
+
             languageBox.getItems().add(TLanguages[i]);
             if (TLanguages[i].toString().equals(C.language)) {
-                firstPos = i;
 
+                firstPos = i;
             }
         }
 

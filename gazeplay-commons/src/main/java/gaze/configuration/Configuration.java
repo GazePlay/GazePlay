@@ -30,7 +30,7 @@ public class Configuration {
     public String language = "fra";
     public String filedir = Utils.getGazePlayFolder() + "files" + Utils.FILESEPARATOR;
     public int fixationlength = 500;
-    public String cssfile = "";
+    public String cssfile = "data/stylesheets/main-green.css";
 
     public Configuration() {
 

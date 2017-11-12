@@ -88,7 +88,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
         result.add(new GameSpec("Colored Bubbles", (gameSpec, scene, root, cbxGames) -> {
             BubblesGamesStats stats = new BubblesGamesStats(scene);
-            Bubble bubble = new Bubble(scene, root, Bubble.COLOR, stats,  true);
+            Bubble bubble = new Bubble(scene, root, Bubble.COLOR, stats, true);
             return stats;
         }));
 

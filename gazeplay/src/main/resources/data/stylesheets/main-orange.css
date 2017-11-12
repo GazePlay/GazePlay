@@ -27,11 +27,11 @@
 }
 
 /* Selected item text color on the control itself */
-   .choice-box > .label {
+.choice-box > .label {
 
-       -fx-text-fill: black;
-       -fx-font-weight: bold;
-   }
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
 
 /* Background color of the whole context menu*/
 .choice-box .context-menu {
