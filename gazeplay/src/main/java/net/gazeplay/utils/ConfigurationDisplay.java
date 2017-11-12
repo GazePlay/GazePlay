@@ -280,6 +280,9 @@ public class ConfigurationDisplay extends Rectangle {
             public void handle(ActionEvent arg0) {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 File file = directoryChooser.showDialog(scene.getWindow());
+                if (file == null) {
+                    return;
+                }
                 buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
                 File F = new File(file.toString());
                 C.filedir = file.toString() + Utils.FILESEPARATOR;
