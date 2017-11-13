@@ -1,13 +1,11 @@
 package gaze.configuration;
 
+import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import utils.games.Utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -15,117 +13,143 @@ import java.util.Properties;
  */
 @ToString
 @Slf4j
+@Data
 public class Configuration {
 
-    private static String GAZEMODE = "GAZEMODE";
-    private static String EYETRACKER = "EYETRACKER";
-    private static String LANGUAGE = "LANGUAGE";
-    private static String FILEDIR = "FILEDIR";
+    private static String PROPERTY_NAME_GAZEMODE = "GAZEMODE";
+    private static String PROPERTY_NAME_EYETRACKER = "EYETRACKER";
+    private static String PROPERTY_NAME_LANGUAGE = "LANGUAGE";
+    private static String PROPERTY_NAME_FILEDIR = "FILEDIR";
+    private static String PROPERTY_NAME_FIXATIONLENGTH = "FixationLength";
+    private static String PROPERTY_NAME_CSSFILE = "CssFile";
+
     private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
-    private static String FIXATIONLENGTH = "FixationLength";
-    private static String CSSFILE = "CssFile";
 
-    public String gazeMode = "true";
-    public String eyetracker = "none";
-    public String language = "fra";
-    public String filedir = Utils.getGazePlayFolder() + "files" + Utils.FILESEPARATOR;
-    public int fixationlength = 500;
-    public String cssfile = "data/stylesheets/main-green.css";
+    private static String DEFAULT_VALUE_GAZEMODE = "true";
+    private static String DEFAULT_VALUE_EYETRACKER = "none";
+    private static String DEFAULT_VALUE_LANGUAGE = "fra";
+    private static int DEFAULT_VALUE_FIXATION_LENGTH = 500;
+    private static String DEFAULT_VALUE_CSS_FILE = "data/stylesheets/main-green.css";
 
-    public Configuration() {
+    private static String getFileDirectoryDefaultValue() {
+        return Utils.getGazePlayFolder() + "files" + Utils.FILESEPARATOR;
+    }
 
-        final Properties prop = new Properties();
-        InputStream input = null;
-
-        try {
-            input = new FileInputStream(CONFIGPATH);
-
-            // load a properties file
-            prop.load(input);
-
-            String buffer = prop.getProperty(GAZEMODE);
-            if (buffer != null)
-                gazeMode = buffer.toLowerCase();
-
-            buffer = prop.getProperty(EYETRACKER);
-            if (buffer != null)
-                eyetracker = buffer.toLowerCase();
-
-            buffer = prop.getProperty(LANGUAGE);
-            if (buffer != null)
-                language = buffer.toLowerCase();
-
-            buffer = prop.getProperty(FILEDIR);
-            if (buffer != null)
-                filedir = buffer;
-
-            buffer = prop.getProperty(FIXATIONLENGTH);
-            if (buffer != null) {
-                try {
-                    fixationlength = Integer.parseInt(buffer);
-                } catch (NumberFormatException e) {
-                    log.info("NumberFormatException " + buffer);
-                }
-
-            }
-
-            buffer = prop.getProperty(CSSFILE);
-            if (buffer != null)
-                cssfile = buffer;
-
-        } catch (final IOException ex) {
-            log.info(CONFIGPATH + " not found");
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (final IOException e) {
-                    log.error("Exception", e);
-                }
-            }
+    private static Properties loadProperties(String propertiesFilePath) throws IOException {
+        try (InputStream inputStream = new FileInputStream(propertiesFilePath)) {
+            final Properties properties = new Properties();
+            properties.load(inputStream);
+            return properties;
         }
     }
 
-    public Configuration(String eyetracker, String LANGUAGE) {
+    public String gazeMode = DEFAULT_VALUE_GAZEMODE;
 
+    public String eyetracker = DEFAULT_VALUE_EYETRACKER;
+
+    public String language = DEFAULT_VALUE_LANGUAGE;
+
+    public String filedir = getFileDirectoryDefaultValue();
+
+    public int fixationlength = DEFAULT_VALUE_FIXATION_LENGTH;
+
+    public String cssfile = DEFAULT_VALUE_CSS_FILE;
+
+    public Configuration() {
+        Properties properties;
+        try {
+            properties = loadProperties(CONFIGPATH);
+        } catch (FileNotFoundException e) {
+            log.warn("Config file not found : {}", CONFIGPATH);
+            properties = null;
+        } catch (IOException e) {
+            log.error("Failure while loading config file {}", CONFIGPATH, e);
+            properties = null;
+        }
+        if (properties != null) {
+            log.info("Properties loaded : {}", properties);
+            populateFromProperties(properties);
+        }
+    }
+
+    public Configuration(String eyetracker, String language) {
         this.eyetracker = eyetracker;
-        this.language = LANGUAGE;
+        this.language = language;
     }
 
     public Configuration(String eyetracker) {
-
         this.eyetracker = eyetracker;
     }
 
-    public void saveConfig() {
+    public void populateFromProperties(Properties prop) {
+        String buffer;
 
-        StringBuilder sb = new StringBuilder(1000);
-        sb.append(EYETRACKER);
-        sb.append('=');
-        sb.append(eyetracker);
-        sb.append(Utils.LINESEPARATOR);
+        buffer = prop.getProperty(PROPERTY_NAME_GAZEMODE);
+        if (buffer != null) {
+            gazeMode = buffer.toLowerCase();
+        }
 
-        sb.append(LANGUAGE);
-        sb.append('=');
-        sb.append(language);
-        sb.append(Utils.LINESEPARATOR);
+        buffer = prop.getProperty(PROPERTY_NAME_EYETRACKER);
+        if (buffer != null) {
+            eyetracker = buffer.toLowerCase();
+        }
 
-        sb.append(FILEDIR);
-        sb.append('=');
-        sb.append(filedir);
-        sb.append(Utils.LINESEPARATOR);
+        buffer = prop.getProperty(PROPERTY_NAME_LANGUAGE);
+        if (buffer != null) {
+            language = buffer.toLowerCase();
+        }
 
-        sb.append(FIXATIONLENGTH);
-        sb.append('=');
-        sb.append(fixationlength);
-        sb.append(Utils.LINESEPARATOR);
+        buffer = prop.getProperty(PROPERTY_NAME_FILEDIR);
+        if (buffer != null) {
+            filedir = buffer;
+        }
 
-        sb.append(CSSFILE);
-        sb.append('=');
-        sb.append(cssfile);
-        sb.append(Utils.LINESEPARATOR);
+        buffer = prop.getProperty(PROPERTY_NAME_FIXATIONLENGTH);
+        if (buffer != null) {
+            try {
+                fixationlength = Integer.parseInt(buffer);
+            } catch (NumberFormatException e) {
+                log.warn("NumberFormatException while parsing value '{}' for property {}", buffer,
+                        PROPERTY_NAME_FIXATIONLENGTH);
+            }
+        }
 
-        Utils.save(sb.toString(), new File(CONFIGPATH));
+        buffer = prop.getProperty(PROPERTY_NAME_CSSFILE);
+        if (buffer != null) {
+            cssfile = buffer;
+        }
+    }
+
+    public void saveConfig() throws IOException {
+        Properties properties = toProperties();
+        try (FileOutputStream fileOutputStream = new FileOutputStream(new File(CONFIGPATH))) {
+            String fileComment = "Automatically generated by GazePlay";
+            properties.store(fileOutputStream, fileComment);
+        }
+        log.info("Properties saved : {}", properties);
+    }
+
+    public void saveConfigIgnoringExceptions() {
+        try {
+            saveConfig();
+        } catch (IOException e) {
+            log.error("Exception while writing configuration to file {}", CONFIGPATH, e);
+        }
+    }
+
+    private Properties toProperties() {
+        Properties properties = new Properties();
+
+        // FIXME why is this not saved to file ?
+        // properties.setProperty(PROPERTY_NAME_GAZEMODE, this.gazeMode);
+
+        properties.setProperty(PROPERTY_NAME_EYETRACKER, this.eyetracker);
+        properties.setProperty(PROPERTY_NAME_LANGUAGE, this.language);
+        properties.setProperty(PROPERTY_NAME_FILEDIR, this.filedir);
+        properties.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(this.fixationlength));
+        properties.setProperty(PROPERTY_NAME_CSSFILE, this.cssfile);
+
+        return properties;
     }
 
 }
