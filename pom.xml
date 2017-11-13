@@ -205,6 +205,7 @@
 						<directory>./gazeplay-melordi/src/main/java</directory>
 						<directory>./gazeplay/src/main/java</directory>
 					</directories>
+					<lineEnding>LF</lineEnding>
 				</configuration>
 				<executions>
 					<execution>
