@@ -157,7 +157,7 @@ public class ConfigurationDisplay extends Rectangle {
                         * (double) FixLengthBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
                 // TLengths[newValue.intValue()].toString();
                 log.info(C.toString());
-                C.saveConfig();
+                C.saveConfigIgnoringExceptions();
             }
         });
     }
@@ -212,7 +212,7 @@ public class ConfigurationDisplay extends Rectangle {
                 else
                     C.cssfile = "data/stylesheets/main-orange.css";
                 log.info(C.toString());
-                C.saveConfig();
+                C.saveConfigIgnoringExceptions();
 
                 scene.getStylesheets().remove(0);
 
@@ -253,7 +253,7 @@ public class ConfigurationDisplay extends Rectangle {
                 }
 
                 log.info(C.toString());
-                C.saveConfig();
+                C.saveConfigIgnoringExceptions();
 
                 log.info(scene.getStylesheets().toString());
 
@@ -290,7 +290,7 @@ public class ConfigurationDisplay extends Rectangle {
                 }
 
                 log.info(C.toString());
-                C.saveConfig();
+                C.saveConfigIgnoringExceptions();
             }
         });
 
@@ -329,7 +329,7 @@ public class ConfigurationDisplay extends Rectangle {
 
                 C.language = TLanguages[newValue.intValue()].toString();
                 log.info(C.toString());
-                C.saveConfig();
+                C.saveConfigIgnoringExceptions();
             }
         });
     }
@@ -361,7 +361,7 @@ public class ConfigurationDisplay extends Rectangle {
 
                 C.eyetracker = TEyeTrackers[newValue.intValue()].toString();
                 log.info(C.toString());
-                C.saveConfig();
+                C.saveConfigIgnoringExceptions();
             }
         });
     }
