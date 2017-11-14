@@ -2,7 +2,6 @@ package utils.games;
 
 import gaze.configuration.Configuration;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -16,7 +15,6 @@ import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,41 +36,38 @@ public class Utils {
         return getImages(folder, -1);
     }
 
-    public static Image[] getImages(String folder, int nbMax) {
+    public static Image[] getImages(final String folder, final int nbMax) {
 
         File directory = new File(folder);
 
         ArrayList<Image> images = new ArrayList<>(directory.list().length);
 
         for (String imagePath : directory.list()) {
-
-            String file = "file:" + directory.getAbsoluteFile() + FILESEPARATOR + imagePath;
-
-            log.info(file);
-
-            if (!imagePath.startsWith(".") && isImage(file)) { // Problems with files starting with a point on Windows
-
-                images.add(new Image(file));
-                log.info("Added");
+            final String fileUrl = "file:" + directory.getAbsoluteFile() + FILESEPARATOR + imagePath;
+            boolean added;
+            if (!imagePath.startsWith(".") && isImage(fileUrl)) { // Problems with files starting with a point on
+                // Windows
+                images.add(new Image(fileUrl));
+                added = true;
             } else {
-
-                log.info("Not added");
+                added = false;
             }
+            log.debug("{} : added = {}", fileUrl, added);
         }
 
         Image[] Timages = obj2im(images.toArray());
 
-        if (nbMax <= 0)
+        if (nbMax <= 0) {
             return Timages;
-
-        Image[] Rimages = new Image[nbMax];
-
-        for (int i = 0; i < nbMax; i++) {
-
-            Rimages[i] = Timages[(int) (Math.random() * Timages.length)];
         }
 
-        return Rimages;
+        Image[] rimages = new Image[nbMax];
+
+        for (int i = 0; i < nbMax; i++) {
+            rimages[i] = Timages[(int) (Math.random() * Timages.length)];
+        }
+
+        return rimages;
     }
 
     private static Image[] obj2im(Object[] objects) {
@@ -88,11 +83,8 @@ public class Utils {
     }
 
     public static boolean isImage(String file) {
-
         String mimetype = new MimetypesFileTypeMap().getContentType(file);
-
-        log.info("Mimetype " + mimetype);
-
+        log.debug("{} : mimetype = {}", file, mimetype);
         return mimetype.startsWith("image");
     }
 
@@ -195,7 +187,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return Default directory for GazePlay : in user's home directory, in a folder called GazePlay
      */
     public static String getGazePlayFolder() {
@@ -204,7 +195,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return DLL directory for GazePlay : in the default directory of GazePlay, a folder called DLL
      */
     public static String getDllFolder() {
@@ -213,7 +203,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return styles directory for GazePlay : in the default directory of GazePlay, a folder called styles
      */
     public static String getStylesFolder() {
@@ -222,7 +211,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return CSS files found in the styles folder
      */
     public static void addStylesheets(ObservableList<String> styleSheets) {
@@ -241,7 +229,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return Temp directory for GazePlay : in the default directory of GazePlay, a folder called Temp
      */
     public static String getTempFolder() {
@@ -250,7 +237,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return images directory for GazePlay : by default in the default directory of GazePlay, in a folder called files
      *         but can be configured through interface and/or GazePlay.properties file
      */
@@ -264,7 +250,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return images directory for GazePlay : in the files directory another folder called images
      */
 
@@ -274,7 +259,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return sounds directory for GazePlay : in the files directory another folder called sounds
      */
 
@@ -284,7 +268,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return statistics directory for GazePlay : in the default directory of GazePlay, in a folder called statistics
      */
 
@@ -294,7 +277,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return current date with respect to the format yyyy-MM-dd
      */
     public static String today() {
@@ -305,7 +287,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return current date with respect to the format dd/MM/yyyy
      */
     public static String todayCSV() {
@@ -317,7 +298,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return current time with respect to the format HH:MM:ss
      */
     public static String time() {
@@ -328,7 +308,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return current time with respect to the format yyyy-MM-dd-HH-MM-ss
      */
     public static String now() {
@@ -393,7 +372,6 @@ public class Utils {
     }
 
     /**
-     *
      * @return true if the operating system is a Windows
      */
     public static boolean isWindows() {
