@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,7 +27,7 @@ import java.util.Collections;
 @Slf4j
 public abstract class Stats {
 
-    private final double heatMapPixelSize = ComputeHeatMapPixelSize();
+    private final double heatMapPixelSize = computeHeatMapPixelSize();
     private final int trail = 10;
 
     protected String gameName;
@@ -77,25 +76,28 @@ public abstract class Stats {
             scene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
         }
 
-        heatMap = new double[(int) (scene.getHeight() / heatMapPixelSize)][(int) (scene.getWidth() / heatMapPixelSize)];
+        int heatMapWidth = (int) (scene.getHeight() / heatMapPixelSize);
+        int heatMapHeight = (int) (scene.getWidth() / heatMapPixelSize);
+        log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
+        heatMap = new double[heatMapWidth][heatMapHeight];
     }
 
     /**
-     *
      * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px) if maximum memory is more
      *         than 1Gb, only 200
      */
-    private double ComputeHeatMapPixelSize() {
-
-        long maxmem = Runtime.getRuntime().maxMemory();
-
+    private double computeHeatMapPixelSize() {
+        long maxMemory = Runtime.getRuntime().maxMemory();
         double width = Screen.getPrimary().getBounds().getWidth();
-
-        if (maxmem < 1073741824l) // size is less than 1Gb (2^30)
-            return width / 200;
-        else
-            return width / 400;
-
+        double result;
+        if (maxMemory < 1024 * 1024 * 1024) {
+            // size is less than 1Gb (2^30)
+            result = width / 200;
+        } else {
+            result = width / 400;
+        }
+        log.info("computeHeatMapPixelSize() : result = {}", result);
+        return result;
     }
 
     protected void saveRawHeatMap(File file) {
