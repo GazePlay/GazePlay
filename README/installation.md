@@ -2,7 +2,7 @@
 
 # Installation
 
-Copiez-collez ou déplacez le fichier téléchargé à partir de ce [lien (Version 1.0.5)](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.5/gazeplay-1.0.5.jar)
+Copiez-collez ou déplacez le fichier téléchargé à partir de ce [lien (Version 1.0.6)](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-SNAPSHOT-1.0.6/gazeplay-1.0.6.jar)
 sur votre disque dur à l'endroit que vous préférez. Le bureau sera parfait.
 
 Double cliquez sur le fichier. Si tout se passe bien, le logiciel se lance.

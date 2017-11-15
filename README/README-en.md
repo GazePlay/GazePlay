@@ -4,7 +4,7 @@
 
 ## Download
 
-[Stable 1.0.5](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.5/gazeplay-1.0.5.jar)
+[Stable 1.0.6](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-SNAPSHOT-1.0.6/gazeplay-1.0.6.jar)
 
 [Evolution Version](dev-en.md)
 

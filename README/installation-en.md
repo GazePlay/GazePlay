@@ -2,7 +2,7 @@
 
 # Installation
 
-Copy-paste or drag and drop downloaded file from this [link (Version 1.0.5)](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.0.5/gazeplay-1.0.5.jar) on your hard drive where you prefer. Desktop is perfect. 
+Copy-paste or drag and drop downloaded file from this [link (Version 1.0.6)](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-SNAPSHOT-1.0.6/gazeplay-1.0.6.jar) on your hard drive where you prefer. Desktop is perfect. 
 
 Double click on the file. If everything is alright, software runs.
 
