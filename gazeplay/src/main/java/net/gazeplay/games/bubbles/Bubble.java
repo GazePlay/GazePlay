@@ -85,7 +85,6 @@ public class Bubble extends Parent {
             @Override
             public void handle(Event e) {
 
-                // log.info(e.getEventType() + " " + e.getTarget());
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
                     // log.info(e.getEventType());

@@ -20,6 +20,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import java.util.Random;
  * Created by Amela Fejza on 5/23/2017.
  */
 
+@Slf4j
 public class JeuAnimaux_handler extends Application {
 
     private static Scene sceneFirst;
@@ -138,8 +140,8 @@ public class JeuAnimaux_handler extends Application {
 
         //musicFileApp = musicFileBravo;
 
-        String a = System.getProperties().getProperty("user.home"); //get the User.Home
         String pathImg=a + File.separator + "GazePlay" + File.separator + "files" + File.separator + "myGame" + File.separator + "images";
+        log.info(pathImg);
         File fImage = new File(pathImg);
         ArrayList<String> imgNames = new ArrayList<String>(Arrays.asList(fImage.list()));
 
