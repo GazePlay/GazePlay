@@ -99,8 +99,8 @@ public class ImagesInfinityRepeat extends Application {
 
         sceneFirst = new Scene(hboxFirst);
 
-        createGame(sceneFirst, hboxFirst,"samplesAmela/photo/cat.jpg" , "samplesAmela/photo/dog.jpg", "samplesAmela/photo/horse.jpg",
-                "samplesAmela/photo/bravo.jpg","samplesAmela/sounds/horse.m4a", "samplesAmela/sounds/cat.m4a",
+        createGame(sceneFirst, hboxFirst,"samplesAmela/images/cat.jpg" , "samplesAmela/images/dog.jpg", "samplesAmela/images/horse.jpg",
+                "samplesAmela/images/bravo.jpg","samplesAmela/sounds/horse.m4a", "samplesAmela/sounds/cat.m4a",
                 "samplesAmela/sounds/dog.m4a", "samplesAmela/sounds/applause.mp3" );
         primaryStage.setScene(sceneFirst);
         primaryStage.show();

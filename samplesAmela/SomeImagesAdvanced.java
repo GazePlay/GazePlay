@@ -54,10 +54,10 @@ public class SomeImagesAdvanced extends Application {
         hbox.setSpacing(10);
 
 
-        Image img = new Image("samplesAmela/photo/cat.jpg");
-        Image img2 = new Image("samplesAmela/photo/dog.jpg");
-        Image img3 = new Image("samplesAmela/photo/horse.jpg");
-        Image img4 = new Image("samplesAmela/photo/bravo.jpg");
+        Image img = new Image("samplesAmela/images/cat.jpg");
+        Image img2 = new Image("samplesAmela/images/dog.jpg");
+        Image img3 = new Image("samplesAmela/images/horse.jpg");
+        Image img4 = new Image("samplesAmela/images/bravo.jpg");
 
         ImageView imgView4 = new ImageView(img4);
         imgView4.setFitHeight(200);
