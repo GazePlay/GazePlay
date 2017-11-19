@@ -50,7 +50,8 @@ public class Card extends Parent {
     private Scene scene;
     private ChoiceBox choiceBox;
     private Group root;
-    ProgressIndicator indicator;
+    private ProgressIndicator indicator;
+    private Timeline timelineProgressBar;
     HiddenItemsGamesStats stats;
     Bravo bravo = Bravo.getBravo();
 
@@ -111,8 +112,6 @@ public class Card extends Parent {
                     indicator.setOpacity(1);
                     indicator.setProgress(0);
 
-                    SequentialTransition sequence = new SequentialTransition();
-
                     Timeline timelineCard = new Timeline();
 
                     timelineCard.getKeyFrames()
@@ -126,18 +125,18 @@ public class Card extends Parent {
                     timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
                             new KeyValue(card.heightProperty(), initHeight * zoom_factor)));
 
-                    Timeline timelineProgressBar = new Timeline();
+                    timelineProgressBar = new Timeline();
 
                     timelineProgressBar.getKeyFrames()
                             .add(new KeyFrame(new Duration(min_time), new KeyValue(indicator.progressProperty(), 1)));
 
-                    sequence.getChildren().addAll(timelineCard, timelineProgressBar);
+                    timelineCard.play();
 
-                    sequence.play();
+                    timelineProgressBar.play();
 
                     toTurn = true;
 
-                    sequence.setOnFinished(new EventHandler<ActionEvent>() {
+                    timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent actionEvent) {
@@ -240,6 +239,11 @@ public class Card extends Parent {
                             .add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight)));
 
                     timeline.play();
+
+                    timelineProgressBar.stop();
+
+                    root.getChildren().remove(indicator);
+
                     indicator.setOpacity(0);
                     indicator.setProgress(0);
                 }
