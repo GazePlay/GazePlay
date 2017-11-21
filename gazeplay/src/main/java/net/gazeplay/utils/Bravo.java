@@ -5,6 +5,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -89,6 +91,17 @@ public class Bravo extends Rectangle {
         sequence.setCycleCount(nb);
 
         sequence.play();
+
+        sequence.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                Timeline timeline = new Timeline();
+                timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(bravo.opacityProperty(), 0)));
+                timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(bravo.translateXProperty(), -10000)));
+                timeline.play();
+            }
+        });
 
         Utils.playSound("data/common/sounds/applause.mp3");
 

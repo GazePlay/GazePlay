@@ -36,12 +36,11 @@ public class Card extends Parent {
     protected static final float cardRatio = 0.75f;
     protected static final int minHeight = 30;
     protected static final float zoom_factor = 1.1f;
-    protected static double min_time;
+    protected static double mintime;
     private Rectangle card;
     private boolean winner;
     private Image image;
-    private boolean toTurn = false;// true if the card is about to be turned (ie player gaze is on it and progress bar
-                                   // is increasing)
+
     private boolean turned = false;// true if the card has been turned
     int nbLines;
     int nbColumns;
@@ -62,7 +61,7 @@ public class Card extends Parent {
     public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image,
             boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGamesStats stats) {
 
-        min_time = new Configuration().fixationlength;
+        mintime = new Configuration().fixationlength;
         this.winner = winner;// true if it is the good card
         this.initWidth = width;
         this.initHeight = height;
@@ -114,9 +113,7 @@ public class Card extends Parent {
 
                     Timeline timelineCard = new Timeline();
 
-                    timelineCard.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(indicator.progressProperty(), 0)));
-                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
+                   timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
                             new KeyValue(card.xProperty(), card.getX() - (initWidth * zoom_factor - initWidth) / 2)));
                     timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
                             new KeyValue(card.yProperty(), card.getY() - (initHeight * zoom_factor - initHeight) / 2)));
@@ -128,25 +125,16 @@ public class Card extends Parent {
                     timelineProgressBar = new Timeline();
 
                     timelineProgressBar.getKeyFrames()
-                            .add(new KeyFrame(new Duration(min_time), new KeyValue(indicator.progressProperty(), 1)));
+                            .add(new KeyFrame(new Duration(mintime), new KeyValue(indicator.progressProperty(), 1)));
 
                     timelineCard.play();
 
                     timelineProgressBar.play();
 
-                    toTurn = true;
-
                     timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent actionEvent) {
-
-                            if (!toTurn) {// la carte n'est plus à tourner quand l'évènement est terminé.
-
-                                return;
-                            }
-
-                            toTurn = false;
 
                             turned = true;
 
@@ -225,8 +213,6 @@ public class Card extends Parent {
                     });
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                    toTurn = false;
-
                     Timeline timeline = new Timeline();
 
                     timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
@@ -241,8 +227,6 @@ public class Card extends Parent {
                     timeline.play();
 
                     timelineProgressBar.stop();
-
-                    root.getChildren().remove(indicator);
 
                     indicator.setOpacity(0);
                     indicator.setProgress(0);
