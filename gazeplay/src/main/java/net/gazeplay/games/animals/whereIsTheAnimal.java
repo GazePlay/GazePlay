@@ -37,7 +37,6 @@ import net.gazeplay.utils.Home;
 import net.gazeplay.utils.HomeUtils;
 import utils.games.Utils;
 
-
 /**
  * Created by Didier Schwab on the 18/11/2017
  */
@@ -56,7 +55,8 @@ public class whereIsTheAnimal extends Application {
 
         root = new Group();
 
-        scene = new Scene(root, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(), Color.BLACK);
+        scene = new Scene(root, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
+                Color.BLACK);
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
@@ -83,14 +83,19 @@ public class whereIsTheAnimal extends Application {
 
         Utils.playSound("data/animals/sounds/fra/bee.w.fra.mp3");
 
-        AnimalPicture R1 = new AnimalPicture(0, 0,width/2, height/2, root, scene,true,"data/animals/images/bees/bee-1040521_1280.jpg", choicebox, stats);
-        AnimalPicture R2 = new AnimalPicture(width/2, 0, width/2, height/2, root, scene,false,"data/animals/images/cats/cat-1337527_1280.jpg", choicebox, stats);
-        AnimalPicture R3 = new AnimalPicture(0, height/2, width/2, height/2, root, scene,false, "data/animals/images/crocodiles/animal-194914_1280.jpg", choicebox, stats);
-        AnimalPicture R4 = new AnimalPicture(width/2,height/2,width/2, height/2, root, scene, false,"data/animals/images/horses/horse-2572051_1280.jpg", choicebox, stats);
+        AnimalPicture R1 = new AnimalPicture(0, 0, width / 2, height / 2, root, scene, true,
+                "data/animals/images/bees/bee-1040521_1280.jpg", choicebox, stats);
+        AnimalPicture R2 = new AnimalPicture(width / 2, 0, width / 2, height / 2, root, scene, false,
+                "data/animals/images/cats/cat-1337527_1280.jpg", choicebox, stats);
+        AnimalPicture R3 = new AnimalPicture(0, height / 2, width / 2, height / 2, root, scene, false,
+                "data/animals/images/crocodiles/animal-194914_1280.jpg", choicebox, stats);
+        AnimalPicture R4 = new AnimalPicture(width / 2, height / 2, width / 2, height / 2, root, scene, false,
+                "data/animals/images/horses/horse-2572051_1280.jpg", choicebox, stats);
 
-        root.getChildren().addAll(R1,R2,R3,R4);
+        root.getChildren().addAll(R1, R2, R3, R4);
     }
 }
+
 @Slf4j
 class AnimalPicture extends Group {
 
@@ -112,7 +117,8 @@ class AnimalPicture extends Group {
 
     Bravo bravo = Bravo.getBravo();
 
-    public AnimalPicture(double posX, double posY, double width, double height, Group root, Scene scene, boolean winner, String imagePath, ChoiceBox choicebox, AnimalStats stats) {
+    public AnimalPicture(double posX, double posY, double width, double height, Group root, Scene scene, boolean winner,
+            String imagePath, ChoiceBox choicebox, AnimalStats stats) {
 
         minTime = new Configuration().fixationlength;
         this.initWidth = width;
@@ -127,10 +133,10 @@ class AnimalPicture extends Group {
         this.getChildren().add(RImage);
         RImage.setFill(new ImagePattern(new Image(imagePath), 0, 0, 1, 1, true));
         indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(RImage.getX() + width/4);
-        double ratio = width/height;
+        indicator.setTranslateX(RImage.getX() + width / 4);
+        double ratio = width / height;
         log.info("Ratio " + ratio);
-        indicator.setTranslateY(RImage.getY() + height - width/1.8);
+        indicator.setTranslateY(RImage.getY() + height - width / 1.8);
         indicator.setMinWidth(width * 0.5);
         indicator.setMinHeight(width * 0.5);
         indicator.setOpacity(0);
@@ -144,7 +150,6 @@ class AnimalPicture extends Group {
 
         this.addEventFilter(GazeEvent.ANY, enterEvent);
     }
-
 
     private EventHandler<Event> buildEvent() {
         return new EventHandler<Event>() {
@@ -161,12 +166,12 @@ class AnimalPicture extends Group {
 
                     Timeline timelineCard = new Timeline();
 
+                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.xProperty(),
+                            RImage.getX() - (initWidth * zoom_factor - initWidth) / 2)));
+                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.yProperty(),
+                            RImage.getY() - (initHeight * zoom_factor - initHeight) / 2)));
                     timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(RImage.xProperty(), RImage.getX() - (initWidth * zoom_factor - initWidth) / 2)));
-                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(RImage.yProperty(), RImage.getY() - (initHeight * zoom_factor - initHeight) / 2)));
-                    timelineCard.getKeyFrames().add(
-                            new KeyFrame(new Duration(1), new KeyValue(RImage.widthProperty(), initWidth * zoom_factor)));
+                            new KeyValue(RImage.widthProperty(), initWidth * zoom_factor)));
                     timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
                             new KeyValue(RImage.heightProperty(), initHeight * zoom_factor)));
 
@@ -201,10 +206,11 @@ class AnimalPicture extends Group {
 
                                 for (Node N : root.getChildren()) {// clear all but images and reward
 
-                                    log.info(N+"");
+                                    log.info(N + "");
 
-                                    if ((N instanceof AnimalPicture && RImage != ((AnimalPicture)N).RImage && !(N instanceof Bravo))
-                                            || (N instanceof Home)) {// we put outside screen Home and cards
+                                    if ((N instanceof AnimalPicture && RImage != ((AnimalPicture) N).RImage
+                                            && !(N instanceof Bravo)) || (N instanceof Home)) {// we put outside screen
+                                                                                               // Home and cards
 
                                         log.info(N + " enlevé ");
                                         N.setTranslateX(-10000);
@@ -225,7 +231,6 @@ class AnimalPicture extends Group {
                                 timeline.getKeyFrames()
                                         .add(new KeyFrame(new Duration(1000), new KeyValue(RImage.yProperty(),
                                                 (scene.getHeight() - RImage.getHeight() * final_zoom) / 2)));
-
 
                                 timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
                                     @Override
@@ -252,8 +257,8 @@ class AnimalPicture extends Group {
 
                                 Timeline timeline = new Timeline();
 
-                                timeline.getKeyFrames()
-                                        .add(new KeyFrame(new Duration(2000), new KeyValue(RImage.opacityProperty(), 0)));
+                                timeline.getKeyFrames().add(
+                                        new KeyFrame(new Duration(2000), new KeyValue(RImage.opacityProperty(), 0)));
 
                                 timeline.play();
 
@@ -265,10 +270,10 @@ class AnimalPicture extends Group {
 
                     Timeline timeline = new Timeline();
 
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(RImage.xProperty(), RImage.getX() + (initWidth * zoom_factor - initWidth) / 2)));
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(RImage.yProperty(), RImage.getY() + (initHeight * zoom_factor - initHeight) / 2)));
+                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.xProperty(),
+                            RImage.getX() + (initWidth * zoom_factor - initWidth) / 2)));
+                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.yProperty(),
+                            RImage.getY() + (initHeight * zoom_factor - initHeight) / 2)));
                     timeline.getKeyFrames()
                             .add(new KeyFrame(new Duration(1), new KeyValue(RImage.widthProperty(), initWidth)));
                     timeline.getKeyFrames()

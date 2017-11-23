@@ -113,7 +113,7 @@ public class Card extends Parent {
 
                     Timeline timelineCard = new Timeline();
 
-                   timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
+                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
                             new KeyValue(card.xProperty(), card.getX() - (initWidth * zoom_factor - initWidth) / 2)));
                     timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
                             new KeyValue(card.yProperty(), card.getY() - (initHeight * zoom_factor - initHeight) / 2)));

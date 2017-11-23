@@ -98,7 +98,8 @@ public class Bravo extends Rectangle {
 
                 Timeline timeline = new Timeline();
                 timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(bravo.opacityProperty(), 0)));
-                timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(bravo.translateXProperty(), -10000)));
+                timeline.getKeyFrames()
+                        .add(new KeyFrame(new Duration(1), new KeyValue(bravo.translateXProperty(), -10000)));
                 timeline.play();
             }
         });

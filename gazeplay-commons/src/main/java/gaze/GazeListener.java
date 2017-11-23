@@ -1,6 +1,7 @@
 package gaze;
 
 import javafx.geometry.Point2D;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Date;
 /**
  * Created by schwab on 04/10/2017.
  */
+@Slf4j
 public abstract class GazeListener {
 
     protected static ArrayList<GazeInfos> shapesEventFilter;
@@ -38,8 +40,6 @@ public abstract class GazeListener {
 
     public void onGazeUpdate(Point2D gazePosition) {
 
-        // log.info(gazePosition);
-        // log.info(GazeUtils.stats);
         // log.info("gazedata = " + gazePosition);
 
         if (secondScreen != null) {

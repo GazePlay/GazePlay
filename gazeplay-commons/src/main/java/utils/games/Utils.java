@@ -159,7 +159,7 @@ public class Utils {
         defaultImages[3] = new Image(
                 ClassLoader.getSystemResourceAsStream("data/common/default/images/businessman-607834_1920.png"));
         defaultImages[4] = new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/crocodiles-614386_1920.png"));
+                ClassLoader.getSystemResourceAsStream("data/common/default/images/crocodile-614386_1920.png"));
         defaultImages[5] = new Image(
                 ClassLoader.getSystemResourceAsStream("data/common/default/images/goldfish-30837_1280.png"));
         defaultImages[6] = new Image(
