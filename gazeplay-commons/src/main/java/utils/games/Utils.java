@@ -175,6 +175,8 @@ public class Utils {
 
     public static void playSound(String ressource) {
 
+        log.debug("Try to play " + ressource);
+
         URL url = ClassLoader.getSystemResource(ressource);
         String path = url.toString();
         Media media = new Media(path);

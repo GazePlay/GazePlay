@@ -37,11 +37,14 @@ import net.gazeplay.utils.Home;
 import net.gazeplay.utils.HomeUtils;
 import utils.games.Utils;
 
+import java.io.File;
+import java.util.Random;
+
 /**
  * Created by Didier Schwab on the 18/11/2017
  */
 @Slf4j
-public class whereIsTheAnimal extends Application {
+public class WhereIsTheAnimal extends Application {
 
     private static Group root;
     private static Scene scene;
@@ -81,16 +84,95 @@ public class whereIsTheAnimal extends Application {
         double width = bounds.getWidth();
         double height = bounds.getHeight();
 
-        Utils.playSound("data/animals/sounds/fra/bee.w.fra.mp3");
+        int winner = (int) (4 * Math.random());
 
-        AnimalPicture R1 = new AnimalPicture(0, 0, width / 2, height / 2, root, scene, true,
-                "data/animals/images/bees/bee-1040521_1280.jpg", choicebox, stats);
-        AnimalPicture R2 = new AnimalPicture(width / 2, 0, width / 2, height / 2, root, scene, false,
-                "data/animals/images/cats/cat-1337527_1280.jpg", choicebox, stats);
-        AnimalPicture R3 = new AnimalPicture(0, height / 2, width / 2, height / 2, root, scene, false,
-                "data/animals/images/crocodiles/animal-194914_1280.jpg", choicebox, stats);
-        AnimalPicture R4 = new AnimalPicture(width / 2, height / 2, width / 2, height / 2, root, scene, false,
-                "data/animals/images/horses/horse-2572051_1280.jpg", choicebox, stats);
+        File F = new File("data/animals/images/");
+
+        log.info("F exists " + F.exists());
+
+        File[] folders = F.listFiles();
+
+        log.info("Dir = " + F.isDirectory());
+
+        log.info("File[] folders = " + folders);
+
+        int deb = (int) (folders.length * Math.random());
+
+        int step = (int) (2 * Math.random() + 1);
+
+        log.info("deb " + deb);
+        log.info("step " + step);
+
+        log.info("folders[deb] " + folders[deb]);
+
+        int i = (deb + step * 0) % folders.length;
+        ;
+
+        File[] files = folders[(i) % folders.length].listFiles();
+
+        int numFile = (int) (files.length * Math.random());
+
+        log.info(files[numFile] + "");
+
+        if (winner == 0)
+            Utils.playSound("data/animals/sounds/fra/" + folders[(i) % folders.length].getName() + ".w.fra.mp3");
+
+        AnimalPicture R1 = new AnimalPicture(0, 0, width / 2, height / 2, root, scene, winner == 0, files[numFile] + "",
+                choicebox, stats);
+
+        i = (deb + step * 1) % folders.length;
+        ;
+
+        files = folders[(i) % folders.length].listFiles();
+
+        numFile = (int) (files.length * Math.random());
+
+        log.info(files[numFile] + "");
+
+        if (winner == 1)
+            Utils.playSound("data/animals/sounds/fra/" + folders[(i) % folders.length].getName() + ".w.fra.mp3");
+
+        AnimalPicture R2 = new AnimalPicture(width / 2, 0, width / 2, height / 2, root, scene, winner == 1,
+                files[numFile] + "", choicebox, stats);
+
+        i = (deb + step * 2) % folders.length;
+
+        files = folders[i].listFiles();
+
+        numFile = (int) (files.length * Math.random());
+
+        log.info(files[numFile] + "");
+
+        if (winner == 2)
+            Utils.playSound("data/animals/sounds/fra/" + folders[(i) % folders.length].getName() + ".w.fra.mp3");
+
+        AnimalPicture R3 = new AnimalPicture(0, height / 2, width / 2, height / 2, root, scene, winner == 2,
+                files[numFile] + "", choicebox, stats);
+
+        i = (deb + step * 3) % folders.length;
+
+        files = folders[i].listFiles();
+
+        numFile = (int) (files.length * Math.random());
+
+        log.info(files[numFile] + "");
+
+        if (winner == 3)
+            Utils.playSound("data/animals/sounds/fra/" + folders[(i) % folders.length].getName() + ".w.fra.mp3");
+
+        AnimalPicture R4 = new AnimalPicture(width / 2, height / 2, width / 2, height / 2, root, scene, winner == 3,
+                files[numFile] + "", choicebox, stats);
+
+        /*
+         * AnimalPicture R1 = new AnimalPicture(0, 0, width / 2, height / 2, root, scene, winner1,
+         * "data/animals/images/bees/bee-1040521_1280.jpg", choicebox, stats); AnimalPicture R2 = new
+         * AnimalPicture(width / 2, 0, width / 2, height / 2, root, scene, winner2,
+         * "data/animals/images/cats/cat-1337527_1280.jpg", choicebox, stats); AnimalPicture R3 = new AnimalPicture(0,
+         * height / 2, width / 2, height / 2, root, scene, winner3,
+         * "data/animals/images/crocodiles/animal-194914_1280.jpg", choicebox, stats); AnimalPicture R4 = new
+         * AnimalPicture(width / 2, height / 2, width / 2, height / 2, root, scene, winner4,
+         * "data/animals/images/horses/horse-2572051_1280.jpg", choicebox, stats);
+         */
 
         root.getChildren().addAll(R1, R2, R3, R4);
     }
@@ -166,14 +248,14 @@ class AnimalPicture extends Group {
 
                     Timeline timelineCard = new Timeline();
 
-                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.xProperty(),
+                /*    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.xProperty(),
                             RImage.getX() - (initWidth * zoom_factor - initWidth) / 2)));
                     timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.yProperty(),
                             RImage.getY() - (initHeight * zoom_factor - initHeight) / 2)));
                     timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
                             new KeyValue(RImage.widthProperty(), initWidth * zoom_factor)));
                     timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(RImage.heightProperty(), initHeight * zoom_factor)));
+                            new KeyValue(RImage.heightProperty(), initHeight * zoom_factor)));*/
 
                     timelineProgressBar = new Timeline();
 
@@ -243,7 +325,7 @@ class AnimalPicture extends Group {
                                             @Override
                                             public void handle(ActionEvent actionEvent) {
                                                 HomeUtils.clear(scene, root, choicebox);
-                                                whereIsTheAnimal.buildGame(root, scene, choicebox, stats);
+                                                WhereIsTheAnimal.buildGame(root, scene, choicebox, stats);
                                                 HomeUtils.home(scene, root, choicebox, stats);
                                                 stats.start();
                                             }
@@ -268,7 +350,7 @@ class AnimalPicture extends Group {
                     });
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                    Timeline timeline = new Timeline();
+             /*       Timeline timeline = new Timeline();
 
                     timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.xProperty(),
                             RImage.getX() + (initWidth * zoom_factor - initWidth) / 2)));
@@ -279,7 +361,7 @@ class AnimalPicture extends Group {
                     timeline.getKeyFrames()
                             .add(new KeyFrame(new Duration(1), new KeyValue(RImage.heightProperty(), initHeight)));
 
-                    timeline.play();
+                    timeline.play();*/
 
                     timelineProgressBar.stop();
 

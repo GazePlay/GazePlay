@@ -3,6 +3,8 @@ package net.gazeplay;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.games.animals.AnimalStats;
+import net.gazeplay.games.animals.WhereIsTheAnimal;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
@@ -95,6 +97,12 @@ public class DefaultGamesLocator implements GamesLocator {
         result.add(new GameSpec("Portrait Bubbles", (gameSpec, scene, root, cbxGames) -> {
             BubblesGamesStats stats = new BubblesGamesStats(scene);
             Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT, stats, false);
+            return stats;
+        }));
+
+        result.add(new GameSpec("Where is the animal ?", (gameSpec, scene, root, cbxGames) -> {
+            AnimalStats stats = new AnimalStats(scene);
+            WhereIsTheAnimal.buildGame(root, scene, cbxGames, stats);
             return stats;
         }));
 

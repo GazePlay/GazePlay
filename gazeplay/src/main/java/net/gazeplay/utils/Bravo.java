@@ -19,7 +19,7 @@ import utils.games.Utils;
 public class Bravo extends Rectangle {
 
     private static int duration = 650;
-    private static int apparitionDuration = 2000;
+    private static int apparitionDuration = 6000;
     private static int nb = 5;
     private static Bravo bravo;
 
