@@ -1,10 +1,8 @@
 package net.gazeplay;
 
-import javafx.scene.image.Image;
-import javafx.scene.paint.ImagePattern;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.games.animals.AnimalStats;
-import net.gazeplay.games.animals.WhereIsTheAnimal;
+import net.gazeplay.games.whereisit.AnimalStats;
+import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
@@ -100,9 +98,51 @@ public class DefaultGamesLocator implements GamesLocator {
             return stats;
         }));
 
-        result.add(new GameSpec("Where is the animal ?", (gameSpec, scene, root, cbxGames) -> {
+        result.add(new GameSpec("Where is the animal ? (2x2)", (gameSpec, scene, root, cbxGames) -> {
             AnimalStats stats = new AnimalStats(scene);
-            WhereIsTheAnimal.buildGame(root, scene, cbxGames, stats);
+            WhereIsIt.buildGame("animals",2, 2, root, scene, cbxGames, stats);
+            return stats;
+        }));
+
+        result.add(new GameSpec("Where is the animal ? (2x3)", (gameSpec, scene, root, cbxGames) -> {
+            AnimalStats stats = new AnimalStats(scene);
+            WhereIsIt.buildGame("animals",2, 3, root, scene, cbxGames, stats);
+            return stats;
+        }));
+
+        result.add(new GameSpec("Where is the animal ? (3x2)", (gameSpec, scene, root, cbxGames) -> {
+            AnimalStats stats = new AnimalStats(scene);
+            WhereIsIt.buildGame("animals",3, 2, root, scene, cbxGames, stats);
+            return stats;
+        }));
+
+        result.add(new GameSpec("Where is the animal ? (3x3)", (gameSpec, scene, root, cbxGames) -> {
+            AnimalStats stats = new AnimalStats(scene);
+            WhereIsIt.buildGame("animals",3, 3, root, scene, cbxGames, stats);
+            return stats;
+        }));
+
+        result.add(new GameSpec("Where is the color ? (2x2)", (gameSpec, scene, root, cbxGames) -> {
+            AnimalStats stats = new AnimalStats(scene);
+            WhereIsIt.buildGame("colors",2, 2, root, scene, cbxGames, stats);
+            return stats;
+        }));
+
+        result.add(new GameSpec("Where is the color ? (2x3)", (gameSpec, scene, root, cbxGames) -> {
+            AnimalStats stats = new AnimalStats(scene);
+            WhereIsIt.buildGame("colors",2, 3, root, scene, cbxGames, stats);
+            return stats;
+        }));
+
+        result.add(new GameSpec("Where is the color ? (3x2)", (gameSpec, scene, root, cbxGames) -> {
+            AnimalStats stats = new AnimalStats(scene);
+            WhereIsIt.buildGame("colors",3, 2, root, scene, cbxGames, stats);
+            return stats;
+        }));
+
+        result.add(new GameSpec("Where is the color ? (3x3)", (gameSpec, scene, root, cbxGames) -> {
+            AnimalStats stats = new AnimalStats(scene);
+            WhereIsIt.buildGame("colors",3, 3, root, scene, cbxGames, stats);
             return stats;
         }));
 

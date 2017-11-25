@@ -1,4 +1,4 @@
-package net.gazeplay.games.animals;
+package net.gazeplay.games.whereisit;
 
 import javafx.scene.Scene;
 import net.gazeplay.utils.stats.HiddenItemsGamesStats;

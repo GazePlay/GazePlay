@@ -1,4 +1,4 @@
-package net.gazeplay.games.animals;
+package net.gazeplay.games.whereisit;
 
 //It is repeated always, it works like a charm :)
 
@@ -18,7 +18,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
@@ -31,23 +30,28 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.games.magiccards.Card;
 import net.gazeplay.utils.Bravo;
 import net.gazeplay.utils.Home;
 import net.gazeplay.utils.HomeUtils;
 import utils.games.Utils;
 
 import java.io.File;
-import java.util.Random;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by Didier Schwab on the 18/11/2017
  */
 @Slf4j
-public class WhereIsTheAnimal extends Application {
+public class WhereIsIt extends Application {
 
     private static Group root;
     private static Scene scene;
+    protected static int nbLines;
+    protected static int nbColumns;
+    protected static String pathSound;
+    protected static String type;
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -67,26 +71,46 @@ public class WhereIsTheAnimal extends Application {
 
         AnimalStats stats = new AnimalStats(scene);
 
-        buildGame(root, scene, null, stats);
+        buildGame("animals",2, 2, root, scene, null, stats);
 
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void buildGame(Group groupRoot, Scene gameScene, ChoiceBox choicebox, AnimalStats stats) {
+    public static void buildGame(String type, int nLines , int nColumns, Group groupRoot, Scene gameScene, ChoiceBox choicebox, AnimalStats stats) {
 
         root = groupRoot;
         scene = gameScene;
+        WhereIsIt.nbLines = nLines;
+        WhereIsIt.nbColumns = nColumns;
+        WhereIsIt.type = type;
+
 
         Rectangle2D bounds = javafx.stage.Screen.getPrimary().getBounds();
 
-        double width = bounds.getWidth();
-        double height = bounds.getHeight();
+        double width = bounds.getWidth()/ nbColumns;
+        double height = bounds.getHeight() / nbLines;
 
-        int winner = (int) (4 * Math.random());
+        int nbImages = nbLines * nbColumns;
 
-        File F = new File("data/animals/images/");
+        int winner = (int) (nbImages * Math.random());
+
+        URL url = WhereIsIt.class.getResource("data/"+ type +"/images/");
+
+        try {
+            url = new URL("file:data/"+ type +"/images/");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        log.info(url + "");
+
+        // System.exit(0);
+
+        File F = new File(url.getFile());
+
+        // File F = new File("data/whereisit/images/");
 
         log.info("F exists " + F.exists());
 
@@ -98,83 +122,51 @@ public class WhereIsTheAnimal extends Application {
 
         int deb = (int) (folders.length * Math.random());
 
-        int step = (int) (2 * Math.random() + 1);
+        int step = (int) (Math.random() + 1.5);
 
         log.info("deb " + deb);
         log.info("step " + step);
 
         log.info("folders[deb] " + folders[deb]);
 
-        int i = (deb + step * 0) % folders.length;
-        ;
+        int posX = 0;
+        int posY = 0;
 
-        File[] files = folders[(i) % folders.length].listFiles();
+        for (int  i = 0; i < nbImages ; i++){
 
-        int numFile = (int) (files.length * Math.random());
+            int index = (deb + step * i) % folders.length;
 
-        log.info(files[numFile] + "");
+            File[] files = folders[(index) % folders.length].listFiles();
 
-        if (winner == 0)
-            Utils.playSound("data/animals/sounds/fra/" + folders[(i) % folders.length].getName() + ".w.fra.mp3");
+            int numFile = (int) (files.length * Math.random());
 
-        AnimalPicture R1 = new AnimalPicture(0, 0, width / 2, height / 2, root, scene, winner == 0, files[numFile] + "",
-                choicebox, stats);
+            log.info(files[numFile] + "");
 
-        i = (deb + step * 1) % folders.length;
-        ;
+            if (winner == i) {
+                pathSound = "data/"+ type+"/sounds/fra/" + folders[(index) % folders.length].getName() + ".w.fra.mp3";
+                Utils.playSound(pathSound);
+            }
+           // AnimalPicture picture = new AnimalPicture((width / 2)*(i%2), (height / 2)*(i/2), width / 2, height / 2, root, scene, winner == i, files[numFile] + "",
+           //         choicebox, stats);
 
-        files = folders[(i) % folders.length].listFiles();
 
-        numFile = (int) (files.length * Math.random());
+            AnimalPicture picture = new AnimalPicture(width*posX, height*posY, width, height, root, scene, winner == i, files[numFile] + "",
+                             choicebox, stats);
 
-        log.info(files[numFile] + "");
+            log.info("posX " + posX);
+            log.info("posY " + posY);
 
-        if (winner == 1)
-            Utils.playSound("data/animals/sounds/fra/" + folders[(i) % folders.length].getName() + ".w.fra.mp3");
+            if((i+1)%nbColumns!=0)
+                posX++;
+            else {
+                posY++;
+                posX=0;
+            }
 
-        AnimalPicture R2 = new AnimalPicture(width / 2, 0, width / 2, height / 2, root, scene, winner == 1,
-                files[numFile] + "", choicebox, stats);
+            root.getChildren().add(picture);
+        }
 
-        i = (deb + step * 2) % folders.length;
-
-        files = folders[i].listFiles();
-
-        numFile = (int) (files.length * Math.random());
-
-        log.info(files[numFile] + "");
-
-        if (winner == 2)
-            Utils.playSound("data/animals/sounds/fra/" + folders[(i) % folders.length].getName() + ".w.fra.mp3");
-
-        AnimalPicture R3 = new AnimalPicture(0, height / 2, width / 2, height / 2, root, scene, winner == 2,
-                files[numFile] + "", choicebox, stats);
-
-        i = (deb + step * 3) % folders.length;
-
-        files = folders[i].listFiles();
-
-        numFile = (int) (files.length * Math.random());
-
-        log.info(files[numFile] + "");
-
-        if (winner == 3)
-            Utils.playSound("data/animals/sounds/fra/" + folders[(i) % folders.length].getName() + ".w.fra.mp3");
-
-        AnimalPicture R4 = new AnimalPicture(width / 2, height / 2, width / 2, height / 2, root, scene, winner == 3,
-                files[numFile] + "", choicebox, stats);
-
-        /*
-         * AnimalPicture R1 = new AnimalPicture(0, 0, width / 2, height / 2, root, scene, winner1,
-         * "data/animals/images/bees/bee-1040521_1280.jpg", choicebox, stats); AnimalPicture R2 = new
-         * AnimalPicture(width / 2, 0, width / 2, height / 2, root, scene, winner2,
-         * "data/animals/images/cats/cat-1337527_1280.jpg", choicebox, stats); AnimalPicture R3 = new AnimalPicture(0,
-         * height / 2, width / 2, height / 2, root, scene, winner3,
-         * "data/animals/images/crocodiles/animal-194914_1280.jpg", choicebox, stats); AnimalPicture R4 = new
-         * AnimalPicture(width / 2, height / 2, width / 2, height / 2, root, scene, winner4,
-         * "data/animals/images/horses/horse-2572051_1280.jpg", choicebox, stats);
-         */
-
-        root.getChildren().addAll(R1, R2, R3, R4);
+        stats.start();
     }
 }
 
@@ -248,15 +240,6 @@ class AnimalPicture extends Group {
 
                     Timeline timelineCard = new Timeline();
 
-                /*    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.xProperty(),
-                            RImage.getX() - (initWidth * zoom_factor - initWidth) / 2)));
-                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.yProperty(),
-                            RImage.getY() - (initHeight * zoom_factor - initHeight) / 2)));
-                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(RImage.widthProperty(), initWidth * zoom_factor)));
-                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(RImage.heightProperty(), initHeight * zoom_factor)));*/
-
                     timelineProgressBar = new Timeline();
 
                     timelineProgressBar.getKeyFrames()
@@ -325,9 +308,9 @@ class AnimalPicture extends Group {
                                             @Override
                                             public void handle(ActionEvent actionEvent) {
                                                 HomeUtils.clear(scene, root, choicebox);
-                                                WhereIsTheAnimal.buildGame(root, scene, choicebox, stats);
+                                                WhereIsIt.buildGame(WhereIsIt.type, WhereIsIt.nbLines, WhereIsIt.nbColumns, root, scene, choicebox, stats);
                                                 HomeUtils.home(scene, root, choicebox, stats);
-                                                stats.start();
+                                                //stats.start();
                                             }
                                         });
                                     }
@@ -344,24 +327,26 @@ class AnimalPicture extends Group {
 
                                 timeline.play();
 
+                                Utils.playSound(WhereIsIt.pathSound);
+
                                 indicator.setOpacity(0);
                             }
                         }
                     });
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-             /*       Timeline timeline = new Timeline();
-
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.xProperty(),
-                            RImage.getX() + (initWidth * zoom_factor - initWidth) / 2)));
-                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.yProperty(),
-                            RImage.getY() + (initHeight * zoom_factor - initHeight) / 2)));
-                    timeline.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(RImage.widthProperty(), initWidth)));
-                    timeline.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(RImage.heightProperty(), initHeight)));
-
-                    timeline.play();*/
+                    /*
+                     * Timeline timeline = new Timeline();
+                     * 
+                     * timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.xProperty(),
+                     * RImage.getX() + (initWidth * zoom_factor - initWidth) / 2))); timeline.getKeyFrames().add(new
+                     * KeyFrame(new Duration(1), new KeyValue(RImage.yProperty(), RImage.getY() + (initHeight *
+                     * zoom_factor - initHeight) / 2))); timeline.getKeyFrames() .add(new KeyFrame(new Duration(1), new
+                     * KeyValue(RImage.widthProperty(), initWidth))); timeline.getKeyFrames() .add(new KeyFrame(new
+                     * Duration(1), new KeyValue(RImage.heightProperty(), initHeight)));
+                     * 
+                     * timeline.play();
+                     */
 
                     timelineProgressBar.stop();
 
