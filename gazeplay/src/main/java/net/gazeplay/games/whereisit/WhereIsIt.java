@@ -52,7 +52,6 @@ public class WhereIsIt extends Application {
     protected static String pathSound;
     protected static String type;
 
-
     @Override
     public void start(Stage primaryStage) {
 
@@ -71,14 +70,15 @@ public class WhereIsIt extends Application {
 
         AnimalStats stats = new AnimalStats(scene);
 
-        buildGame("animals",2, 2, root, scene, null, stats);
+        buildGame("animals", 2, 2, root, scene, null, stats);
 
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void buildGame(String type, int nLines , int nColumns, Group groupRoot, Scene gameScene, ChoiceBox choicebox, AnimalStats stats) {
+    public static void buildGame(String type, int nLines, int nColumns, Group groupRoot, Scene gameScene,
+            ChoiceBox choicebox, AnimalStats stats) {
 
         root = groupRoot;
         scene = gameScene;
@@ -86,20 +86,19 @@ public class WhereIsIt extends Application {
         WhereIsIt.nbColumns = nColumns;
         WhereIsIt.type = type;
 
-
         Rectangle2D bounds = javafx.stage.Screen.getPrimary().getBounds();
 
-        double width = bounds.getWidth()/ nbColumns;
+        double width = bounds.getWidth() / nbColumns;
         double height = bounds.getHeight() / nbLines;
 
         int nbImages = nbLines * nbColumns;
 
         int winner = (int) (nbImages * Math.random());
 
-        URL url = WhereIsIt.class.getResource("data/"+ type +"/images/");
+        URL url = WhereIsIt.class.getResource("data/" + type + "/images/");
 
         try {
-            url = new URL("file:data/"+ type +"/images/");
+            url = new URL("file:data/" + type + "/images/");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -132,7 +131,7 @@ public class WhereIsIt extends Application {
         int posX = 0;
         int posY = 0;
 
-        for (int  i = 0; i < nbImages ; i++){
+        for (int i = 0; i < nbImages; i++) {
 
             int index = (deb + step * i) % folders.length;
 
@@ -143,30 +142,43 @@ public class WhereIsIt extends Application {
             log.info(files[numFile] + "");
 
             if (winner == i) {
-                pathSound = "data/"+ type+"/sounds/fra/" + folders[(index) % folders.length].getName() + ".w.fra.mp3";
+                pathSound = getPathSound(folders[(index) % folders.length].getName(), (new Configuration()).language);
                 Utils.playSound(pathSound);
             }
-           // AnimalPicture picture = new AnimalPicture((width / 2)*(i%2), (height / 2)*(i/2), width / 2, height / 2, root, scene, winner == i, files[numFile] + "",
-           //         choicebox, stats);
+            // AnimalPicture picture = new AnimalPicture((width / 2)*(i%2), (height / 2)*(i/2), width / 2, height / 2,
+            // root, scene, winner == i, files[numFile] + "",
+            // choicebox, stats);
 
-
-            AnimalPicture picture = new AnimalPicture(width*posX, height*posY, width, height, root, scene, winner == i, files[numFile] + "",
-                             choicebox, stats);
+            AnimalPicture picture = new AnimalPicture(width * posX, height * posY, width, height, root, scene,
+                    winner == i, files[numFile] + "", choicebox, stats);
 
             log.info("posX " + posX);
             log.info("posY " + posY);
 
-            if((i+1)%nbColumns!=0)
+            if ((i + 1) % nbColumns != 0)
                 posX++;
             else {
                 posY++;
-                posX=0;
+                posX = 0;
             }
 
             root.getChildren().add(picture);
         }
 
         stats.start();
+    }
+
+    public static String getPathSound(String folder, String language){
+
+        if(language.equals("deu"))// erase when translation is complete
+            language="eng";
+
+        String voice = "w";
+
+        if(Math.random()>0.5)
+            voice = "m";
+
+        return  "data/" + type + "/sounds/" + language + "/" + folder + "."+ voice +"." + language + ".mp3";
     }
 }
 
@@ -308,9 +320,10 @@ class AnimalPicture extends Group {
                                             @Override
                                             public void handle(ActionEvent actionEvent) {
                                                 HomeUtils.clear(scene, root, choicebox);
-                                                WhereIsIt.buildGame(WhereIsIt.type, WhereIsIt.nbLines, WhereIsIt.nbColumns, root, scene, choicebox, stats);
+                                                WhereIsIt.buildGame(WhereIsIt.type, WhereIsIt.nbLines,
+                                                        WhereIsIt.nbColumns, root, scene, choicebox, stats);
                                                 HomeUtils.home(scene, root, choicebox, stats);
-                                                //stats.start();
+                                                // stats.start();
                                             }
                                         });
                                     }

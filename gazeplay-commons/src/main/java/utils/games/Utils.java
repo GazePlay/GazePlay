@@ -175,7 +175,7 @@ public class Utils {
 
     public static void playSound(String ressource) {
 
-        log.debug("Try to play " + ressource);
+        log.info("Try to play " + ressource);
 
         URL url = ClassLoader.getSystemResource(ressource);
         String path = url.toString();
