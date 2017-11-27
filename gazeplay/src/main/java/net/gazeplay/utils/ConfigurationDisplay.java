@@ -135,7 +135,7 @@ public class ConfigurationDisplay extends Rectangle {
         int i = 300;
 
         FixLengthBox.getItems().add(new Double((double) C.fixationlength) / 1000);
-        while (i <= 1000) {
+        while (i <= 30000) {
 
             FixLengthBox.getItems().add(new Double(((double) i) / 1000));
             i = i + 100;
