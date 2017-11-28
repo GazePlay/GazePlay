@@ -55,7 +55,7 @@ public class WhereIsIt extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        primaryStage.setTitle("Where is the animal ?");
+        primaryStage.setTitle("Where is the it ?");
 
         primaryStage.setFullScreen(true);
 
@@ -68,7 +68,7 @@ public class WhereIsIt extends Application {
 
         primaryStage.setScene(scene);
 
-        AnimalStats stats = new AnimalStats(scene);
+        WhereIsItStats stats = new WhereIsItStats(scene);
 
         buildGame("animals", 2, 2, root, scene, null, stats);
 
@@ -78,7 +78,7 @@ public class WhereIsIt extends Application {
     }
 
     public static void buildGame(String type, int nLines, int nColumns, Group groupRoot, Scene gameScene,
-            ChoiceBox choicebox, AnimalStats stats) {
+            ChoiceBox choicebox, WhereIsItStats stats) {
 
         root = groupRoot;
         scene = gameScene;
@@ -108,8 +108,6 @@ public class WhereIsIt extends Application {
         // System.exit(0);
 
         File F = new File(url.getFile());
-
-        // File F = new File("data/whereisit/images/");
 
         log.info("F exists " + F.exists());
 
@@ -145,11 +143,11 @@ public class WhereIsIt extends Application {
                 pathSound = getPathSound(folders[(index) % folders.length].getName(), (new Configuration()).language);
                 Utils.playSound(pathSound);
             }
-            // AnimalPicture picture = new AnimalPicture((width / 2)*(i%2), (height / 2)*(i/2), width / 2, height / 2,
+            // Pictures picture = new Pictures((width / 2)*(i%2), (height / 2)*(i/2), width / 2, height / 2,
             // root, scene, winner == i, files[numFile] + "",
             // choicebox, stats);
 
-            AnimalPicture picture = new AnimalPicture(width * posX, height * posY, width, height, root, scene,
+            Pictures picture = new Pictures(width * posX, height * posY, width, height, root, scene,
                     winner == i, files[numFile] + "", choicebox, stats);
 
             log.info("posX " + posX);
@@ -183,7 +181,7 @@ public class WhereIsIt extends Application {
 }
 
 @Slf4j
-class AnimalPicture extends Group {
+class Pictures extends Group {
 
     protected static final float zoom_factor = 1.1f;
     private boolean selected;
@@ -195,7 +193,7 @@ class AnimalPicture extends Group {
     private Timeline timelineProgressBar;
     private double initWidth;
     private double initHeight;
-    private AnimalStats stats;
+    private WhereIsItStats stats;
     private Scene scene;
     private ChoiceBox choicebox;
 
@@ -203,8 +201,8 @@ class AnimalPicture extends Group {
 
     Bravo bravo = Bravo.getBravo();
 
-    public AnimalPicture(double posX, double posY, double width, double height, Group root, Scene scene, boolean winner,
-            String imagePath, ChoiceBox choicebox, AnimalStats stats) {
+    public Pictures(double posX, double posY, double width, double height, Group root, Scene scene, boolean winner,
+                    String imagePath, ChoiceBox choicebox, WhereIsItStats stats) {
 
         minTime = new Configuration().fixationlength;
         this.initWidth = width;
@@ -285,7 +283,7 @@ class AnimalPicture extends Group {
 
                                     log.info(N + "");
 
-                                    if ((N instanceof AnimalPicture && RImage != ((AnimalPicture) N).RImage
+                                    if ((N instanceof Pictures && RImage != ((Pictures) N).RImage
                                             && !(N instanceof Bravo)) || (N instanceof Home)) {// we put outside screen
                                                                                                // Home and cards
 
