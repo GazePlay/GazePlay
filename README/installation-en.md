@@ -17,7 +17,7 @@ If you experiment some problems send an email to didier.schwab at univ dash gren
 
 These two models are only Windows compatible (version 7, 8 and 10). GazePlay can't use them with another operating system or on computers which material characteritics don't allow to use these device.
 
-Download last version of the Tobii setup and double click on it. Installation won't length more than few seconds.
+Download last version of the [GazePlay-tobii-setup](https://github.com/schwabdidier/GazePlay/releases/download/gazeplay-tobii-setup-1.1.0.jar/gazeplay-tobii-setup-1.1.0.jar) and double click on it. Installation won't length more than few seconds.
 
 For information, installation process simply copy in the default directory of GazePlay a directory called *DLL* with two files called *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll*.
 
