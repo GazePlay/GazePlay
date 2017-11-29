@@ -45,18 +45,21 @@ import java.net.URL;
 @Slf4j
 public class WhereIsIt extends Application {
 
+    public static final int ANIMALNAME = 0;
+    public static final int COLORNAME = 1;
+
     private static Group root;
     private static Scene scene;
     protected static int nbLines;
     protected static int nbColumns;
     protected static String pathSound;
-    protected static String type;
+    protected static int type;
     protected static boolean fourThree;
 
     @Override
     public void start(Stage primaryStage) {
 
-        primaryStage.setTitle("Where is the it ?");
+        primaryStage.setTitle("Where is it ?");
 
         primaryStage.setFullScreen(true);
 
@@ -71,22 +74,24 @@ public class WhereIsIt extends Application {
 
         WhereIsItStats stats = new WhereIsItStats(scene);
 
-        buildGame("animals", 2, 2, false, root, scene, null, stats);
+        buildGame(ANIMALNAME, 2, 2, false, root, scene, null, stats);
 
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void buildGame(String type, int nLines, int nColumns, boolean fourThree, Group groupRoot,
+    public static void buildGame(int Game, int nLines, int nColumns, boolean fourThree, Group groupRoot,
             Scene gameScene, ChoiceBox choicebox, WhereIsItStats stats) {
 
         root = groupRoot;
         scene = gameScene;
         WhereIsIt.nbLines = nLines;
         WhereIsIt.nbColumns = nColumns;
-        WhereIsIt.type = type;
+        WhereIsIt.type = Game;
         WhereIsIt.fourThree = fourThree;
+
+        stats.setName(getName());
 
         double shift = 0;
 
@@ -118,10 +123,10 @@ public class WhereIsIt extends Application {
 
         int winner = (int) (nbImages * Math.random());
 
-        URL url = WhereIsIt.class.getResource("data/" + type + "/images/");
+        URL url = WhereIsIt.class.getResource("data/" + getName() + "/images/");
 
         try {
-            url = new URL("file:data/" + type + "/images/");
+            url = new URL("file:data/" + getName() + "/images/");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -166,9 +171,6 @@ public class WhereIsIt extends Application {
                 pathSound = getPathSound(folders[(index) % folders.length].getName(), (new Configuration()).language);
                 Utils.playSound(pathSound);
             }
-            // Pictures picture = new Pictures((width / 2)*(i%2), (height / 2)*(i/2), width / 2, height / 2,
-            // root, scene, winner == i, files[numFile] + "",
-            // choicebox, stats);
 
             Pictures picture = new Pictures(width * posX + shift, height * posY, width, height, root, scene,
                     winner == i, files[numFile] + "", choicebox, stats);
@@ -199,7 +201,24 @@ public class WhereIsIt extends Application {
         if (Math.random() > 0.5)
             voice = "m";
 
-        return "data/" + type + "/sounds/" + language + "/" + folder + "." + voice + "." + language + ".mp3";
+        return "data/" + getName() + "/sounds/" + language + "/" + folder + "." + voice + "." + language + ".mp3";
+    }
+
+    private static String getName(){
+
+        switch(type){
+
+            case ANIMALNAME :
+                return "where-is-the-animal";
+
+            case COLORNAME :
+                return "where-is-the-color";
+
+            default:
+                log.debug("This case should never happen");
+                System.exit(0); // should never happen
+                return null;
+        }
     }
 }
 

@@ -8,7 +8,10 @@ public class WhereIsItStats extends HiddenItemsGamesStats {
     public WhereIsItStats(Scene scene) {
 
         super(scene);
-        gameName = "Where is the animal ?";
     }
 
+    protected void setName(String gameName){
+
+        this.gameName = gameName;
+    }
 }
