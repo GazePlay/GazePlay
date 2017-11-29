@@ -259,12 +259,13 @@ class Pictures extends Group {
         this.getChildren().add(RImage);
         RImage.setFill(new ImagePattern(new Image(imagePath), 0, 0, 1, 1, true));
         indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(RImage.getX() + width / 4);
+        indicator.setTranslateX(RImage.getX() + width / 8);
         double ratio = width / height;
-        log.info("Ratio " + ratio);
-        indicator.setTranslateY(RImage.getY() + height - width / 1.8);
-        indicator.setMinWidth(width * 0.5);
-        indicator.setMinHeight(width * 0.5);
+        //indicator.setTranslateY(RImage.getY() + height - width / 1.8);
+        indicator.setTranslateY(RImage.getY() + height /8);
+        indicator.setMinWidth(width * 0.75);
+        indicator.setMinHeight(height * 0.75);
+       // System.exit(0);
         indicator.setOpacity(0);
         this.getChildren().add(indicator);
 
