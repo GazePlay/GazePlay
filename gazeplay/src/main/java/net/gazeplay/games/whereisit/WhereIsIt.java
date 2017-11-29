@@ -60,14 +60,14 @@ public class WhereIsIt extends Application {
 
         primaryStage.setFullScreen(true);
 
-        root = new Group();
+        Group appRoot = new Group();
 
-        scene = new Scene(root, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
+        Scene theScene = new Scene(appRoot, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
                 Color.BLACK);
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
-        primaryStage.setScene(scene);
+        primaryStage.setScene(theScene);
 
         WhereIsItStats stats = new WhereIsItStats(scene);
 
@@ -97,9 +97,9 @@ public class WhereIsIt extends Application {
 
         double width = 0, height = 0;
 
-        log.info("Ratio ="+((screenWidth / screenHeight)-4/3));
+        log.info("16/9 or 16/10 screen ? = "+((screenWidth / screenHeight)-(16.0/9.0)));
 
-        if (fourThree && ((screenWidth / screenHeight)-4/3) < 0.1) {
+        if (fourThree && ((screenWidth / screenHeight)-(16.0/9.0)) < 0.1) {
 
             width = 4 * screenHeight / 3;
             height = screenHeight;
