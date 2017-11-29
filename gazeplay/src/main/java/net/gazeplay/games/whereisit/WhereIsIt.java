@@ -147,7 +147,7 @@ public class WhereIsIt extends Application {
 
         int deb = (int) (folders.length * Math.random());
 
-        int step = (int) (Math.random() + 1.5);
+        int step = 1;//(int) (Math.random() + 1.5);
 
         log.info("deb " + deb);
         log.info("step " + step);
@@ -260,12 +260,9 @@ class Pictures extends Group {
         RImage.setFill(new ImagePattern(new Image(imagePath), 0, 0, 1, 1, true));
         indicator = new ProgressIndicator(0);
         indicator.setTranslateX(RImage.getX() + width / 8);
-        double ratio = width / height;
-        //indicator.setTranslateY(RImage.getY() + height - width / 1.8);
-        indicator.setTranslateY(RImage.getY() + height /8);
+        indicator.setTranslateY(RImage.getY() + height / 8);
         indicator.setMinWidth(width * 0.75);
         indicator.setMinHeight(height * 0.75);
-       // System.exit(0);
         indicator.setOpacity(0);
         this.getChildren().add(indicator);
 
@@ -375,12 +372,35 @@ class Pictures extends Group {
 
                             } else {// bad card
 
-                                Timeline timeline = new Timeline();
+                                Timeline disparition = new Timeline();
+                                Timeline apparition = new Timeline();
 
-                                timeline.getKeyFrames().add(
+                                disparition.getKeyFrames().add(
                                         new KeyFrame(new Duration(2000), new KeyValue(RImage.opacityProperty(), 0)));
 
-                                timeline.play();
+                                disparition.getKeyFrames().add(
+                                        new KeyFrame(new Duration(2000), new KeyValue(RImage.fillProperty(),new ImagePattern(new Image("data/common/images/error.png"),  0, 0,1, 1, true))));
+
+                                apparition.getKeyFrames().add(
+                                        new KeyFrame(new Duration(1), new KeyValue(RImage.widthProperty(), initHeight/2)));
+
+                                apparition.getKeyFrames().add(
+                                        new KeyFrame(new Duration(1), new KeyValue(RImage.heightProperty(), initHeight/2)));
+
+                                apparition.getKeyFrames().add(
+                                        new KeyFrame(new Duration(1), new KeyValue(RImage.layoutXProperty(), initWidth/3)));
+
+                                apparition.getKeyFrames().add(
+                                        new KeyFrame(new Duration(1), new KeyValue(RImage.layoutYProperty(), initHeight/4)));
+
+                                apparition.getKeyFrames().add(
+                                        new KeyFrame(new Duration(2000), new KeyValue(RImage.opacityProperty(), 0.8)));
+
+                                SequentialTransition sq = new SequentialTransition();
+                                sq.getChildren().addAll(disparition,apparition);
+                                sq.play();
+
+
 
                                 Utils.playSound(WhereIsIt.pathSound);
 

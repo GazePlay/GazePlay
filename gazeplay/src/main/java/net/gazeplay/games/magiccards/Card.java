@@ -29,9 +29,6 @@ import net.gazeplay.utils.HomeUtils;
 import utils.games.Utils;
 import net.gazeplay.utils.stats.HiddenItemsGamesStats;
 
-import java.io.File;
-import java.io.IOException;
-
 /**
  * Created by schwab on 17/09/2016.
  */
@@ -263,7 +260,7 @@ public class Card extends Parent {
                 } else {
                     Card card = new Card(nbColumns, nbLines, width / 2 + (width + cardWidth) * i,
                             minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight,
-                            new Image("data/magiccards/images/error.png"), false, scene, root, cbxGames, stats);
+                            new Image("data/common/images/error.png"), false, scene, root, cbxGames, stats);
                     root.getChildren().add(card);
                 }
             }
