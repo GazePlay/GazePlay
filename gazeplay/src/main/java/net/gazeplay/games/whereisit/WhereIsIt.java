@@ -70,14 +70,14 @@ public class WhereIsIt extends Application {
 
         WhereIsItStats stats = new WhereIsItStats(scene);
 
-        buildGame("animals", 2, 2, root, scene, null, stats);
+        buildGame("animals", 2, 2, false,root, scene, null, stats);
 
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void buildGame(String type, int nLines, int nColumns, Group groupRoot, Scene gameScene,
+    public static void buildGame(String type, int nLines,  int nColumns, boolean fourthree, Group groupRoot, Scene gameScene,
             ChoiceBox choicebox, WhereIsItStats stats) {
 
         root = groupRoot;
@@ -319,7 +319,7 @@ class Pictures extends Group {
                                             public void handle(ActionEvent actionEvent) {
                                                 HomeUtils.clear(scene, root, choicebox);
                                                 WhereIsIt.buildGame(WhereIsIt.type, WhereIsIt.nbLines,
-                                                        WhereIsIt.nbColumns, root, scene, choicebox, stats);
+                                                        WhereIsIt.nbColumns, false, root, scene, choicebox, stats);
                                                 HomeUtils.home(scene, root, choicebox, stats);
                                                 // stats.start();
                                             }
