@@ -106,7 +106,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
         result.add(new GameSpec("Where is the animal ? (2x3)", (gameSpec, scene, root, cbxGames) -> {
             WhereIsItStats stats = new WhereIsItStats(scene);
-            WhereIsIt.buildGame("animals", 2, 3, true, root, scene, cbxGames, stats);
+            WhereIsIt.buildGame("animals", 2, 3, false, root, scene, cbxGames, stats);
             return stats;
         }));
 

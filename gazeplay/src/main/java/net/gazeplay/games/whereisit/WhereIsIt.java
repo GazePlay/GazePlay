@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.utils.Bravo;
 import net.gazeplay.utils.Home;
 import net.gazeplay.utils.HomeUtils;
+import sun.jvm.hotspot.code.Location;
 import utils.games.Utils;
 
 import java.io.File;
@@ -51,6 +52,7 @@ public class WhereIsIt extends Application {
     protected static int nbColumns;
     protected static String pathSound;
     protected static String type;
+    protected static boolean fourThree;
 
     @Override
     public void start(Stage primaryStage) {
@@ -77,7 +79,7 @@ public class WhereIsIt extends Application {
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void buildGame(String type, int nLines,  int nColumns, boolean fourthree, Group groupRoot, Scene gameScene,
+    public static void buildGame(String type, int nLines,  int nColumns, boolean fourThree, Group groupRoot, Scene gameScene,
             ChoiceBox choicebox, WhereIsItStats stats) {
 
         root = groupRoot;
@@ -85,11 +87,32 @@ public class WhereIsIt extends Application {
         WhereIsIt.nbLines = nLines;
         WhereIsIt.nbColumns = nColumns;
         WhereIsIt.type = type;
+        WhereIsIt.fourThree = fourThree;
+
+        double shift =  0;
 
         Rectangle2D bounds = javafx.stage.Screen.getPrimary().getBounds();
 
-        double width = bounds.getWidth() / nbColumns;
-        double height = bounds.getHeight() / nbLines;
+        double screenWidth = bounds.getWidth();
+        double screenHeight = bounds.getHeight();
+
+        double width = 0, height = 0;
+
+        if (fourThree && screenWidth/screenHeight != 4/3){
+
+            width = 4*screenHeight/3;
+            height = screenHeight;
+            shift = (screenWidth-width)/2;
+        }
+        else {
+
+            width = screenWidth;
+            height = screenHeight;
+            shift = 0;
+        }
+
+        width = width / nbColumns;
+        height = height / nbLines;
 
         int nbImages = nbLines * nbColumns;
 
@@ -147,7 +170,7 @@ public class WhereIsIt extends Application {
             // root, scene, winner == i, files[numFile] + "",
             // choicebox, stats);
 
-            Pictures picture = new Pictures(width * posX, height * posY, width, height, root, scene,
+            Pictures picture = new Pictures(width * posX + shift, height * posY, width, height, root, scene,
                     winner == i, files[numFile] + "", choicebox, stats);
 
             log.info("posX " + posX);
@@ -319,7 +342,7 @@ class Pictures extends Group {
                                             public void handle(ActionEvent actionEvent) {
                                                 HomeUtils.clear(scene, root, choicebox);
                                                 WhereIsIt.buildGame(WhereIsIt.type, WhereIsIt.nbLines,
-                                                        WhereIsIt.nbColumns, false, root, scene, choicebox, stats);
+                                                        WhereIsIt.nbColumns, WhereIsIt.fourThree, root, scene, choicebox, stats);
                                                 HomeUtils.home(scene, root, choicebox, stats);
                                                 // stats.start();
                                             }
