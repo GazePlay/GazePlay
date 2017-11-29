@@ -97,6 +97,8 @@ public class WhereIsIt extends Application {
 
         double width = 0, height = 0;
 
+        log.info("Ratio ="+((screenWidth / screenHeight)-4/3));
+
         if (fourThree && ((screenWidth / screenHeight)-4/3) < 0.1) {
 
             width = 4 * screenHeight / 3;
