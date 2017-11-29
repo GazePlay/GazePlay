@@ -33,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.utils.Bravo;
 import net.gazeplay.utils.Home;
 import net.gazeplay.utils.HomeUtils;
-import sun.jvm.hotspot.code.Location;
 import utils.games.Utils;
 
 import java.io.File;
@@ -72,15 +71,15 @@ public class WhereIsIt extends Application {
 
         WhereIsItStats stats = new WhereIsItStats(scene);
 
-        buildGame("animals", 2, 2, false,root, scene, null, stats);
+        buildGame("animals", 2, 2, false, root, scene, null, stats);
 
         primaryStage.show();
 
         SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    public static void buildGame(String type, int nLines,  int nColumns, boolean fourThree, Group groupRoot, Scene gameScene,
-            ChoiceBox choicebox, WhereIsItStats stats) {
+    public static void buildGame(String type, int nLines, int nColumns, boolean fourThree, Group groupRoot,
+            Scene gameScene, ChoiceBox choicebox, WhereIsItStats stats) {
 
         root = groupRoot;
         scene = gameScene;
@@ -89,7 +88,7 @@ public class WhereIsIt extends Application {
         WhereIsIt.type = type;
         WhereIsIt.fourThree = fourThree;
 
-        double shift =  0;
+        double shift = 0;
 
         Rectangle2D bounds = javafx.stage.Screen.getPrimary().getBounds();
 
@@ -98,13 +97,12 @@ public class WhereIsIt extends Application {
 
         double width = 0, height = 0;
 
-        if (fourThree && screenWidth/screenHeight != 4/3){
+        if (fourThree && screenWidth / screenHeight != 4 / 3) {
 
-            width = 4*screenHeight/3;
+            width = 4 * screenHeight / 3;
             height = screenHeight;
-            shift = (screenWidth-width)/2;
-        }
-        else {
+            shift = (screenWidth - width) / 2;
+        } else {
 
             width = screenWidth;
             height = screenHeight;
@@ -189,17 +187,17 @@ public class WhereIsIt extends Application {
         stats.start();
     }
 
-    public static String getPathSound(String folder, String language){
+    public static String getPathSound(String folder, String language) {
 
-        if(language.equals("deu"))// erase when translation is complete
-            language="eng";
+        if (language.equals("deu"))// erase when translation is complete
+            language = "eng";
 
         String voice = "w";
 
-        if(Math.random()>0.5)
+        if (Math.random() > 0.5)
             voice = "m";
 
-        return  "data/" + type + "/sounds/" + language + "/" + folder + "."+ voice +"." + language + ".mp3";
+        return "data/" + type + "/sounds/" + language + "/" + folder + "." + voice + "." + language + ".mp3";
     }
 }
 
@@ -225,7 +223,7 @@ class Pictures extends Group {
     Bravo bravo = Bravo.getBravo();
 
     public Pictures(double posX, double posY, double width, double height, Group root, Scene scene, boolean winner,
-                    String imagePath, ChoiceBox choicebox, WhereIsItStats stats) {
+            String imagePath, ChoiceBox choicebox, WhereIsItStats stats) {
 
         minTime = new Configuration().fixationlength;
         this.initWidth = width;
@@ -342,7 +340,8 @@ class Pictures extends Group {
                                             public void handle(ActionEvent actionEvent) {
                                                 HomeUtils.clear(scene, root, choicebox);
                                                 WhereIsIt.buildGame(WhereIsIt.type, WhereIsIt.nbLines,
-                                                        WhereIsIt.nbColumns, WhereIsIt.fourThree, root, scene, choicebox, stats);
+                                                        WhereIsIt.nbColumns, WhereIsIt.fourThree, root, scene,
+                                                        choicebox, stats);
                                                 HomeUtils.home(scene, root, choicebox, stats);
                                                 // stats.start();
                                             }
