@@ -12,6 +12,8 @@ import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -285,6 +287,8 @@ class Pictures extends Group {
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
+                    log.debug("ENTERED");
+
                     indicator.setOpacity(0.5);
                     indicator.setProgress(0);
 
@@ -304,12 +308,16 @@ class Pictures extends Group {
                         @Override
                         public void handle(ActionEvent actionEvent) {
 
+                            log.debug("FINISHED");
+
                             selected = true;
 
                             RImage.removeEventFilter(MouseEvent.ANY, enterEvent);
                             RImage.removeEventFilter(GazeEvent.ANY, enterEvent);
 
                             if (winner) {
+
+                                log.debug("WINNER");
 
                                 stats.incNbGoals();
 
@@ -319,7 +327,10 @@ class Pictures extends Group {
 
                                 Timeline timeline = new Timeline();
 
-                                for (Node N : root.getChildren()) {// clear all but images and reward
+                                ObservableList<Node> list = FXCollections.observableArrayList(root.getChildren());
+
+                               // for (Node N : root.getChildren()) {// clear all but images and reward
+                                for (Node N : list) {// clear all but images and reward
 
                                     log.info(N + "");
 
@@ -330,8 +341,8 @@ class Pictures extends Group {
                                         log.info(N + " enlevé ");
                                         N.setTranslateX(-10000);
                                         N.setOpacity(0);
-                                        N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                        N.removeEventFilter(GazeEvent.ANY, enterEvent);
+                                        //N.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                      //  N.removeEventFilter(GazeEvent.ANY, enterEvent);
                                     } else {// we keep only Bravo and winning card
                                     }
                                 }
