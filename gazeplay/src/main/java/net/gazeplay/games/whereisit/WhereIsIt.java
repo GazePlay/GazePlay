@@ -405,7 +405,7 @@ class Pictures extends Group {
                                         new KeyFrame(new Duration(1), new KeyValue(RImage.layoutYProperty(), initHeight/4)));
 
                                 apparition.getKeyFrames().add(
-                                        new KeyFrame(new Duration(2000), new KeyValue(RImage.opacityProperty(), 0.8)));
+                                        new KeyFrame(new Duration(2000), new KeyValue(RImage.opacityProperty(), 0.5)));
 
                                 SequentialTransition sq = new SequentialTransition();
                                 sq.getChildren().addAll(disparition,apparition);
