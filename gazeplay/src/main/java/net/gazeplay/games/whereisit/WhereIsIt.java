@@ -67,8 +67,8 @@ public class WhereIsIt extends Application {
 
         Group appRoot = new Group();
 
-        Scene theScene = new Scene(appRoot, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
-                Color.BLACK);
+        Scene theScene = new Scene(appRoot, Screen.getScreens().get(0).getWidth(),
+                Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
@@ -104,9 +104,9 @@ public class WhereIsIt extends Application {
 
         double width = 0, height = 0;
 
-        log.info("16/9 or 16/10 screen ? = "+((screenWidth / screenHeight)-(16.0/9.0)));
+        log.info("16/9 or 16/10 screen ? = " + ((screenWidth / screenHeight) - (16.0 / 9.0)));
 
-        if (fourThree && ((screenWidth / screenHeight)-(16.0/9.0)) < 0.1) {
+        if (fourThree && ((screenWidth / screenHeight) - (16.0 / 9.0)) < 0.1) {
 
             width = 4 * screenHeight / 3;
             height = screenHeight;
@@ -149,7 +149,7 @@ public class WhereIsIt extends Application {
 
         int deb = (int) (folders.length * Math.random());
 
-        int step = 1;//(int) (Math.random() + 1.5);
+        int step = 1;// (int) (Math.random() + 1.5);
 
         log.info("deb " + deb);
         log.info("step " + step);
@@ -206,20 +206,20 @@ public class WhereIsIt extends Application {
         return "data/" + getName() + "/sounds/" + language + "/" + folder + "." + voice + "." + language + ".mp3";
     }
 
-    private static String getName(){
+    private static String getName() {
 
-        switch(type){
+        switch (type) {
 
-            case ANIMALNAME :
-                return "where-is-the-animal";
+        case ANIMALNAME:
+            return "where-is-the-animal";
 
-            case COLORNAME :
-                return "where-is-the-color";
+        case COLORNAME:
+            return "where-is-the-color";
 
-            default:
-                log.debug("This case should never happen");
-                System.exit(0); // should never happen
-                return null;
+        default:
+            log.debug("This case should never happen");
+            System.exit(0); // should never happen
+            return null;
         }
     }
 }
@@ -329,7 +329,7 @@ class Pictures extends Group {
 
                                 ObservableList<Node> list = FXCollections.observableArrayList(root.getChildren());
 
-                               // for (Node N : root.getChildren()) {// clear all but images and reward
+                                // for (Node N : root.getChildren()) {// clear all but images and reward
                                 for (Node N : list) {// clear all but images and reward
 
                                     log.info(N + "");
@@ -341,8 +341,8 @@ class Pictures extends Group {
                                         log.info(N + " enlevé ");
                                         N.setTranslateX(-10000);
                                         N.setOpacity(0);
-                                        //N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                      //  N.removeEventFilter(GazeEvent.ANY, enterEvent);
+                                        // N.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                        // N.removeEventFilter(GazeEvent.ANY, enterEvent);
                                     } else {// we keep only Bravo and winning card
                                     }
                                 }
@@ -389,29 +389,29 @@ class Pictures extends Group {
                                 disparition.getKeyFrames().add(
                                         new KeyFrame(new Duration(2000), new KeyValue(RImage.opacityProperty(), 0)));
 
-                                disparition.getKeyFrames().add(
-                                        new KeyFrame(new Duration(2000), new KeyValue(RImage.fillProperty(),new ImagePattern(new Image("data/common/images/error.png"),  0, 0,1, 1, true))));
+                                disparition.getKeyFrames()
+                                        .add(new KeyFrame(new Duration(2000),
+                                                new KeyValue(RImage.fillProperty(), new ImagePattern(
+                                                        new Image("data/common/images/error.png"), 0, 0, 1, 1, true))));
 
-                                apparition.getKeyFrames().add(
-                                        new KeyFrame(new Duration(1), new KeyValue(RImage.widthProperty(), initHeight/2)));
+                                apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                        new KeyValue(RImage.widthProperty(), initHeight / 2)));
 
-                                apparition.getKeyFrames().add(
-                                        new KeyFrame(new Duration(1), new KeyValue(RImage.heightProperty(), initHeight/2)));
+                                apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                        new KeyValue(RImage.heightProperty(), initHeight / 2)));
 
-                                apparition.getKeyFrames().add(
-                                        new KeyFrame(new Duration(1), new KeyValue(RImage.layoutXProperty(), initWidth/3)));
+                                apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                        new KeyValue(RImage.layoutXProperty(), initWidth / 3)));
 
-                                apparition.getKeyFrames().add(
-                                        new KeyFrame(new Duration(1), new KeyValue(RImage.layoutYProperty(), initHeight/4)));
+                                apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                        new KeyValue(RImage.layoutYProperty(), initHeight / 4)));
 
                                 apparition.getKeyFrames().add(
                                         new KeyFrame(new Duration(2000), new KeyValue(RImage.opacityProperty(), 0.5)));
 
                                 SequentialTransition sq = new SequentialTransition();
-                                sq.getChildren().addAll(disparition,apparition);
+                                sq.getChildren().addAll(disparition, apparition);
                                 sq.play();
-
-
 
                                 Utils.playSound(WhereIsIt.pathSound);
 
