@@ -39,6 +39,7 @@ import net.gazeplay.utils.HomeUtils;
 import utils.games.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -186,36 +187,83 @@ public class WhereIsIt extends Application {
     }
 
     private static File locateImagesDirectory() {
+        File result = null;
+
+        result = locateImagesDirectoryInUnpackedDistDirectory();
+
+        if (result == null) {
+            result = locateImagesDirectoryInExplodedClassPath();
+        }
+
+        return result;
+    }
+
+    private static File locateImagesDirectoryInUnpackedDistDirectory() {
+        final File workingDirectory = new File(".");
+        log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
+        final String workingDirectoryName;
+        try {
+            workingDirectoryName = workingDirectory.getCanonicalFile().getName();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        log.info("workingDirectoryName = {}", workingDirectoryName);
+
         final String parentImagesPackageResourceLocation = "data/" + getName() + "/images/";
         log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
 
-        URL url = null;
-
-        /*
-         * if (url == null) { try { url = new URL("file:" + parentImagesPackageResourceLocation); } catch
-         * (MalformedURLException e) { throw new RuntimeException(e); } log.info("url = {}", url); }
-         */
-
-        if (url == null) {
-            final ClassLoader classLoader = WhereIsIt.class.getClassLoader();
-            url = classLoader.getResource(parentImagesPackageResourceLocation);
-            log.info("url = {}", url);
+        {
+            final File imagesDirectory = new File(workingDirectory, parentImagesPackageResourceLocation);
+            log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
+            boolean checked = checkImageDirectory(imagesDirectory);
+            if (checked) {
+                return imagesDirectory;
+            }
         }
 
-        if (url == null) {
-            throw new IllegalStateException("Images Directory not found");
+        if (workingDirectoryName.equals("bin")) {
+            final File imagesDirectory = new File(workingDirectory, "../" + parentImagesPackageResourceLocation);
+            log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
+            boolean checked = checkImageDirectory(imagesDirectory);
+            if (checked) {
+                return imagesDirectory;
+            }
         }
 
-        final File imagesDirectory = new File(url.getFile());
-        log.info("imagesDirectory = {}", url);
+        return null;
+    }
 
+    private static File locateImagesDirectoryInExplodedClassPath() {
+        final String parentImagesPackageResourceLocation = "data/" + getName() + "/images/";
+        log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
+
+        final URL parentImagesPackageResourceUrl;
+
+        final ClassLoader classLoader = WhereIsIt.class.getClassLoader();
+        parentImagesPackageResourceUrl = classLoader.getResource(parentImagesPackageResourceLocation);
+        log.info("parentImagesPackageResourceUrl = {}", parentImagesPackageResourceUrl);
+
+        if (parentImagesPackageResourceUrl == null) {
+            throw new IllegalStateException("Resource not found : " + parentImagesPackageResourceUrl);
+        }
+
+        final File imagesDirectory = new File(parentImagesPackageResourceUrl.getFile());
+        log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
+
+        checkImageDirectory(imagesDirectory);
+        return imagesDirectory;
+    }
+
+    private static boolean checkImageDirectory(File imagesDirectory) {
         if (!imagesDirectory.exists()) {
-            throw new IllegalStateException("Directory does not exists " + imagesDirectory);
+            log.warn("Directory does not exist : {}", imagesDirectory.getAbsolutePath());
+            return false;
         }
         if (!imagesDirectory.isDirectory()) {
-            throw new IllegalStateException("File is not a Directory " + imagesDirectory);
+            log.warn("File is not a valid Directory : {}", imagesDirectory.getAbsolutePath());
+            return false;
         }
-        return imagesDirectory;
+        return true;
     }
 
     public static String getPathSound(final String folder, String language) {
@@ -368,7 +416,7 @@ public class WhereIsIt extends Application {
 
                                         if ((N instanceof Pictures && imageRectangle != ((Pictures) N).imageRectangle
                                                 && !(N instanceof Bravo)) || (N instanceof Home)) {// we put outside
-                                                                                                   // screen
+                                            // screen
                                             // Home and cards
 
                                             log.info(N + " enlevé ");
