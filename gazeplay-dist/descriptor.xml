@@ -67,5 +67,18 @@
             <unpack>true</unpack>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
+        <dependencySet>
+            <outputDirectory>/DLL</outputDirectory>
+            <includes>
+                <include>com.github.schwabdidier:gazeplay-dlls:jar</include>
+            </includes>
+            <unpackOptions>
+                <includes>
+                    <include>**/*.dll</include>
+                </includes>
+            </unpackOptions>
+            <unpack>true</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+        </dependencySet>
     </dependencySets>
 </assembly>
