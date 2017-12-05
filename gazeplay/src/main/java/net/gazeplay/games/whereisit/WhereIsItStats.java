@@ -10,7 +10,7 @@ public class WhereIsItStats extends HiddenItemsGamesStats {
         super(scene);
     }
 
-    protected void setName(String gameName){
+    protected void setName(String gameName) {
 
         this.gameName = gameName;
     }
