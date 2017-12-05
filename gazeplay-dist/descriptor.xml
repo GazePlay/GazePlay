@@ -48,6 +48,24 @@
             <outputDirectory>/lib</outputDirectory>
             <unpack>false</unpack>
             <useProjectArtifact>false</useProjectArtifact>
+            <!--
+            <excludes>
+                <exclude>com.github.schwabdidier:gazeplay-data:jar</exclude>
+            </excludes>
+            -->
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>com.github.schwabdidier:gazeplay-data:jar</include>
+            </includes>
+            <unpackOptions>
+                <includes>
+                    <include>data/**</include>
+                </includes>
+            </unpackOptions>
+            <unpack>true</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
     </dependencySets>
 </assembly>
