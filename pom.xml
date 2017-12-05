@@ -40,6 +40,8 @@
 		<module>gazeplay-picto-pick</module>
 		<module>gazeplay-melordi</module>
 		<module>gazeplay-dist</module>
+		<module>gazeplay-data</module>
+		<module>gazeplay-dlls</module>
 	</modules>
 
 
