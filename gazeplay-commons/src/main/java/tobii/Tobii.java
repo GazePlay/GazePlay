@@ -11,7 +11,7 @@ import utils.games.Utils;
 public class Tobii {
 
     private static final double screenWidth = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
-    private static final double screenHeight = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
+    private static final double screenHeight = com.sun.glass.ui.Screen.getScreens().get(0).getHeight();
     private static boolean init = false;
 
     private static Point2D parseTobiiOutput(String tobiiOutput) {
