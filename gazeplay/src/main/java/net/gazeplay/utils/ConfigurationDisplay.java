@@ -19,6 +19,7 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GazePlay;
 import net.gazeplay.utils.layout.Themes;
 import net.gazeplay.utils.multilinguism.Languages;
 import net.gazeplay.utils.multilinguism.Multilinguism;
@@ -99,7 +100,7 @@ public class ConfigurationDisplay extends Rectangle {
         language.setX(100);
         language.setY(100);
         language.setId("item");
-        buildLanguageMenu(C, root, 250, 105);
+        buildLanguageMenu(C, scene, root, cbxGames, 250, 105);
 
         Text eyeTracker = new Text(multilinguism.getTrad("EyeTracker", Multilinguism.getLanguage()) + colon);
         eyeTracker.setX(100);
@@ -303,7 +304,7 @@ public class ConfigurationDisplay extends Rectangle {
         root.getChildren().add(buttonLoad);
     }
 
-    private static void buildLanguageMenu(Configuration C, Group root, double posX, double posY) {
+    private static void buildLanguageMenu(Configuration C, Scene scene, Group root, ChoiceBox cbxGames, double posX, double posY) {
         ChoiceBox languageBox = new ChoiceBox();
         Languages[] TLanguages = Languages.values();
 
@@ -333,6 +334,7 @@ public class ConfigurationDisplay extends Rectangle {
                 C.language = TLanguages[newValue.intValue()].toString();
                 log.info(C.toString());
                 C.saveConfigIgnoringExceptions();
+                buildConfig(scene, root, GazePlay.updateGames());//game names change following the language
             }
         });
     }

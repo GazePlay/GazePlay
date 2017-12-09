@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GazePlay extends Application {
 
-    private Scene scene;
-    private Group root;
+    private static Scene scene;
+    private static Group root;
 
-    private ChoiceBox<String> cbxGames;
+    private static ChoiceBox<String> cbxGames;
 
-    private List<GameSpec> games;
+    private static List<GameSpec> games;
 
-    private final GamesLocator gamesLocator = new DefaultGamesLocator();
+    private static GamesLocator gamesLocator;
 
     @Override
     public void start(Stage primaryStage) {
@@ -39,8 +39,6 @@ public class GazePlay extends Application {
         primaryStage.setTitle("GazePlay");
 
         primaryStage.setFullScreen(true);
-
-        games = gamesLocator.listGames();
 
         root = new Group();
 
@@ -62,6 +60,8 @@ public class GazePlay extends Application {
 
         log.info(scene.getStylesheets().toString());
 
+        updateGames();
+/*
         cbxGames = new ChoiceBox<>();
 
         List<String> gamesLabels = games.stream().map(GameSpec::getLabel).collect(Collectors.toList());
@@ -75,7 +75,7 @@ public class GazePlay extends Application {
                 chooseGame(newValue.intValue());
             }
         });
-
+*/
         // root.getChildren().add(cbxGames);
 
         HomeUtils.goHome(scene, root, cbxGames);
@@ -106,7 +106,35 @@ public class GazePlay extends Application {
         // SecondScreen secondScreen = SecondScreen.launch();
     }
 
-    private void chooseGame(int gameIndex) {
+    /**
+     * This command is called when games have to be updated (example: when language changed)
+     *
+     */
+
+    public static ChoiceBox updateGames(){
+
+        gamesLocator = new DefaultGamesLocator();
+
+        games = gamesLocator.listGames();
+
+        cbxGames = new ChoiceBox<>();
+
+        List<String> gamesLabels = games.stream().map(GameSpec::getLabel).collect(Collectors.toList());
+
+        cbxGames.getItems().addAll(gamesLabels);
+
+        cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
+                chooseGame(newValue.intValue());
+            }
+        });
+
+        return cbxGames;
+    }
+
+    private static void chooseGame(int gameIndex) {
         HomeUtils.clear(scene, root, cbxGames);
 
         log.info("Game number: " + gameIndex);
