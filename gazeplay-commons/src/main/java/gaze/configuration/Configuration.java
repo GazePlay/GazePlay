@@ -20,8 +20,9 @@ public class Configuration {
     private static String PROPERTY_NAME_EYETRACKER = "EYETRACKER";
     private static String PROPERTY_NAME_LANGUAGE = "LANGUAGE";
     private static String PROPERTY_NAME_FILEDIR = "FILEDIR";
-    private static String PROPERTY_NAME_FIXATIONLENGTH = "FixationLength";
-    private static String PROPERTY_NAME_CSSFILE = "CssFile";
+    private static String PROPERTY_NAME_FIXATIONLENGTH = "FIXATIONLENGTH";
+    private static String PROPERTY_NAME_CSSFILE = "CSSFILE";
+    private static String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
 
     private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
@@ -30,6 +31,7 @@ public class Configuration {
     private static String DEFAULT_VALUE_LANGUAGE = "fra";
     private static int DEFAULT_VALUE_FIXATION_LENGTH = 500;
     private static String DEFAULT_VALUE_CSS_FILE = "data/stylesheets/main-green.css";
+    private static String DEFAULT_VALUE_WHEREISIT_DIR = "";
 
     private static String getFileDirectoryDefaultValue() {
         return Utils.getGazePlayFolder() + "files" + Utils.FILESEPARATOR;
@@ -54,6 +56,8 @@ public class Configuration {
     public int fixationlength = DEFAULT_VALUE_FIXATION_LENGTH;
 
     public String cssfile = DEFAULT_VALUE_CSS_FILE;
+
+    public String whereIsItDir = DEFAULT_VALUE_WHEREISIT_DIR;
 
     public Configuration() {
         Properties properties;
@@ -118,6 +122,11 @@ public class Configuration {
         if (buffer != null) {
             cssfile = buffer;
         }
+
+        buffer = prop.getProperty(PROPERTY_NAME_WHEREISIT_DIR);
+        if (buffer != null) {
+            whereIsItDir = buffer.toLowerCase();
+        }
     }
 
     public void saveConfig() throws IOException {
@@ -140,7 +149,7 @@ public class Configuration {
     private Properties toProperties() {
         Properties properties = new Properties();
 
-        // FIXME why is this not saved to file ?
+        // FIXME why is this not saved to file ? -> Certainly no longer usefull (see issue #102)
         // properties.setProperty(PROPERTY_NAME_GAZEMODE, this.gazeMode);
 
         properties.setProperty(PROPERTY_NAME_EYETRACKER, this.eyetracker);
@@ -148,6 +157,7 @@ public class Configuration {
         properties.setProperty(PROPERTY_NAME_FILEDIR, this.filedir);
         properties.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(this.fixationlength));
         properties.setProperty(PROPERTY_NAME_CSSFILE, this.cssfile);
+        properties.setProperty(PROPERTY_NAME_WHEREISIT_DIR, this.whereIsItDir);
 
         return properties;
     }

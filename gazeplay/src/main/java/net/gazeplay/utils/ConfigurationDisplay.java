@@ -126,7 +126,13 @@ public class ConfigurationDisplay extends Rectangle {
         fixLength.setId("item");
         buildFixLengthChooserMenu(scene, C, root, 250, 505);
 
-        root.getChildren().addAll(Configuration, language, eyeTracker, fileDir, styleFile, fixLength);
+        Text wisGameDir = new Text(multilinguism.getTrad("WhereIsItDirectory", Multilinguism.getLanguage()) + colon);
+        wisGameDir.setX(100);
+        wisGameDir.setY(600);
+        wisGameDir.setId("item");
+        buildWISDirectoryChooserMenu(scene, C, root, 250, 605);
+
+        root.getChildren().addAll(Configuration, language, eyeTracker, fileDir, styleFile, fixLength, wisGameDir);
     }
 
     private static void buildFixLengthChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
@@ -304,7 +310,40 @@ public class ConfigurationDisplay extends Rectangle {
         root.getChildren().add(buttonLoad);
     }
 
-    private static void buildLanguageMenu(Configuration C, Scene scene, Group root, ChoiceBox cbxGames, double posX, double posY) {
+    private static void buildWISDirectoryChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
+
+        Button buttonLoad = new Button(C.filedir);
+
+        buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                DirectoryChooser directoryChooser = new DirectoryChooser();
+                File file = directoryChooser.showDialog(scene.getWindow());
+                if (file == null) {
+                    return;
+                }
+                buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
+                File F = new File(file.toString());
+                C.whereIsItDir = file.toString() + Utils.FILESEPARATOR;
+
+                if (Utils.isWindows()) {
+
+                    C.whereIsItDir = Utils.convertWindowsPath(C.whereIsItDir);
+                }
+
+                log.info(C.toString());
+                C.saveConfigIgnoringExceptions();
+            }
+        });
+
+        buttonLoad.setTranslateX(posX);
+        buttonLoad.setTranslateY(posY);
+
+        root.getChildren().add(buttonLoad);
+    }
+
+    private static void buildLanguageMenu(Configuration C, Scene scene, Group root, ChoiceBox cbxGames, double posX,
+            double posY) {
         ChoiceBox languageBox = new ChoiceBox();
         Languages[] TLanguages = Languages.values();
 
@@ -334,7 +373,7 @@ public class ConfigurationDisplay extends Rectangle {
                 C.language = TLanguages[newValue.intValue()].toString();
                 log.info(C.toString());
                 C.saveConfigIgnoringExceptions();
-                buildConfig(scene, root, GazePlay.updateGames());//game names change following the language
+                buildConfig(scene, root, GazePlay.updateGames());// game names change following the language
             }
         });
     }

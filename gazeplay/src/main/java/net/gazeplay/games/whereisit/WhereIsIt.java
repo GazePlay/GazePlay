@@ -50,6 +50,7 @@ public class WhereIsIt extends Application {
 
     public static final int ANIMALNAME = 0;
     public static final int COLORNAME = 1;
+    public static final int CUSTOMIZED = 2;
 
     private static Group root;
     private static Scene scene;
@@ -187,6 +188,12 @@ public class WhereIsIt extends Application {
     }
 
     private static File locateImagesDirectory() {
+
+        if(type == CUSTOMIZED){
+
+            return new File((new Configuration()).getWhereIsItDir());
+        }
+
         File result = null;
 
         result = locateImagesDirectoryInUnpackedDistDirectory();
@@ -288,6 +295,8 @@ public class WhereIsIt extends Application {
             return "where-is-the-animal";
         case COLORNAME:
             return "where-is-the-color";
+        case CUSTOMIZED:
+            return "custumized";
         default:
             log.debug("This case should never happen");
             throw new IllegalStateException("Unsupported type value : " + type);

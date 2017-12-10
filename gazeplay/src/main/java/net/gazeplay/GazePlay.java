@@ -61,21 +61,20 @@ public class GazePlay extends Application {
         log.info(scene.getStylesheets().toString());
 
         updateGames();
-/*
-        cbxGames = new ChoiceBox<>();
-
-        List<String> gamesLabels = games.stream().map(GameSpec::getLabel).collect(Collectors.toList());
-
-        cbxGames.getItems().addAll(gamesLabels);
-
-        cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-
-                chooseGame(newValue.intValue());
-            }
-        });
-*/
+        /*
+         * cbxGames = new ChoiceBox<>();
+         * 
+         * List<String> gamesLabels = games.stream().map(GameSpec::getLabel).collect(Collectors.toList());
+         * 
+         * cbxGames.getItems().addAll(gamesLabels);
+         * 
+         * cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+         * 
+         * @Override public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
+         * {
+         * 
+         * chooseGame(newValue.intValue()); } });
+         */
         // root.getChildren().add(cbxGames);
 
         HomeUtils.goHome(scene, root, cbxGames);
@@ -111,7 +110,7 @@ public class GazePlay extends Application {
      *
      */
 
-    public static ChoiceBox updateGames(){
+    public static ChoiceBox updateGames() {
 
         gamesLocator = new DefaultGamesLocator();
 
