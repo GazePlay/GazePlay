@@ -22,12 +22,14 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
@@ -36,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.utils.Bravo;
 import net.gazeplay.utils.Home;
 import net.gazeplay.utils.HomeUtils;
+import net.gazeplay.utils.multilinguism.Multilinguism;
 import utils.games.Utils;
 
 import java.io.File;
@@ -54,6 +57,7 @@ public class WhereIsIt extends Application {
 
     private static Group root;
     private static Scene scene;
+    private static ChoiceBox choicebox;
     protected static int nbLines;
     protected static int nbColumns;
     protected static String pathSound;
@@ -86,10 +90,11 @@ public class WhereIsIt extends Application {
     }
 
     public static void buildGame(int Game, int nLines, int nColumns, boolean fourThree, Group groupRoot,
-            Scene gameScene, ChoiceBox choicebox, WhereIsItStats stats) {
+            Scene gameScene, ChoiceBox gpChoicebox, WhereIsItStats stats) {
 
         root = groupRoot;
         scene = gameScene;
+        choicebox = gpChoicebox;
         WhereIsIt.nbLines = nLines;
         WhereIsIt.nbColumns = nColumns;
         WhereIsIt.type = Game;
@@ -135,7 +140,9 @@ public class WhereIsIt extends Application {
         final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
 
         if (filesCount == 0) {
-            throw new IllegalStateException("No image found in Directory " + imagesDirectory);
+            log.info("No image found in Directory " + imagesDirectory);
+            error();
+            return;
         }
 
         log.info("imagesFolders = {}", imagesFolders);
@@ -187,21 +194,34 @@ public class WhereIsIt extends Application {
         stats.start();
     }
 
+    private static void error() {
+
+        HomeUtils.clear(scene, root, choicebox);
+        HomeUtils.home(scene, root, choicebox, null);
+
+        Multilinguism multilinguism = Multilinguism.getMultilinguism();
+        Text error = new Text(multilinguism.getTrad("WII-error", Multilinguism.getLanguage()));
+        error.setX(Screen.getMainScreen().getWidth()/2-100);
+        error.setY(Screen.getMainScreen().getHeight()/2);
+        error.setId("item");
+        root.getChildren().addAll(error);
+    }
+
     private static File locateImagesDirectory() {
-
-        if(type == CUSTOMIZED){
-
-            return new File((new Configuration()).getWhereIsItDir());
-        }
 
         File result = null;
 
-        result = locateImagesDirectoryInUnpackedDistDirectory();
+        if (type == CUSTOMIZED) {
 
-        if (result == null) {
-            result = locateImagesDirectoryInExplodedClassPath();
+            result = new File((new Configuration()).getWhereIsItDir() + "/images/");
+        } else {
+
+            result = locateImagesDirectoryInUnpackedDistDirectory();
+
+            if (result == null) {
+                result = locateImagesDirectoryInExplodedClassPath();
+            }
         }
-
         return result;
     }
 
@@ -274,6 +294,38 @@ public class WhereIsIt extends Application {
     }
 
     public static String getPathSound(final String folder, String language) {
+
+        if (type == CUSTOMIZED) {
+
+            try {
+
+                log.info("CUSTOMIZED");
+
+                String path = new Configuration().whereIsItDir + "sounds/";
+                File F = new File(path);
+
+                for (String file : F.list()) {
+
+                    log.info("file " + file);
+                    log.info("folder " + folder);
+
+                    if (file.indexOf(folder) >= 0) {
+
+                        log.info(path + file);
+
+                        return path + file;
+                    }
+                }
+            }
+            catch(Exception e){
+
+                log.info("Problem with customized folder");
+                error();
+            }
+
+            return "";
+        }
+
         if (language.equals("deu")) {
             // erase when translation is complete
             language = "eng";

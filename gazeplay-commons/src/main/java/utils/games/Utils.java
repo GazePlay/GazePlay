@@ -178,7 +178,13 @@ public class Utils {
         log.info("Try to play " + ressource);
 
         URL url = ClassLoader.getSystemResource(ressource);
-        String path = url.toString();
+
+        String path = null;
+
+        if (url == null)
+            path = "file:"+ressource;
+        else
+            path = url.toString();
         Media media = new Media(path);
         try {
             MediaPlayer mp = new MediaPlayer(media);

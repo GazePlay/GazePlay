@@ -61,40 +61,8 @@ public class GazePlay extends Application {
         log.info(scene.getStylesheets().toString());
 
         updateGames();
-        /*
-         * cbxGames = new ChoiceBox<>();
-         * 
-         * List<String> gamesLabels = games.stream().map(GameSpec::getLabel).collect(Collectors.toList());
-         * 
-         * cbxGames.getItems().addAll(gamesLabels);
-         * 
-         * cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-         * 
-         * @Override public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
-         * {
-         * 
-         * chooseGame(newValue.intValue()); } });
-         */
-        // root.getChildren().add(cbxGames);
 
         HomeUtils.goHome(scene, root, cbxGames);
-
-        /*
-         * cbxGames.setScaleX(2); cbxGames.setScaleY(2);
-         * 
-         * cbxGames.setTranslateX(scene.getWidth() * 0.9 / 2); cbxGames.setTranslateY(scene.getHeight() * 0.9 / 2);
-         * 
-         * cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-         * 
-         * @Override public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
-         * {
-         * 
-         * chooseGame(newValue.intValue()); } });
-         * 
-         * root.getChildren().add(cbxGames);
-         * 
-         * HomeUtils.addButtons(scene, root, cbxGames);
-         */
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 

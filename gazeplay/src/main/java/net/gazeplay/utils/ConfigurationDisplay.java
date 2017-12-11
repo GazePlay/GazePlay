@@ -312,7 +312,7 @@ public class ConfigurationDisplay extends Rectangle {
 
     private static void buildWISDirectoryChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
 
-        Button buttonLoad = new Button(C.filedir);
+        Button buttonLoad = new Button(C.whereIsItDir);
 
         buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
             @Override

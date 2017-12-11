@@ -168,12 +168,11 @@ public class DefaultGamesLocator implements GamesLocator {
                     return stats;
                 }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsIt", language),
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.CUSTOMIZED, 3, 3, false, root, scene, cbxGames, stats);
-                    return stats;
-                }));
+        result.add(new GameSpec(multilinguism.getTrad("WhereIsIt", language), (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt.buildGame(WhereIsIt.CUSTOMIZED, 3, 3, false, root, scene, cbxGames, stats);
+            return stats;
+        }));
 
         log.info("Games found : " + result.size());
 
