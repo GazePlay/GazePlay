@@ -1,5 +1,6 @@
 package gaze.configuration;
 
+import gaze.EyeTrackers;
 import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class Configuration {
     private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
     private static String DEFAULT_VALUE_GAZEMODE = "true";
-    private static String DEFAULT_VALUE_EYETRACKER = "none";
+    private static String DEFAULT_VALUE_EYETRACKER = EyeTrackers.mouse_control.toString();
     private static String DEFAULT_VALUE_LANGUAGE = "fra";
     private static int DEFAULT_VALUE_FIXATION_LENGTH = 500;
     private static String DEFAULT_VALUE_CSS_FILE = "data/stylesheets/main-green.css";
@@ -95,7 +96,7 @@ public class Configuration {
 
         buffer = prop.getProperty(PROPERTY_NAME_EYETRACKER);
         if (buffer != null) {
-            eyetracker = buffer.toLowerCase();
+            eyetracker = buffer;
         }
 
         buffer = prop.getProperty(PROPERTY_NAME_LANGUAGE);

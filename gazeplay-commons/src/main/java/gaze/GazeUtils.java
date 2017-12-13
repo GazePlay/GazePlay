@@ -35,7 +35,7 @@ public class GazeUtils {
 
         log.info("Eye-tracker = " + config.eyetracker);
 
-        if (config.eyetracker.equals("tobii")) {
+        if (config.eyetracker.equals(EyeTrackers.tobii_eyeX_4C.toString())) {
 
             Tobii.execProg(new TobiiGazeListener(nodesEventFilter, nodesEventHandler));
         } else if (config.gazeMode.equals("true"))

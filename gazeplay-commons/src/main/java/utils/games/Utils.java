@@ -185,6 +185,16 @@ public class Utils {
             path = "file:" + ressource;
         else
             path = url.toString();
+
+    /*    if (!Utils.isWindows() && url == null)
+            path = "file:" + ressource;
+        else if(Utils.isWindows() && url == null)
+            path = ressource;
+        else
+            path = url.toString();*/
+
+        log.info("path " + path);
+
         Media media = new Media(path);
         try {
             MediaPlayer mp = new MediaPlayer(media);
@@ -376,6 +386,7 @@ public class Utils {
 
         path = path.replace("\\", "/");
         path = path.replaceAll("\\\\", "/");
+
         return path;
     }
 

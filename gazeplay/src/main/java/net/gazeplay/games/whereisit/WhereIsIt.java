@@ -170,6 +170,8 @@ public class WhereIsIt extends Application {
             log.info("randomImageFile = {}", randomImageFile);
 
             if (winner == i) {
+
+                log.info("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
                 pathSound = getPathSound(imagesFolders[(index) % filesCount].getName(), (new Configuration()).language);
                 log.info("pathSound = {}", pathSound);
                 Utils.playSound(pathSound);
@@ -311,9 +313,11 @@ public class WhereIsIt extends Application {
 
                     if (file.indexOf(folder) >= 0) {
 
-                        log.info(path + file);
+                        File f = new File(path + file);
 
-                        return path + file;
+                        log.info("file " + f);
+
+                        return f.toString();
                     }
                 }
             } catch (Exception e) {
@@ -338,7 +342,7 @@ public class WhereIsIt extends Application {
         }
 
         return "data/" + getName() + "/sounds/" + language + "/" + folder + "." + voice + "." + language + ".mp3";
-    }
+      }
 
     private static String getName() {
         switch (type) {

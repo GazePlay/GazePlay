@@ -130,7 +130,7 @@ public class ConfigurationDisplay extends Rectangle {
         wisGameDir.setX(100);
         wisGameDir.setY(600);
         wisGameDir.setId("item");
-        buildWISDirectoryChooserMenu(scene, C, root, 250, 605);
+        buildWITDirectoryChooserMenu(scene, C, root, 250, 605);
 
         root.getChildren().addAll(Configuration, language, eyeTracker, fileDir, styleFile, fixLength, wisGameDir);
     }
@@ -310,7 +310,7 @@ public class ConfigurationDisplay extends Rectangle {
         root.getChildren().add(buttonLoad);
     }
 
-    private static void buildWISDirectoryChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
+    private static void buildWITDirectoryChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
 
         Button buttonLoad = new Button(C.whereIsItDir);
 
@@ -328,6 +328,7 @@ public class ConfigurationDisplay extends Rectangle {
 
                 if (Utils.isWindows()) {
 
+                    log.info("convertWindowsPath " + C.whereIsItDir);
                     C.whereIsItDir = Utils.convertWindowsPath(C.whereIsItDir);
                 }
 
