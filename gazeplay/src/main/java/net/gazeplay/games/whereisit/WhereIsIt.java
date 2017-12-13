@@ -22,27 +22,23 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.utils.Bravo;
 import net.gazeplay.utils.Home;
 import net.gazeplay.utils.HomeUtils;
-import net.gazeplay.utils.multilinguism.Multilinguism;
 import utils.games.Utils;
 
 import java.io.File;
-import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -53,11 +49,9 @@ public class WhereIsIt extends Application {
 
     public static final int ANIMALNAME = 0;
     public static final int COLORNAME = 1;
-    public static final int CUSTOMIZED = 2;
 
     private static Group root;
     private static Scene scene;
-    private static ChoiceBox choicebox;
     protected static int nbLines;
     protected static int nbColumns;
     protected static String pathSound;
@@ -90,11 +84,10 @@ public class WhereIsIt extends Application {
     }
 
     public static void buildGame(int Game, int nLines, int nColumns, boolean fourThree, Group groupRoot,
-            Scene gameScene, ChoiceBox gpChoicebox, WhereIsItStats stats) {
+            Scene gameScene, ChoiceBox choicebox, WhereIsItStats stats) {
 
         root = groupRoot;
         scene = gameScene;
-        choicebox = gpChoicebox;
         WhereIsIt.nbLines = nLines;
         WhereIsIt.nbColumns = nColumns;
         WhereIsIt.type = Game;
@@ -128,55 +121,61 @@ public class WhereIsIt extends Application {
         width = width / nbColumns;
         height = height / nbLines;
 
-        final int nbImages = nbLines * nbColumns;
-        log.debug("nbImages = {}", nbImages);
+        int nbImages = nbLines * nbColumns;
 
-        final int winner = (int) (nbImages * Math.random());
-        log.debug("winner = {}", winner);
+        int winner = (int) (nbImages * Math.random());
 
-        final File imagesDirectory = locateImagesDirectory();
+        URL url = WhereIsIt.class.getResource("data/" + getName() + "/images/");
 
-        final File[] imagesFolders = imagesDirectory.listFiles();
-        final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
-
-        if (filesCount == 0) {
-            log.info("No image found in Directory " + imagesDirectory);
-            error();
-            return;
+        try {
+            url = new URL("file:data/" + getName() + "/images/");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
 
-        log.info("imagesFolders = {}", imagesFolders);
+        log.info(url + "");
 
-        final int randomFolderIndex = (int) (filesCount * Math.random());
-        log.info("randomFolderIndex " + randomFolderIndex);
+        // System.exit(0);
 
-        int step = 1; // (int) (Math.random() + 1.5);
+        File F = new File(url.getFile());
+
+        log.info("F exists " + F.exists());
+
+        File[] folders = F.listFiles();
+
+        log.info("Dir = " + F.isDirectory());
+
+        log.info("File[] folders = " + folders);
+
+        int deb = (int) (folders.length * Math.random());
+
+        int step = 1;// (int) (Math.random() + 1.5);
+
+        log.info("deb " + deb);
         log.info("step " + step);
 
-        log.info("imagesFolders[randomFolderIndex] " + imagesFolders[randomFolderIndex]);
+        log.info("folders[deb] " + folders[deb]);
 
         int posX = 0;
         int posY = 0;
 
         for (int i = 0; i < nbImages; i++) {
 
-            final int index = (randomFolderIndex + step * i) % filesCount;
+            int index = (deb + step * i) % folders.length;
 
-            final File[] files = imagesFolders[(index) % filesCount].listFiles();
+            File[] files = folders[(index) % folders.length].listFiles();
 
-            final int numFile = (int) (files.length * Math.random());
+            int numFile = (int) (files.length * Math.random());
 
-            final File randomImageFile = files[numFile];
-            log.info("randomImageFile = {}", randomImageFile);
+            log.info(files[numFile] + "");
 
             if (winner == i) {
-                pathSound = getPathSound(imagesFolders[(index) % filesCount].getName(), (new Configuration()).language);
-                log.info("pathSound = {}", pathSound);
+                pathSound = getPathSound(folders[(index) % folders.length].getName(), (new Configuration()).language);
                 Utils.playSound(pathSound);
             }
 
             Pictures picture = new Pictures(width * posX + shift, height * posY, width, height, root, scene,
-                    winner == i, randomImageFile + "", choicebox, stats);
+                    winner == i, files[numFile] + "", choicebox, stats);
 
             log.info("posX " + posX);
             log.info("posY " + posY);
@@ -194,400 +193,254 @@ public class WhereIsIt extends Application {
         stats.start();
     }
 
-    private static void error() {
+    public static String getPathSound(String folder, String language) {
 
-        HomeUtils.clear(scene, root, choicebox);
-        HomeUtils.home(scene, root, choicebox, null);
-
-        Multilinguism multilinguism = Multilinguism.getMultilinguism();
-        Text error = new Text(multilinguism.getTrad("WII-error", Multilinguism.getLanguage()));
-        error.setX(Screen.getMainScreen().getWidth()/2-100);
-        error.setY(Screen.getMainScreen().getHeight()/2);
-        error.setId("item");
-        root.getChildren().addAll(error);
-    }
-
-    private static File locateImagesDirectory() {
-
-        File result = null;
-
-        if (type == CUSTOMIZED) {
-
-            result = new File((new Configuration()).getWhereIsItDir() + "/images/");
-        } else {
-
-            result = locateImagesDirectoryInUnpackedDistDirectory();
-
-            if (result == null) {
-                result = locateImagesDirectoryInExplodedClassPath();
-            }
-        }
-        return result;
-    }
-
-    private static File locateImagesDirectoryInUnpackedDistDirectory() {
-        final File workingDirectory = new File(".");
-        log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
-        final String workingDirectoryName;
-        try {
-            workingDirectoryName = workingDirectory.getCanonicalFile().getName();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        log.info("workingDirectoryName = {}", workingDirectoryName);
-
-        final String parentImagesPackageResourceLocation = "data/" + getName() + "/images/";
-        log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
-
-        {
-            final File imagesDirectory = new File(workingDirectory, parentImagesPackageResourceLocation);
-            log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
-            boolean checked = checkImageDirectory(imagesDirectory);
-            if (checked) {
-                return imagesDirectory;
-            }
-        }
-
-        if (workingDirectoryName.equals("bin")) {
-            final File imagesDirectory = new File(workingDirectory, "../" + parentImagesPackageResourceLocation);
-            log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
-            boolean checked = checkImageDirectory(imagesDirectory);
-            if (checked) {
-                return imagesDirectory;
-            }
-        }
-
-        return null;
-    }
-
-    private static File locateImagesDirectoryInExplodedClassPath() {
-        final String parentImagesPackageResourceLocation = "data/" + getName() + "/images/";
-        log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
-
-        final URL parentImagesPackageResourceUrl;
-
-        final ClassLoader classLoader = WhereIsIt.class.getClassLoader();
-        parentImagesPackageResourceUrl = classLoader.getResource(parentImagesPackageResourceLocation);
-        log.info("parentImagesPackageResourceUrl = {}", parentImagesPackageResourceUrl);
-
-        if (parentImagesPackageResourceUrl == null) {
-            throw new IllegalStateException("Resource not found : " + parentImagesPackageResourceUrl);
-        }
-
-        final File imagesDirectory = new File(parentImagesPackageResourceUrl.getFile());
-        log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
-
-        checkImageDirectory(imagesDirectory);
-        return imagesDirectory;
-    }
-
-    private static boolean checkImageDirectory(File imagesDirectory) {
-        if (!imagesDirectory.exists()) {
-            log.warn("Directory does not exist : {}", imagesDirectory.getAbsolutePath());
-            return false;
-        }
-        if (!imagesDirectory.isDirectory()) {
-            log.warn("File is not a valid Directory : {}", imagesDirectory.getAbsolutePath());
-            return false;
-        }
-        return true;
-    }
-
-    public static String getPathSound(final String folder, String language) {
-
-        if (type == CUSTOMIZED) {
-
-            try {
-
-                log.info("CUSTOMIZED");
-
-                String path = new Configuration().whereIsItDir + "sounds/";
-                File F = new File(path);
-
-                for (String file : F.list()) {
-
-                    log.info("file " + file);
-                    log.info("folder " + folder);
-
-                    if (file.indexOf(folder) >= 0) {
-
-                        log.info(path + file);
-
-                        return path + file;
-                    }
-                }
-            }
-            catch(Exception e){
-
-                log.info("Problem with customized folder");
-                error();
-            }
-
-            return "";
-        }
-
-        if (language.equals("deu")) {
-            // erase when translation is complete
+        if (language.equals("deu"))// erase when translation is complete
             language = "eng";
-        }
 
-        final String voice;
-        if (Math.random() > 0.5) {
+        String voice = "w";
+
+        if (Math.random() > 0.5)
             voice = "m";
-        } else {
-            voice = "w";
-        }
 
         return "data/" + getName() + "/sounds/" + language + "/" + folder + "." + voice + "." + language + ".mp3";
     }
 
     private static String getName() {
+
         switch (type) {
+
         case ANIMALNAME:
             return "where-is-the-animal";
+
         case COLORNAME:
             return "where-is-the-color";
-        case CUSTOMIZED:
-            return "custumized";
+
         default:
             log.debug("This case should never happen");
-            throw new IllegalStateException("Unsupported type value : " + type);
+            System.exit(0); // should never happen
+            return null;
         }
     }
+}
 
-    @Slf4j
-    private static class Pictures extends Group {
+@Slf4j
+class Pictures extends Group {
 
-        protected static final float zoom_factor = 1.1f;
+    protected static final float zoom_factor = 1.1f;
+    private boolean selected;
+    ProgressIndicator indicator;
+    private double minTime;
+    private Group root;
+    private boolean winner;
+    private Rectangle RImage;
+    private Timeline timelineProgressBar;
+    private double initWidth;
+    private double initHeight;
+    private WhereIsItStats stats;
+    private Scene scene;
+    private ChoiceBox choicebox;
 
-        private final double minTime;
-        private final Group root;
-        private final boolean winner;
-        private final Rectangle imageRectangle;
-        private final double initWidth;
-        private final double initHeight;
-        private final WhereIsItStats stats;
-        private final Scene scene;
-        private final ChoiceBox choicebox;
+    EventHandler<Event> enterEvent;
 
-        private Timeline timelineProgressBar;
-        private ProgressIndicator indicator;
+    Bravo bravo = Bravo.getBravo();
 
-        private boolean selected;
+    public Pictures(double posX, double posY, double width, double height, Group root, Scene scene, boolean winner,
+            String imagePath, ChoiceBox choicebox, WhereIsItStats stats) {
 
-        private final EventHandler<Event> enterEvent;
+        minTime = new Configuration().fixationlength;
+        this.initWidth = width;
+        this.initHeight = height;
+        selected = false;
+        this.winner = winner;
+        this.root = root;
+        this.stats = stats;
+        this.scene = scene;
+        this.choicebox = choicebox;
+        RImage = new Rectangle(posX, posY, width, height);
+        this.getChildren().add(RImage);
+        RImage.setFill(new ImagePattern(new Image(imagePath), 0, 0, 1, 1, true));
+        indicator = new ProgressIndicator(0);
+        indicator.setTranslateX(RImage.getX() + width / 8);
+        indicator.setTranslateY(RImage.getY() + height / 8);
+        indicator.setMinWidth(width * 0.75);
+        indicator.setMinHeight(height * 0.75);
+        indicator.setOpacity(0);
+        this.getChildren().add(indicator);
 
-        private final Bravo bravo = Bravo.getBravo();
+        enterEvent = buildEvent();
 
-        public Pictures(double posX, double posY, double width, double height, @NonNull Group root,
-                @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull ChoiceBox choicebox,
-                @NonNull WhereIsItStats stats) {
+        GazeUtils.addEventFilter(this);
 
-            log.info("imagePath = {}", imagePath);
+        this.addEventFilter(MouseEvent.ANY, enterEvent);
 
-            this.minTime = new Configuration().fixationlength;
-            this.initWidth = width;
-            this.initHeight = height;
-            this.selected = false;
-            this.winner = winner;
-            this.root = root;
-            this.stats = stats;
-            this.scene = scene;
-            this.choicebox = choicebox;
-            this.imageRectangle = new Rectangle(posX, posY, width, height);
+        this.addEventFilter(GazeEvent.ANY, enterEvent);
+    }
 
-            this.getChildren().add(imageRectangle);
+    private EventHandler<Event> buildEvent() {
+        return new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
 
-            final Image image = new Image("file:" + imagePath);
+                if (selected)
+                    return;
 
-            imageRectangle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-            indicator = new ProgressIndicator(0);
-            indicator.setTranslateX(imageRectangle.getX() + width / 8);
-            indicator.setTranslateY(imageRectangle.getY() + height / 8);
-            indicator.setMinWidth(width * 0.75);
-            indicator.setMinHeight(height * 0.75);
-            indicator.setOpacity(0);
-            this.getChildren().add(indicator);
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-            enterEvent = buildEvent();
+                    log.debug("ENTERED");
 
-            GazeUtils.addEventFilter(this);
+                    indicator.setOpacity(0.5);
+                    indicator.setProgress(0);
 
-            this.addEventFilter(MouseEvent.ANY, enterEvent);
+                    Timeline timelineCard = new Timeline();
 
-            this.addEventFilter(GazeEvent.ANY, enterEvent);
-        }
+                    timelineProgressBar = new Timeline();
 
-        private EventHandler<Event> buildEvent() {
-            return new EventHandler<Event>() {
-                @Override
-                public void handle(Event e) {
+                    timelineProgressBar.getKeyFrames()
+                            .add(new KeyFrame(new Duration(minTime), new KeyValue(indicator.progressProperty(), 1)));
 
-                    if (selected)
-                        return;
+                    timelineCard.play();
 
-                    if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    timelineProgressBar.play();
 
-                        log.debug("ENTERED");
+                    timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
 
-                        indicator.setOpacity(0.5);
-                        indicator.setProgress(0);
+                        @Override
+                        public void handle(ActionEvent actionEvent) {
 
-                        Timeline timelineCard = new Timeline();
+                            log.debug("FINISHED");
 
-                        timelineProgressBar = new Timeline();
+                            selected = true;
 
-                        timelineProgressBar.getKeyFrames().add(
-                                new KeyFrame(new Duration(minTime), new KeyValue(indicator.progressProperty(), 1)));
+                            RImage.removeEventFilter(MouseEvent.ANY, enterEvent);
+                            RImage.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-                        timelineCard.play();
+                            if (winner) {
 
-                        timelineProgressBar.play();
+                                log.debug("WINNER");
 
-                        timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
+                                stats.incNbGoals();
 
-                            @Override
-                            public void handle(ActionEvent actionEvent) {
+                                int final_zoom = 2;
 
-                                log.debug("FINISHED");
+                                indicator.setOpacity(0);
 
-                                selected = true;
+                                Timeline timeline = new Timeline();
 
-                                imageRectangle.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                imageRectangle.removeEventFilter(GazeEvent.ANY, enterEvent);
+                                ObservableList<Node> list = FXCollections.observableArrayList(root.getChildren());
 
-                                if (winner) {
+                                // for (Node N : root.getChildren()) {// clear all but images and reward
+                                for (Node N : list) {// clear all but images and reward
 
-                                    log.debug("WINNER");
+                                    log.info(N + "");
 
-                                    stats.incNbGoals();
+                                    if ((N instanceof Pictures && RImage != ((Pictures) N).RImage
+                                            && !(N instanceof Bravo)) || (N instanceof Home)) {// we put outside screen
+                                                                                               // Home and cards
 
-                                    int final_zoom = 2;
-
-                                    indicator.setOpacity(0);
-
-                                    Timeline timeline = new Timeline();
-
-                                    ObservableList<Node> list = FXCollections.observableArrayList(root.getChildren());
-
-                                    // for (Node N : root.getChildren()) {// clear all but images and reward
-                                    for (Node N : list) {// clear all but images and reward
-
-                                        log.info(N + "");
-
-                                        if ((N instanceof Pictures && imageRectangle != ((Pictures) N).imageRectangle
-                                                && !(N instanceof Bravo)) || (N instanceof Home)) {// we put outside
-                                            // screen
-                                            // Home and cards
-
-                                            log.info(N + " enlevé ");
-                                            N.setTranslateX(-10000);
-                                            N.setOpacity(0);
-                                            // N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                            // N.removeEventFilter(GazeEvent.ANY, enterEvent);
-                                        } else {// we keep only Bravo and winning card
-                                        }
+                                        log.info(N + " enlevé ");
+                                        N.setTranslateX(-10000);
+                                        N.setOpacity(0);
+                                        // N.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                        // N.removeEventFilter(GazeEvent.ANY, enterEvent);
+                                    } else {// we keep only Bravo and winning card
                                     }
-
-                                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(
-                                            imageRectangle.widthProperty(), imageRectangle.getWidth() * final_zoom)));
-                                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(
-                                            imageRectangle.heightProperty(), imageRectangle.getHeight() * final_zoom)));
-                                    timeline.getKeyFrames()
-                                            .add(new KeyFrame(new Duration(1000), new KeyValue(
-                                                    imageRectangle.xProperty(),
-                                                    (scene.getWidth() - imageRectangle.getWidth() * final_zoom) / 2)));
-                                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(
-                                            imageRectangle.yProperty(),
-                                            (scene.getHeight() - imageRectangle.getHeight() * final_zoom) / 2)));
-
-                                    timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-                                        @Override
-                                        public void handle(ActionEvent actionEvent) {
-
-                                            SequentialTransition sequence = bravo.win();
-                                            bravo.toFront();
-                                            sequence.setOnFinished(new EventHandler<ActionEvent>() {
-
-                                                @Override
-                                                public void handle(ActionEvent actionEvent) {
-                                                    HomeUtils.clear(scene, root, choicebox);
-                                                    WhereIsIt.buildGame(WhereIsIt.type, WhereIsIt.nbLines,
-                                                            WhereIsIt.nbColumns, WhereIsIt.fourThree, root, scene,
-                                                            choicebox, stats);
-                                                    HomeUtils.home(scene, root, choicebox, stats);
-                                                    // stats.start();
-                                                }
-                                            });
-                                        }
-                                    });
-
-                                    timeline.play();
-
-                                } else {// bad card
-
-                                    Timeline disparition = new Timeline();
-                                    Timeline apparition = new Timeline();
-
-                                    disparition.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                                            new KeyValue(imageRectangle.opacityProperty(), 0)));
-
-                                    disparition.getKeyFrames()
-                                            .add(new KeyFrame(new Duration(2000),
-                                                    new KeyValue(imageRectangle.fillProperty(),
-                                                            new ImagePattern(new Image("data/common/images/error.png"),
-                                                                    0, 0, 1, 1, true))));
-
-                                    apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                            new KeyValue(imageRectangle.widthProperty(), initHeight / 2)));
-
-                                    apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                            new KeyValue(imageRectangle.heightProperty(), initHeight / 2)));
-
-                                    apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                            new KeyValue(imageRectangle.layoutXProperty(), initWidth / 3)));
-
-                                    apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                            new KeyValue(imageRectangle.layoutYProperty(), initHeight / 4)));
-
-                                    apparition.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                                            new KeyValue(imageRectangle.opacityProperty(), 0.5)));
-
-                                    SequentialTransition sq = new SequentialTransition();
-                                    sq.getChildren().addAll(disparition, apparition);
-                                    sq.play();
-
-                                    Utils.playSound(WhereIsIt.pathSound);
-
-                                    indicator.setOpacity(0);
                                 }
+
+                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
+                                        new KeyValue(RImage.widthProperty(), RImage.getWidth() * final_zoom)));
+                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
+                                        new KeyValue(RImage.heightProperty(), RImage.getHeight() * final_zoom)));
+                                timeline.getKeyFrames()
+                                        .add(new KeyFrame(new Duration(1000), new KeyValue(RImage.xProperty(),
+                                                (scene.getWidth() - RImage.getWidth() * final_zoom) / 2)));
+                                timeline.getKeyFrames()
+                                        .add(new KeyFrame(new Duration(1000), new KeyValue(RImage.yProperty(),
+                                                (scene.getHeight() - RImage.getHeight() * final_zoom) / 2)));
+
+                                timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent actionEvent) {
+
+                                        SequentialTransition sequence = bravo.win();
+                                        bravo.toFront();
+                                        sequence.setOnFinished(new EventHandler<ActionEvent>() {
+
+                                            @Override
+                                            public void handle(ActionEvent actionEvent) {
+                                                HomeUtils.clear(scene, root, choicebox);
+                                                WhereIsIt.buildGame(WhereIsIt.type, WhereIsIt.nbLines,
+                                                        WhereIsIt.nbColumns, WhereIsIt.fourThree, root, scene,
+                                                        choicebox, stats);
+                                                HomeUtils.home(scene, root, choicebox, stats);
+                                                // stats.start();
+                                            }
+                                        });
+                                    }
+                                });
+
+                                timeline.play();
+
+                            } else {// bad card
+
+                                Timeline disparition = new Timeline();
+                                Timeline apparition = new Timeline();
+
+                                disparition.getKeyFrames().add(
+                                        new KeyFrame(new Duration(2000), new KeyValue(RImage.opacityProperty(), 0)));
+
+                                disparition.getKeyFrames()
+                                        .add(new KeyFrame(new Duration(2000),
+                                                new KeyValue(RImage.fillProperty(), new ImagePattern(
+                                                        new Image("data/common/images/error.png"), 0, 0, 1, 1, true))));
+
+                                apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                        new KeyValue(RImage.widthProperty(), initHeight / 2)));
+
+                                apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                        new KeyValue(RImage.heightProperty(), initHeight / 2)));
+
+                                apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                        new KeyValue(RImage.layoutXProperty(), initWidth / 3)));
+
+                                apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                        new KeyValue(RImage.layoutYProperty(), initHeight / 4)));
+
+                                apparition.getKeyFrames().add(
+                                        new KeyFrame(new Duration(2000), new KeyValue(RImage.opacityProperty(), 0.5)));
+
+                                SequentialTransition sq = new SequentialTransition();
+                                sq.getChildren().addAll(disparition, apparition);
+                                sq.play();
+
+                                Utils.playSound(WhereIsIt.pathSound);
+
+                                indicator.setOpacity(0);
                             }
-                        });
-                    } else if (e.getEventType() == MouseEvent.MOUSE_EXITED
-                            || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                        }
+                    });
+                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                        /*
-                         * Timeline timeline = new Timeline();
-                         * 
-                         * timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new
-                         * KeyValue(imageRectangle.xProperty(), imageRectangle.getX() + (initWidth * zoom_factor -
-                         * initWidth) / 2))); timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new
-                         * KeyValue(imageRectangle.yProperty(), imageRectangle.getY() + (initHeight * zoom_factor -
-                         * initHeight) / 2))); timeline.getKeyFrames() .add(new KeyFrame(new Duration(1), new
-                         * KeyValue(imageRectangle.widthProperty(), initWidth))); timeline.getKeyFrames() .add(new
-                         * KeyFrame(new Duration(1), new KeyValue(imageRectangle.heightProperty(), initHeight)));
-                         * 
-                         * timeline.play();
-                         */
+                    /*
+                     * Timeline timeline = new Timeline();
+                     * 
+                     * timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(RImage.xProperty(),
+                     * RImage.getX() + (initWidth * zoom_factor - initWidth) / 2))); timeline.getKeyFrames().add(new
+                     * KeyFrame(new Duration(1), new KeyValue(RImage.yProperty(), RImage.getY() + (initHeight *
+                     * zoom_factor - initHeight) / 2))); timeline.getKeyFrames() .add(new KeyFrame(new Duration(1), new
+                     * KeyValue(RImage.widthProperty(), initWidth))); timeline.getKeyFrames() .add(new KeyFrame(new
+                     * Duration(1), new KeyValue(RImage.heightProperty(), initHeight)));
+                     * 
+                     * timeline.play();
+                     */
 
-                        timelineProgressBar.stop();
+                    timelineProgressBar.stop();
 
-                        indicator.setOpacity(0);
-                        indicator.setProgress(0);
-                    }
+                    indicator.setOpacity(0);
+                    indicator.setProgress(0);
                 }
-            };
-        }
-
+            }
+        };
     }
+
 }
