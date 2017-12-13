@@ -182,7 +182,7 @@ public class Utils {
         String path = null;
 
         if (url == null)
-            path = "file:"+ressource;
+            path = "file:" + ressource;
         else
             path = url.toString();
         Media media = new Media(path);
