@@ -201,8 +201,8 @@ public class WhereIsIt extends Application {
 
         Multilinguism multilinguism = Multilinguism.getMultilinguism();
         Text error = new Text(multilinguism.getTrad("WII-error", Multilinguism.getLanguage()));
-        error.setX(Screen.getMainScreen().getWidth()/2-100);
-        error.setY(Screen.getMainScreen().getHeight()/2);
+        error.setX(Screen.getMainScreen().getWidth() / 2 - 100);
+        error.setY(Screen.getMainScreen().getHeight() / 2);
         error.setId("item");
         root.getChildren().addAll(error);
     }
@@ -316,8 +316,7 @@ public class WhereIsIt extends Application {
                         return path + file;
                     }
                 }
-            }
-            catch(Exception e){
+            } catch (Exception e) {
 
                 log.info("Problem with customized folder");
                 error();
