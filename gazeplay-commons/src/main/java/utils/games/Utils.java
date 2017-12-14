@@ -186,13 +186,6 @@ public class Utils {
         else
             path = url.toString();
 
-    /*    if (!Utils.isWindows() && url == null)
-            path = "file:" + ressource;
-        else if(Utils.isWindows() && url == null)
-            path = ressource;
-        else
-            path = url.toString();*/
-
         log.info("path " + path);
 
         Media media = new Media(path);
