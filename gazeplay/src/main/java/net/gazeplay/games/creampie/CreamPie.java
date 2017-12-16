@@ -42,7 +42,7 @@ public class CreamPie extends Application {
 
         primaryStage.show();
 
-        SecondScreen secondScreen = SecondScreen.launch();
+        SecondScreen.launch();
     }
 
     public static void launch(Group root, javafx.scene.Scene scene, ShootGamesStats stats) {

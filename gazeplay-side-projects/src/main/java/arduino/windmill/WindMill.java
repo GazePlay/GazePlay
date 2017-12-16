@@ -40,6 +40,6 @@ public class WindMill extends Application {
 
         primaryStage.show();
 
-        SecondScreen secondScreen = SecondScreen.launch();
+        SecondScreen.launch();
     }
 }

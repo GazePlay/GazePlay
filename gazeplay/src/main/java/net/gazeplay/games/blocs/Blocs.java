@@ -72,7 +72,7 @@ public class Blocs extends Application {
 
         primaryStage.show();
 
-        SecondScreen secondScreen = SecondScreen.launch();
+        SecondScreen.launch();
     }
 
     public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns,

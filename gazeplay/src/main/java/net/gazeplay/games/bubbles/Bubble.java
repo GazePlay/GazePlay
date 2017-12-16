@@ -21,6 +21,7 @@ import javafx.util.Duration;
 import utils.games.Utils;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by schwab on 28/08/2016.
@@ -29,13 +30,13 @@ public class Bubble extends Parent {
 
     private int type;
 
-    private final int maxRadius = 70;
-    private final int minRadius = 30;
+    private static final int maxRadius = 70;
+    private static final int minRadius = 30;
 
-    private final int maxTimeLength = 7;
-    private final int minTimeLength = 4;
+    private static final int maxTimeLength = 7;
+    private static final int minTimeLength = 4;
 
-    private final int nbFragments = 10; // number of little circles after explosion
+    private static final int nbFragments = 10; // number of little circles after explosion
 
     private ArrayList<Circle> fragments = new ArrayList(nbFragments);
 
@@ -135,7 +136,7 @@ public class Bubble extends Parent {
         sequence.getChildren().addAll(timeline, timeline2);
         sequence.play();
 
-        ObservableList<Node> nodes = this.getChildren();
+        //ObservableList<Node> nodes = this.getChildren();
 
         timeline.setOnFinished(new EventHandler<ActionEvent>() {
 
@@ -238,7 +239,7 @@ public class Bubble extends Parent {
 
     protected Image newPhoto() {
 
-        return photos[((int) (photos.length * Math.random()))];
+        return photos[new Random().nextInt(photos.length)];
 
     }
 }

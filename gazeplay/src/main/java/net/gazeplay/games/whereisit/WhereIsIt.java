@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Didier Schwab on the 18/11/2017
@@ -87,7 +88,7 @@ public class WhereIsIt extends Application {
 
         primaryStage.show();
 
-        SecondScreen secondScreen = SecondScreen.launch();
+        SecondScreen.launch();
     }
 
     public static void buildGame(int Game, int nLines, int nColumns, boolean fourThree, Group groupRoot,
@@ -128,11 +129,10 @@ public class WhereIsIt extends Application {
 
         width = width / nbColumns;
         height = height / nbLines;
-
         final int nbImages = nbLines * nbColumns;
         log.debug("nbImages = {}", nbImages);
-
-        final int winner = (int) (nbImages * Math.random());
+        Random r = new Random();
+        final int winner = r.nextInt(nbImages);
         log.debug("winner = {}", winner);
 
         final File imagesDirectory = locateImagesDirectory();
@@ -148,7 +148,7 @@ public class WhereIsIt extends Application {
 
         log.info("imagesFolders = {}", imagesFolders);
 
-        final int randomFolderIndex = (int) (filesCount * Math.random());
+        final int randomFolderIndex = r.nextInt(filesCount);
         log.info("randomFolderIndex " + randomFolderIndex);
 
         int step = 1; // (int) (Math.random() + 1.5);
@@ -159,15 +159,13 @@ public class WhereIsIt extends Application {
         int posX = 0;
         int posY = 0;
 
-        ArrayList<Pictures> pictures = new ArrayList(nbImages);
-
         for (int i = 0; i < nbImages; i++) {
 
             final int index = (randomFolderIndex + step * i) % filesCount;
 
             final File[] files = imagesFolders[(index) % filesCount].listFiles();
 
-            final int numFile = (int) (files.length * Math.random());
+            final int numFile = r.nextInt(files.length);
 
             final File randomImageFile = files[numFile];
             log.info("randomImageFile = {}", randomImageFile);
@@ -206,8 +204,8 @@ public class WhereIsIt extends Application {
 
         Multilinguism multilinguism = Multilinguism.getMultilinguism();
         Text error = new Text(multilinguism.getTrad("WII-error", Multilinguism.getLanguage()));
-        error.setX(Screen.getMainScreen().getWidth() / 2 - 100);
-        error.setY(Screen.getMainScreen().getHeight() / 2);
+        error.setX(Screen.getMainScreen().getWidth() / 2. - 100);
+        error.setY(Screen.getMainScreen().getHeight() / 2.);
         error.setId("item");
         root.getChildren().addAll(error);
     }
@@ -429,8 +427,6 @@ public class WhereIsIt extends Application {
                 @Override
                 public void handle(Event e) {
 
-
-
                     if (selected)
                         return;
 
@@ -461,8 +457,8 @@ public class WhereIsIt extends Application {
 
                                 selected = true;
 
-                               // imageRectangle.removeEventFilter(MouseEvent.ANY, enterEvent);
-                               // imageRectangle.removeEventFilter(GazeEvent.ANY, enterEvent);
+                                // imageRectangle.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                // imageRectangle.removeEventFilter(GazeEvent.ANY, enterEvent);
 
                                 if (winner) {
 
@@ -476,10 +472,11 @@ public class WhereIsIt extends Application {
 
                                     Timeline timeline = new Timeline();
 
-                                 //   ObservableList<Node> list = FXCollections.observableArrayList(root.getChildren());
+                                    // ObservableList<Node> list =
+                                    // FXCollections.observableArrayList(root.getChildren());
 
-                                     for (Node N : root.getChildren()) {// clear all but images and reward
-                                    //for (Node N : list) {// clear all but images and reward
+                                    for (Node N : root.getChildren()) {// clear all but images and reward
+                                        // for (Node N : list) {// clear all but images and reward
 
                                         log.info(N + "");
 
@@ -519,6 +516,7 @@ public class WhereIsIt extends Application {
 
                                                 @Override
                                                 public void handle(ActionEvent actionEvent) {
+
                                                     HomeUtils.clear(scene, root, choicebox);
                                                     WhereIsIt.buildGame(WhereIsIt.type, WhereIsIt.nbLines,
                                                             WhereIsIt.nbColumns, WhereIsIt.fourThree, root, scene,
@@ -573,20 +571,6 @@ public class WhereIsIt extends Application {
                         });
                     } else if (e.getEventType() == MouseEvent.MOUSE_EXITED
                             || e.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                        /*
-                         * Timeline timeline = new Timeline();
-                         * 
-                         * timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new
-                         * KeyValue(imageRectangle.xProperty(), imageRectangle.getX() + (initWidth * zoom_factor -
-                         * initWidth) / 2))); timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new
-                         * KeyValue(imageRectangle.yProperty(), imageRectangle.getY() + (initHeight * zoom_factor -
-                         * initHeight) / 2))); timeline.getKeyFrames() .add(new KeyFrame(new Duration(1), new
-                         * KeyValue(imageRectangle.widthProperty(), initWidth))); timeline.getKeyFrames() .add(new
-                         * KeyFrame(new Duration(1), new KeyValue(imageRectangle.heightProperty(), initHeight)));
-                         * 
-                         * timeline.play();
-                         */
 
                         timelineProgressBar.stop();
 

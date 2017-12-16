@@ -2,6 +2,7 @@ package net.gazeplay.utils;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -36,6 +37,8 @@ public class HomeUtils {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
+                    scene.setCursor(Cursor.WAIT); //Change cursor to wait style
+
                     log.info("stats = " + stats);
 
                     if (stats == null) {
@@ -45,6 +48,8 @@ public class HomeUtils {
 
                         StatsDisplay.displayStats(stats, scene, root, cbxGames);
                     }
+
+                    scene.setCursor(Cursor.DEFAULT); //Change cursor to default style
                 }
             }
         };
@@ -89,7 +94,6 @@ public class HomeUtils {
         double width = scene.getWidth() / 10;
         double heigth = width;
         double XExit = scene.getWidth() * 0.9;
-        double XLicence = scene.getWidth() * 0.0;
         double Y = scene.getHeight() - heigth * 1.1;
 
         // License license = new License(XLicence, Y, width, heigth, scene, root, cbxGames);

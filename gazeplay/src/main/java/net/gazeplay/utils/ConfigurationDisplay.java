@@ -251,7 +251,6 @@ public class ConfigurationDisplay extends Rectangle {
                 FileChooser fileChooser = new FileChooser();
                 File file = fileChooser.showOpenDialog(scene.getWindow());
                 buttonLoad.setText(file.toString());
-                File F = new File(file.toString());
                 C.cssfile = file.toString();
 
                 if (Utils.isWindows()) {
@@ -291,7 +290,7 @@ public class ConfigurationDisplay extends Rectangle {
                     return;
                 }
                 buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
-                File F = new File(file.toString());
+
                 C.filedir = file.toString() + Utils.FILESEPARATOR;
 
                 if (Utils.isWindows()) {
@@ -323,7 +322,6 @@ public class ConfigurationDisplay extends Rectangle {
                     return;
                 }
                 buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
-                File F = new File(file.toString());
                 C.whereIsItDir = file.toString() + Utils.FILESEPARATOR;
 
                 if (Utils.isWindows()) {

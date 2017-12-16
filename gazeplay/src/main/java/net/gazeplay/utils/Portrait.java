@@ -6,6 +6,8 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import utils.games.Utils;
 
+import java.util.Random;
+
 /**
  * Created by schwab on 12/08/2016.
  */
@@ -46,11 +48,11 @@ public class Portrait extends Circle {
 
     protected int newX() {
 
-        return (int) (Math.random() * maxX) + radius;
+        return new Random().nextInt((int)maxX) + radius;
     }
 
     protected int newY() {
 
-        return (int) (Math.random() * maxY * 2 / 3) + radius;
+        return new Random().nextInt((int)maxY) * 2 / 3 + radius;
     }
 }

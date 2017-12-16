@@ -14,7 +14,7 @@ public class TETSimple {
     public static void main(String[] args) {
 
         final GazeManager gm = GazeManager.getInstance();
-        boolean success = gm.activate();
+        gm.activate();
         final GazeListener gazeListener = new GazeListener();
         gm.addGazeListener(gazeListener);
     }

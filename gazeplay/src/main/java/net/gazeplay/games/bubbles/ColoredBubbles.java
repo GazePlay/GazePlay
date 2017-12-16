@@ -30,10 +30,10 @@ public class ColoredBubbles extends Application {
         scene.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
         primaryStage.setScene(scene);
-        Bubble bubble = new Bubble(scene, root, Bubble.COLOR, null, true);
+        new Bubble(scene, root, Bubble.COLOR, null, true);
         primaryStage.show();
 
-        SecondScreen secondScreen = SecondScreen.launch();
+        SecondScreen.launch();
 
     }
 

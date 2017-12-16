@@ -40,8 +40,8 @@ public class GazeUtils {
             Tobii.execProg(new TobiiGazeListener(nodesEventFilter, nodesEventHandler));
         } else if (config.eyetracker.equals(EyeTrackers.eyetribe.toString()))
             return new EyeTribeGazeListener(nodesEventFilter, nodesEventHandler);
-     //   else
-       //     return new FuzzyGazeListener(nodesEventFilter, nodesEventHandler);
+        // else
+        // return new FuzzyGazeListener(nodesEventFilter, nodesEventHandler);
         return null;
     }
 
