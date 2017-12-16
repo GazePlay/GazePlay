@@ -315,7 +315,7 @@ public class WhereIsIt extends Application {
 
                         File f = new File(path + file);
 
-                        log.info("file " + f);
+                        log.info("file " + f.getAbsolutePath());
 
                         return f.getAbsolutePath();
                     }

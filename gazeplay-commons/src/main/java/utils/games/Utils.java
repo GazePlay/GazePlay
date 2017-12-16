@@ -181,20 +181,23 @@ public class Utils {
 
         String path = null;
 
-        if (url == null)
-            path = "file:" + ressource;
+        if (url == null) {
+            path = new File(ressource).toURI().toString();
+        }
         else
             path = url.toString();
 
         log.info("path " + path);
 
-        Media media = new Media(path);
-        try {
+        try{
+            Media media = new Media(path);
             MediaPlayer mp = new MediaPlayer(media);
             mp.play();
         } catch (Exception e) {
             log.error("Exception", e);
         }
+
+
     }
 
     /**
