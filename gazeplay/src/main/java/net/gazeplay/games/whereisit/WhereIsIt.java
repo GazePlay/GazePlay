@@ -457,7 +457,7 @@ public class WhereIsIt extends Application {
                                 selected = true;
 
                                 imageRectangle.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                imageRectangle.removeEventFilter(GazeEvent.ANY, enterEvent);
+                               // imageRectangle.removeEventFilter(GazeEvent.ANY, enterEvent);
 
                                 if (winner) {
 
