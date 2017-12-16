@@ -196,8 +196,6 @@ public class Utils {
         } catch (Exception e) {
             log.error("Exception", e);
         }
-
-
     }
 
     /**

@@ -44,6 +44,7 @@ import utils.games.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by Didier Schwab on the 18/11/2017
@@ -157,6 +158,8 @@ public class WhereIsIt extends Application {
 
         int posX = 0;
         int posY = 0;
+
+        ArrayList<Pictures> pictures = new ArrayList(nbImages);
 
         for (int i = 0; i < nbImages; i++) {
 
@@ -414,17 +417,19 @@ public class WhereIsIt extends Application {
 
             enterEvent = buildEvent();
 
-            GazeUtils.addEventFilter(this);
+            GazeUtils.addEventFilter(imageRectangle);
 
-            this.addEventFilter(MouseEvent.ANY, enterEvent);
+            imageRectangle.addEventFilter(MouseEvent.ANY, enterEvent);
 
-            this.addEventFilter(GazeEvent.ANY, enterEvent);
+            imageRectangle.addEventFilter(GazeEvent.ANY, enterEvent);
         }
 
         private EventHandler<Event> buildEvent() {
             return new EventHandler<Event>() {
                 @Override
                 public void handle(Event e) {
+
+
 
                     if (selected)
                         return;
@@ -456,7 +461,7 @@ public class WhereIsIt extends Application {
 
                                 selected = true;
 
-                                imageRectangle.removeEventFilter(MouseEvent.ANY, enterEvent);
+                               // imageRectangle.removeEventFilter(MouseEvent.ANY, enterEvent);
                                // imageRectangle.removeEventFilter(GazeEvent.ANY, enterEvent);
 
                                 if (winner) {
@@ -471,10 +476,10 @@ public class WhereIsIt extends Application {
 
                                     Timeline timeline = new Timeline();
 
-                                    ObservableList<Node> list = FXCollections.observableArrayList(root.getChildren());
+                                 //   ObservableList<Node> list = FXCollections.observableArrayList(root.getChildren());
 
-                                    // for (Node N : root.getChildren()) {// clear all but images and reward
-                                    for (Node N : list) {// clear all but images and reward
+                                     for (Node N : root.getChildren()) {// clear all but images and reward
+                                    //for (Node N : list) {// clear all but images and reward
 
                                         log.info(N + "");
 
