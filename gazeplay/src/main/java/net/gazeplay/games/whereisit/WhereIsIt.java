@@ -317,7 +317,7 @@ public class WhereIsIt extends Application {
 
                         log.info("file " + f);
 
-                        return f.toString();
+                        return f.getAbsolutePath();
                     }
                 }
             } catch (Exception e) {
@@ -342,7 +342,7 @@ public class WhereIsIt extends Application {
         }
 
         return "data/" + getName() + "/sounds/" + language + "/" + folder + "." + voice + "." + language + ".mp3";
-      }
+    }
 
     private static String getName() {
         switch (type) {

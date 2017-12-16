@@ -182,7 +182,6 @@ public class DefaultGamesLocator implements GamesLocator {
                     return stats;
                 }));
 
-
         result.add(new GameSpec(multilinguism.getTrad("WhereIsIt", language) + " (3x2)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
