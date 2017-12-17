@@ -85,8 +85,6 @@ public class Card extends Parent {
         indicator.setOpacity(0);
         this.getChildren().add(indicator);
 
-        // this.getChildren().add(bravo);
-
         GazeUtils.addEventFilter(card);
 
         enterEvent = buildEvent();

@@ -48,11 +48,11 @@ public class Portrait extends Circle {
 
     protected int newX() {
 
-        return new Random().nextInt((int)maxX) + radius;
+        return new Random().nextInt((int) maxX) + radius;
     }
 
     protected int newY() {
 
-        return new Random().nextInt((int)maxY) * 2 / 3 + radius;
+        return new Random().nextInt((int) maxY) * 2 / 3 + radius;
     }
 }

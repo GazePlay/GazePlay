@@ -37,7 +37,7 @@ public class HomeUtils {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    scene.setCursor(Cursor.WAIT); //Change cursor to wait style
+                    scene.setCursor(Cursor.WAIT); // Change cursor to wait style
 
                     log.info("stats = " + stats);
 
@@ -49,7 +49,7 @@ public class HomeUtils {
                         StatsDisplay.displayStats(stats, scene, root, cbxGames);
                     }
 
-                    scene.setCursor(Cursor.DEFAULT); //Change cursor to default style
+                    scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
                 }
             }
         };

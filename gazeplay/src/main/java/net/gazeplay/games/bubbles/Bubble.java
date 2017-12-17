@@ -136,7 +136,7 @@ public class Bubble extends Parent {
         sequence.getChildren().addAll(timeline, timeline2);
         sequence.play();
 
-        //ObservableList<Node> nodes = this.getChildren();
+        // ObservableList<Node> nodes = this.getChildren();
 
         timeline.setOnFinished(new EventHandler<ActionEvent>() {
 

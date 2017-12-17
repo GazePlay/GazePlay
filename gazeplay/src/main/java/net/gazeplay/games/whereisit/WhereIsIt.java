@@ -417,9 +417,9 @@ public class WhereIsIt extends Application {
 
             GazeUtils.addEventFilter(imageRectangle);
 
-            imageRectangle.addEventFilter(MouseEvent.ANY, enterEvent);
+            this.addEventFilter(MouseEvent.ANY, enterEvent);
 
-            imageRectangle.addEventFilter(GazeEvent.ANY, enterEvent);
+            this.addEventFilter(GazeEvent.ANY, enterEvent);
         }
 
         private EventHandler<Event> buildEvent() {
