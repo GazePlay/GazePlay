@@ -3,6 +3,7 @@
 # Installation
 
 1) Téléchargez le fichier situé [ici (Version 1.1.0)](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-SNAPSHOT-1.0.6/gazeplay-1.0.6.jar). Il s'agit d'un fichier compressé *zip* qui contient un répertoire nommé *gazeplay* ;
+
 2) Extrayez le répertoire *gazeplay* dans le répertoire utilisateur (voir la faq ci-dessous) ; 
 
 # Lancement de GazePlay
@@ -26,7 +27,9 @@ Sous Linux /home/NomUtilisateur/GazePlay
 ## Comment faire un racourci sous Windows pour *gazeplay.bat* ?
 
 1) Cliquez-droit sur le fichier $gazeplay.bat$ et sélectionnez *créez un raccourci* ;
+
 2) déplacez le raccourci sur le bureau ;
+
 3) double-cliquez sur le raccourci pour lancer *GazePlay*.
 
 ## Lorsque je double-clique sur *gazeplay.bat*, ça ne fonctionne pas.
