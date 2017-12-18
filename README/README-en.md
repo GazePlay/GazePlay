@@ -4,9 +4,9 @@
 
 ## Download
 
-[Stable 1.0.6](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-SNAPSHOT-1.0.6/gazeplay-1.0.6.jar)
+[Stable 1.1.0](README/installation.md)
 
-[Evolution Version](dev-en.md)
+<!--[Evolution Version](dev-en.md)-->
 
 Software comes with default images but it is easy to add personnal images expecially the children favorite.
 
@@ -16,7 +16,7 @@ Software comes with default images but it is easy to add personnal images expeci
 
 ## Quick Access
 
-[Tutos videos](tutorials-en.md) [Installation](installation-en.md)
+ [Installation](installation-en.md)
 
 [Games](jeux-en.md) [Statistics](statistiques-en.md)
 

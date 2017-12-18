@@ -2,23 +2,57 @@
 
 # Installation
 
-Copy-paste or drag and drop downloaded file from this [link (Version 1.0.6)](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-SNAPSHOT-1.0.6/gazeplay-1.0.6.jar) on your hard drive where you prefer. Desktop is perfect. 
+1) Download this [file (Version 1.1.0)](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-SNAPSHOT-1.0.6/gazeplay-1.0.6.jar). Il s'agit d'un fichier compressé *zip* qui contient un répertoire nommé *gazeplay* ;
 
-Double click on the file. If everything is alright, software runs.
+2) Extract the *gazeplay* directory in the user directory (see FAQ) ; 
 
-Otherwise, you certainly don't have a Java virtual machine on your computer.
+# GazePlay Launcher
+
+You can find in the *bin* directory executables to launch *GazePlay*.
+
+On Windows, double-click on *gazeplay.bat*.
+
+On Linux or MacOs, double-click on *gazeplay.sh*.
+
+# FAQ
+
+## What is the default forder of GazePlay ?
+
+On Windows C:\Users\UserName\Documents
+
+On MacOs /Users/UserName/GazePlay
+
+On Linux /home/UserName/GazePlay
+
+## How to create a shortcut Windows for *gazeplay.bat* ?
+
+1) Right-click on the file *gazeplay.bat* and select *create a shortcut* ;
+
+2) move the shortcut on the desktop ;
+
+3) double-click on the shortcut to launch *GazePlay*.
+
+## I click on *gazeplay.bat*, but it doesn't work. Why ?
+
+You may see an error message, you certainly don't have a Java virtual machine on your computer.
 
 [Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
 
 If you experiment some problems send an email to didier.schwab at univ dash grenoble dash alpes dot fr (replace at with @ dash with - and dot with .).
 
+## How to change images ?
 
-## Installation of Tobii EyeX ou Tobii 4C eye-tracker
+In a directory called *XXX* (the name you wish), another directory where you will put a directory called *images*.
+ 
+*images* can have 3 other directories :
 
-These two models are only Windows compatible (version 7, 8 and 10). GazePlay can't use them with another operating system or on computers which material characteritics don't allow to use these device.
+1) *portraits* : images used by *creampie*, *ninja* and *bubles portrait*. Images should be small (300x300 pixels).
 
-Download last version of the [GazePlay-tobii-setup](https://github.com/schwabdidier/GazePlay/releases/download/gazeplay-tobii-setup-1.1.0.jar/gazeplay-tobii-setup-1.1.0.jar) and double click on it. Installation won't length more than few seconds.
+2) *magiccards* : images used by *magic cards*. You can use all image sizes.
 
-For information, installation process simply copy in the default directory of GazePlay a directory called *DLL* with two files called *tobii_stream_engine.dll* et *GazePlayTobiiLibrary2.dll*.
+3) *blocs* : images used by *blocs* and *Scratchcard*. Choose big images (the best is at least screen size).
+
+Vous can have as much directory *XXX* as you wish and change the selected one thanks to the configuration interface.
+
 
 [Back](README-en.md)
