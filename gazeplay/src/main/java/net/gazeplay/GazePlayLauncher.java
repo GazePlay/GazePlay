@@ -3,7 +3,7 @@ package net.gazeplay;
 import javafx.application.Application;
 import lombok.extern.slf4j.Slf4j;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
-import utils.games.Utils;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.File;
 import java.io.IOException;

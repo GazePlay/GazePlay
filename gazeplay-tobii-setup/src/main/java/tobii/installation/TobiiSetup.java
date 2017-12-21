@@ -1,10 +1,10 @@
 package tobii.installation;
 
-import gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.Configuration;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import utils.games.Utils;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.File;
 

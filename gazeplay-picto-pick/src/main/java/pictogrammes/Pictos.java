@@ -1,7 +1,7 @@
 package pictogrammes;
 
-import gaze.GazeEvent;
-import gaze.GazeUtils;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;

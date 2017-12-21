@@ -11,7 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import utils.games.Utils;
+import net.gazeplay.commons.utils.games.Utils;
 
 /**
  * Created by schwab on 17/08/2016.

@@ -1,11 +1,11 @@
 package tobii;
 
-import gaze.TobiiGazeListener;
+import net.gazeplay.commons.gaze.TobiiGazeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
 import lombok.extern.slf4j.Slf4j;
-import utils.games.Utils;
+import net.gazeplay.commons.utils.games.Utils;
 
 @Slf4j
 public class Tobii {

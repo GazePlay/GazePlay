@@ -1,6 +1,6 @@
 package net.gazeplay;
 
-import gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.Configuration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.games.whereisit.WhereIsItStats;
 import net.gazeplay.games.whereisit.WhereIsIt;
@@ -15,7 +15,7 @@ import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
-import net.gazeplay.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.util.ArrayList;
 import java.util.List;

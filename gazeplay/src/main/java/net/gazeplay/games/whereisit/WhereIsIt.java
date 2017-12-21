@@ -3,17 +3,15 @@ package net.gazeplay.games.whereisit;
 //It is repeated always, it works like a charm :)
 
 import com.sun.glass.ui.Screen;
-import gaze.GazeEvent;
-import gaze.GazeUtils;
-import gaze.SecondScreen;
-import gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
+import net.gazeplay.commons.gaze.SecondScreen;
+import net.gazeplay.commons.gaze.configuration.Configuration;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -22,7 +20,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -35,16 +32,15 @@ import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.utils.Bravo;
-import net.gazeplay.utils.Home;
-import net.gazeplay.utils.HomeUtils;
-import net.gazeplay.utils.multilinguism.Multilinguism;
-import utils.games.Utils;
+import net.gazeplay.commons.utils.Bravo;
+import net.gazeplay.commons.utils.Home;
+import net.gazeplay.commons.utils.HomeUtils;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Random;
 
 /**

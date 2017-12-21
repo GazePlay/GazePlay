@@ -4,15 +4,15 @@ package net.gazeplay.games.creampie;
  * Created by schwab on 12/08/2016.
  */
 
-import gaze.SecondScreen;
+import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import net.gazeplay.utils.stats.ShootGamesStats;
-import net.gazeplay.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.ShootGamesStats;
+import net.gazeplay.commons.utils.stats.Stats;
 
 public class CreamPie extends Application {
 

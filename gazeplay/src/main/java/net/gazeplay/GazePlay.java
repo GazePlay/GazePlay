@@ -1,6 +1,6 @@
 package net.gazeplay;
 
-import gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.Configuration;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,9 +11,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.utils.HomeUtils;
-import net.gazeplay.utils.stats.Stats;
-import utils.games.Utils;
+import net.gazeplay.commons.utils.HomeUtils;
+import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.List;
 import java.util.stream.Collectors;
