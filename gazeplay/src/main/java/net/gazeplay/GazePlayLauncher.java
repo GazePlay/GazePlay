@@ -2,8 +2,8 @@ package net.gazeplay;
 
 import javafx.application.Application;
 import lombok.extern.slf4j.Slf4j;
-import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 import net.gazeplay.commons.utils.games.Utils;
+import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +32,9 @@ public class GazePlayLauncher {
             throw new RuntimeException("Failed to load the version info", e);
         }
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++) {
             log.info("***********************");
+        }
         log.info("GazePlay");
         log.info("Version : " + versionInfo);
         Utils.logSystemProperties();
@@ -47,6 +48,9 @@ public class GazePlayLauncher {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             log.error("Exception", e);
         }
+
+        File workingDirectory = new File(".").getAbsoluteFile();
+        log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
 
         // creation of GazePlay default folder if it does not exist.
         File gazePlayFolder = new File(Utils.getGazePlayFolder());

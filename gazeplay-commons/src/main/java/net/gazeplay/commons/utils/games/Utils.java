@@ -206,14 +206,6 @@ public class Utils {
     }
 
     /**
-     * @return DLL directory for GazePlay : in the default directory of GazePlay, a folder called DLL
-     */
-    public static String getDllFolder() {
-
-        return getGazePlayFolder() + "DLL" + FILESEPARATOR;
-    }
-
-    /**
      * @return styles directory for GazePlay : in the default directory of GazePlay, a folder called styles
      */
     public static String getStylesFolder() {
