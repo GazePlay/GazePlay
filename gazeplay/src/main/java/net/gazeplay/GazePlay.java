@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import net.gazeplay.commons.gaze.configuration.Configuration;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,9 +10,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.HomeUtils;
-import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,9 +53,9 @@ public class GazePlay extends Application {
         for (int i = 0; i < 5; i++)
             log.info("***********************");
 
-        Configuration C = new Configuration();
+        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        scene.getStylesheets().add(C.cssfile);
+        scene.getStylesheets().add(config.getCssfile());
 
         Utils.addStylesheets(scene.getStylesheets());
 

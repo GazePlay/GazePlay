@@ -1,118 +1,74 @@
 package net.gazeplay.commons.utils.multilinguism;
 
-import net.gazeplay.commons.gaze.configuration.Configuration;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class Multilinguism {
 
-    private static Multilinguism multilinguism;
-    private HashMap<Entry, String> traductions;
+    private static Map<Entry, String> loadFromFile() {
+        final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+        try (InputStream is = systemClassLoader.getResourceAsStream("data/multilinguism/multilinguism.csv")) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 
-    private Multilinguism() {
+                Map<Entry, String> traductions = new HashMap<>(1000);
 
-        traductions = new HashMap<>(1000);
+                String ligne = null;
 
-        try {
-            InputStream is = ClassLoader.getSystemClassLoader()
-                    .getResourceAsStream("data/multilinguism/multilinguism.csv");
+                boolean firstline = true;
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String[] languages = null, data = null;
 
-            String ligne = null;
+                while ((ligne = br.readLine()) != null) {
+                    if (firstline) {
+                        // Retourner la ligne dans un tableau
+                        languages = ligne.split(",");
+                        firstline = false;
+                    } else {
+                        data = ligne.split(",");
+                        String key = data[0];
+                        for (int i = 1; i < data.length; i++) {
 
-            boolean firstline = true;
-
-            String[] languages = null, data = null;
-
-            while ((ligne = br.readLine()) != null) {
-                if (firstline) {
-                    // Retourner la ligne dans un tableau
-                    languages = ligne.split(",");
-                    firstline = false;
-                } else {
-                    data = ligne.split(",");
-                    String key = data[0];
-                    for (int i = 1; i < data.length; i++) {
-
-                        // log.info(key + ", " + languages[i] + ", " +data[i]);
-                        traductions.put(new Entry(key, languages[i]), data[i]);
+                            // log.info(key + ", " + languages[i] + ", " +data[i]);
+                            traductions.put(new Entry(key, languages[i]), data[i]);
+                        }
                     }
                 }
+                return traductions;
             }
-            br.close();
-
         } catch (IOException e) {
             log.error("Exception", e);
+            throw new RuntimeException(e);
         }
     }
 
-    public static Multilinguism getMultilinguism() {
+    @Getter
+    private static Multilinguism singleton = new Multilinguism();
 
-        if (multilinguism == null)
-            multilinguism = new Multilinguism();
+    private final Map<Entry, String> traductions;
 
-        return multilinguism;
+    private Multilinguism() {
+        this.traductions = loadFromFile();
     }
 
     public String getTrad(String key, String language) {
-
         return traductions.get(new Entry(key, language));
     }
 
-    public static String getLanguage() {
-
-        String language = (new Configuration()).language;
-
-        for (Languages l : Languages.values()) {
-
-            if (l.toString().equals(language)) {
-
-                return language;
-            }
-        }
-
-        return "fra";
+    @Data
+    @AllArgsConstructor
+    private static class Entry {
+        public String key;
+        public String language;
     }
 
-}
-
-class Entry {
-
-    public String key;
-    public String language;
-
-    public Entry(String key, String language) {
-        this.key = key;
-        this.language = language;
-    }
-
-    @Override
-    public String toString() {
-        return "Entry{" + "key='" + key + '\'' + ", language='" + language + '\'' + '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-
-        Entry entry = (Entry) o;
-
-        if (!key.equals(entry.key))
-            return false;
-        return language.equals(entry.language);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = key.hashCode();
-        result = 31 * result + language.hashCode();
-        return result;
-    }
 }

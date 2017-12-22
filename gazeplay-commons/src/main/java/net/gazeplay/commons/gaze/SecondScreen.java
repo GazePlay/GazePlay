@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 
 /**
  * Created by schwab on 10/09/2016.
@@ -61,12 +62,12 @@ public class SecondScreen {
 
         SecondScreen sc = new SecondScreen();
 
-        Configuration config = new Configuration();
+        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
         /*
          * if (config.eyetracker.equals("tobii")) Tobii.execProg(sc); else
          */
-        if (config.gazeMode.equals("true"))
+        if (config.isGazeMode())
             gazeListener = new EyeTribeGazeListener(sc);
         else
             gazeListener = new FuzzyGazeListener(sc);

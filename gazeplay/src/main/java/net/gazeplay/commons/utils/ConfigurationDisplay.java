@@ -1,7 +1,5 @@
 package net.gazeplay.commons.utils;
 
-import net.gazeplay.commons.gaze.EyeTrackers;
-import net.gazeplay.commons.gaze.configuration.Configuration;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -20,10 +18,13 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.gaze.EyeTrackers;
+import net.gazeplay.commons.gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.layout.Themes;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
-import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.File;
 
@@ -34,7 +35,7 @@ import java.io.File;
 @Slf4j
 public class ConfigurationDisplay extends Rectangle {
 
-    private static ConfigurationDisplay config;
+    private static ConfigurationDisplay configurationDisplay;
 
     private static double prefWidth = 200;
     private static double prefHeight = 25;
@@ -53,9 +54,9 @@ public class ConfigurationDisplay extends Rectangle {
         double X = 0;
         double Y = scene.getHeight() - height * 1.1;
 
-        config = new ConfigurationDisplay(X, Y, width, height);
+        configurationDisplay = new ConfigurationDisplay(X, Y, width, height);
 
-        config.setVisible(true);
+        configurationDisplay.setVisible(true);
 
         EventHandler<Event> configEvent = new EventHandler<Event>() {
             @Override
@@ -68,17 +69,19 @@ public class ConfigurationDisplay extends Rectangle {
             }
         };
 
-        config.addEventHandler(MouseEvent.MOUSE_CLICKED, configEvent);
+        configurationDisplay.addEventHandler(MouseEvent.MOUSE_CLICKED, configEvent);
 
-        return config;
+        return configurationDisplay;
     }
 
     private static void buildConfig(Scene scene, Group root, ChoiceBox cbxGames) {
 
-        Multilinguism multilinguism = Multilinguism.getMultilinguism();
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+        Multilinguism multilinguism = Multilinguism.getSingleton();
 
         // to add or not a space before colon (:) according to the language
-        String colon = multilinguism.getTrad("Colon", Multilinguism.getLanguage());
+        String colon = multilinguism.getTrad("Colon", config.getLanguage());
         if (colon.equals("_noSpace"))
             colon = ": ";
         else
@@ -88,60 +91,60 @@ public class ConfigurationDisplay extends Rectangle {
         HomeUtils.clear(scene, root, cbxGames);
         HomeUtils.home(scene, root, cbxGames, null);
 
-        Configuration C = new Configuration();
-        log.info(C.toString());
+        log.info(config.toString());
 
-        Text Configuration = new Text(multilinguism.getTrad("ConfigTitle", Multilinguism.getLanguage()));
+        Text Configuration = new Text(multilinguism.getTrad("ConfigTitle", config.getLanguage()));
         Configuration.setX(scene.getWidth() * 0.4);
         Configuration.setY(60);
         Configuration.setId("title");
 
-        Text language = new Text(multilinguism.getTrad("Lang", Multilinguism.getLanguage()) + colon);
+        Text language = new Text(multilinguism.getTrad("Lang", config.getLanguage()) + colon);
         language.setX(100);
         language.setY(100);
         language.setId("item");
-        buildLanguageMenu(C, scene, root, cbxGames, 250, 105);
+        buildLanguageMenu(config, scene, root, cbxGames, 250, 105);
 
-        Text eyeTracker = new Text(multilinguism.getTrad("EyeTracker", Multilinguism.getLanguage()) + colon);
+        Text eyeTracker = new Text(multilinguism.getTrad("EyeTracker", config.getLanguage()) + colon);
         eyeTracker.setX(100);
         eyeTracker.setY(200);
         eyeTracker.setId("item");
-        buildEyeTrackerMenu(C, root, 250, 205);
+        buildEyeTrackerMenu(config, root, 250, 205);
 
-        Text fileDir = new Text(multilinguism.getTrad("FileDir", Multilinguism.getLanguage()) + colon);
+        Text fileDir = new Text(multilinguism.getTrad("FileDir", config.getLanguage()) + colon);
         fileDir.setX(100);
         fileDir.setY(300);
         fileDir.setId("item");
-        buildDirectoryChooserMenu(scene, C, root, 250, 305);
+        buildDirectoryChooserMenu(scene, config, root, 250, 305);
 
-        Text styleFile = new Text(multilinguism.getTrad("LayoutFile", Multilinguism.getLanguage()) + colon);
+        Text styleFile = new Text(multilinguism.getTrad("LayoutFile", config.getLanguage()) + colon);
         styleFile.setX(100);
         styleFile.setY(400);
         styleFile.setId("item");
-        buildStyleChooser(scene, C, root, 250, 405);
+        buildStyleChooser(scene, config, root, 250, 405);
 
-        Text fixLength = new Text(multilinguism.getTrad("FixationLength", Multilinguism.getLanguage()) + colon);
+        Text fixLength = new Text(multilinguism.getTrad("FixationLength", config.getLanguage()) + colon);
         fixLength.setX(100);
         fixLength.setY(500);
         fixLength.setId("item");
-        buildFixLengthChooserMenu(scene, C, root, 250, 505);
+        buildFixLengthChooserMenu(scene, config, root, 250, 505);
 
-        Text wisGameDir = new Text(multilinguism.getTrad("WhereIsItDirectory", Multilinguism.getLanguage()) + colon);
+        Text wisGameDir = new Text(multilinguism.getTrad("WhereIsItDirectory", config.getLanguage()) + colon);
         wisGameDir.setX(100);
         wisGameDir.setY(600);
         wisGameDir.setId("item");
-        buildWITDirectoryChooserMenu(scene, C, root, 250, 605);
+        buildWITDirectoryChooserMenu(scene, config, root, 250, 605);
 
         root.getChildren().addAll(Configuration, language, eyeTracker, fileDir, styleFile, fixLength, wisGameDir);
     }
 
-    private static void buildFixLengthChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
+    private static void buildFixLengthChooserMenu(Scene scene, Configuration configuration, Group root, int posX,
+            int posY) {
 
         ChoiceBox FixLengthBox = new ChoiceBox();
 
         int i = 300;
 
-        FixLengthBox.getItems().add(new Double((double) C.fixationlength) / 1000);
+        FixLengthBox.getItems().add(new Double((double) configuration.getFixationlength()) / 1000);
         while (i <= 30000) {
 
             FixLengthBox.getItems().add(new Double(((double) i) / 1000));
@@ -160,27 +163,27 @@ public class ConfigurationDisplay extends Rectangle {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
-                C.fixationlength = (int) (1000
+                final int newPropertyValue = (int) (1000
                         * (double) FixLengthBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
-                // TLengths[newValue.intValue()].toString();
-                log.info(C.toString());
-                C.saveConfigIgnoringExceptions();
+
+                ConfigurationBuilder.createFromPropertiesResource().withFixationLength(newPropertyValue)
+                        .saveConfigIgnoringExceptions();
+
             }
         });
     }
 
     /**
-     *
      * Fonction to use to permit to user to select between several theme
      *
      * @param scene
-     * @param C
+     * @param configuration
      * @param root
      * @param posX
      * @param posY
      */
 
-    private static void buildStyleChooser(Scene scene, Configuration C, Group root, int posX, int posY) {
+    private static void buildStyleChooser(Scene scene, Configuration configuration, Group root, int posX, int posY) {
 
         ChoiceBox themesBox = new ChoiceBox();
         Themes[] TThemes = Themes.values();
@@ -190,11 +193,13 @@ public class ConfigurationDisplay extends Rectangle {
         for (int i = 0; i < TThemes.length; i++) {
             themesBox.getItems().add(TThemes[i]);
         }
-        if (C.cssfile.indexOf("orange") > 0) {
+        final String cssfile = configuration.getCssfile();
+
+        if (cssfile.indexOf("orange") > 0) {
             themesBox.getSelectionModel().select(0);
-        } else if (C.cssfile.indexOf("green") > 0) {
+        } else if (cssfile.indexOf("green") > 0) {
             themesBox.getSelectionModel().select(1);
-        } else if (C.cssfile.indexOf("light-blue") > 0) {
+        } else if (cssfile.indexOf("light-blue") > 0) {
             themesBox.getSelectionModel().select(2);
         } else
             themesBox.getSelectionModel().select(3);
@@ -210,20 +215,23 @@ public class ConfigurationDisplay extends Rectangle {
 
                 log.info(newValue + "");
 
+                String newPropertyValue;
+
                 if (TThemes[newValue.intValue()].toString().equals("green"))
-                    C.cssfile = "data/stylesheets/main-green.css";
+                    newPropertyValue = "data/stylesheets/main-green.css";
                 else if (TThemes[newValue.intValue()].toString().equals("blue"))
-                    C.cssfile = "data/stylesheets/main-blue.css";
+                    newPropertyValue = "data/stylesheets/main-blue.css";
                 else if (TThemes[newValue.intValue()].toString().equals("light_blue"))
-                    C.cssfile = "data/stylesheets/main-light-blue.css";
+                    newPropertyValue = "data/stylesheets/main-light-blue.css";
                 else
-                    C.cssfile = "data/stylesheets/main-orange.css";
-                log.info(C.toString());
-                C.saveConfigIgnoringExceptions();
+                    newPropertyValue = "data/stylesheets/main-orange.css";
+
+                ConfigurationBuilder.createFromPropertiesResource().withCssFile(newPropertyValue)
+                        .saveConfigIgnoringExceptions();
 
                 scene.getStylesheets().remove(0);
 
-                scene.getStylesheets().add(C.cssfile);
+                scene.getStylesheets().add(newPropertyValue);
 
                 log.info(scene.getStylesheets().toString());
             }
@@ -231,19 +239,19 @@ public class ConfigurationDisplay extends Rectangle {
     }
 
     /**
-     *
      * Fonction to use to permit to user to choose his/her own css file
      *
      * @param scene
-     * @param C
+     * @param configuration
      * @param root
      * @param posX
      * @param posY
      */
 
-    private static void buildStyleFileChooser(Scene scene, Configuration C, Group root, int posX, int posY) {
+    private static void buildStyleFileChooser(Scene scene, Configuration configuration, Group root, int posX,
+            int posY) {
 
-        Button buttonLoad = new Button(C.cssfile);
+        Button buttonLoad = new Button(configuration.getCssfile());
 
         buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -251,21 +259,20 @@ public class ConfigurationDisplay extends Rectangle {
                 FileChooser fileChooser = new FileChooser();
                 File file = fileChooser.showOpenDialog(scene.getWindow());
                 buttonLoad.setText(file.toString());
-                C.cssfile = file.toString();
 
+                String newPropertyValue = file.toString();
                 if (Utils.isWindows()) {
-
-                    C.cssfile = Utils.convertWindowsPath(C.cssfile);
+                    newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
                 }
 
-                log.info(C.toString());
-                C.saveConfigIgnoringExceptions();
+                ConfigurationBuilder.createFromPropertiesResource().withCssFile(newPropertyValue)
+                        .saveConfigIgnoringExceptions();
 
                 log.info(scene.getStylesheets().toString());
 
                 scene.getStylesheets().remove(0);
 
-                scene.getStylesheets().add("file://" + C.cssfile);
+                scene.getStylesheets().add("file://" + newPropertyValue);
 
                 log.info(scene.getStylesheets().toString());
             }
@@ -277,9 +284,45 @@ public class ConfigurationDisplay extends Rectangle {
         root.getChildren().add(buttonLoad);
     }
 
-    private static void buildDirectoryChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
+    private static void buildDirectoryChooserMenu(Scene scene, Configuration configuration, Group root, int posX,
+            int posY) {
 
-        Button buttonLoad = new Button(C.filedir);
+        final String filedir = configuration.getFiledir();
+
+        Button buttonLoad = new Button(filedir);
+
+        buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                DirectoryChooser directoryChooser = new DirectoryChooser();
+                File file = directoryChooser.showDialog(scene.getWindow());
+                if (file == null) {
+                    return;
+                }
+                buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
+
+                String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
+
+                if (Utils.isWindows()) {
+                    newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
+                }
+
+                ConfigurationBuilder.createFromPropertiesResource().withFileDir(newPropertyValue)
+                        .saveConfigIgnoringExceptions();
+            }
+        });
+
+        buttonLoad.setTranslateX(posX);
+        buttonLoad.setTranslateY(posY);
+
+        root.getChildren().add(buttonLoad);
+    }
+
+    private static void buildWITDirectoryChooserMenu(Scene scene, Configuration configuration, Group root, int posX,
+            int posY) {
+
+        final String whereIsItDir = configuration.getWhereIsItDir();
+        Button buttonLoad = new Button(whereIsItDir);
 
         buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -291,15 +334,14 @@ public class ConfigurationDisplay extends Rectangle {
                 }
                 buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
 
-                C.filedir = file.toString() + Utils.FILESEPARATOR;
+                String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
 
                 if (Utils.isWindows()) {
-
-                    C.filedir = Utils.convertWindowsPath(C.filedir);
+                    newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
                 }
 
-                log.info(C.toString());
-                C.saveConfigIgnoringExceptions();
+                ConfigurationBuilder.createFromPropertiesResource().withWhereIsItDir(newPropertyValue)
+                        .saveConfigIgnoringExceptions();
             }
         });
 
@@ -309,40 +351,8 @@ public class ConfigurationDisplay extends Rectangle {
         root.getChildren().add(buttonLoad);
     }
 
-    private static void buildWITDirectoryChooserMenu(Scene scene, Configuration C, Group root, int posX, int posY) {
-
-        Button buttonLoad = new Button(C.whereIsItDir);
-
-        buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                DirectoryChooser directoryChooser = new DirectoryChooser();
-                File file = directoryChooser.showDialog(scene.getWindow());
-                if (file == null) {
-                    return;
-                }
-                buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
-                C.whereIsItDir = file.toString() + Utils.FILESEPARATOR;
-
-                if (Utils.isWindows()) {
-
-                    log.info("convertWindowsPath " + C.whereIsItDir);
-                    C.whereIsItDir = Utils.convertWindowsPath(C.whereIsItDir);
-                }
-
-                log.info(C.toString());
-                C.saveConfigIgnoringExceptions();
-            }
-        });
-
-        buttonLoad.setTranslateX(posX);
-        buttonLoad.setTranslateY(posY);
-
-        root.getChildren().add(buttonLoad);
-    }
-
-    private static void buildLanguageMenu(Configuration C, Scene scene, Group root, ChoiceBox cbxGames, double posX,
-            double posY) {
+    private static void buildLanguageMenu(Configuration configuration, Scene scene, Group root, ChoiceBox cbxGames,
+            double posX, double posY) {
         ChoiceBox languageBox = new ChoiceBox();
         Languages[] TLanguages = Languages.values();
 
@@ -351,7 +361,7 @@ public class ConfigurationDisplay extends Rectangle {
         for (int i = 0; i < TLanguages.length; i++) {
 
             languageBox.getItems().add(TLanguages[i]);
-            if (TLanguages[i].toString().equals(C.language)) {
+            if (TLanguages[i].toString().equals(configuration.getLanguage())) {
 
                 firstPos = i;
             }
@@ -369,15 +379,17 @@ public class ConfigurationDisplay extends Rectangle {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
-                C.language = TLanguages[newValue.intValue()].toString();
-                log.info(C.toString());
-                C.saveConfigIgnoringExceptions();
+                final String newPropertyValue = TLanguages[newValue.intValue()].toString();
+
+                ConfigurationBuilder.createFromPropertiesResource().withLanguage(newPropertyValue)
+                        .saveConfigIgnoringExceptions();
+
                 buildConfig(scene, root, GazePlay.updateGames());// game names change following the language
             }
         });
     }
 
-    private static void buildEyeTrackerMenu(Configuration C, Group root, double posX, double posY) {
+    private static void buildEyeTrackerMenu(Configuration configuration, Group root, double posX, double posY) {
         ChoiceBox EyeTrackersBox = new ChoiceBox();
         EyeTrackers[] TEyeTrackers = EyeTrackers.values();
 
@@ -385,7 +397,7 @@ public class ConfigurationDisplay extends Rectangle {
 
         for (int i = 0; i < TEyeTrackers.length; i++) {
             EyeTrackersBox.getItems().add(TEyeTrackers[i]);
-            if (TEyeTrackers[i].toString().equals(C.eyetracker)) {
+            if (TEyeTrackers[i].toString().equals(configuration.getEyetracker())) {
                 firstPos = i;
 
             }
@@ -401,10 +413,9 @@ public class ConfigurationDisplay extends Rectangle {
         EyeTrackersBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-
-                C.eyetracker = TEyeTrackers[newValue.intValue()].toString();
-                log.info(C.toString());
-                C.saveConfigIgnoringExceptions();
+                final String newPropertyValue = TEyeTrackers[newValue.intValue()].toString();
+                ConfigurationBuilder.createFromPropertiesResource().withEyeTracker(newPropertyValue)
+                        .saveConfigIgnoringExceptions();
             }
         });
     }

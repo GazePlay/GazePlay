@@ -1,6 +1,5 @@
 package net.gazeplay.commons.utils.games;
 
-import net.gazeplay.commons.gaze.configuration.Configuration;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -9,6 +8,8 @@ import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import org.apache.commons.io.IOUtils;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -246,7 +247,8 @@ public class Utils {
 
     public static String getFilesFolder() {
 
-        String filesFolder = new Configuration().filedir;
+        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        String filesFolder = config.getFiledir();
 
         log.info("filesFolder : " + filesFolder);
         return filesFolder;

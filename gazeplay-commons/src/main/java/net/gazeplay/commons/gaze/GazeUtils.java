@@ -2,12 +2,13 @@ package net.gazeplay.commons.gaze;
 
 import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
-import net.gazeplay.commons.gaze.configuration.Configuration;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
-import tobii.Tobii;
+import net.gazeplay.commons.gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.stats.Stats;
+import tobii.Tobii;
 
 import java.util.ArrayList;
 
@@ -31,14 +32,14 @@ public class GazeUtils {
 
     private static IGazeListener createGazeListener() {
 
-        Configuration config = new Configuration();
+        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        log.info("Eye-tracker = " + config.eyetracker);
+        final String eyetracker = config.getEyetracker();
+        log.info("Eye-tracker = " + eyetracker);
 
-        if (config.eyetracker.equals(EyeTrackers.tobii_eyeX_4C.toString())) {
-
+        if (eyetracker.equals(EyeTrackers.tobii_eyeX_4C.toString())) {
             Tobii.execProg(new TobiiGazeListener(nodesEventFilter, nodesEventHandler));
-        } else if (config.eyetracker.equals(EyeTrackers.eyetribe.toString()))
+        } else if (eyetracker.equals(EyeTrackers.eyetribe.toString()))
             return new EyeTribeGazeListener(nodesEventFilter, nodesEventHandler);
         // else
         // return new FuzzyGazeListener(nodesEventFilter, nodesEventHandler);

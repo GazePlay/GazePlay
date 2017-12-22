@@ -14,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.HomeUtils;
@@ -24,29 +25,30 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsDisplay {
 
-    public static void displayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames) {
+    public static void displayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames,
+            Configuration config) {
 
-        Multilinguism multilinguism = Multilinguism.getMultilinguism();
+        Multilinguism multilinguism = Multilinguism.getSingleton();
 
         stats.stop();
 
         HomeUtils.clear(scene, root, cbxGames);
 
         // to add or not a space before colon (:) according to the language
-        String colon = multilinguism.getTrad("Colon", Multilinguism.getLanguage());
+        String colon = multilinguism.getTrad("Colon", config.getLanguage());
         if (colon.equals("_noSpace"))
             colon = ": ";
         else
             colon = " : ";
 
-        Text statistics = new Text(multilinguism.getTrad("StatsTitle", Multilinguism.getLanguage()));
+        Text statistics = new Text(multilinguism.getTrad("StatsTitle", config.getLanguage()));
 
         statistics.setX(scene.getWidth() * 0.4);
         statistics.setY(60);
         statistics.setId("title");
 
-        Text totalLength = new Text(multilinguism.getTrad("TotalLength", Multilinguism.getLanguage()) + colon
-                + convert(stats.getTotalLength()));
+        Text totalLength = new Text(
+                multilinguism.getTrad("TotalLength", config.getLanguage()) + colon + convert(stats.getTotalLength()));
 
         totalLength.setX(100);
         totalLength.setY(150);
@@ -55,16 +57,14 @@ public class StatsDisplay {
         Text shoots = new Text();
         if (stats instanceof ShootGamesStats) {
 
-            shoots = new Text(
-                    multilinguism.getTrad("Shoots", Multilinguism.getLanguage()) + colon + stats.getNbGoals());
+            shoots = new Text(multilinguism.getTrad("Shoots", config.getLanguage()) + colon + stats.getNbGoals());
         } else if (stats instanceof BubblesGamesStats) {
 
-            shoots = new Text(
-                    multilinguism.getTrad("BubbleShoot", Multilinguism.getLanguage()) + colon + stats.getNbGoals());
+            shoots = new Text(multilinguism.getTrad("BubbleShoot", config.getLanguage()) + colon + stats.getNbGoals());
         } else if (stats instanceof HiddenItemsGamesStats) {
 
-            shoots = new Text(multilinguism.getTrad("HiddenItemsShoot", Multilinguism.getLanguage()) + colon
-                    + stats.getNbGoals());
+            shoots = new Text(
+                    multilinguism.getTrad("HiddenItemsShoot", config.getLanguage()) + colon + stats.getNbGoals());
         }
 
         shoots.setX(100);
@@ -72,7 +72,7 @@ public class StatsDisplay {
         shoots.setId("item");
 
         Text length = new Text(
-                multilinguism.getTrad("Length", Multilinguism.getLanguage()) + colon + convert(stats.getLength()));
+                multilinguism.getTrad("Length", config.getLanguage()) + colon + convert(stats.getLength()));
 
         length.setX(100);
         length.setY(250);
@@ -82,11 +82,11 @@ public class StatsDisplay {
 
         if (stats instanceof ShootGamesStats) {
 
-            averageLength = new Text(multilinguism.getTrad("ShootaverageLength", Multilinguism.getLanguage()) + colon
+            averageLength = new Text(multilinguism.getTrad("ShootaverageLength", config.getLanguage()) + colon
                     + convert(stats.getAverageLength()));
         } else if (stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
 
-            averageLength = new Text(multilinguism.getTrad("AverageLength", Multilinguism.getLanguage()) + colon
+            averageLength = new Text(multilinguism.getTrad("AverageLength", config.getLanguage()) + colon
                     + convert(stats.getAverageLength()));
         }
 
@@ -98,11 +98,11 @@ public class StatsDisplay {
 
         if (stats instanceof ShootGamesStats) {
 
-            medianLength = new Text(multilinguism.getTrad("ShootmedianLength", Multilinguism.getLanguage()) + colon
+            medianLength = new Text(multilinguism.getTrad("ShootmedianLength", config.getLanguage()) + colon
                     + convert(stats.getMedianLength()));
         } else if (stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
 
-            medianLength = new Text(multilinguism.getTrad("MedianLength", Multilinguism.getLanguage()) + colon
+            medianLength = new Text(multilinguism.getTrad("MedianLength", config.getLanguage()) + colon
                     + convert(stats.getMedianLength()));
         }
 
@@ -111,7 +111,7 @@ public class StatsDisplay {
         medianLength.setId("item");
 
         Text standDev = new Text(
-                multilinguism.getTrad("StandDev", Multilinguism.getLanguage()) + colon + convert((long) stats.getSD()));
+                multilinguism.getTrad("StandDev", config.getLanguage()) + colon + convert((long) stats.getSD()));
 
         standDev.setX(100);
         standDev.setY(400);
@@ -122,7 +122,7 @@ public class StatsDisplay {
         if (stats instanceof ShootGamesStats && !(stats instanceof BubblesGamesStats)
                 && ((ShootGamesStats) stats).getNbUnCountedShoots() != 0) {
 
-            UncountedShoot = new Text(multilinguism.getTrad("UncountedShoot", Multilinguism.getLanguage()) + colon
+            UncountedShoot = new Text(multilinguism.getTrad("UncountedShoot", config.getLanguage()) + colon
                     + ((ShootGamesStats) stats).getNbUnCountedShoots());
 
             UncountedShoot.setX(scene.getWidth() / 2);

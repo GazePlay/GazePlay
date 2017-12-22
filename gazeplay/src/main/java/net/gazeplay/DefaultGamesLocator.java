@@ -1,9 +1,9 @@
 package net.gazeplay;
 
-import net.gazeplay.commons.gaze.configuration.Configuration;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.games.whereisit.WhereIsItStats;
-import net.gazeplay.games.whereisit.WhereIsIt;
+import net.gazeplay.commons.gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
@@ -15,7 +15,8 @@ import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.games.whereisit.WhereIsIt;
+import net.gazeplay.games.whereisit.WhereIsItStats;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,10 @@ public class DefaultGamesLocator implements GamesLocator {
     @Override
     public List<GameSpec> listGames() {
 
-        Multilinguism multilinguism = Multilinguism.getMultilinguism();
-        String language = (new Configuration()).language;
+        Multilinguism multilinguism = Multilinguism.getSingleton();
+
+        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        String language = config.getLanguage();
 
         List<GameSpec> result = new ArrayList<>();
 

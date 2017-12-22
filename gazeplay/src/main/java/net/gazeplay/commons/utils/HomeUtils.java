@@ -13,9 +13,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.StatsDisplay;
-import net.gazeplay.commons.utils.games.Utils;
 
 @Slf4j
 public class HomeUtils {
@@ -46,7 +48,9 @@ public class HomeUtils {
                         goHome(scene, root, cbxGames);
                     } else {
 
-                        StatsDisplay.displayStats(stats, scene, root, cbxGames);
+                        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+                        StatsDisplay.displayStats(stats, scene, root, cbxGames, config);
                     }
 
                     scene.setCursor(Cursor.DEFAULT); // Change cursor to default style

@@ -1,8 +1,5 @@
 package net.gazeplay.games.magiccards;
 
-import net.gazeplay.commons.gaze.GazeEvent;
-import net.gazeplay.commons.gaze.GazeUtils;
-import net.gazeplay.commons.gaze.configuration.Configuration;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
@@ -23,6 +20,10 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
+import net.gazeplay.commons.gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.Home;
 import net.gazeplay.commons.utils.HomeUtils;
@@ -63,7 +64,9 @@ public class Card extends Parent {
     public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image,
             boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGamesStats stats) {
 
-        mintime = new Configuration().fixationlength;
+        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+        mintime = config.getFixationlength();
         this.winner = winner;// true if it is the good card
         this.initWidth = width;
         this.initHeight = height;
