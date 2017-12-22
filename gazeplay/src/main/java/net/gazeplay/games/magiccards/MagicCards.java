@@ -1,13 +1,13 @@
 package net.gazeplay.games.magiccards;
 
-import gaze.SecondScreen;
+import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import net.gazeplay.utils.stats.HiddenItemsGamesStats;
+import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
 /**
  * Created by schwab on 17/09/2016.

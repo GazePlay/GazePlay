@@ -3,7 +3,7 @@ package net.gazeplay;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
-import net.gazeplay.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.Stats;
 
 public class GameSpec {
 

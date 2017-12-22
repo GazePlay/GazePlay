@@ -1,11 +1,11 @@
 package tobii;
 
-import gaze.TobiiGazeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
 import lombok.extern.slf4j.Slf4j;
-import utils.games.Utils;
+import net.gazeplay.commons.gaze.TobiiGazeListener;
+import net.gazeplay.commons.utils.games.TobiiDllUtils;
 
 @Slf4j
 public class Tobii {
@@ -88,23 +88,7 @@ public class Tobii {
     public static native String gazePosition();
 
     static {
-        try {
-            if (System.getProperty("os.name").indexOf("indow") > 0) {
-                System.load(Utils.getDllFolder() + "tobii_stream_engine.dll");
-                System.load(Utils.getDllFolder() + "GazePlayTobiiLibrary2.dll");
-                // System.loadLibrary("tobii_stream_engine");
-                // System.loadLibrary("GazePlayTobiiLibrary2");
-            }
-        } catch (java.lang.UnsatisfiedLinkError e) {
-            log.info("******************************************************");
-            log.info("If you wish to Use a Tobii 4C or a Tobii EyeX");
-            log.info("Please put appropriate DLLs in DLL folder :");
-            log.info("tobii_stream_engine.dll and GazePlayTobiiLibrary2.dll");
-            log.info("should be in");
-            log.info(Utils.getDllFolder());
-            log.info("******************************************************");
-            // System.exit(0);
-        }
+        TobiiDllUtils.getSingleton().loadTobiiDlls();
     }
 
     public static boolean isInit() {

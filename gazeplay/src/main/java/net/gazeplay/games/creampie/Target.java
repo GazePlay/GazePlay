@@ -1,7 +1,7 @@
 package net.gazeplay.games.creampie;
 
-import gaze.GazeEvent;
-import gaze.GazeUtils;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
@@ -12,9 +12,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
-import net.gazeplay.utils.Portrait;
-import net.gazeplay.utils.stats.ShootGamesStats;
-import net.gazeplay.utils.stats.Stats;
+import net.gazeplay.commons.utils.Portrait;
+import net.gazeplay.commons.utils.stats.ShootGamesStats;
+import net.gazeplay.commons.utils.stats.Stats;
 
 /**
  * Created by schwab on 26/12/2016.

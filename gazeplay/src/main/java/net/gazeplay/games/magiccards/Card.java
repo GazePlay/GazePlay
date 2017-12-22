@@ -1,8 +1,5 @@
 package net.gazeplay.games.magiccards;
 
-import gaze.GazeEvent;
-import gaze.GazeUtils;
-import gaze.configuration.Configuration;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
@@ -23,11 +20,15 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.utils.Bravo;
-import net.gazeplay.utils.Home;
-import net.gazeplay.utils.HomeUtils;
-import utils.games.Utils;
-import net.gazeplay.utils.stats.HiddenItemsGamesStats;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
+import net.gazeplay.commons.gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.Bravo;
+import net.gazeplay.commons.utils.Home;
+import net.gazeplay.commons.utils.HomeUtils;
+import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
 /**
  * Created by schwab on 17/09/2016.
@@ -63,7 +64,9 @@ public class Card extends Parent {
     public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image,
             boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGamesStats stats) {
 
-        mintime = new Configuration().fixationlength;
+        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+        mintime = config.getFixationlength();
         this.winner = winner;// true if it is the good card
         this.initWidth = width;
         this.initHeight = height;

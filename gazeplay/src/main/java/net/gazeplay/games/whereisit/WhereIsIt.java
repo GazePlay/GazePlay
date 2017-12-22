@@ -3,17 +3,11 @@ package net.gazeplay.games.whereisit;
 //It is repeated always, it works like a charm :)
 
 import com.sun.glass.ui.Screen;
-import gaze.GazeEvent;
-import gaze.GazeUtils;
-import gaze.SecondScreen;
-import gaze.configuration.Configuration;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -22,7 +16,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -35,16 +28,20 @@ import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.utils.Bravo;
-import net.gazeplay.utils.Home;
-import net.gazeplay.utils.HomeUtils;
-import net.gazeplay.utils.multilinguism.Multilinguism;
-import utils.games.Utils;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
+import net.gazeplay.commons.gaze.SecondScreen;
+import net.gazeplay.commons.gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.Bravo;
+import net.gazeplay.commons.utils.Home;
+import net.gazeplay.commons.utils.HomeUtils;
+import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -135,14 +132,18 @@ public class WhereIsIt extends Application {
         final int winner = r.nextInt(nbImages);
         log.debug("winner = {}", winner);
 
-        final File imagesDirectory = locateImagesDirectory();
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+        final File imagesDirectory = locateImagesDirectory(config);
 
         final File[] imagesFolders = imagesDirectory.listFiles();
         final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
 
+        final String language = config.getLanguage();
+
         if (filesCount == 0) {
             log.info("No image found in Directory " + imagesDirectory);
-            error();
+            error(language);
             return;
         }
 
@@ -173,7 +174,8 @@ public class WhereIsIt extends Application {
             if (winner == i) {
 
                 log.info("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
-                pathSound = getPathSound(imagesFolders[(index) % filesCount].getName(), (new Configuration()).language);
+
+                pathSound = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
                 log.info("pathSound = {}", pathSound);
                 Utils.playSound(pathSound);
             }
@@ -197,26 +199,26 @@ public class WhereIsIt extends Application {
         stats.start();
     }
 
-    private static void error() {
+    private static void error(String language) {
 
         HomeUtils.clear(scene, root, choicebox);
         HomeUtils.home(scene, root, choicebox, null);
 
-        Multilinguism multilinguism = Multilinguism.getMultilinguism();
-        Text error = new Text(multilinguism.getTrad("WII-error", Multilinguism.getLanguage()));
+        Multilinguism multilinguism = Multilinguism.getSingleton();
+        Text error = new Text(multilinguism.getTrad("WII-error", language));
         error.setX(Screen.getMainScreen().getWidth() / 2. - 100);
         error.setY(Screen.getMainScreen().getHeight() / 2.);
         error.setId("item");
         root.getChildren().addAll(error);
     }
 
-    private static File locateImagesDirectory() {
+    private static File locateImagesDirectory(Configuration config) {
 
         File result = null;
 
         if (type == CUSTOMIZED) {
 
-            result = new File((new Configuration()).getWhereIsItDir() + "/images/");
+            result = new File(config.getWhereIsItDir() + "/images/");
         } else {
 
             result = locateImagesDirectoryInUnpackedDistDirectory();
@@ -300,11 +302,13 @@ public class WhereIsIt extends Application {
 
         if (type == CUSTOMIZED) {
 
+            final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
             try {
 
                 log.info("CUSTOMIZED");
 
-                String path = new Configuration().whereIsItDir + "sounds/";
+                String path = config.getWhereIsItDir() + "sounds/";
                 File F = new File(path);
 
                 for (String file : F.list()) {
@@ -324,7 +328,7 @@ public class WhereIsIt extends Application {
             } catch (Exception e) {
 
                 log.info("Problem with customized folder");
-                error();
+                error(config.getLanguage());
             }
 
             return "";
@@ -389,7 +393,9 @@ public class WhereIsIt extends Application {
 
             log.info("imagePath = {}", imagePath);
 
-            this.minTime = new Configuration().fixationlength;
+            final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+            this.minTime = config.getFixationlength();
             this.initWidth = width;
             this.initHeight = height;
             this.selected = false;

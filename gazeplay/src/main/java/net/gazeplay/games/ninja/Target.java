@@ -1,7 +1,7 @@
 package net.gazeplay.games.ninja;
 
-import gaze.GazeEvent;
-import gaze.GazeUtils;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -10,11 +10,11 @@ import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Screen;
-import net.gazeplay.utils.Portrait;
+import net.gazeplay.commons.utils.Portrait;
 import javafx.util.Duration;
-import net.gazeplay.utils.stats.ShootGamesStats;
-import net.gazeplay.utils.stats.Stats;
-import utils.games.Utils;
+import net.gazeplay.commons.utils.stats.ShootGamesStats;
+import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.ArrayList;
 

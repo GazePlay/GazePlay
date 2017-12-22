@@ -5,9 +5,9 @@ package net.gazeplay.games.blocs;
  */
 
 import com.sun.glass.ui.Screen;
-import gaze.GazeEvent;
-import gaze.GazeUtils;
-import gaze.SecondScreen;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
+import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -23,10 +23,10 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import net.gazeplay.utils.Bravo;
-import net.gazeplay.utils.HomeUtils;
-import utils.games.Utils;
-import net.gazeplay.utils.stats.HiddenItemsGamesStats;
+import net.gazeplay.commons.utils.Bravo;
+import net.gazeplay.commons.utils.HomeUtils;
+import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
 public class Blocs extends Application {
 

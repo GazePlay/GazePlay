@@ -1,14 +1,12 @@
 package net.gazeplay.games.bubbles;
 
-import gaze.GazeEvent;
-import gaze.GazeUtils;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
 import javafx.animation.*;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -18,7 +16,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.util.Duration;
-import utils.games.Utils;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.ArrayList;
 import java.util.Random;

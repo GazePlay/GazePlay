@@ -1,7 +1,7 @@
 package net.gazeplay.games.ninja;
 
 import javafx.scene.Scene;
-import net.gazeplay.utils.stats.ShootGamesStats;
+import net.gazeplay.commons.utils.stats.ShootGamesStats;
 
 public class NinjaStats extends ShootGamesStats {
 

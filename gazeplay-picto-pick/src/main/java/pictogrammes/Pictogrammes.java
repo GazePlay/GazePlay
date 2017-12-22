@@ -1,6 +1,6 @@
 package pictogrammes;
 
-import gaze.SecondScreen;
+import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;

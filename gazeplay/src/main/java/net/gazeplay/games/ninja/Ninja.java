@@ -1,13 +1,13 @@
 package net.gazeplay.games.ninja;
 
-import gaze.SecondScreen;
+import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import net.gazeplay.utils.stats.ShootGamesStats;
+import net.gazeplay.commons.utils.stats.ShootGamesStats;
 
 /**
  * Created by schwab on 26/12/2016.

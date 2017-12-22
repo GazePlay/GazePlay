@@ -1,11 +1,10 @@
 package net.gazeplay.games.bubbles;
 
-import gaze.SecondScreen;
+import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
