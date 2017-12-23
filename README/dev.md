@@ -2,8 +2,8 @@
 
 # Version Évolution
 
-<!--Il n'y a pas de version évolution en ce moment (depuis le 15/11/2017). La prochaine version évolution sera disponible aux alentours du 22/11/2017.-->
-
+Il n'y a pas de version évolution en ce moment.
+<!--
 Cette version Évolution est destinée aux utilisateurs impatients de tester les nouveautés de GazePlay. Les autres choisiront la version "Stable".
 
 [Version évolution 1.1.0](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-1.1.0/gazeplay-1.1.0.zip)
