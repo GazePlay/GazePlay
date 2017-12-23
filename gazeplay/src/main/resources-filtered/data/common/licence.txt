@@ -12,7 +12,7 @@ dont les partenaire accadémiques sont l'Université Grenoble Alpes, le CNRS, Gr
 Plusieurs étudiants ont contribué au développement des jeux et/ou aux idées dans le cadre
 de leur formation : Rajaa BARHTAOUI, Amela FEJZA
 
-Merci également à la communauté open source pour son aide : Yann Robert (Maven, logs, lombok)
+Merci également à la communauté open source pour son aide : Yann Robert (Maven, logs, lombok,...)
 
 Plusieurs personnes ont également contribué par leurs idées, par leur aide technique ou matérielle :
 Sandra Chaulet, Francis Jambon, Émilie Janots, Claire Lemaire, Frédéric Pons, François Portet,

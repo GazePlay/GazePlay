@@ -12,6 +12,6 @@ L'installation se fait en extrayant le répertoire gazeplay du *zip*. Installez 
 
 Il n'est plus nécessaire d'installer le tobii-setup qui est maintenant pré-installé.
 
-[Version stable 1.0.6](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-SNAPSHOT-1.0.6/gazeplay-1.0.6.jar)
+<!--[Version stable 1.0.6](https://github.com/schwabdidier/GazePlay/releases/download/GazePlay-SNAPSHOT-1.0.6/gazeplay-1.0.6.jar)-->
 
 [Retour](../README.md)
