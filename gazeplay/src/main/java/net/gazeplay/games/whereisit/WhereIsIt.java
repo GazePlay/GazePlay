@@ -2,7 +2,6 @@ package net.gazeplay.games.whereisit;
 
 //It is repeated always, it works like a charm :)
 
-import com.sun.glass.ui.Screen;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -208,9 +207,10 @@ public class WhereIsIt {
         HomeUtils.home(scene, group, choiceBox, null);
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
+
         Text error = new Text(multilinguism.getTrad("WII-error", language));
-        error.setX(Screen.getMainScreen().getWidth() / 2. - 100);
-        error.setY(Screen.getMainScreen().getHeight() / 2.);
+        error.setX(scene.getWidth() / 2. - 100);
+        error.setY(scene.getHeight() / 2.);
         error.setId("item");
         group.getChildren().addAll(error);
     }
