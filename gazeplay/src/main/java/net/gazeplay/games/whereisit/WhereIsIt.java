@@ -90,7 +90,7 @@ public class WhereIsIt {
     }
 
     public void buildGame() {
-        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree).computeGameSizing();
+        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree).computeGameSizing(scene);
 
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);

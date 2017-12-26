@@ -1,6 +1,7 @@
 package net.gazeplay.games.whereisit;
 
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,22 +16,33 @@ public class GameSizingComputer {
     public GameSizing computeGameSizing() {
         Rectangle2D bounds = javafx.stage.Screen.getPrimary().getBounds();
 
-        double screenWidth = bounds.getWidth();
-        double screenHeight = bounds.getHeight();
+        return computeGameSizing(bounds);
+    }
+
+    public GameSizing computeGameSizing(Scene scene) {
+        Rectangle2D bounds = new Rectangle2D(0, 0, scene.getWidth(), scene.getHeight());
+
+        return computeGameSizing(bounds);
+    }
+
+    public GameSizing computeGameSizing(Rectangle2D bounds) {
+
+        double sceneWidth = bounds.getWidth();
+        double sceneHeight = bounds.getHeight();
 
         final double width;
         final double height;
         final double shift;
 
-        log.info("16/9 or 16/10 screen ? = " + ((screenWidth / screenHeight) - (16.0 / 9.0)));
+        log.info("16/9 or 16/10 screen ? = " + ((sceneWidth / sceneHeight) - (16.0 / 9.0)));
 
-        if (fourThree && ((screenWidth / screenHeight) - (16.0 / 9.0)) < 0.1) {
-            width = 4 * screenHeight / 3;
-            height = screenHeight;
-            shift = (screenWidth - width) / 2;
+        if (fourThree && ((sceneWidth / sceneHeight) - (16.0 / 9.0)) < 0.1) {
+            width = 4 * sceneHeight / 3;
+            height = sceneHeight;
+            shift = (sceneWidth - width) / 2;
         } else {
-            width = screenWidth;
-            height = screenHeight;
+            width = sceneWidth;
+            height = sceneHeight;
             shift = 0;
         }
 
