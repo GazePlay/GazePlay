@@ -347,8 +347,8 @@ public class WhereIsIt {
         private final WhereIsItStats stats;
         private final Scene scene;
 
-        private Timeline timelineProgressBar;
-        private ProgressIndicator indicator;
+        private final ProgressIndicator progressIndicator;
+        private Timeline progressIndicatorAnimationTimeLine;
 
         private boolean selected;
 
@@ -372,20 +372,12 @@ public class WhereIsIt {
             this.root = root;
             this.stats = stats;
             this.scene = scene;
-            this.imageRectangle = new Rectangle(posX, posY, width, height);
+
+            this.imageRectangle = createImageRectangle(posX, posY, width, height, imagePath);
+            this.progressIndicator = buildProgressIndicator(width, height);
 
             this.getChildren().add(imageRectangle);
-
-            final Image image = new Image("file:" + imagePath);
-
-            imageRectangle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-            indicator = new ProgressIndicator(0);
-            indicator.setTranslateX(imageRectangle.getX() + width / 8);
-            indicator.setTranslateY(imageRectangle.getY() + height / 8);
-            indicator.setMinWidth(width * 0.75);
-            indicator.setMinHeight(height * 0.75);
-            indicator.setOpacity(0);
-            this.getChildren().add(indicator);
+            this.getChildren().add(progressIndicator);
 
             enterEvent = buildEvent(gameInstance);
 
@@ -394,6 +386,25 @@ public class WhereIsIt {
             this.addEventFilter(MouseEvent.ANY, enterEvent);
 
             this.addEventFilter(GazeEvent.ANY, enterEvent);
+        }
+
+        private Rectangle createImageRectangle(double posX, double posY, double width, double height,
+                @NonNull String imagePath) {
+            final Image image = new Image("file:" + imagePath);
+
+            Rectangle result = new Rectangle(posX, posY, width, height);
+            result.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+            return result;
+        }
+
+        private ProgressIndicator buildProgressIndicator(double width, double height) {
+            ProgressIndicator result = new ProgressIndicator(0);
+            result.setTranslateX(imageRectangle.getX() + width / 8);
+            result.setTranslateY(imageRectangle.getY() + height / 8);
+            result.setMinWidth(width * 0.75);
+            result.setMinHeight(height * 0.75);
+            result.setOpacity(0);
+            return result;
         }
 
         private EventHandler<Event> buildEvent(final WhereIsIt gameInstance) {
@@ -409,21 +420,21 @@ public class WhereIsIt {
 
                         log.debug("ENTERED");
 
-                        indicator.setOpacity(0.5);
-                        indicator.setProgress(0);
+                        progressIndicator.setOpacity(0.5);
+                        progressIndicator.setProgress(0);
 
                         Timeline timelineCard = new Timeline();
 
-                        timelineProgressBar = new Timeline();
+                        progressIndicatorAnimationTimeLine = new Timeline();
 
-                        timelineProgressBar.getKeyFrames().add(
-                                new KeyFrame(new Duration(minTime), new KeyValue(indicator.progressProperty(), 1)));
+                        progressIndicatorAnimationTimeLine.getKeyFrames().add(new KeyFrame(new Duration(minTime),
+                                new KeyValue(progressIndicator.progressProperty(), 1)));
 
                         timelineCard.play();
 
-                        timelineProgressBar.play();
+                        progressIndicatorAnimationTimeLine.play();
 
-                        timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
+                        progressIndicatorAnimationTimeLine.setOnFinished(new EventHandler<ActionEvent>() {
 
                             @Override
                             public void handle(ActionEvent actionEvent) {
@@ -443,7 +454,7 @@ public class WhereIsIt {
 
                                     int final_zoom = 2;
 
-                                    indicator.setOpacity(0);
+                                    progressIndicator.setOpacity(0);
 
                                     Timeline timeline = new Timeline();
 
@@ -538,17 +549,17 @@ public class WhereIsIt {
 
                                     Utils.playSound(gameInstance.pathSound);
 
-                                    indicator.setOpacity(0);
+                                    progressIndicator.setOpacity(0);
                                 }
                             }
                         });
                     } else if (e.getEventType() == MouseEvent.MOUSE_EXITED
                             || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                        timelineProgressBar.stop();
+                        progressIndicatorAnimationTimeLine.stop();
 
-                        indicator.setOpacity(0);
-                        indicator.setProgress(0);
+                        progressIndicator.setOpacity(0);
+                        progressIndicator.setProgress(0);
                     }
                 }
             };
