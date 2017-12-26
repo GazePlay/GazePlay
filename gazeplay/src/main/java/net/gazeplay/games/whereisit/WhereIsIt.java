@@ -334,8 +334,6 @@ public class WhereIsIt {
     @Slf4j
     private static class PictureCard extends Group {
 
-        protected static final float zoom_factor = 1.1f;
-
         private final double minTime;
         private final Group root;
         private final boolean winner;
@@ -448,8 +446,6 @@ public class WhereIsIt {
             log.debug("WINNER");
 
             stats.incNbGoals();
-
-            int final_zoom = 2;
 
             customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
