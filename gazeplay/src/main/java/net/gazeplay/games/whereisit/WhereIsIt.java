@@ -22,6 +22,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeEvent;
@@ -48,7 +49,19 @@ import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZE
 public class WhereIsIt {
 
     public enum WhereIsItGameType {
-        ANIMALNAME, COLORNAME, CUSTOMIZED;
+        ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
+                "where-is-the-color"), CUSTOMIZED("custumized", "custumized");
+
+        @Getter
+        private final String gameName;
+
+        @Getter
+        private final String resourcesDirectoryName;
+
+        WhereIsItGameType(String gameName, String resourcesDirectoryName) {
+            this.gameName = gameName;
+            this.resourcesDirectoryName = resourcesDirectoryName;
+        }
     }
 
     private final WhereIsItGameType gameType;
@@ -74,11 +87,11 @@ public class WhereIsIt {
         this.gameType = gameType;
         this.fourThree = fourThree;
         this.stats = stats;
+
+        this.stats.setName(gameType.getGameName());
     }
 
     public void buildGame() {
-        stats.setName(getName());
-
         double shift = 0;
 
         Rectangle2D bounds = javafx.stage.Screen.getPrimary().getBounds();
@@ -219,7 +232,8 @@ public class WhereIsIt {
         }
         log.info("workingDirectoryName = {}", workingDirectoryName);
 
-        final String parentImagesPackageResourceLocation = "data/" + getName() + "/images/";
+        final String parentImagesPackageResourceLocation = "data/" + this.gameType.getResourcesDirectoryName()
+                + "/images/";
         log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
 
         {
@@ -244,7 +258,8 @@ public class WhereIsIt {
     }
 
     private File locateImagesDirectoryInExplodedClassPath() {
-        final String parentImagesPackageResourceLocation = "data/" + getName() + "/images/";
+        final String parentImagesPackageResourceLocation = "data/" + this.gameType.getResourcesDirectoryName()
+                + "/images/";
         log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
 
         final URL parentImagesPackageResourceUrl;
@@ -324,21 +339,8 @@ public class WhereIsIt {
             voice = "w";
         }
 
-        return "data/" + getName() + "/sounds/" + language + "/" + folder + "." + voice + "." + language + ".mp3";
-    }
-
-    private String getName() {
-        switch (this.gameType) {
-        case ANIMALNAME:
-            return "where-is-the-animal";
-        case COLORNAME:
-            return "where-is-the-color";
-        case CUSTOMIZED:
-            return "custumized";
-        default:
-            log.debug("This case should never happen");
-            throw new IllegalStateException("Unsupported type value : " + this.gameType);
-        }
+        return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + language + "/" + folder + "." + voice
+                + "." + language + ".mp3";
     }
 
     @Slf4j
