@@ -111,7 +111,18 @@ public class WhereIsIt {
         }
     }
 
-    public void hideAllIncorrectPictureCards() {
+    /**
+     * this method should be called when exiting the game, or before starting a new round, in order to clean up all
+     * resources in both UI and memory
+     */
+    public void dispose() {
+        if (pictureCardList != null) {
+            group.getChildren().removeAll(pictureCardList);
+            pictureCardList = null;
+        }
+    }
+
+    public void removeAllIncorrectPictureCards() {
         // Collect all items to be removed from the User Interface
         List<PictureCard> pictureCardsToHide = new ArrayList<>();
         for (PictureCard pictureCard : pictureCardList) {
@@ -463,7 +474,7 @@ public class WhereIsIt {
             customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
 
-            gameInstance.hideAllIncorrectPictureCards();
+            gameInstance.removeAllIncorrectPictureCards();
 
             Rectangle2D sceneBounds = new Rectangle2D(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
             log.info("sceneBounds = {}", sceneBounds);
@@ -490,6 +501,7 @@ public class WhereIsIt {
                         public void handle(ActionEvent actionEvent) {
 
                             HomeUtils.clear(gameInstance.scene, gameInstance.group, gameInstance.choiceBox);
+                            gameInstance.dispose();
                             gameInstance.buildGame();
                             HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
                                     gameInstance.stats);
