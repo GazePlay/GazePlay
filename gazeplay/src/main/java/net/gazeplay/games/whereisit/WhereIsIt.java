@@ -162,7 +162,7 @@ public class WhereIsIt {
 
             PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, group, scene,
-                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", choiceBox, stats, this);
+                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
 
             pictureCardList.add(pictureCard);
 
@@ -346,7 +346,6 @@ public class WhereIsIt {
         private final double initHeight;
         private final WhereIsItStats stats;
         private final Scene scene;
-        private final ChoiceBox choicebox;
 
         private Timeline timelineProgressBar;
         private ProgressIndicator indicator;
@@ -358,8 +357,8 @@ public class WhereIsIt {
         private final Bravo bravo = Bravo.getBravo();
 
         public PictureCard(double posX, double posY, double width, double height, @NonNull Group root,
-                @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull ChoiceBox choicebox,
-                @NonNull WhereIsItStats stats, WhereIsIt gameInstance) {
+                @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats,
+                WhereIsIt gameInstance) {
 
             log.info("imagePath = {}", imagePath);
 
@@ -373,7 +372,6 @@ public class WhereIsIt {
             this.root = root;
             this.stats = stats;
             this.scene = scene;
-            this.choicebox = choicebox;
             this.imageRectangle = new Rectangle(posX, posY, width, height);
 
             this.getChildren().add(imageRectangle);
