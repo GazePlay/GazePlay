@@ -118,84 +118,108 @@ public class DefaultGamesLocator implements GamesLocator {
         result.add(new GameSpec(multilinguism.getTrad("WhereIsTheAnimal", language) + " (2x2)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.ANIMALNAME, 2, 2, false, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 2, false, root,
+                            scene, cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
         result.add(new GameSpec(multilinguism.getTrad("WhereIsTheAnimal", language) + " (2x3)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.ANIMALNAME, 2, 3, false, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 3, false, root,
+                            scene, cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
         result.add(new GameSpec(multilinguism.getTrad("WhereIsTheAnimal", language) + " (3x2)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.ANIMALNAME, 3, 2, true, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 2, true, root, scene,
+                            cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
         result.add(new GameSpec(multilinguism.getTrad("WhereIsTheAnimal", language) + " (3x3)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.ANIMALNAME, 3, 3, false, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 3, false, root,
+                            scene, cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
         result.add(new GameSpec(multilinguism.getTrad("WhereIsTheColor", language) + " (2x2)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.COLORNAME, 2, 2, false, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 2, false, root, scene,
+                            cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
         result.add(new GameSpec(multilinguism.getTrad("WhereIsTheColor", language) + " (2x3)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.COLORNAME, 2, 3, false, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 3, false, root, scene,
+                            cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
         result.add(new GameSpec(multilinguism.getTrad("WhereIsTheColor", language) + " (3x2)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.COLORNAME, 3, 2, false, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 2, false, root, scene,
+                            cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
         result.add(new GameSpec(multilinguism.getTrad("WhereIsTheColor", language) + " (3x3)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.COLORNAME, 3, 3, false, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 3, false, root, scene,
+                            cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
         result.add(new GameSpec(multilinguism.getTrad("WhereIsIt", language) + " (2x2)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.CUSTOMIZED, 2, 2, false, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 2, false, root,
+                            scene, cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
         result.add(new GameSpec(multilinguism.getTrad("WhereIsIt", language) + " (2x3)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.CUSTOMIZED, 2, 3, false, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 3, false, root,
+                            scene, cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
         result.add(new GameSpec(multilinguism.getTrad("WhereIsIt", language) + " (3x2)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.CUSTOMIZED, 3, 2, false, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 3, 2, false, root,
+                            scene, cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
         result.add(new GameSpec(multilinguism.getTrad("WhereIsIt", language) + " (3x3)",
                 (gameSpec, scene, root, cbxGames) -> {
                     WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt.buildGame(WhereIsIt.COLORNAME, 3, 3, false, root, scene, cbxGames, stats);
+                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 3, false, root, scene,
+                            cbxGames, stats);
+                    whereIsIt.buildGame();
                     return stats;
                 }));
 
