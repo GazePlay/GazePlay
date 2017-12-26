@@ -342,8 +342,12 @@ public class WhereIsIt {
         private final Rectangle imageRectangle;
         private final Rectangle errorImageRectangle;
 
-        private final double initWidth;
-        private final double initHeight;
+        private final double initialWidth;
+        private final double initialHeight;
+
+        private final double initialPositionX;
+        private final double initialPositionY;
+
         private final WhereIsItStats stats;
         private final Scene scene;
         private final String imagePath;
@@ -353,7 +357,11 @@ public class WhereIsIt {
 
         private boolean selected;
 
+        private final CustomInputEventHandler customInputEventHandler;
+
         private final Bravo bravo = Bravo.getBravo();
+
+        private final WhereIsIt gameInstance;
 
         public PictureCard(double posX, double posY, double width, double height, @NonNull Group root,
                 @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats,
@@ -364,13 +372,16 @@ public class WhereIsIt {
             final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
             this.minTime = config.getFixationlength();
-            this.initWidth = width;
-            this.initHeight = height;
+            this.initialPositionX = posX;
+            this.initialPositionY = posY;
+            this.initialWidth = width;
+            this.initialHeight = height;
             this.selected = false;
             this.winner = winner;
             this.root = root;
             this.stats = stats;
             this.scene = scene;
+            this.gameInstance = gameInstance;
 
             this.imagePath = imagePath;
 
@@ -385,13 +396,13 @@ public class WhereIsIt {
             this.getChildren().add(progressIndicator);
             this.getChildren().add(errorImageRectangle);
 
-            EventHandler<Event> enterEvent = buildEvent(gameInstance);
+            customInputEventHandler = buildCustomInputEventHandler(gameInstance);
 
             GazeUtils.addEventFilter(imageRectangle);
 
-            this.addEventFilter(MouseEvent.ANY, enterEvent);
+            this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
 
-            this.addEventFilter(GazeEvent.ANY, enterEvent);
+            this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
         }
 
         private Timeline createProgressIndicatorTimeLine(WhereIsIt gameInstance) {
@@ -418,8 +429,9 @@ public class WhereIsIt {
 
                     selected = true;
 
-                    // imageRectangle.removeEventFilter(MouseEvent.ANY, enterEvent);
-                    // imageRectangle.removeEventFilter(GazeEvent.ANY, enterEvent);
+                    imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandler);
+                    imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandler);
+                    GazeUtils.removeEventFilter(imageRectangle);
 
                     if (winner) {
                         onCorrectCardSelected(gameInstance);
@@ -438,6 +450,7 @@ public class WhereIsIt {
 
             int final_zoom = 2;
 
+            customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
 
             // ObservableList<Node> list =
@@ -495,6 +508,7 @@ public class WhereIsIt {
         }
 
         private void onWrongCardSelected(WhereIsIt gameInstance) {
+            customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
 
             FadeTransition imageFadeOutTransition = new FadeTransition(new Duration(2000), imageRectangle);
@@ -516,6 +530,7 @@ public class WhereIsIt {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     Utils.playSound(gameInstance.pathSound);
+                    customInputEventHandler.ignoreAnyInput = false;
                 }
             });
 
@@ -564,37 +579,55 @@ public class WhereIsIt {
             return result;
         }
 
-        private EventHandler<Event> buildEvent(final WhereIsIt gameInstance) {
+        private CustomInputEventHandler buildCustomInputEventHandler(final WhereIsIt gameInstance) {
+            return new CustomInputEventHandler();
+        }
 
-            return new EventHandler<Event>() {
-                @Override
-                public void handle(Event e) {
+        private class CustomInputEventHandler implements EventHandler<Event> {
 
-                    if (selected) {
-                        return;
-                    }
+            /**
+             * this is used to temporarily indicate to ignore input for instance, when an animation is in progress, we
+             * do not want the game to continue to process input, as the user input is irrelevant while the animation is
+             * in progress
+             */
+            private boolean ignoreAnyInput = false;
 
-                    if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                        log.info("ENTERED {}", imagePath);
-
-                        progressIndicator.setProgress(0);
-                        progressIndicator.setVisible(true);
-
-                        progressIndicatorAnimationTimeLine.playFromStart();
-
-                    } else if (e.getEventType() == MouseEvent.MOUSE_EXITED
-                            || e.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                        log.info("EXITED {}", imagePath);
-
-                        progressIndicatorAnimationTimeLine.stop();
-
-                        progressIndicator.setVisible(false);
-                        progressIndicator.setProgress(0);
-                    }
+            @Override
+            public void handle(Event e) {
+                if (ignoreAnyInput) {
+                    return;
                 }
-            };
+
+                if (selected) {
+                    return;
+                }
+
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    onEntered();
+                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                    onExited();
+                }
+
+            }
+
+            private void onEntered() {
+                log.info("ENTERED {}", imagePath);
+
+                progressIndicator.setProgress(0);
+                progressIndicator.setVisible(true);
+
+                progressIndicatorAnimationTimeLine.playFromStart();
+            }
+
+            private void onExited() {
+                log.info("EXITED {}", imagePath);
+
+                progressIndicatorAnimationTimeLine.stop();
+
+                progressIndicator.setVisible(false);
+                progressIndicator.setProgress(0);
+            }
+
         }
 
     }
