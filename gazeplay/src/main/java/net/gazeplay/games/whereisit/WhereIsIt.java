@@ -3,10 +3,7 @@ package net.gazeplay.games.whereisit;
 //It is repeated always, it works like a charm :)
 
 import com.sun.glass.ui.Screen;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -341,7 +338,10 @@ public class WhereIsIt {
         private final double minTime;
         private final Group root;
         private final boolean winner;
+
         private final Rectangle imageRectangle;
+        private final Rectangle errorImageRectangle;
+
         private final double initWidth;
         private final double initHeight;
         private final WhereIsItStats stats;
@@ -379,8 +379,11 @@ public class WhereIsIt {
 
             this.progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
+            this.errorImageRectangle = createErrorImageRectangle();
+
             this.getChildren().add(imageRectangle);
             this.getChildren().add(progressIndicator);
+            this.getChildren().add(errorImageRectangle);
 
             EventHandler<Event> enterEvent = buildEvent(gameInstance);
 
@@ -428,8 +431,6 @@ public class WhereIsIt {
 
                         progressIndicator.setVisible(false);
 
-                        Timeline timeline = new Timeline();
-
                         // ObservableList<Node> list =
                         // FXCollections.observableArrayList(root.getChildren());
 
@@ -451,6 +452,8 @@ public class WhereIsIt {
                             } else {// we keep only Bravo and winning card
                             }
                         }
+
+                        Timeline timeline = new Timeline();
 
                         timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
                                 new KeyValue(imageRectangle.widthProperty(), imageRectangle.getWidth() * final_zoom)));
@@ -486,38 +489,27 @@ public class WhereIsIt {
 
                     } else {// bad card
 
-                        Timeline disparition = new Timeline();
-                        Timeline apparition = new Timeline();
+                        progressIndicator.setVisible(false);
 
-                        disparition.getKeyFrames().add(
-                                new KeyFrame(new Duration(2000), new KeyValue(imageRectangle.opacityProperty(), 0)));
+                        FadeTransition imageFadeOutTransition = new FadeTransition(new Duration(1000), imageRectangle);
+                        imageFadeOutTransition.setFromValue(1);
+                        imageFadeOutTransition.setToValue(0);
 
-                        disparition.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(
-                                imageRectangle.fillProperty(),
-                                new ImagePattern(new Image("data/common/images/error.png"), 0, 0, 1, 1, true))));
+                        errorImageRectangle.toFront();
+                        errorImageRectangle.setOpacity(0);
+                        errorImageRectangle.setVisible(true);
 
-                        apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                new KeyValue(imageRectangle.widthProperty(), initHeight / 2)));
+                        FadeTransition errorFadeInTransition = new FadeTransition(new Duration(1000),
+                                errorImageRectangle);
+                        errorFadeInTransition.setFromValue(0);
+                        errorFadeInTransition.setToValue(1);
 
-                        apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                new KeyValue(imageRectangle.heightProperty(), initHeight / 2)));
-
-                        apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                new KeyValue(imageRectangle.layoutXProperty(), initWidth / 3)));
-
-                        apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                new KeyValue(imageRectangle.layoutYProperty(), initHeight / 4)));
-
-                        apparition.getKeyFrames().add(
-                                new KeyFrame(new Duration(2000), new KeyValue(imageRectangle.opacityProperty(), 0.5)));
-
-                        SequentialTransition sq = new SequentialTransition();
-                        sq.getChildren().addAll(disparition, apparition);
-                        sq.play();
+                        SequentialTransition sequentialTransition = new SequentialTransition();
+                        sequentialTransition.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
 
                         Utils.playSound(gameInstance.pathSound);
 
-                        progressIndicator.setVisible(false);
+                        sequentialTransition.play();
                     }
                 }
             };
@@ -530,6 +522,28 @@ public class WhereIsIt {
             Rectangle result = new Rectangle(posX, posY, width, height);
             result.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
             return result;
+        }
+
+        private Rectangle createErrorImageRectangle() {
+            final Image image = new Image("data/common/images/error.png");
+
+            double imageWidth = image.getWidth();
+            double imageHeight = image.getHeight();
+            double imageHeightToWidthRatio = imageHeight / imageWidth;
+
+            double rectangleWidth = imageRectangle.getWidth() / 3;
+            double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
+
+            double positionX = imageRectangle.getX() + (imageRectangle.getWidth() - rectangleWidth) / 2;
+            double positionY = imageRectangle.getY() + (imageRectangle.getHeight() - rectangleHeight) / 2;
+
+            Rectangle errorImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
+            errorImageRectangle.setFill(new ImagePattern(image));
+            errorImageRectangle.setX(positionX);
+            errorImageRectangle.setY(positionY);
+            errorImageRectangle.setOpacity(0);
+            errorImageRectangle.setVisible(false);
+            return errorImageRectangle;
         }
 
         private ProgressIndicator buildProgressIndicator(double width, double height) {
