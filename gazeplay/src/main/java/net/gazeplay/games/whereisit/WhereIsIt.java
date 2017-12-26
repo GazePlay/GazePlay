@@ -453,24 +453,7 @@ public class WhereIsIt {
             // ObservableList<Node> list =
             // FXCollections.observableArrayList(root.getChildren());
 
-            for (Node N : root.getChildren()) {// clear all but images and reward
-                // for (Node N : list) {// clear all but images and reward
-
-                log.info(N + "");
-
-                if ((N instanceof PictureCard && imageRectangle != ((PictureCard) N).imageRectangle
-                        && !(N instanceof Bravo)) || (N instanceof Home)) {// we put outside
-                    // screen
-                    // Home and cards
-
-                    log.info(N + " enlevé ");
-                    N.setTranslateX(-10000);
-                    N.setOpacity(0);
-                    // N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                    // N.removeEventFilter(GazeEvent.ANY, enterEvent);
-                } else {// we keep only Bravo and winning card
-                }
-            }
+            hideAllOtherCards();
 
             Rectangle2D sceneBounds = new Rectangle2D(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
             log.info("sceneBounds = {}", sceneBounds);
@@ -507,6 +490,27 @@ public class WhereIsIt {
             });
 
             fullAnimation.play();
+        }
+
+        private void hideAllOtherCards() {
+            for (Node N : root.getChildren()) {// clear all but images and reward
+                // for (Node N : list) {// clear all but images and reward
+
+                log.info(N + "");
+
+                if ((N instanceof PictureCard && imageRectangle != ((PictureCard) N).imageRectangle
+                        && !(N instanceof Bravo)) || (N instanceof Home)) {// we put outside
+                    // screen
+                    // Home and cards
+
+                    log.info(N + " enlevé ");
+                    N.setTranslateX(-10000);
+                    N.setOpacity(0);
+                    // N.removeEventFilter(MouseEvent.ANY, enterEvent);
+                    // N.removeEventFilter(GazeEvent.ANY, enterEvent);
+                } else {// we keep only Bravo and winning card
+                }
+            }
         }
 
         private void onWrongCardSelected(WhereIsIt gameInstance) {
