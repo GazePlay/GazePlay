@@ -7,6 +7,7 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -475,18 +476,23 @@ public class WhereIsIt {
                 }
             }
 
-            Timeline timeline = new Timeline();
+            Rectangle2D sceneBounds = new Rectangle2D(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
+            log.info("sceneBounds = {}", sceneBounds);
 
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                    new KeyValue(imageRectangle.widthProperty(), imageRectangle.getWidth() * final_zoom)));
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                    new KeyValue(imageRectangle.heightProperty(), imageRectangle.getHeight() * final_zoom)));
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(imageRectangle.xProperty(),
-                    (scene.getWidth() - imageRectangle.getWidth() * final_zoom) / 2)));
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(imageRectangle.yProperty(),
-                    (scene.getHeight() - imageRectangle.getHeight() * final_zoom) / 2)));
+            ScaleTransition scaleToFullScreenTransition = new ScaleTransition(new Duration(1000), imageRectangle);
+            scaleToFullScreenTransition.setByX((sceneBounds.getWidth() / initialWidth) - 1);
+            scaleToFullScreenTransition.setByY((sceneBounds.getHeight() / initialHeight) - 1);
 
-            timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+            TranslateTransition translateToCenterTransition = new TranslateTransition(new Duration(1000),
+                    imageRectangle);
+            translateToCenterTransition.setByX(-initialPositionX + (sceneBounds.getWidth() - initialWidth) / 2);
+            translateToCenterTransition.setByY(-initialPositionY + (sceneBounds.getHeight() - initialHeight) / 2);
+
+            ParallelTransition fullAnimation = new ParallelTransition();
+            fullAnimation.getChildren().add(translateToCenterTransition);
+            fullAnimation.getChildren().add(scaleToFullScreenTransition);
+
+            fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
 
@@ -504,7 +510,7 @@ public class WhereIsIt {
                 }
             });
 
-            timeline.play();
+            fullAnimation.play();
         }
 
         private void onWrongCardSelected(WhereIsIt gameInstance) {
