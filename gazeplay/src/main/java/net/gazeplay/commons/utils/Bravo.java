@@ -21,11 +21,11 @@ import java.net.URL;
  */
 public class Bravo extends Rectangle {
 
-    private static final int duration = 650;
-
-    private static final int apparitionDuration = duration;
+    private static final int duration = 1300;
 
     private static final int nb = 5;
+
+    private static final int apparitionDuration = duration*nb;
 
     private static final String pictureResourceLocation = "data/common/images/bravo.png";
 
