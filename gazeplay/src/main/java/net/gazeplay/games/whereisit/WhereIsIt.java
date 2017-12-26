@@ -9,7 +9,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
@@ -27,7 +26,6 @@ import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.Bravo;
-import net.gazeplay.commons.utils.Home;
 import net.gazeplay.commons.utils.HomeUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -76,6 +74,8 @@ public class WhereIsIt {
 
     private final WhereIsItStats stats;
 
+    private List<PictureCard> pictureCardList;
+
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
             final Group group, final Scene scene, final ChoiceBox choiceBox, final WhereIsItStats stats) {
         this.group = group;
@@ -102,13 +102,26 @@ public class WhereIsIt {
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        List<PictureCard> pictureCardList = pickAndBuildRandomPictures(config, gameSizing,
-                numberOfImagesToDisplayPerRound, random, winnerImageIndexAmongDisplayedImages);
+        pictureCardList = pickAndBuildRandomPictures(config, gameSizing, numberOfImagesToDisplayPerRound, random,
+                winnerImageIndexAmongDisplayedImages);
 
         if (pictureCardList != null) {
             group.getChildren().addAll(pictureCardList);
             stats.start();
         }
+    }
+
+    public void hideAllIncorrectPictureCards() {
+        // Collect all items to be removed from the User Interface
+        List<PictureCard> pictureCardsToHide = new ArrayList<>();
+        for (PictureCard pictureCard : pictureCardList) {
+            if (!pictureCard.winner) {
+                pictureCardsToHide.add(pictureCard);
+            }
+        }
+
+        // remove all at once, in order to update the UserInterface only once
+        group.getChildren().removeAll(pictureCardsToHide);
     }
 
     private List<PictureCard> pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
@@ -450,10 +463,7 @@ public class WhereIsIt {
             customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
 
-            // ObservableList<Node> list =
-            // FXCollections.observableArrayList(root.getChildren());
-
-            hideAllOtherCards();
+            gameInstance.hideAllIncorrectPictureCards();
 
             Rectangle2D sceneBounds = new Rectangle2D(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
             log.info("sceneBounds = {}", sceneBounds);
@@ -490,27 +500,6 @@ public class WhereIsIt {
             });
 
             fullAnimation.play();
-        }
-
-        private void hideAllOtherCards() {
-            for (Node N : root.getChildren()) {// clear all but images and reward
-                // for (Node N : list) {// clear all but images and reward
-
-                log.info(N + "");
-
-                if ((N instanceof PictureCard && imageRectangle != ((PictureCard) N).imageRectangle
-                        && !(N instanceof Bravo)) || (N instanceof Home)) {// we put outside
-                    // screen
-                    // Home and cards
-
-                    log.info(N + " enlevé ");
-                    N.setTranslateX(-10000);
-                    N.setOpacity(0);
-                    // N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                    // N.removeEventFilter(GazeEvent.ANY, enterEvent);
-                } else {// we keep only Bravo and winning card
-                }
-            }
         }
 
         private void onWrongCardSelected(WhereIsIt gameInstance) {
