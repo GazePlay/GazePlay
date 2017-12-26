@@ -37,6 +37,8 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZED;
@@ -93,52 +95,63 @@ public class WhereIsIt {
     public void buildGame() {
         final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree).computeGameSizing();
 
-        final int nbImages = nbLines * nbColumns;
-        log.debug("nbImages = {}", nbImages);
-        Random r = new Random();
-        final int winner = r.nextInt(nbImages);
-        log.debug("winner = {}", winner);
+        final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
+        log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
+
+        Random random = new Random();
+        final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
+        log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
+        List<Pictures> picturesList = pickAndBuildRandomPictures(config, gameSizing, numberOfImagesToDisplayPerRound,
+                random, winnerImageIndexAmongDisplayedImages);
+
+        if (picturesList != null) {
+            group.getChildren().addAll(picturesList);
+            stats.start();
+        }
+    }
+
+    private List<Pictures> pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
+            final int numberOfImagesToDisplayPerRound, final Random random,
+            final int winnerImageIndexAmongDisplayedImages) {
+
         final File imagesDirectory = locateImagesDirectory(config);
+        final String language = config.getLanguage();
 
         final File[] imagesFolders = imagesDirectory.listFiles();
         final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
 
-        final String language = config.getLanguage();
-
         if (filesCount == 0) {
-            log.info("No image found in Directory " + imagesDirectory);
+            log.warn("No image found in Directory " + imagesDirectory);
             error(language);
-            return;
+            return null;
         }
 
-        log.info("imagesFolders = {}", imagesFolders);
-
-        final int randomFolderIndex = r.nextInt(filesCount);
+        final int randomFolderIndex = random.nextInt(filesCount);
         log.info("randomFolderIndex " + randomFolderIndex);
 
         int step = 1; // (int) (Math.random() + 1.5);
         log.info("step " + step);
 
-        log.info("imagesFolders[randomFolderIndex] " + imagesFolders[randomFolderIndex]);
-
         int posX = 0;
         int posY = 0;
 
-        for (int i = 0; i < nbImages; i++) {
+        List<Pictures> picturesList = new ArrayList<>();
+
+        for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
             final int index = (randomFolderIndex + step * i) % filesCount;
 
             final File[] files = imagesFolders[(index) % filesCount].listFiles();
 
-            final int numFile = r.nextInt(files.length);
+            final int numFile = random.nextInt(files.length);
 
             final File randomImageFile = files[numFile];
             log.info("randomImageFile = {}", randomImageFile);
 
-            if (winner == i) {
+            if (winnerImageIndexAmongDisplayedImages == i) {
 
                 log.info("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
 
@@ -148,8 +161,10 @@ public class WhereIsIt {
             }
 
             Pictures picture = new Pictures(gameSizing.width * posX + gameSizing.shift, gameSizing.height * posY,
-                    gameSizing.width, gameSizing.height, group, scene, winner == i, randomImageFile + "", choiceBox,
-                    stats, this);
+                    gameSizing.width, gameSizing.height, group, scene, winnerImageIndexAmongDisplayedImages == i,
+                    randomImageFile + "", choiceBox, stats, this);
+
+            picturesList.add(picture);
 
             log.info("posX " + posX);
             log.info("posY " + posY);
@@ -160,11 +175,9 @@ public class WhereIsIt {
                 posY++;
                 posX = 0;
             }
-
-            group.getChildren().add(picture);
         }
 
-        stats.start();
+        return picturesList;
     }
 
     private void error(String language) {
