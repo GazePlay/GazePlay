@@ -516,9 +516,7 @@ public class WhereIsIt extends Application {
                                         @Override
                                         public void handle(ActionEvent actionEvent) {
 
-                                            SequentialTransition sequence = bravo.win();
-                                            bravo.toFront();
-                                            sequence.setOnFinished(new EventHandler<ActionEvent>() {
+                                            bravo.playWinTransition(new EventHandler<ActionEvent>() {
 
                                                 @Override
                                                 public void handle(ActionEvent actionEvent) {
