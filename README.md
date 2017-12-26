@@ -2,7 +2,7 @@
 
 ## Web
 
-[gazeplay.net](gazeplay.net)
+[gazeplay.net](http://gazeplay.net)
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109236598-1"></script>
