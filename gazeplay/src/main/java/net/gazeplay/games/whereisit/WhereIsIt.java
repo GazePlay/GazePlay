@@ -10,7 +10,6 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -22,8 +21,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -93,42 +90,8 @@ public class WhereIsIt {
         this.stats.setName(gameType.getGameName());
     }
 
-    @Data
-    @AllArgsConstructor
-    private static class GameSizing {
-        private final double width;
-        private final double height;
-        private final double shift;
-    }
-
-    public GameSizing computeGameSizing() {
-        Rectangle2D bounds = javafx.stage.Screen.getPrimary().getBounds();
-
-        double screenWidth = bounds.getWidth();
-        double screenHeight = bounds.getHeight();
-
-        final double width;
-        final double height;
-        final double shift;
-
-        log.info("16/9 or 16/10 screen ? = " + ((screenWidth / screenHeight) - (16.0 / 9.0)));
-
-        if (fourThree && ((screenWidth / screenHeight) - (16.0 / 9.0)) < 0.1) {
-            width = 4 * screenHeight / 3;
-            height = screenHeight;
-            shift = (screenWidth - width) / 2;
-        } else {
-            width = screenWidth;
-            height = screenHeight;
-            shift = 0;
-        }
-
-        return new GameSizing(width / nbColumns, height / nbLines, shift);
-    }
-
     public void buildGame() {
-
-        final GameSizing gameSizing = computeGameSizing();
+        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree).computeGameSizing();
 
         final int nbImages = nbLines * nbColumns;
         log.debug("nbImages = {}", nbImages);
