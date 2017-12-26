@@ -104,16 +104,16 @@ public class WhereIsIt {
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        List<Pictures> picturesList = pickAndBuildRandomPictures(config, gameSizing, numberOfImagesToDisplayPerRound,
-                random, winnerImageIndexAmongDisplayedImages);
+        List<PictureCard> pictureCardList = pickAndBuildRandomPictures(config, gameSizing,
+                numberOfImagesToDisplayPerRound, random, winnerImageIndexAmongDisplayedImages);
 
-        if (picturesList != null) {
-            group.getChildren().addAll(picturesList);
+        if (pictureCardList != null) {
+            group.getChildren().addAll(pictureCardList);
             stats.start();
         }
     }
 
-    private List<Pictures> pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
+    private List<PictureCard> pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
             final int numberOfImagesToDisplayPerRound, final Random random,
             final int winnerImageIndexAmongDisplayedImages) {
 
@@ -138,7 +138,7 @@ public class WhereIsIt {
         int posX = 0;
         int posY = 0;
 
-        List<Pictures> picturesList = new ArrayList<>();
+        final List<PictureCard> pictureCardList = new ArrayList<>();
 
         for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
@@ -160,11 +160,11 @@ public class WhereIsIt {
                 Utils.playSound(this.pathSound);
             }
 
-            Pictures picture = new Pictures(gameSizing.width * posX + gameSizing.shift, gameSizing.height * posY,
-                    gameSizing.width, gameSizing.height, group, scene, winnerImageIndexAmongDisplayedImages == i,
-                    randomImageFile + "", choiceBox, stats, this);
+            PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, group, scene,
+                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", choiceBox, stats, this);
 
-            picturesList.add(picture);
+            pictureCardList.add(pictureCard);
 
             log.info("posX " + posX);
             log.info("posY " + posY);
@@ -177,7 +177,7 @@ public class WhereIsIt {
             }
         }
 
-        return picturesList;
+        return pictureCardList;
     }
 
     private void error(String language) {
@@ -334,7 +334,7 @@ public class WhereIsIt {
     }
 
     @Slf4j
-    private static class Pictures extends Group {
+    private static class PictureCard extends Group {
 
         protected static final float zoom_factor = 1.1f;
 
@@ -357,7 +357,7 @@ public class WhereIsIt {
 
         private final Bravo bravo = Bravo.getBravo();
 
-        public Pictures(double posX, double posY, double width, double height, @NonNull Group root,
+        public PictureCard(double posX, double posY, double width, double height, @NonNull Group root,
                 @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull ChoiceBox choicebox,
                 @NonNull WhereIsItStats stats, WhereIsIt gameInstance) {
 
@@ -457,7 +457,8 @@ public class WhereIsIt {
 
                                         log.info(N + "");
 
-                                        if ((N instanceof Pictures && imageRectangle != ((Pictures) N).imageRectangle
+                                        if ((N instanceof PictureCard
+                                                && imageRectangle != ((PictureCard) N).imageRectangle
                                                 && !(N instanceof Bravo)) || (N instanceof Home)) {// we put outside
                                             // screen
                                             // Home and cards
