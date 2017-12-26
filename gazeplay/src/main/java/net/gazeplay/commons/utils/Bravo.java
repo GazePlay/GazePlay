@@ -25,7 +25,7 @@ public class Bravo extends Rectangle {
 
     private static final int nb = 5;
 
-    private static final int apparitionDuration = duration*nb;
+    private static final int apparitionDuration = duration * nb;
 
     private static final String pictureResourceLocation = "data/common/images/bravo.png";
 
