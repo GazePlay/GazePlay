@@ -59,8 +59,12 @@ public class GazeUtils {
     public static void addEventFilter(Node gs) {
 
         gm.addGazeListener(gazeListener);
+        final int listenersCount = gm.getNumGazeListeners();
+        log.info("Gaze Event Filters Count = {}", listenersCount);
 
         nodesEventFilter.add(new GazeInfos(gs));
+        final int nodesEventFilterListSize = nodesEventFilter.size();
+        log.info("nodesEventFilterListSize = {}", nodesEventFilterListSize);
     }
 
     public static void addEventHandler(Node gs) {
