@@ -346,13 +346,12 @@ public class WhereIsIt {
         private final double initHeight;
         private final WhereIsItStats stats;
         private final Scene scene;
+        private final String imagePath;
 
         private final ProgressIndicator progressIndicator;
-        private Timeline progressIndicatorAnimationTimeLine;
+        private final Timeline progressIndicatorAnimationTimeLine;
 
         private boolean selected;
-
-        private final EventHandler<Event> enterEvent;
 
         private final Bravo bravo = Bravo.getBravo();
 
@@ -373,19 +372,155 @@ public class WhereIsIt {
             this.stats = stats;
             this.scene = scene;
 
+            this.imagePath = imagePath;
+
             this.imageRectangle = createImageRectangle(posX, posY, width, height, imagePath);
             this.progressIndicator = buildProgressIndicator(width, height);
+
+            this.progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
             this.getChildren().add(imageRectangle);
             this.getChildren().add(progressIndicator);
 
-            enterEvent = buildEvent(gameInstance);
+            EventHandler<Event> enterEvent = buildEvent(gameInstance);
 
             GazeUtils.addEventFilter(imageRectangle);
 
             this.addEventFilter(MouseEvent.ANY, enterEvent);
 
             this.addEventFilter(GazeEvent.ANY, enterEvent);
+        }
+
+        private Timeline createProgressIndicatorTimeLine(WhereIsIt gameInstance) {
+            Timeline result = new Timeline();
+
+            result.getKeyFrames()
+                    .add(new KeyFrame(new Duration(minTime), new KeyValue(progressIndicator.progressProperty(), 1)));
+
+            EventHandler<ActionEvent> progressIndicatorAnimationTimeLineOnFinished = createProgressIndicatorAnimationTimeLineOnFinished(
+                    gameInstance);
+
+            result.setOnFinished(progressIndicatorAnimationTimeLineOnFinished);
+
+            return result;
+        }
+
+        private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(WhereIsIt gameInstance) {
+            return new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent actionEvent) {
+
+                    log.debug("FINISHED");
+
+                    selected = true;
+
+                    // imageRectangle.removeEventFilter(MouseEvent.ANY, enterEvent);
+                    // imageRectangle.removeEventFilter(GazeEvent.ANY, enterEvent);
+
+                    if (winner) {
+
+                        log.debug("WINNER");
+
+                        stats.incNbGoals();
+
+                        int final_zoom = 2;
+
+                        progressIndicator.setVisible(false);
+
+                        Timeline timeline = new Timeline();
+
+                        // ObservableList<Node> list =
+                        // FXCollections.observableArrayList(root.getChildren());
+
+                        for (Node N : root.getChildren()) {// clear all but images and reward
+                            // for (Node N : list) {// clear all but images and reward
+
+                            log.info(N + "");
+
+                            if ((N instanceof PictureCard && imageRectangle != ((PictureCard) N).imageRectangle
+                                    && !(N instanceof Bravo)) || (N instanceof Home)) {// we put outside
+                                // screen
+                                // Home and cards
+
+                                log.info(N + " enlevé ");
+                                N.setTranslateX(-10000);
+                                N.setOpacity(0);
+                                // N.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                // N.removeEventFilter(GazeEvent.ANY, enterEvent);
+                            } else {// we keep only Bravo and winning card
+                            }
+                        }
+
+                        timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
+                                new KeyValue(imageRectangle.widthProperty(), imageRectangle.getWidth() * final_zoom)));
+                        timeline.getKeyFrames()
+                                .add(new KeyFrame(new Duration(1000), new KeyValue(imageRectangle.heightProperty(),
+                                        imageRectangle.getHeight() * final_zoom)));
+                        timeline.getKeyFrames()
+                                .add(new KeyFrame(new Duration(1000), new KeyValue(imageRectangle.xProperty(),
+                                        (scene.getWidth() - imageRectangle.getWidth() * final_zoom) / 2)));
+                        timeline.getKeyFrames()
+                                .add(new KeyFrame(new Duration(1000), new KeyValue(imageRectangle.yProperty(),
+                                        (scene.getHeight() - imageRectangle.getHeight() * final_zoom) / 2)));
+
+                        timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent actionEvent) {
+
+                                bravo.playWinTransition(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent actionEvent) {
+
+                                        HomeUtils.clear(gameInstance.scene, gameInstance.group, gameInstance.choiceBox);
+                                        gameInstance.buildGame();
+                                        HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
+                                                gameInstance.stats);
+
+                                    }
+                                });
+                            }
+                        });
+
+                        timeline.play();
+
+                    } else {// bad card
+
+                        Timeline disparition = new Timeline();
+                        Timeline apparition = new Timeline();
+
+                        disparition.getKeyFrames().add(
+                                new KeyFrame(new Duration(2000), new KeyValue(imageRectangle.opacityProperty(), 0)));
+
+                        disparition.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(
+                                imageRectangle.fillProperty(),
+                                new ImagePattern(new Image("data/common/images/error.png"), 0, 0, 1, 1, true))));
+
+                        apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                new KeyValue(imageRectangle.widthProperty(), initHeight / 2)));
+
+                        apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                new KeyValue(imageRectangle.heightProperty(), initHeight / 2)));
+
+                        apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                new KeyValue(imageRectangle.layoutXProperty(), initWidth / 3)));
+
+                        apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
+                                new KeyValue(imageRectangle.layoutYProperty(), initHeight / 4)));
+
+                        apparition.getKeyFrames().add(
+                                new KeyFrame(new Duration(2000), new KeyValue(imageRectangle.opacityProperty(), 0.5)));
+
+                        SequentialTransition sq = new SequentialTransition();
+                        sq.getChildren().addAll(disparition, apparition);
+                        sq.play();
+
+                        Utils.playSound(gameInstance.pathSound);
+
+                        progressIndicator.setVisible(false);
+                    }
+                }
+            };
         }
 
         private Rectangle createImageRectangle(double posX, double posY, double width, double height,
@@ -403,7 +538,8 @@ public class WhereIsIt {
             result.setTranslateY(imageRectangle.getY() + height / 8);
             result.setMinWidth(width * 0.75);
             result.setMinHeight(height * 0.75);
-            result.setOpacity(0);
+            result.setOpacity(0.5);
+            result.setVisible(false);
             return result;
         }
 
@@ -413,152 +549,27 @@ public class WhereIsIt {
                 @Override
                 public void handle(Event e) {
 
-                    if (selected)
+                    if (selected) {
                         return;
+                    }
 
                     if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                        log.debug("ENTERED");
+                        log.info("ENTERED {}", imagePath);
 
-                        progressIndicator.setOpacity(0.5);
                         progressIndicator.setProgress(0);
+                        progressIndicator.setVisible(true);
 
-                        Timeline timelineCard = new Timeline();
+                        progressIndicatorAnimationTimeLine.playFromStart();
 
-                        progressIndicatorAnimationTimeLine = new Timeline();
-
-                        progressIndicatorAnimationTimeLine.getKeyFrames().add(new KeyFrame(new Duration(minTime),
-                                new KeyValue(progressIndicator.progressProperty(), 1)));
-
-                        timelineCard.play();
-
-                        progressIndicatorAnimationTimeLine.play();
-
-                        progressIndicatorAnimationTimeLine.setOnFinished(new EventHandler<ActionEvent>() {
-
-                            @Override
-                            public void handle(ActionEvent actionEvent) {
-
-                                log.debug("FINISHED");
-
-                                selected = true;
-
-                                // imageRectangle.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                // imageRectangle.removeEventFilter(GazeEvent.ANY, enterEvent);
-
-                                if (winner) {
-
-                                    log.debug("WINNER");
-
-                                    stats.incNbGoals();
-
-                                    int final_zoom = 2;
-
-                                    progressIndicator.setOpacity(0);
-
-                                    Timeline timeline = new Timeline();
-
-                                    // ObservableList<Node> list =
-                                    // FXCollections.observableArrayList(root.getChildren());
-
-                                    for (Node N : root.getChildren()) {// clear all but images and reward
-                                        // for (Node N : list) {// clear all but images and reward
-
-                                        log.info(N + "");
-
-                                        if ((N instanceof PictureCard
-                                                && imageRectangle != ((PictureCard) N).imageRectangle
-                                                && !(N instanceof Bravo)) || (N instanceof Home)) {// we put outside
-                                            // screen
-                                            // Home and cards
-
-                                            log.info(N + " enlevé ");
-                                            N.setTranslateX(-10000);
-                                            N.setOpacity(0);
-                                            // N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                            // N.removeEventFilter(GazeEvent.ANY, enterEvent);
-                                        } else {// we keep only Bravo and winning card
-                                        }
-                                    }
-
-                                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(
-                                            imageRectangle.widthProperty(), imageRectangle.getWidth() * final_zoom)));
-                                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(
-                                            imageRectangle.heightProperty(), imageRectangle.getHeight() * final_zoom)));
-                                    timeline.getKeyFrames()
-                                            .add(new KeyFrame(new Duration(1000), new KeyValue(
-                                                    imageRectangle.xProperty(),
-                                                    (scene.getWidth() - imageRectangle.getWidth() * final_zoom) / 2)));
-                                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(
-                                            imageRectangle.yProperty(),
-                                            (scene.getHeight() - imageRectangle.getHeight() * final_zoom) / 2)));
-
-                                    timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-                                        @Override
-                                        public void handle(ActionEvent actionEvent) {
-
-                                            bravo.playWinTransition(new EventHandler<ActionEvent>() {
-                                                @Override
-                                                public void handle(ActionEvent actionEvent) {
-
-                                                    HomeUtils.clear(gameInstance.scene, gameInstance.group,
-                                                            gameInstance.choiceBox);
-                                                    gameInstance.buildGame();
-                                                    HomeUtils.home(gameInstance.scene, gameInstance.group,
-                                                            gameInstance.choiceBox, gameInstance.stats);
-
-                                                }
-                                            });
-                                        }
-                                    });
-
-                                    timeline.play();
-
-                                } else {// bad card
-
-                                    Timeline disparition = new Timeline();
-                                    Timeline apparition = new Timeline();
-
-                                    disparition.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                                            new KeyValue(imageRectangle.opacityProperty(), 0)));
-
-                                    disparition.getKeyFrames()
-                                            .add(new KeyFrame(new Duration(2000),
-                                                    new KeyValue(imageRectangle.fillProperty(),
-                                                            new ImagePattern(new Image("data/common/images/error.png"),
-                                                                    0, 0, 1, 1, true))));
-
-                                    apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                            new KeyValue(imageRectangle.widthProperty(), initHeight / 2)));
-
-                                    apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                            new KeyValue(imageRectangle.heightProperty(), initHeight / 2)));
-
-                                    apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                            new KeyValue(imageRectangle.layoutXProperty(), initWidth / 3)));
-
-                                    apparition.getKeyFrames().add(new KeyFrame(new Duration(1),
-                                            new KeyValue(imageRectangle.layoutYProperty(), initHeight / 4)));
-
-                                    apparition.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                                            new KeyValue(imageRectangle.opacityProperty(), 0.5)));
-
-                                    SequentialTransition sq = new SequentialTransition();
-                                    sq.getChildren().addAll(disparition, apparition);
-                                    sq.play();
-
-                                    Utils.playSound(gameInstance.pathSound);
-
-                                    progressIndicator.setOpacity(0);
-                                }
-                            }
-                        });
                     } else if (e.getEventType() == MouseEvent.MOUSE_EXITED
                             || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
+                        log.info("EXITED {}", imagePath);
+
                         progressIndicatorAnimationTimeLine.stop();
 
-                        progressIndicator.setOpacity(0);
+                        progressIndicator.setVisible(false);
                         progressIndicator.setProgress(0);
                     }
                 }
