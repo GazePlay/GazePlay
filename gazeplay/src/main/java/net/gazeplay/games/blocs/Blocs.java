@@ -235,7 +235,7 @@ public class Blocs extends Application {
 
                         HomeUtils.home.setVisible(false);
 
-                        bravo.win().setOnFinished(event -> {
+                        bravo.playWinTransition(event -> {
                             HomeUtils.clear(theScene, blockRoot, choiceBox);
                             makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, useTrail,
                                     stats);

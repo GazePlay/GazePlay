@@ -2,7 +2,6 @@ package net.gazeplay.games.magiccards;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
-import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -184,9 +183,7 @@ public class Card extends Parent {
                                     @Override
                                     public void handle(ActionEvent actionEvent) {
 
-                                        SequentialTransition sequence = bravo.win();
-                                        bravo.toFront();
-                                        sequence.setOnFinished(new EventHandler<ActionEvent>() {
+                                        bravo.playWinTransition(new EventHandler<ActionEvent>() {
 
                                             @Override
                                             public void handle(ActionEvent actionEvent) {
