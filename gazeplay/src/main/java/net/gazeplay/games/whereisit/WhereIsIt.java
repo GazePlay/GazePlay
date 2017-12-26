@@ -7,7 +7,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -19,18 +18,14 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
-import net.gazeplay.commons.gaze.SecondScreen;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.Bravo;
@@ -44,61 +39,44 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
 
+import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZED;
+
 /**
  * Created by Didier Schwab on the 18/11/2017
  */
 @Slf4j
-public class WhereIsIt extends Application {
+public class WhereIsIt {
 
-    public static final int ANIMALNAME = 0;
-    public static final int COLORNAME = 1;
-    public static final int CUSTOMIZED = 2;
-
-    private static Group root;
-    private static Scene scene;
-    private static ChoiceBox choicebox;
-    protected static int nbLines;
-    protected static int nbColumns;
-    protected static String pathSound;
-    protected static int type;
-    protected static boolean fourThree;
-
-    @Override
-    public void start(Stage primaryStage) {
-
-        primaryStage.setTitle("Where is it ?");
-
-        primaryStage.setFullScreen(true);
-
-        Group appRoot = new Group();
-
-        Scene theScene = new Scene(appRoot, Screen.getScreens().get(0).getWidth(),
-                Screen.getScreens().get(0).getHeight(), Color.BLACK);
-
-        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
-
-        primaryStage.setScene(theScene);
-
-        WhereIsItStats stats = new WhereIsItStats(scene);
-
-        buildGame(ANIMALNAME, 2, 2, false, root, scene, null, stats);
-
-        primaryStage.show();
-
-        SecondScreen.launch();
+    public enum WhereIsItGameType {
+        ANIMALNAME, COLORNAME, CUSTOMIZED;
     }
 
-    public static void buildGame(int Game, int nLines, int nColumns, boolean fourThree, Group groupRoot,
-            Scene gameScene, ChoiceBox gpChoicebox, WhereIsItStats stats) {
+    private final WhereIsItGameType gameType;
+    private final int nbLines;
+    private final int nbColumns;
+    private final boolean fourThree;
 
-        root = groupRoot;
-        scene = gameScene;
-        choicebox = gpChoicebox;
-        WhereIsIt.nbLines = nLines;
-        WhereIsIt.nbColumns = nColumns;
-        WhereIsIt.type = Game;
-        WhereIsIt.fourThree = fourThree;
+    private final Group group;
+    private final Scene scene;
+    private final ChoiceBox choiceBox;
 
+    private String pathSound;
+
+    private final WhereIsItStats stats;
+
+    public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
+            final Group group, final Scene scene, final ChoiceBox choiceBox, final WhereIsItStats stats) {
+        this.group = group;
+        this.scene = scene;
+        this.choiceBox = choiceBox;
+        this.nbLines = nbLines;
+        this.nbColumns = nbColumns;
+        this.gameType = gameType;
+        this.fourThree = fourThree;
+        this.stats = stats;
+    }
+
+    public void buildGame() {
         stats.setName(getName());
 
         double shift = 0;
@@ -175,13 +153,13 @@ public class WhereIsIt extends Application {
 
                 log.info("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
 
-                pathSound = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
-                log.info("pathSound = {}", pathSound);
-                Utils.playSound(pathSound);
+                this.pathSound = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
+                log.info("pathSound = {}", this.pathSound);
+                Utils.playSound(this.pathSound);
             }
 
-            Pictures picture = new Pictures(width * posX + shift, height * posY, width, height, root, scene,
-                    winner == i, randomImageFile + "", choicebox, stats);
+            Pictures picture = new Pictures(width * posX + shift, height * posY, width, height, group, scene,
+                    winner == i, randomImageFile + "", choiceBox, stats, this);
 
             log.info("posX " + posX);
             log.info("posY " + posY);
@@ -193,30 +171,30 @@ public class WhereIsIt extends Application {
                 posX = 0;
             }
 
-            root.getChildren().add(picture);
+            group.getChildren().add(picture);
         }
 
         stats.start();
     }
 
-    private static void error(String language) {
+    private void error(String language) {
 
-        HomeUtils.clear(scene, root, choicebox);
-        HomeUtils.home(scene, root, choicebox, null);
+        HomeUtils.clear(scene, group, choiceBox);
+        HomeUtils.home(scene, group, choiceBox, null);
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
         Text error = new Text(multilinguism.getTrad("WII-error", language));
         error.setX(Screen.getMainScreen().getWidth() / 2. - 100);
         error.setY(Screen.getMainScreen().getHeight() / 2.);
         error.setId("item");
-        root.getChildren().addAll(error);
+        group.getChildren().addAll(error);
     }
 
-    private static File locateImagesDirectory(Configuration config) {
+    private File locateImagesDirectory(Configuration config) {
 
         File result = null;
 
-        if (type == CUSTOMIZED) {
+        if (this.gameType == CUSTOMIZED) {
 
             result = new File(config.getWhereIsItDir() + "/images/");
         } else {
@@ -230,7 +208,7 @@ public class WhereIsIt extends Application {
         return result;
     }
 
-    private static File locateImagesDirectoryInUnpackedDistDirectory() {
+    private File locateImagesDirectoryInUnpackedDistDirectory() {
         final File workingDirectory = new File(".");
         log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
         final String workingDirectoryName;
@@ -265,7 +243,7 @@ public class WhereIsIt extends Application {
         return null;
     }
 
-    private static File locateImagesDirectoryInExplodedClassPath() {
+    private File locateImagesDirectoryInExplodedClassPath() {
         final String parentImagesPackageResourceLocation = "data/" + getName() + "/images/";
         log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
 
@@ -298,9 +276,9 @@ public class WhereIsIt extends Application {
         return true;
     }
 
-    public static String getPathSound(final String folder, String language) {
+    public String getPathSound(final String folder, String language) {
 
-        if (type == CUSTOMIZED) {
+        if (this.gameType == CUSTOMIZED) {
 
             final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
@@ -349,8 +327,8 @@ public class WhereIsIt extends Application {
         return "data/" + getName() + "/sounds/" + language + "/" + folder + "." + voice + "." + language + ".mp3";
     }
 
-    private static String getName() {
-        switch (type) {
+    private String getName() {
+        switch (this.gameType) {
         case ANIMALNAME:
             return "where-is-the-animal";
         case COLORNAME:
@@ -359,7 +337,7 @@ public class WhereIsIt extends Application {
             return "custumized";
         default:
             log.debug("This case should never happen");
-            throw new IllegalStateException("Unsupported type value : " + type);
+            throw new IllegalStateException("Unsupported type value : " + this.gameType);
         }
     }
 
@@ -389,7 +367,7 @@ public class WhereIsIt extends Application {
 
         public Pictures(double posX, double posY, double width, double height, @NonNull Group root,
                 @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull ChoiceBox choicebox,
-                @NonNull WhereIsItStats stats) {
+                @NonNull WhereIsItStats stats, WhereIsIt gameInstance) {
 
             log.info("imagePath = {}", imagePath);
 
@@ -419,7 +397,7 @@ public class WhereIsIt extends Application {
             indicator.setOpacity(0);
             this.getChildren().add(indicator);
 
-            enterEvent = buildEvent();
+            enterEvent = buildEvent(gameInstance);
 
             GazeUtils.addEventFilter(imageRectangle);
 
@@ -428,7 +406,8 @@ public class WhereIsIt extends Application {
             this.addEventFilter(GazeEvent.ANY, enterEvent);
         }
 
-        private EventHandler<Event> buildEvent() {
+        private EventHandler<Event> buildEvent(final WhereIsIt gameInstance) {
+
             return new EventHandler<Event>() {
                 @Override
                 public void handle(Event e) {
@@ -517,16 +496,15 @@ public class WhereIsIt extends Application {
                                         public void handle(ActionEvent actionEvent) {
 
                                             bravo.playWinTransition(new EventHandler<ActionEvent>() {
-
                                                 @Override
                                                 public void handle(ActionEvent actionEvent) {
 
-                                                    HomeUtils.clear(scene, root, choicebox);
-                                                    WhereIsIt.buildGame(WhereIsIt.type, WhereIsIt.nbLines,
-                                                            WhereIsIt.nbColumns, WhereIsIt.fourThree, root, scene,
-                                                            choicebox, stats);
-                                                    HomeUtils.home(scene, root, choicebox, stats);
-                                                    // stats.start();
+                                                    HomeUtils.clear(gameInstance.scene, gameInstance.group,
+                                                            gameInstance.choiceBox);
+                                                    gameInstance.buildGame();
+                                                    HomeUtils.home(gameInstance.scene, gameInstance.group,
+                                                            gameInstance.choiceBox, gameInstance.stats);
+
                                                 }
                                             });
                                         }
@@ -567,7 +545,7 @@ public class WhereIsIt extends Application {
                                     sq.getChildren().addAll(disparition, apparition);
                                     sq.play();
 
-                                    Utils.playSound(WhereIsIt.pathSound);
+                                    Utils.playSound(gameInstance.pathSound);
 
                                     indicator.setOpacity(0);
                                 }
