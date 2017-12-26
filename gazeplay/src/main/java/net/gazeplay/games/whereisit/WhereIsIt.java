@@ -491,7 +491,7 @@ public class WhereIsIt {
 
                         progressIndicator.setVisible(false);
 
-                        FadeTransition imageFadeOutTransition = new FadeTransition(new Duration(1000), imageRectangle);
+                        FadeTransition imageFadeOutTransition = new FadeTransition(new Duration(2000), imageRectangle);
                         imageFadeOutTransition.setFromValue(1);
                         imageFadeOutTransition.setToValue(0);
 
@@ -499,17 +499,22 @@ public class WhereIsIt {
                         errorImageRectangle.setOpacity(0);
                         errorImageRectangle.setVisible(true);
 
-                        FadeTransition errorFadeInTransition = new FadeTransition(new Duration(1000),
+                        FadeTransition errorFadeInTransition = new FadeTransition(new Duration(500),
                                 errorImageRectangle);
                         errorFadeInTransition.setFromValue(0);
                         errorFadeInTransition.setToValue(1);
 
-                        SequentialTransition sequentialTransition = new SequentialTransition();
-                        sequentialTransition.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
+                        ParallelTransition fullAnimation = new ParallelTransition();
+                        fullAnimation.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
 
-                        Utils.playSound(gameInstance.pathSound);
+                        fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent actionEvent) {
+                                Utils.playSound(gameInstance.pathSound);
+                            }
+                        });
 
-                        sequentialTransition.play();
+                        fullAnimation.play();
                     }
                 }
             };
