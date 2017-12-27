@@ -79,17 +79,14 @@ public class HomeUtils {
     }
 
     public static void clear(Scene scene, Group root, ChoiceBox<String> cbxGames) {
-
         scene.setFill(Color.BLACK);
 
-        for (Node N : root.getChildren()) {
+        // remove all children
+        root.getChildren().clear();
 
-            N.setTranslateX(-10000);
-        }
-
-        root.getChildren().remove(0, root.getChildren().size());
-
-        root.getChildren().add(Bravo.getBravo());
+        Bravo bravo = Bravo.getBravo();
+        bravo.setVisible(false);
+        root.getChildren().add(bravo);
 
     }
 
