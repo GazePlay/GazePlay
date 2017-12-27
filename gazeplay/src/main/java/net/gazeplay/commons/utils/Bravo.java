@@ -76,11 +76,11 @@ public class Bravo extends Rectangle {
         double imageHeight = image.getHeight();
         double imageHeightToWidthRatio = imageHeight / imageWidth;
 
-        double positionX = (scene.getWidth() - imageWidth) / 2;
-        double positionY = (scene.getHeight() - imageHeight) / 2;
-
         double initialWidth = scene.getWidth() / 4;
         double initialHeight = imageHeightToWidthRatio * initialWidth;
+
+        double positionX = (scene.getWidth() - initialWidth) / 2;
+        double positionY = (scene.getHeight() - initialHeight) / 2;
 
         setFill(new ImagePattern(image));
 
