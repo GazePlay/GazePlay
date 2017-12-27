@@ -233,7 +233,7 @@ public class Blocs extends Application {
 
                         RemoveAllBlocs();
 
-                        HomeUtils.homeButton.setVisible(false);
+                        HomeUtils.home.setVisible(false);
 
                         bravo.playWinTransition(scene, event -> {
                             HomeUtils.clear(theScene, blockRoot, choiceBox);
