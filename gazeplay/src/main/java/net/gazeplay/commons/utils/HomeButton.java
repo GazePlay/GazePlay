@@ -7,9 +7,9 @@ import javafx.scene.shape.Rectangle;
 /**
  * Created by schwab on 22/12/2016.
  */
-public class Home extends Rectangle {
+public class HomeButton extends Rectangle {
 
-    public Home(double X, double Y, double width, double heigth) {
+    public HomeButton(double X, double Y, double width, double heigth) {
 
         super(X, Y, width, heigth);
 
