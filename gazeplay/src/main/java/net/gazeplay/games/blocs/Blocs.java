@@ -102,7 +102,7 @@ public class Blocs extends Application {
 
         scene.setFill(new ImagePattern(images[value]));
 
-        enterEvent = buildEvent(stats, useTrail);
+        enterEvent = buildEvent(scene, stats, useTrail);
 
         double width = scene.getWidth() / nbColomns;
         double height = scene.getHeight() / nbLines;
@@ -182,7 +182,7 @@ public class Blocs extends Application {
         count--;
     }
 
-    private static EventHandler<Event> buildEvent(HiddenItemsGamesStats stats, boolean useTrail) {
+    private static EventHandler<Event> buildEvent(Scene scene, HiddenItemsGamesStats stats, boolean useTrail) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -235,7 +235,7 @@ public class Blocs extends Application {
 
                         HomeUtils.home.setVisible(false);
 
-                        bravo.playWinTransition(event -> {
+                        bravo.playWinTransition(scene, event -> {
                             HomeUtils.clear(theScene, blockRoot, choiceBox);
                             makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, useTrail,
                                     stats);

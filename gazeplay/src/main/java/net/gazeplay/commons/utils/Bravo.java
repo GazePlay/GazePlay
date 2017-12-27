@@ -1,12 +1,12 @@
 package net.gazeplay.commons.utils;
 
-import com.sun.glass.ui.Screen;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
@@ -44,8 +44,8 @@ public class Bravo extends Rectangle {
         soundResourceUrl = classLoader.getResource(soundResourceLocation);
     }
 
-    public void playWinTransition(EventHandler<ActionEvent> onFinishedEventHandler) {
-        resetState();
+    public void playWinTransition(Scene scene, EventHandler<ActionEvent> onFinishedEventHandler) {
+        resetState(scene);
 
         FadeTransition fadeInTransition = new FadeTransition(new Duration(apparitionDuration), this);
         fadeInTransition.setFromValue(0.0);
@@ -69,20 +69,25 @@ public class Bravo extends Rectangle {
         fullTransition.play();
     }
 
-    private void resetState() {
-        setFill(new ImagePattern(new Image(pictureResourceLocation)));
+    private void resetState(Scene scene) {
+        Image image = new Image(pictureResourceLocation);
 
-        Screen screen = Screen.getScreens().get(0);
+        double imageWidth = image.getWidth();
+        double imageHeight = image.getHeight();
+        double imageHeightToWidthRatio = imageHeight / imageWidth;
 
-        int positionX = screen.getWidth() / 3;
-        int positionY = screen.getWidth() / 6;
+        double positionX = (scene.getWidth() - imageWidth) / 2;
+        double positionY = (scene.getHeight() - imageHeight) / 2;
 
-        int initialWidth = screen.getWidth() / 4;
+        double initialWidth = scene.getWidth() / 4;
+        double initialHeight = imageHeightToWidthRatio * initialWidth;
+
+        setFill(new ImagePattern(image));
 
         setX(positionX);
         setY(positionY);
         setWidth(initialWidth);
-        setHeight(initialWidth);
+        setHeight(initialHeight);
 
         setTranslateX(0);
         setScaleX(1);
