@@ -24,7 +24,7 @@ import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.Bravo;
-import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.Home;
 import net.gazeplay.commons.utils.HomeUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
@@ -158,7 +158,7 @@ public class Card extends Parent {
                                 for (Node N : root.getChildren()) {// clear all but images and reward
 
                                     if ((N instanceof Card && card != ((Card) N).getCard() && !(N instanceof Bravo))
-                                            || (N instanceof HomeButton)) {// we put outside screen HomeButton and cards
+                                            || (N instanceof Home)) {// we put outside screen Home and cards
 
                                         N.setTranslateX(-10000);
                                         N.setOpacity(0);
