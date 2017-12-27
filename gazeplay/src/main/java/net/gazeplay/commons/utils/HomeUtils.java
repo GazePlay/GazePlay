@@ -22,7 +22,7 @@ import net.gazeplay.commons.utils.stats.StatsDisplay;
 @Slf4j
 public class HomeUtils {
 
-    public static Home home;
+    public static HomeButton homeButton;
 
     public static void home(Scene scene, Group root, ChoiceBox<String> cbxGames, Stats stats) {
 
@@ -31,7 +31,7 @@ public class HomeUtils {
         double X = scene.getWidth() * 0.9;
         double Y = scene.getHeight() - height * 1.1;
 
-        home = new Home(X, Y, width, height);
+        homeButton = new HomeButton(X, Y, width, height);
 
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
             @Override
@@ -58,9 +58,9 @@ public class HomeUtils {
             }
         };
 
-        home.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
-        root.getChildren().add(home);
+        root.getChildren().add(homeButton);
     }
 
     public static void goHome(Scene scene, Group root, ChoiceBox<String> cbxGames) {
@@ -79,17 +79,14 @@ public class HomeUtils {
     }
 
     public static void clear(Scene scene, Group root, ChoiceBox<String> cbxGames) {
-
         scene.setFill(Color.BLACK);
 
-        for (Node N : root.getChildren()) {
+        // remove all children
+        root.getChildren().clear();
 
-            N.setTranslateX(-10000);
-        }
-
-        root.getChildren().remove(0, root.getChildren().size());
-
-        root.getChildren().add(Bravo.getBravo());
+        Bravo bravo = Bravo.getBravo();
+        bravo.setVisible(false);
+        root.getChildren().add(bravo);
 
     }
 
