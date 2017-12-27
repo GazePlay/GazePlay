@@ -1,9 +1,6 @@
 package net.gazeplay.commons.utils;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.Transition;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -21,11 +18,11 @@ import java.net.URL;
  */
 public class Bravo extends Rectangle {
 
-    private static final int duration = 1300;
+    private static final int duration = 650;
 
     private static final int nb = 5;
 
-    private static final int apparitionDuration = duration * nb;
+    private static final int apparitionDuration = duration;
 
     private static final String pictureResourceLocation = "data/common/images/bravo.png";
 
@@ -47,6 +44,8 @@ public class Bravo extends Rectangle {
     public void playWinTransition(Scene scene, EventHandler<ActionEvent> onFinishedEventHandler) {
         resetState(scene);
 
+        PauseTransition delayTransition = new PauseTransition(Duration.millis(4000));
+
         FadeTransition fadeInTransition = new FadeTransition(new Duration(apparitionDuration), this);
         fadeInTransition.setFromValue(0.0);
         fadeInTransition.setToValue(1.0);
@@ -59,6 +58,7 @@ public class Bravo extends Rectangle {
 
         ParallelTransition fullTransition = new ParallelTransition();
 
+        fullTransition.getChildren().add(delayTransition);
         fullTransition.getChildren().add(fadeInTransition);
         fullTransition.getChildren().add(scaleTransition);
 
