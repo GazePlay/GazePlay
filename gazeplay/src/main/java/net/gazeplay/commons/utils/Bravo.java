@@ -1,6 +1,7 @@
 package net.gazeplay.commons.utils;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -10,19 +11,37 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
 
 /**
  * Created by schwab on 30/10/2016.
  */
+@Slf4j
 public class Bravo extends Rectangle {
 
-    private static final int duration = 650;
+    private static final int soundClipDuration = 6000;
 
-    private static final int nb = 5;
+    private static final int zoomInAndOutCyclesCount = 3;
 
-    private static final int apparitionDuration = duration;
+    private static final int animationDelayDuration = 1000;
+
+    private static final int zoomInDuration = (soundClipDuration - animationDelayDuration) / (zoomInAndOutCyclesCount);
+
+    private static final int fadeInDuration = zoomInDuration / 2;
+
+    private static final int delayBeforeNextRoundDuration = 5000;
+
+    /**
+     * initially, the image will take this ratio of the scene height double between 0 and 1
+     */
+    private static final double pictureInitialHeightToSceneHeightRatio = 1d / 3d;
+
+    /**
+     * when fully scaled, the image will take this ratio of the scene height double between 0 and 1
+     */
+    private static final double pictureFinalHeightToSceneHeightRatio = 0.95d;
 
     private static final String pictureResourceLocation = "data/common/images/bravo.png";
 
@@ -33,40 +52,92 @@ public class Bravo extends Rectangle {
 
     private final URL soundResourceUrl;
 
+    private AudioClip soundClip;
+
+    private SequentialTransition fullTransition;
+
     private Bravo() {
         super(0, 0, 0, 0);
 
         ClassLoader classLoader = this.getClass().getClassLoader();
 
         soundResourceUrl = classLoader.getResource(soundResourceLocation);
+
+        soundClip = new AudioClip(soundResourceUrl.toExternalForm());
+
+        fullTransition = createFullTransition();
     }
 
     public void playWinTransition(Scene scene, EventHandler<ActionEvent> onFinishedEventHandler) {
+        playWinTransition(scene, 0, onFinishedEventHandler);
+    }
+
+    public void playWinTransition(Scene scene, long initialDelay, EventHandler<ActionEvent> onFinishedEventHandler) {
         resetState(scene);
 
-        PauseTransition delayTransition = new PauseTransition(Duration.millis(4000));
+        fullTransition.setOnFinished(actionEvent -> {
+            log.debug("finished fullTransition");
+            onFinishedEventHandler.handle(actionEvent);
+            log.debug("finished onFinishedEventHandler");
+        });
 
-        FadeTransition fadeInTransition = new FadeTransition(new Duration(apparitionDuration), this);
-        fadeInTransition.setFromValue(0.0);
-        fadeInTransition.setToValue(1.0);
-        fadeInTransition.setCycleCount(1);
-        fadeInTransition.setAutoReverse(false);
+        delayedStart(initialDelay);
+    }
+
+    private void delayedStart(long initialDelay) {
+        final Runnable uiRunnable = () -> {
+            // set visible only after all other property as been set
+            // and just before the animation starts
+            setVisible(true);
+
+            log.debug("Playing graphic animation ...");
+            fullTransition.play();
+            log.debug("Playing sound animation ...");
+            soundClip.play(0.2);
+            log.debug("Finished JavaFX task");
+        };
+
+        final Runnable deferedAnimationRunnable = () -> {
+            try {
+                Thread.sleep(initialDelay);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            log.debug("Adding task to JavaFX thread queue ...");
+            Platform.runLater(uiRunnable);
+        };
+
+        Thread startPlayingThread = new Thread(deferedAnimationRunnable);
+
+        log.debug("Starting new thread ...");
+        startPlayingThread.start();
+    }
+
+    private SequentialTransition createFullTransition() {
+        PauseTransition delayBetweenSoundStartAndAnimationStartTransition = new PauseTransition(
+                Duration.millis(animationDelayDuration));
+        delayBetweenSoundStartAndAnimationStartTransition
+                .setOnFinished(actionEvent -> log.debug("finished delayBetweenSoundStartAndAnimationStartTransition"));
+
+        PauseTransition delayAfterAnimationEndsBeforeStartingNextRoundTransition = new PauseTransition(
+                Duration.millis(delayBeforeNextRoundDuration));
+        delayAfterAnimationEndsBeforeStartingNextRoundTransition.setOnFinished(
+                actionEvent -> log.debug("finished delayAfterAnimationEndsBeforeStartingNextRoundTransition"));
+
+        FadeTransition fadeInTransition = createFadeInTransition();
 
         Transition scaleTransition = createScaleTransition();
 
-        AudioClip soundClip = new AudioClip(soundResourceUrl.toExternalForm());
+        ParallelTransition animationTransition = new ParallelTransition();
+        animationTransition.getChildren().add(fadeInTransition);
+        animationTransition.getChildren().add(scaleTransition);
+        animationTransition.setOnFinished(actionEvent -> log.debug("finished animationTransition"));
 
-        ParallelTransition fullTransition = new ParallelTransition();
-
-        fullTransition.getChildren().add(delayTransition);
-        fullTransition.getChildren().add(fadeInTransition);
-        fullTransition.getChildren().add(scaleTransition);
-
-        soundClip.play(0.2);
-
-        fullTransition.setOnFinished(onFinishedEventHandler);
-
-        fullTransition.play();
+        SequentialTransition fullTransition = new SequentialTransition();
+        fullTransition.getChildren().add(delayBetweenSoundStartAndAnimationStartTransition);
+        fullTransition.getChildren().add(animationTransition);
+        fullTransition.getChildren().add(delayAfterAnimationEndsBeforeStartingNextRoundTransition);
+        return fullTransition;
     }
 
     private void resetState(Scene scene) {
@@ -76,8 +147,8 @@ public class Bravo extends Rectangle {
         double imageHeight = image.getHeight();
         double imageHeightToWidthRatio = imageHeight / imageWidth;
 
-        double initialWidth = scene.getWidth() / 4;
-        double initialHeight = imageHeightToWidthRatio * initialWidth;
+        double initialHeight = scene.getHeight() * pictureInitialHeightToSceneHeightRatio;
+        double initialWidth = initialHeight / imageHeightToWidthRatio;
 
         double positionX = (scene.getWidth() - initialWidth) / 2;
         double positionY = (scene.getHeight() - initialHeight) / 2;
@@ -97,18 +168,32 @@ public class Bravo extends Rectangle {
         setOpacity(0);
 
         toFront(); // bug when it is uncommented (with bloc at least).
-
-        // set visible only after all other property as been set
-        setVisible(true);
     }
 
     private ScaleTransition createScaleTransition() {
-        ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(duration), this);
-        scaleTransition.setByX(1f * 3 / 2);
-        scaleTransition.setByY(1f * 3 / 2);
-        scaleTransition.setCycleCount(nb);
+        ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(zoomInDuration), this);
+        scaleTransition.setInterpolator(Interpolator.LINEAR);
+
+        // scale to the actual height of the scene
+        // so that the image takes the full height of the scene when it is fully scaled
+        double scaleRatio = (1 / pictureInitialHeightToSceneHeightRatio) / (1 / pictureFinalHeightToSceneHeightRatio)
+                - 1d;
+        scaleTransition.setByX(scaleRatio);
+        scaleTransition.setByY(scaleRatio);
+
+        scaleTransition.setCycleCount(zoomInAndOutCyclesCount);
         scaleTransition.setAutoReverse(true);
+        scaleTransition.setOnFinished(actionEvent -> log.debug("finished scaleTransition"));
         return scaleTransition;
     }
 
+    private FadeTransition createFadeInTransition() {
+        FadeTransition fadeInTransition = new FadeTransition(new Duration(fadeInDuration), this);
+        fadeInTransition.setFromValue(0.0);
+        fadeInTransition.setToValue(1.0);
+        fadeInTransition.setCycleCount(1);
+        fadeInTransition.setAutoReverse(false);
+        fadeInTransition.setOnFinished(actionEvent -> log.debug("finished fadeInTransition"));
+        return fadeInTransition;
+    }
 }
