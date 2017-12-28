@@ -13,10 +13,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +29,6 @@ import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.HomeUtils;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.io.File;
@@ -69,11 +71,9 @@ public class WhereIsIt {
     private final Scene scene;
     private final ChoiceBox choiceBox;
 
-    private String pathSound;
-
     private final WhereIsItStats stats;
 
-    private List<PictureCard> pictureCardList;
+    private RoundDetails currentRoundDetails;
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
             final Group group, final Scene scene, final ChoiceBox choiceBox, final WhereIsItStats stats) {
@@ -101,13 +101,22 @@ public class WhereIsIt {
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        pictureCardList = pickAndBuildRandomPictures(config, gameSizing, numberOfImagesToDisplayPerRound, random,
+        currentRoundDetails = pickAndBuildRandomPictures(config, gameSizing, numberOfImagesToDisplayPerRound, random,
                 winnerImageIndexAmongDisplayedImages);
 
-        if (pictureCardList != null) {
-            group.getChildren().addAll(pictureCardList);
+        if (currentRoundDetails != null) {
+            group.getChildren().addAll(currentRoundDetails.pictureCardList);
             stats.start();
+
+            playQuestionSound();
         }
+    }
+
+    private void playQuestionSound() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        URL soundResourceUrl = classLoader.getResource(currentRoundDetails.questionSoundPath);
+        AudioClip soundClip = new AudioClip(soundResourceUrl.toExternalForm());
+        soundClip.play();
     }
 
     /**
@@ -115,16 +124,22 @@ public class WhereIsIt {
      * resources in both UI and memory
      */
     public void dispose() {
-        if (pictureCardList != null) {
-            group.getChildren().removeAll(pictureCardList);
-            pictureCardList = null;
+        if (currentRoundDetails != null) {
+            if (currentRoundDetails.pictureCardList != null) {
+                group.getChildren().removeAll(currentRoundDetails.pictureCardList);
+            }
+            currentRoundDetails = null;
         }
     }
 
     public void removeAllIncorrectPictureCards() {
+        if (this.currentRoundDetails == null) {
+            return;
+        }
+
         // Collect all items to be removed from the User Interface
         List<PictureCard> pictureCardsToHide = new ArrayList<>();
-        for (PictureCard pictureCard : pictureCardList) {
+        for (PictureCard pictureCard : this.currentRoundDetails.pictureCardList) {
             if (!pictureCard.winner) {
                 pictureCardsToHide.add(pictureCard);
             }
@@ -134,7 +149,16 @@ public class WhereIsIt {
         group.getChildren().removeAll(pictureCardsToHide);
     }
 
-    private List<PictureCard> pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
+    @Data
+    @AllArgsConstructor
+    public static class RoundDetails {
+        private final List<PictureCard> pictureCardList;
+        private final int winnerImageIndexAmongDisplayedImages;
+        private final String questionSoundPath;
+
+    }
+
+    private RoundDetails pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
             final int numberOfImagesToDisplayPerRound, final Random random,
             final int winnerImageIndexAmongDisplayedImages) {
 
@@ -160,6 +184,7 @@ public class WhereIsIt {
         int posY = 0;
 
         final List<PictureCard> pictureCardList = new ArrayList<>();
+        String questionSoundPath = null;
 
         for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
@@ -176,9 +201,8 @@ public class WhereIsIt {
 
                 log.info("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
 
-                this.pathSound = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
-                log.info("pathSound = {}", this.pathSound);
-                Utils.playSound(this.pathSound);
+                questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
+                log.info("pathSound = {}", questionSoundPath);
             }
 
             PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
@@ -198,7 +222,7 @@ public class WhereIsIt {
             }
         }
 
-        return pictureCardList;
+        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath);
     }
 
     private void error(String language) {
@@ -473,6 +497,7 @@ public class WhereIsIt {
 
             customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
+            HomeUtils.homeButton.setVisible(false);
 
             gameInstance.removeAllIncorrectPictureCards();
 
@@ -496,7 +521,7 @@ public class WhereIsIt {
                 @Override
                 public void handle(ActionEvent actionEvent) {
 
-                    bravo.playWinTransition(scene, new EventHandler<ActionEvent>() {
+                    bravo.playWinTransition(scene, 200, new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent actionEvent) {
 
@@ -518,15 +543,17 @@ public class WhereIsIt {
             customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
 
-            FadeTransition imageFadeOutTransition = new FadeTransition(new Duration(2000), imageRectangle);
+            FadeTransition imageFadeOutTransition = new FadeTransition(new Duration(1500), imageRectangle);
             imageFadeOutTransition.setFromValue(1);
-            imageFadeOutTransition.setToValue(0);
+            // the final opacity is not zero so that we can see what was the image, even after it is marked as an
+            // erroneous pick
+            imageFadeOutTransition.setToValue(0.2);
 
             errorImageRectangle.toFront();
             errorImageRectangle.setOpacity(0);
             errorImageRectangle.setVisible(true);
 
-            FadeTransition errorFadeInTransition = new FadeTransition(new Duration(500), errorImageRectangle);
+            FadeTransition errorFadeInTransition = new FadeTransition(new Duration(650), errorImageRectangle);
             errorFadeInTransition.setFromValue(0);
             errorFadeInTransition.setToValue(1);
 
@@ -536,7 +563,7 @@ public class WhereIsIt {
             fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
-                    Utils.playSound(gameInstance.pathSound);
+                    gameInstance.playQuestionSound();
                     customInputEventHandler.ignoreAnyInput = false;
                 }
             });
@@ -575,12 +602,18 @@ public class WhereIsIt {
             return errorImageRectangle;
         }
 
-        private ProgressIndicator buildProgressIndicator(double width, double height) {
+        private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {
+            double minWidth = parentWidth / 2;
+            double minHeight = parentHeight / 2;
+
+            double positionX = imageRectangle.getX() + (parentWidth - minWidth) / 2;
+            double positionY = imageRectangle.getY() + (parentHeight - minHeight) / 2;
+
             ProgressIndicator result = new ProgressIndicator(0);
-            result.setTranslateX(imageRectangle.getX() + width / 8);
-            result.setTranslateY(imageRectangle.getY() + height / 8);
-            result.setMinWidth(width * 0.75);
-            result.setMinHeight(height * 0.75);
+            result.setTranslateX(positionX);
+            result.setTranslateY(positionY);
+            result.setMinWidth(minWidth);
+            result.setMinHeight(minHeight);
             result.setOpacity(0.5);
             result.setVisible(false);
             return result;
