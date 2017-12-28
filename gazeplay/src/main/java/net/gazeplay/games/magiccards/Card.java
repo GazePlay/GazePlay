@@ -183,7 +183,7 @@ public class Card extends Parent {
                                     @Override
                                     public void handle(ActionEvent actionEvent) {
 
-                                        bravo.playWinTransition(scene, new EventHandler<ActionEvent>() {
+                                        bravo.playWinTransition(scene, 500, new EventHandler<ActionEvent>() {
 
                                             @Override
                                             public void handle(ActionEvent actionEvent) {
