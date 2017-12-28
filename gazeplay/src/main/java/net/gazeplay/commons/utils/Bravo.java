@@ -25,13 +25,13 @@ public class Bravo extends Rectangle {
 
     private static final int zoomInAndOutCyclesCount = 3;
 
-    private static final int animationDelayDuration = 1000;
+    private static final int animationDelayDuration = 500;
 
     private static final int zoomInDuration = (soundClipDuration - animationDelayDuration) / (zoomInAndOutCyclesCount);
 
     private static final int fadeInDuration = zoomInDuration / 2;
 
-    private static final int delayBeforeNextRoundDuration = 5000;
+    private static final int delayBeforeNextRoundDuration = 1000;
 
     /**
      * initially, the image will take this ratio of the scene height double between 0 and 1

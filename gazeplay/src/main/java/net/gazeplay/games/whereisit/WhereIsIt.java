@@ -521,7 +521,7 @@ public class WhereIsIt {
                 @Override
                 public void handle(ActionEvent actionEvent) {
 
-                    bravo.playWinTransition(scene, 200, new EventHandler<ActionEvent>() {
+                    bravo.playWinTransition(scene, 500, new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent actionEvent) {
 
