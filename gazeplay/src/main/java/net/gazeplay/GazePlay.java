@@ -59,7 +59,7 @@ public class GazePlay extends Application {
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
         final Screen screen = Screen.getScreens().get(0);
-        log.info(String.format("Screen size: %3d X %3d", screen.getWidth(), screen.getHeight()));
+        log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
 
         scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
 
