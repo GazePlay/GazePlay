@@ -7,7 +7,6 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
@@ -31,17 +30,18 @@ public class Target extends Portrait {
 
     private static int radius = 100;
 
-    private final Scene scene;
+    private final RandomPositionGenerator randomPositionGenerator;
 
     private final Stats stats;
 
     private final Image[] availableImages;
 
-    public Target(Scene scene, Hand hand, ShootGamesStats stats, Image[] availableImages) {
+    public Target(RandomPositionGenerator randomPositionGenerator, Hand hand, ShootGamesStats stats,
+            Image[] availableImages) {
 
-        super(radius, scene, availableImages);
+        super(radius, randomPositionGenerator, availableImages);
 
-        this.scene = scene;
+        this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
         this.availableImages = availableImages;
         this.stats = stats;
@@ -87,7 +87,7 @@ public class Target extends Portrait {
 
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(radiusProperty(), radius)));
 
-        Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius(), scene);
+        Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
 
         timeline2.getKeyFrames()
                 .add(new KeyFrame(new Duration(1), new KeyValue(centerXProperty(), newPosition.getX())));

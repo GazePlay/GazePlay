@@ -1,11 +1,10 @@
 package net.gazeplay.commons.utils;
 
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.stage.Screen;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import net.gazeplay.commons.utils.games.Utils;
@@ -21,16 +20,17 @@ public class Portrait extends Circle {
         return Utils.images(Utils.getImagesFolder() + "portraits");
     }
 
-    protected static final RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator();
+    private final RandomPositionGenerator randomPositionGenerator;
 
     @Getter
     private final int initialRadius;
 
-    public Portrait(int initialRadius, Scene scene, Image[] availableImages) {
+    public Portrait(int initialRadius, RandomPositionGenerator randomPositionGenerator, Image[] availableImages) {
         super(initialRadius);
         this.initialRadius = initialRadius;
+        this.randomPositionGenerator = randomPositionGenerator;
 
-        this.setPosition(randomPositionGenerator.newRandomPosition(initialRadius, scene));
+        this.setPosition(randomPositionGenerator.newRandomPosition(initialRadius));
 
         setFill(new ImagePattern(pickRandomImage(availableImages), 0, 0, 1, 1, true));
     }
@@ -52,24 +52,18 @@ public class Portrait extends Circle {
         private final int y;
     }
 
+    @AllArgsConstructor
     public static class RandomPositionGenerator {
 
         private static final int initRadius = 100;
 
-        private static Rectangle2D getScreenBounds() {
-            return Screen.getPrimary().getBounds();
-        }
-
-        private static Rectangle2D getSceneBounds(Scene scene) {
-            return new Rectangle2D(0, 0, scene.getWidth(), scene.getHeight());
-        }
-
         private final Random random = new Random();
 
-        public Position newRandomPosition(double radius, Scene scene) {
-            Rectangle2D bounds = getSceneBounds(scene);
-            double maxX = bounds.getMaxX() - 2 * initRadius;
-            double maxY = bounds.getMaxY() - 2 * initRadius;
+        private final Scene scene;
+
+        public Position newRandomPosition(double radius) {
+            double maxX = scene.getWidth() - 2 * initRadius;
+            double maxY = scene.getHeight() - 2 * initRadius;
             double positionX = random.nextInt((int) maxX) + radius;
             double positionY = random.nextInt((int) maxY) + radius;
             return new Position((int) positionX, (int) positionY);

@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
@@ -37,22 +36,23 @@ public class Target extends Portrait {
 
     private final Stats stats;
 
-    private final Scene scene;
+    private final RandomPositionGenerator randomPositionGenerator;
 
     private final ArrayList<Portrait> portraits = new ArrayList(nbBall);
 
     private final Image[] availableImages;
 
-    public Target(Group root, Scene scene, ShootGamesStats shoottats, Image[] availableImages) {
-        super(radius, scene, availableImages);
+    public Target(Group root, RandomPositionGenerator randomPositionGenerator, ShootGamesStats shoottats,
+            Image[] availableImages) {
+        super(radius, randomPositionGenerator, availableImages);
 
-        this.scene = scene;
+        this.randomPositionGenerator = randomPositionGenerator;
         this.availableImages = availableImages;
         this.stats = shoottats;
 
         for (int i = 0; i < nbBall; i++) {
 
-            Portrait P = new Portrait(ballRadius, scene, availableImages);
+            Portrait P = new Portrait(ballRadius, randomPositionGenerator, availableImages);
             P.setOpacity(0);
             root.getChildren().add(P);
             portraits.add(P);
@@ -92,7 +92,7 @@ public class Target extends Portrait {
         Timeline timeline = new Timeline();
         int length = (int) (2000 * Math.random()) + 1000;// between 1 and 3 seconds
 
-        Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius(), scene);
+        Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
 
         timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(length), new KeyValue(centerXProperty(), newPosition.getX())));
@@ -149,7 +149,7 @@ public class Target extends Portrait {
 
         timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(radiusProperty(), radius)));
 
-        Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius(), scene);
+        Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
 
         timeline3.getKeyFrames()
                 .add(new KeyFrame(new Duration(1000), new KeyValue(centerXProperty(), newPosition.getX())));

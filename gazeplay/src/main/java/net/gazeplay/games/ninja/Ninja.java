@@ -46,7 +46,9 @@ public class Ninja extends Application {
 
     public static void launch(Group root, Scene scene, ShootGamesStats stats) {
 
-        Target portrait = new Target(root, scene, stats, Portrait.loadAllImages());
+        Portrait.RandomPositionGenerator randomPositionGenerator = new Portrait.RandomPositionGenerator(scene);
+
+        Target portrait = new Target(root, randomPositionGenerator, stats, Portrait.loadAllImages());
 
         root.getChildren().add(portrait);
     }
