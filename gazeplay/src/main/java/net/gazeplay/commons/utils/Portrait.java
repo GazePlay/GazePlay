@@ -40,6 +40,14 @@ public class Portrait extends Circle {
         this.setCenterY(position.getY());
     }
 
+    public Position getPosition() {
+        return new Position((int) getCenterX(), (int) getCenterY());
+    }
+
+    public Position getCurrentPositionWithTranslation() {
+        return new Position((int) getCenterX() + (int) getTranslateX(), (int) getCenterY() + (int) getTranslateY());
+    }
+
     protected Image pickRandomImage(Image[] availableImages) {
         int count = availableImages.length;
         int index = (int) (count * Math.random());
@@ -55,17 +63,17 @@ public class Portrait extends Circle {
     @AllArgsConstructor
     public static class RandomPositionGenerator {
 
-        private static final int initRadius = 100;
-
         private final Random random = new Random();
 
         private final Scene scene;
 
         public Position newRandomPosition(double radius) {
-            double maxX = scene.getWidth() - 2 * initRadius;
-            double maxY = scene.getHeight() - 2 * initRadius;
-            double positionX = random.nextInt((int) maxX) + radius;
-            double positionY = random.nextInt((int) maxY) + radius;
+            double minX = radius;
+            double minY = radius;
+            double maxX = scene.getWidth() - radius;
+            double maxY = scene.getHeight() - radius;
+            double positionX = random.nextInt((int) (maxX - minX)) + minX;
+            double positionY = random.nextInt((int) (maxY - minY)) + minY;
             return new Position((int) positionX, (int) positionY);
         }
 
