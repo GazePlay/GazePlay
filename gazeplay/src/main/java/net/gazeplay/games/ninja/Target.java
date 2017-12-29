@@ -14,49 +14,43 @@ import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.stats.ShootGamesStats;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by schwab on 26/12/2016.
  */
 public class Target extends Portrait {
 
-    EventHandler<Event> enterEvent;
+    private static final int radius = 100;
 
-    private boolean anniOff = true;
+    private static final int ballRadius = 50;
 
-    private static int radius = 100;
-
-    private static int ballRadius = 50;
-
-    private static int nbBall = 20;
-
-    private final Stats stats;
+    private static final int nbBall = 20;
 
     private final RandomPositionGenerator randomPositionGenerator;
 
-    private final ArrayList<Portrait> portraits = new ArrayList(nbBall);
+    private final Stats stats;
+
+    private final List<Portrait> miniBallsPortraits;
 
     private final Image[] availableImages;
 
-    public Target(Group root, RandomPositionGenerator randomPositionGenerator, ShootGamesStats shoottats,
-            Image[] availableImages) {
+    private final EventHandler<Event> enterEvent;
+
+    private boolean anniOff = true;
+
+    public Target(Group root, RandomPositionGenerator randomPositionGenerator, Stats stats, Image[] availableImages) {
         super(radius, randomPositionGenerator, availableImages);
 
         this.randomPositionGenerator = randomPositionGenerator;
+        this.stats = stats;
         this.availableImages = availableImages;
-        this.stats = shoottats;
 
-        for (int i = 0; i < nbBall; i++) {
-
-            Portrait P = new Portrait(ballRadius, randomPositionGenerator, availableImages);
-            P.setOpacity(0);
-            root.getChildren().add(P);
-            portraits.add(P);
-        }
+        this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, availableImages, nbBall);
+        root.getChildren().addAll(miniBallsPortraits);
 
         enterEvent = buildEvent();
 
@@ -68,6 +62,17 @@ public class Target extends Portrait {
         move();
 
         stats.start();
+    }
+
+    private List<Portrait> generateMiniBallsPortraits(RandomPositionGenerator randomPositionGenerator,
+            Image[] availableImages, int count) {
+        List<Portrait> result = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            Portrait miniPortrait = new Portrait(ballRadius, randomPositionGenerator, availableImages);
+            miniPortrait.setOpacity(0);
+            result.add(miniPortrait);
+        }
+        return result;
     }
 
     private EventHandler<Event> buildEvent() {
@@ -130,7 +135,7 @@ public class Target extends Portrait {
 
         for (int i = 0; i < nbBall; i++) {
 
-            Portrait P = portraits.get(i);
+            Portrait P = miniBallsPortraits.get(i);
 
             timeline2.getKeyFrames()
                     .add(new KeyFrame(new Duration(1), new KeyValue(P.centerXProperty(), getCenterX())));
