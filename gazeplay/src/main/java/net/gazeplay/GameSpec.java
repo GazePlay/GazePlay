@@ -3,6 +3,7 @@ package net.gazeplay;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import lombok.Getter;
 import net.gazeplay.commons.utils.stats.Stats;
 
 public class GameSpec {
@@ -13,17 +14,24 @@ public class GameSpec {
 
     }
 
-    private final String label;
+    @Getter
+    private final String nameCode;
+
+    @Getter
+    private final String variationHint;
 
     private final GameLauncher gameLauncher;
 
-    public GameSpec(String label, GameLauncher gameLauncher) {
-        this.label = label;
+    public GameSpec(String nameCode, String variationHint, GameLauncher gameLauncher) {
+        this.nameCode = nameCode;
+        this.variationHint = variationHint;
         this.gameLauncher = gameLauncher;
     }
 
-    public String getLabel() {
-        return label;
+    public GameSpec(String nameCode, GameLauncher gameLauncher) {
+        this.nameCode = nameCode;
+        this.variationHint = null;
+        this.gameLauncher = gameLauncher;
     }
 
     public Stats launch(Scene scene, Group root, ChoiceBox<String> cbxGames) {

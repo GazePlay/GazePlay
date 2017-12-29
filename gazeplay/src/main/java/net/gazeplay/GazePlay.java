@@ -9,11 +9,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.HomeUtils;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.List;
@@ -87,7 +89,20 @@ public class GazePlay extends Application {
 
         cbxGames = new ChoiceBox<>();
 
-        List<String> gamesLabels = games.stream().map(GameSpec::getLabel).collect(Collectors.toList());
+        Multilinguism multilinguism = Multilinguism.getSingleton();
+
+        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        String language = config.getLanguage();
+
+        List<String> gamesLabels = games.stream()
+                .map(gameSpec -> new Pair<>(gameSpec, multilinguism.getTrad(gameSpec.getNameCode(), language)))
+                .map(pair -> {
+                    String variationHint = pair.getKey().getVariationHint();
+                    if (variationHint == null) {
+                        return pair.getValue();
+                    }
+                    return pair.getValue() + " " + variationHint;
+                }).collect(Collectors.toList());
 
         cbxGames.getItems().addAll(gamesLabels);
 
@@ -113,7 +128,7 @@ public class GazePlay extends Application {
 
         GameSpec selectedGameSpec = games.get(gameIndex);
 
-        log.info(selectedGameSpec.getLabel());
+        log.info(selectedGameSpec.getNameCode() + " " + selectedGameSpec.getVariationHint());
 
         Stats stats = selectedGameSpec.launch(scene, root, cbxGames);
 

@@ -1,9 +1,6 @@
 package net.gazeplay;
 
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.gaze.configuration.Configuration;
-import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
@@ -27,201 +24,175 @@ public class DefaultGamesLocator implements GamesLocator {
     @Override
     public List<GameSpec> listGames() {
 
-        Multilinguism multilinguism = Multilinguism.getSingleton();
-
-        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-        String language = config.getLanguage();
-
         List<GameSpec> result = new ArrayList<>();
 
-        result.add(new GameSpec(multilinguism.getTrad("Creampie", language), (gameSpec, scene, root, cbxGames) -> {
+        result.add(new GameSpec("Creampie", (gameSpec, scene, root, cbxGames) -> {
             CreampieStats stats = new CreampieStats(scene);
             CreamPie.launch(root, scene, stats);
             return stats;
         }));
 
-        result.add(new GameSpec(multilinguism.getTrad("Ninja", language), (gameSpec, scene, root, cbxGames) -> {
+        result.add(new GameSpec("Ninja", (gameSpec, scene, root, cbxGames) -> {
             NinjaStats stats = new NinjaStats(scene);
             Ninja.launch(root, scene, stats);
             return stats;
         }));
 
-        result.add(new GameSpec(multilinguism.getTrad("MagicCards", language) + " (2x2)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    MagicCardsGamesStats stats = new MagicCardsGamesStats(scene);
-                    Card.addCards(root, scene, cbxGames, 2, 2, stats);
-                    return stats;
-                }));
+        result.add(new GameSpec("MagicCards", "(2x2)", (gameSpec, scene, root, cbxGames) -> {
+            MagicCardsGamesStats stats = new MagicCardsGamesStats(scene);
+            Card.addCards(root, scene, cbxGames, 2, 2, stats);
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("MagicCards", language) + " (2x3)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    MagicCardsGamesStats stats = new MagicCardsGamesStats(scene);
-                    Card.addCards(root, scene, cbxGames, 2, 3, stats);
-                    return stats;
-                }));
+        result.add(new GameSpec("MagicCards", "(2x3)", (gameSpec, scene, root, cbxGames) -> {
+            MagicCardsGamesStats stats = new MagicCardsGamesStats(scene);
+            Card.addCards(root, scene, cbxGames, 2, 3, stats);
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("MagicCards", language) + " (3x2)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    MagicCardsGamesStats stats = new MagicCardsGamesStats(scene);
-                    Card.addCards(root, scene, cbxGames, 3, 2, stats);
-                    return stats;
-                }));
+        result.add(new GameSpec("MagicCards", "(3x2)", (gameSpec, scene, root, cbxGames) -> {
+            MagicCardsGamesStats stats = new MagicCardsGamesStats(scene);
+            Card.addCards(root, scene, cbxGames, 3, 2, stats);
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("MagicCards", language) + " (3x3)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    MagicCardsGamesStats stats = new MagicCardsGamesStats(scene);
-                    Card.addCards(root, scene, cbxGames, 3, 3, stats);
-                    return stats;
-                }));
+        result.add(new GameSpec("MagicCards", "(3x3)", (gameSpec, scene, root, cbxGames) -> {
+            MagicCardsGamesStats stats = new MagicCardsGamesStats(scene);
+            Card.addCards(root, scene, cbxGames, 3, 3, stats);
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("Blocks", language) + " (2x2)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    BlocsGamesStats stats = new BlocsGamesStats(scene);
-                    Blocs.makeBlocks(scene, root, cbxGames, 2, 2, true, 1, false, stats);
-                    return stats;
-                }));
+        result.add(new GameSpec("Blocks", "(2x2)", (gameSpec, scene, root, cbxGames) -> {
+            BlocsGamesStats stats = new BlocsGamesStats(scene);
+            Blocs.makeBlocks(scene, root, cbxGames, 2, 2, true, 1, false, stats);
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("Blocks", language) + " (2x3)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    BlocsGamesStats stats = new BlocsGamesStats(scene);
-                    Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1, false, stats);
-                    return stats;
-                }));
+        result.add(new GameSpec("Blocks", "(2x3)", (gameSpec, scene, root, cbxGames) -> {
+            BlocsGamesStats stats = new BlocsGamesStats(scene);
+            Blocs.makeBlocks(scene, root, cbxGames, 2, 3, true, 1, false, stats);
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("Blocks", language) + " (3x3)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    BlocsGamesStats stats = new BlocsGamesStats(scene);
-                    Blocs.makeBlocks(scene, root, cbxGames, 3, 3, true, 1, false, stats);
-                    return stats;
-                }));
+        result.add(new GameSpec("Blocks", "(3x3)", (gameSpec, scene, root, cbxGames) -> {
+            BlocsGamesStats stats = new BlocsGamesStats(scene);
+            Blocs.makeBlocks(scene, root, cbxGames, 3, 3, true, 1, false, stats);
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("ScratchCard", language), (gameSpec, scene, root, cbxGames) -> {
+        result.add(new GameSpec("ScratchCard", (gameSpec, scene, root, cbxGames) -> {
             ScratchcardGamesStats stats = new ScratchcardGamesStats(scene);
             Blocs.makeBlocks(scene, root, cbxGames, 100, 100, false, 0.6f, true, stats);
             return stats;
         }));
 
-        result.add(
-                new GameSpec(multilinguism.getTrad("ColoredBubbles", language), (gameSpec, scene, root, cbxGames) -> {
-                    BubblesGamesStats stats = new BubblesGamesStats(scene);
-                    Bubble bubble = new Bubble(scene, root, Bubble.COLOR, stats, true);
-                    return stats;
-                }));
+        result.add(new GameSpec("ColoredBubbles", (gameSpec, scene, root, cbxGames) -> {
+            BubblesGamesStats stats = new BubblesGamesStats(scene);
+            Bubble bubble = new Bubble(scene, root, Bubble.COLOR, stats, true);
+            return stats;
+        }));
 
-        result.add(
-                new GameSpec(multilinguism.getTrad("PortraitBubbles", language), (gameSpec, scene, root, cbxGames) -> {
-                    BubblesGamesStats stats = new BubblesGamesStats(scene);
-                    Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT, stats, false);
-                    return stats;
-                }));
+        result.add(new GameSpec("PortraitBubbles", (gameSpec, scene, root, cbxGames) -> {
+            BubblesGamesStats stats = new BubblesGamesStats(scene);
+            Bubble bubble = new Bubble(scene, root, Bubble.PORTRAIT, stats, false);
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsTheAnimal", language) + " (2x2)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 2, false, root,
-                            scene, cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsTheAnimal", "(2x2)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 2, false, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsTheAnimal", language) + " (2x3)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 3, false, root,
-                            scene, cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsTheAnimal", "(2x3)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 3, false, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsTheAnimal", language) + " (3x2)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 2, true, root, scene,
-                            cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsTheAnimal", "(3x2)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 2, true, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsTheAnimal", language) + " (3x3)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 3, false, root,
-                            scene, cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsTheAnimal", "(3x3)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 3, false, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsTheColor", language) + " (2x2)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 2, false, root, scene,
-                            cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsTheColor", "(2x2)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 2, false, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsTheColor", language) + " (2x3)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 3, false, root, scene,
-                            cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsTheColor", "(2x3)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 3, false, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsTheColor", language) + " (3x2)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 2, false, root, scene,
-                            cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsTheColor", "(3x2)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 2, false, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsTheColor", language) + " (3x3)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 3, false, root, scene,
-                            cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsTheColor", "(3x3)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 3, false, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsIt", language) + " (2x2)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 2, false, root,
-                            scene, cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsIt", "(2x2)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 2, false, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsIt", language) + " (2x3)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 3, false, root,
-                            scene, cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsIt", "(2x3)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 3, false, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsIt", language) + " (3x2)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 3, 2, false, root,
-                            scene, cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsIt", "(3x2)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 3, 2, false, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
-        result.add(new GameSpec(multilinguism.getTrad("WhereIsIt", language) + " (3x3)",
-                (gameSpec, scene, root, cbxGames) -> {
-                    WhereIsItStats stats = new WhereIsItStats(scene);
-                    WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 3, false, root, scene,
-                            cbxGames, stats);
-                    whereIsIt.buildGame();
-                    return stats;
-                }));
+        result.add(new GameSpec("WhereIsIt", "(3x3)", (gameSpec, scene, root, cbxGames) -> {
+            WhereIsItStats stats = new WhereIsItStats(scene);
+            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 3, false, root, scene,
+                    cbxGames, stats);
+            whereIsIt.buildGame();
+            return stats;
+        }));
 
         log.info("Games found : " + result.size());
 
