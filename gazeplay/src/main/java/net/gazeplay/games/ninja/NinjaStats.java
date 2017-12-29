@@ -10,9 +10,4 @@ public class NinjaStats extends ShootGamesStats {
         this.gameName = "ninja";
     }
 
-    @Override
-    public void saveStats() {
-        super.saveStats();
-    }
-
 }

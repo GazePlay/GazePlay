@@ -10,9 +10,4 @@ public class CreampieStats extends ShootGamesStats {
         this.gameName = "creampie";
     }
 
-    @Override
-    public void saveStats() {
-        super.saveStats();
-    }
-
 }
