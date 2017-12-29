@@ -1,20 +1,22 @@
 package net.gazeplay.games.ninja;
 
-import net.gazeplay.commons.gaze.GazeEvent;
-import net.gazeplay.commons.gaze.GazeUtils;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Screen;
-import net.gazeplay.commons.utils.Portrait;
 import javafx.util.Duration;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
+import net.gazeplay.commons.utils.Portrait;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.ArrayList;
 
@@ -33,19 +35,24 @@ public class Target extends Portrait {
 
     private static int nbBall = 20;
 
-    private Stats stats;
+    private final Stats stats;
 
-    private ArrayList<Portrait> portraits = new ArrayList(nbBall);
+    private final Scene scene;
 
-    public Target(Group root, ShootGamesStats shoottats) {
+    private final ArrayList<Portrait> portraits = new ArrayList(nbBall);
 
-        super(radius);
+    private final Image[] availableImages;
 
-        stats = shoottats;
+    public Target(Group root, Scene scene, ShootGamesStats shoottats, Image[] availableImages) {
+        super(radius, scene, availableImages);
+
+        this.scene = scene;
+        this.availableImages = availableImages;
+        this.stats = shoottats;
 
         for (int i = 0; i < nbBall; i++) {
 
-            Portrait P = new Portrait(ballRadius);
+            Portrait P = new Portrait(ballRadius, scene, availableImages);
             P.setOpacity(0);
             root.getChildren().add(P);
             portraits.add(P);
@@ -84,8 +91,13 @@ public class Target extends Portrait {
 
         Timeline timeline = new Timeline();
         int length = (int) (2000 * Math.random()) + 1000;// between 1 and 3 seconds
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(centerXProperty(), newX())));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(centerYProperty(), newY())));
+
+        Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius(), scene);
+
+        timeline.getKeyFrames()
+                .add(new KeyFrame(new Duration(length), new KeyValue(centerXProperty(), newPosition.getX())));
+        timeline.getKeyFrames()
+                .add(new KeyFrame(new Duration(length), new KeyValue(centerYProperty(), newPosition.getY())));
 
         timeline.play();
 
@@ -136,10 +148,15 @@ public class Target extends Portrait {
         }
 
         timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(radiusProperty(), radius)));
-        timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(centerXProperty(), newX())));
-        timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(centerYProperty(), newY())));
+
+        Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius(), scene);
+
+        timeline3.getKeyFrames()
+                .add(new KeyFrame(new Duration(1000), new KeyValue(centerXProperty(), newPosition.getX())));
+        timeline3.getKeyFrames()
+                .add(new KeyFrame(new Duration(1000), new KeyValue(centerYProperty(), newPosition.getY())));
         timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                new KeyValue(fillProperty(), new ImagePattern(newPhoto(), 0, 0, 1, 1, true))));
+                new KeyValue(fillProperty(), new ImagePattern(pickRandomImage(availableImages), 0, 0, 1, 1, true))));
         timeline4.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(opacityProperty(), 1)));
 
         SequentialTransition sequence = new SequentialTransition(timeline, timeline2, timeline3, timeline4);

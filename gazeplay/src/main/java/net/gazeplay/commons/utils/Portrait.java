@@ -1,9 +1,13 @@
 package net.gazeplay.commons.utils;
 
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
+import lombok.Data;
+import lombok.Getter;
 import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.Random;
@@ -13,46 +17,64 @@ import java.util.Random;
  */
 public class Portrait extends Circle {
 
-    // protected static final int maxX = 1000;
-    // protected static final int maxY = 500;
-
-    protected int radius = initRadius;
-
-    protected static final int initRadius = 100;
-
-    protected static final double maxX = Screen.getPrimary().getBounds().getMaxX() - 2 * initRadius;
-    protected static final double maxY = Screen.getPrimary().getBounds().getMaxY() - 2 * initRadius;
-
-    private static Image[] photos;
-
-    public Portrait(int radius) {
-
-        super(radius);
-        this.setPosition(newX(), newY());
-        this.radius = radius;
-        photos = Utils.images(Utils.getImagesFolder() + "portraits");
-        setFill(new ImagePattern(newPhoto(), 0, 0, 1, 1, true));
+    public static Image[] loadAllImages() {
+        return Utils.images(Utils.getImagesFolder() + "portraits");
     }
 
-    public void setPosition(double X, double Y) {
+    protected static final RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator();
 
-        this.setCenterX(X);
-        this.setCenterY(Y);
+    @Getter
+    private final int initialRadius;
+
+    public Portrait(int initialRadius, Scene scene, Image[] availableImages) {
+        super(initialRadius);
+        this.initialRadius = initialRadius;
+
+        this.setPosition(randomPositionGenerator.newRandomPosition(initialRadius, scene));
+
+        setFill(new ImagePattern(pickRandomImage(availableImages), 0, 0, 1, 1, true));
     }
 
-    protected Image newPhoto() {
+    public void setPosition(Position position) {
+        this.setCenterX(position.getX());
+        this.setCenterY(position.getY());
+    }
 
-        return photos[((int) (photos.length * Math.random()))];
+    protected Image pickRandomImage(Image[] availableImages) {
+        int count = availableImages.length;
+        int index = (int) (count * Math.random());
+        return availableImages[index];
+    }
+
+    @Data
+    public static class Position {
+        private final int x;
+        private final int y;
+    }
+
+    public static class RandomPositionGenerator {
+
+        private static final int initRadius = 100;
+
+        private static Rectangle2D getScreenBounds() {
+            return Screen.getPrimary().getBounds();
+        }
+
+        private static Rectangle2D getSceneBounds(Scene scene) {
+            return new Rectangle2D(0, 0, scene.getWidth(), scene.getHeight());
+        }
+
+        private final Random random = new Random();
+
+        public Position newRandomPosition(double radius, Scene scene) {
+            Rectangle2D bounds = getSceneBounds(scene);
+            double maxX = bounds.getMaxX() - 2 * initRadius;
+            double maxY = bounds.getMaxY() - 2 * initRadius;
+            double positionX = random.nextInt((int) maxX) + radius;
+            double positionY = random.nextInt((int) maxY) + radius;
+            return new Position((int) positionX, (int) positionY);
+        }
 
     }
 
-    protected int newX() {
-
-        return new Random().nextInt((int) maxX) + radius;
-    }
-
-    protected int newY() {
-
-        return new Random().nextInt((int) maxY) * 2 / 3 + radius;
-    }
 }
