@@ -1,19 +1,24 @@
 package net.gazeplay;
 
+import com.sun.glass.ui.Screen;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Pair;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.HomeUtils;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.List;
@@ -25,43 +30,53 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GazePlay extends Application {
 
-    private static Scene scene;
-    private static Group root;
+    @Getter
+    private static GazePlay instance;
 
-    private static ChoiceBox<String> cbxGames;
+    @Getter
+    private Scene scene;
 
-    private static List<GameSpec> games;
+    @Getter
+    private Group root;
 
-    private static GamesLocator gamesLocator;
+    @Getter
+    private ChoiceBox<String> cbxGames;
+
+    private List<GameSpec> games;
+    private GamesLocator gamesLocator;
+
+    public GazePlay() {
+        instance = this;
+    }
 
     @Override
     public void start(Stage primaryStage) {
-
         primaryStage.setTitle("GazePlay");
-
         primaryStage.setFullScreen(true);
 
         root = new Group();
 
-        scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(),
-                com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        log.info(String.format("Screen size: %3d X %3d", com.sun.glass.ui.Screen.getScreens().get(0).getWidth(),
-                com.sun.glass.ui.Screen.getScreens().get(0).getHeight()));
+        final Screen screen = Screen.getScreens().get(0);
+        log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
+
+        scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
+
+        ObservableList<String> stylesheets = scene.getStylesheets();
+        stylesheets.add(config.getCssfile());
+        Utils.addStylesheets(stylesheets);
+        log.info(stylesheets.toString());
 
         // end of System information
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++) {
             log.info("***********************");
+        }
 
-        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        gamesLocator = new DefaultGamesLocator();
+        games = gamesLocator.listGames();
 
-        scene.getStylesheets().add(config.getCssfile());
-
-        Utils.addStylesheets(scene.getStylesheets());
-
-        log.info(scene.getStylesheets().toString());
-
-        updateGames();
+        cbxGames = createChoiceBox(games, config);
 
         HomeUtils.goHome(scene, root, cbxGames);
 
@@ -74,38 +89,52 @@ public class GazePlay extends Application {
         // SecondScreen secondScreen = SecondScreen.launch();
     }
 
+    public void onLanguageChanged() {
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+        final List<String> gamesLabels = generateTranslatedGamesNames(games, config);
+
+        this.cbxGames.getItems().clear();
+        this.cbxGames.getItems().addAll(gamesLabels);
+    }
+
     /**
      * This command is called when games have to be updated (example: when language changed)
-     *
      */
 
-    public static ChoiceBox updateGames() {
+    private ChoiceBox createChoiceBox(List<GameSpec> games, Configuration config) {
+        List<String> gamesLabels = generateTranslatedGamesNames(games, config);
 
-        gamesLocator = new DefaultGamesLocator();
-
-        games = gamesLocator.listGames();
-
-        cbxGames = new ChoiceBox<>();
-
-        List<String> gamesLabels = games.stream().map(GameSpec::getLabel).collect(Collectors.toList());
-
+        ChoiceBox<String> cbxGames = new ChoiceBox<>();
         cbxGames.getItems().addAll(gamesLabels);
-
         cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-
                 chooseGame(newValue.intValue());
             }
         });
-
         return cbxGames;
     }
 
-    private static void chooseGame(int gameIndex) {
-        HomeUtils.clear(scene, root, cbxGames);
+    private List<String> generateTranslatedGamesNames(List<GameSpec> games, Configuration config) {
+        final String language = config.getLanguage();
+        final Multilinguism multilinguism = Multilinguism.getSingleton();
 
+        return games.stream()
+                .map(gameSpec -> new Pair<>(gameSpec, multilinguism.getTrad(gameSpec.getNameCode(), language)))
+                .map(pair -> {
+                    String variationHint = pair.getKey().getVariationHint();
+                    if (variationHint == null) {
+                        return pair.getValue();
+                    }
+                    return pair.getValue() + " " + variationHint;
+                }).collect(Collectors.toList());
+    }
+
+    private void chooseGame(int gameIndex) {
         log.info("Game number: " + gameIndex);
+
+        HomeUtils.clear(scene, root, cbxGames);
 
         if (gameIndex == -1) {
             return;
@@ -113,9 +142,9 @@ public class GazePlay extends Application {
 
         GameSpec selectedGameSpec = games.get(gameIndex);
 
-        log.info(selectedGameSpec.getLabel());
+        log.info(selectedGameSpec.getNameCode() + " " + selectedGameSpec.getVariationHint());
 
-        Stats stats = selectedGameSpec.launch(scene, root, cbxGames);
+        final Stats stats = selectedGameSpec.launch(scene, root, cbxGames);
 
         HomeUtils.home(scene, root, cbxGames, stats);
     }

@@ -1,55 +1,61 @@
 package net.gazeplay.games.ninja;
 
-import net.gazeplay.commons.gaze.GazeEvent;
-import net.gazeplay.commons.gaze.GazeUtils;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
-import javafx.stage.Screen;
-import net.gazeplay.commons.utils.Portrait;
 import javafx.util.Duration;
-import net.gazeplay.commons.utils.stats.ShootGamesStats;
+import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
+import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.commons.utils.games.Utils;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by schwab on 26/12/2016.
  */
+@Slf4j
 public class Target extends Portrait {
 
-    EventHandler<Event> enterEvent;
+    private static final int radius = 100;
 
-    private boolean anniOff = true;
+    private static final int ballRadius = 50;
 
-    private static int radius = 100;
+    private static final int nbBall = 20;
 
-    private static int ballRadius = 50;
+    private final RandomPositionGenerator randomPositionGenerator;
 
-    private static int nbBall = 20;
+    private final Stats stats;
 
-    private Stats stats;
+    private final List<Portrait> miniBallsPortraits;
 
-    private ArrayList<Portrait> portraits = new ArrayList(nbBall);
+    private final Image[] availableImages;
 
-    public Target(Group root, ShootGamesStats shoottats) {
+    private final EventHandler<Event> enterEvent;
 
-        super(radius);
+    private static final String audioClipResourceLocation = "data/ninja/sounds/2009.wav";
 
-        stats = shoottats;
+    private boolean animationStopped = true;
 
-        for (int i = 0; i < nbBall; i++) {
+    private TranslateTransition currentTranslation;
 
-            Portrait P = new Portrait(ballRadius);
-            P.setOpacity(0);
-            root.getChildren().add(P);
-            portraits.add(P);
-        }
+    public Target(Group root, RandomPositionGenerator randomPositionGenerator, Stats stats, Image[] availableImages) {
+        super(radius, randomPositionGenerator, availableImages);
+
+        this.randomPositionGenerator = randomPositionGenerator;
+        this.stats = stats;
+        this.availableImages = availableImages;
+
+        this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, availableImages, nbBall);
+        root.getChildren().addAll(miniBallsPortraits);
 
         enterEvent = buildEvent();
 
@@ -63,6 +69,25 @@ public class Target extends Portrait {
         stats.start();
     }
 
+    private void playHitSound() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        URL soundResourceUrl = classLoader.getResource(audioClipResourceLocation);
+        javafx.scene.media.AudioClip soundClip = new javafx.scene.media.AudioClip(soundResourceUrl.toExternalForm());
+        soundClip.play();
+    }
+
+    private List<Portrait> generateMiniBallsPortraits(RandomPositionGenerator randomPositionGenerator,
+            Image[] availableImages, int count) {
+        List<Portrait> result = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            Portrait miniPortrait = new Portrait(ballRadius, randomPositionGenerator, availableImages);
+            miniPortrait.setOpacity(1);
+            miniPortrait.setVisible(false);
+            result.add(miniPortrait);
+        }
+        return result;
+    }
+
     private EventHandler<Event> buildEvent() {
 
         return e -> {
@@ -71,92 +96,160 @@ public class Target extends Portrait {
             // e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED ||
             // e.getEventType() == GazeEvent.GAZE_MOVED) && anniOff) {
 
-            if (anniOff
+            if (animationStopped
                     && (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
 
-                anniOff = false;
-                enter();
+                animationStopped = false;
+                enter(e);
             }
         };
     }
 
     private void move() {
+        final int length = (int) (2000 * Math.random()) + 1000;// between 1 and 3 seconds
 
-        Timeline timeline = new Timeline();
-        int length = (int) (2000 * Math.random()) + 1000;// between 1 and 3 seconds
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(centerXProperty(), newX())));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(length), new KeyValue(centerYProperty(), newY())));
+        final Position currentPosition = new Position((int) getCenterX(), (int) getCenterY());
+        final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
+        log.info("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
 
-        timeline.play();
-
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
-
+        TranslateTransition translation = new TranslateTransition(new Duration(length), this);
+        translation.setByX(-this.getCenterX() + newPosition.getX());
+        translation.setByY(-this.getCenterY() + newPosition.getY());
+        translation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+
+                Target.this.setScaleX(1);
+                Target.this.setScaleY(1);
+                Target.this.setScaleZ(1);
+
+                Target.this.setPosition(newPosition);
+
+                Target.this.setTranslateX(0);
+                Target.this.setTranslateY(0);
+                Target.this.setTranslateZ(0);
 
                 move();
             }
         });
 
+        currentTranslation = translation;
+        translation.play();
     }
 
-    private void enter() {
+    public Position getPointerPosition(Event e) {
+        double mousePositionX = 0;
+        double mousePositionY = 0;
+        if (e instanceof MouseEvent) {
+            MouseEvent mouseEvent = (MouseEvent) e;
+            mousePositionX = mouseEvent.getX();
+            mousePositionY = mouseEvent.getY();
+        }
+        if (e instanceof GazeEvent) {
+            GazeEvent gazeEvent = (GazeEvent) e;
+            mousePositionX = gazeEvent.getX();
+            mousePositionY = gazeEvent.getY();
+        }
+        return new Position((int) mousePositionX, (int) mousePositionY);
+    }
+
+    private void enter(Event e) {
 
         stats.incNbGoals();
 
-        // this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
-
-        Timeline timeline = new Timeline();
-        Timeline timeline2 = new Timeline();
-        Timeline timeline3 = new Timeline();
-        Timeline timeline4 = new Timeline();
-
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(radiusProperty(), ballRadius)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(opacityProperty(), 0.5)));
-
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(opacityProperty(), 0)));
-
-        for (int i = 0; i < nbBall; i++) {
-
-            Portrait P = portraits.get(i);
-
-            timeline2.getKeyFrames()
-                    .add(new KeyFrame(new Duration(1), new KeyValue(P.centerXProperty(), getCenterX())));
-            timeline2.getKeyFrames()
-                    .add(new KeyFrame(new Duration(1), new KeyValue(P.centerYProperty(), getCenterY())));
-            timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(P.opacityProperty(), 1)));
-
-            double XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
-            double YendValue = Math.random() * Screen.getPrimary().getBounds().getHeight();
-            timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                    new KeyValue(P.centerYProperty(), YendValue, Interpolator.EASE_OUT)));
-            timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                    new KeyValue(P.centerXProperty(), XendValue, Interpolator.EASE_OUT)));
-            timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(P.opacityProperty(), 0)));
+        Transition runningTranslation = currentTranslation;
+        if (runningTranslation != null) {
+            runningTranslation.stop();
         }
 
-        timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(radiusProperty(), radius)));
-        timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(centerXProperty(), newX())));
-        timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(centerYProperty(), newY())));
-        timeline3.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                new KeyValue(fillProperty(), new ImagePattern(newPhoto(), 0, 0, 1, 1, true))));
-        timeline4.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(opacityProperty(), 1)));
+        // this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
-        SequentialTransition sequence = new SequentialTransition(timeline, timeline2, timeline3, timeline4);
+        Transition transition1 = createTransition1();
 
-        sequence.play();
+        Transition transition2 = createTransition2();
+
+        Timeline childrenTimelineStart = new Timeline();
+        Timeline childrenTimelineEnd = new Timeline();
+
+        Position currentPositionWithTranslation = getCurrentPositionWithTranslation();
+
+        Position pointerPosition = getPointerPosition(e);
+        log.info("pointerPosition = {}, currentPositionWithTranslation = {}", pointerPosition,
+                currentPositionWithTranslation);
+
+        for (Portrait childMiniBall : miniBallsPortraits) {
+            childMiniBall.setPosition(currentPositionWithTranslation);
+            childMiniBall.setOpacity(1);
+            childMiniBall.setVisible(true);
+
+            Position childBallTargetPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
+
+            childrenTimelineEnd.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.centerXProperty(),
+                            childBallTargetPosition.getX(), Interpolator.EASE_OUT)));
+
+            childrenTimelineEnd.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.centerYProperty(),
+                            childBallTargetPosition.getY(), Interpolator.EASE_OUT)));
+
+            childrenTimelineEnd.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.opacityProperty(), 0)));
+        }
+
+        Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
+
+        Timeline selfTimeLine = new Timeline();
+
+        selfTimeLine.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(radiusProperty(), radius)));
+
+        selfTimeLine.getKeyFrames()
+                .add(new KeyFrame(new Duration(1000), new KeyValue(centerXProperty(), newPosition.getX())));
+
+        selfTimeLine.getKeyFrames()
+                .add(new KeyFrame(new Duration(1000), new KeyValue(centerYProperty(), newPosition.getY())));
+
+        selfTimeLine.getKeyFrames().add(new KeyFrame(new Duration(1000),
+                new KeyValue(fillProperty(), new ImagePattern(pickRandomImage(availableImages), 0, 0, 1, 1, true))));
+
+        Transition transition4 = createTransition4();
+
+        SequentialTransition sequence = new SequentialTransition(transition1, transition2, childrenTimelineStart,
+                childrenTimelineEnd, selfTimeLine, transition4);
 
         sequence.setOnFinished(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent actionEvent) {
-
-                anniOff = true;
-
+                animationStopped = true;
                 stats.start();
+                move();
             }
         });
 
-        Utils.playSound("data/ninja/sounds/2009.wav");
+        sequence.play();
+
+        playHitSound();
+
+    }
+
+    private Transition createTransition1() {
+        FadeTransition fadeTransition = new FadeTransition(new Duration(1), this);
+        fadeTransition.setToValue(0.5);
+
+        Timeline timeline1 = new Timeline();
+        timeline1.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(radiusProperty(), ballRadius)));
+        return new ParallelTransition(fadeTransition, timeline1);
+    }
+
+    private Transition createTransition2() {
+        FadeTransition fadeTransition = new FadeTransition(new Duration(1), this);
+        fadeTransition.setToValue(0);
+        return fadeTransition;
+    }
+
+    private Transition createTransition4() {
+        FadeTransition fadeTransition = new FadeTransition(new Duration(1), this);
+        fadeTransition.setToValue(1);
+        return fadeTransition;
     }
 }

@@ -4,13 +4,14 @@ package net.gazeplay.games.creampie;
  * Created by schwab on 12/08/2016.
  */
 
-import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.gazeplay.commons.gaze.SecondScreen;
+import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -45,11 +46,13 @@ public class CreamPie extends Application {
         SecondScreen.launch();
     }
 
-    public static void launch(Group root, javafx.scene.Scene scene, ShootGamesStats stats) {
+    public static void launch(Group root, Scene scene, ShootGamesStats stats) {
 
         Hand hand = new Hand(scene);
 
-        Target portrait = new Target(hand, stats);
+        Portrait.RandomPositionGenerator randomPositionGenerator = new Portrait.RandomPositionGenerator(scene);
+
+        Target portrait = new Target(randomPositionGenerator, hand, stats, Portrait.loadAllImages());
 
         root.getChildren().add(portrait);
 

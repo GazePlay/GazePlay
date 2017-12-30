@@ -353,21 +353,16 @@ public class ConfigurationDisplay extends Rectangle {
 
     private static void buildLanguageMenu(Configuration configuration, Scene scene, Group root, ChoiceBox cbxGames,
             double posX, double posY) {
-        ChoiceBox languageBox = new ChoiceBox();
-        Languages[] TLanguages = Languages.values();
 
-        int firstPos = 1;
-
-        for (int i = 0; i < TLanguages.length; i++) {
-
-            languageBox.getItems().add(TLanguages[i]);
-            if (TLanguages[i].toString().equals(configuration.getLanguage())) {
-
-                firstPos = i;
-            }
+        Languages currentLanguage = null;
+        if (configuration.getLanguage() != null) {
+            currentLanguage = Languages.valueOf(configuration.getLanguage());
         }
 
-        languageBox.getSelectionModel().select(firstPos);
+        ChoiceBox<Languages> languageBox = new ChoiceBox<>();
+        languageBox.getItems().addAll(Languages.values());
+        languageBox.getSelectionModel().select(currentLanguage);
+
         languageBox.setTranslateX(posX);
         languageBox.setTranslateY(posY);
         languageBox.setPrefWidth(prefWidth);
@@ -375,16 +370,17 @@ public class ConfigurationDisplay extends Rectangle {
 
         root.getChildren().add(languageBox);
 
-        languageBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+        languageBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Languages>() {
             @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            public void changed(ObservableValue<? extends Languages> observable, Languages oldValue,
+                    Languages newValue) {
 
-                final String newPropertyValue = TLanguages[newValue.intValue()].toString();
-
-                ConfigurationBuilder.createFromPropertiesResource().withLanguage(newPropertyValue)
+                ConfigurationBuilder.createFromPropertiesResource().withLanguage(newValue.name())
                         .saveConfigIgnoringExceptions();
 
-                buildConfig(scene, root, GazePlay.updateGames());// game names change following the language
+                GazePlay.getInstance().onLanguageChanged();
+
+                buildConfig(scene, root, cbxGames);// game names change following the language
             }
         });
     }

@@ -125,7 +125,7 @@ public class Utils {
 
     public static Image[] images(String folder) {
 
-        log.debug("Try to find images in folder : " + folder);
+        log.info("Try to find images in folder : " + folder);
 
         if ((new File(folder)).exists()) {
 
