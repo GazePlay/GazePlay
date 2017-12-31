@@ -18,9 +18,9 @@ import java.util.ArrayList;
 @Slf4j
 public class GazeUtils {
 
-    static ArrayList<GazeInfos> nodesEventFilter = new ArrayList<GazeInfos>(100);
+    static ArrayList<GazeInfos> nodesEventFilter = new ArrayList<>(100);
 
-    static ArrayList<GazeInfos> nodesEventHandler = new ArrayList<GazeInfos>(100);
+    static ArrayList<GazeInfos> nodesEventHandler = new ArrayList<>(100);
 
     static final GazeManager gm = GazeManager.getInstance();
     static boolean success = gm.activate();
@@ -105,6 +105,18 @@ public class GazeUtils {
 
             nodesEventHandler.remove(i);
         }
+    }
+
+    /**
+     *
+     * Clear all Nodes in both EventFilter and EventHandler. There is no more gaze event after this function is called
+     *
+     */
+    public static void clear(){
+
+        nodesEventFilter.clear();
+
+        nodesEventHandler.clear();
     }
 
     public static boolean isOn() {
