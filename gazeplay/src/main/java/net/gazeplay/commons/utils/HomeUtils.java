@@ -1,5 +1,6 @@
 package net.gazeplay.commons.utils;
 
+import com.sun.glass.ui.Screen;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -13,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GazePlay;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.Utils;
@@ -65,7 +67,7 @@ public class HomeUtils {
 
     public static void goHome(Scene scene, Group root, ChoiceBox<String> cbxGames) {
 
-        clear(scene, root, cbxGames);
+        clear(root, cbxGames);
 
         if (cbxGames != null) {
             cbxGames.getSelectionModel().clearSelection();
@@ -78,16 +80,22 @@ public class HomeUtils {
         }
     }
 
-    public static void clear(Scene scene, Group root, ChoiceBox<String> cbxGames) {
-        scene.setFill(Color.BLACK);
+    public static void clear(Group root, ChoiceBox<String> cbxGames) {
 
-        // remove all children
         root.getChildren().clear();
+
+        log.info("Nodes not removed: {}", root.getChildren().size());
+
+        for (Node N : root.getChildren()) {
+
+            log.info("I have to move: {}", N);
+
+            N.setTranslateX(-10000);
+        }
 
         Bravo bravo = Bravo.getBravo();
         bravo.setVisible(false);
         root.getChildren().add(bravo);
-
     }
 
     public static void addButtons(Scene scene, Group root, ChoiceBox<String> cbxGames) {

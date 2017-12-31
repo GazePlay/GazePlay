@@ -187,7 +187,7 @@ public class Card extends Parent {
 
                                             @Override
                                             public void handle(ActionEvent actionEvent) {
-                                                HomeUtils.clear(scene, root, choiceBox);
+                                                HomeUtils.clear(root, choiceBox);
                                                 Card.addCards(root, scene, choiceBox, nbLines, nbColumns, stats);
                                                 HomeUtils.home(scene, root, choiceBox, stats);
                                                 stats.start();

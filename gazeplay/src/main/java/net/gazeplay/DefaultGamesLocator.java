@@ -194,7 +194,7 @@ public class DefaultGamesLocator implements GamesLocator {
             return stats;
         }));
 
-        log.info("Games found : " + result.size());
+        log.info("Games found : {}", result.size());
 
         return result;
     }

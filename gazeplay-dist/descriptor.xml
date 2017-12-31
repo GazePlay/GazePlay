@@ -45,14 +45,12 @@
     </fileSets>
     <dependencySets>
         <dependencySet>
+            <includes>
+                <include>com.github.schwabdidier:gazeplay-dlls:jar</include>
+            </includes>
             <outputDirectory>/lib</outputDirectory>
             <unpack>false</unpack>
             <useProjectArtifact>false</useProjectArtifact>
-            <!--
-            <excludes>
-                <exclude>com.github.schwabdidier:gazeplay-data:jar</exclude>
-            </excludes>
-            -->
         </dependencySet>
         <dependencySet>
             <outputDirectory>/</outputDirectory>

@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
@@ -34,9 +35,11 @@ public class GazePlay extends Application {
     private static GazePlay instance;
 
     @Getter
+    @Setter
     private Scene scene;
 
     @Getter
+    @Setter
     private Group root;
 
     @Getter
@@ -134,7 +137,7 @@ public class GazePlay extends Application {
     private void chooseGame(int gameIndex) {
         log.info("Game number: " + gameIndex);
 
-        HomeUtils.clear(scene, root, cbxGames);
+        HomeUtils.clear(root, cbxGames);
 
         if (gameIndex == -1) {
             return;

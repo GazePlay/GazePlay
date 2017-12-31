@@ -88,7 +88,7 @@ public class ConfigurationDisplay extends Rectangle {
             colon = " : ";
 
         log.info("ConfigurationDisplay");
-        HomeUtils.clear(scene, root, cbxGames);
+        HomeUtils.clear(root, cbxGames);
         HomeUtils.home(scene, root, cbxGames, null);
 
         log.info(config.toString());
