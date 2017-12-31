@@ -32,7 +32,7 @@ public class StatsDisplay {
 
         stats.stop();
 
-        HomeUtils.clear(root, cbxGames);
+        HomeUtils.clear();
 
         // to add or not a space before colon (:) according to the language
         String colon = multilinguism.getTrad("Colon", config.getLanguage());

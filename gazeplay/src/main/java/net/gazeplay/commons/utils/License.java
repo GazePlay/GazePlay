@@ -38,7 +38,7 @@ public class License extends Rectangle {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    HomeUtils.clear(root, cbxGames);
+                    HomeUtils.clear();
 
                     root.getChildren().add(licence(width, height));
 

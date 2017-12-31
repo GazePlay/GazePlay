@@ -67,7 +67,7 @@ public class HomeUtils {
 
     public static void goHome(Scene scene, Group root, ChoiceBox<String> cbxGames) {
 
-        clear(root, cbxGames);
+        clear();
 
         if (cbxGames != null) {
             cbxGames.getSelectionModel().clearSelection();
@@ -80,7 +80,13 @@ public class HomeUtils {
         }
     }
 
-    public static void clear(Group root, ChoiceBox<String> cbxGames) {
+    public static void clear() {
+
+        Scene scene = GazePlay.getInstance().getScene();
+
+        scene.setFill(Color.BLACK);
+
+        Group root = GazePlay.getInstance().getRoot();
 
         root.getChildren().clear();
 

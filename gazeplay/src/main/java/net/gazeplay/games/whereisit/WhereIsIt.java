@@ -227,7 +227,7 @@ public class WhereIsIt {
 
     private void error(String language) {
 
-        HomeUtils.clear(group, choiceBox);
+        HomeUtils.clear();
         HomeUtils.home(scene, group, choiceBox, null);
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
@@ -525,7 +525,7 @@ public class WhereIsIt {
                         @Override
                         public void handle(ActionEvent actionEvent) {
 
-                            HomeUtils.clear(gameInstance.group, gameInstance.choiceBox);
+                            HomeUtils.clear();
                             gameInstance.dispose();
                             gameInstance.buildGame();
                             HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,

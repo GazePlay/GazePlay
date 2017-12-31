@@ -35,11 +35,9 @@ public class GazePlay extends Application {
     private static GazePlay instance;
 
     @Getter
-    @Setter
     private Scene scene;
 
     @Getter
-    @Setter
     private Group root;
 
     @Getter
@@ -137,7 +135,7 @@ public class GazePlay extends Application {
     private void chooseGame(int gameIndex) {
         log.info("Game number: " + gameIndex);
 
-        HomeUtils.clear(root, cbxGames);
+        HomeUtils.clear();
 
         if (gameIndex == -1) {
             return;
