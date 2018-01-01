@@ -78,7 +78,7 @@ public class WhereIsIt {
     private RoundDetails currentRoundDetails;
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
-                     final Group group, final Scene scene, final ChoiceBox choiceBox, final WhereIsItStats stats) {
+            final Group group, final Scene scene, final ChoiceBox choiceBox, final WhereIsItStats stats) {
         this.group = group;
         this.scene = scene;
         this.choiceBox = choiceBox;
@@ -130,9 +130,9 @@ public class WhereIsIt {
 
         Rectangle2D bounds = screen.getBounds();
 
-        double X = (bounds.getWidth()/2 - Question.getBoundsInParent().getWidth());
+        double X = (bounds.getWidth() / 2 - Question.getBoundsInParent().getWidth());
 
-        double Y = bounds.getHeight()/2;
+        double Y = bounds.getHeight() / 2;
 
         Question.setX(X);
 
@@ -144,8 +144,7 @@ public class WhereIsIt {
 
         group.getChildren().addAll(Question);
 
-        TranslateTransition fullAnimation = new TranslateTransition(
-                Duration.millis(2000), Question);
+        TranslateTransition fullAnimation = new TranslateTransition(Duration.millis(2000), Question);
 
         fullAnimation.play();
 
@@ -201,8 +200,8 @@ public class WhereIsIt {
     }
 
     private RoundDetails pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
-                                                    final int numberOfImagesToDisplayPerRound, final Random random,
-                                                    final int winnerImageIndexAmongDisplayedImages) {
+            final int numberOfImagesToDisplayPerRound, final Random random,
+            final int winnerImageIndexAmongDisplayedImages) {
 
         final File imagesDirectory = locateImagesDirectory(config);
         final String language = config.getLanguage();
@@ -429,12 +428,12 @@ public class WhereIsIt {
 
     public String getQuestion(final String folder, String language) {
 
-        log.info("folder: {}",folder);
-        log.info("language: {}",language);
+        log.info("folder: {}", folder);
+        log.info("language: {}", language);
 
         if (this.gameType == CUSTOMIZED) {
 
-                return null;
+            return null;
         }
 
         if (language.equals("deu")) {
@@ -442,7 +441,8 @@ public class WhereIsIt {
             language = "eng";
         }
 
-        String path = "data/" + this.gameType.getResourcesDirectoryName() + "/" + this.gameType.getResourcesDirectoryName()+ ".csv";
+        String path = "data/" + this.gameType.getResourcesDirectoryName() + "/"
+                + this.gameType.getResourcesDirectoryName() + ".csv";
 
         LocalMultilinguism LM = new LocalMultilinguism(path);
 
@@ -483,8 +483,8 @@ public class WhereIsIt {
         private final WhereIsIt gameInstance;
 
         public PictureCard(double posX, double posY, double width, double height, @NonNull Group root,
-                           @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats,
-                           WhereIsIt gameInstance) {
+                @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats,
+                WhereIsIt gameInstance) {
 
             log.info("imagePath = {}", imagePath);
 
@@ -644,7 +644,7 @@ public class WhereIsIt {
         }
 
         private Rectangle createImageRectangle(double posX, double posY, double width, double height,
-                                               @NonNull String imagePath) {
+                @NonNull String imagePath) {
             final Image image = new Image("file:" + imagePath);
 
             Rectangle result = new Rectangle(posX, posY, width, height);

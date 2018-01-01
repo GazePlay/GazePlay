@@ -112,7 +112,7 @@ public class GazeUtils {
      * Clear all Nodes in both EventFilter and EventHandler. There is no more gaze event after this function is called
      *
      */
-    public static void clear(){
+    public static void clear() {
 
         nodesEventFilter.clear();
 
