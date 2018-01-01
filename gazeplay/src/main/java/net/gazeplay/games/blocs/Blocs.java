@@ -4,7 +4,6 @@ package net.gazeplay.games.blocs;
  * Created by schwab on 29/10/2016.
  */
 
-import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.Event;
@@ -15,15 +14,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import net.gazeplay.GameContext;
-import net.gazeplay.StatsContext;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
-public class Blocs extends Application {
+public class Blocs {
 
     private final EventHandler<Event> enterEvent;
 
@@ -44,23 +41,6 @@ public class Blocs extends Application {
 
     private int count;
     private boolean finished;
-
-    public static void main(String[] args) {
-        Application.launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        StatsContext statsContext = StatsContext.newInstance(null);
-        HiddenItemsGamesStats stats = new HiddenItemsGamesStats(statsContext.getScene());
-
-        GameContext gameContext = GameContext.newInstance(null);
-
-        Blocs blocs = new Blocs(gameContext, 2, 2, true, 1, false, stats);
-        blocs.makeBlocks();
-
-        gameContext.setUpOnStage(primaryStage);
-    }
 
     public Blocs(GameContext gameContext, int nbLines, int nbColomns, boolean colors, float percents4Win,
             boolean useTrail, HiddenItemsGamesStats stats) {
@@ -93,7 +73,7 @@ public class Blocs extends Application {
         count = initCount;
     }
 
-    public void makeBlocks() {
+    public void launch() {
         Scene scene = gameContext.getScene();
 
         double width = scene.getWidth() / nbColomns;
@@ -223,7 +203,7 @@ public class Blocs extends Application {
 
                         gameContext.playWinTransition(0, event -> {
                             gameContext.clear();
-                            Blocs.this.makeBlocks();
+                            Blocs.this.launch();
                             // HomeUtils.home(theScene, blockRoot, choiceBox, stats);
 
                             gameContext.onGameStarted();

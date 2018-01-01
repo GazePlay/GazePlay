@@ -67,28 +67,28 @@ public class DefaultGamesLocator implements GamesLocator {
         result.add(new GameSpec("Blocks", "(2x2)", (gameSpec, gameContext) -> {
             BlocsGamesStats stats = new BlocsGamesStats(gameContext.getScene());
             Blocs game = new Blocs(gameContext, 2, 2, true, 1, false, stats);
-            game.makeBlocks();
+            game.launch();
             return stats;
         }));
 
         result.add(new GameSpec("Blocks", "(2x3)", (gameSpec, gameContext) -> {
             BlocsGamesStats stats = new BlocsGamesStats(gameContext.getScene());
             Blocs game = new Blocs(gameContext, 2, 3, true, 1, false, stats);
-            game.makeBlocks();
+            game.launch();
             return stats;
         }));
 
         result.add(new GameSpec("Blocks", "(3x3)", (gameSpec, gameContext) -> {
             BlocsGamesStats stats = new BlocsGamesStats(gameContext.getScene());
             Blocs game = new Blocs(gameContext, 3, 3, true, 1, false, stats);
-            game.makeBlocks();
+            game.launch();
             return stats;
         }));
 
         result.add(new GameSpec("ScratchCard", (gameSpec, gameContext) -> {
             ScratchcardGamesStats stats = new ScratchcardGamesStats(gameContext.getScene());
             Blocs game = new Blocs(gameContext, 100, 100, false, 0.6f, true, stats);
-            game.makeBlocks();
+            game.launch();
             return stats;
         }));
 
