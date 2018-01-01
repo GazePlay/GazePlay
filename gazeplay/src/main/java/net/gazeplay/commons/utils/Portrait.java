@@ -68,6 +68,11 @@ public class Portrait extends Circle {
         private final Scene scene;
 
         public Position newRandomPosition(double radius) {
+
+            // if (scene.getWidth() == 0 || scene.getHeight() == 0) {
+            // return new Position(0, 0);
+            // }
+
             double minX = radius;
             double minY = radius;
             double maxX = scene.getWidth() - radius;

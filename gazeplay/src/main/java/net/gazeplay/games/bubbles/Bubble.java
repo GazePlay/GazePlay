@@ -1,12 +1,9 @@
 package net.gazeplay.games.bubbles;
 
-import net.gazeplay.commons.gaze.GazeEvent;
-import net.gazeplay.commons.gaze.GazeUtils;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -16,6 +13,9 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.util.Duration;
+import net.gazeplay.GameContext;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class Bubble extends Parent {
     public static final int PORTRAIT = 0;
     public static final int COLOR = 1;
 
-    public Bubble(Scene scene, Group root, int type, BubblesGamesStats stats, boolean image) {
+    public Bubble(GameContext gameContext, int type, BubblesGamesStats stats, boolean image) {
 
         photos = Utils.images(Utils.getImagesFolder() + "portraits" + Utils.FILESEPARATOR);
 
@@ -57,7 +57,7 @@ public class Bubble extends Parent {
 
         this.type = type;
 
-        root.getChildren().add(this);
+        gameContext.getChildren().add(this);
 
         for (int i = 0; i < nbFragments; i++) {
 

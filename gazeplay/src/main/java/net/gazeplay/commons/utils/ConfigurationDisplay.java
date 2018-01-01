@@ -88,8 +88,7 @@ public class ConfigurationDisplay extends Rectangle {
             colon = " : ";
 
         log.info("ConfigurationDisplay");
-        HomeUtils.clear(scene, root);
-        HomeUtils.home(scene, root, cbxGames, null);
+        // HomeUtils.home(scene, root, cbxGames, null);
 
         log.info(config.toString());
 
@@ -351,8 +350,8 @@ public class ConfigurationDisplay extends Rectangle {
         root.getChildren().add(buttonLoad);
     }
 
-    private static void buildLanguageMenu(Configuration configuration, GazePlay gazePlay, Scene scene, Group root, ChoiceBox cbxGames,
-            double posX, double posY) {
+    private static void buildLanguageMenu(Configuration configuration, GazePlay gazePlay, Scene scene, Group root,
+            ChoiceBox cbxGames, double posX, double posY) {
 
         Languages currentLanguage = null;
         if (configuration.getLanguage() != null) {
@@ -378,7 +377,7 @@ public class ConfigurationDisplay extends Rectangle {
                 ConfigurationBuilder.createFromPropertiesResource().withLanguage(newValue.name())
                         .saveConfigIgnoringExceptions();
 
-				gazePlay.getHomeMenuScreen().onLanguageChanged();
+                gazePlay.getHomeMenuScreen().onLanguageChanged();
 
                 buildConfig(gazePlay, scene, root, cbxGames);// game names change following the language
             }

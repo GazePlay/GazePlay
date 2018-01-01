@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.SecondScreen;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
@@ -33,7 +34,9 @@ public class Ninja extends Application {
 
         ShootGamesStats stats = new ShootGamesStats(scene);
 
-        launch(root, scene, stats);
+        GameContext gameContext = new GameContext(null, root, scene);
+
+        launch(gameContext, stats);
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
@@ -44,12 +47,13 @@ public class Ninja extends Application {
         SecondScreen.launch();
     }
 
-    public static void launch(Group root, Scene scene, ShootGamesStats stats) {
+    public static void launch(GameContext gameContext, ShootGamesStats stats) {
+        Scene scene = gameContext.getScene();
 
         Portrait.RandomPositionGenerator randomPositionGenerator = new Portrait.RandomPositionGenerator(scene);
 
-        Target portrait = new Target(root, randomPositionGenerator, stats, Portrait.loadAllImages());
+        Target portrait = new Target(gameContext, randomPositionGenerator, stats, Portrait.loadAllImages());
 
-        root.getChildren().add(portrait);
+        gameContext.getChildren().add(portrait);
     }
 }

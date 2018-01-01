@@ -2,21 +2,24 @@ package net.gazeplay.commons.utils.stats;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import net.gazeplay.GameContext;
+import net.gazeplay.GazePlay;
+import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.utils.HeatMapUtils;
-import net.gazeplay.commons.utils.HomeUtils;
+import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
@@ -25,15 +28,16 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsDisplay {
 
-    public static void displayStats(Stats stats, Scene scene, Group root, ChoiceBox<String> cbxGames,
-            Configuration config) {
+    public static void displayStats(GazePlay gazePlay, Stats stats, GameContext gameContext, Configuration config) {
+
+        final Scene scene = gameContext.getScene();
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
         stats.stop();
 
-        HomeUtils.clear(scene, root);
-        //GazeUtils.clear();
+        gameContext.clear();
+        GazeUtils.clear();
 
         // to add or not a space before colon (:) according to the language
         String colon = multilinguism.getTrad("Colon", config.getLanguage());
@@ -140,12 +144,45 @@ public class StatsDisplay {
         heatChart.setWidth(scene.getWidth() * 0.35);
         heatChart.setHeight(scene.getHeight() * 0.35);
 
-        root.getChildren().addAll(statistics, shoots, totalLength, length, averageLength, medianLength, standDev,
+        gameContext.getChildren().addAll(statistics, shoots, totalLength, length, averageLength, medianLength, standDev,
                 UncountedShoot, chart, heatChart);
 
         stats.saveStats();
 
-        HomeUtils.home(scene, root, cbxGames, null);
+        createHomeButtonInStatsScreen(gazePlay, gameContext);
+    }
+
+    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, GameContext gameContext) {
+        final Scene scene = gameContext.getScene();
+        final Group root = gameContext.getRoot();
+
+        double width = scene.getWidth() / 10;
+        double height = width;
+        double X = scene.getWidth() * 0.9;
+        double Y = scene.getHeight() - height * 1.1;
+
+        HomeButton homeButton = new HomeButton(X, Y, width, height);
+
+        EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
+            @Override
+            public void handle(javafx.event.Event e) {
+
+                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+
+                    scene.setCursor(Cursor.WAIT); // Change cursor to wait style
+
+                    gazePlay.onReturnToMenu();
+
+                    scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
+                }
+            }
+        };
+
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+
+        root.getChildren().add(homeButton);
+
+        return homeButton;
     }
 
     static LineChart<String, Number> buildLineChart(Stats stats, Scene scene) {

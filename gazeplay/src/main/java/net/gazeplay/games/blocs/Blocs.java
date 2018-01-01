@@ -12,7 +12,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -20,242 +19,251 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.SecondScreen;
 import net.gazeplay.commons.utils.Bravo;
-import net.gazeplay.commons.utils.HomeUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
 public class Blocs extends Application {
 
-	private static EventHandler<Event> enterEvent;
-	private static Group blockRoot;
-	private static int count;
-	private static int initCount;
-	private static float p4w;
-	private static boolean finished;
-	private static Scene theScene;
-	private static int nColomns;
-	private static int nLines;
-	private static boolean hasColors;
-	private static Bravo bravo = Bravo.getBravo();
-	private static ChoiceBox<String> choiceBox;
-	private static Bloc[][] blocs;
-	private static final int trail = 10;
-	private static Image[] images;
+    private final EventHandler<Event> enterEvent;
 
-	public static void main(String[] args) {
-		Application.launch(args);
-	}
+    private final GameContext gameContext;
+    private final int nbLines;
+    private final int nbColomns;
+    private final boolean colors;
+    private final float percents4Win;
+    private final boolean useTrail;
+    private final HiddenItemsGamesStats stats;
 
-	@Override
-	public void start(Stage primaryStage) {
+    private final int initCount;
 
-		primaryStage.setTitle("Blocs");
+    private final boolean hasColors;
+    private final Bravo bravo = Bravo.getBravo();
+    private final Bloc[][] blocs;
+    private final int trail = 10;
+    private final Image[] images;
 
-		primaryStage.setFullScreen(true);
+    private int count;
+    private boolean finished;
 
-		blockRoot = new Group();
+    public static void main(String[] args) {
+        Application.launch(args);
+    }
 
-		theScene = new Scene(blockRoot, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
-				Color.BLACK);
+    @Override
+    public void start(Stage primaryStage) {
 
-		primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
+        primaryStage.setTitle("Blocs");
 
-		primaryStage.setScene(theScene);
+        primaryStage.setFullScreen(true);
 
-		HiddenItemsGamesStats stats = new HiddenItemsGamesStats(theScene);
+        Group blockRoot = new Group();
 
-		makeBlocks(theScene, blockRoot, null, 2, 2, true, 1, false, stats);
+        Scene theScene = new Scene(blockRoot, Screen.getScreens().get(0).getWidth(),
+                Screen.getScreens().get(0).getHeight(), Color.BLACK);
 
-		primaryStage.show();
+        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
-		SecondScreen.launch();
-	}
+        primaryStage.setScene(theScene);
 
-	public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns,
-								  boolean colors, float percents4Win, boolean useTrail, HiddenItemsGamesStats stats) {
+        HiddenItemsGamesStats stats = new HiddenItemsGamesStats(theScene);
 
-		images = Utils.images(Utils.getImagesFolder() + "blocs" + Utils.FILESEPARATOR);
+        GameContext gameContext = new GameContext(null, blockRoot, theScene);
 
-		finished = false;
+        Blocs blocs = new Blocs(gameContext, 2, 2, true, 1, false, stats);
+        blocs.makeBlocks();
 
-		p4w = percents4Win;
+        primaryStage.show();
 
-		blockRoot = root;
+        SecondScreen.launch();
+    }
 
-		nColomns = nbColomns;
+    public Blocs(GameContext gameContext, int nbLines, int nbColomns, boolean colors, float percents4Win,
+            boolean useTrail, HiddenItemsGamesStats stats) {
+        this.gameContext = gameContext;
+        this.nbLines = nbLines;
+        this.nbColomns = nbColomns;
+        this.colors = colors;
+        this.percents4Win = percents4Win;
+        this.useTrail = useTrail;
+        this.stats = stats;
 
-		nLines = nbLines;
+        images = Utils.images(Utils.getImagesFolder() + "blocs" + Utils.FILESEPARATOR);
 
-		hasColors = colors;
+        finished = false;
 
-		theScene = scene;
+        hasColors = colors;
 
-		choiceBox = cbxGames;
+        blocs = new Bloc[nbColomns][nbLines];
 
-		blocs = new Bloc[nbColomns][nbLines];
+        int value = (int) Math.floor(Math.random() * images.length);
 
-		int value = (int) Math.floor(Math.random() * images.length);
+        Scene scene = gameContext.getScene();
 
-		scene.setFill(new ImagePattern(images[value]));
+        scene.setFill(new ImagePattern(images[value]));
 
-		enterEvent = buildEvent(scene, root, stats, useTrail);
+        enterEvent = buildEvent(gameContext, stats, useTrail);
 
-		double width = scene.getWidth() / nbColomns;
-		double height = scene.getHeight() / nbLines;
+        initCount = nbColomns * nbLines;
 
-		initCount = nbColomns * nbLines;
+        count = initCount;
+    }
 
-		count = initCount;
+    public void makeBlocks() {
+        Scene scene = gameContext.getScene();
 
-		for (int i = 0; i < nbColomns; i++)
-			for (int j = 0; j < nbLines; j++) {
+        double width = scene.getWidth() / nbColomns;
+        double height = scene.getHeight() / nbLines;
 
-				Bloc bloc = new Bloc(i * width, j * height, width + 1, height + 1, i, j);// width+1, height+1 to avoid
-				// spaces between blocks for
-				// Scratchcard
-				if (colors)
-					bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
-				else
-					bloc.setFill(Color.BLACK);
-				root.getChildren().add(bloc);
-				blocs[i][j] = bloc;
+        for (int i = 0; i < nbColomns; i++)
+            for (int j = 0; j < nbLines; j++) {
 
-				bloc.toBack();
+                Bloc bloc = new Bloc(i * width, j * height, width + 1, height + 1, i, j);// width+1, height+1 to avoid
+                // spaces between blocks for
+                // Scratchcard
+                if (colors)
+                    bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+                else
+                    bloc.setFill(Color.BLACK);
+                gameContext.getChildren().add(bloc);
+                blocs[i][j] = bloc;
 
-				GazeUtils.addEventFilter(bloc);
+                bloc.toBack();
 
-				bloc.addEventFilter(MouseEvent.ANY, enterEvent);
+                GazeUtils.addEventFilter(bloc);
 
-				bloc.addEventFilter(GazeEvent.ANY, enterEvent);
+                bloc.addEventFilter(MouseEvent.ANY, enterEvent);
 
-				stats.start();
-			}
-	}
+                bloc.addEventFilter(GazeEvent.ANY, enterEvent);
 
-	private static void RemoveAllBlocs() {
+                stats.start();
+            }
+    }
 
-		int maxX = blocs.length;
-		int maxY = blocs[0].length;
+    private void removeAllBlocs() {
 
-		final Service<Void> calculateService = new Service<Void>() {
+        int maxX = blocs.length;
+        int maxY = blocs[0].length;
 
-			@Override
-			protected Task<Void> createTask() {
-				return new Task<Void>() {
-
-					@Override
-					protected Void call() throws Exception {
-						for (int i = 0; i < maxX; i++) {
-							for (int j = 0; j < maxY; j++) {
-
-								removeBloc(blocs[i][j]);
+        final Service<Void> calculateService = new Service<Void>() {
 
-							}
-						}
-						return null;
-					}
-				};
-			}
-		};
-		calculateService.start();
-	}
-
-	private static void removeBloc(Bloc toRemove) {
-
-		/*
-		 * log.info("##############"); log.info("#####TO REMOVE#########"); log.info(toRemove.posX);
-		 * log.info(toRemove.posY); log.info("##############");
-		 */
-		if (toRemove == null)
-			return;
-
-		toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
-		toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
-		GazeUtils.removeEventFilter(toRemove);
-		toRemove.setTranslateX(-10000);
-		toRemove.setOpacity(0);
-		// blockRoot.getChildren().remove(toRemove);
-		count--;
-	}
-
-	private static EventHandler<Event> buildEvent(Scene scene, Group root, HiddenItemsGamesStats stats, boolean useTrail) {
-		return new EventHandler<Event>() {
-			@Override
-			public void handle(Event e) {
-
-				// log.info("useTrail = " + useTrail);
-				// log.info("e.getEventType() = " + e.getEventType());
-
-				if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
-						|| e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
-
-					if (!useTrail) {
-
-						Bloc bloc = (Bloc) e.getTarget();
-						removeBloc(bloc);
-					} else {
-
-						Bloc bloc = (Bloc) e.getTarget();
-
-						int posX = bloc.posX;
-						int posY = bloc.posY;
-
-						// log.info(bloc.posX);
-						// log.info(bloc.posY);
-
-						int maxX = blocs.length;
-						int maxY = blocs[0].length;
-
-						for (int i = -trail; i < trail; i++) {
-							for (int j = -trail; j < trail; j++) {
-
-								// log.info(Math.sqrt(i * i + j * j) + " : " + maxX + ", " + maxY + ", " + (posX + i) +
-								// ", " + (posY + j));
-								if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0
-										&& posX + i < maxX && posY + j < maxY) {
-									// log.info("à supprimer");
-									removeBloc(blocs[posX + i][posY + j]);
-									blocs[posX + i][posY + j] = null;
-								}
-							}
-						}
-					}
-
-					if (((float) initCount - count) / initCount >= p4w && !finished) {
-
-						finished = true;
-
-						stats.incNbGoals();
-
-						RemoveAllBlocs();
-
-						HomeUtils.homeButton.setVisible(false);
-
-						bravo.playWinTransition(scene, event -> {
-							HomeUtils.clear(scene, root);
-							makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, useTrail,
-									stats);
-							HomeUtils.home(theScene, blockRoot, choiceBox, stats);
-						});
-					}
-				}
-			}
-		};
-	}
-}
-
-class Bloc extends Rectangle {
-
-	public int posX;
-	public int posY;
-
-	public Bloc(double x, double y, double width, double height, int posX, int posY) {
-		super(x, y, width, height);
-		this.posX = posX;
-		this.posY = posY;
-	}
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+
+                    @Override
+                    protected Void call() throws Exception {
+                        for (int i = 0; i < maxX; i++) {
+                            for (int j = 0; j < maxY; j++) {
+
+                                removeBloc(blocs[i][j]);
+
+                            }
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+        calculateService.start();
+    }
+
+    private void removeBloc(Bloc toRemove) {
+
+        /*
+         * log.info("##############"); log.info("#####TO REMOVE#########"); log.info(toRemove.posX);
+         * log.info(toRemove.posY); log.info("##############");
+         */
+        if (toRemove == null)
+            return;
+
+        toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
+        toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
+        GazeUtils.removeEventFilter(toRemove);
+        toRemove.setTranslateX(-10000);
+        toRemove.setOpacity(0);
+        // blockRoot.getChildren().remove(toRemove);
+        count--;
+    }
+
+    private EventHandler<Event> buildEvent(GameContext gameContext, HiddenItemsGamesStats stats, boolean useTrail) {
+        return new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+
+                // log.info("useTrail = " + useTrail);
+                // log.info("e.getEventType() = " + e.getEventType());
+
+                if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
+                        || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
+
+                    if (!useTrail) {
+
+                        Bloc bloc = (Bloc) e.getTarget();
+                        removeBloc(bloc);
+                    } else {
+
+                        Bloc bloc = (Bloc) e.getTarget();
+
+                        int posX = bloc.posX;
+                        int posY = bloc.posY;
+
+                        // log.info(bloc.posX);
+                        // log.info(bloc.posY);
+
+                        int maxX = blocs.length;
+                        int maxY = blocs[0].length;
+
+                        for (int i = -trail; i < trail; i++) {
+                            for (int j = -trail; j < trail; j++) {
+
+                                // log.info(Math.sqrt(i * i + j * j) + " : " + maxX + ", " + maxY + ", " + (posX + i) +
+                                // ", " + (posY + j));
+                                if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0
+                                        && posX + i < maxX && posY + j < maxY) {
+                                    // log.info("à supprimer");
+                                    removeBloc(blocs[posX + i][posY + j]);
+                                    blocs[posX + i][posY + j] = null;
+                                }
+                            }
+                        }
+                    }
+
+                    if (((float) initCount - count) / initCount >= percents4Win && !finished) {
+
+                        finished = true;
+
+                        stats.incNbGoals();
+
+                        removeAllBlocs();
+
+                        gameContext.hideHomeButton();
+
+                        bravo.playWinTransition(gameContext.getScene(), event -> {
+                            gameContext.clear();
+                            Blocs.this.makeBlocks();
+                            // HomeUtils.home(theScene, blockRoot, choiceBox, stats);
+                        });
+                    }
+                }
+            }
+        };
+    }
+
+    private static class Bloc extends Rectangle {
+
+        public final int posX;
+        public final int posY;
+
+        public Bloc(double x, double y, double width, double height, int posX, int posY) {
+            super(x, y, width, height);
+            this.posX = posX;
+            this.posY = posY;
+        }
+    }
+
 }

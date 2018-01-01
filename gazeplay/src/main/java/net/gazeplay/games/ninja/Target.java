@@ -4,12 +4,12 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.Portrait;
@@ -47,7 +47,8 @@ public class Target extends Portrait {
 
     private TranslateTransition currentTranslation;
 
-    public Target(Group root, RandomPositionGenerator randomPositionGenerator, Stats stats, Image[] availableImages) {
+    public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
+            Image[] availableImages) {
         super(radius, randomPositionGenerator, availableImages);
 
         this.randomPositionGenerator = randomPositionGenerator;
@@ -55,7 +56,7 @@ public class Target extends Portrait {
         this.availableImages = availableImages;
 
         this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, availableImages, nbBall);
-        root.getChildren().addAll(miniBallsPortraits);
+        gameContext.getChildren().addAll(miniBallsPortraits);
 
         enterEvent = buildEvent();
 

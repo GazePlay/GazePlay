@@ -7,11 +7,9 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -19,13 +17,13 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.HomeUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
@@ -39,29 +37,29 @@ public class Card extends Parent {
     protected static final int minHeight = 30;
     protected static final float zoom_factor = 1.1f;
     protected static double mintime;
-    private Rectangle card;
-    private boolean winner;
-    private Image image;
+
+    private final Rectangle card;
+    private final boolean winner;
+    private final Image image;
 
     private boolean turned = false;// true if the card has been turned
-    int nbLines;
-    int nbColumns;
+    final int nbLines;
+    final int nbColumns;
     private double initWidth;
     private double initHeight;
-    private Scene scene;
-    private ChoiceBox choiceBox;
-    private Group root;
-    private ProgressIndicator indicator;
+    private final Scene scene;
+    private final GameContext gameContext;
+    private final ProgressIndicator indicator;
     private Timeline timelineProgressBar;
-    HiddenItemsGamesStats stats;
-    Bravo bravo = Bravo.getBravo();
+    final HiddenItemsGamesStats stats;
+    final Bravo bravo = Bravo.getBravo();
 
     private static Image[] images;
 
-    EventHandler<Event> enterEvent;
+    final EventHandler<Event> enterEvent;
 
     public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image,
-            boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGamesStats stats) {
+            boolean winner, GameContext gameContext, HiddenItemsGamesStats stats) {
 
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
@@ -69,9 +67,9 @@ public class Card extends Parent {
         this.winner = winner;// true if it is the good card
         this.initWidth = width;
         this.initHeight = height;
-        this.scene = scene;
-        this.choiceBox = choiceBox;
-        this.root = root;
+        this.gameContext = gameContext;
+        this.scene = gameContext.getScene();
+
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
@@ -155,7 +153,7 @@ public class Card extends Parent {
 
                                 Timeline timeline = new Timeline();
 
-                                for (Node N : root.getChildren()) {// clear all but images and reward
+                                for (Node N : gameContext.getChildren()) {// clear all but images and reward
 
                                     if ((N instanceof Card && card != ((Card) N).getCard() && !(N instanceof Bravo))
                                             || (N instanceof HomeButton)) {// we put outside screen HomeButton and cards
@@ -187,9 +185,9 @@ public class Card extends Parent {
 
                                             @Override
                                             public void handle(ActionEvent actionEvent) {
-                                                HomeUtils.clear(scene, root);
-                                                Card.addCards(root, scene, choiceBox, nbLines, nbColumns, stats);
-                                                HomeUtils.home(scene, root, choiceBox, stats);
+                                                gameContext.clear();
+                                                Card.addCards(gameContext, nbLines, nbColumns, stats);
+                                                // HomeUtils.home(scene, root, choiceBox, stats);
                                                 stats.start();
                                             }
                                         });
@@ -235,8 +233,9 @@ public class Card extends Parent {
         };
     }
 
-    public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbLines, int nbColumns,
-            HiddenItemsGamesStats stats) {
+    public static void addCards(GameContext gameContext, int nbLines, int nbColumns, HiddenItemsGamesStats stats) {
+
+        Scene scene = gameContext.getScene();
 
         images = Utils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
         double cardHeight = computeCardHeight(scene, nbLines);
@@ -253,13 +252,13 @@ public class Card extends Parent {
                 if (k++ == winner) {
                     winCard = new Card(nbColumns, nbLines, width / 2 + (width + cardWidth) * i,
                             minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, getRandomImage(), true,
-                            scene, root, cbxGames, stats);
-                    root.getChildren().add(winCard);
+                            gameContext, stats);
+                    gameContext.getChildren().add(winCard);
                 } else {
                     Card card = new Card(nbColumns, nbLines, width / 2 + (width + cardWidth) * i,
                             minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight,
-                            new Image("data/common/images/error.png"), false, scene, root, cbxGames, stats);
-                    root.getChildren().add(card);
+                            new Image("data/common/images/error.png"), false, gameContext, stats);
+                    gameContext.getChildren().add(card);
                 }
             }
         winCard.toFront();

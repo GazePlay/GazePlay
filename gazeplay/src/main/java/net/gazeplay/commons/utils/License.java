@@ -4,7 +4,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -14,6 +13,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GazePlay;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -25,8 +25,7 @@ import java.io.IOException;
 @Slf4j
 public class License extends Rectangle {
 
-    public License(double X, double Y, double width, double height, Scene scene, Group root, ChoiceBox<String> cbxGames,
-            String language) {
+    public License(double X, double Y, double width, double height, GazePlay gazePlay, Scene scene, Group root) {
 
         super(X, Y, width, height);
 
@@ -38,11 +37,9 @@ public class License extends Rectangle {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    HomeUtils.clear(scene, root);
-
                     root.getChildren().add(licence(width, height));
 
-                    HomeUtils.home(scene, root, cbxGames, null);
+                    gazePlay.getHomeMenuScreen();
                 }
             }
         };

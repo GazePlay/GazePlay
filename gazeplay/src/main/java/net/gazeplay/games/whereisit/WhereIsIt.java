@@ -9,7 +9,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -23,12 +22,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.Bravo;
-import net.gazeplay.commons.utils.HomeUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.io.File;
@@ -67,19 +66,17 @@ public class WhereIsIt {
     private final int nbColumns;
     private final boolean fourThree;
 
-    private final Group group;
+    private final GameContext gameContext;
     private final Scene scene;
-    private final ChoiceBox choiceBox;
 
     private final WhereIsItStats stats;
 
     private RoundDetails currentRoundDetails;
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
-            final Group group, final Scene scene, final ChoiceBox choiceBox, final WhereIsItStats stats) {
-        this.group = group;
-        this.scene = scene;
-        this.choiceBox = choiceBox;
+            final GameContext gameContext, final WhereIsItStats stats) {
+        this.gameContext = gameContext;
+        this.scene = gameContext.getScene();
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.gameType = gameType;
@@ -105,7 +102,7 @@ public class WhereIsIt {
                 winnerImageIndexAmongDisplayedImages);
 
         if (currentRoundDetails != null) {
-            group.getChildren().addAll(currentRoundDetails.pictureCardList);
+            gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
             stats.start();
 
             playQuestionSound();
@@ -126,7 +123,7 @@ public class WhereIsIt {
     public void dispose() {
         if (currentRoundDetails != null) {
             if (currentRoundDetails.pictureCardList != null) {
-                group.getChildren().removeAll(currentRoundDetails.pictureCardList);
+                gameContext.getChildren().removeAll(currentRoundDetails.pictureCardList);
             }
             currentRoundDetails = null;
         }
@@ -146,7 +143,7 @@ public class WhereIsIt {
         }
 
         // remove all at once, in order to update the UserInterface only once
-        group.getChildren().removeAll(pictureCardsToHide);
+        gameContext.getChildren().removeAll(pictureCardsToHide);
     }
 
     @Data
@@ -206,7 +203,7 @@ public class WhereIsIt {
             }
 
             PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, group, scene,
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
                     winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
 
             pictureCardList.add(pictureCard);
@@ -227,8 +224,8 @@ public class WhereIsIt {
 
     private void error(String language) {
 
-        HomeUtils.clear(scene, group);
-        HomeUtils.home(scene, group, choiceBox, null);
+        gameContext.clear();
+        // HomeUtils.home(scene, group, choiceBox, null);
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
@@ -236,7 +233,7 @@ public class WhereIsIt {
         error.setX(scene.getWidth() / 2. - 100);
         error.setY(scene.getHeight() / 2.);
         error.setId("item");
-        group.getChildren().addAll(error);
+        gameContext.getChildren().addAll(error);
     }
 
     private File locateImagesDirectory(Configuration config) {
@@ -383,7 +380,7 @@ public class WhereIsIt {
     private static class PictureCard extends Group {
 
         private final double minTime;
-        private final Group root;
+        private final GameContext gameContext;
         private final boolean winner;
 
         private final Rectangle imageRectangle;
@@ -410,9 +407,8 @@ public class WhereIsIt {
 
         private final WhereIsIt gameInstance;
 
-        public PictureCard(double posX, double posY, double width, double height, @NonNull Group root,
-                @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats,
-                WhereIsIt gameInstance) {
+        public PictureCard(double posX, double posY, double width, double height, @NonNull GameContext gameContext,
+                boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats, WhereIsIt gameInstance) {
 
             log.info("imagePath = {}", imagePath);
 
@@ -425,9 +421,9 @@ public class WhereIsIt {
             this.initialHeight = height;
             this.selected = false;
             this.winner = winner;
-            this.root = root;
+            this.gameContext = gameContext;
             this.stats = stats;
-            this.scene = scene;
+            this.scene = gameContext.getScene();
             this.gameInstance = gameInstance;
 
             this.imagePath = imagePath;
@@ -497,7 +493,8 @@ public class WhereIsIt {
 
             customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
-            HomeUtils.homeButton.setVisible(false);
+
+            gameContext.hideHomeButton();
 
             gameInstance.removeAllIncorrectPictureCards();
 
@@ -525,11 +522,11 @@ public class WhereIsIt {
                         @Override
                         public void handle(ActionEvent actionEvent) {
 
-                            HomeUtils.clear(gameInstance.scene, gameInstance.group);
+                            gameInstance.gameContext.clear();
                             gameInstance.dispose();
                             gameInstance.buildGame();
-                            HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
-                                    gameInstance.stats);
+                            // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
+                            // gameInstance.stats);
 
                         }
                     });

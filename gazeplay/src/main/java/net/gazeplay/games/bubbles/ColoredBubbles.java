@@ -1,6 +1,5 @@
 package net.gazeplay.games.bubbles;
 
-import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -8,6 +7,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.gazeplay.GameContext;
+import net.gazeplay.commons.gaze.SecondScreen;
 
 /**
  * Created by schwab on 28/08/2016.
@@ -29,7 +30,10 @@ public class ColoredBubbles extends Application {
         scene.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
         primaryStage.setScene(scene);
-        new Bubble(scene, root, Bubble.COLOR, null, true);
+
+        GameContext gameContext = new GameContext(null, root, scene);
+
+        new Bubble(gameContext, Bubble.COLOR, null, true);
         primaryStage.show();
 
         SecondScreen.launch();

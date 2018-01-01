@@ -1,12 +1,13 @@
 package net.gazeplay.games.bubbles;
 
-import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.gazeplay.GameContext;
+import net.gazeplay.commons.gaze.SecondScreen;
 
 /**
  * Created by schwab on 28/08/2016.
@@ -30,7 +31,9 @@ public class PortraitBubbles extends Application {
 
         primaryStage.setScene(scene);
 
-        new Bubble(scene, root, Bubble.PORTRAIT, null, false);
+        GameContext gameContext = new GameContext(null, root, scene);
+
+        new Bubble(gameContext, Bubble.PORTRAIT, null, false);
 
         primaryStage.show();
 

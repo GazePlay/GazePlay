@@ -1,12 +1,13 @@
 package net.gazeplay.games.magiccards;
 
-import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.gazeplay.GameContext;
+import net.gazeplay.commons.gaze.SecondScreen;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
 /**
@@ -28,7 +29,9 @@ public class MagicCards extends Application {
 
         HiddenItemsGamesStats stats = new HiddenItemsGamesStats(scene);
 
-        Card.addCards(root, scene, null, 2, 2, stats);
+        GameContext gameContext = new GameContext(null, root, scene);
+
+        Card.addCards(gameContext, 2, 2, stats);
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 

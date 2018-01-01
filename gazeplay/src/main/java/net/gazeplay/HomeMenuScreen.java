@@ -1,0 +1,226 @@
+package net.gazeplay;
+
+import com.sun.glass.ui.Screen;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import javafx.util.Pair;
+import lombok.Data;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.configuration.Configuration;
+import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.ConfigurationDisplay;
+import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.stats.Stats;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Data
+@Slf4j
+public class HomeMenuScreen {
+
+    @Getter
+    private final GazePlay gazePlay;
+
+    @Getter
+    private final Scene scene;
+
+    private final Group root;
+
+    @Getter
+    private final ChoiceBox<String> cbxGames;
+
+    private final List<GameSpec> games;
+
+    private final GamesLocator gamesLocator;
+
+    public HomeMenuScreen(final GazePlay gazePlay, final Configuration config) {
+        this.gazePlay = gazePlay;
+
+        gamesLocator = new DefaultGamesLocator();
+        games = gamesLocator.listGames();
+
+        root = new Group();
+
+        final Screen screen = Screen.getScreens().get(0);
+        log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
+
+        scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
+
+        ObservableList<String> stylesheets = scene.getStylesheets();
+        stylesheets.add(config.getCssfile());
+        Utils.addStylesheets(stylesheets);
+        log.info(stylesheets.toString());
+
+        // end of System information
+        for (int i = 0; i < 5; i++) {
+            log.info("***********************");
+        }
+
+        cbxGames = createChoiceBox(games, config);
+
+        cbxGames.getSelectionModel().clearSelection();
+        root.getChildren().add(cbxGames);
+
+        cbxGames.setTranslateX(scene.getWidth() * 0.9 / 2);
+        cbxGames.setTranslateY(scene.getHeight() * 0.9 / 2);
+
+        addButtons();
+    }
+
+    public ObservableList<Node> getChildren() {
+        return root.getChildren();
+    }
+
+    public void setUpOnStage(Stage primaryStage) {
+        cbxGames.getSelectionModel().clearSelection();
+
+        primaryStage.setTitle("GazePlay");
+        primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
+        primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
+        primaryStage.show();
+    }
+
+    public void onLanguageChanged() {
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+        final List<String> gamesLabels = generateTranslatedGamesNames(games, config);
+
+        this.cbxGames.getItems().clear();
+        this.cbxGames.getItems().addAll(gamesLabels);
+    }
+
+    /**
+     * This command is called when games have to be updated (example: when language changed)
+     */
+    private ChoiceBox createChoiceBox(List<GameSpec> games, Configuration config) {
+        List<String> gamesLabels = generateTranslatedGamesNames(games, config);
+
+        ChoiceBox<String> cbxGames = new ChoiceBox<>();
+        cbxGames.getItems().addAll(gamesLabels);
+        cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                chooseGame(newValue.intValue());
+            }
+        });
+        return cbxGames;
+    }
+
+    private List<String> generateTranslatedGamesNames(List<GameSpec> games, Configuration config) {
+        final String language = config.getLanguage();
+        final Multilinguism multilinguism = Multilinguism.getSingleton();
+
+        return games.stream()
+                .map(gameSpec -> new Pair<>(gameSpec, multilinguism.getTrad(gameSpec.getNameCode(), language)))
+                .map(pair -> {
+                    String variationHint = pair.getKey().getVariationHint();
+                    if (variationHint == null) {
+                        return pair.getValue();
+                    }
+                    return pair.getValue() + " " + variationHint;
+                }).collect(Collectors.toList());
+    }
+
+    private void chooseGame(int gameIndex) {
+        log.info("Game number: " + gameIndex);
+
+        // HomeUtils.clear(scene, root);
+
+        if (gameIndex == -1) {
+            return;
+        }
+
+        GameSpec selectedGameSpec = games.get(gameIndex);
+
+        chooseGame(selectedGameSpec);
+    }
+
+    private void chooseGame(GameSpec selectedGameSpec) {
+        log.info(selectedGameSpec.getNameCode() + " " + selectedGameSpec.getVariationHint());
+
+        Group root = new Group();
+
+        final Screen screen = Screen.getScreens().get(0);
+        log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
+
+        Scene scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
+
+        GameContext gameContext = new GameContext(gazePlay, root, scene);
+
+        final Stats stats = selectedGameSpec.launch(gameContext);
+
+        gameContext.createHomeButtonInGameScreen(gazePlay, stats);
+
+        gazePlay.onGameLaunch(gameContext);
+    }
+
+    private void addButtons() {
+
+        double width = scene.getWidth() / 10;
+        double heigth = width;
+        double XExit = scene.getWidth() * 0.9;
+        double Y = scene.getHeight() - heigth * 1.1;
+
+        // License license = new License(XLicence, Y, width, heigth, scene, root, cbxGames);
+
+        // root.getChildren().add(license);
+
+        Rectangle exitButton = createExitButton(width, heigth, XExit, Y);
+
+        getChildren().add(ConfigurationDisplay.addConfig(GazePlay.getInstance(), scene, root, cbxGames));
+        getChildren().add(exitButton);
+        getChildren().add(createLogo());
+        getChildren().add(Utils.buildLicence());
+    }
+
+    private Rectangle createExitButton(double width, double heigth, double XExit, double y) {
+        EventHandler<Event> homeEvent = new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+
+                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+
+                    System.exit(0);
+
+                }
+            }
+        };
+
+        Rectangle exitButton = new Rectangle(XExit, y, width, heigth);
+        exitButton.setFill(new ImagePattern(new Image("data/common/images/power-off.png"), 0, 0, 1, 1, true));
+        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+        return exitButton;
+    }
+
+    private Node createLogo() {
+        double width = scene.getWidth() * 0.5;
+        double height = scene.getHeight() * 0.2;
+
+        double posY = scene.getHeight() * 0.1;
+        double posX = (scene.getWidth() - width) / 2;
+
+        Rectangle logo = new Rectangle(posX, posY, width, height);
+        logo.setFill(new ImagePattern(new Image("data/common/images/gazeplay.jpg"), 0, 0, 1, 1, true));
+
+        return logo;
+    }
+
+}
