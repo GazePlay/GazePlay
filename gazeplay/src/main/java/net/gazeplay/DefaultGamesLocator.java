@@ -95,12 +95,14 @@ public class DefaultGamesLocator implements GamesLocator {
         result.add(new GameSpec("ColoredBubbles", (gameSpec, gameContext) -> {
             BubblesGamesStats stats = new BubblesGamesStats(gameContext.getScene());
             Bubble bubble = new Bubble(gameContext, Bubble.COLOR, stats, true);
+            bubble.launch();
             return stats;
         }));
 
         result.add(new GameSpec("PortraitBubbles", (gameSpec, gameContext) -> {
             BubblesGamesStats stats = new BubblesGamesStats(gameContext.getScene());
             Bubble bubble = new Bubble(gameContext, Bubble.PORTRAIT, stats, false);
+            bubble.launch();
             return stats;
         }));
 

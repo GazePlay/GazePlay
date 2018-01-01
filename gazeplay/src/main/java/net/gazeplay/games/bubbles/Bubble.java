@@ -19,6 +19,7 @@ import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -26,7 +27,8 @@ import java.util.Random;
  */
 public class Bubble extends Parent {
 
-    private int type;
+    public static final int PORTRAIT = 0;
+    public static final int COLOR = 1;
 
     private static final int maxRadius = 70;
     private static final int minRadius = 30;
@@ -36,47 +38,35 @@ public class Bubble extends Parent {
 
     private static final int nbFragments = 10; // number of little circles after explosion
 
-    private ArrayList<Circle> fragments = new ArrayList(nbFragments);
+    private final GameContext gameContext;
 
-    private static Image[] photos;
+    private final int type;
 
-    EventHandler<Event> enterEvent;
-    Scene scene;
+    private final BubblesGamesStats stats;
 
-    public static final int PORTRAIT = 0;
-    public static final int COLOR = 1;
+    private final boolean image;
 
-    public Bubble(GameContext gameContext, int type, BubblesGamesStats stats, boolean image) {
+    private final Image[] photos;
+
+    private final List<Circle> fragments;
+
+    private final EventHandler<Event> enterEvent;
+
+    public Bubble(GameContext gameContext, int type, BubblesGamesStats stats, boolean useBackgroundImage) {
+        this.gameContext = gameContext;
+        this.type = type;
+        this.stats = stats;
+        this.image = useBackgroundImage;
 
         photos = Utils.images(Utils.getImagesFolder() + "portraits" + Utils.FILESEPARATOR);
 
-        this.scene = gameContext.getScene();
-
-        if (image)
-            scene.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
-
-        this.type = type;
+        if (useBackgroundImage) {
+            gameContext.getScene().setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
+        }
 
         gameContext.getChildren().add(this);
 
-        for (int i = 0; i < nbFragments; i++) {
-
-            Circle fragment = new Circle();
-
-            fragments.add(fragment);
-
-            fragment.setOpacity(1);
-            fragment.setRadius(20);
-            fragment.setVisible(true);
-            fragment.setCenterX(-100);
-            fragment.setCenterY(-100);
-
-            if (type == COLOR)
-                fragment.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
-            else
-                fragment.setFill(new ImagePattern(newPhoto(), 0, 0, 1, 1, true));
-
-        }
+        this.fragments = buildFragments(type);
 
         this.getChildren().addAll(fragments);
 
@@ -94,12 +84,41 @@ public class Bubble extends Parent {
             }
         };
 
+    }
+
+    public void launch() {
+
         for (int i = 0; i < 10; i++) {
 
             newCircle();
         }
 
         stats.start();
+
+    }
+
+    private List<Circle> buildFragments(int type) {
+        List<Circle> fragments = new ArrayList<>(nbFragments);
+
+        for (int i = 0; i < nbFragments; i++) {
+
+            Circle fragment = new Circle();
+            fragment.setOpacity(1);
+            fragment.setRadius(20);
+            fragment.setVisible(true);
+            fragment.setCenterX(-100);
+            fragment.setCenterY(-100);
+
+            if (type == COLOR) {
+                fragment.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+            } else {
+                fragment.setFill(new ImagePattern(newPhoto(), 0, 0, 1, 1, true));
+            }
+
+            fragments.add(fragment);
+        }
+
+        return fragments;
     }
 
     public void explose(Circle C) {
@@ -168,18 +187,16 @@ public class Bubble extends Parent {
     }
 
     private void newCircle() {
+        Circle circle = buildCircle();
 
-        Circle C = buildCircle();
+        this.getChildren().add(circle);
 
-        this.getChildren().add(C);
+        GazeUtils.addEventFilter(circle);
 
-        GazeUtils.addEventFilter(C);
+        circle.addEventFilter(MouseEvent.ANY, enterEvent);
+        circle.addEventHandler(GazeEvent.ANY, enterEvent);
 
-        C.addEventFilter(MouseEvent.ANY, enterEvent);
-
-        C.addEventHandler(GazeEvent.ANY, enterEvent);
-
-        moveCircle(C);
+        moveCircle(circle);
     }
 
     private Circle buildCircle() {
@@ -198,41 +215,34 @@ public class Bubble extends Parent {
         return C;
     }
 
-    private void moveCircle(Circle C) {
+    private void moveCircle(Circle circle) {
+        final Scene scene = gameContext.getScene();
 
         double centerX = (scene.getWidth() - maxRadius) * Math.random() + maxRadius;
         double centerY = scene.getHeight();
 
-        C.setCenterX(centerX);
-        // C.setTranslateY((scene.getHeight() - maxRadius) * Math.random() + maxRadius);
-        C.setCenterY(centerY);
-
-        Timeline timeline = new Timeline();
+        circle.setCenterX(centerX);
+        // circle.setTranslateY((scene.getHeight() - maxRadius) * Math.random() + maxRadius);
+        circle.setCenterY(centerY);
 
         double timelength = ((maxTimeLength - minTimeLength) * Math.random() + minTimeLength) * 1000;
 
+        Timeline timeline = new Timeline();
+
         timeline.getKeyFrames().add(new KeyFrame(new Duration(timelength),
-                new KeyValue(C.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
-
-        /*
-         * SequentialTransition sequence = new SequentialTransition();
-         * 
-         * for(int i = 0; i < 10; i++) { sequence.getChildren().add(new KeyFrame(new Duration(timelength / 10), new
-         * KeyValue(C.centerXProperty(), centerX - 100))); sequence.getChildren().add(new KeyFrame(new
-         * Duration(timelength / 10), new KeyValue(C.centerXProperty(), centerX + 100))); }
-         */
-
-        timeline.play();
+                new KeyValue(circle.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
 
         timeline.setOnFinished(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent actionEvent) {
 
-                // moveCircle(C);
+                // moveCircle(circle);
                 newCircle();
             }
         });
+
+        timeline.play();
     }
 
     protected Image newPhoto() {
