@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import net.gazeplay.commons.utils.games.Utils;
 
@@ -52,12 +51,6 @@ public class Portrait extends Circle {
         int count = availableImages.length;
         int index = (int) (count * Math.random());
         return availableImages[index];
-    }
-
-    @Data
-    public static class Position {
-        private final int x;
-        private final int y;
     }
 
     @AllArgsConstructor

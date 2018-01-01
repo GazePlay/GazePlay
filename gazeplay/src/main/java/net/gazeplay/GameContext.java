@@ -36,13 +36,7 @@ public class GameContext extends GraphicalContext {
     }
 
     public void createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
-
-        double width = scene.getWidth() / 10;
-        double height = width;
-        double X = scene.getWidth() * 0.9;
-        double Y = scene.getHeight() - height * 1.1;
-
-        HomeButton homeButton = new HomeButton(X, Y, width, height);
+        HomeButton homeButton = new HomeButton();
 
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
             @Override
@@ -68,7 +62,8 @@ public class GameContext extends GraphicalContext {
 
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
-        root.getChildren().add(homeButton);
+        homeButton.recomputeSizeAndPosition(scene);
+        getChildren().add(homeButton);
 
         this.homeButton = homeButton;
     }

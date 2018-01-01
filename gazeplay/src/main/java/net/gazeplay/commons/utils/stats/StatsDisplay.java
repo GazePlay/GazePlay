@@ -155,12 +155,7 @@ public class StatsDisplay {
         final Scene scene = statsContext.getScene();
         final Group root = statsContext.getRoot();
 
-        double width = scene.getWidth() / 10;
-        double height = width;
-        double X = scene.getWidth() * 0.9;
-        double Y = scene.getHeight() - height * 1.1;
-
-        HomeButton homeButton = new HomeButton(X, Y, width, height);
+        HomeButton homeButton = new HomeButton();
 
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
             @Override
@@ -179,7 +174,8 @@ public class StatsDisplay {
 
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
-        root.getChildren().add(homeButton);
+        homeButton.recomputeSizeAndPosition(scene);
+        statsContext.getChildren().add(homeButton);
 
         return homeButton;
     }
