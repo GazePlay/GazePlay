@@ -16,6 +16,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,7 @@ import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.multilinguism.LocalMultilinguism;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.io.File;
@@ -44,625 +46,692 @@ import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZE
 @Slf4j
 public class WhereIsIt {
 
-    public enum WhereIsItGameType {
-        ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
-                "where-is-the-color"), CUSTOMIZED("custumized", "custumized");
-
-        @Getter
-        private final String gameName;
-
-        @Getter
-        private final String resourcesDirectoryName;
-
-        WhereIsItGameType(String gameName, String resourcesDirectoryName) {
-            this.gameName = gameName;
-            this.resourcesDirectoryName = resourcesDirectoryName;
-        }
-    }
-
-    private final WhereIsItGameType gameType;
-    private final int nbLines;
-    private final int nbColumns;
-    private final boolean fourThree;
-
-    private final GameContext gameContext;
-    private final Scene scene;
-
-    private final WhereIsItStats stats;
-
-    private RoundDetails currentRoundDetails;
-
-    public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
-            final GameContext gameContext, final WhereIsItStats stats) {
-        this.gameContext = gameContext;
-        this.scene = gameContext.getScene();
-        this.nbLines = nbLines;
-        this.nbColumns = nbColumns;
-        this.gameType = gameType;
-        this.fourThree = fourThree;
-        this.stats = stats;
-
-        this.stats.setName(gameType.getGameName());
-    }
-
-    public void buildGame() {
-        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree).computeGameSizing(scene);
-
-        final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
-        log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
-
-        Random random = new Random();
-        final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
-        log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
-
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+	public enum WhereIsItGameType {
+		ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
+				"where-is-the-color"), CUSTOMIZED("custumized", "custumized");
 
-        currentRoundDetails = pickAndBuildRandomPictures(config, gameSizing, numberOfImagesToDisplayPerRound, random,
-                winnerImageIndexAmongDisplayedImages);
+		@Getter
+		private final String gameName;
 
-        if (currentRoundDetails != null) {
-            gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
-            stats.start();
+		@Getter
+		private final String resourcesDirectoryName;
 
-            playQuestionSound();
-        }
-    }
+		WhereIsItGameType(String gameName, String resourcesDirectoryName) {
+			this.gameName = gameName;
+			this.resourcesDirectoryName = resourcesDirectoryName;
+		}
+	}
 
-    private void playQuestionSound() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL soundResourceUrl = classLoader.getResource(currentRoundDetails.questionSoundPath);
-        AudioClip soundClip = new AudioClip(soundResourceUrl.toExternalForm());
-        soundClip.play();
-    }
+	private final WhereIsItGameType gameType;
+	private final int nbLines;
+	private final int nbColumns;
+	private final boolean fourThree;
 
-    /**
-     * this method should be called when exiting the game, or before starting a new round, in order to clean up all
-     * resources in both UI and memory
-     */
-    public void dispose() {
-        if (currentRoundDetails != null) {
-            if (currentRoundDetails.pictureCardList != null) {
-                gameContext.getChildren().removeAll(currentRoundDetails.pictureCardList);
-            }
-            currentRoundDetails = null;
-        }
-    }
+	private final GameContext gameContext;
+	private final Scene scene;
 
-    public void removeAllIncorrectPictureCards() {
-        if (this.currentRoundDetails == null) {
-            return;
-        }
+	private final WhereIsItStats stats;
 
-        // Collect all items to be removed from the User Interface
-        List<PictureCard> pictureCardsToHide = new ArrayList<>();
-        for (PictureCard pictureCard : this.currentRoundDetails.pictureCardList) {
-            if (!pictureCard.winner) {
-                pictureCardsToHide.add(pictureCard);
-            }
-        }
+	private RoundDetails currentRoundDetails;
 
-        // remove all at once, in order to update the UserInterface only once
-        gameContext.getChildren().removeAll(pictureCardsToHide);
-    }
+	public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
+					 final GameContext gameContext, final WhereIsItStats stats) {
+		this.gameContext = gameContext;
+		this.scene = gameContext.getScene();
+		this.nbLines = nbLines;
+		this.nbColumns = nbColumns;
+		this.gameType = gameType;
+		this.fourThree = fourThree;
+		this.stats = stats;
 
-    @Data
-    @AllArgsConstructor
-    public static class RoundDetails {
-        private final List<PictureCard> pictureCardList;
-        private final int winnerImageIndexAmongDisplayedImages;
-        private final String questionSoundPath;
+		this.stats.setName(gameType.getGameName());
+	}
 
-    }
+	public void buildGame() {
+		final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree).computeGameSizing(scene);
 
-    private RoundDetails pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
-            final int numberOfImagesToDisplayPerRound, final Random random,
-            final int winnerImageIndexAmongDisplayedImages) {
+		final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
+		log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
-        final File imagesDirectory = locateImagesDirectory(config);
-        final String language = config.getLanguage();
+		Random random = new Random();
+		final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
+		log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        final File[] imagesFolders = imagesDirectory.listFiles();
-        final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
+		final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        if (filesCount == 0) {
-            log.warn("No image found in Directory " + imagesDirectory);
-            error(language);
-            return null;
-        }
+		currentRoundDetails = pickAndBuildRandomPictures(config, gameSizing, numberOfImagesToDisplayPerRound, random,
+				winnerImageIndexAmongDisplayedImages);
 
-        final int randomFolderIndex = random.nextInt(filesCount);
-        log.info("randomFolderIndex " + randomFolderIndex);
+		if (currentRoundDetails != null) {
+			Transition displayQuestion = DisplayQuestion(currentRoundDetails.question);
 
-        int step = 1; // (int) (Math.random() + 1.5);
-        log.info("step " + step);
+			displayQuestion.setOnFinished(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent actionEvent) {
+					gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
+					stats.start();
+				}
+			});
+		}
+	}
 
-        int posX = 0;
-        int posY = 0;
+	private Transition DisplayQuestion(String question) {
 
-        final List<PictureCard> pictureCardList = new ArrayList<>();
-        String questionSoundPath = null;
+		Text Question = new Text(currentRoundDetails.question);
 
-        for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
+		Screen screen = Screen.getPrimary();
 
-            final int index = (randomFolderIndex + step * i) % filesCount;
+		Rectangle2D bounds = screen.getBounds();
 
-            final File[] files = imagesFolders[(index) % filesCount].listFiles();
+		double X = (bounds.getWidth() / 2 - Question.getBoundsInParent().getWidth());
 
-            final int numFile = random.nextInt(files.length);
+		double Y = bounds.getHeight() / 2;
 
-            final File randomImageFile = files[numFile];
-            log.info("randomImageFile = {}", randomImageFile);
+		Question.setX(X);
 
-            if (winnerImageIndexAmongDisplayedImages == i) {
+		Question.setY(Y);
 
-                log.info("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
+		Question.setVisible(true);
 
-                questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
-                log.info("pathSound = {}", questionSoundPath);
-            }
+		Question.setId("title");
 
-            PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+		gameContext.getChildren().addAll(Question);
 
-            pictureCardList.add(pictureCard);
+		TranslateTransition fullAnimation = new TranslateTransition(Duration.millis(2000), Question);
 
-            log.info("posX " + posX);
-            log.info("posY " + posY);
+		fullAnimation.play();
 
-            if ((i + 1) % nbColumns != 0)
-                posX++;
-            else {
-                posY++;
-                posX = 0;
-            }
-        }
+		playQuestionSound();
 
-        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath);
-    }
+		return fullAnimation;
+	}
 
-    private void error(String language) {
+	private void playQuestionSound() {
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		URL soundResourceUrl = classLoader.getResource(currentRoundDetails.questionSoundPath);
+		AudioClip soundClip = new AudioClip(soundResourceUrl.toExternalForm());
+		soundClip.play();
+	}
 
-        gameContext.clear();
-        // HomeUtils.home(scene, group, choiceBox, null);
+	/**
+	 * this method should be called when exiting the game, or before starting a new round, in order to clean up all
+	 * resources in both UI and memory
+	 */
+	public void dispose() {
+		if (currentRoundDetails != null) {
+			if (currentRoundDetails.pictureCardList != null) {
+				gameContext.getChildren().removeAll(currentRoundDetails.pictureCardList);
+			}
+			currentRoundDetails = null;
+		}
+	}
 
-        Multilinguism multilinguism = Multilinguism.getSingleton();
+	public void removeAllIncorrectPictureCards() {
+		if (this.currentRoundDetails == null) {
+			return;
+		}
 
-        Text error = new Text(multilinguism.getTrad("WII-error", language));
-        error.setX(scene.getWidth() / 2. - 100);
-        error.setY(scene.getHeight() / 2.);
-        error.setId("item");
-        gameContext.getChildren().addAll(error);
-    }
+		// Collect all items to be removed from the User Interface
+		List<PictureCard> pictureCardsToHide = new ArrayList<>();
+		for (PictureCard pictureCard : this.currentRoundDetails.pictureCardList) {
+			if (!pictureCard.winner) {
+				pictureCardsToHide.add(pictureCard);
+			}
+		}
 
-    private File locateImagesDirectory(Configuration config) {
+		// remove all at once, in order to update the UserInterface only once
+		gameContext.getChildren().removeAll(pictureCardsToHide);
+	}
 
-        File result = null;
+	@Data
+	@AllArgsConstructor
+	public static class RoundDetails {
+		private final List<PictureCard> pictureCardList;
+		private final int winnerImageIndexAmongDisplayedImages;
+		private final String questionSoundPath;
+		private final String question;
+	}
 
-        if (this.gameType == CUSTOMIZED) {
+	private RoundDetails pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
+													final int numberOfImagesToDisplayPerRound, final Random random,
+													final int winnerImageIndexAmongDisplayedImages) {
 
-            result = new File(config.getWhereIsItDir() + "/images/");
-        } else {
+		final File imagesDirectory = locateImagesDirectory(config);
+		final String language = config.getLanguage();
 
-            result = locateImagesDirectoryInUnpackedDistDirectory();
+		final File[] imagesFolders = imagesDirectory.listFiles();
+		final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
 
-            if (result == null) {
-                result = locateImagesDirectoryInExplodedClassPath();
-            }
-        }
-        return result;
-    }
+		if (filesCount == 0) {
+			log.warn("No image found in Directory " + imagesDirectory);
+			error(language);
+			return null;
+		}
+
+		final int randomFolderIndex = random.nextInt(filesCount);
+		log.info("randomFolderIndex " + randomFolderIndex);
 
-    private File locateImagesDirectoryInUnpackedDistDirectory() {
-        final File workingDirectory = new File(".");
-        log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
-        final String workingDirectoryName;
-        try {
-            workingDirectoryName = workingDirectory.getCanonicalFile().getName();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        log.info("workingDirectoryName = {}", workingDirectoryName);
+		int step = 1; // (int) (Math.random() + 1.5);
+		log.info("step " + step);
 
-        final String parentImagesPackageResourceLocation = "data/" + this.gameType.getResourcesDirectoryName()
-                + "/images/";
-        log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
+		int posX = 0;
+		int posY = 0;
+
+		final List<PictureCard> pictureCardList = new ArrayList<>();
+		String questionSoundPath = null;
+		String question = null;
+
+		for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
+
+			final int index = (randomFolderIndex + step * i) % filesCount;
+
+			final File[] files = imagesFolders[(index) % filesCount].listFiles();
+
+			final int numFile = random.nextInt(files.length);
+
+			final File randomImageFile = files[numFile];
+			log.info("randomImageFile = {}", randomImageFile);
+
+			if (winnerImageIndexAmongDisplayedImages == i) {
+
+				log.info("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
+
+				questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
+
+				question = getQuestion(imagesFolders[(index) % filesCount].getName(), language);
+
+				log.info("pathSound = {}", questionSoundPath);
+
+				log.info("question = {}", question);
+			}
+
+			PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+					gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
+					winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+
+			pictureCardList.add(pictureCard);
+
+			log.info("posX " + posX);
+			log.info("posY " + posY);
+
+			if ((i + 1) % nbColumns != 0)
+				posX++;
+			else {
+				posY++;
+				posX = 0;
+			}
+		}
+
+		return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question);
+	}
+
+	private void error(String language) {
+
+		gameContext.clear();
+		// HomeUtils.home(scene, group, choiceBox, null);
+
+		Multilinguism multilinguism = Multilinguism.getSingleton();
+
+		Text error = new Text(multilinguism.getTrad("WII-error", language));
+		error.setX(scene.getWidth() / 2. - 100);
+		error.setY(scene.getHeight() / 2.);
+		error.setId("item");
+		gameContext.getChildren().addAll(error);
+	}
+
+	private File locateImagesDirectory(Configuration config) {
+
+		File result = null;
 
-        {
-            final File imagesDirectory = new File(workingDirectory, parentImagesPackageResourceLocation);
-            log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
-            boolean checked = checkImageDirectory(imagesDirectory);
-            if (checked) {
-                return imagesDirectory;
-            }
-        }
+		if (this.gameType == CUSTOMIZED) {
+
+			result = new File(config.getWhereIsItDir() + "/images/");
+		} else {
 
-        if (workingDirectoryName.equals("bin")) {
-            final File imagesDirectory = new File(workingDirectory, "../" + parentImagesPackageResourceLocation);
-            log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
-            boolean checked = checkImageDirectory(imagesDirectory);
-            if (checked) {
-                return imagesDirectory;
-            }
-        }
+			result = locateImagesDirectoryInUnpackedDistDirectory();
 
-        return null;
-    }
+			if (result == null) {
+				result = locateImagesDirectoryInExplodedClassPath();
+			}
+		}
+		return result;
+	}
 
-    private File locateImagesDirectoryInExplodedClassPath() {
-        final String parentImagesPackageResourceLocation = "data/" + this.gameType.getResourcesDirectoryName()
-                + "/images/";
-        log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
+	private File locateImagesDirectoryInUnpackedDistDirectory() {
+		final File workingDirectory = new File(".");
+		log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
+		final String workingDirectoryName;
+		try {
+			workingDirectoryName = workingDirectory.getCanonicalFile().getName();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		log.info("workingDirectoryName = {}", workingDirectoryName);
 
-        final URL parentImagesPackageResourceUrl;
+		final String parentImagesPackageResourceLocation = "data/" + this.gameType.getResourcesDirectoryName()
+				+ "/images/";
+		log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
 
-        final ClassLoader classLoader = WhereIsIt.class.getClassLoader();
-        parentImagesPackageResourceUrl = classLoader.getResource(parentImagesPackageResourceLocation);
-        log.info("parentImagesPackageResourceUrl = {}", parentImagesPackageResourceUrl);
+		{
+			final File imagesDirectory = new File(workingDirectory, parentImagesPackageResourceLocation);
+			log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
+			boolean checked = checkImageDirectory(imagesDirectory);
+			if (checked) {
+				return imagesDirectory;
+			}
+		}
 
-        if (parentImagesPackageResourceUrl == null) {
-            throw new IllegalStateException("Resource not found : " + parentImagesPackageResourceUrl);
-        }
+		if (workingDirectoryName.equals("bin")) {
+			final File imagesDirectory = new File(workingDirectory, "../" + parentImagesPackageResourceLocation);
+			log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
+			boolean checked = checkImageDirectory(imagesDirectory);
+			if (checked) {
+				return imagesDirectory;
+			}
+		}
 
-        final File imagesDirectory = new File(parentImagesPackageResourceUrl.getFile());
-        log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
+		return null;
+	}
 
-        checkImageDirectory(imagesDirectory);
-        return imagesDirectory;
-    }
+	private File locateImagesDirectoryInExplodedClassPath() {
+		final String parentImagesPackageResourceLocation = "data/" + this.gameType.getResourcesDirectoryName()
+				+ "/images/";
+		log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
 
-    private static boolean checkImageDirectory(File imagesDirectory) {
-        if (!imagesDirectory.exists()) {
-            log.warn("Directory does not exist : {}", imagesDirectory.getAbsolutePath());
-            return false;
-        }
-        if (!imagesDirectory.isDirectory()) {
-            log.warn("File is not a valid Directory : {}", imagesDirectory.getAbsolutePath());
-            return false;
-        }
-        return true;
-    }
+		final URL parentImagesPackageResourceUrl;
 
-    public String getPathSound(final String folder, String language) {
+		final ClassLoader classLoader = WhereIsIt.class.getClassLoader();
+		parentImagesPackageResourceUrl = classLoader.getResource(parentImagesPackageResourceLocation);
+		log.info("parentImagesPackageResourceUrl = {}", parentImagesPackageResourceUrl);
 
-        if (this.gameType == CUSTOMIZED) {
+		if (parentImagesPackageResourceUrl == null) {
+			throw new IllegalStateException("Resource not found : " + parentImagesPackageResourceUrl);
+		}
 
-            final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+		final File imagesDirectory = new File(parentImagesPackageResourceUrl.getFile());
+		log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
 
-            try {
+		checkImageDirectory(imagesDirectory);
+		return imagesDirectory;
+	}
 
-                log.info("CUSTOMIZED");
+	private static boolean checkImageDirectory(File imagesDirectory) {
+		if (!imagesDirectory.exists()) {
+			log.warn("Directory does not exist : {}", imagesDirectory.getAbsolutePath());
+			return false;
+		}
+		if (!imagesDirectory.isDirectory()) {
+			log.warn("File is not a valid Directory : {}", imagesDirectory.getAbsolutePath());
+			return false;
+		}
+		return true;
+	}
 
-                String path = config.getWhereIsItDir() + "sounds/";
-                File F = new File(path);
+	public String getPathSound(final String folder, String language) {
 
-                for (String file : F.list()) {
+		if (this.gameType == CUSTOMIZED) {
 
-                    log.info("file " + file);
-                    log.info("folder " + folder);
+			final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-                    if (file.indexOf(folder) >= 0) {
+			try {
 
-                        File f = new File(path + file);
+				log.info("CUSTOMIZED");
 
-                        log.info("file " + f.getAbsolutePath());
+				String path = config.getWhereIsItDir() + "sounds/";
+				File F = new File(path);
 
-                        return f.getAbsolutePath();
-                    }
-                }
-            } catch (Exception e) {
+				for (String file : F.list()) {
 
-                log.info("Problem with customized folder");
-                error(config.getLanguage());
-            }
+					log.info("file " + file);
+					log.info("folder " + folder);
 
-            return "";
-        }
+					if (file.indexOf(folder) >= 0) {
 
-        if (language.equals("deu")) {
-            // erase when translation is complete
-            language = "eng";
-        }
+						File f = new File(path + file);
 
-        final String voice;
-        if (Math.random() > 0.5) {
-            voice = "m";
-        } else {
-            voice = "w";
-        }
+						log.info("file " + f.getAbsolutePath());
 
-        return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + language + "/" + folder + "." + voice
-                + "." + language + ".mp3";
-    }
+						return f.getAbsolutePath();
+					}
+				}
+			} catch (Exception e) {
 
-    @Slf4j
-    private static class PictureCard extends Group {
+				log.info("Problem with customized folder");
+				error(config.getLanguage());
+			}
 
-        private final double minTime;
-        private final GameContext gameContext;
-        private final boolean winner;
+			return "";
+		}
 
-        private final Rectangle imageRectangle;
-        private final Rectangle errorImageRectangle;
+		if (language.equals("deu")) {
+			// erase when translation is complete
+			language = "eng";
+		}
 
-        private final double initialWidth;
-        private final double initialHeight;
+		final String voice;
+		if (Math.random() > 0.5) {
+			voice = "m";
+		} else {
+			voice = "w";
+		}
 
-        private final double initialPositionX;
-        private final double initialPositionY;
+		return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + language + "/" + folder + "." + voice
+				+ "." + language + ".mp3";
+	}
 
-        private final WhereIsItStats stats;
-        private final Scene scene;
-        private final String imagePath;
+	public String getQuestion(final String folder, String language) {
 
-        private final ProgressIndicator progressIndicator;
-        private final Timeline progressIndicatorAnimationTimeLine;
+		log.info("folder: {}", folder);
+		log.info("language: {}", language);
 
-        private boolean selected;
+		if (this.gameType == CUSTOMIZED) {
 
-        private final CustomInputEventHandler customInputEventHandler;
+			return null;
+		}
 
-        private final WhereIsIt gameInstance;
+		if (language.equals("deu")) {
+			// erase when translation is complete
+			language = "eng";
+		}
 
-        public PictureCard(double posX, double posY, double width, double height, @NonNull GameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats, WhereIsIt gameInstance) {
+		String path = "data/" + this.gameType.getResourcesDirectoryName() + "/"
+				+ this.gameType.getResourcesDirectoryName() + ".csv";
 
-            log.info("imagePath = {}", imagePath);
+		LocalMultilinguism LM = new LocalMultilinguism(path);
 
-            final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+		String traduction = LM.getTrad(folder, language);
 
-            this.minTime = config.getFixationlength();
-            this.initialPositionX = posX;
-            this.initialPositionY = posY;
-            this.initialWidth = width;
-            this.initialHeight = height;
-            this.selected = false;
-            this.winner = winner;
-            this.gameContext = gameContext;
-            this.stats = stats;
-            this.scene = gameContext.getScene();
-            this.gameInstance = gameInstance;
+		return traduction;
+	}
 
-            this.imagePath = imagePath;
+	@Slf4j
+	private static class PictureCard extends Group {
 
-            this.imageRectangle = createImageRectangle(posX, posY, width, height, imagePath);
-            this.progressIndicator = buildProgressIndicator(width, height);
+		private final double minTime;
+		private final GameContext gameContext;
+		private final boolean winner;
 
-            this.progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
+		private final Rectangle imageRectangle;
+		private final Rectangle errorImageRectangle;
 
-            this.errorImageRectangle = createErrorImageRectangle();
+		private final double initialWidth;
+		private final double initialHeight;
 
-            this.getChildren().add(imageRectangle);
-            this.getChildren().add(progressIndicator);
-            this.getChildren().add(errorImageRectangle);
+		private final double initialPositionX;
+		private final double initialPositionY;
 
-            customInputEventHandler = buildCustomInputEventHandler(gameInstance);
+		private final WhereIsItStats stats;
+		private final Scene scene;
+		private final String imagePath;
 
-            GazeUtils.addEventFilter(imageRectangle);
+		private final ProgressIndicator progressIndicator;
+		private final Timeline progressIndicatorAnimationTimeLine;
 
-            this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
+		private boolean selected;
 
-            this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
-        }
+		private final CustomInputEventHandler customInputEventHandler;
 
-        private Timeline createProgressIndicatorTimeLine(WhereIsIt gameInstance) {
-            Timeline result = new Timeline();
+		private final WhereIsIt gameInstance;
 
-            result.getKeyFrames()
-                    .add(new KeyFrame(new Duration(minTime), new KeyValue(progressIndicator.progressProperty(), 1)));
+		public PictureCard(double posX, double posY, double width, double height, @NonNull GameContext gameContext,
+						   boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats, WhereIsIt gameInstance) {
 
-            EventHandler<ActionEvent> progressIndicatorAnimationTimeLineOnFinished = createProgressIndicatorAnimationTimeLineOnFinished(
-                    gameInstance);
+			log.info("imagePath = {}", imagePath);
 
-            result.setOnFinished(progressIndicatorAnimationTimeLineOnFinished);
+			final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-            return result;
-        }
+			this.minTime = config.getFixationlength();
+			this.initialPositionX = posX;
+			this.initialPositionY = posY;
+			this.initialWidth = width;
+			this.initialHeight = height;
+			this.selected = false;
+			this.winner = winner;
+			this.gameContext = gameContext;
+			this.stats = stats;
+			this.scene = gameContext.getScene();
+			this.gameInstance = gameInstance;
 
-        private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(WhereIsIt gameInstance) {
-            return new EventHandler<ActionEvent>() {
+			this.imagePath = imagePath;
 
-                @Override
-                public void handle(ActionEvent actionEvent) {
+			this.imageRectangle = createImageRectangle(posX, posY, width, height, imagePath);
+			this.progressIndicator = buildProgressIndicator(width, height);
 
-                    log.debug("FINISHED");
+			this.progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
-                    selected = true;
+			this.errorImageRectangle = createErrorImageRectangle();
 
-                    imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandler);
-                    imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandler);
-                    GazeUtils.removeEventFilter(imageRectangle);
+			this.getChildren().add(imageRectangle);
+			this.getChildren().add(progressIndicator);
+			this.getChildren().add(errorImageRectangle);
 
-                    if (winner) {
-                        onCorrectCardSelected(gameInstance);
-                    } else {
-                        // bad card
-                        onWrongCardSelected(gameInstance);
-                    }
-                }
-            };
-        }
+			customInputEventHandler = buildCustomInputEventHandler(gameInstance);
 
-        private void onCorrectCardSelected(WhereIsIt gameInstance) {
-            log.debug("WINNER");
+			GazeUtils.addEventFilter(imageRectangle);
 
-            stats.incNbGoals();
+			this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
 
-            customInputEventHandler.ignoreAnyInput = true;
-            progressIndicator.setVisible(false);
+			this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
+		}
 
-            gameInstance.removeAllIncorrectPictureCards();
+		private Timeline createProgressIndicatorTimeLine(WhereIsIt gameInstance) {
+			Timeline result = new Timeline();
 
-            Rectangle2D sceneBounds = new Rectangle2D(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
-            log.info("sceneBounds = {}", sceneBounds);
+			result.getKeyFrames()
+					.add(new KeyFrame(new Duration(minTime), new KeyValue(progressIndicator.progressProperty(), 1)));
 
-            ScaleTransition scaleToFullScreenTransition = new ScaleTransition(new Duration(1000), imageRectangle);
-            scaleToFullScreenTransition.setByX((sceneBounds.getWidth() / initialWidth) - 1);
-            scaleToFullScreenTransition.setByY((sceneBounds.getHeight() / initialHeight) - 1);
+			EventHandler<ActionEvent> progressIndicatorAnimationTimeLineOnFinished = createProgressIndicatorAnimationTimeLineOnFinished(
+					gameInstance);
 
-            TranslateTransition translateToCenterTransition = new TranslateTransition(new Duration(1000),
-                    imageRectangle);
-            translateToCenterTransition.setByX(-initialPositionX + (sceneBounds.getWidth() - initialWidth) / 2);
-            translateToCenterTransition.setByY(-initialPositionY + (sceneBounds.getHeight() - initialHeight) / 2);
+			result.setOnFinished(progressIndicatorAnimationTimeLineOnFinished);
 
-            ParallelTransition fullAnimation = new ParallelTransition();
-            fullAnimation.getChildren().add(translateToCenterTransition);
-            fullAnimation.getChildren().add(scaleToFullScreenTransition);
+			return result;
+		}
 
-            fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
+		private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(WhereIsIt gameInstance) {
+			return new EventHandler<ActionEvent>() {
 
-                    gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            gameInstance.dispose();
-                            gameContext.clear();
+				@Override
+				public void handle(ActionEvent actionEvent) {
 
-                            gameInstance.buildGame();
-                            // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
-                            // gameInstance.stats);
+					log.debug("FINISHED");
 
-                            gameContext.onGameStarted();
+					selected = true;
 
-                        }
-                    });
-                }
-            });
+					imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandler);
+					imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandler);
+					GazeUtils.removeEventFilter(imageRectangle);
 
-            fullAnimation.play();
-        }
+					if (winner) {
+						onCorrectCardSelected(gameInstance);
+					} else {
+						// bad card
+						onWrongCardSelected(gameInstance);
+					}
+				}
+			};
+		}
 
-        private void onWrongCardSelected(WhereIsIt gameInstance) {
-            customInputEventHandler.ignoreAnyInput = true;
-            progressIndicator.setVisible(false);
+		private void onCorrectCardSelected(WhereIsIt gameInstance) {
+			log.debug("WINNER");
 
-            FadeTransition imageFadeOutTransition = new FadeTransition(new Duration(1500), imageRectangle);
-            imageFadeOutTransition.setFromValue(1);
-            // the final opacity is not zero so that we can see what was the image, even after it is marked as an
-            // erroneous pick
-            imageFadeOutTransition.setToValue(0.2);
+			stats.incNbGoals();
 
-            errorImageRectangle.toFront();
-            errorImageRectangle.setOpacity(0);
-            errorImageRectangle.setVisible(true);
+			customInputEventHandler.ignoreAnyInput = true;
+			progressIndicator.setVisible(false);
 
-            FadeTransition errorFadeInTransition = new FadeTransition(new Duration(650), errorImageRectangle);
-            errorFadeInTransition.setFromValue(0);
-            errorFadeInTransition.setToValue(1);
+			gameInstance.removeAllIncorrectPictureCards();
 
-            ParallelTransition fullAnimation = new ParallelTransition();
-            fullAnimation.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
+			Rectangle2D sceneBounds = new Rectangle2D(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
+			log.info("sceneBounds = {}", sceneBounds);
 
-            fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    gameInstance.playQuestionSound();
-                    customInputEventHandler.ignoreAnyInput = false;
-                }
-            });
+			ScaleTransition scaleToFullScreenTransition = new ScaleTransition(new Duration(1000), imageRectangle);
+			scaleToFullScreenTransition.setByX((sceneBounds.getWidth() / initialWidth) - 1);
+			scaleToFullScreenTransition.setByY((sceneBounds.getHeight() / initialHeight) - 1);
 
-            fullAnimation.play();
-        }
+			TranslateTransition translateToCenterTransition = new TranslateTransition(new Duration(1000),
+					imageRectangle);
+			translateToCenterTransition.setByX(-initialPositionX + (sceneBounds.getWidth() - initialWidth) / 2);
+			translateToCenterTransition.setByY(-initialPositionY + (sceneBounds.getHeight() - initialHeight) / 2);
 
-        private Rectangle createImageRectangle(double posX, double posY, double width, double height,
-                @NonNull String imagePath) {
-            final Image image = new Image("file:" + imagePath);
+			ParallelTransition fullAnimation = new ParallelTransition();
+			fullAnimation.getChildren().add(translateToCenterTransition);
+			fullAnimation.getChildren().add(scaleToFullScreenTransition);
 
-            Rectangle result = new Rectangle(posX, posY, width, height);
-            result.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-            return result;
-        }
+			fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent actionEvent) {
 
-        private Rectangle createErrorImageRectangle() {
-            final Image image = new Image("data/common/images/error.png");
+					gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+						@Override
+						public void handle(ActionEvent actionEvent) {
+							gameInstance.dispose();
+							gameContext.clear();
 
-            double imageWidth = image.getWidth();
-            double imageHeight = image.getHeight();
-            double imageHeightToWidthRatio = imageHeight / imageWidth;
+							gameInstance.buildGame();
+							// HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
+							// gameInstance.stats);
 
-            double rectangleWidth = imageRectangle.getWidth() / 3;
-            double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
+							gameContext.onGameStarted();
 
-            double positionX = imageRectangle.getX() + (imageRectangle.getWidth() - rectangleWidth) / 2;
-            double positionY = imageRectangle.getY() + (imageRectangle.getHeight() - rectangleHeight) / 2;
+						}
+					});
+				}
+			});
 
-            Rectangle errorImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
-            errorImageRectangle.setFill(new ImagePattern(image));
-            errorImageRectangle.setX(positionX);
-            errorImageRectangle.setY(positionY);
-            errorImageRectangle.setOpacity(0);
-            errorImageRectangle.setVisible(false);
-            return errorImageRectangle;
-        }
+			fullAnimation.play();
+		}
 
-        private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {
-            double minWidth = parentWidth / 2;
-            double minHeight = parentHeight / 2;
+		private void onWrongCardSelected(WhereIsIt gameInstance) {
+			customInputEventHandler.ignoreAnyInput = true;
+			progressIndicator.setVisible(false);
 
-            double positionX = imageRectangle.getX() + (parentWidth - minWidth) / 2;
-            double positionY = imageRectangle.getY() + (parentHeight - minHeight) / 2;
+			FadeTransition imageFadeOutTransition = new FadeTransition(new Duration(1500), imageRectangle);
+			imageFadeOutTransition.setFromValue(1);
+			// the final opacity is not zero so that we can see what was the image, even after it is marked as an
+			// erroneous pick
+			imageFadeOutTransition.setToValue(0.2);
 
-            ProgressIndicator result = new ProgressIndicator(0);
-            result.setTranslateX(positionX);
-            result.setTranslateY(positionY);
-            result.setMinWidth(minWidth);
-            result.setMinHeight(minHeight);
-            result.setOpacity(0.5);
-            result.setVisible(false);
-            return result;
-        }
+			errorImageRectangle.toFront();
+			errorImageRectangle.setOpacity(0);
+			errorImageRectangle.setVisible(true);
 
-        private CustomInputEventHandler buildCustomInputEventHandler(final WhereIsIt gameInstance) {
-            return new CustomInputEventHandler();
-        }
+			FadeTransition errorFadeInTransition = new FadeTransition(new Duration(650), errorImageRectangle);
+			errorFadeInTransition.setFromValue(0);
+			errorFadeInTransition.setToValue(1);
 
-        private class CustomInputEventHandler implements EventHandler<Event> {
+			ParallelTransition fullAnimation = new ParallelTransition();
+			fullAnimation.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
 
-            /**
-             * this is used to temporarily indicate to ignore input for instance, when an animation is in progress, we
-             * do not want the game to continue to process input, as the user input is irrelevant while the animation is
-             * in progress
-             */
-            private boolean ignoreAnyInput = false;
+			fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent actionEvent) {
+					gameInstance.playQuestionSound();
+					customInputEventHandler.ignoreAnyInput = false;
+				}
+			});
 
-            @Override
-            public void handle(Event e) {
-                if (ignoreAnyInput) {
-                    return;
-                }
+			fullAnimation.play();
+		}
 
-                if (selected) {
-                    return;
-                }
+		private Rectangle createImageRectangle(double posX, double posY, double width, double height,
+											   @NonNull String imagePath) {
+			final Image image = new Image("file:" + imagePath);
 
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    onEntered();
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                    onExited();
-                }
+			Rectangle result = new Rectangle(posX, posY, width, height);
+			result.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+			return result;
+		}
 
-            }
+		private Rectangle createErrorImageRectangle() {
+			final Image image = new Image("data/common/images/error.png");
 
-            private void onEntered() {
-                log.info("ENTERED {}", imagePath);
+			double imageWidth = image.getWidth();
+			double imageHeight = image.getHeight();
+			double imageHeightToWidthRatio = imageHeight / imageWidth;
 
-                progressIndicator.setProgress(0);
-                progressIndicator.setVisible(true);
+			double rectangleWidth = imageRectangle.getWidth() / 3;
+			double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
 
-                progressIndicatorAnimationTimeLine.playFromStart();
-            }
+			double positionX = imageRectangle.getX() + (imageRectangle.getWidth() - rectangleWidth) / 2;
+			double positionY = imageRectangle.getY() + (imageRectangle.getHeight() - rectangleHeight) / 2;
 
-            private void onExited() {
-                log.info("EXITED {}", imagePath);
+			Rectangle errorImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
+			errorImageRectangle.setFill(new ImagePattern(image));
+			errorImageRectangle.setX(positionX);
+			errorImageRectangle.setY(positionY);
+			errorImageRectangle.setOpacity(0);
+			errorImageRectangle.setVisible(false);
+			return errorImageRectangle;
+		}
 
-                progressIndicatorAnimationTimeLine.stop();
+		private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {
+			double minWidth = parentWidth / 2;
+			double minHeight = parentHeight / 2;
 
-                progressIndicator.setVisible(false);
-                progressIndicator.setProgress(0);
-            }
+			double positionX = imageRectangle.getX() + (parentWidth - minWidth) / 2;
+			double positionY = imageRectangle.getY() + (parentHeight - minHeight) / 2;
 
-        }
+			ProgressIndicator result = new ProgressIndicator(0);
+			result.setTranslateX(positionX);
+			result.setTranslateY(positionY);
+			result.setMinWidth(minWidth);
+			result.setMinHeight(minHeight);
+			result.setOpacity(0.5);
+			result.setVisible(false);
+			return result;
+		}
 
-    }
+		private CustomInputEventHandler buildCustomInputEventHandler(final WhereIsIt gameInstance) {
+			return new CustomInputEventHandler();
+		}
+
+		private class CustomInputEventHandler implements EventHandler<Event> {
+
+			/**
+			 * this is used to temporarily indicate to ignore input for instance, when an animation is in progress, we
+			 * do not want the game to continue to process input, as the user input is irrelevant while the animation is
+			 * in progress
+			 */
+			private boolean ignoreAnyInput = false;
+
+			@Override
+			public void handle(Event e) {
+				if (ignoreAnyInput) {
+					return;
+				}
+
+				if (selected) {
+					return;
+				}
+
+				if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+					onEntered();
+				} else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+					onExited();
+				}
+
+			}
+
+			private void onEntered() {
+				log.info("ENTERED {}", imagePath);
+
+				progressIndicator.setProgress(0);
+				progressIndicator.setVisible(true);
+
+				progressIndicatorAnimationTimeLine.playFromStart();
+			}
+
+			private void onExited() {
+				log.info("EXITED {}", imagePath);
+
+				progressIndicatorAnimationTimeLine.stop();
+
+				progressIndicator.setVisible(false);
+				progressIndicator.setProgress(0);
+			}
+
+		}
+
+	}
 }

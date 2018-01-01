@@ -15,9 +15,11 @@ import java.util.Map;
 @Slf4j
 public class Multilinguism {
 
-    private static Map<Entry, String> loadFromFile() {
+    final static String mainFilePath = "data/multilinguism/multilinguism.csv";
+
+    protected static Map<Entry, String> loadFromFile(String path) {
         final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-        try (InputStream is = systemClassLoader.getResourceAsStream("data/multilinguism/multilinguism.csv")) {
+        try (InputStream is = systemClassLoader.getResourceAsStream(path)) {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 
                 Map<Entry, String> traductions = new HashMap<>(1000);
@@ -56,8 +58,8 @@ public class Multilinguism {
 
     private final Map<Entry, String> traductions;
 
-    private Multilinguism() {
-        this.traductions = loadFromFile();
+    protected Multilinguism() {
+        this.traductions = loadFromFile(mainFilePath);
     }
 
     public String getTrad(String key, String language) {
@@ -66,7 +68,7 @@ public class Multilinguism {
 
     @Data
     @AllArgsConstructor
-    private static class Entry {
+    protected static class Entry {
         public String key;
         public String language;
     }
