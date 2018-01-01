@@ -91,8 +91,6 @@ public class HomeUtils {
 
         root.getChildren().clear();
 
-        log.info("Nodes not removed: {}", root.getChildren().size());
-
         Bravo bravo = Bravo.getBravo();
         bravo.setVisible(false);
         root.getChildren().add(bravo);

@@ -17,6 +17,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,6 +30,7 @@ import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.HomeUtils;
+import net.gazeplay.commons.utils.multilinguism.LocalMultilinguism;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.io.File;
@@ -76,7 +78,7 @@ public class WhereIsIt {
     private RoundDetails currentRoundDetails;
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
-            final Group group, final Scene scene, final ChoiceBox choiceBox, final WhereIsItStats stats) {
+                     final Group group, final Scene scene, final ChoiceBox choiceBox, final WhereIsItStats stats) {
         this.group = group;
         this.scene = scene;
         this.choiceBox = choiceBox;
@@ -105,11 +107,51 @@ public class WhereIsIt {
                 winnerImageIndexAmongDisplayedImages);
 
         if (currentRoundDetails != null) {
-            group.getChildren().addAll(currentRoundDetails.pictureCardList);
-            stats.start();
 
-            playQuestionSound();
+            Transition displayQuestion = DisplayQuestion(currentRoundDetails.question);
+
+            displayQuestion.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    HomeUtils.clear();
+                    group.getChildren().addAll(currentRoundDetails.pictureCardList);
+                    HomeUtils.home(scene, group, choiceBox, stats);
+                    stats.start();
+                }
+            });
         }
+    }
+
+    private Transition DisplayQuestion(String question) {
+
+        Text Question = new Text(currentRoundDetails.question);
+
+        Screen screen = Screen.getPrimary();
+
+        Rectangle2D bounds = screen.getBounds();
+
+        double X = (bounds.getWidth()/2 - Question.getBoundsInParent().getWidth());
+
+        double Y = bounds.getHeight()/2;
+
+        Question.setX(X);
+
+        Question.setY(Y);
+
+        Question.setVisible(true);
+
+        Question.setId("title");
+
+        group.getChildren().addAll(Question);
+
+        TranslateTransition fullAnimation = new TranslateTransition(
+                Duration.millis(2000), Question);
+
+        fullAnimation.play();
+
+        playQuestionSound();
+
+        return fullAnimation;
     }
 
     private void playQuestionSound() {
@@ -155,12 +197,12 @@ public class WhereIsIt {
         private final List<PictureCard> pictureCardList;
         private final int winnerImageIndexAmongDisplayedImages;
         private final String questionSoundPath;
-
+        private final String question;
     }
 
     private RoundDetails pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
-            final int numberOfImagesToDisplayPerRound, final Random random,
-            final int winnerImageIndexAmongDisplayedImages) {
+                                                    final int numberOfImagesToDisplayPerRound, final Random random,
+                                                    final int winnerImageIndexAmongDisplayedImages) {
 
         final File imagesDirectory = locateImagesDirectory(config);
         final String language = config.getLanguage();
@@ -185,6 +227,7 @@ public class WhereIsIt {
 
         final List<PictureCard> pictureCardList = new ArrayList<>();
         String questionSoundPath = null;
+        String question = null;
 
         for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
@@ -202,7 +245,12 @@ public class WhereIsIt {
                 log.info("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
 
                 questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
+
+                question = getQuestion(imagesFolders[(index) % filesCount].getName(), language);
+
                 log.info("pathSound = {}", questionSoundPath);
+
+                log.info("question = {}", question);
             }
 
             PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
@@ -222,7 +270,7 @@ public class WhereIsIt {
             }
         }
 
-        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath);
+        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question);
     }
 
     private void error(String language) {
@@ -379,6 +427,30 @@ public class WhereIsIt {
                 + "." + language + ".mp3";
     }
 
+    public String getQuestion(final String folder, String language) {
+
+        log.info("folder: {}",folder);
+        log.info("language: {}",language);
+
+        if (this.gameType == CUSTOMIZED) {
+
+                return null;
+        }
+
+        if (language.equals("deu")) {
+            // erase when translation is complete
+            language = "eng";
+        }
+
+        String path = "data/" + this.gameType.getResourcesDirectoryName() + "/" + this.gameType.getResourcesDirectoryName()+ ".csv";
+
+        LocalMultilinguism LM = new LocalMultilinguism(path);
+
+        String traduction = LM.getTrad(folder, language);
+
+        return traduction;
+    }
+
     @Slf4j
     private static class PictureCard extends Group {
 
@@ -411,8 +483,8 @@ public class WhereIsIt {
         private final WhereIsIt gameInstance;
 
         public PictureCard(double posX, double posY, double width, double height, @NonNull Group root,
-                @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats,
-                WhereIsIt gameInstance) {
+                           @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats,
+                           WhereIsIt gameInstance) {
 
             log.info("imagePath = {}", imagePath);
 
@@ -572,7 +644,7 @@ public class WhereIsIt {
         }
 
         private Rectangle createImageRectangle(double posX, double posY, double width, double height,
-                @NonNull String imagePath) {
+                                               @NonNull String imagePath) {
             final Image image = new Image("file:" + imagePath);
 
             Rectangle result = new Rectangle(posX, posY, width, height);
