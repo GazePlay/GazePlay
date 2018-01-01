@@ -516,12 +516,14 @@ public class WhereIsIt {
                     gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent actionEvent) {
-
-                            gameContext.clear();
                             gameInstance.dispose();
+                            gameContext.clear();
+
                             gameInstance.buildGame();
                             // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
                             // gameInstance.stats);
+
+                            gameContext.onGameStarted();
 
                         }
                     });

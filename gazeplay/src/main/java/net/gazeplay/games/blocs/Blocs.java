@@ -225,6 +225,8 @@ public class Blocs extends Application {
                             gameContext.clear();
                             Blocs.this.makeBlocks();
                             // HomeUtils.home(theScene, blockRoot, choiceBox, stats);
+
+                            gameContext.onGameStarted();
                         });
                     }
                 }

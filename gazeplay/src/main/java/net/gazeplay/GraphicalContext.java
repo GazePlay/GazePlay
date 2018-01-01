@@ -32,6 +32,12 @@ public class GraphicalContext {
         stage.setScene(scene);
         stage.setFullScreen(false); // fullscreen seem to be very slow
         stage.setOnCloseRequest((WindowEvent we) -> stage.close());
+
+        if (homeButton != null) {
+            homeButton.setVisible(true);
+            homeButton.toFront();
+        }
+
         stage.show();
     }
 
@@ -56,6 +62,14 @@ public class GraphicalContext {
         if (homeButton != null) {
             getChildren().add(homeButton);
             homeButton.setVisible(true);
+            homeButton.toFront();
+        }
+    }
+
+    public void onGameStarted() {
+        if (homeButton != null) {
+            homeButton.setVisible(true);
+            homeButton.toFront();
         }
     }
 

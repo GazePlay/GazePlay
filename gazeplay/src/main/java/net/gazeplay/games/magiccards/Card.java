@@ -172,6 +172,8 @@ public class Card extends Parent {
                                                 Card.addCards(gameContext, nbLines, nbColumns, stats);
                                                 // HomeUtils.home(scene, root, choiceBox, stats);
                                                 stats.start();
+
+                                                gameContext.onGameStarted();
                                             }
                                         });
                                     }
