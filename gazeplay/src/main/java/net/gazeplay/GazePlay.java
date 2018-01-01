@@ -44,4 +44,8 @@ public class GazePlay extends Application {
         statsContext.setUpOnStage(primaryStage);
     }
 
+    public void onDisplayConfigurationManagement(ConfigurationContext configurationContext) {
+        configurationContext.setUpOnStage(primaryStage);
+    }
+
 }

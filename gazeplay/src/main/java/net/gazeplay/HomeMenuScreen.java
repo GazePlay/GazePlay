@@ -23,7 +23,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.ConfigurationDisplay;
+import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -178,7 +178,10 @@ public class HomeMenuScreen {
 
         Rectangle exitButton = createExitButton(width, heigth, XExit, Y);
 
-        getChildren().add(ConfigurationDisplay.addConfig(GazePlay.getInstance(), scene, root, cbxGames));
+        ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
+        ConfigurationButton configurationButton = ConfigurationButton.createConfigurationDisplay(configurationContext);
+
+        getChildren().add(configurationButton);
         getChildren().add(exitButton);
         getChildren().add(createLogo());
         getChildren().add(Utils.buildLicence());
