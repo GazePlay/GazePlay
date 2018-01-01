@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.ConfigurationButton;
+import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -63,10 +64,7 @@ public class HomeMenuScreen {
 
         scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
 
-        ObservableList<String> stylesheets = scene.getStylesheets();
-        stylesheets.add(config.getCssfile());
-        Utils.addStylesheets(stylesheets);
-        log.info(stylesheets.toString());
+        CssUtil.setPreferredStylesheets(config, scene);
 
         // end of System information
         for (int i = 0; i < 5; i++) {
