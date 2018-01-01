@@ -378,7 +378,7 @@ public class ConfigurationDisplay extends Rectangle {
                 ConfigurationBuilder.createFromPropertiesResource().withLanguage(newValue.name())
                         .saveConfigIgnoringExceptions();
 
-				gazePlay.onLanguageChanged();
+				gazePlay.getHomeMenuScreen().onLanguageChanged();
 
                 buildConfig(gazePlay, scene, root, cbxGames);// game names change following the language
             }

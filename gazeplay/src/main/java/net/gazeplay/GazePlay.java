@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Pair;
+import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
@@ -30,126 +31,133 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GazePlay extends Application {
 
-    @Getter
-    private static GazePlay instance;
+	@Data
+	public static class HomeMenuScreen {
 
-    @Getter
-    private Scene scene;
+		@Getter
+		private final Scene scene;
 
-    @Getter
-    private Group root;
+		@Getter
+		private final Group root;
 
-    @Getter
-    private ChoiceBox<String> cbxGames;
+		@Getter
+		private final ChoiceBox<String> cbxGames;
 
-    private List<GameSpec> games;
+		private final List<GameSpec> games;
 
-    private GamesLocator gamesLocator;
+		private final GamesLocator gamesLocator;
 
-    public GazePlay() {
-        instance = this;
-    }
+		public HomeMenuScreen(final Configuration config) {
 
-    @Override
-    public void start(Stage primaryStage) {
-        gamesLocator = new DefaultGamesLocator();
-        games = gamesLocator.listGames();
+			gamesLocator = new DefaultGamesLocator();
+			games = gamesLocator.listGames();
 
-        buildHomeMenuScreen();
-        setUpHomeMenuScreen(primaryStage);
-    }
+			root = new Group();
 
-    public void setUpHomeMenuScreen(Stage primaryStage) {
-        primaryStage.setTitle("GazePlay");
-        primaryStage.setFullScreen(true);
-        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        // SecondScreen secondScreen = SecondScreen.launch();
-    }
+			final Screen screen = Screen.getScreens().get(0);
+			log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
 
-    public void buildHomeMenuScreen() {
-        root = new Group();
+			scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+			ObservableList<String> stylesheets = scene.getStylesheets();
+			stylesheets.add(config.getCssfile());
+			Utils.addStylesheets(stylesheets);
+			log.info(stylesheets.toString());
 
-        final Screen screen = Screen.getScreens().get(0);
-        log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
+			// end of System information
+			for (int i = 0; i < 5; i++) {
+				log.info("***********************");
+			}
 
-        scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
+			cbxGames = createChoiceBox(games, config);
 
-        ObservableList<String> stylesheets = scene.getStylesheets();
-        stylesheets.add(config.getCssfile());
-        Utils.addStylesheets(stylesheets);
-        log.info(stylesheets.toString());
+			HomeUtils.goHome(scene, root, cbxGames);
+		}
 
-        // end of System information
-        for (int i = 0; i < 5; i++) {
-            log.info("***********************");
-        }
+		public void setUpHomeMenuScreen(Stage primaryStage) {
+			primaryStage.setTitle("GazePlay");
+			primaryStage.setFullScreen(true);
+			primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			// SecondScreen secondScreen = SecondScreen.launch();
+		}
 
-        cbxGames = createChoiceBox(games, config);
+		public void onLanguageChanged() {
+			final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        HomeUtils.goHome(scene, root, cbxGames);
-    }
+			final List<String> gamesLabels = generateTranslatedGamesNames(games, config);
 
-    public void onLanguageChanged() {
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+			this.cbxGames.getItems().clear();
+			this.cbxGames.getItems().addAll(gamesLabels);
+		}
 
-        final List<String> gamesLabels = generateTranslatedGamesNames(games, config);
+		/**
+		 * This command is called when games have to be updated (example: when language changed)
+		 */
+		private ChoiceBox createChoiceBox(List<GameSpec> games, Configuration config) {
+			List<String> gamesLabels = generateTranslatedGamesNames(games, config);
 
-        this.cbxGames.getItems().clear();
-        this.cbxGames.getItems().addAll(gamesLabels);
-    }
+			ChoiceBox<String> cbxGames = new ChoiceBox<>();
+			cbxGames.getItems().addAll(gamesLabels);
+			cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					chooseGame(newValue.intValue());
+				}
+			});
+			return cbxGames;
+		}
 
-    /**
-     * This command is called when games have to be updated (example: when language changed)
-     */
+		private List<String> generateTranslatedGamesNames(List<GameSpec> games, Configuration config) {
+			final String language = config.getLanguage();
+			final Multilinguism multilinguism = Multilinguism.getSingleton();
 
-    private ChoiceBox createChoiceBox(List<GameSpec> games, Configuration config) {
-        List<String> gamesLabels = generateTranslatedGamesNames(games, config);
+			return games.stream()
+					.map(gameSpec -> new Pair<>(gameSpec, multilinguism.getTrad(gameSpec.getNameCode(), language)))
+					.map(pair -> {
+						String variationHint = pair.getKey().getVariationHint();
+						if (variationHint == null) {
+							return pair.getValue();
+						}
+						return pair.getValue() + " " + variationHint;
+					}).collect(Collectors.toList());
+		}
 
-        ChoiceBox<String> cbxGames = new ChoiceBox<>();
-        cbxGames.getItems().addAll(gamesLabels);
-        cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                chooseGame(newValue.intValue());
-            }
-        });
-        return cbxGames;
-    }
+		private void chooseGame(int gameIndex) {
+			log.info("Game number: " + gameIndex);
 
-    private List<String> generateTranslatedGamesNames(List<GameSpec> games, Configuration config) {
-        final String language = config.getLanguage();
-        final Multilinguism multilinguism = Multilinguism.getSingleton();
+			HomeUtils.clear(scene, root);
 
-        return games.stream()
-                .map(gameSpec -> new Pair<>(gameSpec, multilinguism.getTrad(gameSpec.getNameCode(), language)))
-                .map(pair -> {
-                    String variationHint = pair.getKey().getVariationHint();
-                    if (variationHint == null) {
-                        return pair.getValue();
-                    }
-                    return pair.getValue() + " " + variationHint;
-                }).collect(Collectors.toList());
-    }
+			if (gameIndex == -1) {
+				return;
+			}
 
-    private void chooseGame(int gameIndex) {
-        log.info("Game number: " + gameIndex);
+			GameSpec selectedGameSpec = games.get(gameIndex);
 
-        HomeUtils.clear(scene, root);
+			log.info(selectedGameSpec.getNameCode() + " " + selectedGameSpec.getVariationHint());
 
-        if (gameIndex == -1) {
-            return;
-        }
+			final Stats stats = selectedGameSpec.launch(scene, root, cbxGames);
 
-        GameSpec selectedGameSpec = games.get(gameIndex);
+			HomeUtils.home(scene, root, cbxGames, stats);
+		}
 
-        log.info(selectedGameSpec.getNameCode() + " " + selectedGameSpec.getVariationHint());
+	}
 
-        final Stats stats = selectedGameSpec.launch(scene, root, cbxGames);
+	@Getter
+	private static GazePlay instance;
 
-        HomeUtils.home(scene, root, cbxGames, stats);
-    }
+	@Getter
+	private HomeMenuScreen homeMenuScreen;
+
+	public GazePlay() {
+		instance = this;
+	}
+
+	@Override
+	public void start(Stage primaryStage) {
+		homeMenuScreen = new HomeMenuScreen(ConfigurationBuilder.createFromPropertiesResource().build());
+		homeMenuScreen.setUpHomeMenuScreen(primaryStage);
+	}
+
 }
