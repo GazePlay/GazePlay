@@ -7,7 +7,6 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
@@ -22,8 +21,6 @@ import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.Bravo;
-import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
@@ -52,7 +49,6 @@ public class Card extends Parent {
     private final ProgressIndicator indicator;
     private Timeline timelineProgressBar;
     final HiddenItemsGamesStats stats;
-    final Bravo bravo = Bravo.getBravo();
 
     private static Image[] images;
 
@@ -153,19 +149,6 @@ public class Card extends Parent {
 
                                 Timeline timeline = new Timeline();
 
-                                for (Node N : gameContext.getChildren()) {// clear all but images and reward
-
-                                    if ((N instanceof Card && card != ((Card) N).getCard() && !(N instanceof Bravo))
-                                            || (N instanceof HomeButton)) {// we put outside screen HomeButton and cards
-
-                                        N.setTranslateX(-10000);
-                                        N.setOpacity(0);
-                                        N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                        N.removeEventFilter(GazeEvent.ANY, enterEvent);
-                                    } else {// we keep only Bravo and winning card
-                                    }
-                                }
-
                                 timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
                                         new KeyValue(card.widthProperty(), card.getWidth() * final_zoom)));
                                 timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
@@ -181,7 +164,7 @@ public class Card extends Parent {
                                     @Override
                                     public void handle(ActionEvent actionEvent) {
 
-                                        bravo.playWinTransition(scene, 500, new EventHandler<ActionEvent>() {
+                                        gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
 
                                             @Override
                                             public void handle(ActionEvent actionEvent) {

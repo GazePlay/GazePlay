@@ -14,8 +14,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import net.gazeplay.GameContext;
 import net.gazeplay.GazePlay;
+import net.gazeplay.StatsContext;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.utils.HeatMapUtils;
@@ -28,15 +28,14 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsDisplay {
 
-    public static void displayStats(GazePlay gazePlay, Stats stats, GameContext gameContext, Configuration config) {
+    public static void displayStats(GazePlay gazePlay, Stats stats, StatsContext statsContext, Configuration config) {
 
-        final Scene scene = gameContext.getScene();
+        final Scene scene = statsContext.getScene();
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
         stats.stop();
 
-        gameContext.clear();
         GazeUtils.clear();
 
         // to add or not a space before colon (:) according to the language
@@ -144,17 +143,17 @@ public class StatsDisplay {
         heatChart.setWidth(scene.getWidth() * 0.35);
         heatChart.setHeight(scene.getHeight() * 0.35);
 
-        gameContext.getChildren().addAll(statistics, shoots, totalLength, length, averageLength, medianLength, standDev,
-                UncountedShoot, chart, heatChart);
+        statsContext.getChildren().addAll(statistics, shoots, totalLength, length, averageLength, medianLength,
+                standDev, UncountedShoot, chart, heatChart);
 
         stats.saveStats();
 
-        createHomeButtonInStatsScreen(gazePlay, gameContext);
+        createHomeButtonInStatsScreen(gazePlay, statsContext);
     }
 
-    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, GameContext gameContext) {
-        final Scene scene = gameContext.getScene();
-        final Group root = gameContext.getRoot();
+    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
+        final Scene scene = statsContext.getScene();
+        final Group root = statsContext.getRoot();
 
         double width = scene.getWidth() / 10;
         double height = width;

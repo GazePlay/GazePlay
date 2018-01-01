@@ -31,7 +31,7 @@ public class ColoredBubbles extends Application {
         primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
         primaryStage.setScene(scene);
 
-        GameContext gameContext = new GameContext(null, root, scene);
+        GameContext gameContext = GameContext.newInstance(null);
 
         new Bubble(gameContext, Bubble.COLOR, null, true);
         primaryStage.show();

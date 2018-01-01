@@ -50,7 +50,7 @@ public class Bubble extends Parent {
 
         photos = Utils.images(Utils.getImagesFolder() + "portraits" + Utils.FILESEPARATOR);
 
-        this.scene = scene;
+        this.scene = gameContext.getScene();
 
         if (image)
             scene.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));

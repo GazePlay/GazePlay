@@ -40,4 +40,8 @@ public class GazePlay extends Application {
         homeMenuScreen.setUpOnStage(primaryStage);
     }
 
+    public void onDisplayStats(StatsContext statsContext) {
+        statsContext.setUpOnStage(primaryStage);
+    }
+
 }

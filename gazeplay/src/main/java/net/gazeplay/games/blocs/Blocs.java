@@ -4,13 +4,11 @@ package net.gazeplay.games.blocs;
  * Created by schwab on 29/10/2016.
  */
 
-import com.sun.glass.ui.Screen;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -18,12 +16,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import net.gazeplay.GameContext;
+import net.gazeplay.StatsContext;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
-import net.gazeplay.commons.gaze.SecondScreen;
-import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
@@ -42,7 +38,6 @@ public class Blocs extends Application {
     private final int initCount;
 
     private final boolean hasColors;
-    private final Bravo bravo = Bravo.getBravo();
     private final Bloc[][] blocs;
     private final int trail = 10;
     private final Image[] images;
@@ -56,30 +51,15 @@ public class Blocs extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        StatsContext statsContext = StatsContext.newInstance(null);
+        HiddenItemsGamesStats stats = new HiddenItemsGamesStats(statsContext.getScene());
 
-        primaryStage.setTitle("Blocs");
-
-        primaryStage.setFullScreen(true);
-
-        Group blockRoot = new Group();
-
-        Scene theScene = new Scene(blockRoot, Screen.getScreens().get(0).getWidth(),
-                Screen.getScreens().get(0).getHeight(), Color.BLACK);
-
-        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
-
-        primaryStage.setScene(theScene);
-
-        HiddenItemsGamesStats stats = new HiddenItemsGamesStats(theScene);
-
-        GameContext gameContext = new GameContext(null, blockRoot, theScene);
+        GameContext gameContext = GameContext.newInstance(null);
 
         Blocs blocs = new Blocs(gameContext, 2, 2, true, 1, false, stats);
         blocs.makeBlocks();
 
-        primaryStage.show();
-
-        SecondScreen.launch();
+        gameContext.setUpOnStage(primaryStage);
     }
 
     public Blocs(GameContext gameContext, int nbLines, int nbColomns, boolean colors, float percents4Win,
@@ -241,9 +221,7 @@ public class Blocs extends Application {
 
                         removeAllBlocs();
 
-                        gameContext.hideHomeButton();
-
-                        bravo.playWinTransition(gameContext.getScene(), event -> {
+                        gameContext.playWinTransition(0, event -> {
                             gameContext.clear();
                             Blocs.this.makeBlocks();
                             // HomeUtils.home(theScene, blockRoot, choiceBox, stats);

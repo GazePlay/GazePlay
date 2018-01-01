@@ -1,18 +1,15 @@
 package net.gazeplay;
 
-import javafx.collections.ObservableList;
+import com.sun.glass.ui.Screen;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import lombok.Data;
-import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
@@ -21,54 +18,24 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.StatsDisplay;
 
-@Data
 @Slf4j
-public class GameContext {
+public class GameContext extends GraphicalContext {
 
-    @Getter
-    private final GazePlay gazePlay;
+    public static GameContext newInstance(GazePlay gazePlay) {
+        Group root = new Group();
 
-    @Getter
-    private final Group root;
+        final Screen screen = Screen.getScreens().get(0);
+        log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
 
-    @Getter
-    private final Scene scene;
-
-    private HomeButton homeButton;
-
-    public void setUpOnStage(Stage primaryStage) {
-        primaryStage.setTitle("GazePlay");
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(false); // fullscreen seem to be very slow
-        primaryStage.setOnCloseRequest((WindowEvent we) -> gazePlay.onReturnToMenu());
-        primaryStage.show();
+        Scene scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
+        return new GameContext(gazePlay, root, scene);
     }
 
-    public ObservableList<Node> getChildren() {
-        return root.getChildren();
+    private GameContext(GazePlay gazePlay, Group root, Scene scene) {
+        super(gazePlay, root, scene);
     }
 
-    public void clear() {
-        getScene().setFill(Color.BLACK);
-
-        getChildren().clear();
-
-        log.info("Nodes not removed: {}", getChildren().size());
-
-        Bravo bravo = Bravo.getBravo();
-        bravo.setVisible(false);
-        getChildren().add(bravo);
-    }
-
-    public void hideHomeButton() {
-        this.homeButton.setVisible(false);
-    }
-
-    public void showHomeButton() {
-        this.homeButton.setVisible(false);
-    }
-
-    public void createHomeButtonInGameScreen(GazePlay gazePlay, Stats stats) {
+    public void createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
 
         double width = scene.getWidth() / 10;
         double height = width;
@@ -87,8 +54,12 @@ public class GameContext {
 
                     log.info("stats = " + stats);
 
+                    StatsContext statsContext = StatsContext.newInstance(gazePlay);
+
                     Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-                    StatsDisplay.displayStats(gazePlay, stats, GameContext.this, config);
+                    StatsDisplay.displayStats(gazePlay, stats, statsContext, config);
+
+                    gazePlay.onDisplayStats(statsContext);
 
                     scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
                 }
@@ -100,6 +71,14 @@ public class GameContext {
         root.getChildren().add(homeButton);
 
         this.homeButton = homeButton;
+    }
+
+    public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
+        homeButton.setVisible(false);
+
+        Bravo bravo = Bravo.getBravo();
+        getChildren().add(bravo);
+        bravo.playWinTransition(scene, delay, onFinishedEventHandler);
     }
 
 }

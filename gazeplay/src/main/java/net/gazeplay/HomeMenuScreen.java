@@ -156,14 +156,7 @@ public class HomeMenuScreen {
     private void chooseGame(GameSpec selectedGameSpec) {
         log.info(selectedGameSpec.getNameCode() + " " + selectedGameSpec.getVariationHint());
 
-        Group root = new Group();
-
-        final Screen screen = Screen.getScreens().get(0);
-        log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
-
-        Scene scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
-
-        GameContext gameContext = new GameContext(gazePlay, root, scene);
+        GameContext gameContext = GameContext.newInstance(gazePlay);
 
         final Stats stats = selectedGameSpec.launch(gameContext);
 

@@ -36,7 +36,7 @@ public class CreamPie extends Application {
 
         Stats stats = new ShootGamesStats(scene);
 
-        GameContext gameContext = new GameContext(null, root, scene);
+        GameContext gameContext = GameContext.newInstance(null);
 
         launch(gameContext, (ShootGamesStats) stats);
 

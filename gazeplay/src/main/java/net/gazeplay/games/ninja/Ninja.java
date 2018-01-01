@@ -1,13 +1,10 @@
 package net.gazeplay.games.ninja;
 
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import net.gazeplay.GameContext;
-import net.gazeplay.commons.gaze.SecondScreen;
+import net.gazeplay.StatsContext;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
 
@@ -22,29 +19,15 @@ public class Ninja extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        StatsContext statsContext = StatsContext.newInstance(null);
+        ShootGamesStats stats = new ShootGamesStats(statsContext.getScene());
 
-        primaryStage.setTitle("Ninja Portraits");
-
-        primaryStage.setFullScreen(true);
-
-        Group root = new Group();
-
-        Scene scene = new Scene(root, com.sun.glass.ui.Screen.getScreens().get(0).getWidth(),
-                com.sun.glass.ui.Screen.getScreens().get(0).getHeight(), Color.BLACK);
-
-        ShootGamesStats stats = new ShootGamesStats(scene);
-
-        GameContext gameContext = new GameContext(null, root, scene);
+        GameContext gameContext = GameContext.newInstance(null);
+        gameContext.createHomeButtonInGameScreen(null, null);
 
         launch(gameContext, stats);
 
-        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
-
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
-
-        SecondScreen.launch();
+        gameContext.setUpOnStage(primaryStage);
     }
 
     public static void launch(GameContext gameContext, ShootGamesStats stats) {

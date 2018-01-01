@@ -27,7 +27,6 @@ import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.io.File;
@@ -403,8 +402,6 @@ public class WhereIsIt {
 
         private final CustomInputEventHandler customInputEventHandler;
 
-        private final Bravo bravo = Bravo.getBravo();
-
         private final WhereIsIt gameInstance;
 
         public PictureCard(double posX, double posY, double width, double height, @NonNull GameContext gameContext,
@@ -494,8 +491,6 @@ public class WhereIsIt {
             customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
 
-            gameContext.hideHomeButton();
-
             gameInstance.removeAllIncorrectPictureCards();
 
             Rectangle2D sceneBounds = new Rectangle2D(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
@@ -518,11 +513,11 @@ public class WhereIsIt {
                 @Override
                 public void handle(ActionEvent actionEvent) {
 
-                    bravo.playWinTransition(scene, 500, new EventHandler<ActionEvent>() {
+                    gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent actionEvent) {
 
-                            gameInstance.gameContext.clear();
+                            gameContext.clear();
                             gameInstance.dispose();
                             gameInstance.buildGame();
                             // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
