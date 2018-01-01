@@ -14,12 +14,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
-import net.gazeplay.games.bubbles.BubblesGamesStats;
 import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.HomeUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.games.bubbles.BubblesGamesStats;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -33,8 +32,8 @@ public class StatsDisplay {
 
         stats.stop();
 
-        HomeUtils.clear();
-        GazeUtils.clear();
+        HomeUtils.clear(scene, root);
+        //GazeUtils.clear();
 
         // to add or not a space before colon (:) according to the language
         String colon = multilinguism.getTrad("Colon", config.getLanguage());

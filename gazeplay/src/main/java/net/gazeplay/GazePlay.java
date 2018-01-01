@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
@@ -44,6 +43,7 @@ public class GazePlay extends Application {
     private ChoiceBox<String> cbxGames;
 
     private List<GameSpec> games;
+
     private GamesLocator gamesLocator;
 
     public GazePlay() {
@@ -52,9 +52,23 @@ public class GazePlay extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        gamesLocator = new DefaultGamesLocator();
+        games = gamesLocator.listGames();
+
+        buildHomeMenuScreen();
+        setUpHomeMenuScreen(primaryStage);
+    }
+
+    public void setUpHomeMenuScreen(Stage primaryStage) {
         primaryStage.setTitle("GazePlay");
         primaryStage.setFullScreen(true);
+        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        // SecondScreen secondScreen = SecondScreen.launch();
+    }
 
+    public void buildHomeMenuScreen() {
         root = new Group();
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
@@ -74,20 +88,9 @@ public class GazePlay extends Application {
             log.info("***********************");
         }
 
-        gamesLocator = new DefaultGamesLocator();
-        games = gamesLocator.listGames();
-
         cbxGames = createChoiceBox(games, config);
 
         HomeUtils.goHome(scene, root, cbxGames);
-
-        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
-
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
-
-        // SecondScreen secondScreen = SecondScreen.launch();
     }
 
     public void onLanguageChanged() {
@@ -135,7 +138,7 @@ public class GazePlay extends Application {
     private void chooseGame(int gameIndex) {
         log.info("Game number: " + gameIndex);
 
-        HomeUtils.clear();
+        HomeUtils.clear(scene, root);
 
         if (gameIndex == -1) {
             return;

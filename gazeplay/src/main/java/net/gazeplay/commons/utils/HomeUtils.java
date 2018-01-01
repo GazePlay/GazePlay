@@ -1,6 +1,5 @@
 package net.gazeplay.commons.utils;
 
-import com.sun.glass.ui.Screen;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -15,7 +14,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
-import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.Utils;
@@ -68,7 +66,7 @@ public class HomeUtils {
 
     public static void goHome(Scene scene, Group root, ChoiceBox<String> cbxGames) {
 
-        clear();
+        clear(scene, root);
 
         if (cbxGames != null) {
             cbxGames.getSelectionModel().clearSelection();
@@ -81,13 +79,9 @@ public class HomeUtils {
         }
     }
 
-    public static void clear() {
-
-        Scene scene = GazePlay.getInstance().getScene();
+    public static void clear(Scene scene, Group root) {
 
         scene.setFill(Color.BLACK);
-
-        Group root = GazePlay.getInstance().getRoot();
 
         root.getChildren().clear();
 
@@ -127,7 +121,7 @@ public class HomeUtils {
 
         exit.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
-        root.getChildren().add(ConfigurationDisplay.addConfig(scene, root, cbxGames));
+        root.getChildren().add(ConfigurationDisplay.addConfig(GazePlay.getInstance(), scene, root, cbxGames));
 
         root.getChildren().add(exit);
 

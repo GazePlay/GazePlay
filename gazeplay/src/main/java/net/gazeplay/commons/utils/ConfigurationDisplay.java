@@ -19,7 +19,6 @@ import javafx.stage.FileChooser;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.gaze.EyeTrackers;
-import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.Utils;
@@ -48,7 +47,7 @@ public class ConfigurationDisplay extends Rectangle {
         this.setFill(new ImagePattern(new Image("data/common/images/configuration-button-alt4.png"), 0, 0, 1, 1, true));
     }
 
-    public static ConfigurationDisplay addConfig(Scene scene, Group root, ChoiceBox cbxGames) {
+    public static ConfigurationDisplay addConfig(GazePlay gazePlay, Scene scene, Group root, ChoiceBox cbxGames) {
 
         double width = scene.getWidth() / 10;
         double height = width;
@@ -65,7 +64,7 @@ public class ConfigurationDisplay extends Rectangle {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    buildConfig(scene, root, cbxGames);
+                    buildConfig(gazePlay, scene, root, cbxGames);
                 }
             }
         };
@@ -75,7 +74,7 @@ public class ConfigurationDisplay extends Rectangle {
         return configurationDisplay;
     }
 
-    private static void buildConfig(Scene scene, Group root, ChoiceBox cbxGames) {
+    private static void buildConfig(GazePlay gazePlay, Scene scene, Group root, ChoiceBox cbxGames) {
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
@@ -89,7 +88,7 @@ public class ConfigurationDisplay extends Rectangle {
             colon = " : ";
 
         log.info("ConfigurationDisplay");
-        HomeUtils.clear();
+        HomeUtils.clear(scene, root);
         HomeUtils.home(scene, root, cbxGames, null);
 
         log.info(config.toString());
@@ -103,7 +102,7 @@ public class ConfigurationDisplay extends Rectangle {
         language.setX(100);
         language.setY(100);
         language.setId("item");
-        buildLanguageMenu(config, scene, root, cbxGames, 250, 105);
+        buildLanguageMenu(config, gazePlay, scene, root, cbxGames, 250, 105);
 
         Text eyeTracker = new Text(multilinguism.getTrad("EyeTracker", config.getLanguage()) + colon);
         eyeTracker.setX(100);
@@ -352,7 +351,7 @@ public class ConfigurationDisplay extends Rectangle {
         root.getChildren().add(buttonLoad);
     }
 
-    private static void buildLanguageMenu(Configuration configuration, Scene scene, Group root, ChoiceBox cbxGames,
+    private static void buildLanguageMenu(Configuration configuration, GazePlay gazePlay, Scene scene, Group root, ChoiceBox cbxGames,
             double posX, double posY) {
 
         Languages currentLanguage = null;
@@ -379,9 +378,9 @@ public class ConfigurationDisplay extends Rectangle {
                 ConfigurationBuilder.createFromPropertiesResource().withLanguage(newValue.name())
                         .saveConfigIgnoringExceptions();
 
-                GazePlay.getInstance().onLanguageChanged();
+				gazePlay.onLanguageChanged();
 
-                buildConfig(scene, root, cbxGames);// game names change following the language
+                buildConfig(gazePlay, scene, root, cbxGames);// game names change following the language
             }
         });
     }

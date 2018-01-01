@@ -5,9 +5,6 @@ package net.gazeplay.games.blocs;
  */
 
 import com.sun.glass.ui.Screen;
-import net.gazeplay.commons.gaze.GazeEvent;
-import net.gazeplay.commons.gaze.GazeUtils;
-import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -23,6 +20,9 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
+import net.gazeplay.commons.gaze.SecondScreen;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.HomeUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -30,232 +30,232 @@ import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
 public class Blocs extends Application {
 
-    private static EventHandler<Event> enterEvent;
-    private static Group blockRoot;
-    private static int count;
-    private static int initCount;
-    private static float p4w;
-    private static boolean finished;
-    private static Scene theScene;
-    private static int nColomns;
-    private static int nLines;
-    private static boolean hasColors;
-    private static Bravo bravo = Bravo.getBravo();
-    private static ChoiceBox<String> choiceBox;
-    private static Bloc[][] blocs;
-    private static final int trail = 10;
-    private static Image[] images;
+	private static EventHandler<Event> enterEvent;
+	private static Group blockRoot;
+	private static int count;
+	private static int initCount;
+	private static float p4w;
+	private static boolean finished;
+	private static Scene theScene;
+	private static int nColomns;
+	private static int nLines;
+	private static boolean hasColors;
+	private static Bravo bravo = Bravo.getBravo();
+	private static ChoiceBox<String> choiceBox;
+	private static Bloc[][] blocs;
+	private static final int trail = 10;
+	private static Image[] images;
 
-    public static void main(String[] args) {
-        Application.launch(args);
-    }
+	public static void main(String[] args) {
+		Application.launch(args);
+	}
 
-    @Override
-    public void start(Stage primaryStage) {
+	@Override
+	public void start(Stage primaryStage) {
 
-        primaryStage.setTitle("Blocs");
+		primaryStage.setTitle("Blocs");
 
-        primaryStage.setFullScreen(true);
+		primaryStage.setFullScreen(true);
 
-        blockRoot = new Group();
+		blockRoot = new Group();
 
-        theScene = new Scene(blockRoot, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
-                Color.BLACK);
+		theScene = new Scene(blockRoot, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
+				Color.BLACK);
 
-        primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
+		primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
-        primaryStage.setScene(theScene);
+		primaryStage.setScene(theScene);
 
-        HiddenItemsGamesStats stats = new HiddenItemsGamesStats(theScene);
+		HiddenItemsGamesStats stats = new HiddenItemsGamesStats(theScene);
 
-        makeBlocks(theScene, blockRoot, null, 2, 2, true, 1, false, stats);
+		makeBlocks(theScene, blockRoot, null, 2, 2, true, 1, false, stats);
 
-        primaryStage.show();
+		primaryStage.show();
 
-        SecondScreen.launch();
-    }
+		SecondScreen.launch();
+	}
 
-    public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns,
-            boolean colors, float percents4Win, boolean useTrail, HiddenItemsGamesStats stats) {
+	public static void makeBlocks(Scene scene, Group root, ChoiceBox<String> cbxGames, int nbLines, int nbColomns,
+								  boolean colors, float percents4Win, boolean useTrail, HiddenItemsGamesStats stats) {
 
-        images = Utils.images(Utils.getImagesFolder() + "blocs" + Utils.FILESEPARATOR);
+		images = Utils.images(Utils.getImagesFolder() + "blocs" + Utils.FILESEPARATOR);
 
-        finished = false;
+		finished = false;
 
-        p4w = percents4Win;
+		p4w = percents4Win;
 
-        blockRoot = root;
+		blockRoot = root;
 
-        nColomns = nbColomns;
+		nColomns = nbColomns;
 
-        nLines = nbLines;
+		nLines = nbLines;
 
-        hasColors = colors;
+		hasColors = colors;
 
-        theScene = scene;
+		theScene = scene;
 
-        choiceBox = cbxGames;
+		choiceBox = cbxGames;
 
-        blocs = new Bloc[nbColomns][nbLines];
+		blocs = new Bloc[nbColomns][nbLines];
 
-        int value = (int) Math.floor(Math.random() * images.length);
+		int value = (int) Math.floor(Math.random() * images.length);
 
-        scene.setFill(new ImagePattern(images[value]));
+		scene.setFill(new ImagePattern(images[value]));
 
-        enterEvent = buildEvent(scene, stats, useTrail);
+		enterEvent = buildEvent(scene, root, stats, useTrail);
 
-        double width = scene.getWidth() / nbColomns;
-        double height = scene.getHeight() / nbLines;
+		double width = scene.getWidth() / nbColomns;
+		double height = scene.getHeight() / nbLines;
 
-        initCount = nbColomns * nbLines;
+		initCount = nbColomns * nbLines;
 
-        count = initCount;
+		count = initCount;
 
-        for (int i = 0; i < nbColomns; i++)
-            for (int j = 0; j < nbLines; j++) {
+		for (int i = 0; i < nbColomns; i++)
+			for (int j = 0; j < nbLines; j++) {
 
-                Bloc bloc = new Bloc(i * width, j * height, width + 1, height + 1, i, j);// width+1, height+1 to avoid
-                                                                                         // spaces between blocks for
-                                                                                         // Scratchcard
-                if (colors)
-                    bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
-                else
-                    bloc.setFill(Color.BLACK);
-                root.getChildren().add(bloc);
-                blocs[i][j] = bloc;
+				Bloc bloc = new Bloc(i * width, j * height, width + 1, height + 1, i, j);// width+1, height+1 to avoid
+				// spaces between blocks for
+				// Scratchcard
+				if (colors)
+					bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+				else
+					bloc.setFill(Color.BLACK);
+				root.getChildren().add(bloc);
+				blocs[i][j] = bloc;
 
-                bloc.toBack();
+				bloc.toBack();
 
-                GazeUtils.addEventFilter(bloc);
+				GazeUtils.addEventFilter(bloc);
 
-                bloc.addEventFilter(MouseEvent.ANY, enterEvent);
+				bloc.addEventFilter(MouseEvent.ANY, enterEvent);
 
-                bloc.addEventFilter(GazeEvent.ANY, enterEvent);
+				bloc.addEventFilter(GazeEvent.ANY, enterEvent);
 
-                stats.start();
-            }
-    }
+				stats.start();
+			}
+	}
 
-    private static void RemoveAllBlocs() {
+	private static void RemoveAllBlocs() {
 
-        int maxX = blocs.length;
-        int maxY = blocs[0].length;
+		int maxX = blocs.length;
+		int maxY = blocs[0].length;
 
-        final Service<Void> calculateService = new Service<Void>() {
+		final Service<Void> calculateService = new Service<Void>() {
 
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<Void>() {
+			@Override
+			protected Task<Void> createTask() {
+				return new Task<Void>() {
 
-                    @Override
-                    protected Void call() throws Exception {
-                        for (int i = 0; i < maxX; i++) {
-                            for (int j = 0; j < maxY; j++) {
+					@Override
+					protected Void call() throws Exception {
+						for (int i = 0; i < maxX; i++) {
+							for (int j = 0; j < maxY; j++) {
 
-                                removeBloc(blocs[i][j]);
+								removeBloc(blocs[i][j]);
 
-                            }
-                        }
-                        return null;
-                    }
-                };
-            }
-        };
-        calculateService.start();
-    }
+							}
+						}
+						return null;
+					}
+				};
+			}
+		};
+		calculateService.start();
+	}
 
-    private static void removeBloc(Bloc toRemove) {
+	private static void removeBloc(Bloc toRemove) {
 
-        /*
-         * log.info("##############"); log.info("#####TO REMOVE#########"); log.info(toRemove.posX);
-         * log.info(toRemove.posY); log.info("##############");
-         */
-        if (toRemove == null)
-            return;
+		/*
+		 * log.info("##############"); log.info("#####TO REMOVE#########"); log.info(toRemove.posX);
+		 * log.info(toRemove.posY); log.info("##############");
+		 */
+		if (toRemove == null)
+			return;
 
-        toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
-        toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
-        GazeUtils.removeEventFilter(toRemove);
-        toRemove.setTranslateX(-10000);
-        toRemove.setOpacity(0);
-        // blockRoot.getChildren().remove(toRemove);
-        count--;
-    }
+		toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
+		toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
+		GazeUtils.removeEventFilter(toRemove);
+		toRemove.setTranslateX(-10000);
+		toRemove.setOpacity(0);
+		// blockRoot.getChildren().remove(toRemove);
+		count--;
+	}
 
-    private static EventHandler<Event> buildEvent(Scene scene, HiddenItemsGamesStats stats, boolean useTrail) {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+	private static EventHandler<Event> buildEvent(Scene scene, Group root, HiddenItemsGamesStats stats, boolean useTrail) {
+		return new EventHandler<Event>() {
+			@Override
+			public void handle(Event e) {
 
-                // log.info("useTrail = " + useTrail);
-                // log.info("e.getEventType() = " + e.getEventType());
+				// log.info("useTrail = " + useTrail);
+				// log.info("e.getEventType() = " + e.getEventType());
 
-                if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
-                        || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
+				if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
+						|| e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
-                    if (!useTrail) {
+					if (!useTrail) {
 
-                        Bloc bloc = (Bloc) e.getTarget();
-                        removeBloc(bloc);
-                    } else {
+						Bloc bloc = (Bloc) e.getTarget();
+						removeBloc(bloc);
+					} else {
 
-                        Bloc bloc = (Bloc) e.getTarget();
+						Bloc bloc = (Bloc) e.getTarget();
 
-                        int posX = bloc.posX;
-                        int posY = bloc.posY;
+						int posX = bloc.posX;
+						int posY = bloc.posY;
 
-                        // log.info(bloc.posX);
-                        // log.info(bloc.posY);
+						// log.info(bloc.posX);
+						// log.info(bloc.posY);
 
-                        int maxX = blocs.length;
-                        int maxY = blocs[0].length;
+						int maxX = blocs.length;
+						int maxY = blocs[0].length;
 
-                        for (int i = -trail; i < trail; i++) {
-                            for (int j = -trail; j < trail; j++) {
+						for (int i = -trail; i < trail; i++) {
+							for (int j = -trail; j < trail; j++) {
 
-                                // log.info(Math.sqrt(i * i + j * j) + " : " + maxX + ", " + maxY + ", " + (posX + i) +
-                                // ", " + (posY + j));
-                                if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0
-                                        && posX + i < maxX && posY + j < maxY) {
-                                    // log.info("à supprimer");
-                                    removeBloc(blocs[posX + i][posY + j]);
-                                    blocs[posX + i][posY + j] = null;
-                                }
-                            }
-                        }
-                    }
+								// log.info(Math.sqrt(i * i + j * j) + " : " + maxX + ", " + maxY + ", " + (posX + i) +
+								// ", " + (posY + j));
+								if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0
+										&& posX + i < maxX && posY + j < maxY) {
+									// log.info("à supprimer");
+									removeBloc(blocs[posX + i][posY + j]);
+									blocs[posX + i][posY + j] = null;
+								}
+							}
+						}
+					}
 
-                    if (((float) initCount - count) / initCount >= p4w && !finished) {
+					if (((float) initCount - count) / initCount >= p4w && !finished) {
 
-                        finished = true;
+						finished = true;
 
-                        stats.incNbGoals();
+						stats.incNbGoals();
 
-                        RemoveAllBlocs();
+						RemoveAllBlocs();
 
-                        HomeUtils.homeButton.setVisible(false);
+						HomeUtils.homeButton.setVisible(false);
 
-                        bravo.playWinTransition(scene, event -> {
-                            HomeUtils.clear();
-                            makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, useTrail,
-                                    stats);
-                            HomeUtils.home(theScene, blockRoot, choiceBox, stats);
-                        });
-                    }
-                }
-            }
-        };
-    }
+						bravo.playWinTransition(scene, event -> {
+							HomeUtils.clear(scene, root);
+							makeBlocks(theScene, blockRoot, choiceBox, nLines, nColomns, hasColors, p4w, useTrail,
+									stats);
+							HomeUtils.home(theScene, blockRoot, choiceBox, stats);
+						});
+					}
+				}
+			}
+		};
+	}
 }
 
 class Bloc extends Rectangle {
 
-    public int posX;
-    public int posY;
+	public int posX;
+	public int posY;
 
-    public Bloc(double x, double y, double width, double height, int posX, int posY) {
-        super(x, y, width, height);
-        this.posX = posX;
-        this.posY = posY;
-    }
+	public Bloc(double x, double y, double width, double height, int posX, int posY) {
+		super(x, y, width, height);
+		this.posX = posX;
+		this.posY = posY;
+	}
 }
