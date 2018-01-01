@@ -28,13 +28,15 @@ public class DefaultGamesLocator implements GamesLocator {
 
         result.add(new GameSpec("Creampie", (gameSpec, gameContext) -> {
             CreampieStats stats = new CreampieStats(gameContext.getScene());
-            CreamPie.launch(gameContext, stats);
+            CreamPie game = new CreamPie(gameContext, stats);
+            game.launch();
             return stats;
         }));
 
         result.add(new GameSpec("Ninja", (gameSpec, gameContext) -> {
             NinjaStats stats = new NinjaStats(gameContext.getScene());
-            Ninja.launch(gameContext, stats);
+            Ninja game = new Ninja(gameContext, stats);
+            game.launch();
             return stats;
         }));
 
