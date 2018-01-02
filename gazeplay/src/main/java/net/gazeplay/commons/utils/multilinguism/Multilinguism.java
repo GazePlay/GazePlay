@@ -1,76 +1,38 @@
 package net.gazeplay.commons.utils.multilinguism;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 public class Multilinguism {
 
-    final static String mainFilePath = "data/multilinguism/multilinguism.csv";
-
-    protected static Map<Entry, String> loadFromFile(String path) {
-        final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-        try (InputStream is = systemClassLoader.getResourceAsStream(path)) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-
-                Map<Entry, String> traductions = new HashMap<>(1000);
-
-                String ligne = null;
-
-                boolean firstline = true;
-
-                String[] languages = null, data = null;
-
-                while ((ligne = br.readLine()) != null) {
-                    if (firstline) {
-                        // Retourner la ligne dans un tableau
-                        languages = ligne.split(",");
-                        firstline = false;
-                    } else {
-                        data = ligne.split(",");
-                        String key = data[0];
-                        for (int i = 1; i < data.length; i++) {
-
-                            // log.info(key + ", " + languages[i] + ", " +data[i]);
-                            traductions.put(new Entry(key, languages[i]), data[i]);
-                        }
-                    }
-                }
-                return traductions;
-            }
-        } catch (IOException e) {
-            log.error("Exception", e);
-            throw new RuntimeException(e);
-        }
-    }
+    private final static String mainFilePath = "data/multilinguism/multilinguism.csv";
 
     @Getter
-    private static Multilinguism singleton = new Multilinguism();
+    private static Multilinguism singleton = new Multilinguism(new I18N(mainFilePath));
 
-    private final Map<Entry, String> traductions;
+    private static Map<String, Multilinguism> byResourceLocation = new HashMap<>();
 
-    protected Multilinguism() {
-        this.traductions = loadFromFile(mainFilePath);
+    public static Multilinguism getForResource(String resourceLocation) {
+        Multilinguism result = byResourceLocation.get(resourceLocation);
+        if (result == null) {
+            result = new Multilinguism(new I18N(resourceLocation));
+            byResourceLocation.put(resourceLocation, result);
+        }
+        return result;
+    }
+
+    private final I18N i18n;
+
+    private Multilinguism(I18N i18n) {
+        this.i18n = i18n;
     }
 
     public String getTrad(String key, String language) {
-        return traductions.get(new Entry(key, language));
-    }
-
-    @Data
-    @AllArgsConstructor
-    protected static class Entry {
-        public String key;
-        public String language;
+        return i18n.translate(key, language);
     }
 
 }

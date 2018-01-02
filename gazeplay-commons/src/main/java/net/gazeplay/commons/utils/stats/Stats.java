@@ -1,12 +1,13 @@
 package net.gazeplay.commons.utils.stats;
 
-import net.gazeplay.commons.gaze.GazeEvent;
-import net.gazeplay.commons.gaze.GazeUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.games.Utils;
 
@@ -28,24 +29,28 @@ import java.util.Collections;
 public abstract class Stats {
 
     private final double heatMapPixelSize = computeHeatMapPixelSize();
+
     private final int trail = 10;
 
     protected String gameName;
 
     protected int nbGoals;
+
     protected long length;
+
     protected long beginTime;
-    protected long zeroTime;
+
+    private long zeroTime;
+
+    @Getter
     protected ArrayList<Integer> lengthBetweenGoals;
-    protected javafx.scene.Scene scene;
-    protected EventHandler<MouseEvent> recordMouseMovements;
-    protected EventHandler<GazeEvent> recordGazeMovements;
 
-    protected double[][] heatMap;
+    private EventHandler<MouseEvent> recordMouseMovements;
+    private EventHandler<GazeEvent> recordGazeMovements;
 
-    public ArrayList<Integer> getLengthBetweenGoals() {
-        return lengthBetweenGoals;
-    }
+    private double[][] heatMap;
+
+    private final Scene gameContextScene;
 
     public void printLengthBetweenGoalsToString(PrintWriter out) {
 
@@ -55,9 +60,9 @@ public abstract class Stats {
         }
     }
 
-    public Stats(Scene scene) {
+    public Stats(Scene gameContextScene) {
+        this.gameContextScene = gameContextScene;
 
-        this.scene = scene;
         nbGoals = 0;
         beginTime = 0;
         length = 0;
@@ -67,17 +72,15 @@ public abstract class Stats {
         log.info("GazeUtils ON : " + GazeUtils.isOn());
 
         if (GazeUtils.isOn()) {
-
             recordGazeMovements = buildRecordGazeMovements();
             GazeUtils.addStats(this);
         } else {
-
             recordMouseMovements = buildRecordMouseMovements();
-            scene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+            gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
         }
 
-        int heatMapWidth = (int) (scene.getHeight() / heatMapPixelSize);
-        int heatMapHeight = (int) (scene.getWidth() / heatMapPixelSize);
+        int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
+        int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
         log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
         heatMap = new double[heatMapWidth][heatMapHeight];
     }
@@ -290,13 +293,10 @@ public abstract class Stats {
     }
 
     public void stop() {
-
         if (GazeUtils.isOn()) {
-
-            scene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
+            gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
         } else {
-
-            scene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
+            gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
         }
     }
 

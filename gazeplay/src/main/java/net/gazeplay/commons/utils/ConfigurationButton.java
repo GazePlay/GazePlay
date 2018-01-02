@@ -17,9 +17,8 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GazePlay;
+import net.gazeplay.ConfigurationContext;
 import net.gazeplay.commons.gaze.EyeTrackers;
-import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.Utils;
@@ -34,48 +33,46 @@ import java.io.File;
  */
 
 @Slf4j
-public class ConfigurationDisplay extends Rectangle {
+public class ConfigurationButton extends Rectangle {
 
-    private static ConfigurationDisplay configurationDisplay;
+    public static ConfigurationButton createConfigurationDisplay(ConfigurationContext configurationContext) {
+        final EventHandler<Event> configEvent = new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+
+                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+
+                    buildConfig(configurationContext);
+                    configurationContext.getGazePlay().onDisplayConfigurationManagement(configurationContext);
+                }
+            }
+        };
+
+        final Scene scene = configurationContext.getScene();
+
+        double width = scene.getWidth() / 10;
+        double height = width;
+        double positionX = 0;
+        double positionY = scene.getHeight() - height * 1.1;
+
+        ConfigurationButton configurationButton = new ConfigurationButton(positionX, positionY, width, height);
+        configurationButton.setVisible(true);
+        configurationButton.addEventHandler(MouseEvent.MOUSE_CLICKED, configEvent);
+        return configurationButton;
+    }
 
     private static double prefWidth = 200;
+
     private static double prefHeight = 25;
 
-    private ConfigurationDisplay(double X, double Y, double width, double heigth) {
+    private ConfigurationButton(double X, double Y, double width, double heigth) {
 
         super(X, Y, width, heigth);
 
         this.setFill(new ImagePattern(new Image("data/common/images/configuration-button-alt4.png"), 0, 0, 1, 1, true));
     }
 
-    public static ConfigurationDisplay addConfig(Scene scene, Group root, ChoiceBox cbxGames) {
-
-        double width = scene.getWidth() / 10;
-        double height = width;
-        double X = 0;
-        double Y = scene.getHeight() - height * 1.1;
-
-        configurationDisplay = new ConfigurationDisplay(X, Y, width, height);
-
-        configurationDisplay.setVisible(true);
-
-        EventHandler<Event> configEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
-                    buildConfig(scene, root, cbxGames);
-                }
-            }
-        };
-
-        configurationDisplay.addEventHandler(MouseEvent.MOUSE_CLICKED, configEvent);
-
-        return configurationDisplay;
-    }
-
-    private static void buildConfig(Scene scene, Group root, ChoiceBox cbxGames) {
+    private static void buildConfig(ConfigurationContext configurationContext) {
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
@@ -88,58 +85,62 @@ public class ConfigurationDisplay extends Rectangle {
         else
             colon = " : ";
 
-        log.info("ConfigurationDisplay");
-        HomeUtils.clear();
-        HomeUtils.home(scene, root, cbxGames, null);
+        log.info("ConfigurationButton");
+        // HomeUtils.home(scene, root, cbxGames, null);
 
         log.info(config.toString());
 
-        Text Configuration = new Text(multilinguism.getTrad("ConfigTitle", config.getLanguage()));
-        Configuration.setX(scene.getWidth() * 0.4);
-        Configuration.setY(60);
-        Configuration.setId("title");
+        Scene scene = configurationContext.getScene();
+
+        Text configTitleText = new Text(multilinguism.getTrad("ConfigTitle", config.getLanguage()));
+        configTitleText.setX(scene.getWidth() * 0.4);
+        configTitleText.setY(60);
+        configTitleText.setId("title");
 
         Text language = new Text(multilinguism.getTrad("Lang", config.getLanguage()) + colon);
         language.setX(100);
         language.setY(100);
         language.setId("item");
-        buildLanguageMenu(config, scene, root, cbxGames, 250, 105);
+        buildLanguageMenu(config, configurationContext, 250, 105);
 
         Text eyeTracker = new Text(multilinguism.getTrad("EyeTracker", config.getLanguage()) + colon);
         eyeTracker.setX(100);
         eyeTracker.setY(200);
         eyeTracker.setId("item");
-        buildEyeTrackerMenu(config, root, 250, 205);
+        buildEyeTrackerMenu(config, configurationContext, 250, 205);
 
         Text fileDir = new Text(multilinguism.getTrad("FileDir", config.getLanguage()) + colon);
         fileDir.setX(100);
         fileDir.setY(300);
         fileDir.setId("item");
-        buildDirectoryChooserMenu(scene, config, root, 250, 305);
+        buildDirectoryChooserMenu(scene, config, configurationContext, 250, 305);
 
         Text styleFile = new Text(multilinguism.getTrad("LayoutFile", config.getLanguage()) + colon);
         styleFile.setX(100);
         styleFile.setY(400);
         styleFile.setId("item");
-        buildStyleChooser(scene, config, root, 250, 405);
+        buildStyleChooser(scene, config, configurationContext, 250, 405);
 
         Text fixLength = new Text(multilinguism.getTrad("FixationLength", config.getLanguage()) + colon);
         fixLength.setX(100);
         fixLength.setY(500);
         fixLength.setId("item");
-        buildFixLengthChooserMenu(scene, config, root, 250, 505);
+        buildFixLengthChooserMenu(scene, config, configurationContext, 250, 505);
 
         Text wisGameDir = new Text(multilinguism.getTrad("WhereIsItDirectory", config.getLanguage()) + colon);
         wisGameDir.setX(100);
         wisGameDir.setY(600);
         wisGameDir.setId("item");
-        buildWITDirectoryChooserMenu(scene, config, root, 250, 605);
+        buildWITDirectoryChooserMenu(scene, config, configurationContext, 250, 605);
 
-        root.getChildren().addAll(Configuration, language, eyeTracker, fileDir, styleFile, fixLength, wisGameDir);
+        configurationContext.getChildren().addAll(configTitleText, language, eyeTracker, fileDir, styleFile, fixLength,
+                wisGameDir);
+
+        configurationContext.createHomeButtonInConfigurationManagementScreen(configurationContext.getGazePlay());
     }
 
-    private static void buildFixLengthChooserMenu(Scene scene, Configuration configuration, Group root, int posX,
-            int posY) {
+    private static void buildFixLengthChooserMenu(Scene scene, Configuration configuration,
+            ConfigurationContext configurationContext, int posX, int posY) {
 
         ChoiceBox FixLengthBox = new ChoiceBox();
 
@@ -158,7 +159,7 @@ public class ConfigurationDisplay extends Rectangle {
         FixLengthBox.setPrefWidth(prefWidth);
         FixLengthBox.setPrefHeight(prefHeight);
 
-        root.getChildren().add(FixLengthBox);
+        configurationContext.getChildren().add(FixLengthBox);
 
         FixLengthBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -184,7 +185,8 @@ public class ConfigurationDisplay extends Rectangle {
      * @param posY
      */
 
-    private static void buildStyleChooser(Scene scene, Configuration configuration, Group root, int posX, int posY) {
+    private static void buildStyleChooser(Scene scene, Configuration configuration,
+            ConfigurationContext configurationContext, int posX, int posY) {
 
         ChoiceBox themesBox = new ChoiceBox();
         Themes[] TThemes = Themes.values();
@@ -208,7 +210,7 @@ public class ConfigurationDisplay extends Rectangle {
         themesBox.setTranslateY(posY);
         themesBox.setPrefWidth(prefWidth);
         themesBox.setPrefHeight(prefHeight);
-        root.getChildren().add(themesBox);
+        configurationContext.getChildren().add(themesBox);
 
         themesBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -285,8 +287,8 @@ public class ConfigurationDisplay extends Rectangle {
         root.getChildren().add(buttonLoad);
     }
 
-    private static void buildDirectoryChooserMenu(Scene scene, Configuration configuration, Group root, int posX,
-            int posY) {
+    private static void buildDirectoryChooserMenu(Scene scene, Configuration configuration,
+            ConfigurationContext configurationContext, int posX, int posY) {
 
         final String filedir = configuration.getFiledir();
 
@@ -316,11 +318,11 @@ public class ConfigurationDisplay extends Rectangle {
         buttonLoad.setTranslateX(posX);
         buttonLoad.setTranslateY(posY);
 
-        root.getChildren().add(buttonLoad);
+        configurationContext.getChildren().add(buttonLoad);
     }
 
-    private static void buildWITDirectoryChooserMenu(Scene scene, Configuration configuration, Group root, int posX,
-            int posY) {
+    private static void buildWITDirectoryChooserMenu(Scene scene, Configuration configuration,
+            ConfigurationContext configurationContext, int posX, int posY) {
 
         final String whereIsItDir = configuration.getWhereIsItDir();
         Button buttonLoad = new Button(whereIsItDir);
@@ -349,10 +351,10 @@ public class ConfigurationDisplay extends Rectangle {
         buttonLoad.setTranslateX(posX);
         buttonLoad.setTranslateY(posY);
 
-        root.getChildren().add(buttonLoad);
+        configurationContext.getChildren().add(buttonLoad);
     }
 
-    private static void buildLanguageMenu(Configuration configuration, Scene scene, Group root, ChoiceBox cbxGames,
+    private static void buildLanguageMenu(Configuration configuration, ConfigurationContext configurationContext,
             double posX, double posY) {
 
         Languages currentLanguage = null;
@@ -369,7 +371,7 @@ public class ConfigurationDisplay extends Rectangle {
         languageBox.setPrefWidth(prefWidth);
         languageBox.setPrefHeight(prefHeight);
 
-        root.getChildren().add(languageBox);
+        configurationContext.getChildren().add(languageBox);
 
         languageBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Languages>() {
             @Override
@@ -379,14 +381,15 @@ public class ConfigurationDisplay extends Rectangle {
                 ConfigurationBuilder.createFromPropertiesResource().withLanguage(newValue.name())
                         .saveConfigIgnoringExceptions();
 
-                GazePlay.getInstance().onLanguageChanged();
+                configurationContext.getGazePlay().getHomeMenuScreen().onLanguageChanged();
 
-                buildConfig(scene, root, cbxGames);// game names change following the language
+                buildConfig(configurationContext);// game names change following the language
             }
         });
     }
 
-    private static void buildEyeTrackerMenu(Configuration configuration, Group root, double posX, double posY) {
+    private static void buildEyeTrackerMenu(Configuration configuration, ConfigurationContext configurationContext,
+            double posX, double posY) {
         ChoiceBox EyeTrackersBox = new ChoiceBox();
         EyeTrackers[] TEyeTrackers = EyeTrackers.values();
 
@@ -405,7 +408,7 @@ public class ConfigurationDisplay extends Rectangle {
         EyeTrackersBox.setTranslateY(posY);
         EyeTrackersBox.setPrefWidth(prefWidth);
         EyeTrackersBox.setPrefHeight(prefHeight);
-        root.getChildren().add(EyeTrackersBox);
+        configurationContext.getChildren().add(EyeTrackersBox);
 
         EyeTrackersBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override

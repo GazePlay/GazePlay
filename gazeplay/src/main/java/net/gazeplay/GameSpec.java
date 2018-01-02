@@ -1,8 +1,5 @@
 package net.gazeplay;
 
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import lombok.Getter;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -10,7 +7,7 @@ public class GameSpec {
 
     public interface GameLauncher {
 
-        Stats launchGame(GameSpec gameSpec, Scene scene, Group root, ChoiceBox<String> cbxGames);
+        Stats launchGame(GameSpec gameSpec, GameContext gameContext);
 
     }
 
@@ -34,7 +31,7 @@ public class GameSpec {
         this.gameLauncher = gameLauncher;
     }
 
-    public Stats launch(Scene scene, Group root, ChoiceBox<String> cbxGames) {
-        return gameLauncher.launchGame(this, scene, root, cbxGames);
+    public Stats launch(GameContext gameContext) {
+        return gameLauncher.launchGame(this, gameContext);
     }
 }

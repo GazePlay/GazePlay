@@ -6,31 +6,31 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GameContext;
+import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.Bravo;
-import net.gazeplay.commons.utils.HomeUtils;
-import net.gazeplay.commons.utils.multilinguism.LocalMultilinguism;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.io.File;
@@ -46,7 +46,7 @@ import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZE
  * Created by Didier Schwab on the 18/11/2017
  */
 @Slf4j
-public class WhereIsIt {
+public class WhereIsIt implements GameLifeCycle {
 
     public enum WhereIsItGameType {
         ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
@@ -58,10 +58,15 @@ public class WhereIsIt {
         @Getter
         private final String resourcesDirectoryName;
 
+        @Getter
+        private final String languageResourceLocation;
+
         WhereIsItGameType(String gameName, String resourcesDirectoryName) {
             this.gameName = gameName;
             this.resourcesDirectoryName = resourcesDirectoryName;
+            this.languageResourceLocation = "data/" + resourcesDirectoryName + "/" + resourcesDirectoryName + ".csv";
         }
+
     }
 
     private final WhereIsItGameType gameType;
@@ -69,19 +74,17 @@ public class WhereIsIt {
     private final int nbColumns;
     private final boolean fourThree;
 
-    private final Group group;
+    private final GameContext gameContext;
     private final Scene scene;
-    private final ChoiceBox choiceBox;
 
     private final WhereIsItStats stats;
 
     private RoundDetails currentRoundDetails;
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
-            final Group group, final Scene scene, final ChoiceBox choiceBox, final WhereIsItStats stats) {
-        this.group = group;
-        this.scene = scene;
-        this.choiceBox = choiceBox;
+            final GameContext gameContext, final WhereIsItStats stats) {
+        this.gameContext = gameContext;
+        this.scene = gameContext.getScene();
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.gameType = gameType;
@@ -91,7 +94,8 @@ public class WhereIsIt {
         this.stats.setName(gameType.getGameName());
     }
 
-    public void buildGame() {
+    @Override
+    public void launch() {
         final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree).computeGameSizing(scene);
 
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
@@ -107,48 +111,38 @@ public class WhereIsIt {
                 winnerImageIndexAmongDisplayedImages);
 
         if (currentRoundDetails != null) {
+            Transition animation = createQuestionTextTransition(currentRoundDetails.question);
 
-            Transition displayQuestion = DisplayQuestion(currentRoundDetails.question);
-
-            displayQuestion.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    HomeUtils.clear();
-                    group.getChildren().addAll(currentRoundDetails.pictureCardList);
-                    HomeUtils.home(scene, group, choiceBox, stats);
-                    stats.start();
-                }
-            });
+            animation.play();
+            playQuestionSound();
         }
     }
 
-    private Transition DisplayQuestion(String question) {
+    private Transition createQuestionTextTransition(String question) {
+        Text questionText = new Text(question);
 
-        Text Question = new Text(currentRoundDetails.question);
+        double positionX = gameContext.getScene().getWidth() / 2 - questionText.getBoundsInParent().getWidth() / 2;
+        double positionY = gameContext.getScene().getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
 
-        Screen screen = Screen.getPrimary();
+        questionText.setX(positionX);
+        questionText.setY(positionY);
+        questionText.setVisible(true);
+        questionText.setId("title");
+        questionText.setTextAlignment(TextAlignment.CENTER);
+        StackPane.setAlignment(questionText, Pos.CENTER);
 
-        Rectangle2D bounds = screen.getBounds();
+        gameContext.getChildren().addAll(questionText);
 
-        double X = (bounds.getWidth() / 2 - Question.getBoundsInParent().getWidth());
+        TranslateTransition fullAnimation = new TranslateTransition(Duration.millis(2000), questionText);
+        fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                gameContext.getChildren().remove(questionText);
 
-        double Y = bounds.getHeight() / 2;
-
-        Question.setX(X);
-
-        Question.setY(Y);
-
-        Question.setVisible(true);
-
-        Question.setId("title");
-
-        group.getChildren().addAll(Question);
-
-        TranslateTransition fullAnimation = new TranslateTransition(Duration.millis(2000), Question);
-
-        fullAnimation.play();
-
-        playQuestionSound();
+                gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
+                stats.start();
+            }
+        });
 
         return fullAnimation;
     }
@@ -164,10 +158,11 @@ public class WhereIsIt {
      * this method should be called when exiting the game, or before starting a new round, in order to clean up all
      * resources in both UI and memory
      */
+    @Override
     public void dispose() {
         if (currentRoundDetails != null) {
             if (currentRoundDetails.pictureCardList != null) {
-                group.getChildren().removeAll(currentRoundDetails.pictureCardList);
+                gameContext.getChildren().removeAll(currentRoundDetails.pictureCardList);
             }
             currentRoundDetails = null;
         }
@@ -187,7 +182,7 @@ public class WhereIsIt {
         }
 
         // remove all at once, in order to update the UserInterface only once
-        group.getChildren().removeAll(pictureCardsToHide);
+        gameContext.getChildren().removeAll(pictureCardsToHide);
     }
 
     @Data
@@ -245,7 +240,7 @@ public class WhereIsIt {
 
                 questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
 
-                question = getQuestion(imagesFolders[(index) % filesCount].getName(), language);
+                question = getQuestionText(imagesFolders[(index) % filesCount].getName(), language);
 
                 log.info("pathSound = {}", questionSoundPath);
 
@@ -253,7 +248,7 @@ public class WhereIsIt {
             }
 
             PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, group, scene,
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
                     winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
 
             pictureCardList.add(pictureCard);
@@ -274,8 +269,8 @@ public class WhereIsIt {
 
     private void error(String language) {
 
-        HomeUtils.clear();
-        HomeUtils.home(scene, group, choiceBox, null);
+        gameContext.clear();
+        // HomeUtils.home(scene, group, choiceBox, null);
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
@@ -283,7 +278,7 @@ public class WhereIsIt {
         error.setX(scene.getWidth() / 2. - 100);
         error.setY(scene.getHeight() / 2.);
         error.setId("item");
-        group.getChildren().addAll(error);
+        gameContext.getChildren().addAll(error);
     }
 
     private File locateImagesDirectory(Configuration config) {
@@ -426,13 +421,12 @@ public class WhereIsIt {
                 + "." + language + ".mp3";
     }
 
-    public String getQuestion(final String folder, String language) {
+    private String getQuestionText(final String folder, String language) {
 
         log.info("folder: {}", folder);
         log.info("language: {}", language);
 
         if (this.gameType == CUSTOMIZED) {
-
             return null;
         }
 
@@ -441,13 +435,9 @@ public class WhereIsIt {
             language = "eng";
         }
 
-        String path = "data/" + this.gameType.getResourcesDirectoryName() + "/"
-                + this.gameType.getResourcesDirectoryName() + ".csv";
+        Multilinguism localMultilinguism = Multilinguism.getForResource(gameType.languageResourceLocation);
 
-        LocalMultilinguism LM = new LocalMultilinguism(path);
-
-        String traduction = LM.getTrad(folder, language);
-
+        String traduction = localMultilinguism.getTrad(folder, language);
         return traduction;
     }
 
@@ -455,7 +445,7 @@ public class WhereIsIt {
     private static class PictureCard extends Group {
 
         private final double minTime;
-        private final Group root;
+        private final GameContext gameContext;
         private final boolean winner;
 
         private final Rectangle imageRectangle;
@@ -478,13 +468,10 @@ public class WhereIsIt {
 
         private final CustomInputEventHandler customInputEventHandler;
 
-        private final Bravo bravo = Bravo.getBravo();
-
         private final WhereIsIt gameInstance;
 
-        public PictureCard(double posX, double posY, double width, double height, @NonNull Group root,
-                @NonNull Scene scene, boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats,
-                WhereIsIt gameInstance) {
+        public PictureCard(double posX, double posY, double width, double height, @NonNull GameContext gameContext,
+                boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats, WhereIsIt gameInstance) {
 
             log.info("imagePath = {}", imagePath);
 
@@ -497,9 +484,9 @@ public class WhereIsIt {
             this.initialHeight = height;
             this.selected = false;
             this.winner = winner;
-            this.root = root;
+            this.gameContext = gameContext;
             this.stats = stats;
-            this.scene = scene;
+            this.scene = gameContext.getScene();
             this.gameInstance = gameInstance;
 
             this.imagePath = imagePath;
@@ -569,7 +556,6 @@ public class WhereIsIt {
 
             customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
-            HomeUtils.homeButton.setVisible(false);
 
             gameInstance.removeAllIncorrectPictureCards();
 
@@ -593,15 +579,17 @@ public class WhereIsIt {
                 @Override
                 public void handle(ActionEvent actionEvent) {
 
-                    bravo.playWinTransition(scene, 500, new EventHandler<ActionEvent>() {
+                    gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent actionEvent) {
-
-                            HomeUtils.clear();
                             gameInstance.dispose();
-                            gameInstance.buildGame();
-                            HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
-                                    gameInstance.stats);
+                            gameContext.clear();
+
+                            gameInstance.launch();
+                            // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
+                            // gameInstance.stats);
+
+                            gameContext.onGameStarted();
 
                         }
                     });

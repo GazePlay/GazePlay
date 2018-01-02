@@ -14,6 +14,8 @@ import javafx.util.Duration;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.Portrait;
+import net.gazeplay.commons.utils.Position;
+import net.gazeplay.commons.utils.RandomPositionGenerator;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
 import net.gazeplay.commons.utils.stats.Stats;
 

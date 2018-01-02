@@ -33,7 +33,7 @@ public class HiddenItemsGamesStats extends Stats {
         out.print(',');
         out.print("Standard Déviation");
         out.print(',');
-        for (int i = 0; i < lengthBetweenGoals.size(); i++) {
+        for (int i = 0; i < getLengthBetweenGoals().size(); i++) {
             out.print("shoot ");
             out.print(i);
             out.print(",");

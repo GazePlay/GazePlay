@@ -3,30 +3,22 @@ package net.gazeplay.games.magiccards;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
-import net.gazeplay.commons.gaze.configuration.Configuration;
-import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.Bravo;
-import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.HomeUtils;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
 /**
@@ -35,69 +27,136 @@ import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 @Slf4j
 public class Card extends Parent {
 
-    protected static final float cardRatio = 0.75f;
-    protected static final int minHeight = 30;
-    protected static final float zoom_factor = 1.1f;
-    protected static double mintime;
-    private Rectangle card;
-    private boolean winner;
-    private Image image;
+    private static final float zoom_factor = 1.1f;
 
-    private boolean turned = false;// true if the card has been turned
-    int nbLines;
-    int nbColumns;
-    private double initWidth;
-    private double initHeight;
-    private Scene scene;
-    private ChoiceBox choiceBox;
-    private Group root;
-    private ProgressIndicator indicator;
+    private final double fixationlength;
+
+    private final Rectangle card;
+
+    @Getter
+    private final boolean winner;
+
+    private final Image image;
+
+    private final Scene scene;
+    private final GameContext gameContext;
+
+    private final double initWidth;
+    private final double initHeight;
+
+    private final MagicCards gameInstance;
+
+    /**
+     * true if the card has been turned
+     */
+    private boolean turned = false;
+
+    private final ProgressIndicator progressIndicator;
+
     private Timeline timelineProgressBar;
-    HiddenItemsGamesStats stats;
-    Bravo bravo = Bravo.getBravo();
+    final HiddenItemsGamesStats stats;
 
-    private static Image[] images;
+    final EventHandler<Event> enterEvent;
 
-    EventHandler<Event> enterEvent;
+    public Card(double positionX, double positionY, double width, double height, Image image, boolean winner,
+            GameContext gameContext, HiddenItemsGamesStats stats, MagicCards gameInstance, int fixationlength) {
 
-    public Card(int nbColumns, int nbLines, double x, double y, double width, double height, Image image,
-            boolean winner, Scene scene, Group root, ChoiceBox choiceBox, HiddenItemsGamesStats stats) {
+        this.card = new Rectangle(positionX, positionY, width, height);
+        this.card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
 
-        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        this.image = image;
+        this.winner = winner; // true if it is the good card
 
-        mintime = config.getFixationlength();
-        this.winner = winner;// true if it is the good card
+        this.gameContext = gameContext;
+        this.scene = gameContext.getScene();
+
+        this.stats = stats;
+
+        this.fixationlength = fixationlength;
+
+        this.gameInstance = gameInstance;
+
         this.initWidth = width;
         this.initHeight = height;
-        this.scene = scene;
-        this.choiceBox = choiceBox;
-        this.root = root;
-        this.nbLines = nbLines;
-        this.nbColumns = nbColumns;
-        this.stats = stats;
-        card = new Rectangle(x, y, width, height);
-        card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
+
         this.getChildren().add(card);
-        this.image = image;
-        indicator = new ProgressIndicator(0);
+
+        this.progressIndicator = createProgressIndicator(width, height);
+        this.getChildren().add(this.progressIndicator);
+
+        this.enterEvent = buildEvent();
+
+        GazeUtils.addEventFilter(card);
+
+        this.addEventFilter(MouseEvent.ANY, enterEvent);
+        this.addEventFilter(GazeEvent.ANY, enterEvent);
+    }
+
+    private ProgressIndicator createProgressIndicator(double width, double height) {
+        ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(card.getX() + width * 0.05);
         indicator.setTranslateY(card.getY() + height * 0.2);
         indicator.setMinWidth(width * 0.9);
         indicator.setMinHeight(width * 0.9);
         indicator.setOpacity(0);
-        this.getChildren().add(indicator);
-
-        GazeUtils.addEventFilter(card);
-
-        enterEvent = buildEvent();
-
-        this.addEventFilter(MouseEvent.ANY, enterEvent);
-
-        this.addEventFilter(GazeEvent.ANY, enterEvent);
+        return indicator;
     }
 
-    public static void main(String[] args) {
-        Application.launch(MagicCards.class, args);
+    private void onCorrectCardSelected() {
+
+        stats.incNbGoals();
+
+        int final_zoom = 2;
+
+        progressIndicator.setOpacity(0);
+
+        gameInstance.removeAllIncorrectCards();
+
+        Timeline timeline = new Timeline();
+
+        timeline.getKeyFrames().add(
+                new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth() * final_zoom)));
+        timeline.getKeyFrames().add(
+                new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight() * final_zoom)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
+                new KeyValue(card.xProperty(), (scene.getWidth() - card.getWidth() * final_zoom) / 2)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
+                new KeyValue(card.yProperty(), (scene.getHeight() - card.getHeight() * final_zoom) / 2)));
+
+        timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        gameInstance.dispose();
+
+                        gameContext.clear();
+
+                        gameInstance.launch();
+
+                        stats.start();
+
+                        gameContext.onGameStarted();
+                    }
+                });
+            }
+        });
+
+        timeline.play();
+    }
+
+    private void onWrongCardSelected() {
+
+        Timeline timeline = new Timeline();
+
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(card.opacityProperty(), 0)));
+
+        timeline.play();
+
+        progressIndicator.setOpacity(0);
     }
 
     private EventHandler<Event> buildEvent() {
@@ -110,8 +169,8 @@ public class Card extends Parent {
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    indicator.setOpacity(1);
-                    indicator.setProgress(0);
+                    progressIndicator.setOpacity(1);
+                    progressIndicator.setProgress(0);
 
                     Timeline timelineCard = new Timeline();
 
@@ -126,8 +185,8 @@ public class Card extends Parent {
 
                     timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames()
-                            .add(new KeyFrame(new Duration(mintime), new KeyValue(indicator.progressProperty(), 1)));
+                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                            new KeyValue(progressIndicator.progressProperty(), 1)));
 
                     timelineCard.play();
 
@@ -146,68 +205,9 @@ public class Card extends Parent {
                             card.removeEventFilter(GazeEvent.ANY, enterEvent);
 
                             if (winner) {
-
-                                stats.incNbGoals();
-
-                                int final_zoom = 2;
-
-                                indicator.setOpacity(0);
-
-                                Timeline timeline = new Timeline();
-
-                                for (Node N : root.getChildren()) {// clear all but images and reward
-
-                                    if ((N instanceof Card && card != ((Card) N).getCard() && !(N instanceof Bravo))
-                                            || (N instanceof HomeButton)) {// we put outside screen HomeButton and cards
-
-                                        N.setTranslateX(-10000);
-                                        N.setOpacity(0);
-                                        N.removeEventFilter(MouseEvent.ANY, enterEvent);
-                                        N.removeEventFilter(GazeEvent.ANY, enterEvent);
-                                    } else {// we keep only Bravo and winning card
-                                    }
-                                }
-
-                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                                        new KeyValue(card.widthProperty(), card.getWidth() * final_zoom)));
-                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                                        new KeyValue(card.heightProperty(), card.getHeight() * final_zoom)));
-                                timeline.getKeyFrames()
-                                        .add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(),
-                                                (scene.getWidth() - card.getWidth() * final_zoom) / 2)));
-                                timeline.getKeyFrames()
-                                        .add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(),
-                                                (scene.getHeight() - card.getHeight() * final_zoom) / 2)));
-
-                                timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-                                    @Override
-                                    public void handle(ActionEvent actionEvent) {
-
-                                        bravo.playWinTransition(scene, 500, new EventHandler<ActionEvent>() {
-
-                                            @Override
-                                            public void handle(ActionEvent actionEvent) {
-                                                HomeUtils.clear();
-                                                Card.addCards(root, scene, choiceBox, nbLines, nbColumns, stats);
-                                                HomeUtils.home(scene, root, choiceBox, stats);
-                                                stats.start();
-                                            }
-                                        });
-                                    }
-                                });
-
-                                timeline.play();
-
+                                onCorrectCardSelected();
                             } else {// bad card
-
-                                Timeline timeline = new Timeline();
-
-                                timeline.getKeyFrames()
-                                        .add(new KeyFrame(new Duration(2000), new KeyValue(card.opacityProperty(), 0)));
-
-                                timeline.play();
-
-                                indicator.setOpacity(0);
+                                onWrongCardSelected();
                             }
                         }
                     });
@@ -228,63 +228,11 @@ public class Card extends Parent {
 
                     timelineProgressBar.stop();
 
-                    indicator.setOpacity(0);
-                    indicator.setProgress(0);
+                    progressIndicator.setOpacity(0);
+                    progressIndicator.setProgress(0);
                 }
             }
         };
-    }
-
-    public static void addCards(Group root, Scene scene, ChoiceBox cbxGames, int nbLines, int nbColumns,
-            HiddenItemsGamesStats stats) {
-
-        images = Utils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
-        double cardHeight = computeCardHeight(scene, nbLines);
-        double cardWidth = cardHeight * cardRatio;
-        double width = computeCardWidth(scene, nbColumns) - cardWidth;
-
-        int winner = (int) (nbColumns * nbLines * Math.random());
-        int k = 0;
-        Card winCard = null;
-
-        for (int i = 0; i < nbColumns; i++)
-            for (int j = 0; j < nbLines; j++) {
-
-                if (k++ == winner) {
-                    winCard = new Card(nbColumns, nbLines, width / 2 + (width + cardWidth) * i,
-                            minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight, getRandomImage(), true,
-                            scene, root, cbxGames, stats);
-                    root.getChildren().add(winCard);
-                } else {
-                    Card card = new Card(nbColumns, nbLines, width / 2 + (width + cardWidth) * i,
-                            minHeight / 2 + (minHeight + cardHeight) * j, cardWidth, cardHeight,
-                            new Image("data/common/images/error.png"), false, scene, root, cbxGames, stats);
-                    root.getChildren().add(card);
-                }
-            }
-        winCard.toFront();
-        stats.start();
-    }
-
-    private static Image getRandomImage() {
-
-        int value = (int) Math.floor(Math.random() * images.length);
-
-        return images[value];
-    }
-
-    private static double computeCardHeight(Scene scene, int nbLines) {
-
-        return scene.getHeight() * 0.9 / nbLines;
-    }
-
-    private static double computeCardWidth(Scene scene, int nbColumns) {
-
-        return scene.getWidth() / nbColumns;
-    }
-
-    public Rectangle getCard() {
-        return card;
     }
 
 }
