@@ -6,17 +6,19 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -109,45 +111,38 @@ public class WhereIsIt implements GameLifeCycle {
                 winnerImageIndexAmongDisplayedImages);
 
         if (currentRoundDetails != null) {
-            Transition displayQuestion = DisplayQuestion(currentRoundDetails.question);
+            Transition animation = createQuestionTextTransition(currentRoundDetails.question);
 
-            displayQuestion.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
-                    stats.start();
-                }
-            });
+            animation.play();
+            playQuestionSound();
         }
     }
 
-    private Transition DisplayQuestion(String question) {
+    private Transition createQuestionTextTransition(String question) {
+        Text questionText = new Text(question);
 
-        Text Question = new Text(currentRoundDetails.question);
+        double positionX = gameContext.getScene().getWidth() / 2 - questionText.getBoundsInParent().getWidth() / 2;
+        double positionY = gameContext.getScene().getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
 
-        Screen screen = Screen.getPrimary();
+        questionText.setX(positionX);
+        questionText.setY(positionY);
+        questionText.setVisible(true);
+        questionText.setId("title");
+        questionText.setTextAlignment(TextAlignment.CENTER);
+        StackPane.setAlignment(questionText, Pos.CENTER);
 
-        Rectangle2D bounds = screen.getBounds();
+        gameContext.getChildren().addAll(questionText);
 
-        double X = (bounds.getWidth() / 2 - Question.getBoundsInParent().getWidth());
+        TranslateTransition fullAnimation = new TranslateTransition(Duration.millis(2000), questionText);
+        fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                gameContext.getChildren().remove(questionText);
 
-        double Y = bounds.getHeight() / 2;
-
-        Question.setX(X);
-
-        Question.setY(Y);
-
-        Question.setVisible(true);
-
-        Question.setId("title");
-
-        gameContext.getChildren().addAll(Question);
-
-        TranslateTransition fullAnimation = new TranslateTransition(Duration.millis(2000), Question);
-
-        fullAnimation.play();
-
-        playQuestionSound();
+                gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
+                stats.start();
+            }
+        });
 
         return fullAnimation;
     }

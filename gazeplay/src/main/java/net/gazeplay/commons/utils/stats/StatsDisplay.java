@@ -3,7 +3,6 @@ package net.gazeplay.commons.utils.stats;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -187,7 +186,6 @@ public class StatsDisplay {
 
     public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
         final Scene scene = statsContext.getScene();
-        final Group root = statsContext.getRoot();
 
         HomeButton homeButton = new HomeButton();
 

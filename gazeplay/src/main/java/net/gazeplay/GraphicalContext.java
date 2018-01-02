@@ -1,7 +1,6 @@
 package net.gazeplay;
 
 import javafx.collections.ObservableList;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -14,12 +13,12 @@ import net.gazeplay.commons.utils.HomeButton;
 
 @Data
 @Slf4j
-public class GraphicalContext {
+public abstract class GraphicalContext<T> {
 
     @Getter
     private final GazePlay gazePlay;
 
-    private final Group root;
+    protected final T root;
 
     @Getter
     protected final Scene scene;
@@ -40,9 +39,7 @@ public class GraphicalContext {
         stage.show();
     }
 
-    public ObservableList<Node> getChildren() {
-        return root.getChildren();
-    }
+    public abstract ObservableList<Node> getChildren();
 
     public void hideHomeButton() {
         this.homeButton.setVisible(false);

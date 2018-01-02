@@ -1,10 +1,12 @@
 package net.gazeplay;
 
 import com.sun.glass.ui.Screen;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -16,7 +18,7 @@ import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.HomeButton;
 
 @Slf4j
-public class ConfigurationContext extends GraphicalContext {
+public class ConfigurationContext extends GraphicalContext<Group> {
 
     public static ConfigurationContext newInstance(GazePlay gazePlay) {
         Group root = new Group();
@@ -61,6 +63,11 @@ public class ConfigurationContext extends GraphicalContext {
         getChildren().add(homeButton);
 
         this.homeButton = homeButton;
+    }
+
+    @Override
+    public ObservableList<Node> getChildren() {
+        return root.getChildren();
     }
 
 }

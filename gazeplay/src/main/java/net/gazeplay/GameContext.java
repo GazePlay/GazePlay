@@ -1,11 +1,13 @@
 package net.gazeplay;
 
 import com.sun.glass.ui.Screen;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -20,7 +22,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.StatsDisplay;
 
 @Slf4j
-public class GameContext extends GraphicalContext {
+public class GameContext extends GraphicalContext<Group> {
 
     public static GameContext newInstance(GazePlay gazePlay) {
         Group root = new Group();
@@ -79,6 +81,11 @@ public class GameContext extends GraphicalContext {
         Bravo bravo = Bravo.getBravo();
         getChildren().add(bravo);
         bravo.playWinTransition(scene, delay, onFinishedEventHandler);
+    }
+
+    @Override
+    public ObservableList<Node> getChildren() {
+        return root.getChildren();
     }
 
 }
