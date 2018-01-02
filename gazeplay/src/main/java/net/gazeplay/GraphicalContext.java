@@ -19,8 +19,7 @@ public class GraphicalContext {
     @Getter
     private final GazePlay gazePlay;
 
-    @Getter
-    protected final Group root;
+    private final Group root;
 
     @Getter
     protected final Scene scene;
