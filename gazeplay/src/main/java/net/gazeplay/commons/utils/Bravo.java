@@ -10,7 +10,6 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
@@ -43,12 +42,13 @@ public class Bravo extends Rectangle {
      */
     private static final double pictureFinalHeightToSceneHeightRatio = 0.95d;
 
-    private static final String pictureResourceLocation = "data/common/images/bravo.png";
+    private static final String defaultPictureResourceLocation = "data/common/images/bravo.png";
 
-    private static final String soundResourceLocation = "data/common/sounds/applause.mp3";
+    private static final String defaultSoundResourceLocation = "data/common/sounds/applause.mp3";
 
-    @Getter
-    private static final Bravo bravo = new Bravo();
+    private final String pictureResourceLocation;
+
+    private final String soundResourceLocation;
 
     private final URL soundResourceUrl;
 
@@ -56,8 +56,14 @@ public class Bravo extends Rectangle {
 
     private SequentialTransition fullTransition;
 
-    private Bravo() {
+    public Bravo() {
+        this(defaultPictureResourceLocation, defaultSoundResourceLocation);
+    }
+
+    public Bravo(String pictureResourceLocation, String soundResourceLocation) {
         super(0, 0, 0, 0);
+        this.pictureResourceLocation = pictureResourceLocation;
+        this.soundResourceLocation = soundResourceLocation;
 
         ClassLoader classLoader = this.getClass().getClassLoader();
 

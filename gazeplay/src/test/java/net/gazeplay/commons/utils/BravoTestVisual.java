@@ -57,13 +57,15 @@ public class BravoTestVisual {
 
 			primaryStage.setScene(scene);
 
-			root.getChildren().add(Bravo.getBravo());
+			Bravo bravo = new Bravo();
+
+			root.getChildren().add(bravo);
 
 			primaryStage.show();
 
 			long startTime = System.currentTimeMillis();
 
-			Bravo.getBravo().playWinTransition(scene, 2000, actionEvent -> {
+			bravo.playWinTransition(scene, 2000, actionEvent -> {
 				long finishedTime = System.currentTimeMillis();
 
 				duration = finishedTime - startTime;
