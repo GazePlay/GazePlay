@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.utils.Portrait;
+import net.gazeplay.commons.utils.RandomPositionGenerator;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
 
 public class CreamPie implements GameLifeCycle {
@@ -28,7 +29,7 @@ public class CreamPie implements GameLifeCycle {
 
         Hand hand = new Hand(scene);
 
-        Portrait.RandomPositionGenerator randomPositionGenerator = new Portrait.RandomPositionGenerator(scene);
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(scene);
 
         Target portrait = new Target(randomPositionGenerator, hand, stats, Portrait.loadAllImages());
 
