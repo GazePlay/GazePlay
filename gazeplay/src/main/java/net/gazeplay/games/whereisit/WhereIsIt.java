@@ -29,7 +29,6 @@ import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.multilinguism.LocalMultilinguism;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.io.File;
@@ -57,10 +56,15 @@ public class WhereIsIt implements GameLifeCycle {
         @Getter
         private final String resourcesDirectoryName;
 
+        @Getter
+        private final String languageResourceLocation;
+
         WhereIsItGameType(String gameName, String resourcesDirectoryName) {
             this.gameName = gameName;
             this.resourcesDirectoryName = resourcesDirectoryName;
+            this.languageResourceLocation = "data/" + resourcesDirectoryName + "/" + resourcesDirectoryName + ".csv";
         }
+
     }
 
     private final WhereIsItGameType gameType;
@@ -241,7 +245,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                 questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
 
-                question = getQuestion(imagesFolders[(index) % filesCount].getName(), language);
+                question = getQuestionText(imagesFolders[(index) % filesCount].getName(), language);
 
                 log.info("pathSound = {}", questionSoundPath);
 
@@ -422,13 +426,12 @@ public class WhereIsIt implements GameLifeCycle {
                 + "." + language + ".mp3";
     }
 
-    public String getQuestion(final String folder, String language) {
+    private String getQuestionText(final String folder, String language) {
 
         log.info("folder: {}", folder);
         log.info("language: {}", language);
 
         if (this.gameType == CUSTOMIZED) {
-
             return null;
         }
 
@@ -437,13 +440,9 @@ public class WhereIsIt implements GameLifeCycle {
             language = "eng";
         }
 
-        String path = "data/" + this.gameType.getResourcesDirectoryName() + "/"
-                + this.gameType.getResourcesDirectoryName() + ".csv";
+        Multilinguism localMultilinguism = Multilinguism.getForResource(gameType.languageResourceLocation);
 
-        LocalMultilinguism LM = new LocalMultilinguism(path);
-
-        String traduction = LM.getTrad(folder, language);
-
+        String traduction = localMultilinguism.getTrad(folder, language);
         return traduction;
     }
 
