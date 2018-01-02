@@ -110,7 +110,7 @@ public class DefaultGamesLocator implements GamesLocator {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 2, false, gameContext,
                     stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 
@@ -118,14 +118,14 @@ public class DefaultGamesLocator implements GamesLocator {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 3, false, gameContext,
                     stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 
         result.add(new GameSpec("WhereIsTheAnimal", "(3x2)", (gameSpec, gameContext) -> {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 2, true, gameContext, stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 
@@ -133,35 +133,35 @@ public class DefaultGamesLocator implements GamesLocator {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 3, false, gameContext,
                     stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 
         result.add(new GameSpec("WhereIsTheColor", "(2x2)", (gameSpec, gameContext) -> {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 2, false, gameContext, stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 
         result.add(new GameSpec("WhereIsTheColor", "(2x3)", (gameSpec, gameContext) -> {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 3, false, gameContext, stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 
         result.add(new GameSpec("WhereIsTheColor", "(3x2)", (gameSpec, gameContext) -> {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 2, false, gameContext, stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 
         result.add(new GameSpec("WhereIsTheColor", "(3x3)", (gameSpec, gameContext) -> {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 3, false, gameContext, stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 
@@ -169,7 +169,7 @@ public class DefaultGamesLocator implements GamesLocator {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 2, false, gameContext,
                     stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 
@@ -177,7 +177,7 @@ public class DefaultGamesLocator implements GamesLocator {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 3, false, gameContext,
                     stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 
@@ -185,14 +185,14 @@ public class DefaultGamesLocator implements GamesLocator {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 3, 2, false, gameContext,
                     stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 
         result.add(new GameSpec("WhereIsIt", "(3x3)", (gameSpec, gameContext) -> {
             WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
             WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 3, false, gameContext, stats);
-            whereIsIt.buildGame();
+            whereIsIt.launch();
             return stats;
         }));
 

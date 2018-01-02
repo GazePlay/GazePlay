@@ -87,7 +87,7 @@ public class WhereIsIt {
         this.stats.setName(gameType.getGameName());
     }
 
-    public void buildGame() {
+    public void launch() {
         final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree).computeGameSizing(scene);
 
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
@@ -588,7 +588,7 @@ public class WhereIsIt {
                             gameInstance.dispose();
                             gameContext.clear();
 
-                            gameInstance.buildGame();
+                            gameInstance.launch();
                             // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
                             // gameInstance.stats);
 
