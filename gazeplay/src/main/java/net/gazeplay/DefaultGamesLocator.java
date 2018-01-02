@@ -7,7 +7,7 @@ import net.gazeplay.games.bubbles.Bubble;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
-import net.gazeplay.games.magiccards.Card;
+import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
@@ -42,25 +42,29 @@ public class DefaultGamesLocator implements GamesLocator {
 
         result.add(new GameSpec("MagicCards", "(2x2)", (gameSpec, gameContext) -> {
             MagicCardsGamesStats stats = new MagicCardsGamesStats(gameContext.getScene());
-            Card.addCards(gameContext, 2, 2, stats);
+            MagicCards magicCards = new MagicCards(gameContext, 2, 2, stats);
+            magicCards.launch();
             return stats;
         }));
 
         result.add(new GameSpec("MagicCards", "(2x3)", (gameSpec, gameContext) -> {
             MagicCardsGamesStats stats = new MagicCardsGamesStats(gameContext.getScene());
-            Card.addCards(gameContext, 2, 3, stats);
+            MagicCards magicCards = new MagicCards(gameContext, 2, 3, stats);
+            magicCards.launch();
             return stats;
         }));
 
         result.add(new GameSpec("MagicCards", "(3x2)", (gameSpec, gameContext) -> {
             MagicCardsGamesStats stats = new MagicCardsGamesStats(gameContext.getScene());
-            Card.addCards(gameContext, 3, 2, stats);
+            MagicCards magicCards = new MagicCards(gameContext, 3, 2, stats);
+            magicCards.launch();
             return stats;
         }));
 
         result.add(new GameSpec("MagicCards", "(3x3)", (gameSpec, gameContext) -> {
             MagicCardsGamesStats stats = new MagicCardsGamesStats(gameContext.getScene());
-            Card.addCards(gameContext, 3, 3, stats);
+            MagicCards magicCards = new MagicCards(gameContext, 3, 3, stats);
+            magicCards.launch();
             return stats;
         }));
 
