@@ -14,13 +14,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class LocalMultilinguism extends Multilinguism{
+public class LocalMultilinguism extends Multilinguism {
 
     private final Map<Entry, String> gameTraductions;
 
-    public LocalMultilinguism(String path) {this.gameTraductions = super.loadFromFile(path);}
+    public LocalMultilinguism(String path) {
+        this.gameTraductions = super.loadFromFile(path);
+    }
 
-    public String getTrad(String key, String language) {return gameTraductions.get(new Entry(key, language));
+    public String getTrad(String key, String language) {
+        return gameTraductions.get(new Entry(key, language));
     }
 
 }
