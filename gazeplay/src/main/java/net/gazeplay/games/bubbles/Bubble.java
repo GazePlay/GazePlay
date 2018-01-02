@@ -28,9 +28,6 @@ import java.util.Random;
  */
 public class Bubble extends Parent implements GameLifeCycle {
 
-    public static final int PORTRAIT = 0;
-    public static final int COLOR = 1;
-
     private static final int maxRadius = 70;
     private static final int minRadius = 30;
 
@@ -41,7 +38,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final GameContext gameContext;
 
-    private final int type;
+    private final BubbleType type;
 
     private final BubblesGamesStats stats;
 
@@ -53,7 +50,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final EventHandler<Event> enterEvent;
 
-    public Bubble(GameContext gameContext, int type, BubblesGamesStats stats, boolean useBackgroundImage) {
+    public Bubble(GameContext gameContext, BubbleType type, BubblesGamesStats stats, boolean useBackgroundImage) {
         this.gameContext = gameContext;
         this.type = type;
         this.stats = stats;
@@ -104,7 +101,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     }
 
-    private List<Circle> buildFragments(int type) {
+    private List<Circle> buildFragments(BubbleType bubbleType) {
         List<Circle> fragments = new ArrayList<>(nbFragments);
 
         for (int i = 0; i < nbFragments; i++) {
@@ -116,7 +113,7 @@ public class Bubble extends Parent implements GameLifeCycle {
             fragment.setCenterX(-100);
             fragment.setCenterY(-100);
 
-            if (type == COLOR) {
+            if (bubbleType == BubbleType.COLOR) {
                 fragment.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
             } else {
                 fragment.setFill(new ImagePattern(newPhoto(), 0, 0, 1, 1, true));
@@ -214,7 +211,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         C.setRadius(radius);
 
-        if (type == COLOR)
+        if (type == BubbleType.COLOR)
             C.setFill(new Color(Math.random(), Math.random(), Math.random(), 0.9));
         else
             C.setFill(new ImagePattern(newPhoto(), 0, 0, 1, 1, true));

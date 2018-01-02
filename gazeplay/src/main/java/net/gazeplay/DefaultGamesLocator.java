@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
+import net.gazeplay.games.bubbles.BubbleType;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
@@ -98,14 +99,14 @@ public class DefaultGamesLocator implements GamesLocator {
 
         result.add(new GameSpec("ColoredBubbles", (gameSpec, gameContext) -> {
             BubblesGamesStats stats = new BubblesGamesStats(gameContext.getScene());
-            Bubble bubble = new Bubble(gameContext, Bubble.COLOR, stats, true);
+            Bubble bubble = new Bubble(gameContext, BubbleType.COLOR, stats, true);
             bubble.launch();
             return stats;
         }));
 
         result.add(new GameSpec("PortraitBubbles", (gameSpec, gameContext) -> {
             BubblesGamesStats stats = new BubblesGamesStats(gameContext.getScene());
-            Bubble bubble = new Bubble(gameContext, Bubble.PORTRAIT, stats, false);
+            Bubble bubble = new Bubble(gameContext, BubbleType.PORTRAIT, stats, false);
             bubble.launch();
             return stats;
         }));
