@@ -141,6 +141,8 @@ public class WhereIsIt implements GameLifeCycle {
 
                 gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
                 stats.start();
+
+                gameContext.onGameStarted();
             }
         });
 
