@@ -35,11 +35,16 @@ public class GameContext extends GraphicalContext<Group> {
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
         CssUtil.setPreferredStylesheets(config, scene);
 
-        return new GameContext(gazePlay, root, scene);
+        Bravo bravo = new Bravo();
+
+        return new GameContext(gazePlay, root, scene, bravo);
     }
 
-    private GameContext(GazePlay gazePlay, Group root, Scene scene) {
+    private final Bravo bravo;
+
+    private GameContext(GazePlay gazePlay, Group root, Scene scene, Bravo bravo) {
         super(gazePlay, root, scene);
+        this.bravo = bravo;
     }
 
     public void createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
@@ -78,7 +83,6 @@ public class GameContext extends GraphicalContext<Group> {
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
         homeButton.setVisible(false);
 
-        Bravo bravo = Bravo.getBravo();
         getChildren().add(bravo);
         bravo.playWinTransition(scene, delay, onFinishedEventHandler);
     }
