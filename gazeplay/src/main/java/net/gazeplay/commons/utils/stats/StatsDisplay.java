@@ -18,7 +18,6 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
-import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -38,8 +37,6 @@ public class StatsDisplay {
         stats.stop();
 
         GazeUtils.clear();
-
-        CssUtil.setPreferredStylesheets(config, scene);
 
         // to add or not a space before colon (:) according to the language
         String colon = multilinguism.getTrad("Colon", config.getLanguage());

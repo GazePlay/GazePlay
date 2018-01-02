@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.Bravo;
+import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.StatsDisplay;
@@ -28,6 +29,10 @@ public class GameContext extends GraphicalContext {
         log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
 
         Scene scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
+
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        CssUtil.setPreferredStylesheets(config, scene);
+
         return new GameContext(gazePlay, root, scene);
     }
 

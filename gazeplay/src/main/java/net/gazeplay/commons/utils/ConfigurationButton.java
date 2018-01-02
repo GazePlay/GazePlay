@@ -50,10 +50,6 @@ public class ConfigurationButton extends Rectangle {
 
         final Scene scene = configurationContext.getScene();
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-
-        CssUtil.setPreferredStylesheets(config, scene);
-
         double width = scene.getWidth() / 10;
         double height = width;
         double positionX = 0;
