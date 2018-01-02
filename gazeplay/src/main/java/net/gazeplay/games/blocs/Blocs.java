@@ -15,12 +15,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.GameContext;
+import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
-public class Blocs {
+public class Blocs implements GameLifeCycle {
 
     private final EventHandler<Event> enterEvent;
 
@@ -73,6 +74,7 @@ public class Blocs {
         count = initCount;
     }
 
+    @Override
     public void launch() {
         Scene scene = gameContext.getScene();
 
@@ -102,6 +104,11 @@ public class Blocs {
 
                 stats.start();
             }
+    }
+
+    @Override
+    public void dispose() {
+
     }
 
     private void removeAllBlocs() {

@@ -2,13 +2,14 @@ package net.gazeplay.games.ninja;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameContext;
+import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
 
 /**
  * Created by schwab on 26/12/2016.
  */
-public class Ninja {
+public class Ninja implements GameLifeCycle {
 
     private final GameContext gameContext;
 
@@ -20,6 +21,7 @@ public class Ninja {
         this.stats = stats;
     }
 
+    @Override
     public void launch() {
         Scene scene = gameContext.getScene();
 
@@ -28,5 +30,10 @@ public class Ninja {
         Target portrait = new Target(gameContext, randomPositionGenerator, stats, Portrait.loadAllImages());
 
         gameContext.getChildren().add(portrait);
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

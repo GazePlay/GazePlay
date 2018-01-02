@@ -6,10 +6,11 @@ package net.gazeplay.games.creampie;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameContext;
+import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
 
-public class CreamPie {
+public class CreamPie implements GameLifeCycle {
 
     private final GameContext gameContext;
 
@@ -21,6 +22,7 @@ public class CreamPie {
         this.stats = stats;
     }
 
+    @Override
     public void launch() {
         Scene scene = gameContext.getScene();
 
@@ -32,5 +34,10 @@ public class CreamPie {
 
         gameContext.getChildren().add(portrait);
         gameContext.getChildren().add(hand);
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

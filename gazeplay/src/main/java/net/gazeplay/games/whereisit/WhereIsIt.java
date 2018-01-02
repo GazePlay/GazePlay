@@ -24,6 +24,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
+import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
@@ -44,7 +45,7 @@ import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZE
  * Created by Didier Schwab on the 18/11/2017
  */
 @Slf4j
-public class WhereIsIt {
+public class WhereIsIt implements GameLifeCycle {
 
     public enum WhereIsItGameType {
         ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
@@ -87,6 +88,7 @@ public class WhereIsIt {
         this.stats.setName(gameType.getGameName());
     }
 
+    @Override
     public void launch() {
         final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree).computeGameSizing(scene);
 
@@ -157,6 +159,7 @@ public class WhereIsIt {
      * this method should be called when exiting the game, or before starting a new round, in order to clean up all
      * resources in both UI and memory
      */
+    @Override
     public void dispose() {
         if (currentRoundDetails != null) {
             if (currentRoundDetails.pictureCardList != null) {

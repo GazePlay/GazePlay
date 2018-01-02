@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.gazeplay.GameContext;
+import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.Utils;
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * Created by schwab on 17/09/2016.
  */
-public class MagicCards {
+public class MagicCards implements GameLifeCycle {
 
     @Data
     @AllArgsConstructor
@@ -50,6 +51,7 @@ public class MagicCards {
         images = Utils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
     }
 
+    @Override
     public void launch() {
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
@@ -66,6 +68,7 @@ public class MagicCards {
         stats.start();
     }
 
+    @Override
     public void dispose() {
         if (currentRoundDetails != null) {
             if (currentRoundDetails.cardList != null) {

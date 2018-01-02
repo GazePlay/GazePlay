@@ -14,6 +14,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 import net.gazeplay.GameContext;
+import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -25,7 +26,7 @@ import java.util.Random;
 /**
  * Created by schwab on 28/08/2016.
  */
-public class Bubble extends Parent {
+public class Bubble extends Parent implements GameLifeCycle {
 
     public static final int PORTRAIT = 0;
     public static final int COLOR = 1;
@@ -86,6 +87,7 @@ public class Bubble extends Parent {
 
     }
 
+    @Override
     public void launch() {
 
         for (int i = 0; i < 10; i++) {
@@ -94,6 +96,11 @@ public class Bubble extends Parent {
         }
 
         stats.start();
+
+    }
+
+    @Override
+    public void dispose() {
 
     }
 
