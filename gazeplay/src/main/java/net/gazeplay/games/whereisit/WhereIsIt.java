@@ -66,7 +66,6 @@ public class WhereIsIt implements GameLifeCycle {
             this.resourcesDirectoryName = resourcesDirectoryName;
             this.languageResourceLocation = "data/" + resourcesDirectoryName + "/" + resourcesDirectoryName + ".csv";
         }
-
     }
 
     private final WhereIsItGameType gameType;
@@ -119,15 +118,16 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     private Transition createQuestionTextTransition(String question) {
+
         Text questionText = new Text(question);
 
-        double positionX = gameContext.getScene().getWidth() / 2 - questionText.getBoundsInParent().getWidth() / 2;
+        questionText.setId("title");
+
+        double positionX = gameContext.getScene().getWidth() / 2 - questionText.getBoundsInParent().getWidth()*2;
         double positionY = gameContext.getScene().getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
 
         questionText.setX(positionX);
         questionText.setY(positionY);
-        questionText.setVisible(true);
-        questionText.setId("title");
         questionText.setTextAlignment(TextAlignment.CENTER);
         StackPane.setAlignment(questionText, Pos.CENTER);
 
