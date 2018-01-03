@@ -123,7 +123,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         questionText.setId("title");
 
-        double positionX = gameContext.getScene().getWidth() / 2 - questionText.getBoundsInParent().getWidth()*2;
+        double positionX = gameContext.getScene().getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
         double positionY = gameContext.getScene().getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
 
         questionText.setX(positionX);
@@ -432,7 +432,7 @@ public class WhereIsIt implements GameLifeCycle {
 
             final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-            File F = new File(config.getWhereIsItDir()+"questions.csv");
+            File F = new File(config.getWhereIsItDir() + "questions.csv");
 
             log.info("F: {}", F.toURI().toString());
 
