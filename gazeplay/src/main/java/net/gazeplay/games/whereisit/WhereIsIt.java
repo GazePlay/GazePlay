@@ -429,7 +429,18 @@ public class WhereIsIt implements GameLifeCycle {
         log.info("language: {}", language);
 
         if (this.gameType == CUSTOMIZED) {
-            return null;
+
+            final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+            File F = new File(config.getWhereIsItDir()+"questions.csv");
+
+            log.info("F: {}", F.toURI().toString());
+
+            Multilinguism localMultilinguism = Multilinguism.getForResource(F.toURI().toString());
+
+            String traduction = localMultilinguism.getTrad(folder, language);
+
+            return traduction;
         }
 
         if (language.equals("deu")) {
