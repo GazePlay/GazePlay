@@ -28,7 +28,7 @@ public abstract class GraphicalContext<T> {
     public void setUpOnStage(Stage stage) {
         stage.setTitle("GazePlay");
         stage.setScene(scene);
-        stage.setFullScreen(false); // fullscreen seem to be very slow
+        stage.setFullScreen(true); // fullscreen seem to be very slow
         stage.setOnCloseRequest((WindowEvent we) -> stage.close());
 
         if (homeButton != null) {
