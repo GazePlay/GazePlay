@@ -117,7 +117,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
     }
 
-    private Transition  createQuestionTextTransition(String question) {
+    private Transition createQuestionTextTransition(String question) {
 
         Text questionText = new Text(question);
 
@@ -156,8 +156,8 @@ public class WhereIsIt implements GameLifeCycle {
 
         log.info("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
 
-        if(soundResourceUrl == null)
-            soundClip = new AudioClip("file:"+currentRoundDetails.questionSoundPath);
+        if (soundResourceUrl == null)
+            soundClip = new AudioClip("file:" + currentRoundDetails.questionSoundPath);
         else
             soundClip = new AudioClip(soundResourceUrl.toExternalForm());
         soundClip.play();

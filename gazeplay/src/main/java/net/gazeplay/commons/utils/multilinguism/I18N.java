@@ -22,11 +22,11 @@ public class I18N {
         final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
         InputStream is;
 
-        try  {
+        try {
             is = systemClassLoader.getResourceAsStream(resourceLocation);
 
             if (is == null) {
-                //throw new FileNotFoundException("Resource was not found : " + resourceLocation);
+                // throw new FileNotFoundException("Resource was not found : " + resourceLocation);
 
                 File F = new File(resourceLocation);
                 is = new FileInputStream(F);
