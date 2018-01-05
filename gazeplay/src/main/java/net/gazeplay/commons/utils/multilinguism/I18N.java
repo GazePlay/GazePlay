@@ -20,7 +20,18 @@ public class I18N {
 
     protected static Map<Entry, String> loadFromFile(String resourceLocation) {
         final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-        try (InputStream is = systemClassLoader.getResourceAsStream(resourceLocation)) {
+        InputStream is;
+
+        try  {
+            is = systemClassLoader.getResourceAsStream(resourceLocation);
+
+            if (is == null) {
+                //throw new FileNotFoundException("Resource was not found : " + resourceLocation);
+
+                File F = new File(resourceLocation);
+                is = new FileInputStream(F);
+            }
+
             if (is == null) {
                 throw new FileNotFoundException("Resource was not found : " + resourceLocation);
             }

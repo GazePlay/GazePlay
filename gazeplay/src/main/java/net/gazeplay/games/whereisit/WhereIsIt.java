@@ -117,7 +117,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
     }
 
-    private Transition createQuestionTextTransition(String question) {
+    private Transition  createQuestionTextTransition(String question) {
 
         Text questionText = new Text(question);
 
@@ -152,7 +152,14 @@ public class WhereIsIt implements GameLifeCycle {
     private void playQuestionSound() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL soundResourceUrl = classLoader.getResource(currentRoundDetails.questionSoundPath);
-        AudioClip soundClip = new AudioClip(soundResourceUrl.toExternalForm());
+        AudioClip soundClip;
+
+        log.info("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
+
+        if(soundResourceUrl == null)
+            soundClip = new AudioClip("file:"+currentRoundDetails.questionSoundPath);
+        else
+            soundClip = new AudioClip(soundResourceUrl.toExternalForm());
         soundClip.play();
     }
 
@@ -434,9 +441,9 @@ public class WhereIsIt implements GameLifeCycle {
 
             File F = new File(config.getWhereIsItDir() + "questions.csv");
 
-            log.info("F: {}", F.toURI().toString());
+            log.info("F: {}", F.toString());
 
-            Multilinguism localMultilinguism = Multilinguism.getForResource(F.toURI().toString());
+            Multilinguism localMultilinguism = Multilinguism.getForResource(F.toString());
 
             String traduction = localMultilinguism.getTrad(folder, language);
 
