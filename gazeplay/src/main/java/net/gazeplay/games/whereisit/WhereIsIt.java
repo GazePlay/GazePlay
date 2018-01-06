@@ -39,6 +39,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.StringTokenizer;
 
 import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZED;
 
@@ -110,14 +111,14 @@ public class WhereIsIt implements GameLifeCycle {
                 winnerImageIndexAmongDisplayedImages);
 
         if (currentRoundDetails != null) {
-            Transition animation = createQuestionTextTransition(currentRoundDetails.question);
 
+            Transition animation = createQuestionTransition(currentRoundDetails.question, currentRoundDetails.pictos);
             animation.play();
             playQuestionSound();
         }
     }
 
-    private Transition createQuestionTextTransition(String question) {
+    private Transition createQuestionTransition(String question, List<Image> Pictos) {
 
         Text questionText = new Text(question);
 
@@ -131,13 +132,31 @@ public class WhereIsIt implements GameLifeCycle {
         questionText.setTextAlignment(TextAlignment.CENTER);
         StackPane.setAlignment(questionText, Pos.CENTER);
 
-        gameContext.getChildren().addAll(questionText);
+        gameContext.getChildren().add(questionText);
 
-        TranslateTransition fullAnimation = new TranslateTransition(Duration.millis(2000), questionText);
+        List<Rectangle> RectPict = new ArrayList<>(20);
+
+        if (Pictos != null && !Pictos.isEmpty()) {
+            int i = 0;
+            for (Image I : Pictos) {
+
+                Rectangle R = new Rectangle(200, 200);
+                R.setFill(new ImagePattern(I));
+                R.setY(positionY + 100);
+                R.setX(++i * 250);
+                RectPict.add(R);
+            }
+
+            gameContext.getChildren().addAll(RectPict);
+        }
+
+        TranslateTransition fullAnimation = new TranslateTransition(Duration.millis(5000), questionText);
         fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 gameContext.getChildren().remove(questionText);
+
+                gameContext.getChildren().removeAll(RectPict);
 
                 gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
                 stats.start();
@@ -201,6 +220,7 @@ public class WhereIsIt implements GameLifeCycle {
         private final int winnerImageIndexAmongDisplayedImages;
         private final String questionSoundPath;
         private final String question;
+        private final List<Image> pictos;
     }
 
     private RoundDetails pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
@@ -231,6 +251,7 @@ public class WhereIsIt implements GameLifeCycle {
         final List<PictureCard> pictureCardList = new ArrayList<>();
         String questionSoundPath = null;
         String question = null;
+        List<Image> pictograms = null;
 
         for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
@@ -250,6 +271,8 @@ public class WhereIsIt implements GameLifeCycle {
                 questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
 
                 question = getQuestionText(imagesFolders[(index) % filesCount].getName(), language);
+
+                pictograms = getPictogramms(imagesFolders[(index) % filesCount].getName());
 
                 log.info("pathSound = {}", questionSoundPath);
 
@@ -273,7 +296,8 @@ public class WhereIsIt implements GameLifeCycle {
             }
         }
 
-        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question);
+        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question,
+                pictograms);
     }
 
     private void error(String language) {
@@ -441,8 +465,6 @@ public class WhereIsIt implements GameLifeCycle {
 
             File F = new File(config.getWhereIsItDir() + "questions.csv");
 
-            log.info("F: {}", F.toString());
-
             Multilinguism localMultilinguism = Multilinguism.getForResource(F.toString());
 
             String traduction = localMultilinguism.getTrad(folder, language);
@@ -459,6 +481,47 @@ public class WhereIsIt implements GameLifeCycle {
 
         String traduction = localMultilinguism.getTrad(folder, language);
         return traduction;
+    }
+
+    private List<Image> getPictogramms(final String folder) {
+
+        final String language = "pictos";
+
+        if (this.gameType != CUSTOMIZED) {
+
+            return null;
+        }
+
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+        File F = new File(config.getWhereIsItDir() + "questions.csv");
+
+        Multilinguism localMultilinguism = Multilinguism.getForResource(F.toString());
+
+        String traduction = localMultilinguism.getTrad(folder, language);
+
+        log.info("traduction: {}", traduction);
+
+        StringTokenizer st = new StringTokenizer(traduction, ";");
+
+        String token = null;
+
+        List<Image> L = new ArrayList<>(20);
+
+        while (st.hasMoreTokens()) {
+
+            token = config.getWhereIsItDir() + "Pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
+            log.info("token \"{}\"", token);
+            File Ftoken = new File(token);
+            log.info("Exists {}", Ftoken.exists());
+            if (Ftoken.exists()) {
+
+                L.add(new Image(Ftoken.toURI().toString()));
+            }
+        }
+
+        log.info("L {}", L);
+        return L;
     }
 
     @Slf4j
