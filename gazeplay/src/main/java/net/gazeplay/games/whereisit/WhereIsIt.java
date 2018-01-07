@@ -19,6 +19,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,6 +49,9 @@ import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZE
  */
 @Slf4j
 public class WhereIsIt implements GameLifeCycle {
+
+    private static final int NBMAXPICTO = 7;
+    private static final double MAXSIZEPICTO = 250;
 
     public enum WhereIsItGameType {
         ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
@@ -134,16 +138,34 @@ public class WhereIsIt implements GameLifeCycle {
 
         gameContext.getChildren().add(questionText);
 
-        List<Rectangle> RectPict = new ArrayList<>(20);
+        List<Rectangle> RectPict = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete them
+                                                        // from the group later
 
-        if (Pictos != null && !Pictos.isEmpty()) {
+        if (Pictos != null && !Pictos.isEmpty() && Pictos.size() <= NBMAXPICTO) {
+
+            double screenWidth = Screen.getPrimary().getBounds().getWidth();
+
+            double nbPicto = Pictos.size();
+
+            double pictoSize = screenWidth / (nbPicto + 1);
+
+            log.info("screenWidth/(nbPicto) : {}", pictoSize);
+
+            pictoSize = Math.min(pictoSize, MAXSIZEPICTO);
+
+            log.info("Picto Size: {}", pictoSize);
+
             int i = 0;
+            double shift = screenWidth / 2 - ((nbPicto / 2) * pictoSize * 1.1);
+
+            log.info("shift Size: {}", shift);
+
             for (Image I : Pictos) {
 
-                Rectangle R = new Rectangle(200, 200);
+                Rectangle R = new Rectangle(pictoSize, pictoSize);
                 R.setFill(new ImagePattern(I));
                 R.setY(positionY + 100);
-                R.setX(++i * 250);
+                R.setX(shift + (i++ * pictoSize * 1.1));
                 RectPict.add(R);
             }
 
