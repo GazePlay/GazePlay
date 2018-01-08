@@ -133,8 +133,14 @@ public class ConfigurationButton extends Rectangle {
         wisGameDir.setId("item");
         buildWITDirectoryChooserMenu(scene, config, configurationContext, 250, 605);
 
+        Text questionLength = new Text(multilinguism.getTrad("QuestionLength", config.getLanguage()) + colon);
+        questionLength.setX(100);
+        questionLength.setY(700);
+        questionLength.setId("item");
+        buildQuestionLengthChooserMenu(scene, config, configurationContext, 250, 705);
+
         configurationContext.getChildren().addAll(configTitleText, language, eyeTracker, fileDir, styleFile, fixLength,
-                wisGameDir);
+                wisGameDir, questionLength);
 
         configurationContext.createHomeButtonInConfigurationManagementScreen(configurationContext.getGazePlay());
     }
@@ -175,12 +181,47 @@ public class ConfigurationButton extends Rectangle {
         });
     }
 
+    private static void buildQuestionLengthChooserMenu(Scene scene, Configuration configuration,
+            ConfigurationContext configurationContext, int posX, int posY) {
+
+        ChoiceBox QuestionLengthBox = new ChoiceBox();
+
+        int i = 500;
+
+        QuestionLengthBox.getItems().add(new Double((double) configuration.getQuestionLength()) / 1000);
+        while (i <= 20000) {
+
+            QuestionLengthBox.getItems().add(new Double(((double) i) / 1000));
+            i = i + 500;
+        }
+
+        QuestionLengthBox.getSelectionModel().select(0);
+        QuestionLengthBox.setTranslateX(posX);
+        QuestionLengthBox.setTranslateY(posY);
+        QuestionLengthBox.setPrefWidth(prefWidth);
+        QuestionLengthBox.setPrefHeight(prefHeight);
+
+        configurationContext.getChildren().add(QuestionLengthBox);
+
+        QuestionLengthBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
+                final int newPropertyValue = (int) (1000
+                        * (double) QuestionLengthBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
+
+                ConfigurationBuilder.createFromPropertiesResource().withQuestionLength(newPropertyValue)
+                        .saveConfigIgnoringExceptions();
+
+            }
+        });
+    }
+
     /**
      * Fonction to use to permit to user to select between several theme
      *
      * @param scene
      * @param configuration
-     * @param root
      * @param posX
      * @param posY
      */

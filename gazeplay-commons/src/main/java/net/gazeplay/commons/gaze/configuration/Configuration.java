@@ -23,6 +23,8 @@ public class Configuration {
 
     private final String whereIsItDir;
 
+    private final int questionLength;
+
     protected Configuration(ConfigurationBuilder builder) {
         this.gazeMode = builder.gazeMode;
         this.eyetracker = builder.eyetracker;
@@ -31,6 +33,7 @@ public class Configuration {
         this.fixationlength = builder.fixationlength;
         this.cssfile = builder.cssfile;
         this.whereIsItDir = builder.whereIsItDir;
+        this.questionLength = builder.questionLength;
     }
 
 }

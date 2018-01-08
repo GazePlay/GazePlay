@@ -17,6 +17,7 @@ public class ConfigurationBuilder implements Cloneable {
     private static String PROPERTY_NAME_FIXATIONLENGTH = "FIXATIONLENGTH";
     private static String PROPERTY_NAME_CSSFILE = "CSSFILE";
     private static String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
+    private static String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
 
     private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
@@ -26,6 +27,7 @@ public class ConfigurationBuilder implements Cloneable {
     private static int DEFAULT_VALUE_FIXATION_LENGTH = 500;
     private static String DEFAULT_VALUE_CSS_FILE = "data/stylesheets/main-green.css";
     private static String DEFAULT_VALUE_WHEREISIT_DIR = "";
+    private static int DEFAULT_VALUE_QUESTION_LENGTH = 5000;
 
     private static String getFileDirectoryDefaultValue() {
         return Utils.getGazePlayFolder() + "files" + Utils.FILESEPARATOR;
@@ -71,6 +73,8 @@ public class ConfigurationBuilder implements Cloneable {
     protected String cssfile = DEFAULT_VALUE_CSS_FILE;
 
     protected String whereIsItDir = DEFAULT_VALUE_WHEREISIT_DIR;
+
+    protected int questionLength = DEFAULT_VALUE_QUESTION_LENGTH;
 
     public ConfigurationBuilder() {
 
@@ -126,6 +130,12 @@ public class ConfigurationBuilder implements Cloneable {
         return copy;
     }
 
+    public ConfigurationBuilder withQuestionLength(int value) {
+        ConfigurationBuilder copy = copy();
+        copy.questionLength = value;
+        return copy;
+    }
+
     public void populateFromProperties(Properties prop) {
         String buffer;
 
@@ -168,6 +178,17 @@ public class ConfigurationBuilder implements Cloneable {
         if (buffer != null) {
             whereIsItDir = buffer.toLowerCase();
         }
+
+        buffer = prop.getProperty(PROPERTY_NAME_QUESTION_LENGTH);
+        if (buffer != null) {
+            try {
+                questionLength = Integer.parseInt(buffer);
+            } catch (NumberFormatException e) {
+                log.warn("NumberFormatException while parsing value '{}' for property {}", buffer,
+                        PROPERTY_NAME_QUESTION_LENGTH);
+            }
+        }
+
     }
 
     private Properties toProperties() {
@@ -182,6 +203,7 @@ public class ConfigurationBuilder implements Cloneable {
         properties.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(this.fixationlength));
         properties.setProperty(PROPERTY_NAME_CSSFILE, this.cssfile);
         properties.setProperty(PROPERTY_NAME_WHEREISIT_DIR, this.whereIsItDir);
+        properties.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Integer.toString(this.questionLength));
 
         return properties;
     }
@@ -207,5 +229,4 @@ public class ConfigurationBuilder implements Cloneable {
             log.error("Exception while writing configuration to file {}", CONFIGPATH, e);
         }
     }
-
 }

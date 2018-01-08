@@ -50,7 +50,7 @@ import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZE
 @Slf4j
 public class WhereIsIt implements GameLifeCycle {
 
-    private static final int NBMAXPICTO = 7;
+    private static final int NBMAXPICTO = 10;
     private static final double MAXSIZEPICTO = 250;
 
     public enum WhereIsItGameType {
@@ -139,7 +139,7 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().add(questionText);
 
         List<Rectangle> RectPict = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete them
-                                                        // from the group later
+        // from the group later
 
         if (Pictos != null && !Pictos.isEmpty() && Pictos.size() <= NBMAXPICTO) {
 
@@ -172,7 +172,9 @@ public class WhereIsIt implements GameLifeCycle {
             gameContext.getChildren().addAll(RectPict);
         }
 
-        TranslateTransition fullAnimation = new TranslateTransition(Duration.millis(5000), questionText);
+        TranslateTransition fullAnimation = new TranslateTransition(
+                Duration.millis(ConfigurationBuilder.createFromPropertiesResource().build().getQuestionLength()),
+                questionText);
         fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -191,17 +193,22 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     private void playQuestionSound() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL soundResourceUrl = classLoader.getResource(currentRoundDetails.questionSoundPath);
-        AudioClip soundClip;
 
-        log.info("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
+        try {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            URL soundResourceUrl = classLoader.getResource(currentRoundDetails.questionSoundPath);
+            AudioClip soundClip = null;
 
-        if (soundResourceUrl == null)
-            soundClip = new AudioClip("file:" + currentRoundDetails.questionSoundPath);
-        else
-            soundClip = new AudioClip(soundResourceUrl.toExternalForm());
-        soundClip.play();
+            log.info("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
+
+            if (soundResourceUrl == null)
+                soundClip = new AudioClip("file:" + currentRoundDetails.questionSoundPath);
+            else
+                soundClip = new AudioClip(soundResourceUrl.toExternalForm());
+            soundClip.play();
+        } catch (Exception e) {
+            log.info("Can't play sound: no associated sound");
+        }
     }
 
     /**
@@ -250,9 +257,13 @@ public class WhereIsIt implements GameLifeCycle {
             final int winnerImageIndexAmongDisplayedImages) {
 
         final File imagesDirectory = locateImagesDirectory(config);
+
         final String language = config.getLanguage();
 
         final File[] imagesFolders = imagesDirectory.listFiles();
+
+        log.info("imagesFolders " + imagesFolders);
+
         final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
 
         if (filesCount == 0) {
@@ -264,8 +275,7 @@ public class WhereIsIt implements GameLifeCycle {
         final int randomFolderIndex = random.nextInt(filesCount);
         log.info("randomFolderIndex " + randomFolderIndex);
 
-        int step = 1; // (int) (Math.random() + 1.5);
-        log.info("step " + step);
+        int step = 1;
 
         int posX = 0;
         int posY = 0;
@@ -279,7 +289,16 @@ public class WhereIsIt implements GameLifeCycle {
 
             final int index = (randomFolderIndex + step * i) % filesCount;
 
-            final File[] files = imagesFolders[(index) % filesCount].listFiles();
+            final File folder = imagesFolders[(index) % filesCount];
+
+            log.info("folder = {}", folder);
+
+            if (!folder.isDirectory())
+                continue;
+
+            final File[] files = folder.listFiles();
+
+            log.info("files = {}", files);
 
             final int numFile = random.nextInt(files.length);
 
@@ -532,7 +551,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         while (st.hasMoreTokens()) {
 
-            token = config.getWhereIsItDir() + "Pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
+            token = config.getWhereIsItDir() + "pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
             log.info("token \"{}\"", token);
             File Ftoken = new File(token);
             log.info("Exists {}", Ftoken.exists());
