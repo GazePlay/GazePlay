@@ -141,10 +141,6 @@ public class Blocs implements GameLifeCycle {
 
     private void removeBloc(Bloc toRemove) {
 
-        /*
-         * log.info("##############"); log.info("#####TO REMOVE#########"); log.info(toRemove.posX);
-         * log.info(toRemove.posY); log.info("##############");
-         */
         if (toRemove == null)
             return;
 
@@ -153,7 +149,6 @@ public class Blocs implements GameLifeCycle {
         GazeUtils.removeEventFilter(toRemove);
         toRemove.setTranslateX(-10000);
         toRemove.setOpacity(0);
-        // blockRoot.getChildren().remove(toRemove);
         count--;
     }
 
@@ -161,9 +156,6 @@ public class Blocs implements GameLifeCycle {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-
-                // log.info("useTrail = " + useTrail);
-                // log.info("e.getEventType() = " + e.getEventType());
 
                 if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
                         || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
@@ -179,20 +171,15 @@ public class Blocs implements GameLifeCycle {
                         int posX = bloc.posX;
                         int posY = bloc.posY;
 
-                        // log.info(bloc.posX);
-                        // log.info(bloc.posY);
-
                         int maxX = blocs.length;
                         int maxY = blocs[0].length;
 
                         for (int i = -trail; i < trail; i++) {
                             for (int j = -trail; j < trail; j++) {
 
-                                // log.info(Math.sqrt(i * i + j * j) + " : " + maxX + ", " + maxY + ", " + (posX + i) +
-                                // ", " + (posY + j));
                                 if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0
                                         && posX + i < maxX && posY + j < maxY) {
-                                    // log.info("à supprimer");
+
                                     removeBloc(blocs[posX + i][posY + j]);
                                     blocs[posX + i][posY + j] = null;
                                 }
@@ -211,8 +198,6 @@ public class Blocs implements GameLifeCycle {
                         gameContext.playWinTransition(0, event -> {
                             gameContext.clear();
                             Blocs.this.launch();
-                            // HomeUtils.home(theScene, blockRoot, choiceBox, stats);
-
                             gameContext.onGameStarted();
                         });
                     }
@@ -232,5 +217,4 @@ public class Blocs implements GameLifeCycle {
             this.posY = posY;
         }
     }
-
 }

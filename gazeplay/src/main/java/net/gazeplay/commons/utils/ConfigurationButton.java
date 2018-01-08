@@ -86,7 +86,6 @@ public class ConfigurationButton extends Rectangle {
             colon = " : ";
 
         log.info("ConfigurationButton");
-        // HomeUtils.home(scene, root, cbxGames, null);
 
         log.info(config.toString());
 

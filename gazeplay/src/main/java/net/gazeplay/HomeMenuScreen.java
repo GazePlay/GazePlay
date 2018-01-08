@@ -140,8 +140,6 @@ public class HomeMenuScreen {
     private void chooseGame(int gameIndex) {
         log.info("Game number: " + gameIndex);
 
-        // HomeUtils.clear(scene, root);
-
         if (gameIndex == -1) {
             return;
         }
