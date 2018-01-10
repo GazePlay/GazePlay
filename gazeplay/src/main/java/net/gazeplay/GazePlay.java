@@ -40,7 +40,7 @@ public class GazePlay extends Application {
 
         primaryStage.setMaximized(false);
 
-        homeMenuScreen = new HomeMenuScreen(this, ConfigurationBuilder.createFromPropertiesResource().build());
+        homeMenuScreen = HomeMenuScreen.newInstance(this, ConfigurationBuilder.createFromPropertiesResource().build());
         homeMenuScreen.setUpOnStage(primaryStage);
 
         primaryStage.centerOnScreen();

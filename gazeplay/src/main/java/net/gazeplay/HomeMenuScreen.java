@@ -35,6 +35,21 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HomeMenuScreen {
 
+    public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
+
+        GamesLocator gamesLocator = new DefaultGamesLocator();
+        List<GameSpec> games = gamesLocator.listGames();
+
+        Group root = new Group();
+
+        Scene scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
+                Color.BLACK);
+
+        CssUtil.setPreferredStylesheets(config, scene);
+
+        return new HomeMenuScreen(gazePlay, games, scene, root, config);
+    }
+
     @Getter
     private final GazePlay gazePlay;
 
@@ -48,25 +63,11 @@ public class HomeMenuScreen {
 
     private final List<GameSpec> games;
 
-    private final GamesLocator gamesLocator;
-
-    public HomeMenuScreen(final GazePlay gazePlay, final Configuration config) {
+    public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, Scene scene, Group root, Configuration config) {
         this.gazePlay = gazePlay;
-
-        gamesLocator = new DefaultGamesLocator();
-        games = gamesLocator.listGames();
-
-        root = new Group();
-
-        scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
-                Color.BLACK);
-
-        CssUtil.setPreferredStylesheets(config, scene);
-
-        // end of System information
-        for (int i = 0; i < 5; i++) {
-            log.info("***********************");
-        }
+        this.games = games;
+        this.scene = scene;
+        this.root = root;
 
         cbxGames = createChoiceBox(games, config);
 
@@ -77,6 +78,7 @@ public class HomeMenuScreen {
         cbxGames.setTranslateY(scene.getHeight() * 0.9 / 2);
 
         addButtons();
+
     }
 
     public ObservableList<Node> getChildren() {
