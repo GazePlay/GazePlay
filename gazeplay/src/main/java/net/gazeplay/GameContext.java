@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -48,15 +49,46 @@ public class GameContext extends GraphicalContext<Pane> {
         HBox menuHBox = createHBox();
         menuHBox.toFront();
 
-        root.setBottom(menuHBox);
+        Rectangle blindFoldPanel = new Rectangle(0, 0, 0, 0);
+
+        StackPane bottomStackPane = new StackPane();
+        bottomStackPane.getChildren().add(blindFoldPanel);
+        bottomStackPane.getChildren().add(menuHBox);
+
+        bottomStackPane.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                resizeBlindFoldPanel(blindFoldPanel, menuHBox);
+                blindFoldPanel.toBack();
+            }
+        });
+        bottomStackPane.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                resizeBlindFoldPanel(blindFoldPanel, menuHBox);
+                blindFoldPanel.toFront();
+            }
+        });
+
+        resizeBlindFoldPanel(blindFoldPanel, menuHBox);
+        blindFoldPanel.toFront();
+
+        root.setBottom(bottomStackPane);
         root.setCenter(gamingRoot);
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot);
 
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
-        return new GameContext(gazePlay, gamingRoot, scene, bravo, menuHBox, gamePanelDimensionProvider,
-                randomPositionGenerator, root);
+        return new GameContext(gazePlay, gamingRoot, scene, bravo, bottomStackPane, menuHBox,
+                gamePanelDimensionProvider, randomPositionGenerator, root);
+    }
+
+    private static void resizeBlindFoldPanel(Rectangle blindFoldPanel, HBox menuHBox) {
+        blindFoldPanel.setX(0);
+        blindFoldPanel.setY(0);
+        blindFoldPanel.setWidth(menuHBox.getWidth());
+        blindFoldPanel.setHeight(menuHBox.getHeight());
     }
 
     public static HBox createHBox() {
@@ -80,6 +112,8 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final Bravo bravo;
 
+    private final Pane bottomPane;
+
     private final HBox menuHBox;
 
     @Getter
@@ -90,11 +124,12 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final BorderPane rootBorderPane;
 
-    private GameContext(GazePlay gazePlay, Pane gamingRoot, Scene scene, Bravo bravo, HBox menuHBox,
+    private GameContext(GazePlay gazePlay, Pane gamingRoot, Scene scene, Bravo bravo, Pane bottomPane, HBox menuHBox,
             GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
             BorderPane rootBorderPane) {
         super(gazePlay, gamingRoot, scene);
         this.bravo = bravo;
+        this.bottomPane = bottomPane;
         this.menuHBox = menuHBox;
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
         this.randomPositionGenerator = randomPositionGenerator;
@@ -103,7 +138,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     public void resetBordersToFront() {
         rootBorderPane.setBottom(null);
-        rootBorderPane.setBottom(menuHBox);
+        rootBorderPane.setBottom(bottomPane);
     }
 
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
