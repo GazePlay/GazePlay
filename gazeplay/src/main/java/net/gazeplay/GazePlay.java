@@ -1,6 +1,8 @@
 package net.gazeplay;
 
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +30,21 @@ public class GazePlay extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
+
+        Screen screen = Screen.getPrimary();
+
+        Rectangle2D screenBounds = screen.getBounds();
+
+        primaryStage.setWidth(screenBounds.getWidth() * 0.95);
+        primaryStage.setHeight(screenBounds.getHeight() * 0.90);
+
+        primaryStage.setMaximized(false);
+
         homeMenuScreen = new HomeMenuScreen(this, ConfigurationBuilder.createFromPropertiesResource().build());
         homeMenuScreen.setUpOnStage(primaryStage);
+
+        primaryStage.centerOnScreen();
+
         primaryStage.setFullScreen(true);
     }
 

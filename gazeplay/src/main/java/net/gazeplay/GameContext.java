@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import com.sun.glass.ui.Screen;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -33,10 +32,8 @@ public class GameContext extends GraphicalContext<Pane> {
 
         BorderPane root = new BorderPane();
 
-        final Screen screen = Screen.getScreens().get(0);
-        log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
-
-        Scene scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
+        Scene scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
+                Color.BLACK);
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
         CssUtil.setPreferredStylesheets(config, scene);

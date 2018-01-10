@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import com.sun.glass.ui.Screen;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -59,11 +58,7 @@ public class HomeMenuScreen {
 
         root = new Group();
 
-        final Screen screen = Screen.getScreens().get(0);
-        log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
-
-        double ratioToScreenSize = 1;
-        scene = new Scene(root, screen.getWidth() * ratioToScreenSize, screen.getHeight() * ratioToScreenSize,
+        scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
                 Color.BLACK);
 
         CssUtil.setPreferredStylesheets(config, scene);
