@@ -100,7 +100,8 @@ public class WhereIsIt implements GameLifeCycle {
 
     @Override
     public void launch() {
-        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree).computeGameSizing(scene);
+        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree)
+                .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);

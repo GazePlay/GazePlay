@@ -48,4 +48,11 @@ public class GazePlay extends Application {
         configurationContext.setUpOnStage(primaryStage);
     }
 
+    public void toggleFullScreen() {
+        boolean fullScreen = !primaryStage.isFullScreen();
+        log.info("fullScreen = {}", fullScreen);
+        primaryStage.setFullScreen(fullScreen);
+        primaryStage.show();
+    }
+
 }

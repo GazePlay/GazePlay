@@ -8,16 +8,18 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
+import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import lombok.Data;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
+import net.gazeplay.commons.utils.AspectRatioImageRectangleUtil;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
@@ -36,18 +38,34 @@ public class Blocs implements GameLifeCycle {
     private final int initCount;
 
     private final boolean hasColors;
-    private final Bloc[][] blocs;
+
     private final int trail = 10;
     private final Image[] images;
 
-    private int count;
-    private boolean finished;
+    @Data
+    public static class CurrentRoundDetails {
 
-    public Blocs(GameContext gameContext, int nbLines, int nbColomns, boolean colors, float percents4Win,
+        private int remainingCount;
+
+        private boolean finished;
+
+        private final Bloc[][] blocs;
+
+        public CurrentRoundDetails(int initCount, int nbLines, int nbColumns) {
+            this.remainingCount = initCount;
+            this.finished = false;
+            this.blocs = new Bloc[nbColumns][nbLines];
+        }
+
+    }
+
+    private CurrentRoundDetails currentRoundDetails;
+
+    public Blocs(GameContext gameContext, int nbLines, int nbColumns, boolean colors, float percents4Win,
             boolean useTrail, HiddenItemsGamesStats stats) {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
-        this.nbColomns = nbColomns;
+        this.nbColomns = nbColumns;
         this.colors = colors;
         this.percents4Win = percents4Win;
         this.useTrail = useTrail;
@@ -55,31 +73,38 @@ public class Blocs implements GameLifeCycle {
 
         images = Utils.images(Utils.getImagesFolder() + "blocs" + Utils.FILESEPARATOR);
 
-        finished = false;
-
         hasColors = colors;
-
-        blocs = new Bloc[nbColomns][nbLines];
-
-        int value = (int) Math.floor(Math.random() * images.length);
-
-        Scene scene = gameContext.getScene();
-
-        scene.setFill(new ImagePattern(images[value]));
 
         enterEvent = buildEvent(gameContext, stats, useTrail);
 
-        initCount = nbColomns * nbLines;
+        initCount = nbColumns * nbLines;
+    }
 
-        count = initCount;
+    private void setHiddenPicture(GameContext gameContext) {
+        final int randomPictureIndex = (int) Math.floor(Math.random() * images.length);
+        final Image randomPicture = images[randomPictureIndex];
+
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        imageRectangle.setFill(new ImagePattern(randomPicture, 0, 0, 1, 1, true));
+
+        AspectRatioImageRectangleUtil aspectRatioImageRectangleUtil = new AspectRatioImageRectangleUtil();
+        aspectRatioImageRectangleUtil.setFillImageKeepingAspectRatio(imageRectangle, randomPicture, dimension2D);
+
+        gameContext.getChildren().add(imageRectangle);
     }
 
     @Override
     public void launch() {
-        Scene scene = gameContext.getScene();
+        this.currentRoundDetails = new CurrentRoundDetails(initCount, nbLines, nbColomns);
 
-        double width = scene.getWidth() / nbColomns;
-        double height = scene.getHeight() / nbLines;
+        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        setHiddenPicture(gameContext);
+
+        double width = dimension2D.getWidth() / nbColomns;
+        double height = dimension2D.getHeight() / nbLines;
 
         for (int i = 0; i < nbColomns; i++)
             for (int j = 0; j < nbLines; j++) {
@@ -92,9 +117,9 @@ public class Blocs implements GameLifeCycle {
                 else
                     bloc.setFill(Color.BLACK);
                 gameContext.getChildren().add(bloc);
-                blocs[i][j] = bloc;
+                currentRoundDetails.blocs[i][j] = bloc;
 
-                bloc.toBack();
+                bloc.toFront();
 
                 GazeUtils.addEventFilter(bloc);
 
@@ -111,7 +136,9 @@ public class Blocs implements GameLifeCycle {
 
     }
 
-    private void removeAllBlocs() {
+    public void removeAllBlocs() {
+
+        final Bloc[][] blocs = currentRoundDetails.blocs;
 
         int maxX = blocs.length;
         int maxY = blocs[0].length;
@@ -140,16 +167,16 @@ public class Blocs implements GameLifeCycle {
     }
 
     private void removeBloc(Bloc toRemove) {
-
-        if (toRemove == null)
+        if (toRemove == null) {
             return;
+        }
 
         toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
         toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
         GazeUtils.removeEventFilter(toRemove);
         toRemove.setTranslateX(-10000);
         toRemove.setOpacity(0);
-        count--;
+        currentRoundDetails.remainingCount--;
     }
 
     private EventHandler<Event> buildEvent(GameContext gameContext, HiddenItemsGamesStats stats, boolean useTrail) {
@@ -171,6 +198,8 @@ public class Blocs implements GameLifeCycle {
                         int posX = bloc.posX;
                         int posY = bloc.posY;
 
+                        final Bloc[][] blocs = currentRoundDetails.blocs;
+
                         int maxX = blocs.length;
                         int maxY = blocs[0].length;
 
@@ -187,9 +216,10 @@ public class Blocs implements GameLifeCycle {
                         }
                     }
 
-                    if (((float) initCount - count) / initCount >= percents4Win && !finished) {
+                    if (((float) initCount - currentRoundDetails.remainingCount) / initCount >= percents4Win
+                            && !currentRoundDetails.finished) {
 
-                        finished = true;
+                        currentRoundDetails.finished = true;
 
                         stats.incNbGoals();
 

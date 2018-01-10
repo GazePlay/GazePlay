@@ -93,6 +93,7 @@ public class HomeMenuScreen {
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
         primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
+
         primaryStage.show();
     }
 
@@ -154,11 +155,11 @@ public class HomeMenuScreen {
 
         GameContext gameContext = GameContext.newInstance(gazePlay);
 
+        gazePlay.onGameLaunch(gameContext);
         final Stats stats = selectedGameSpec.launch(gameContext);
 
+        gameContext.createToggleFullScreenButtonInGameScreen(gazePlay);
         gameContext.createHomeButtonInGameScreen(gazePlay, stats);
-
-        gazePlay.onGameLaunch(gameContext);
     }
 
     private void addButtons() {

@@ -5,27 +5,32 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.Bravo;
-import net.gazeplay.commons.utils.CssUtil;
-import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.StatsDisplay;
 
 @Slf4j
-public class GameContext extends GraphicalContext<Group> {
+public class GameContext extends GraphicalContext<Pane> {
 
     public static GameContext newInstance(GazePlay gazePlay) {
-        Group root = new Group();
+
+        BorderPane root = new BorderPane();
 
         final Screen screen = Screen.getScreens().get(0);
         log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
@@ -37,17 +42,71 @@ public class GameContext extends GraphicalContext<Group> {
 
         Bravo bravo = new Bravo();
 
-        return new GameContext(gazePlay, root, scene, bravo);
+        Pane gamingRoot = new Pane();
+        gamingRoot.setStyle("-fx-background-color: black;");
+
+        HBox menuHBox = createHBox();
+        menuHBox.toFront();
+
+        root.setBottom(menuHBox);
+        root.setCenter(gamingRoot);
+
+        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot);
+
+        RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
+
+        return new GameContext(gazePlay, gamingRoot, scene, bravo, menuHBox, gamePanelDimensionProvider,
+                randomPositionGenerator, root);
+    }
+
+    public static HBox createHBox() {
+        HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER_RIGHT);
+        hbox.setPadding(new Insets(15, 12, 15, 12));
+        hbox.setSpacing(10);
+        // hbox.setStyle("-fx-background-color: lightgrey;");
+        // hbox.setBackground(new BackgroundFill()):
+
+        hbox.backgroundProperty()
+                .setValue(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        hbox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        hbox.setStyle(
+                "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+
+        return hbox;
     }
 
     private final Bravo bravo;
 
-    private GameContext(GazePlay gazePlay, Group root, Scene scene, Bravo bravo) {
-        super(gazePlay, root, scene);
+    private final HBox menuHBox;
+
+    @Getter
+    private final RandomPositionGenerator randomPositionGenerator;
+
+    @Getter
+    private final GamePanelDimensionProvider gamePanelDimensionProvider;
+
+    private final BorderPane rootBorderPane;
+
+    private GameContext(GazePlay gazePlay, Pane gamingRoot, Scene scene, Bravo bravo, HBox menuHBox,
+            GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
+            BorderPane rootBorderPane) {
+        super(gazePlay, gamingRoot, scene);
         this.bravo = bravo;
+        this.menuHBox = menuHBox;
+        this.gamePanelDimensionProvider = gamePanelDimensionProvider;
+        this.randomPositionGenerator = randomPositionGenerator;
+        this.rootBorderPane = rootBorderPane;
     }
 
-    public void createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
+    public void resetBordersToFront() {
+        rootBorderPane.setBottom(null);
+        rootBorderPane.setBottom(menuHBox);
+    }
+
+    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
         HomeButton homeButton = new HomeButton();
 
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
@@ -74,15 +133,31 @@ public class GameContext extends GraphicalContext<Group> {
 
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
-        homeButton.recomputeSizeAndPosition(scene);
-        getChildren().add(homeButton);
+        // homeButton.recomputeSizeAndPosition(scene);
+        menuHBox.getChildren().add(homeButton);
 
-        this.homeButton = homeButton;
+        return homeButton;
+    }
+
+    public void createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
+
+        EventHandler<Event> eventHandler = new EventHandler<javafx.event.Event>() {
+            @Override
+            public void handle(javafx.event.Event e) {
+                gazePlay.toggleFullScreen();
+            }
+        };
+
+        Image buttonGraphics = new Image("data/common/images/fullscreen.png");
+
+        Button button = new Button("FullScreen", new ImageView(buttonGraphics));
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+        // button.recomputeSizeAndPosition(scene);
+        menuHBox.getChildren().add(button);
     }
 
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
-        homeButton.setVisible(false);
-
         getChildren().add(bravo);
         bravo.playWinTransition(scene, delay, onFinishedEventHandler);
     }

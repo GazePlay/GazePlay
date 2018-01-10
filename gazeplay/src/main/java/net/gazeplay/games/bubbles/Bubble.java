@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -13,6 +12,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.GazeEvent;
@@ -26,6 +26,7 @@ import java.util.Random;
 /**
  * Created by schwab on 28/08/2016.
  */
+@Slf4j
 public class Bubble extends Parent implements GameLifeCycle {
 
     private static final int maxRadius = 70;
@@ -192,8 +193,10 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private void newCircle() {
         Circle circle = buildCircle();
+        circle.toBack();
 
         this.getChildren().add(circle);
+        this.gameContext.resetBordersToFront();
 
         GazeUtils.addEventFilter(circle);
 
@@ -220,10 +223,11 @@ public class Bubble extends Parent implements GameLifeCycle {
     }
 
     private void moveCircle(Circle circle) {
-        final Scene scene = gameContext.getScene();
+        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        log.info("dimension2D = {}", dimension2D);
 
-        double centerX = (scene.getWidth() - maxRadius) * Math.random() + maxRadius;
-        double centerY = scene.getHeight();
+        double centerX = (dimension2D.getWidth() - maxRadius) * Math.random() + maxRadius;
+        double centerY = dimension2D.getHeight();
 
         circle.setCenterX(centerX);
         // circle.setTranslateY((scene.getHeight() - maxRadius) * Math.random() + maxRadius);

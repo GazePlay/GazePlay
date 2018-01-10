@@ -12,10 +12,13 @@ public class HomeButton extends Rectangle {
 
     private static final int DEFAULT_SIZE = 100;
 
+    private final String imageResourceLocation = "data/common/images/home-button.png";
+
     public HomeButton() {
         super(0, 0, DEFAULT_SIZE, DEFAULT_SIZE);
 
-        this.setFill(new ImagePattern(new Image("data/common/images/home-button.png"), 0, 0, 1, 1, true));
+        ImagePattern value = new ImagePattern(new Image(imageResourceLocation), 0, 0, 1, 1, true);
+        this.setFill(value);
     }
 
     public void recomputeSizeAndPosition(Scene scene) {

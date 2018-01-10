@@ -1,10 +1,8 @@
 package net.gazeplay.games.ninja;
 
-import javafx.scene.Scene;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.utils.Portrait;
-import net.gazeplay.commons.utils.RandomPositionGenerator;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
 
 /**
@@ -24,11 +22,8 @@ public class Ninja implements GameLifeCycle {
 
     @Override
     public void launch() {
-        Scene scene = gameContext.getScene();
-
-        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(scene);
-
-        Target portrait = new Target(gameContext, randomPositionGenerator, stats, Portrait.loadAllImages());
+        Target portrait = new Target(gameContext, gameContext.getRandomPositionGenerator(), stats,
+                Portrait.loadAllImages());
 
         gameContext.getChildren().add(portrait);
     }

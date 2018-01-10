@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -38,7 +37,6 @@ public class Card extends Parent {
 
     private final Image image;
 
-    private final Scene scene;
     private final GameContext gameContext;
 
     private final double initWidth;
@@ -68,7 +66,6 @@ public class Card extends Parent {
         this.winner = winner; // true if it is the good card
 
         this.gameContext = gameContext;
-        this.scene = gameContext.getScene();
 
         this.stats = stats;
 
@@ -104,6 +101,8 @@ public class Card extends Parent {
 
     private void onCorrectCardSelected() {
 
+        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
         stats.incNbGoals();
 
         int final_zoom = 2;
@@ -119,9 +118,9 @@ public class Card extends Parent {
         timeline.getKeyFrames().add(
                 new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight() * final_zoom)));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                new KeyValue(card.xProperty(), (scene.getWidth() - card.getWidth() * final_zoom) / 2)));
+                new KeyValue(card.xProperty(), (dimension2D.getWidth() - card.getWidth() * final_zoom) / 2)));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                new KeyValue(card.yProperty(), (scene.getHeight() - card.getHeight() * final_zoom) / 2)));
+                new KeyValue(card.yProperty(), (dimension2D.getHeight() - card.getHeight() * final_zoom) / 2)));
 
         timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
             @Override

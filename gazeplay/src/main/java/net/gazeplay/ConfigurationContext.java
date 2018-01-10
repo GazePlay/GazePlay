@@ -38,7 +38,7 @@ public class ConfigurationContext extends GraphicalContext<Group> {
         super(gazePlay, root, scene);
     }
 
-    public void createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
+    public HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
 
         HomeButton homeButton = new HomeButton();
 
@@ -62,7 +62,7 @@ public class ConfigurationContext extends GraphicalContext<Group> {
         homeButton.recomputeSizeAndPosition(scene);
         getChildren().add(homeButton);
 
-        this.homeButton = homeButton;
+        return homeButton;
     }
 
     @Override
