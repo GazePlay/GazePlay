@@ -62,7 +62,9 @@ public class HomeMenuScreen {
         final Screen screen = Screen.getScreens().get(0);
         log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
 
-        scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
+        double ratioToScreenSize = 1;
+        scene = new Scene(root, screen.getWidth() * ratioToScreenSize, screen.getHeight() * ratioToScreenSize,
+                Color.BLACK);
 
         CssUtil.setPreferredStylesheets(config, scene);
 
@@ -86,15 +88,20 @@ public class HomeMenuScreen {
         return root.getChildren();
     }
 
-    public void setUpOnStage(Stage primaryStage) {
+    public void setUpOnStage(Stage stage) {
         cbxGames.getSelectionModel().clearSelection();
 
-        primaryStage.setTitle("GazePlay");
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
+        stage.setTitle("GazePlay");
 
-        primaryStage.show();
+        // setting the scene again will exit fullscreen
+        // so we need to backup the fullscreen status, and restore it after the scene has been set
+        boolean fullscreen = stage.isFullScreen();
+        stage.setScene(scene);
+        stage.setFullScreen(fullscreen);
+
+        stage.setOnCloseRequest((WindowEvent we) -> stage.close());
+
+        stage.show();
     }
 
     public void onLanguageChanged() {

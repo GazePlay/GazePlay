@@ -30,6 +30,7 @@ public class GazePlay extends Application {
         this.primaryStage = primaryStage;
         homeMenuScreen = new HomeMenuScreen(this, ConfigurationBuilder.createFromPropertiesResource().build());
         homeMenuScreen.setUpOnStage(primaryStage);
+        primaryStage.setFullScreen(true);
     }
 
     public void onGameLaunch(GameContext gameContext) {
