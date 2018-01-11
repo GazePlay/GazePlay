@@ -52,23 +52,25 @@ public class GameContext extends GraphicalContext<Pane> {
         bottomStackPane.getChildren().add(blindFoldPanel);
         bottomStackPane.getChildren().add(menuHBox);
 
-        bottomStackPane.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+        EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 resizeBlindFoldPanel(blindFoldPanel, menuHBox);
                 blindFoldPanel.toBack();
             }
-        });
-        bottomStackPane.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+        };
+        EventHandler<MouseEvent> mouseExitControlPanelEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 resizeBlindFoldPanel(blindFoldPanel, menuHBox);
                 blindFoldPanel.toFront();
             }
-        });
+        };
 
-        resizeBlindFoldPanel(blindFoldPanel, menuHBox);
-        blindFoldPanel.toFront();
+        bottomStackPane.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
+        bottomStackPane.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
+
+        mouseEnterControlPanelEventHandler.handle(null);
 
         root.setBottom(bottomStackPane);
         root.setCenter(gamingRoot);
