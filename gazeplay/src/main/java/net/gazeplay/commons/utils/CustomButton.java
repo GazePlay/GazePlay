@@ -8,25 +8,31 @@ import javafx.stage.Screen;
 
 public class CustomButton extends Rectangle {
 
-    private static final double DEFAULT_SIZE = Screen.getPrimary().getBounds().getWidth() / 10;
+	private static final double DEFAULT_SIZE;
 
-    public CustomButton(String imageResourceLocation) {
-        super(0, 0, DEFAULT_SIZE, DEFAULT_SIZE);
+	static {
+		//DEFAULT_SIZE = 128;
+		//DEFAULT_SIZE = Screen.getPrimary().getBounds().getWidth() / 10;
+		DEFAULT_SIZE = Screen.getPrimary().getBounds().getWidth() / 20;
+	}
 
-        ImagePattern value = new ImagePattern(new Image(imageResourceLocation), 0, 0, 1, 1, true);
-        this.setFill(value);
-    }
+	public CustomButton(String imageResourceLocation) {
+		super(0, 0, DEFAULT_SIZE, DEFAULT_SIZE);
 
-    public void recomputeSizeAndPosition(Scene scene) {
-        double size = scene.getWidth() / 10;
+		ImagePattern value = new ImagePattern(new Image(imageResourceLocation), 0, 0, 1, 1, true);
+		this.setFill(value);
+	}
 
-        double positionX = scene.getWidth() - (size * 1.5);
-        double positionY = scene.getHeight() - (size * 1.5);
+	public void recomputeSizeAndPosition(Scene scene) {
+		double size = scene.getWidth() / 10;
 
-        setX(positionX);
-        setY(positionY);
-        setWidth(size);
-        setHeight(size);
-    }
+		double positionX = scene.getWidth() - (size * 1.5);
+		double positionY = scene.getHeight() - (size * 1.5);
+
+		setX(positionX);
+		setY(positionY);
+		setWidth(size);
+		setHeight(size);
+	}
 
 }
