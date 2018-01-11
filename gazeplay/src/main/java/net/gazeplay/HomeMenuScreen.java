@@ -28,6 +28,7 @@ import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.CssUtil;
+import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
 
 @Data
 @Slf4j
-public class HomeMenuScreen {
+public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
@@ -53,23 +54,13 @@ public class HomeMenuScreen {
     }
 
     @Getter
-    private final GazePlay gazePlay;
-
-    @Getter
-    private final Scene scene;
-
-    private final BorderPane root;
-
-    @Getter
     private final ChoiceBox<String> cbxGames;
 
     private final List<GameSpec> games;
 
     public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, Scene scene, BorderPane root, Configuration config) {
-        this.gazePlay = gazePlay;
+        super(gazePlay, root, scene);
         this.games = games;
-        this.scene = scene;
-        this.root = root;
 
         addButtons();
 
@@ -91,8 +82,6 @@ public class HomeMenuScreen {
 
         root.setStyle(
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
-        CssUtil.setPreferredStylesheets(config, scene);
     }
 
     public ObservableList<Node> getChildren() {
@@ -111,6 +100,9 @@ public class HomeMenuScreen {
         stage.setFullScreen(fullscreen);
 
         stage.setOnCloseRequest((WindowEvent we) -> stage.close());
+
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        CssUtil.setPreferredStylesheets(config, scene);
 
         stage.show();
     }
@@ -171,6 +163,8 @@ public class HomeMenuScreen {
     private void chooseGame(GameSpec selectedGameSpec) {
         log.info(selectedGameSpec.getNameCode() + " " + selectedGameSpec.getVariationHint());
 
+        GazePlay gazePlay = getGazePlay();
+
         GameContext gameContext = GameContext.newInstance(gazePlay);
 
         gazePlay.onGameLaunch(gameContext);
@@ -181,20 +175,12 @@ public class HomeMenuScreen {
     }
 
     private void addButtons() {
+        GazePlay gazePlay = getGazePlay();
 
-        double width = scene.getWidth() / 10;
-        double heigth = width;
-        double XExit = scene.getWidth() * 0.9;
-        double Y = scene.getHeight() - heigth * 1.1;
-
-        // License license = new License(XLicence, Y, width, heigth, scene, root, cbxGames);
-
-        // root.getChildren().add(license);
-
-        Rectangle exitButton = createExitButton(width, heigth, XExit, Y);
+        Rectangle exitButton = createExitButton();
 
         ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
-        ConfigurationButton configurationButton = ConfigurationButton.createConfigurationDisplay(configurationContext);
+        ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(configurationContext);
 
         FlowPane leftControlPane = new FlowPane();
         leftControlPane.setAlignment(Pos.TOP_LEFT);
@@ -213,25 +199,11 @@ public class HomeMenuScreen {
 
         root.setTop(topPane);
         root.setBottom(bottomPane);
-
     }
 
-    private Rectangle createExitButton(double width, double heigth, double XExit, double y) {
-        EventHandler<Event> homeEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
-                    System.exit(0);
-
-                }
-            }
-        };
-
-        Rectangle exitButton = new Rectangle(XExit, y, width, heigth);
-        exitButton.setFill(new ImagePattern(new Image("data/common/images/power-off.png"), 0, 0, 1, 1, true));
-        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+    private Rectangle createExitButton() {
+        CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
+        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
         return exitButton;
     }
 
