@@ -5,12 +5,16 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -40,12 +44,10 @@ public class HomeMenuScreen {
         GamesLocator gamesLocator = new DefaultGamesLocator();
         List<GameSpec> games = gamesLocator.listGames();
 
-        Group root = new Group();
+        BorderPane root = new BorderPane();
 
         Scene scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
                 Color.BLACK);
-
-        CssUtil.setPreferredStylesheets(config, scene);
 
         return new HomeMenuScreen(gazePlay, games, scene, root, config);
     }
@@ -56,29 +58,41 @@ public class HomeMenuScreen {
     @Getter
     private final Scene scene;
 
-    private final Group root;
+    private final BorderPane root;
 
     @Getter
     private final ChoiceBox<String> cbxGames;
 
     private final List<GameSpec> games;
 
-    public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, Scene scene, Group root, Configuration config) {
+    public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, Scene scene, BorderPane root, Configuration config) {
         this.gazePlay = gazePlay;
         this.games = games;
         this.scene = scene;
         this.root = root;
 
+        addButtons();
+
         cbxGames = createChoiceBox(games, config);
 
         cbxGames.getSelectionModel().clearSelection();
-        root.getChildren().add(cbxGames);
 
-        cbxGames.setTranslateX(scene.getWidth() * 0.9 / 2);
-        cbxGames.setTranslateY(scene.getHeight() * 0.9 / 2);
+        StackPane centerCenterPane = new StackPane();
+        centerCenterPane.getChildren().add(cbxGames);
 
-        addButtons();
+        VBox verticalMenuBox = new VBox();
+        verticalMenuBox.getChildren().add(Utils.buildLicence());
 
+        BorderPane centerBorderPane = new BorderPane();
+        centerBorderPane.setCenter(centerCenterPane);
+        centerBorderPane.setLeft(verticalMenuBox);
+
+        root.setCenter(centerBorderPane);
+
+        root.setStyle(
+                "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+
+        CssUtil.setPreferredStylesheets(config, scene);
     }
 
     public ObservableList<Node> getChildren() {
@@ -182,10 +196,24 @@ public class HomeMenuScreen {
         ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
         ConfigurationButton configurationButton = ConfigurationButton.createConfigurationDisplay(configurationContext);
 
-        getChildren().add(configurationButton);
-        getChildren().add(exitButton);
-        getChildren().add(createLogo());
-        getChildren().add(Utils.buildLicence());
+        FlowPane leftControlPane = new FlowPane();
+        leftControlPane.setAlignment(Pos.TOP_LEFT);
+        leftControlPane.getChildren().add(configurationButton);
+
+        FlowPane rightControlPane = new FlowPane();
+        rightControlPane.setAlignment(Pos.TOP_RIGHT);
+        rightControlPane.getChildren().add(exitButton);
+
+        BorderPane bottomPane = new BorderPane();
+        bottomPane.setLeft(leftControlPane);
+        bottomPane.setRight(rightControlPane);
+
+        StackPane topPane = new StackPane();
+        topPane.getChildren().add(createLogo());
+
+        root.setTop(topPane);
+        root.setBottom(bottomPane);
+
     }
 
     private Rectangle createExitButton(double width, double heigth, double XExit, double y) {
