@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -90,37 +91,30 @@ public class Utils {
     }
 
     public static MenuBar buildLicence() {
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        String licenseFileAsString = loadLicenseFileAsString(classLoader);
+
+        MenuItem licenseMenuItem = new MenuItem(licenseFileAsString);
+
+        Menu menu = new Menu("GazePlay");
+        menu.getItems().add(licenseMenuItem);
 
         MenuBar menuBar = new MenuBar();
-
-        // --- Menu File
-        Menu menu = new Menu("GazePlay");
-
-        StringBuilder licence = new StringBuilder(50000);
-        String line;
-
-        try {
-
-            InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream("data/common/licence.txt");
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
-            while ((line = br.readLine()) != null) {
-                licence.append('\n');
-                licence.append(line);
-            }
-            br.close();
-        } catch (IOException e) {
-            log.error("Exception", e);
-        }
-
-        MenuItem MenuLicence = new MenuItem(licence.toString());
-
-        menu.getItems().add(MenuLicence);
-
         menuBar.getMenus().addAll(menu);
+        menuBar.setPrefHeight(40);
+        menuBar.setPrefWidth(80);
 
         return menuBar;
+    }
+
+    private static String loadLicenseFileAsString(ClassLoader classLoader) {
+        try {
+            try (InputStream is = classLoader.getResourceAsStream("data/common/licence.txt")) {
+                return IOUtils.toString(is, Charset.forName("UTF-8"));
+            }
+        } catch (IOException e) {
+            return "Failed to load the license file";
+        }
     }
 
     public static Image[] images(String folder) {

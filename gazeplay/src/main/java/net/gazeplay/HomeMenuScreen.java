@@ -9,12 +9,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -62,23 +60,49 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         super(gazePlay, root, scene);
         this.games = games;
 
-        addButtons();
+        Rectangle exitButton = createExitButton();
+
+        ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
+        ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(configurationContext);
+
+        FlowPane leftControlPane = new FlowPane();
+        leftControlPane.setAlignment(Pos.TOP_LEFT);
+        leftControlPane.getChildren().add(configurationButton);
+
+        FlowPane rightControlPane = new FlowPane();
+        rightControlPane.setAlignment(Pos.TOP_RIGHT);
+        rightControlPane.getChildren().add(exitButton);
+
+        BorderPane bottomPane = new BorderPane();
+        bottomPane.setLeft(leftControlPane);
+        bottomPane.setRight(rightControlPane);
+
+        MenuBar menuBar = Utils.buildLicence();
+
+        Node logo = createLogo();
+        StackPane topLogoPane = new StackPane();
+        topLogoPane.getChildren().add(logo);
 
         cbxGames = createChoiceBox(games, config);
-
         cbxGames.getSelectionModel().clearSelection();
 
         StackPane centerCenterPane = new StackPane();
         centerCenterPane.getChildren().add(cbxGames);
 
-        VBox verticalMenuBox = new VBox();
-        verticalMenuBox.getChildren().add(Utils.buildLicence());
+        VBox leftPanel = new VBox();
+        leftPanel.getChildren().add(menuBar);
 
-        BorderPane centerBorderPane = new BorderPane();
-        centerBorderPane.setCenter(centerCenterPane);
-        centerBorderPane.setLeft(verticalMenuBox);
+        BorderPane centerPanel = new BorderPane();
+        centerPanel.setCenter(centerCenterPane);
+        centerPanel.setLeft(leftPanel);
 
-        root.setCenter(centerBorderPane);
+        BorderPane topPane = new BorderPane();
+        topPane.setTop(menuBar);
+        topPane.setCenter(topLogoPane);
+
+        root.setTop(topPane);
+        root.setBottom(bottomPane);
+        root.setCenter(centerPanel);
 
         root.setStyle(
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
@@ -119,7 +143,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     /**
      * This command is called when games have to be updated (example: when language changed)
      */
-    private ChoiceBox createChoiceBox(List<GameSpec> games, Configuration config) {
+    private ChoiceBox<String> createChoiceBox(List<GameSpec> games, Configuration config) {
         List<String> gamesLabels = generateTranslatedGamesNames(games, config);
 
         ChoiceBox<String> cbxGames = new ChoiceBox<>();
@@ -172,33 +196,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         gameContext.createToggleFullScreenButtonInGameScreen(gazePlay);
         gameContext.createHomeButtonInGameScreen(gazePlay, stats);
-    }
-
-    private void addButtons() {
-        GazePlay gazePlay = getGazePlay();
-
-        Rectangle exitButton = createExitButton();
-
-        ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
-        ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(configurationContext);
-
-        FlowPane leftControlPane = new FlowPane();
-        leftControlPane.setAlignment(Pos.TOP_LEFT);
-        leftControlPane.getChildren().add(configurationButton);
-
-        FlowPane rightControlPane = new FlowPane();
-        rightControlPane.setAlignment(Pos.TOP_RIGHT);
-        rightControlPane.getChildren().add(exitButton);
-
-        BorderPane bottomPane = new BorderPane();
-        bottomPane.setLeft(leftControlPane);
-        bottomPane.setRight(rightControlPane);
-
-        StackPane topPane = new StackPane();
-        topPane.getChildren().add(createLogo());
-
-        root.setTop(topPane);
-        root.setBottom(bottomPane);
     }
 
     private Rectangle createExitButton() {
