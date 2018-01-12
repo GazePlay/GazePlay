@@ -12,12 +12,14 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 import lombok.Data;
 import lombok.Getter;
@@ -25,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.ConfigurationButton;
-import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -112,23 +113,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
+    @Override
     public void setUpOnStage(Stage stage) {
         cbxGames.getSelectionModel().clearSelection();
 
-        stage.setTitle("GazePlay");
-
-        // setting the scene again will exit fullscreen
-        // so we need to backup the fullscreen status, and restore it after the scene has been set
-        boolean fullscreen = stage.isFullScreen();
-        stage.setScene(scene);
-        stage.setFullScreen(fullscreen);
-
-        stage.setOnCloseRequest((WindowEvent we) -> stage.close());
-
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-        CssUtil.setPreferredStylesheets(config, scene);
-
-        stage.show();
+        super.setUpOnStage(stage);
     }
 
     public void onLanguageChanged() {

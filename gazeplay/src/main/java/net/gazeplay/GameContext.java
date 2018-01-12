@@ -19,11 +19,11 @@ import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.commons.utils.stats.StatsDisplay;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
@@ -151,12 +151,21 @@ public class GameContext extends GraphicalContext<Pane> {
 
                     scene.setCursor(Cursor.WAIT); // Change cursor to wait style
 
+                    stats.stop();
+                    GazeUtils.clear();
+
                     log.info("stats = " + stats);
 
-                    StatsContext statsContext = StatsContext.newInstance(gazePlay);
+                    Runnable asynchronousStatsPersistTask = new Runnable() {
+                        @Override
+                        public void run() {
+                            stats.saveStats();
+                        }
+                    };
+                    Thread asynchronousStatsPersistThread = new Thread(asynchronousStatsPersistTask);
+                    asynchronousStatsPersistThread.start();
 
-                    Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-                    StatsDisplay.displayStats(gazePlay, stats, statsContext, config);
+                    StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
 
                     gazePlay.onDisplayStats(statsContext);
 

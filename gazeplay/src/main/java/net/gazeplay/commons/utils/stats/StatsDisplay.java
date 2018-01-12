@@ -12,14 +12,10 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
-import net.gazeplay.commons.gaze.GazeUtils;
-import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
 import java.util.ArrayList;
@@ -27,167 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsDisplay {
 
-    public static void displayStats(GazePlay gazePlay, Stats stats, StatsContext statsContext, Configuration config) {
-
-        final Scene scene = statsContext.getScene();
-
-        Multilinguism multilinguism = Multilinguism.getSingleton();
-
-        stats.stop();
-
-        GazeUtils.clear();
-
-        // to add or not a space before colon (:) according to the language
-        String colon = multilinguism.getTrad("Colon", config.getLanguage());
-        if (colon.equals("_noSpace")) {
-            colon = ": ";
-        } else {
-            colon = " : ";
-        }
-
-        {
-            Text statistics = new Text(multilinguism.getTrad("StatsTitle", config.getLanguage()));
-
-            statistics.setX(scene.getWidth() * 0.4);
-            statistics.setY(60);
-            statistics.setId("title");
-
-            statsContext.getChildren().add(statistics);
-        }
-
-        {
-            Text totalLength = new Text(multilinguism.getTrad("TotalLength", config.getLanguage()) + colon
-                    + convert(stats.getTotalLength()));
-
-            totalLength.setX(100);
-            totalLength.setY(150);
-            totalLength.setId("item");
-
-            statsContext.getChildren().add(totalLength);
-        }
-
-        {
-            Text shoots = new Text();
-            if (stats instanceof ShootGamesStats) {
-
-                shoots = new Text(multilinguism.getTrad("Shoots", config.getLanguage()) + colon + stats.getNbGoals());
-            } else if (stats instanceof BubblesGamesStats) {
-
-                shoots = new Text(
-                        multilinguism.getTrad("BubbleShoot", config.getLanguage()) + colon + stats.getNbGoals());
-            } else if (stats instanceof HiddenItemsGamesStats) {
-
-                shoots = new Text(
-                        multilinguism.getTrad("HiddenItemsShoot", config.getLanguage()) + colon + stats.getNbGoals());
-            }
-
-            shoots.setX(100);
-            shoots.setY(200);
-            shoots.setId("item");
-
-            statsContext.getChildren().add(shoots);
-
-        }
-
-        {
-            Text length = new Text(
-                    multilinguism.getTrad("Length", config.getLanguage()) + colon + convert(stats.getLength()));
-
-            length.setX(100);
-            length.setY(250);
-            length.setId("item");
-
-            statsContext.getChildren().add(length);
-        }
-
-        {
-            Text averageLength = new Text();
-
-            if (stats instanceof ShootGamesStats) {
-
-                averageLength = new Text(multilinguism.getTrad("ShootaverageLength", config.getLanguage()) + colon
-                        + convert(stats.getAverageLength()));
-            } else if (stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
-
-                averageLength = new Text(multilinguism.getTrad("AverageLength", config.getLanguage()) + colon
-                        + convert(stats.getAverageLength()));
-            }
-
-            averageLength.setX(100);
-            averageLength.setY(300);
-            averageLength.setId("item");
-
-            statsContext.getChildren().add(averageLength);
-        }
-
-        {
-            Text medianLength = new Text();
-
-            if (stats instanceof ShootGamesStats) {
-
-                medianLength = new Text(multilinguism.getTrad("ShootmedianLength", config.getLanguage()) + colon
-                        + convert(stats.getMedianLength()));
-            } else if (stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
-
-                medianLength = new Text(multilinguism.getTrad("MedianLength", config.getLanguage()) + colon
-                        + convert(stats.getMedianLength()));
-            }
-
-            medianLength.setX(100);
-            medianLength.setY(350);
-            medianLength.setId("item");
-            statsContext.getChildren().add(medianLength);
-        }
-
-        {
-            Text standDev = new Text(
-                    multilinguism.getTrad("StandDev", config.getLanguage()) + colon + convert((long) stats.getSD()));
-            standDev.setX(100);
-            standDev.setY(400);
-            standDev.setId("item");
-            statsContext.getChildren().add(standDev);
-        }
-
-        {
-            Text UncountedShoot = new Text();
-
-            if (stats instanceof ShootGamesStats && !(stats instanceof BubblesGamesStats)
-                    && ((ShootGamesStats) stats).getNbUnCountedShoots() != 0) {
-
-                UncountedShoot = new Text(multilinguism.getTrad("UncountedShoot", config.getLanguage()) + colon
-                        + ((ShootGamesStats) stats).getNbUnCountedShoots());
-
-                UncountedShoot.setX(scene.getWidth() / 2);
-                UncountedShoot.setY(150);
-                UncountedShoot.setId("item");
-            }
-
-            statsContext.getChildren().add(UncountedShoot);
-        }
-
-        {
-            LineChart<String, Number> chart = buildLineChart(stats, scene);
-            statsContext.getChildren().add(chart);
-        }
-
-        {
-            Rectangle heatChart = BuildHeatChart(stats, scene);
-            heatChart.setX(scene.getWidth() * 5 / 9);
-            heatChart.setY(scene.getHeight() / 2 + 15);
-            heatChart.setWidth(scene.getWidth() * 0.35);
-            heatChart.setHeight(scene.getHeight() * 0.35);
-            statsContext.getChildren().add(heatChart);
-        }
-
-        stats.saveStats();
-
-        createHomeButtonInStatsScreen(gazePlay, statsContext);
-    }
-
     public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
-        final Scene scene = statsContext.getScene();
-
-        HomeButton homeButton = new HomeButton();
 
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
             @Override
@@ -195,24 +31,22 @@ public class StatsDisplay {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    scene.setCursor(Cursor.WAIT); // Change cursor to wait style
+                    statsContext.getScene().setCursor(Cursor.WAIT); // Change cursor to wait style
 
                     gazePlay.onReturnToMenu();
 
-                    scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
+                    statsContext.getScene().setCursor(Cursor.DEFAULT); // Change cursor to default style
                 }
             }
         };
 
+        HomeButton homeButton = new HomeButton();
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-
-        homeButton.recomputeSizeAndPosition(scene);
-        statsContext.getChildren().add(homeButton);
 
         return homeButton;
     }
 
-    static LineChart<String, Number> buildLineChart(Stats stats, Scene scene) {
+    public static LineChart<String, Number> buildLineChart(Stats stats, Scene scene) {
 
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
@@ -282,15 +116,13 @@ public class StatsDisplay {
 
         lineChart.setLegendVisible(false);
 
-        lineChart.setTranslateX(scene.getWidth() * 1 / 10);
-        lineChart.setTranslateY(scene.getHeight() / 2);
         lineChart.setMaxWidth(scene.getWidth() * 0.4);
         lineChart.setMaxHeight(scene.getHeight() * 0.4);
 
         return lineChart;
     }
 
-    private static Rectangle BuildHeatChart(Stats stats, Scene scene) {
+    public static Rectangle BuildHeatChart(Stats stats, Scene scene) {
 
         HeatMapUtils.buildHeatMap(stats.getHeatMap());
 
@@ -305,7 +137,7 @@ public class StatsDisplay {
         return heatMap;
     }
 
-    private static EventHandler<Event> closeLineChart(LineChart<String, Number> lineChart, Scene scene) {
+    public static EventHandler<Event> closeLineChart(LineChart<String, Number> lineChart, Scene scene) {
 
         return new EventHandler<Event>() {
 
@@ -334,7 +166,7 @@ public class StatsDisplay {
         };
     }
 
-    private static EventHandler<Event> openLineChart(LineChart<String, Number> lineChart, Scene scene) {
+    public static EventHandler<Event> openLineChart(LineChart<String, Number> lineChart, Scene scene) {
 
         return new EventHandler<Event>() {
 
@@ -359,7 +191,7 @@ public class StatsDisplay {
         };
     }
 
-    private static EventHandler<Event> closeHeatMap(Rectangle heatMap, Scene scene) {
+    public static EventHandler<Event> closeHeatMap(Rectangle heatMap, Scene scene) {
 
         return new EventHandler<Event>() {
 
@@ -383,7 +215,7 @@ public class StatsDisplay {
         };
     }
 
-    private static EventHandler<Event> openHeatMap(Rectangle heatMap, Scene scene) {
+    public static EventHandler<Event> openHeatMap(Rectangle heatMap, Scene scene) {
 
         return new EventHandler<Event>() {
 
@@ -410,7 +242,7 @@ public class StatsDisplay {
 
     }
 
-    private static String convert(long totalTime) {
+    public static String convert(long totalTime) {
 
         long days = TimeUnit.MILLISECONDS.toDays(totalTime);
         totalTime -= TimeUnit.DAYS.toMillis(days);
