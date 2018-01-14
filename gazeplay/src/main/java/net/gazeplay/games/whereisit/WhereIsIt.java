@@ -6,8 +6,8 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
@@ -21,10 +21,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.util.Duration;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
@@ -79,7 +76,6 @@ public class WhereIsIt implements GameLifeCycle {
     private final boolean fourThree;
 
     private final GameContext gameContext;
-    private final Scene scene;
 
     private final WhereIsItStats stats;
 
@@ -88,7 +84,6 @@ public class WhereIsIt implements GameLifeCycle {
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
             final GameContext gameContext, final WhereIsItStats stats) {
         this.gameContext = gameContext;
-        this.scene = gameContext.getScene();
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.gameType = gameType;
@@ -100,8 +95,6 @@ public class WhereIsIt implements GameLifeCycle {
 
     @Override
     public void launch() {
-        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree)
-                .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
@@ -112,7 +105,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        currentRoundDetails = pickAndBuildRandomPictures(config, gameSizing, numberOfImagesToDisplayPerRound, random,
+        currentRoundDetails = pickAndBuildRandomPictures(config, numberOfImagesToDisplayPerRound, random,
                 winnerImageIndexAmongDisplayedImages);
 
         if (currentRoundDetails != null) {
@@ -129,8 +122,10 @@ public class WhereIsIt implements GameLifeCycle {
 
         questionText.setId("title");
 
-        double positionX = gameContext.getScene().getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
-        double positionY = gameContext.getScene().getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
+        final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        double positionX = gamePaneDimension2D.getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
+        double positionY = gamePaneDimension2D.getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
 
         questionText.setX(positionX);
         questionText.setY(positionY);
@@ -139,7 +134,8 @@ public class WhereIsIt implements GameLifeCycle {
 
         gameContext.getChildren().add(questionText);
 
-        List<Rectangle> RectPict = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete them
+        List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
+        // them
         // from the group later
 
         if (Pictos != null && !Pictos.isEmpty() && Pictos.size() <= NBMAXPICTO) {
@@ -167,23 +163,32 @@ public class WhereIsIt implements GameLifeCycle {
                 R.setFill(new ImagePattern(I));
                 R.setY(positionY + 100);
                 R.setX(shift + (i++ * pictoSize * 1.1));
-                RectPict.add(R);
+                pictogramesList.add(R);
             }
 
-            gameContext.getChildren().addAll(RectPict);
+            gameContext.getChildren().addAll(pictogramesList);
         }
 
         TranslateTransition fullAnimation = new TranslateTransition(
                 Duration.millis(ConfigurationBuilder.createFromPropertiesResource().build().getQuestionLength()),
                 questionText);
+
         fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 gameContext.getChildren().remove(questionText);
 
-                gameContext.getChildren().removeAll(RectPict);
+                gameContext.getChildren().removeAll(pictogramesList);
 
+                log.info("Adding {} pictures", currentRoundDetails.pictureCardList.size());
                 gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
+
+                for (PictureCard p : currentRoundDetails.pictureCardList) {
+                    log.info("p = {}", p);
+                    p.toFront();
+                    p.setOpacity(1);
+                }
+
                 stats.start();
 
                 gameContext.onGameStarted();
@@ -253,7 +258,7 @@ public class WhereIsIt implements GameLifeCycle {
         private final List<Image> pictos;
     }
 
-    private RoundDetails pickAndBuildRandomPictures(final Configuration config, final GameSizing gameSizing,
+    private RoundDetails pickAndBuildRandomPictures(final Configuration config,
             final int numberOfImagesToDisplayPerRound, final Random random,
             final int winnerImageIndexAmongDisplayedImages) {
 
@@ -280,6 +285,10 @@ public class WhereIsIt implements GameLifeCycle {
 
         int posX = 0;
         int posY = 0;
+
+        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree)
+                .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
+        log.info("gameSizing = {}", gameSizing);
 
         final List<PictureCard> pictureCardList = new ArrayList<>();
         String questionSoundPath = null;
@@ -348,6 +357,8 @@ public class WhereIsIt implements GameLifeCycle {
         // HomeUtils.home(scene, group, choiceBox, null);
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
+
+        Scene scene = gameContext.getScene();
 
         Text error = new Text(multilinguism.getTrad("WII-error", language));
         error.setX(scene.getWidth() / 2. - 100);
@@ -567,6 +578,7 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     @Slf4j
+    @ToString
     private static class PictureCard extends Group {
 
         private final double minTime;
@@ -583,7 +595,6 @@ public class WhereIsIt implements GameLifeCycle {
         private final double initialPositionY;
 
         private final WhereIsItStats stats;
-        private final Scene scene;
         private final String imagePath;
 
         private final ProgressIndicator progressIndicator;
@@ -611,7 +622,6 @@ public class WhereIsIt implements GameLifeCycle {
             this.winner = winner;
             this.gameContext = gameContext;
             this.stats = stats;
-            this.scene = gameContext.getScene();
             this.gameInstance = gameInstance;
 
             this.imagePath = imagePath;
@@ -684,17 +694,19 @@ public class WhereIsIt implements GameLifeCycle {
 
             gameInstance.removeAllIncorrectPictureCards();
 
-            Rectangle2D sceneBounds = new Rectangle2D(scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight());
-            log.info("sceneBounds = {}", sceneBounds);
+            Dimension2D gamePanelDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            log.info("gamePanelDimension2D = {}", gamePanelDimension2D);
 
             ScaleTransition scaleToFullScreenTransition = new ScaleTransition(new Duration(1000), imageRectangle);
-            scaleToFullScreenTransition.setByX((sceneBounds.getWidth() / initialWidth) - 1);
-            scaleToFullScreenTransition.setByY((sceneBounds.getHeight() / initialHeight) - 1);
+            scaleToFullScreenTransition.setByX((gamePanelDimension2D.getWidth() / initialWidth) - 1);
+            scaleToFullScreenTransition.setByY((gamePanelDimension2D.getHeight() / initialHeight) - 1);
 
             TranslateTransition translateToCenterTransition = new TranslateTransition(new Duration(1000),
                     imageRectangle);
-            translateToCenterTransition.setByX(-initialPositionX + (sceneBounds.getWidth() - initialWidth) / 2);
-            translateToCenterTransition.setByY(-initialPositionY + (sceneBounds.getHeight() - initialHeight) / 2);
+            translateToCenterTransition
+                    .setByX(-initialPositionX + (gamePanelDimension2D.getWidth() - initialWidth) / 2);
+            translateToCenterTransition
+                    .setByY(-initialPositionY + (gamePanelDimension2D.getHeight() - initialHeight) / 2);
 
             ParallelTransition fullAnimation = new ParallelTransition();
             fullAnimation.getChildren().add(translateToCenterTransition);
