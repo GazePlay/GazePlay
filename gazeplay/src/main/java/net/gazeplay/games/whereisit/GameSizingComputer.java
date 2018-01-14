@@ -44,6 +44,10 @@ public class GameSizingComputer {
         double sceneWidth = bounds.getWidth();
         double sceneHeight = bounds.getHeight();
 
+        if (sceneWidth == 0 || sceneHeight == 0) {
+            throw new IllegalStateException("Invalid gaming area size : bounds = " + bounds);
+        }
+
         final double width;
         final double height;
         final double shift;

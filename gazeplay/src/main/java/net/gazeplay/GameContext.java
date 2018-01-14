@@ -75,7 +75,7 @@ public class GameContext extends GraphicalContext<Pane> {
         root.setBottom(bottomStackPane);
         root.setCenter(gamingRoot);
 
-        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot);
+        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot, scene);
 
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
