@@ -12,6 +12,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
@@ -584,7 +585,7 @@ public class WhereIsIt implements GameLifeCycle {
         private final GameContext gameContext;
         private final boolean winner;
 
-        private final Rectangle imageRectangle;
+        private final ImageView imageRectangle;
         private final Rectangle errorImageRectangle;
 
         private final double initialWidth;
@@ -625,7 +626,7 @@ public class WhereIsIt implements GameLifeCycle {
 
             this.imagePath = imagePath;
 
-            this.imageRectangle = createImageRectangle(posX, posY, width, height, imagePath);
+            this.imageRectangle = createImageView(posX, posY, width, height, imagePath);
             this.progressIndicator = buildProgressIndicator(width, height);
 
             this.progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
@@ -767,12 +768,16 @@ public class WhereIsIt implements GameLifeCycle {
             fullAnimation.play();
         }
 
-        private Rectangle createImageRectangle(double posX, double posY, double width, double height,
+        private ImageView createImageView(double posX, double posY, double width, double height,
                 @NonNull String imagePath) {
             final Image image = new Image("file:" + imagePath);
 
-            Rectangle result = new Rectangle(posX, posY, width, height);
-            result.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+            ImageView result = new ImageView(image);
+            result.setX(posX);
+            result.setY(posY);
+            result.setFitWidth(width);
+            result.setFitHeight(height);
+            result.setPreserveRatio(false);
             return result;
         }
 
@@ -783,11 +788,11 @@ public class WhereIsIt implements GameLifeCycle {
             double imageHeight = image.getHeight();
             double imageHeightToWidthRatio = imageHeight / imageWidth;
 
-            double rectangleWidth = imageRectangle.getWidth() / 3;
+            double rectangleWidth = imageRectangle.getFitWidth() / 3;
             double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
 
-            double positionX = imageRectangle.getX() + (imageRectangle.getWidth() - rectangleWidth) / 2;
-            double positionY = imageRectangle.getY() + (imageRectangle.getHeight() - rectangleHeight) / 2;
+            double positionX = imageRectangle.getX() + (imageRectangle.getFitWidth() - rectangleWidth) / 2;
+            double positionY = imageRectangle.getY() + (imageRectangle.getFitHeight() - rectangleHeight) / 2;
 
             Rectangle errorImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
             errorImageRectangle.setFill(new ImagePattern(image));
