@@ -40,6 +40,7 @@ public abstract class GraphicalContext<T> {
         CssUtil.setPreferredStylesheets(config, scene);
 
         stage.show();
+        log.info("Finished setup stage with the game scene");
     }
 
     public abstract ObservableList<Node> getChildren();

@@ -1,13 +1,16 @@
 package net.gazeplay;
 
+import javafx.scene.Scene;
 import lombok.Getter;
 import net.gazeplay.commons.utils.stats.Stats;
 
 public class GameSpec {
 
-    public interface GameLauncher {
+    public interface GameLauncher<T extends Stats> {
 
-        Stats launchGame(GameSpec gameSpec, GameContext gameContext);
+        T createNewStats(Scene scene);
+
+        GameLifeCycle createNewGame(GameContext gameContext, T stats);
 
     }
 
@@ -17,6 +20,7 @@ public class GameSpec {
     @Getter
     private final String variationHint;
 
+    @Getter
     private final GameLauncher gameLauncher;
 
     public GameSpec(String nameCode, String variationHint, GameLauncher gameLauncher) {
@@ -31,7 +35,4 @@ public class GameSpec {
         this.gameLauncher = gameLauncher;
     }
 
-    public Stats launch(GameContext gameContext) {
-        return gameLauncher.launchGame(this, gameContext);
-    }
 }

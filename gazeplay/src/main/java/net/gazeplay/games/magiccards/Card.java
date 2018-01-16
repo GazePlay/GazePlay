@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
-import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
+import net.gazeplay.commons.utils.stats.Stats;
 
 /**
  * Created by schwab on 17/09/2016.
@@ -52,12 +52,12 @@ public class Card extends Parent {
     private final ProgressIndicator progressIndicator;
 
     private Timeline timelineProgressBar;
-    final HiddenItemsGamesStats stats;
+    final Stats stats;
 
     final EventHandler<Event> enterEvent;
 
     public Card(double positionX, double positionY, double width, double height, Image image, boolean winner,
-            GameContext gameContext, HiddenItemsGamesStats stats, MagicCards gameInstance, int fixationlength) {
+            GameContext gameContext, Stats stats, MagicCards gameInstance, int fixationlength) {
 
         this.card = new Rectangle(positionX, positionY, width, height);
         this.card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));

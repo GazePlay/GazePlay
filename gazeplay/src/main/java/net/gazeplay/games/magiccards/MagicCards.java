@@ -10,6 +10,7 @@ import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +36,13 @@ public class MagicCards implements GameLifeCycle {
     private final int nbLines;
     private final int nbColumns;
 
-    private final HiddenItemsGamesStats stats;
+    private final Stats stats;
 
     private final Image[] images;
 
     private RoundDetails currentRoundDetails;
 
-    public MagicCards(GameContext gameContext, int nbLines, int nbColumns, HiddenItemsGamesStats stats) {
+    public MagicCards(GameContext gameContext, int nbLines, int nbColumns, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.nbLines = nbLines;

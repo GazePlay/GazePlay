@@ -57,6 +57,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private final List<GameSpec> games;
 
+    private GameLifeCycle currentGame;
+
     public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, Scene scene, BorderPane root, Configuration config) {
         super(gazePlay, root, scene);
         this.games = games;
@@ -181,10 +183,16 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         GameContext gameContext = GameContext.newInstance(gazePlay);
 
         gazePlay.onGameLaunch(gameContext);
-        final Stats stats = selectedGameSpec.launch(gameContext);
+
+        GameSpec.GameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
+
+        final Stats stats = gameLauncher.createNewStats(gameContext.getScene());
 
         gameContext.createToggleFullScreenButtonInGameScreen(gazePlay);
         gameContext.createHomeButtonInGameScreen(gazePlay, stats);
+
+        GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, stats);
+        currentGame.launch();
     }
 
     private Rectangle createExitButton() {

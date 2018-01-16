@@ -5,13 +5,13 @@ import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 
 public class WhereIsItStats extends HiddenItemsGamesStats {
 
-    public WhereIsItStats(Scene scene) {
-
+    public WhereIsItStats(Scene scene, String gameName) {
         super(scene);
+        this.gameName = gameName;
     }
 
     protected void setName(String gameName) {
-
         this.gameName = gameName;
     }
+
 }

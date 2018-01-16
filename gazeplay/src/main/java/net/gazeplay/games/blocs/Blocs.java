@@ -21,7 +21,7 @@ import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.AspectRatioImageRectangleUtil;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
+import net.gazeplay.commons.utils.stats.Stats;
 
 public class Blocs implements GameLifeCycle {
 
@@ -33,7 +33,7 @@ public class Blocs implements GameLifeCycle {
     private final boolean colors;
     private final float percents4Win;
     private final boolean useTrail;
-    private final HiddenItemsGamesStats stats;
+    private final Stats stats;
 
     private final int initCount;
 
@@ -62,7 +62,7 @@ public class Blocs implements GameLifeCycle {
     private CurrentRoundDetails currentRoundDetails;
 
     public Blocs(GameContext gameContext, int nbLines, int nbColumns, boolean colors, float percents4Win,
-            boolean useTrail, HiddenItemsGamesStats stats) {
+            boolean useTrail, Stats stats) {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColomns = nbColumns;
@@ -179,7 +179,7 @@ public class Blocs implements GameLifeCycle {
         currentRoundDetails.remainingCount--;
     }
 
-    private EventHandler<Event> buildEvent(GameContext gameContext, HiddenItemsGamesStats stats, boolean useTrail) {
+    private EventHandler<Event> buildEvent(GameContext gameContext, Stats stats, boolean useTrail) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {

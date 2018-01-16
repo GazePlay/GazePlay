@@ -3,7 +3,7 @@ package net.gazeplay.games.ninja;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.utils.Portrait;
-import net.gazeplay.commons.utils.stats.ShootGamesStats;
+import net.gazeplay.commons.utils.stats.Stats;
 
 /**
  * Created by schwab on 26/12/2016.
@@ -12,9 +12,9 @@ public class Ninja implements GameLifeCycle {
 
     private final GameContext gameContext;
 
-    private final ShootGamesStats stats;
+    private final Stats stats;
 
-    public Ninja(GameContext gameContext, ShootGamesStats stats) {
+    public Ninja(GameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;

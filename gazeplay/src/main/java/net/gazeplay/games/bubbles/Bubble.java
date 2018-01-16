@@ -18,6 +18,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final BubbleType type;
 
-    private final BubblesGamesStats stats;
+    private final Stats stats;
 
     private final boolean image;
 
@@ -51,7 +52,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final EventHandler<Event> enterEvent;
 
-    public Bubble(GameContext gameContext, BubbleType type, BubblesGamesStats stats, boolean useBackgroundImage) {
+    public Bubble(GameContext gameContext, BubbleType type, Stats stats, boolean useBackgroundImage) {
         this.gameContext = gameContext;
         this.type = type;
         this.stats = stats;

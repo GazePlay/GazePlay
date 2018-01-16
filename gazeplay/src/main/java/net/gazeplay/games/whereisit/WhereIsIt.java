@@ -30,6 +30,7 @@ import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,20 +78,18 @@ public class WhereIsIt implements GameLifeCycle {
 
     private final GameContext gameContext;
 
-    private final WhereIsItStats stats;
+    private final Stats stats;
 
     private RoundDetails currentRoundDetails;
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
-            final GameContext gameContext, final WhereIsItStats stats) {
+            final GameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.gameType = gameType;
         this.fourThree = fourThree;
         this.stats = stats;
-
-        this.stats.setName(gameType.getGameName());
     }
 
     @Override
@@ -594,7 +593,7 @@ public class WhereIsIt implements GameLifeCycle {
         private final double initialPositionX;
         private final double initialPositionY;
 
-        private final WhereIsItStats stats;
+        private final Stats stats;
         private final String imagePath;
 
         private final ProgressIndicator progressIndicator;
@@ -607,7 +606,7 @@ public class WhereIsIt implements GameLifeCycle {
         private final WhereIsIt gameInstance;
 
         public PictureCard(double posX, double posY, double width, double height, @NonNull GameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull WhereIsItStats stats, WhereIsIt gameInstance) {
+                boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance) {
 
             log.info("imagePath = {}", imagePath);
 

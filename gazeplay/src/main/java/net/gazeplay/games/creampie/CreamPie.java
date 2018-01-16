@@ -8,14 +8,15 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
+import net.gazeplay.commons.utils.stats.Stats;
 
 public class CreamPie implements GameLifeCycle {
 
     private final GameContext gameContext;
 
-    private final ShootGamesStats stats;
+    private final Stats stats;
 
-    public CreamPie(GameContext gameContext, ShootGamesStats stats) {
+    public CreamPie(GameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
