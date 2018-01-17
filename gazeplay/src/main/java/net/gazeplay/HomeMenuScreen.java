@@ -75,7 +75,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         leftControlPane.getChildren().add(configurationButton);
 
         HBox rightControlPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
         rightControlPane.setAlignment(Pos.CENTER);
         rightControlPane.getChildren().add(exitButton);
 
