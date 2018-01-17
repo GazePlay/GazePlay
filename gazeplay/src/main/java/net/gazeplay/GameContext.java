@@ -93,8 +93,8 @@ public class GameContext extends GraphicalContext<Pane> {
     public static HBox createHBox() {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_RIGHT);
-        hbox.setPadding(new Insets(15, 12, 15, 12));
-        hbox.setSpacing(10);
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(hbox);
+
         // hbox.setStyle("-fx-background-color: lightgrey;");
         // hbox.setBackground(new BackgroundFill()):
 
