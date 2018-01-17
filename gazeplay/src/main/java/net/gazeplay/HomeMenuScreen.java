@@ -13,7 +13,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.ConfigurationButton;
+import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -68,12 +69,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
         ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(configurationContext);
 
-        FlowPane leftControlPane = new FlowPane();
-        leftControlPane.setAlignment(Pos.TOP_LEFT);
+        HBox leftControlPane = new HBox();
+        leftControlPane.setAlignment(Pos.CENTER);
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.getChildren().add(configurationButton);
 
-        FlowPane rightControlPane = new FlowPane();
-        rightControlPane.setAlignment(Pos.TOP_RIGHT);
+        HBox rightControlPane = new HBox();
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
+        rightControlPane.setAlignment(Pos.CENTER);
         rightControlPane.getChildren().add(exitButton);
 
         BorderPane bottomPane = new BorderPane();
