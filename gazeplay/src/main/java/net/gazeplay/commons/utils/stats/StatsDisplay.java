@@ -134,6 +134,7 @@ public class StatsDisplay {
         Image image = new Image("file:" + HeatMapUtils.getHeatMapPath());
 
         ImageView heatMap = new ImageView(image);
+        heatMap.setPreserveRatio(true);
 
         EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, scene);
 
@@ -184,7 +185,7 @@ public class StatsDisplay {
 
                 int originalIndexInParent = getOriginalIndexInParent(lineChart);
 
-                zoomInAndCenter(lineChart, lineChart.getWidth(), lineChart.getHeight());
+                zoomInAndCenter(lineChart, lineChart.getWidth(), lineChart.getHeight(), false);
 
                 lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED,
                         createZoomOutLineChartEventHandler(lineChart, scene, originalIndexInParent));
@@ -216,7 +217,7 @@ public class StatsDisplay {
 
                 int originalIndexInParent = getOriginalIndexInParent(heatMap);
 
-                zoomInAndCenter(heatMap, heatMap.getFitWidth(), heatMap.getFitHeight());
+                zoomInAndCenter(heatMap, heatMap.getFitWidth(), heatMap.getFitHeight(), true);
 
                 heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED,
                         createZoomOutHeatMapEventHandler(heatMap, scene, originalIndexInParent));
@@ -231,7 +232,7 @@ public class StatsDisplay {
         node.setTranslateY(0);
     }
 
-    private static void zoomInAndCenter(Node node, double initialWidth, double initialHeight) {
+    private static void zoomInAndCenter(Node node, double initialWidth, double initialHeight, boolean preserveRatio) {
         Parent parent = node.getParent();
 
         node.toFront();
@@ -241,8 +242,14 @@ public class StatsDisplay {
         double xScaleRatio = parentBoundsInParent.getMaxX() / initialWidth;
         double yScaleRatio = parentBoundsInParent.getMaxY() / initialHeight;
 
-        node.setScaleX(xScaleRatio);
-        node.setScaleY(yScaleRatio);
+        if (preserveRatio) {
+            double bestScaleRatio = Math.min(xScaleRatio, yScaleRatio);
+            node.setScaleX(bestScaleRatio);
+            node.setScaleY(bestScaleRatio);
+        } else {
+            node.setScaleX(xScaleRatio);
+            node.setScaleY(yScaleRatio);
+        }
 
         Bounds boundsInParent = node.getBoundsInParent();
 
