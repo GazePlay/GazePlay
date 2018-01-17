@@ -17,8 +17,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.layout.Themes;
@@ -61,12 +62,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         HomeButton homeButton = createHomeButtonInConfigurationManagementScreen(gazePlay);
 
-        FlowPane rightControlPane = new FlowPane();
-        rightControlPane.setAlignment(Pos.TOP_RIGHT);
+        HBox rightControlPane = new HBox();
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
+        rightControlPane.setAlignment(Pos.CENTER_RIGHT);
 
-        FlowPane leftControlPane = new FlowPane();
-        leftControlPane.setAlignment(Pos.TOP_LEFT);
-
+        HBox leftControlPane = new HBox();
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
+        leftControlPane.setAlignment(Pos.CENTER_LEFT);
         rightControlPane.getChildren().add(homeButton);
 
         BorderPane bottomControlPane = new BorderPane();

@@ -19,6 +19,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -192,7 +193,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
         HBox controlButtonPane = new HBox();
-        controlButtonPane.setAlignment(Pos.TOP_RIGHT);
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
+        controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
         controlButtonPane.getChildren().add(homeButton);
 
         StackPane centerStackPane = new StackPane();
