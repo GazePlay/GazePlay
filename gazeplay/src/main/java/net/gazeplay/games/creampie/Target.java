@@ -16,7 +16,6 @@ import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
-import net.gazeplay.commons.utils.stats.ShootGamesStats;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
@@ -38,8 +37,7 @@ public class Target extends Portrait {
 
     private final Image[] availableImages;
 
-    public Target(RandomPositionGenerator randomPositionGenerator, Hand hand, ShootGamesStats stats,
-            Image[] availableImages) {
+    public Target(RandomPositionGenerator randomPositionGenerator, Hand hand, Stats stats, Image[] availableImages) {
 
         super(radius, randomPositionGenerator, availableImages);
 
