@@ -234,13 +234,6 @@ public class StatsDisplay {
     private static void zoomInAndCenter(Node node, double initialWidth, double initialHeight) {
         Parent parent = node.getParent();
 
-        VBox parentVBox = (VBox) parent;
-
-        // set the node as the last child
-        // because when it is the first child, it does not work well
-        // parentVBox.getChildren().remove(node);
-        // parentVBox.getChildren().add(node);
-
         node.toFront();
 
         Bounds parentBoundsInParent = parent.getBoundsInLocal();
