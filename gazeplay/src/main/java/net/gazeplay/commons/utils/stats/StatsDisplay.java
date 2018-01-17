@@ -2,16 +2,20 @@ package net.gazeplay.commons.utils.stats;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.VBox;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
 import net.gazeplay.commons.utils.HeatMapUtils;
@@ -21,6 +25,7 @@ import net.gazeplay.games.bubbles.BubblesGamesStats;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class StatsDisplay {
 
     public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
@@ -110,136 +115,149 @@ public class StatsDisplay {
         sdp.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
         sdm.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
 
-        EventHandler<Event> openLineChartEvent = openLineChart(lineChart, scene);
+        EventHandler<Event> openLineChartEvent = createZoomInLineChartEventHandler(lineChart, scene);
 
         lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED, openLineChartEvent);
 
         lineChart.setLegendVisible(false);
 
-        lineChart.setMaxWidth(scene.getWidth() * 0.4);
-        lineChart.setMaxHeight(scene.getHeight() * 0.4);
+        lineChart.setPrefWidth(scene.getWidth() * 0.4);
+        lineChart.setPrefHeight(scene.getHeight() * 0.4);
 
         return lineChart;
     }
 
-    public static Rectangle BuildHeatChart(Stats stats, Scene scene) {
+    public static ImageView BuildHeatChart(Stats stats, Scene scene) {
 
         HeatMapUtils.buildHeatMap(stats.getHeatMap());
 
-        Rectangle heatMap = new Rectangle();
+        Image image = new Image("file:" + HeatMapUtils.getHeatMapPath());
 
-        heatMap.setFill(new ImagePattern(new Image("file:" + HeatMapUtils.getHeatMapPath()), 0, 0, 1, 1, true));
+        ImageView heatMap = new ImageView(image);
 
-        EventHandler<Event> openHeatMapEvent = openHeatMap(heatMap, scene);
+        EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, scene);
 
         heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMapEvent);
 
         return heatMap;
     }
 
-    public static EventHandler<Event> closeLineChart(LineChart<String, Number> lineChart, Scene scene) {
+    private static void resetToOriginalIndexInParent(Node node, int originalIndexInParent) {
+        Parent parent = node.getParent();
 
+        VBox parentVBox = (VBox) parent;
+
+        parentVBox.getChildren().remove(node);
+        parentVBox.getChildren().add(originalIndexInParent, node);
+    }
+
+    private static int getOriginalIndexInParent(Node node) {
+        Parent parent = node.getParent();
+        VBox parentVBox = (VBox) parent;
+        return parentVBox.getChildren().indexOf(node);
+    }
+
+    private static EventHandler<Event> createZoomOutLineChartEventHandler(LineChart<String, Number> lineChart,
+            Scene scene, int originalIndexInParent) {
         return new EventHandler<Event>() {
-
             @Override
             public void handle(Event e) {
+                lineChart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                zoomOutAndReset(lineChart);
 
-                    lineChart.setTranslateX(scene.getWidth() * 1 / 10);
-                    lineChart.setTranslateY(scene.getHeight() / 2);
-                    lineChart.setMinWidth(scene.getWidth() * 0.4);
-                    lineChart.setMinHeight(scene.getHeight() * 0.4);
+                resetToOriginalIndexInParent(lineChart, originalIndexInParent);
 
-                    /*
-                     * lineChart.setTranslateX(scene.getWidth()*1/9); lineChart.setTranslateY(scene.getHeight()/2+15);
-                     * lineChart.setMinWidth(scene.getWidth()*0.35); lineChart.setMinHeight(scene.getHeight()*0.35);
-                     */
-
-                    lineChart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
-
-                    lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED, openLineChart(lineChart, scene));
-
-                }
+                lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        createZoomInLineChartEventHandler(lineChart, scene));
             }
 
         };
     }
 
-    public static EventHandler<Event> openLineChart(LineChart<String, Number> lineChart, Scene scene) {
-
+    private static EventHandler<Event> createZoomInLineChartEventHandler(LineChart<String, Number> lineChart,
+            Scene scene) {
         return new EventHandler<Event>() {
-
             @Override
             public void handle(Event e) {
+                lineChart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                int originalIndexInParent = getOriginalIndexInParent(lineChart);
 
-                    lineChart.setTranslateX(scene.getWidth() * 0.05);
-                    lineChart.setTranslateY(scene.getHeight() * 0.05);
-                    lineChart.setMinWidth(scene.getWidth() * 0.9);
-                    lineChart.setMinHeight(scene.getHeight() * 0.9);
+                zoomInAndCenter(lineChart, lineChart.getWidth(), lineChart.getHeight());
 
-                    lineChart.toFront();
-
-                    lineChart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
-
-                    lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED, closeLineChart(lineChart, scene));
-
-                }
+                lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        createZoomOutLineChartEventHandler(lineChart, scene, originalIndexInParent));
             }
         };
     }
 
-    public static EventHandler<Event> closeHeatMap(Rectangle heatMap, Scene scene) {
-
+    private static EventHandler<Event> createZoomOutHeatMapEventHandler(ImageView heatMap, Scene scene,
+            int originalIndexInParent) {
         return new EventHandler<Event>() {
-
             @Override
             public void handle(Event e) {
+                heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                zoomOutAndReset(heatMap);
 
-                    heatMap.setX(scene.getWidth() * 5 / 9);
-                    heatMap.setY(scene.getHeight() / 2 + 15);
-                    heatMap.setWidth(scene.getWidth() * 0.35);
-                    heatMap.setHeight(scene.getHeight() * 0.35);
+                resetToOriginalIndexInParent(heatMap, originalIndexInParent);
 
-                    heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
-
-                    heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMap(heatMap, scene));
-
-                }
+                heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInHeatMapEventHandler(heatMap, scene));
             }
-
         };
     }
 
-    public static EventHandler<Event> openHeatMap(Rectangle heatMap, Scene scene) {
-
+    private static EventHandler<Event> createZoomInHeatMapEventHandler(ImageView heatMap, Scene scene) {
         return new EventHandler<Event>() {
-
             @Override
             public void handle(Event e) {
+                heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                int originalIndexInParent = getOriginalIndexInParent(heatMap);
 
-                    heatMap.setX(scene.getWidth() * 0.05);
-                    heatMap.setY(scene.getHeight() * 0.05);
-                    heatMap.setWidth(scene.getWidth() * 0.9);
-                    heatMap.setHeight(scene.getHeight() * 0.9);
+                zoomInAndCenter(heatMap, heatMap.getFitWidth(), heatMap.getFitHeight());
 
-                    heatMap.toFront();
-
-                    heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
-
-                    heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, closeHeatMap(heatMap, scene));
-
-                }
+                heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        createZoomOutHeatMapEventHandler(heatMap, scene, originalIndexInParent));
             }
-
         };
+    }
 
+    private static void zoomOutAndReset(Node node) {
+        node.setScaleX(1);
+        node.setScaleY(1);
+        node.setTranslateX(0);
+        node.setTranslateY(0);
+    }
+
+    private static void zoomInAndCenter(Node node, double initialWidth, double initialHeight) {
+        Parent parent = node.getParent();
+
+        VBox parentVBox = (VBox) parent;
+
+        // set the node as the last child
+        // because when it is the first child, it does not work well
+        // parentVBox.getChildren().remove(node);
+        // parentVBox.getChildren().add(node);
+
+        node.toFront();
+
+        Bounds parentBoundsInParent = parent.getBoundsInLocal();
+
+        double xScaleRatio = parentBoundsInParent.getMaxX() / initialWidth;
+        double yScaleRatio = parentBoundsInParent.getMaxY() / initialHeight;
+
+        node.setScaleX(xScaleRatio);
+        node.setScaleY(yScaleRatio);
+
+        Bounds boundsInParent = node.getBoundsInParent();
+
+        double translateX = -1 * Math.abs(boundsInParent.getMinY());
+        double translateY = -1 * Math.abs(boundsInParent.getMinY());
+
+        node.setTranslateX(translateX);
+        node.setTranslateY(translateY);
     }
 
     public static String convert(long totalTime) {

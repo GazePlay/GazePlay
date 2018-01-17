@@ -7,9 +7,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -182,9 +182,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Rectangle heatMap = StatsDisplay.BuildHeatChart(stats, scene);
-            heatMap.setWidth(scene.getWidth() * 0.35);
-            heatMap.setHeight(scene.getHeight() * 0.35);
+            ImageView heatMap = StatsDisplay.BuildHeatChart(stats, scene);
+            heatMap.setFitWidth(scene.getWidth() * 0.35);
+            heatMap.setFitHeight(scene.getHeight() * 0.35);
 
             centerPane.getChildren().add(heatMap);
         }
