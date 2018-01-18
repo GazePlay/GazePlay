@@ -36,9 +36,9 @@ public class GazeUtils {
         final String eyetracker = config.getEyetracker();
         log.info("Eye-tracker = " + eyetracker);
 
-        if (eyetracker.equals(EyeTrackers.tobii_eyeX_4C.toString())) {
+        if (eyetracker.equals(EyeTracker.tobii_eyeX_4C.toString())) {
             GazeTobii.execProg(new TobiiGazeListener(nodesEventFilter, nodesEventHandler));
-        } else if (eyetracker.equals(EyeTrackers.eyetribe.toString()))
+        } else if (eyetracker.equals(EyeTracker.eyetribe.toString()))
             return new EyeTribeGazeListener(nodesEventFilter, nodesEventHandler);
         // else
         // return new FuzzyGazeListener(nodesEventFilter, nodesEventHandler);

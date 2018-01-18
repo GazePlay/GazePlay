@@ -1,22 +1,25 @@
 package net.gazeplay;
 
-import com.sun.glass.ui.Screen;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 import lombok.Data;
 import lombok.Getter;
@@ -24,7 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.ConfigurationButton;
-import net.gazeplay.commons.utils.CssUtil;
+import net.gazeplay.commons.utils.ControlPanelConfigurator;
+import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -34,66 +38,91 @@ import java.util.stream.Collectors;
 
 @Data
 @Slf4j
-public class HomeMenuScreen {
+public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
-    @Getter
-    private final GazePlay gazePlay;
+    public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
-    @Getter
-    private final Scene scene;
+        GamesLocator gamesLocator = new DefaultGamesLocator();
+        List<GameSpec> games = gamesLocator.listGames();
 
-    private final Group root;
+        BorderPane root = new BorderPane();
+
+        Scene scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
+                Color.BLACK);
+
+        return new HomeMenuScreen(gazePlay, games, scene, root, config);
+    }
 
     @Getter
     private final ChoiceBox<String> cbxGames;
 
     private final List<GameSpec> games;
 
-    private final GamesLocator gamesLocator;
+    private GameLifeCycle currentGame;
 
-    public HomeMenuScreen(final GazePlay gazePlay, final Configuration config) {
-        this.gazePlay = gazePlay;
+    public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, Scene scene, BorderPane root, Configuration config) {
+        super(gazePlay, root, scene);
+        this.games = games;
 
-        gamesLocator = new DefaultGamesLocator();
-        games = gamesLocator.listGames();
+        Rectangle exitButton = createExitButton();
 
-        root = new Group();
+        ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
+        ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(configurationContext);
 
-        final Screen screen = Screen.getScreens().get(0);
-        log.info("Screen size: {} x {}", screen.getWidth(), screen.getHeight());
+        HBox leftControlPane = new HBox();
+        leftControlPane.setAlignment(Pos.CENTER);
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
+        leftControlPane.getChildren().add(configurationButton);
 
-        scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
+        HBox rightControlPane = new HBox();
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
+        rightControlPane.setAlignment(Pos.CENTER);
+        rightControlPane.getChildren().add(exitButton);
 
-        CssUtil.setPreferredStylesheets(config, scene);
+        BorderPane bottomPane = new BorderPane();
+        bottomPane.setLeft(leftControlPane);
+        bottomPane.setRight(rightControlPane);
 
-        // end of System information
-        for (int i = 0; i < 5; i++) {
-            log.info("***********************");
-        }
+        MenuBar menuBar = Utils.buildLicence();
+
+        Node logo = createLogo();
+        StackPane topLogoPane = new StackPane();
+        topLogoPane.getChildren().add(logo);
 
         cbxGames = createChoiceBox(games, config);
-
         cbxGames.getSelectionModel().clearSelection();
-        root.getChildren().add(cbxGames);
 
-        cbxGames.setTranslateX(scene.getWidth() * 0.9 / 2);
-        cbxGames.setTranslateY(scene.getHeight() * 0.9 / 2);
+        StackPane centerCenterPane = new StackPane();
+        centerCenterPane.getChildren().add(cbxGames);
 
-        addButtons();
+        VBox leftPanel = new VBox();
+        leftPanel.getChildren().add(menuBar);
+
+        BorderPane centerPanel = new BorderPane();
+        centerPanel.setCenter(centerCenterPane);
+        centerPanel.setLeft(leftPanel);
+
+        BorderPane topPane = new BorderPane();
+        topPane.setTop(menuBar);
+        topPane.setCenter(topLogoPane);
+
+        root.setTop(topPane);
+        root.setBottom(bottomPane);
+        root.setCenter(centerPanel);
+
+        root.setStyle(
+                "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
     public ObservableList<Node> getChildren() {
         return root.getChildren();
     }
 
-    public void setUpOnStage(Stage primaryStage) {
+    @Override
+    public void setUpOnStage(Stage stage) {
         cbxGames.getSelectionModel().clearSelection();
 
-        primaryStage.setTitle("GazePlay");
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
-        primaryStage.show();
+        super.setUpOnStage(stage);
     }
 
     public void onLanguageChanged() {
@@ -108,7 +137,7 @@ public class HomeMenuScreen {
     /**
      * This command is called when games have to be updated (example: when language changed)
      */
-    private ChoiceBox createChoiceBox(List<GameSpec> games, Configuration config) {
+    private ChoiceBox<String> createChoiceBox(List<GameSpec> games, Configuration config) {
         List<String> gamesLabels = generateTranslatedGamesNames(games, config);
 
         ChoiceBox<String> cbxGames = new ChoiceBox<>();
@@ -152,53 +181,26 @@ public class HomeMenuScreen {
     private void chooseGame(GameSpec selectedGameSpec) {
         log.info(selectedGameSpec.getNameCode() + " " + selectedGameSpec.getVariationHint());
 
+        GazePlay gazePlay = getGazePlay();
+
         GameContext gameContext = GameContext.newInstance(gazePlay);
 
-        final Stats stats = selectedGameSpec.launch(gameContext);
+        gazePlay.onGameLaunch(gameContext);
 
+        GameSpec.GameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
+
+        final Stats stats = gameLauncher.createNewStats(gameContext.getScene());
+
+        gameContext.createToggleFullScreenButtonInGameScreen(gazePlay);
         gameContext.createHomeButtonInGameScreen(gazePlay, stats);
 
-        gazePlay.onGameLaunch(gameContext);
+        GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, stats);
+        currentGame.launch();
     }
 
-    private void addButtons() {
-
-        double width = scene.getWidth() / 10;
-        double heigth = width;
-        double XExit = scene.getWidth() * 0.9;
-        double Y = scene.getHeight() - heigth * 1.1;
-
-        // License license = new License(XLicence, Y, width, heigth, scene, root, cbxGames);
-
-        // root.getChildren().add(license);
-
-        Rectangle exitButton = createExitButton(width, heigth, XExit, Y);
-
-        ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
-        ConfigurationButton configurationButton = ConfigurationButton.createConfigurationDisplay(configurationContext);
-
-        getChildren().add(configurationButton);
-        getChildren().add(exitButton);
-        getChildren().add(createLogo());
-        getChildren().add(Utils.buildLicence());
-    }
-
-    private Rectangle createExitButton(double width, double heigth, double XExit, double y) {
-        EventHandler<Event> homeEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
-                    System.exit(0);
-
-                }
-            }
-        };
-
-        Rectangle exitButton = new Rectangle(XExit, y, width, heigth);
-        exitButton.setFill(new ImagePattern(new Image("data/common/images/power-off.png"), 0, 0, 1, 1, true));
-        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+    private Rectangle createExitButton() {
+        CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
+        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
         return exitButton;
     }
 

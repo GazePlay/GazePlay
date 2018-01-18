@@ -1,7 +1,9 @@
 package net.gazeplay.games.whereisit;
 
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,10 +27,26 @@ public class GameSizingComputer {
         return computeGameSizing(bounds);
     }
 
+    public GameSizing computeGameSizing(Pane pane) {
+        Rectangle2D bounds = new Rectangle2D(0, 0, pane.getWidth(), pane.getHeight());
+
+        return computeGameSizing(bounds);
+    }
+
+    public GameSizing computeGameSizing(Dimension2D dimension2D) {
+        Rectangle2D bounds = new Rectangle2D(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+
+        return computeGameSizing(bounds);
+    }
+
     public GameSizing computeGameSizing(Rectangle2D bounds) {
 
         double sceneWidth = bounds.getWidth();
         double sceneHeight = bounds.getHeight();
+
+        if (sceneWidth == 0 || sceneHeight == 0) {
+            throw new IllegalStateException("Invalid gaming area size : bounds = " + bounds);
+        }
 
         final double width;
         final double height;
@@ -46,7 +64,9 @@ public class GameSizingComputer {
             shift = 0;
         }
 
-        return new GameSizing(width / nbColumns, height / nbLines, shift);
+        GameSizing gameSizing = new GameSizing(width / nbColumns, height / nbLines, shift);
+        log.info("gameSizing = {}", gameSizing);
+        return gameSizing;
     }
 
 }

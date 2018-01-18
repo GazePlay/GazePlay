@@ -1,6 +1,6 @@
 package net.gazeplay.games.magiccards;
 
-import javafx.scene.Scene;
+import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +10,7 @@ import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +36,13 @@ public class MagicCards implements GameLifeCycle {
     private final int nbLines;
     private final int nbColumns;
 
-    private final HiddenItemsGamesStats stats;
+    private final Stats stats;
 
     private final Image[] images;
 
     private RoundDetails currentRoundDetails;
 
-    public MagicCards(GameContext gameContext, int nbLines, int nbColumns, HiddenItemsGamesStats stats) {
+    public MagicCards(GameContext gameContext, int nbLines, int nbColumns, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.nbLines = nbLines;
@@ -96,12 +97,12 @@ public class MagicCards implements GameLifeCycle {
     }
 
     private List<Card> createCards(int winnerCardIndex, Configuration config) {
-        Scene scene = gameContext.getScene();
+        javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        final double cardHeight = computeCardHeight(scene, nbLines);
+        final double cardHeight = computeCardHeight(gameDimension2D, nbLines);
         final double cardWidth = cardHeight * cardRatio;
 
-        double width = computeCardWidth(scene, nbColumns) - cardWidth;
+        double width = computeCardWidth(gameDimension2D, nbColumns) - cardWidth;
 
         List<Card> result = new ArrayList<>();
 
@@ -137,12 +138,12 @@ public class MagicCards implements GameLifeCycle {
         return result;
     }
 
-    private static double computeCardHeight(Scene scene, int nbLines) {
-        return scene.getHeight() * 0.9 / nbLines;
+    private static double computeCardHeight(Dimension2D gameDimension2D, int nbLines) {
+        return gameDimension2D.getHeight() * 0.9 / nbLines;
     }
 
-    private static double computeCardWidth(Scene scene, int nbColumns) {
-        return scene.getWidth() / nbColumns;
+    private static double computeCardWidth(Dimension2D gameDimension2D, int nbColumns) {
+        return gameDimension2D.getWidth() / nbColumns;
     }
 
     private Image getRandomImage() {

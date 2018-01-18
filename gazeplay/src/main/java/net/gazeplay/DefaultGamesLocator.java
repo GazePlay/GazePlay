@@ -1,6 +1,8 @@
 package net.gazeplay;
 
+import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
@@ -27,178 +29,293 @@ public class DefaultGamesLocator implements GamesLocator {
 
         List<GameSpec> result = new ArrayList<>();
 
-        result.add(new GameSpec("Creampie", (gameSpec, gameContext) -> {
-            CreampieStats stats = new CreampieStats(gameContext.getScene());
-            CreamPie game = new CreamPie(gameContext, stats);
-            game.launch();
-            return stats;
+        result.add(new GameSpec("Creampie", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new CreampieStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new CreamPie(gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("Ninja", (gameSpec, gameContext) -> {
-            NinjaStats stats = new NinjaStats(gameContext.getScene());
-            Ninja game = new Ninja(gameContext, stats);
-            game.launch();
-            return stats;
+        result.add(new GameSpec("Ninja", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new NinjaStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new Ninja(gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("MagicCards", "(2x2)", (gameSpec, gameContext) -> {
-            MagicCardsGamesStats stats = new MagicCardsGamesStats(gameContext.getScene());
-            MagicCards magicCards = new MagicCards(gameContext, 2, 2, stats);
-            magicCards.launch();
-            return stats;
+        result.add(new GameSpec("MagicCards", "(2x2)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new MagicCardsGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new MagicCards(gameContext, 2, 2, stats);
+            }
         }));
 
-        result.add(new GameSpec("MagicCards", "(2x3)", (gameSpec, gameContext) -> {
-            MagicCardsGamesStats stats = new MagicCardsGamesStats(gameContext.getScene());
-            MagicCards magicCards = new MagicCards(gameContext, 2, 3, stats);
-            magicCards.launch();
-            return stats;
+        result.add(new GameSpec("MagicCards", "(2x3)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new MagicCardsGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new MagicCards(gameContext, 2, 3, stats);
+            }
         }));
 
-        result.add(new GameSpec("MagicCards", "(3x2)", (gameSpec, gameContext) -> {
-            MagicCardsGamesStats stats = new MagicCardsGamesStats(gameContext.getScene());
-            MagicCards magicCards = new MagicCards(gameContext, 3, 2, stats);
-            magicCards.launch();
-            return stats;
+        result.add(new GameSpec("MagicCards", "(3x2)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new MagicCardsGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new MagicCards(gameContext, 3, 2, stats);
+            }
         }));
 
-        result.add(new GameSpec("MagicCards", "(3x3)", (gameSpec, gameContext) -> {
-            MagicCardsGamesStats stats = new MagicCardsGamesStats(gameContext.getScene());
-            MagicCards magicCards = new MagicCards(gameContext, 3, 3, stats);
-            magicCards.launch();
-            return stats;
+        result.add(new GameSpec("MagicCards", "(3x3)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new MagicCardsGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new MagicCards(gameContext, 3, 3, stats);
+            }
         }));
 
-        result.add(new GameSpec("Blocks", "(2x2)", (gameSpec, gameContext) -> {
-            BlocsGamesStats stats = new BlocsGamesStats(gameContext.getScene());
-            Blocs game = new Blocs(gameContext, 2, 2, true, 1, false, stats);
-            game.launch();
-            return stats;
+        result.add(new GameSpec("Blocks", "(2x2)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new BlocsGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new Blocs(gameContext, 2, 2, true, 1, false, stats);
+            }
         }));
 
-        result.add(new GameSpec("Blocks", "(2x3)", (gameSpec, gameContext) -> {
-            BlocsGamesStats stats = new BlocsGamesStats(gameContext.getScene());
-            Blocs game = new Blocs(gameContext, 2, 3, true, 1, false, stats);
-            game.launch();
-            return stats;
+        result.add(new GameSpec("Blocks", "(2x3)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new BlocsGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new Blocs(gameContext, 2, 3, true, 1, false, stats);
+            }
         }));
 
-        result.add(new GameSpec("Blocks", "(3x3)", (gameSpec, gameContext) -> {
-            BlocsGamesStats stats = new BlocsGamesStats(gameContext.getScene());
-            Blocs game = new Blocs(gameContext, 3, 3, true, 1, false, stats);
-            game.launch();
-            return stats;
+        result.add(new GameSpec("Blocks", "(3x3)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new BlocsGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new Blocs(gameContext, 3, 3, true, 1, false, stats);
+            }
         }));
 
-        result.add(new GameSpec("ScratchCard", (gameSpec, gameContext) -> {
-            ScratchcardGamesStats stats = new ScratchcardGamesStats(gameContext.getScene());
-            Blocs game = new Blocs(gameContext, 100, 100, false, 0.6f, true, stats);
-            game.launch();
-            return stats;
+        result.add(new GameSpec("ScratchCard", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new ScratchcardGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new Blocs(gameContext, 100, 100, false, 0.6f, true, stats);
+            }
         }));
 
-        result.add(new GameSpec("ColoredBubbles", (gameSpec, gameContext) -> {
-            BubblesGamesStats stats = new BubblesGamesStats(gameContext.getScene());
-            Bubble bubble = new Bubble(gameContext, BubbleType.COLOR, stats, true);
-            bubble.launch();
-            return stats;
+        result.add(new GameSpec("ColoredBubbles", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new BubblesGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new Bubble(gameContext, BubbleType.COLOR, stats, true);
+            }
         }));
 
-        result.add(new GameSpec("PortraitBubbles", (gameSpec, gameContext) -> {
-            BubblesGamesStats stats = new BubblesGamesStats(gameContext.getScene());
-            Bubble bubble = new Bubble(gameContext, BubbleType.PORTRAIT, stats, false);
-            bubble.launch();
-            return stats;
+        result.add(new GameSpec("PortraitBubbles", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new BubblesGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new Bubble(gameContext, BubbleType.PORTRAIT, stats, false);
+            }
         }));
 
-        result.add(new GameSpec("WhereIsTheAnimal", "(2x2)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 2, false, gameContext,
-                    stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsTheAnimal", "(2x2)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.ANIMALNAME.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 2, false, gameContext, stats);
+            }
+
         }));
 
-        result.add(new GameSpec("WhereIsTheAnimal", "(2x3)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 3, false, gameContext,
-                    stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsTheAnimal", "(2x3)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.ANIMALNAME.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 2, 3, false, gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("WhereIsTheAnimal", "(3x2)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 2, true, gameContext, stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsTheAnimal", "(3x2)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.ANIMALNAME.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 2, true, gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("WhereIsTheAnimal", "(3x3)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 3, false, gameContext,
-                    stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsTheAnimal", "(3x3)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.ANIMALNAME.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.ANIMALNAME, 3, 3, false, gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("WhereIsTheColor", "(2x2)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 2, false, gameContext, stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsTheColor", "(2x2)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.COLORNAME.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 2, false, gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("WhereIsTheColor", "(2x3)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 3, false, gameContext, stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsTheColor", "(2x3)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.COLORNAME.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 2, 3, false, gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("WhereIsTheColor", "(3x2)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 2, false, gameContext, stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsTheColor", "(3x2)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.COLORNAME.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 2, false, gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("WhereIsTheColor", "(3x3)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 3, false, gameContext, stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsTheColor", "(3x3)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.COLORNAME.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 3, false, gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("WhereIsIt", "(2x2)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 2, false, gameContext,
-                    stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsIt", "(2x2)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.CUSTOMIZED.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 2, false, gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("WhereIsIt", "(2x3)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 3, false, gameContext,
-                    stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsIt", "(2x3)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.CUSTOMIZED.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 2, 3, false, gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("WhereIsIt", "(3x2)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 3, 2, false, gameContext,
-                    stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsIt", "(3x2)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.CUSTOMIZED.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 3, 2, false, gameContext, stats);
+            }
         }));
 
-        result.add(new GameSpec("WhereIsIt", "(3x3)", (gameSpec, gameContext) -> {
-            WhereIsItStats stats = new WhereIsItStats(gameContext.getScene());
-            WhereIsIt whereIsIt = new WhereIsIt(WhereIsIt.WhereIsItGameType.COLORNAME, 3, 3, false, gameContext, stats);
-            whereIsIt.launch();
-            return stats;
+        result.add(new GameSpec("WhereIsIt", "(3x3)", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.CUSTOMIZED.getGameName());
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 3, 3, false, gameContext, stats);
+            }
         }));
 
         log.info("Games found : {}", result.size());

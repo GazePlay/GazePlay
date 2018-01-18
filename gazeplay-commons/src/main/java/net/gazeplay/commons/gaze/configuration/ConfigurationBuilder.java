@@ -1,7 +1,7 @@
 package net.gazeplay.commons.gaze.configuration;
 
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.gaze.EyeTrackers;
+import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.*;
@@ -22,7 +22,7 @@ public class ConfigurationBuilder implements Cloneable {
     private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
     private static boolean DEFAULT_VALUE_GAZEMODE = true;
-    private static String DEFAULT_VALUE_EYETRACKER = EyeTrackers.mouse_control.toString();
+    private static String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
     private static String DEFAULT_VALUE_LANGUAGE = "fra";
     private static int DEFAULT_VALUE_FIXATION_LENGTH = 500;
     private static String DEFAULT_VALUE_CSS_FILE = "data/stylesheets/main-green.css";

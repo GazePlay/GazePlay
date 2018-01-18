@@ -1,17 +1,17 @@
 package net.gazeplay.games.creampie;
 
-import net.gazeplay.games.creampie.event.TouchEvent;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.games.creampie.event.TouchEvent;
 
 /**
  * Created by schwab on 17/08/2016.
@@ -24,21 +24,13 @@ public class Hand extends Parent {
     private Rectangle hand;
     private Rectangle pie;
 
-    private Scene scene;
-
     private double handTranslateX = 0;
     private double handTranslateY = 0;
     private double pieTranslateX = 0;
     private double pieTranslateY = 0;
 
-    public Hand(Scene scene) {
-
-        this.scene = scene;
-
-        handTranslateX = (scene.getWidth() - maxSize) / 2;
-        handTranslateY = scene.getHeight() - maxSize;
-        pieTranslateX = (scene.getWidth() - size) / 2;
-        pieTranslateY = scene.getHeight() - maxSize;
+    public Hand() {
+        recomputePosition();
 
         hand = new Rectangle(0, 0, maxSize, maxSize);
 
@@ -75,7 +67,24 @@ public class Hand extends Parent {
         this.addEventHandler(TouchEvent.TOUCH, (TouchEvent te) -> touch(te));
     }
 
+    public void recomputePosition() {
+        Pane parent = (Pane) this.getParent();
+        if (parent != null) {
+            handTranslateX = (parent.getWidth() - maxSize) / 2;
+            handTranslateY = parent.getHeight() - maxSize;
+            pieTranslateX = (parent.getWidth() - size) / 2;
+            pieTranslateY = parent.getHeight() - maxSize;
+
+            hand.setTranslateX(handTranslateX);
+            hand.setTranslateY(handTranslateY);
+
+            pie.setTranslateX(pieTranslateX);
+            pie.setTranslateY(pieTranslateY);
+        }
+    }
+
     private void touch(TouchEvent te) {
+        recomputePosition();
 
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
