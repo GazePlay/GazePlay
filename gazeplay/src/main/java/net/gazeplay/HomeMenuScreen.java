@@ -77,7 +77,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
         rightControlPane.setAlignment(Pos.CENTER);
-        rightControlPane.getChildren().add(exitButton);
+        // rightControlPane.getChildren().add(exitButton);
 
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);
@@ -88,6 +88,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         Node logo = createLogo();
         StackPane topLogoPane = new StackPane();
         topLogoPane.getChildren().add(logo);
+
+        HBox topRightPane = new HBox();
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
+        topRightPane.setAlignment(Pos.TOP_CENTER);
+        topRightPane.getChildren().add(exitButton);
 
         cbxGames = createChoiceBox(games, config);
         cbxGames.getSelectionModel().clearSelection();
@@ -105,6 +110,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         BorderPane topPane = new BorderPane();
         topPane.setTop(menuBar);
         topPane.setCenter(topLogoPane);
+        topPane.setRight(topRightPane);
 
         root.setTop(topPane);
         root.setBottom(bottomPane);
