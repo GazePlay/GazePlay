@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.stats.Stats;
-import tobii.Tobii;
 
 import java.util.ArrayList;
 
@@ -38,7 +37,7 @@ public class GazeUtils {
         log.info("Eye-tracker = " + eyetracker);
 
         if (eyetracker.equals(EyeTrackers.tobii_eyeX_4C.toString())) {
-            Tobii.execProg(new TobiiGazeListener(nodesEventFilter, nodesEventHandler));
+            GazeTobii.execProg(new TobiiGazeListener(nodesEventFilter, nodesEventHandler));
         } else if (eyetracker.equals(EyeTrackers.eyetribe.toString()))
             return new EyeTribeGazeListener(nodesEventFilter, nodesEventHandler);
         // else
@@ -120,6 +119,12 @@ public class GazeUtils {
     }
 
     public static boolean isOn() {
-        return Tobii.isInit() || success;
+        try {
+
+            return GazeTobii.isInit() || success;
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
