@@ -45,7 +45,7 @@ public class GazeTobii {
                                 Thread.sleep(10);// sleep is mandatory to avoid too much calls to gazePosition()
                                 float[] pointAsFloatArray = Tobii.gazePosition();
                                 Point2D point = new Point2D(pointAsFloatArray[0], pointAsFloatArray[1]);
-                                point = new Point2D(point.getX() * screenWidth,point.getY()* screenHeight);
+                                point = new Point2D(point.getX() * screenWidth, point.getY() * screenHeight);
                                 listener.onGazeUpdate(point);
                             } catch (Exception e) {
 
