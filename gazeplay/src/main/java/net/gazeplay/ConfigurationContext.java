@@ -65,11 +65,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
         rightControlPane.setAlignment(Pos.CENTER_RIGHT);
+        rightControlPane.getChildren().add(homeButton);
 
         HBox leftControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.setAlignment(Pos.CENTER_LEFT);
-        rightControlPane.getChildren().add(homeButton);
 
         BorderPane bottomControlPane = new BorderPane();
         bottomControlPane.setLeft(leftControlPane);
@@ -134,10 +134,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(100);
         grid.setVgap(50);
-        grid.setPadding(new Insets(50, 50, 50, 50));
+        // grid.setPadding(new Insets(50, 50, 50, 50));
 
         Text configTitleText = new Text(multilinguism.getTrad("ConfigTitle", config.getLanguage()));
-        configTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        // configTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20)); should be managed with css
         configTitleText.setId("title");
         configTitleText.setTextAlignment(TextAlignment.CENTER);
         grid.add(configTitleText, 0, 0, 2, 1);
@@ -211,7 +211,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
         label.setId("item");
-        label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
+        // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
 
         grid.add(label, COLUMN_INDEX_LABEL, currentRowIndex);
         grid.add(input, COLUMN_INDEX_INPUT, currentRowIndex);

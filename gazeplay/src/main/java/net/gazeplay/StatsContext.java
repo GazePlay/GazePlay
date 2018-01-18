@@ -54,10 +54,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
         label.setId("item");
-        label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
+        // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); in CSS
 
         value.setId("item");
-        value.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
+        // value.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); in CSS
 
         grid.add(label, COLUMN_INDEX_LABEL, currentRowIndex);
         grid.add(value, COLUMN_INDEX_VALUE, currentRowIndex);
@@ -86,7 +86,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(100);
         grid.setVgap(50);
-        grid.setPadding(new Insets(50, 50, 50, 50));
+        // grid.setPadding(new Insets(50, 50, 50, 50));
 
         AtomicInteger currentFormRow = new AtomicInteger(1);
 
@@ -201,9 +201,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         centerStackPane.getChildren().add(centerPane);
 
         Text screenTitleText = new Text(multilinguism.getTrad("StatsTitle", config.getLanguage()));
-        screenTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        // screenTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         screenTitleText.setId("title");
-        screenTitleText.setTextAlignment(TextAlignment.CENTER);
+        // screenTitleText.setTextAlignment(TextAlignment.CENTER);
 
         StackPane topPane = new StackPane();
         topPane.getChildren().add(screenTitleText);
