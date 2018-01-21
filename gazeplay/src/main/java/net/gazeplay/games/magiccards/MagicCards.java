@@ -4,6 +4,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.configuration.Configuration;
@@ -18,6 +19,7 @@ import java.util.List;
 /**
  * Created by schwab on 17/09/2016.
  */
+@Slf4j
 public class MagicCards implements GameLifeCycle {
 
     @Data
@@ -99,10 +101,16 @@ public class MagicCards implements GameLifeCycle {
     private List<Card> createCards(int winnerCardIndex, Configuration config) {
         javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
+        log.info("Width{} ; height{}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
+
         final double cardHeight = computeCardHeight(gameDimension2D, nbLines);
         final double cardWidth = cardHeight * cardRatio;
 
+        log.info("cardWidth{} ; cardHeight{}", cardWidth, cardHeight);
+
         double width = computeCardWidth(gameDimension2D, nbColumns) - cardWidth;
+
+        log.info("width{} ", width);
 
         List<Card> result = new ArrayList<>();
 
@@ -111,7 +119,7 @@ public class MagicCards implements GameLifeCycle {
         final int fixationlength = config.getFixationlength();
 
         for (int currentLineIndex = 0; currentLineIndex < nbLines; currentLineIndex++) {
-            for (int currentColumnIndex = 0; currentColumnIndex < nbLines; currentColumnIndex++) {
+            for (int currentColumnIndex = 0; currentColumnIndex < nbColumns; currentColumnIndex++) {
 
                 final boolean isWinnerCard;
                 final Image image;
@@ -124,8 +132,10 @@ public class MagicCards implements GameLifeCycle {
                     image = new Image("data/common/images/error.png");
                 }
 
-                double positionX = width / 2 + (width + cardWidth) * currentLineIndex;
-                double positionY = minHeight / 2 + (minHeight + cardHeight) * currentColumnIndex;
+                double positionX = width / 2 + (width + cardWidth) * currentColumnIndex;
+                double positionY = minHeight / 2 + (minHeight + cardHeight) * currentLineIndex;
+
+                log.info("positionX : {} ; positionY : {}", positionX, positionY);
 
                 Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, gameContext,
                         stats, this, fixationlength);
