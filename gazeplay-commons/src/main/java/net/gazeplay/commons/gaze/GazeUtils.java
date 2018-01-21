@@ -53,7 +53,7 @@ public class GazeUtils {
         log.info("Eye-tracker = " + eyetracker);
 
         if (eyetracker.equals(EyeTracker.tobii_eyeX_4C.toString())) {
-            GazeTobii.execProg(new TobiiGazeListener(nodesEventFilter, nodesEventHandler));
+            GazeTobii.getInstance().execProg(new TobiiGazeListener(nodesEventFilter, nodesEventHandler));
         } else if (eyetracker.equals(EyeTracker.eyetribe.toString()))
             return new EyeTribeGazeListener(nodesEventFilter, nodesEventHandler);
         // else
@@ -128,6 +128,6 @@ public class GazeUtils {
     }
 
     public boolean isOn() {
-        return GazeTobii.isInit() || success;
+        return GazeTobii.getInstance().isInit() || success;
     }
 }

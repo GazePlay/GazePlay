@@ -1,8 +1,10 @@
 package net.gazeplay.commons.gaze;
 
+import com.sun.glass.ui.Screen;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import tobii.Tobii;
 import tobii.TobiiDemo;
@@ -10,25 +12,31 @@ import tobii.TobiiDemo;
 @Slf4j
 public class GazeTobii {
 
-    private static boolean init = false;
+    @Getter
+    private static final GazeTobii instance = new GazeTobii();
 
-    private static final float screenWidth = com.sun.glass.ui.Screen.getScreens().get(0).getWidth();
+    private boolean init = false;
 
-    private static final float screenHeight = com.sun.glass.ui.Screen.getScreens().get(0).getHeight();
+    public boolean isInit() {
+        return init;
+    }
 
-    public static void execProg(TobiiGazeListener listener) {
+    public void execProg(TobiiGazeListener listener) {
 
         if (!System.getProperty("os.name").contains("indow")) {
-
             return;
         }
 
         if (init) {
-
             return;
         }
         init = true;
+
         Tobii.gazePosition();
+
+        Screen mainScreen = Screen.getMainScreen();
+        final float screenWidth = mainScreen.getWidth();
+        final float screenHeight = mainScreen.getHeight();
 
         final Service<Void> calculateService = new Service<Void>() {
 
@@ -38,9 +46,7 @@ public class GazeTobii {
 
                     @Override
                     protected Void call() throws Exception {
-
                         while (true) {
-
                             try {
                                 Thread.sleep(10);// sleep is mandatory to avoid too much calls to gazePosition()
                                 float[] pointAsFloatArray = Tobii.gazePosition();
@@ -48,20 +54,15 @@ public class GazeTobii {
                                 point = new Point2D(point.getX() * screenWidth, point.getY() * screenHeight);
                                 listener.onGazeUpdate(point);
                             } catch (Exception e) {
-
-                                e.printStackTrace();
+                                log.error("Exception on Gaze position update", e);
                             }
                         }
                     }
                 };
             }
         };
+
         calculateService.start();
-    }
-
-    public static boolean isInit() {
-
-        return init;
     }
 
     public static void main(String[] args) throws Exception {
