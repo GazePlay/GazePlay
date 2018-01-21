@@ -121,8 +121,8 @@ public class StatsDisplay {
 
         lineChart.setLegendVisible(false);
 
-        lineChart.setPrefWidth(scene.getWidth() * 0.4);
-        lineChart.setPrefHeight(scene.getHeight() * 0.4);
+        lineChart.setMaxWidth(scene.getWidth() * 0.4);
+        lineChart.setMaxHeight(scene.getHeight() * 0.4);
 
         return lineChart;
     }
