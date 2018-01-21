@@ -82,7 +82,7 @@ public class Pictos extends Parent {
 
             this.getChildren().add(R.rectangle);
 
-            GazeUtils.addEventFilter(R.rectangle);
+            GazeUtils.getInstance().addEventFilter(R.rectangle);
 
             R.rectangle.addEventFilter(MouseEvent.ANY, enterEvent);
             R.rectangle.addEventFilter(GazeEvent.ANY, enterEvent);

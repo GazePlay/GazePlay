@@ -152,7 +152,7 @@ public class GameContext extends GraphicalContext<Pane> {
                     scene.setCursor(Cursor.WAIT); // Change cursor to wait style
 
                     stats.stop();
-                    GazeUtils.clear();
+                    GazeUtils.getInstance().clear();
 
                     log.info("stats = " + stats);
 

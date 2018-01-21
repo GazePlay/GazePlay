@@ -69,11 +69,11 @@ public abstract class Stats {
         zeroTime = System.currentTimeMillis();
         lengthBetweenGoals = new ArrayList<Integer>(1000);
 
-        log.info("GazeUtils ON : " + GazeUtils.isOn());
+        log.info("GazeUtils ON : " + GazeUtils.getInstance().isOn());
 
-        if (GazeUtils.isOn()) {
+        if (GazeUtils.getInstance().isOn()) {
             recordGazeMovements = buildRecordGazeMovements();
-            GazeUtils.addStats(this);
+            GazeUtils.getInstance().addStats(this);
         } else {
             recordMouseMovements = buildRecordMouseMovements();
             gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
@@ -293,7 +293,7 @@ public abstract class Stats {
     }
 
     public void stop() {
-        if (GazeUtils.isOn()) {
+        if (GazeUtils.getInstance().isOn()) {
             gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
         } else {
             gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);

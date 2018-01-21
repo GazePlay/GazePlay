@@ -5,6 +5,7 @@ import com.theeyetribe.clientsdk.data.GazeData;
 import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by schwab on 16/08/2016.
@@ -18,7 +19,7 @@ class EyeTribeGazeListener extends GazeListener implements IGazeListener {
         super(secondScreen);
     }
 
-    public EyeTribeGazeListener(ArrayList<GazeInfos> shapesEventFilter, ArrayList<GazeInfos> shapesEventHandler) {
+    public EyeTribeGazeListener(List<GazeInfos> shapesEventFilter, List<GazeInfos> shapesEventHandler) {
         super(shapesEventFilter, shapesEventHandler);
     }
 

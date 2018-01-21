@@ -639,7 +639,7 @@ public class WhereIsIt implements GameLifeCycle {
 
             customInputEventHandler = buildCustomInputEventHandler(gameInstance);
 
-            GazeUtils.addEventFilter(imageRectangle);
+            GazeUtils.getInstance().addEventFilter(imageRectangle);
 
             this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
 
@@ -672,7 +672,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                     imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandler);
                     imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandler);
-                    GazeUtils.removeEventFilter(imageRectangle);
+                    GazeUtils.getInstance().removeEventFilter(imageRectangle);
 
                     if (winner) {
                         onCorrectCardSelected(gameInstance);

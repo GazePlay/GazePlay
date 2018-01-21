@@ -4,12 +4,14 @@ import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by schwab on 16/08/2016.
@@ -17,19 +19,33 @@ import java.util.ArrayList;
 @Slf4j
 public class GazeUtils {
 
-    static ArrayList<GazeInfos> nodesEventFilter = new ArrayList<>(100);
+    @Getter
+    private static final GazeUtils instance = new GazeUtils();
 
-    static ArrayList<GazeInfos> nodesEventHandler = new ArrayList<>(100);
+    private final List<GazeInfos> nodesEventFilter;
 
-    static final GazeManager gm = GazeManager.getInstance();
-    static boolean success = gm.activate();
-    static final IGazeListener gazeListener = createGazeListener();
+    private final List<GazeInfos> nodesEventHandler;
 
-    static Stats stats;
+    private final GazeManager gm;
 
-    static Scene scene = null;
+    private final boolean success;
 
-    private static IGazeListener createGazeListener() {
+    private final IGazeListener gazeListener;
+
+    @Getter
+    private Stats stats;
+
+    private Scene scene;
+
+    private GazeUtils() {
+        nodesEventFilter = new ArrayList<>(100);
+        nodesEventHandler = new ArrayList<>(100);
+        gm = GazeManager.getInstance();
+        success = gm.activate();
+        gazeListener = createGazeListener();
+    }
+
+    private IGazeListener createGazeListener() {
 
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
@@ -45,18 +61,15 @@ public class GazeUtils {
         return null;
     }
 
-    public static void addStats(Stats newStats) {
-
+    public void addStats(Stats newStats) {
         stats = newStats;
     }
 
-    public static void addEventFilter(Scene gazeScene) {
-
+    public void addEventFilter(Scene gazeScene) {
         scene = gazeScene;
     }
 
-    public static void addEventFilter(Node gs) {
-
+    public void addEventFilter(Node gs) {
         gm.addGazeListener(gazeListener);
         final int listenersCount = gm.getNumGazeListeners();
         log.info("Gaze Event Filters Count = {}", listenersCount);
@@ -66,14 +79,12 @@ public class GazeUtils {
         log.info("nodesEventFilterListSize = {}", nodesEventFilterListSize);
     }
 
-    public static void addEventHandler(Node gs) {
-
+    public void addEventHandler(Node gs) {
         gm.addGazeListener(gazeListener);
-
         nodesEventHandler.add(new GazeInfos(gs));
     }
 
-    public static void removeEventFilter(Node gs) {
+    public void removeEventFilter(Node gs) {
 
         int i;
 
@@ -93,7 +104,7 @@ public class GazeUtils {
         }
     }
 
-    public static void removeEventHandler(Node gs) {
+    public void removeEventHandler(Node gs) {
 
         int i;
 
@@ -107,24 +118,16 @@ public class GazeUtils {
     }
 
     /**
-     *
      * Clear all Nodes in both EventFilter and EventHandler. There is no more gaze event after this function is called
-     *
      */
-    public static void clear() {
+    public void clear() {
 
         nodesEventFilter.clear();
 
         nodesEventHandler.clear();
     }
 
-    public static boolean isOn() {
-        try {
-
-            return GazeTobii.isInit() || success;
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        return false;
+    public boolean isOn() {
+        return GazeTobii.isInit() || success;
     }
 }

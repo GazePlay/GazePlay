@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by schwab on 04/10/2017.
@@ -12,8 +13,8 @@ import java.util.Date;
 @Slf4j
 public abstract class GazeListener {
 
-    protected static ArrayList<GazeInfos> shapesEventFilter;
-    protected static ArrayList<GazeInfos> shapesEventHandler;
+    protected static List<GazeInfos> shapesEventFilter;
+    protected static List<GazeInfos> shapesEventHandler;
     protected static SecondScreen secondScreen;
 
     public GazeListener() {
@@ -24,13 +25,13 @@ public abstract class GazeListener {
         this.secondScreen = secondScreen;
     }
 
-    public GazeListener(ArrayList<GazeInfos> shapesEventFilter, ArrayList<GazeInfos> shapesEventHandler) {
+    public GazeListener(List<GazeInfos> shapesEventFilter, List<GazeInfos> shapesEventHandler) {
 
         this.shapesEventFilter = shapesEventFilter;
         this.shapesEventHandler = shapesEventHandler;
     }
 
-    public GazeListener(SecondScreen secondScreen, ArrayList<GazeInfos> shapesEventFilter,
+    public GazeListener(SecondScreen secondScreen, List<GazeInfos> shapesEventFilter,
             ArrayList<GazeInfos> shapesEventHandler) {
 
         this.secondScreen = secondScreen;
@@ -47,9 +48,9 @@ public abstract class GazeListener {
             secondScreen.light(gazePosition);
         }
 
-        if (GazeUtils.stats != null) {
+        if (GazeUtils.getInstance().getStats() != null) {
 
-            GazeUtils.stats.incHeatMap((int) gazePosition.getX(), (int) gazePosition.getY());
+            GazeUtils.getInstance().getStats().incHeatMap((int) gazePosition.getX(), (int) gazePosition.getY());
         }
 
         for (GazeInfos gi : shapesEventFilter) {

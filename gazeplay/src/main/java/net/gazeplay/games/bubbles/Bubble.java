@@ -199,7 +199,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.getChildren().add(circle);
         this.gameContext.resetBordersToFront();
 
-        GazeUtils.addEventFilter(circle);
+        GazeUtils.getInstance().addEventFilter(circle);
 
         circle.addEventFilter(MouseEvent.ANY, enterEvent);
         circle.addEventHandler(GazeEvent.ANY, enterEvent);
