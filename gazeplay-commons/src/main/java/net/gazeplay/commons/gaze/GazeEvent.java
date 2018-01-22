@@ -4,17 +4,15 @@ package net.gazeplay.commons.gaze;
  * Created by schwab on 14/08/2016.
  */
 
-import com.theeyetribe.clientsdk.IGazeListener;
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
+import lombok.Getter;
 
 public class GazeEvent extends InputEvent {
 
-    static IGazeListener gazeListener;
-
-    public static final EventType<GazeEvent> ANY = new EventType<GazeEvent>(Event.ANY, "GAZE");
+    public static final EventType<GazeEvent> ANY = new EventType<>(Event.ANY, "GAZE");
 
     public static final EventType<GazeEvent> GAZE_ENTERED = new EventType<>(GazeEvent.ANY, "GAZE_ENTERED");
 
@@ -22,39 +20,36 @@ public class GazeEvent extends InputEvent {
 
     public static final EventType<GazeEvent> GAZE_MOVED = new EventType<>(GazeEvent.ANY, "GAZE_MOVED");
 
-    private long time;
+    @Getter
+    private final long time;
 
-    private double X;
+    @Getter
+    private final double x;
 
-    private double Y;
+    @Getter
+    private final double y;
 
     /**
      * Creates a new {@code LightningEvent} with an event type of {@code PLASMA_STRIKE}. The source and Target of the
      * event is set to {@code NULL_SOURCE_TARGET}.
      */
     public GazeEvent() {
-        super(GAZE_ENTERED);
+        this(GAZE_ENTERED);
     }
 
     public GazeEvent(EventType<GazeEvent> et) {
-        super(et);
-    }
-
-    public long getTime() {
-        return time;
+        this(et, 0);
     }
 
     public GazeEvent(EventType<GazeEvent> et, long time) {
-        super(et);
-        this.time = time;
-
+        this(et, time, 0, 0);
     }
 
-    public GazeEvent(EventType<GazeEvent> et, long time, double X, double Y) {
+    public GazeEvent(EventType<GazeEvent> et, long time, double x, double y) {
         super(et);
         this.time = time;
-        this.X = X;
-        this.Y = Y;
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -69,6 +64,9 @@ public class GazeEvent extends InputEvent {
      */
     public GazeEvent(Object source, EventTarget target) {
         super(source, target, GAZE_ENTERED);
+        this.time = 0;
+        this.x = 0;
+        this.y = 0;
     }
 
     @Override
@@ -79,16 +77,6 @@ public class GazeEvent extends InputEvent {
     @Override
     public EventType<? extends GazeEvent> getEventType() {
         return (EventType<? extends GazeEvent>) super.getEventType();
-    }
-
-    public double getX() {
-
-        return X;
-    }
-
-    public double getY() {
-
-        return Y;
     }
 
 }
