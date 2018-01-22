@@ -85,7 +85,7 @@ public abstract class Stats {
 
     /**
      * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px) if maximum memory is more
-     * than 1Gb, only 200
+     *         than 1Gb, only 200
      */
     private double computeHeatMapPixelSize() {
         long maxMemory = Runtime.getRuntime().maxMemory();
