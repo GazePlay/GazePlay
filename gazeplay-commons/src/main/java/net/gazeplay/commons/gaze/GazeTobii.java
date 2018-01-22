@@ -12,25 +12,7 @@ import tobii.TobiiDemo;
 @Slf4j
 public class GazeTobii {
 
-    @Getter
-    private static final GazeTobii instance = new GazeTobii();
-
-    private boolean init = false;
-
-    public boolean isInit() {
-        return init;
-    }
-
     public void execProg(TobiiGazeListener listener) {
-
-        if (!System.getProperty("os.name").contains("indow")) {
-            return;
-        }
-
-        if (init) {
-            return;
-        }
-        init = true;
 
         Tobii.gazePosition();
 
@@ -53,7 +35,7 @@ public class GazeTobii {
                                 Point2D point = new Point2D(pointAsFloatArray[0], pointAsFloatArray[1]);
                                 point = new Point2D(point.getX() * screenWidth, point.getY() * screenHeight);
                                 listener.onGazeUpdate(point);
-                            } catch (Exception e) {
+                            } catch (Throwable e) {
                                 log.error("Exception on Gaze position update", e);
                             }
                         }

@@ -121,7 +121,7 @@ public class Blocs implements GameLifeCycle {
 
                 bloc.toFront();
 
-                GazeUtils.getInstance().addEventFilter(bloc);
+                GazeUtils.getInstance().getGazeListener().addEventFilter(bloc);
 
                 bloc.addEventFilter(MouseEvent.ANY, enterEvent);
 
@@ -173,7 +173,7 @@ public class Blocs implements GameLifeCycle {
 
         toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
         toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
-        GazeUtils.getInstance().removeEventFilter(toRemove);
+        GazeUtils.getInstance().getGazeListener().removeEventFilter(toRemove);
         toRemove.setTranslateX(-10000);
         toRemove.setOpacity(0);
         currentRoundDetails.remainingCount--;
