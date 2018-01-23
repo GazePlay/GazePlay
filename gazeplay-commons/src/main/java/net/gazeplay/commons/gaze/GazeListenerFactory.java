@@ -10,12 +10,12 @@ import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
  * Created by schwab on 16/08/2016.
  */
 @Slf4j
-public class GazeUtils {
+public class GazeListenerFactory {
 
     @Getter
-    private static final GazeUtils instance = new GazeUtils();
+    private static final GazeListenerFactory instance = new GazeListenerFactory();
 
-    private GazeUtils() {
+    private GazeListenerFactory() {
     }
 
     public GazeListener createNewGazeListener() {

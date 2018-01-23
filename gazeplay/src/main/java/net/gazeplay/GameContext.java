@@ -20,7 +20,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeListener;
-import net.gazeplay.commons.gaze.GazeUtils;
+import net.gazeplay.commons.gaze.GazeListenerFactory;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.*;
@@ -80,7 +80,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
-        GazeListener gazeListener = GazeUtils.getInstance().createNewGazeListener();
+        GazeListener gazeListener = GazeListenerFactory.getInstance().createNewGazeListener();
 
         return new GameContext(gazePlay, gamingRoot, scene, bravo, bottomStackPane, menuHBox,
                 gamePanelDimensionProvider, randomPositionGenerator, root, gazeListener);

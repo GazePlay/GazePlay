@@ -2,7 +2,7 @@ package arduino.windmill;
 
 import com.sun.glass.ui.Screen;
 import net.gazeplay.commons.gaze.GazeListener;
-import net.gazeplay.commons.gaze.GazeUtils;
+import net.gazeplay.commons.gaze.GazeListenerFactory;
 import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -32,7 +32,7 @@ public class WindMill extends Application {
         Scene scene = new Scene(root, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
                 Color.BLACK);
 
-        GazeListener gazeListener = GazeUtils.getInstance().createNewGazeListener();
+        GazeListener gazeListener = GazeListenerFactory.getInstance().createNewGazeListener();
 
         Choices pictos = new Choices(scene, gazeListener);
 

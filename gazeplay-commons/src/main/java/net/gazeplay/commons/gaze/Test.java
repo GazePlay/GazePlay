@@ -26,7 +26,7 @@ public class Test extends Application {
 
         root.getChildren().add(circle);
 
-        GazeListener gazeListener = GazeUtils.getInstance().createNewGazeListener();
+        GazeListener gazeListener = GazeListenerFactory.getInstance().createNewGazeListener();
 
         gazeListener.addEventFilter(circle);
 
