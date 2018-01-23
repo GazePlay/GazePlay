@@ -72,8 +72,6 @@ public abstract class Stats {
         recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
         recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
 
-        GazeUtils.getInstance().addStats(this);
-
         gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
         gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
 

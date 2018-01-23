@@ -24,6 +24,7 @@ import javafx.util.Pair;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.ConfigurationButton;
@@ -196,6 +197,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         GameSpec.GameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
 
         final Stats stats = gameLauncher.createNewStats(gameContext.getScene());
+
+        GazeUtils.getInstance().getGazeListener().addStats(stats);
 
         gameContext.createToggleFullScreenButtonInGameScreen(gazePlay);
         gameContext.createHomeButtonInGameScreen(gazePlay, stats);

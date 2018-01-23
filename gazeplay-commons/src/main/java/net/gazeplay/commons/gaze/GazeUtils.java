@@ -19,9 +19,6 @@ public class GazeUtils {
 
     private GazeListener gazeListener;
 
-    @Getter
-    private Stats stats;
-
     private Scene scene;
 
     private GazeUtils() {
@@ -63,10 +60,6 @@ public class GazeUtils {
         }
 
         return gazeListener;
-    }
-
-    public void addStats(Stats newStats) {
-        stats = newStats;
     }
 
     public void addEventFilter(Scene gazeScene) {

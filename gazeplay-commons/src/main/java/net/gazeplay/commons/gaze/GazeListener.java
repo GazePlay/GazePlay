@@ -24,12 +24,19 @@ public abstract class GazeListener {
     @Getter
     private final List<GazeInfos> shapesEventHandler = new ArrayList<>();
 
+    @Getter
+    private Stats stats;
+
     public GazeListener() {
         this(null);
     }
 
     public GazeListener(SecondScreen secondScreen) {
         this.secondScreen = secondScreen;
+    }
+
+    public void addStats(Stats newStats) {
+        stats = newStats;
     }
 
     public void addEventFilter(Node gs) {
@@ -88,7 +95,7 @@ public abstract class GazeListener {
             secondScreen.light(gazePosition);
         }
 
-        Stats stats = GazeUtils.getInstance().getStats();
+        Stats stats = this.stats;
         if (stats != null) {
             stats.incHeatMap((int) gazePosition.getX(), (int) gazePosition.getY());
         }
