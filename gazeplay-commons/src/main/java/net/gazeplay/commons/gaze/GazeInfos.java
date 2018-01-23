@@ -1,48 +1,33 @@
 package net.gazeplay.commons.gaze;
 
 import javafx.scene.Node;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by schwab on 24/08/2016.
  */
 public class GazeInfos {
 
-    private Node node;
+    @Getter
+    private final Node node;
+
+    @Getter
+    @Setter
     private long time;
+
+    @Getter
+    @Setter
     private boolean on;
 
-    public GazeInfos(Node node) {
-        this.node = node;
+    GazeInfos(Node node) {
+        this(node, 0, false);
     }
 
-    public GazeInfos(Node node, long time, boolean on) {
-
+    private GazeInfos(Node node, long time, boolean on) {
         this.node = node;
         this.time = time;
         this.on = on;
     }
 
-    public Node getNode() {
-        return node;
-    }
-
-    public void setNode(Node node) {
-        this.node = node;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public boolean isOn() {
-        return on;
-    }
-
-    public void setOn(boolean on) {
-        this.on = on;
-    }
 }
