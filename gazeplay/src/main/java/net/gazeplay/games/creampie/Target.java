@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
+import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.GazeEvent;
 import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.Portrait;
@@ -37,7 +38,8 @@ public class Target extends Portrait {
 
     private final Image[] availableImages;
 
-    public Target(RandomPositionGenerator randomPositionGenerator, Hand hand, Stats stats, Image[] availableImages) {
+    public Target(RandomPositionGenerator randomPositionGenerator, Hand hand, Stats stats, GameContext gameContext,
+            Image[] availableImages) {
 
         super(radius, randomPositionGenerator, availableImages);
 
@@ -61,7 +63,7 @@ public class Target extends Portrait {
             }
         };
 
-        GazeUtils.getInstance().getGazeListener().addEventFilter(this);
+        gameContext.getGazeListener().addEventFilter(this);
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
 

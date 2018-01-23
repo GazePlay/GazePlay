@@ -1,6 +1,7 @@
 package arduino.windmill;
 
 import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeListener;
 import net.gazeplay.commons.gaze.GazeUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -49,7 +50,7 @@ public class Choices extends Parent {
 
     ArduinoSerialCommunication arduino;
 
-    public Choices(Scene scene) {
+    public Choices(Scene scene, GazeListener gazeListener) {
 
         arduino = new ArduinoSerialCommunication();
         arduino.initialize();
@@ -84,7 +85,7 @@ public class Choices extends Parent {
 
             this.getChildren().add(R.rectangle);
 
-            GazeUtils.getInstance().getGazeListener().addEventFilter(R.rectangle);
+            gazeListener.addEventFilter(R.rectangle);
 
             R.rectangle.addEventFilter(MouseEvent.ANY, enterEvent);
             R.rectangle.addEventFilter(GazeEvent.ANY, enterEvent);

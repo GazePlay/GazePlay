@@ -1,12 +1,10 @@
 package net.gazeplay.commons.gaze;
 
 import com.theeyetribe.clientsdk.GazeManager;
-import javafx.scene.Scene;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.stats.Stats;
 
 /**
  * Created by schwab on 16/08/2016.
@@ -17,19 +15,10 @@ public class GazeUtils {
     @Getter
     private static final GazeUtils instance = new GazeUtils();
 
-    private GazeListener gazeListener;
-
     private GazeUtils() {
     }
 
-    public GazeListener getGazeListener() {
-        if (gazeListener == null) {
-            gazeListener = initGazeListener();
-        }
-        return gazeListener;
-    }
-
-    private GazeListener initGazeListener() {
+    public GazeListener createNewGazeListener() {
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
         final String eyetrackerConfigValue = config.getEyetracker();

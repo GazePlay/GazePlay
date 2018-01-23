@@ -1,6 +1,7 @@
 package pictogrammes;
 
 import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.GazeListener;
 import net.gazeplay.commons.gaze.GazeUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -47,7 +48,7 @@ public class Pictos extends Parent {
 
     EventHandler<Event> enterEvent;
 
-    public Pictos(Scene scene) {
+    public Pictos(Scene scene, GazeListener gazeListener) {
 
         this.scene = scene;
 
@@ -82,7 +83,7 @@ public class Pictos extends Parent {
 
             this.getChildren().add(R.rectangle);
 
-            GazeUtils.getInstance().getGazeListener().addEventFilter(R.rectangle);
+            gazeListener.addEventFilter(R.rectangle);
 
             R.rectangle.addEventFilter(MouseEvent.ANY, enterEvent);
             R.rectangle.addEventFilter(GazeEvent.ANY, enterEvent);
