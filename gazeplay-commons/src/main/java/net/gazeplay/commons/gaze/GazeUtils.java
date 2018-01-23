@@ -19,8 +19,6 @@ public class GazeUtils {
 
     private GazeListener gazeListener;
 
-    private Scene scene;
-
     private GazeUtils() {
     }
 
@@ -60,10 +58,6 @@ public class GazeUtils {
         }
 
         return gazeListener;
-    }
-
-    public void addEventFilter(Scene gazeScene) {
-        scene = gazeScene;
     }
 
 }
