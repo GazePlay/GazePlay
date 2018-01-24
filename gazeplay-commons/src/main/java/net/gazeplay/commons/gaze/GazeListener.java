@@ -88,37 +88,38 @@ public abstract class GazeListener {
     }
 
     public void onGazeUpdate(Point2D gazePosition) {
-
-        // log.info("gazedata = " + gazePosition);
+        log.info("gazedata = " + gazePosition);
 
         if (secondScreen != null) {
             secondScreen.light(gazePosition);
         }
 
+        final double positionX = gazePosition.getX();
+        final double positionY = gazePosition.getY();
+
         Stats stats = this.stats;
         if (stats != null) {
-            stats.incHeatMap((int) gazePosition.getX(), (int) gazePosition.getY());
+            stats.incHeatMap((int) positionX, (int) positionY);
         }
 
         for (GazeInfos gi : shapesEventFilter) {
+            final Node node = gi.getNode();
 
-            javafx.geometry.Point2D p = gi.getNode().sceneToLocal(gazePosition.getX(), gazePosition.getY());
+            Point2D p = node.sceneToLocal(positionX, positionY);
 
             // log.info("p = " + p);
 
-            if (gi.getNode().contains(p)) {
+            if (node.contains(p)) {
 
                 if (gi.isOn()) {
 
-                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), gazePosition.getX(),
-                            gazePosition.getY()));
+                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY));
                     // log.info(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
                 } else {
 
                     gi.setOn(true);
                     gi.setTime((new Date()).getTime());
-                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), gazePosition.getX(),
-                            gazePosition.getY()));
+                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), positionX, positionY));
                     // log.info(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
                 }
             } else {// gaze is not on the shape
@@ -127,8 +128,7 @@ public abstract class GazeListener {
 
                     gi.setOn(false);
                     gi.setTime(-1);
-                    gi.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), gazePosition.getX(),
-                            gazePosition.getY()));
+                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), positionX, positionY));
                     // log.info(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
                 } else {// gaze was not on the shape previously
                     // nothing to do
