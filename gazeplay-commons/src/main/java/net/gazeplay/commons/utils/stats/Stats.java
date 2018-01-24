@@ -7,7 +7,6 @@ import javafx.stage.Screen;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeEvent;
-import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.games.Utils;
 
@@ -45,8 +44,8 @@ public abstract class Stats {
     @Getter
     protected ArrayList<Integer> lengthBetweenGoals;
 
-    private EventHandler<MouseEvent> recordMouseMovements;
-    private EventHandler<GazeEvent> recordGazeMovements;
+    private final EventHandler<MouseEvent> recordMouseMovements;
+    private final EventHandler<GazeEvent> recordGazeMovements;
 
     private double[][] heatMap;
 
@@ -69,15 +68,11 @@ public abstract class Stats {
         zeroTime = System.currentTimeMillis();
         lengthBetweenGoals = new ArrayList<Integer>(1000);
 
-        log.info("GazeUtils ON : " + GazeUtils.isOn());
+        recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
+        recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
 
-        if (GazeUtils.isOn()) {
-            recordGazeMovements = buildRecordGazeMovements();
-            GazeUtils.addStats(this);
-        } else {
-            recordMouseMovements = buildRecordMouseMovements();
-            gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
-        }
+        gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+        gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
 
         int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
         int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
@@ -161,30 +156,6 @@ public abstract class Stats {
 
         saveRawHeatMap(heatMapCSVPath);
         savePNGHeatMap(heatMapPNGPath);
-    }
-
-    private EventHandler<GazeEvent> buildRecordGazeMovements() {
-
-        return new EventHandler<GazeEvent>() {
-
-            @Override
-            public void handle(GazeEvent e) {
-
-                incHeatMap((int) e.getX(), (int) e.getY());
-            }
-        };
-    }
-
-    private EventHandler<MouseEvent> buildRecordMouseMovements() {
-
-        return new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent e) {
-
-                incHeatMap((int) e.getX(), (int) e.getY());
-            }
-        };
     }
 
     public void incHeatMap(int X, int Y) {
@@ -293,11 +264,8 @@ public abstract class Stats {
     }
 
     public void stop() {
-        if (GazeUtils.isOn()) {
-            gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
-        } else {
-            gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
-        }
+        gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
+        gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
     }
 
     public void incNbGoals() {

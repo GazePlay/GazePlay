@@ -26,7 +26,8 @@ public class CreamPie implements GameLifeCycle {
     public void launch() {
         Hand hand = new Hand();
 
-        Target portrait = new Target(gameContext.getRandomPositionGenerator(), hand, stats, Portrait.loadAllImages());
+        Target portrait = new Target(gameContext.getRandomPositionGenerator(), hand, stats, gameContext,
+                Portrait.loadAllImages());
 
         gameContext.getChildren().add(portrait);
         gameContext.getChildren().add(hand);

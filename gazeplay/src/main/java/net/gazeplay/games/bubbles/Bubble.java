@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.GazeEvent;
-import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -199,7 +198,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.getChildren().add(circle);
         this.gameContext.resetBordersToFront();
 
-        GazeUtils.addEventFilter(circle);
+        gameContext.getGazeListener().addEventFilter(circle);
 
         circle.addEventFilter(MouseEvent.ANY, enterEvent);
         circle.addEventHandler(GazeEvent.ANY, enterEvent);

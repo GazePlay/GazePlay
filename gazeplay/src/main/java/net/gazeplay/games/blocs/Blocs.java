@@ -18,7 +18,6 @@ import lombok.Data;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.GazeEvent;
-import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.utils.AspectRatioImageRectangleUtil;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -121,7 +120,7 @@ public class Blocs implements GameLifeCycle {
 
                 bloc.toFront();
 
-                GazeUtils.addEventFilter(bloc);
+                gameContext.getGazeListener().addEventFilter(bloc);
 
                 bloc.addEventFilter(MouseEvent.ANY, enterEvent);
 
@@ -173,7 +172,7 @@ public class Blocs implements GameLifeCycle {
 
         toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
         toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
-        GazeUtils.removeEventFilter(toRemove);
+        gameContext.getGazeListener().removeEventFilter(toRemove);
         toRemove.setTranslateX(-10000);
         toRemove.setOpacity(0);
         currentRoundDetails.remainingCount--;

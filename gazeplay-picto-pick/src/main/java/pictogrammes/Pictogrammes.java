@@ -1,5 +1,7 @@
 package pictogrammes;
 
+import net.gazeplay.commons.gaze.GazeListener;
+import net.gazeplay.commons.gaze.GazeListenerFactory;
 import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -27,7 +29,9 @@ public class Pictogrammes extends Application {
         Group root = new Group();
         Scene scene = new Scene(root, 1200, 700, Color.BLACK);
 
-        Pictos pictos = new Pictos(scene);
+        GazeListener gazeListener = GazeListenerFactory.getInstance().createNewGazeListener();
+
+        Pictos pictos = new Pictos(scene, gazeListener);
 
         root.getChildren().add(pictos);
 

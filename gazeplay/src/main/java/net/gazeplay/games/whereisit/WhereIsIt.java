@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.GazeEvent;
-import net.gazeplay.commons.gaze.GazeUtils;
 import net.gazeplay.commons.gaze.configuration.Configuration;
 import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -639,7 +638,7 @@ public class WhereIsIt implements GameLifeCycle {
 
             customInputEventHandler = buildCustomInputEventHandler(gameInstance);
 
-            GazeUtils.addEventFilter(imageRectangle);
+            gameContext.getGazeListener().addEventFilter(imageRectangle);
 
             this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
 
@@ -672,7 +671,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                     imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandler);
                     imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandler);
-                    GazeUtils.removeEventFilter(imageRectangle);
+                    gameContext.getGazeListener().removeEventFilter(imageRectangle);
 
                     if (winner) {
                         onCorrectCardSelected(gameInstance);
