@@ -1,8 +1,8 @@
 package net.gazeplay.commons.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.tc33.jheatchart.HeatChart;
 import net.gazeplay.commons.utils.games.Utils;
+import org.tc33.jheatchart.HeatChart;
 
 import java.io.File;
 

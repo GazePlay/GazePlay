@@ -197,7 +197,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         final Stats stats = gameLauncher.createNewStats(gameContext.getScene());
 
-        gameContext.getGazeListener().addStats(stats);
+        gameContext.getGazeDeviceManager().addStats(stats);
 
         gameContext.createToggleFullScreenButtonInGameScreen(gazePlay);
         gameContext.createHomeButtonInGameScreen(gazePlay, stats);

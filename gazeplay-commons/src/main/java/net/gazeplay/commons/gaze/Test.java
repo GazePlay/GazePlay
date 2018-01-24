@@ -6,8 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import net.gazeplay.commons.gaze.devicemanager.GazeListener;
-import net.gazeplay.commons.gaze.devicemanager.GazeListenerFactory;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 
 /**
  * Created by schwab on 16/08/2016.
@@ -28,9 +28,9 @@ public class Test extends Application {
 
         root.getChildren().add(circle);
 
-        GazeListener gazeListener = GazeListenerFactory.getInstance().createNewGazeListener();
+        GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
-        gazeListener.addEventFilter(circle);
+        gazeDeviceManager.addEventFilter(circle);
 
         primaryStage.setScene(scene);
         primaryStage.show();

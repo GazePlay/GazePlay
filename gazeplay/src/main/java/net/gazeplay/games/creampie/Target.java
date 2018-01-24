@@ -62,7 +62,7 @@ public class Target extends Portrait {
             }
         };
 
-        gameContext.getGazeListener().addEventFilter(this);
+        gameContext.getGazeDeviceManager().addEventFilter(this);
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
 

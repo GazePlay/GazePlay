@@ -19,10 +19,10 @@ import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.gaze.devicemanager.GazeListener;
-import net.gazeplay.commons.gaze.devicemanager.GazeListenerFactory;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -80,10 +80,10 @@ public class GameContext extends GraphicalContext<Pane> {
 
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
-        GazeListener gazeListener = GazeListenerFactory.getInstance().createNewGazeListener();
+        GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
         return new GameContext(gazePlay, gamingRoot, scene, bravo, bottomStackPane, menuHBox,
-                gamePanelDimensionProvider, randomPositionGenerator, root, gazeListener);
+                gamePanelDimensionProvider, randomPositionGenerator, root, gazeDeviceManager);
     }
 
     private static void resizeBlindFoldPanel(Rectangle blindFoldPanel, HBox menuHBox) {
@@ -127,11 +127,11 @@ public class GameContext extends GraphicalContext<Pane> {
     private final BorderPane rootBorderPane;
 
     @Getter
-    private final GazeListener gazeListener;
+    private final GazeDeviceManager gazeDeviceManager;
 
     private GameContext(GazePlay gazePlay, Pane gamingRoot, Scene scene, Bravo bravo, Pane bottomPane, HBox menuHBox,
             GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
-            BorderPane rootBorderPane, GazeListener gazeListener) {
+            BorderPane rootBorderPane, GazeDeviceManager gazeDeviceManager) {
         super(gazePlay, gamingRoot, scene);
         this.bravo = bravo;
         this.bottomPane = bottomPane;
@@ -139,7 +139,7 @@ public class GameContext extends GraphicalContext<Pane> {
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
         this.randomPositionGenerator = randomPositionGenerator;
         this.rootBorderPane = rootBorderPane;
-        this.gazeListener = gazeListener;
+        this.gazeDeviceManager = gazeDeviceManager;
     }
 
     public void resetBordersToFront() {
@@ -159,8 +159,8 @@ public class GameContext extends GraphicalContext<Pane> {
                     scene.setCursor(Cursor.WAIT); // Change cursor to wait style
 
                     stats.stop();
-                    gazeListener.clear();
-                    gazeListener.destroy();
+                    gazeDeviceManager.clear();
+                    gazeDeviceManager.destroy();
 
                     log.info("stats = " + stats);
 

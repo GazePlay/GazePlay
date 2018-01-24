@@ -8,13 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import tobii.Tobii;
 
 @Slf4j
-public class TobiiGazeListener extends GazeListener {
+public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
 
     private Service<Void> calculateService;
 
     private transient boolean stopRequested = false;
 
-    public TobiiGazeListener() {
+    public TobiiGazeDeviceManager() {
         super();
     }
 

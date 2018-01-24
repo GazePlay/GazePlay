@@ -82,7 +82,7 @@ public class Card extends Parent {
 
         this.enterEvent = buildEvent();
 
-        gameContext.getGazeListener().addEventFilter(card);
+        gameContext.getGazeDeviceManager().addEventFilter(card);
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);

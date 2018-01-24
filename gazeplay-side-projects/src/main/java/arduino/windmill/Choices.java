@@ -1,7 +1,5 @@
 package arduino.windmill;
 
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.gaze.devicemanager.GazeListener;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -16,6 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import utils.arduino.ArduinoSerialCommunication;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class Choices extends Parent {
 
     ArduinoSerialCommunication arduino;
 
-    public Choices(Scene scene, GazeListener gazeListener) {
+    public Choices(Scene scene, GazeDeviceManager gazeDeviceManager) {
 
         arduino = new ArduinoSerialCommunication();
         arduino.initialize();
@@ -84,7 +84,7 @@ public class Choices extends Parent {
 
             this.getChildren().add(R.rectangle);
 
-            gazeListener.addEventFilter(R.rectangle);
+            gazeDeviceManager.addEventFilter(R.rectangle);
 
             R.rectangle.addEventFilter(MouseEvent.ANY, enterEvent);
             R.rectangle.addEventFilter(GazeEvent.ANY, enterEvent);
@@ -136,9 +136,7 @@ public class Choices extends Parent {
                     timeline.play();
 
                     entry = -1;
-                }
-
-                else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                } else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
 
                     // log.info("MOVE");
 

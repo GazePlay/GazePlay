@@ -638,7 +638,7 @@ public class WhereIsIt implements GameLifeCycle {
 
             customInputEventHandler = buildCustomInputEventHandler(gameInstance);
 
-            gameContext.getGazeListener().addEventFilter(imageRectangle);
+            gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
 
             this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
 
@@ -671,7 +671,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                     imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandler);
                     imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandler);
-                    gameContext.getGazeListener().removeEventFilter(imageRectangle);
+                    gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
 
                     if (winner) {
                         onCorrectCardSelected(gameInstance);

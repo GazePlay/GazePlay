@@ -10,32 +10,32 @@ import net.gazeplay.commons.gaze.EyeTracker;
  * Created by schwab on 16/08/2016.
  */
 @Slf4j
-public class GazeListenerFactory {
+public class GazeDeviceManagerFactory {
 
     @Getter
-    private static final GazeListenerFactory instance = new GazeListenerFactory();
+    private static final GazeDeviceManagerFactory instance = new GazeDeviceManagerFactory();
 
-    private GazeListenerFactory() {
+    private GazeDeviceManagerFactory() {
     }
 
-    public GazeListener createNewGazeListener() {
+    public GazeDeviceManager createNewGazeListener() {
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
         final String eyetrackerConfigValue = config.getEyetracker();
         final EyeTracker eyeTracker = EyeTracker.valueOf(eyetrackerConfigValue);
         log.info("Eye-tracker = " + eyeTracker);
 
-        final GazeListener gazeListener;
+        final GazeDeviceManager gazeDeviceManager;
 
         switch (eyeTracker) {
         case tobii_eyeX_4C:
-            gazeListener = new TobiiGazeListener();
+            gazeDeviceManager = new TobiiGazeDeviceManager();
             break;
         case eyetribe:
-            gazeListener = new EyeTribeGazeListener();
+            gazeDeviceManager = new EyeTribeGazeDeviceManager();
             break;
         default:
-            gazeListener = new GazeListener() {
+            gazeDeviceManager = new AbstractGazeDeviceManager() {
                 @Override
                 public void init() {
 
@@ -48,8 +48,8 @@ public class GazeListenerFactory {
             };
         }
 
-        gazeListener.init();
-        return gazeListener;
+        gazeDeviceManager.init();
+        return gazeDeviceManager;
     }
 
 }

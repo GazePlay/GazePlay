@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * Created by schwab on 16/08/2016.
- *
+ * <p>
  * may be deprecated
  */
 class FuzzyGazeListener implements IGazeListener {
@@ -83,7 +83,7 @@ class FuzzyGazeListener implements IGazeListener {
                         // log.info(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
                     }
                 } else {// gaze was not on the shape previously
-                        // nothing to do
+                    // nothing to do
 
                 }
 

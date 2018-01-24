@@ -1,14 +1,14 @@
 package pictogrammes;
 
-import net.gazeplay.commons.gaze.devicemanager.GazeListener;
-import net.gazeplay.commons.gaze.devicemanager.GazeListenerFactory;
-import net.gazeplay.commons.gaze.SecondScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.gazeplay.commons.gaze.SecondScreen;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 
 /**
  * Created by schwab on 23/08/2016.
@@ -29,9 +29,9 @@ public class Pictogrammes extends Application {
         Group root = new Group();
         Scene scene = new Scene(root, 1200, 700, Color.BLACK);
 
-        GazeListener gazeListener = GazeListenerFactory.getInstance().createNewGazeListener();
+        GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
-        Pictos pictos = new Pictos(scene, gazeListener);
+        Pictos pictos = new Pictos(scene, gazeDeviceManager);
 
         root.getChildren().add(pictos);
 

@@ -9,15 +9,15 @@ import net.gazeplay.commons.gaze.SecondScreen;
 /**
  * Created by schwab on 16/08/2016.
  */
-class EyeTribeGazeListener extends GazeListener implements IGazeListener {
+class EyeTribeGazeDeviceManager extends AbstractGazeDeviceManager implements IGazeListener {
 
     private GazeManager gazeManager;
 
-    public EyeTribeGazeListener() {
+    public EyeTribeGazeDeviceManager() {
         super();
     }
 
-    public EyeTribeGazeListener(SecondScreen secondScreen) {
+    public EyeTribeGazeDeviceManager(SecondScreen secondScreen) {
         super(secondScreen);
     }
 

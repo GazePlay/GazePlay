@@ -63,7 +63,7 @@ public class Target extends Portrait {
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
 
-        gameContext.getGazeListener().addEventFilter(this);
+        gameContext.getGazeDeviceManager().addEventFilter(this);
         this.addEventHandler(GazeEvent.ANY, enterEvent);
 
         move();

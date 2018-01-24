@@ -1,7 +1,5 @@
 package pictogrammes;
 
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.gaze.devicemanager.GazeListener;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -16,6 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class Pictos extends Parent {
 
     EventHandler<Event> enterEvent;
 
-    public Pictos(Scene scene, GazeListener gazeListener) {
+    public Pictos(Scene scene, GazeDeviceManager gazeDeviceManager) {
 
         this.scene = scene;
 
@@ -82,7 +82,7 @@ public class Pictos extends Parent {
 
             this.getChildren().add(R.rectangle);
 
-            gazeListener.addEventFilter(R.rectangle);
+            gazeDeviceManager.addEventFilter(R.rectangle);
 
             R.rectangle.addEventFilter(MouseEvent.ANY, enterEvent);
             R.rectangle.addEventFilter(GazeEvent.ANY, enterEvent);
@@ -91,16 +91,16 @@ public class Pictos extends Parent {
         /*
          * R1.setTranslateX(min_X); R1.setTranslateY(min_Y); R1.setWidth(imagesWidth); R1.setHeight(imagesHeight);
          * R1.setStrokeWidth(imagesWidth*strokeFactor);
-         * 
+         *
          * this.getChildren().add(R1);
-         * 
+         *
          * R2.setTranslateX(min_X + imagesWidth + sep); R2.setTranslateY(min_Y); R2.setWidth(imagesWidth);
          * R2.setHeight(imagesHeight); R2.setStrokeWidth(imagesWidth*strokeFactor);
-         * 
+         *
          * this.getChildren().add(R2);
          */
-        // GazeListenerFactory.addEventFilter(R1);
-        // GazeListenerFactory.addEventFilter(R2);
+        // GazeDeviceManagerFactory.addEventFilter(R1);
+        // GazeDeviceManagerFactory.addEventFilter(R2);
 
         /*
          * R1.addEventFilter(MouseEvent.ANY, enterEvent); R1.addEventFilter(GazeEvent.ANY, enterEvent);

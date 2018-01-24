@@ -15,7 +15,7 @@ import java.util.List;
  * Created by schwab on 04/10/2017.
  */
 @Slf4j
-public abstract class GazeListener {
+public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     private final SecondScreen secondScreen;
 
@@ -28,32 +28,38 @@ public abstract class GazeListener {
     @Getter
     private Stats stats;
 
-    public GazeListener() {
+    public AbstractGazeDeviceManager() {
         this(null);
     }
 
-    public GazeListener(SecondScreen secondScreen) {
+    public AbstractGazeDeviceManager(SecondScreen secondScreen) {
         this.secondScreen = secondScreen;
     }
 
+    @Override
     public abstract void init();
 
+    @Override
     public abstract void destroy();
 
+    @Override
     public void addStats(Stats newStats) {
         stats = newStats;
     }
 
+    @Override
     public void addEventFilter(Node gs) {
         shapesEventFilter.add(new GazeInfos(gs));
         final int nodesEventFilterListSize = shapesEventFilter.size();
         log.info("nodesEventFilterListSize = {}", nodesEventFilterListSize);
     }
 
+    @Override
     public void addEventHandler(Node gs) {
         shapesEventHandler.add(new GazeInfos(gs));
     }
 
+    @Override
     public void removeEventFilter(Node gs) {
         int i;
 
@@ -73,6 +79,7 @@ public abstract class GazeListener {
         }
     }
 
+    @Override
     public void removeEventHandler(Node gs) {
         int i;
 
@@ -87,12 +94,13 @@ public abstract class GazeListener {
     /**
      * Clear all Nodes in both EventFilter and EventHandler. There is no more gaze event after this function is called
      */
+    @Override
     public void clear() {
         shapesEventFilter.clear();
         shapesEventHandler.clear();
     }
 
-    public void onGazeUpdate(Point2D gazePosition) {
+    void onGazeUpdate(Point2D gazePosition) {
         // log.info("gazedata = " + gazePosition);
 
         if (secondScreen != null) {
