@@ -1,5 +1,6 @@
 package net.gazeplay.commons.gaze;
 
+import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
 import com.theeyetribe.clientsdk.data.GazeData;
 import javafx.geometry.Point2D;
@@ -12,12 +13,26 @@ import java.util.List;
  */
 class EyeTribeGazeListener extends GazeListener implements IGazeListener {
 
+    private GazeManager gazeManager;
+
     public EyeTribeGazeListener() {
         super();
     }
 
     public EyeTribeGazeListener(SecondScreen secondScreen) {
         super(secondScreen);
+    }
+
+    @Override
+    public void init() {
+        gazeManager = GazeManager.getInstance();
+        gazeManager.activate();
+        gazeManager.addGazeListener(this);
+    }
+
+    @Override
+    public void destroy() {
+        gazeManager.removeGazeListener(this);
     }
 
     @Override

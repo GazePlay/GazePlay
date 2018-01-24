@@ -35,6 +35,10 @@ public abstract class GazeListener {
         this.secondScreen = secondScreen;
     }
 
+    public abstract void init();
+
+    public abstract void destroy();
+
     public void addStats(Stats newStats) {
         stats = newStats;
     }
@@ -88,7 +92,7 @@ public abstract class GazeListener {
     }
 
     public void onGazeUpdate(Point2D gazePosition) {
-        log.info("gazedata = " + gazePosition);
+        // log.info("gazedata = " + gazePosition);
 
         if (secondScreen != null) {
             secondScreen.light(gazePosition);

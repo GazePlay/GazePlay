@@ -160,6 +160,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
                     stats.stop();
                     gazeListener.clear();
+                    gazeListener.destroy();
 
                     log.info("stats = " + stats);
 

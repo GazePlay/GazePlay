@@ -29,23 +29,26 @@ public class GazeListenerFactory {
 
         switch (eyeTracker) {
         case tobii_eyeX_4C:
-            GazeTobii gazeTobii = new GazeTobii();
-            TobiiGazeListener tobiiGazeListener = new TobiiGazeListener();
-            gazeTobii.execProg(tobiiGazeListener);
-            gazeListener = tobiiGazeListener;
+            gazeListener = new TobiiGazeListener();
             break;
         case eyetribe:
-            EyeTribeGazeListener eyeTribeGazeListener = new EyeTribeGazeListener();
-            GazeManager gazeManager = GazeManager.getInstance();
-            gazeManager.activate();
-            gazeManager.addGazeListener(eyeTribeGazeListener);
-            gazeListener = eyeTribeGazeListener;
+            gazeListener = new EyeTribeGazeListener();
             break;
         default:
             gazeListener = new GazeListener() {
+                @Override
+                public void init() {
+
+                }
+
+                @Override
+                public void destroy() {
+
+                }
             };
         }
 
+        gazeListener.init();
         return gazeListener;
     }
 
