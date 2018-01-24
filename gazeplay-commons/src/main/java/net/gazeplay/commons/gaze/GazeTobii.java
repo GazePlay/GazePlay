@@ -17,8 +17,8 @@ public class GazeTobii {
         Tobii.gazePosition();
 
         Screen mainScreen = Screen.getMainScreen();
-        final float screenWidth = mainScreen.getWidth();
-        final float screenHeight = mainScreen.getHeight();
+        final int screenWidth = mainScreen.getWidth();
+        final int screenHeight = mainScreen.getHeight();
 
         final Service<Void> calculateService = new Service<Void>() {
 
@@ -32,8 +32,14 @@ public class GazeTobii {
                             try {
                                 Thread.sleep(10);// sleep is mandatory to avoid too much calls to gazePosition()
                                 float[] pointAsFloatArray = Tobii.gazePosition();
-                                Point2D point = new Point2D(pointAsFloatArray[0], pointAsFloatArray[1]);
-                                point = new Point2D(point.getX() * screenWidth, point.getY() * screenHeight);
+
+                                final float xRatio = pointAsFloatArray[0];
+                                final float yRatio = pointAsFloatArray[1];
+
+                                final double positionX = xRatio * screenWidth;
+                                final double positionY = yRatio * screenHeight;
+
+                                Point2D point = new Point2D(positionX, positionY);
                                 listener.onGazeUpdate(point);
                             } catch (Throwable e) {
                                 log.error("Exception on Gaze position update", e);
