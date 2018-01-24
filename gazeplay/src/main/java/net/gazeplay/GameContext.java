@@ -21,8 +21,8 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeListener;
 import net.gazeplay.commons.gaze.GazeListenerFactory;
-import net.gazeplay.commons.gaze.configuration.Configuration;
-import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.Stats;
 

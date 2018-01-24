@@ -1,4 +1,4 @@
-package net.gazeplay.commons.gaze.configuration;
+package net.gazeplay.commons.configuration;
 
 import lombok.Data;
 import lombok.ToString;

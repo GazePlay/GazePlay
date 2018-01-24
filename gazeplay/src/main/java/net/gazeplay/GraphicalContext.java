@@ -9,8 +9,8 @@ import javafx.stage.WindowEvent;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.gaze.configuration.Configuration;
-import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.CssUtil;
 
 @Data

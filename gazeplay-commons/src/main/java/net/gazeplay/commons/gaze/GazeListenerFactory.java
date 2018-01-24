@@ -1,10 +1,9 @@
 package net.gazeplay.commons.gaze;
 
-import com.theeyetribe.clientsdk.GazeManager;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.gaze.configuration.Configuration;
-import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
 /**
  * Created by schwab on 16/08/2016.

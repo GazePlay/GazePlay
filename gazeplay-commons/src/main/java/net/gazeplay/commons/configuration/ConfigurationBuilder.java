@@ -1,4 +1,4 @@
-package net.gazeplay.commons.gaze.configuration;
+package net.gazeplay.commons.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.EyeTracker;

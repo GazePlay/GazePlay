@@ -3,7 +3,7 @@ package net.gazeplay.commons.gaze;
 import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
 import com.theeyetribe.clientsdk.data.Point2D;
-import net.gazeplay.commons.gaze.configuration.Configuration;
+import net.gazeplay.commons.configuration.Configuration;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.gaze.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
 /**
  * Created by schwab on 10/09/2016.
