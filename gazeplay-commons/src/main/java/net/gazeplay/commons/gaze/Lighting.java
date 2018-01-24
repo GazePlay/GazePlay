@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 /**
  * Created by schwab on 10/09/2016.

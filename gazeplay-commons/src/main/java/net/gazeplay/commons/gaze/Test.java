@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import net.gazeplay.commons.gaze.devicemanager.GazeListener;
+import net.gazeplay.commons.gaze.devicemanager.GazeListenerFactory;
 
 /**
  * Created by schwab on 16/08/2016.

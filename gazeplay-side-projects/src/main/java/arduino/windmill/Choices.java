@@ -1,7 +1,7 @@
 package arduino.windmill;
 
-import net.gazeplay.commons.gaze.GazeEvent;
-import net.gazeplay.commons.gaze.GazeListener;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.gaze.devicemanager.GazeListener;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;

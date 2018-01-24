@@ -1,6 +1,6 @@
 package net.gazeplay.games.creampie.event;
 
-import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.event.EventType;

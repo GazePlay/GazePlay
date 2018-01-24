@@ -1,6 +1,6 @@
 package sample;
 
-import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;

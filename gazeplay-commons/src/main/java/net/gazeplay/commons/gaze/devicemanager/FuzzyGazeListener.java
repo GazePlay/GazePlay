@@ -1,7 +1,8 @@
-package net.gazeplay.commons.gaze;
+package net.gazeplay.commons.gaze.devicemanager;
 
 import com.theeyetribe.clientsdk.IGazeListener;
 import com.theeyetribe.clientsdk.data.GazeData;
+import net.gazeplay.commons.gaze.SecondScreen;
 
 import java.util.ArrayList;
 import java.util.Date;

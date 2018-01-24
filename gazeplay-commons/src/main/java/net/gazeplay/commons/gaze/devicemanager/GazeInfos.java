@@ -1,4 +1,4 @@
-package net.gazeplay.commons.gaze;
+package net.gazeplay.commons.gaze.devicemanager;
 
 import javafx.scene.Node;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 /**
  * Created by schwab on 24/08/2016.
  */
-public class GazeInfos {
+class GazeInfos {
 
     @Getter
     private final Node node;

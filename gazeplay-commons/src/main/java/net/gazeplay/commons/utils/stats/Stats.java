@@ -6,7 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.games.Utils;
 

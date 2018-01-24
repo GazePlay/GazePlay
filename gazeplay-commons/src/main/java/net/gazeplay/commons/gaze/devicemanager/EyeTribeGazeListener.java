@@ -1,12 +1,10 @@
-package net.gazeplay.commons.gaze;
+package net.gazeplay.commons.gaze.devicemanager;
 
 import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
 import com.theeyetribe.clientsdk.data.GazeData;
 import javafx.geometry.Point2D;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.gazeplay.commons.gaze.SecondScreen;
 
 /**
  * Created by schwab on 16/08/2016.

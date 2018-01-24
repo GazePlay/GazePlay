@@ -17,7 +17,7 @@ import javafx.scene.shape.Rectangle;
 import lombok.Data;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.commons.gaze.GazeEvent;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.AspectRatioImageRectangleUtil;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;

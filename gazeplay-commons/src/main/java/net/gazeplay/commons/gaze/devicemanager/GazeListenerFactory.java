@@ -1,9 +1,10 @@
-package net.gazeplay.commons.gaze;
+package net.gazeplay.commons.gaze.devicemanager;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.gaze.EyeTracker;
 
 /**
  * Created by schwab on 16/08/2016.

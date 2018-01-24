@@ -1,9 +1,10 @@
-package net.gazeplay.commons.gaze;
+package net.gazeplay.commons.gaze.devicemanager;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.SecondScreen;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;

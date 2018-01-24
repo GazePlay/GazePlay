@@ -1,4 +1,4 @@
-package net.gazeplay.commons.gaze;
+package net.gazeplay.commons.gaze.devicemanager;
 
 import com.sun.glass.ui.Screen;
 import javafx.concurrent.Service;
