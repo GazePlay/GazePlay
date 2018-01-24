@@ -1,9 +1,6 @@
 package net.gazeplay.commons.gaze;
 
-import com.theeyetribe.clientsdk.GazeManager;
-import com.theeyetribe.clientsdk.IGazeListener;
 import com.theeyetribe.clientsdk.data.Point2D;
-import net.gazeplay.commons.configuration.Configuration;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -13,7 +10,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
 /**
  * Created by schwab on 10/09/2016.
@@ -25,10 +21,6 @@ public class SecondScreen {
     private static final int lightingLength = 20;
     private static final Color lightingColor = Color.BLUE;
     private static Lighting[][] T;
-
-    static final GazeManager gm = GazeManager.getInstance();
-    static boolean success = gm.activate();
-    static IGazeListener gazeListener;
 
     private SecondScreen() {
 
@@ -61,17 +53,6 @@ public class SecondScreen {
         stage2.show();
 
         SecondScreen sc = new SecondScreen();
-
-        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-
-        /*
-         * if (config.eyetracker.equals("tobii")) Tobii.execProg(sc); else
-         */
-        if (config.isGazeMode())
-            gazeListener = new EyeTribeGazeListener(sc);
-        else
-            gazeListener = new FuzzyGazeListener(sc);
-
         return sc;
     }
 
