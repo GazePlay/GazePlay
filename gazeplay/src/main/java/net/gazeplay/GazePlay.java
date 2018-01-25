@@ -1,6 +1,7 @@
 package net.gazeplay;
 
 import javafx.application.Application;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -69,6 +70,14 @@ public class GazePlay extends Application {
         log.info("fullScreen = {}", fullScreen);
         primaryStage.setFullScreen(fullScreen);
         primaryStage.show();
+    }
+
+    public boolean isFullScreen() {
+        return primaryStage.isFullScreen();
+    }
+
+    public ReadOnlyBooleanProperty getFullScreenProperty() {
+        return primaryStage.fullScreenProperty();
     }
 
 }
