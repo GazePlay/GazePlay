@@ -1,15 +1,15 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeMotionListener;
-import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by schwab on 04/10/2017.
@@ -17,13 +17,13 @@ import java.util.List;
 @Slf4j
 public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
-    private final List<GazeMotionListener> gazeMotionListeners = new ArrayList<>();
+    private final List<GazeMotionListener> gazeMotionListeners = new CopyOnWriteArrayList<>();
 
     @Getter
-    private final List<GazeInfos> shapesEventFilter = new ArrayList<>();
+    private final List<GazeInfos> shapesEventFilter = new CopyOnWriteArrayList<>();
 
     @Getter
-    private final List<GazeInfos> shapesEventHandler = new ArrayList<>();
+    private final List<GazeInfos> shapesEventHandler = new CopyOnWriteArrayList<>();
 
     public AbstractGazeDeviceManager() {
 
@@ -123,14 +123,17 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
             if (node.contains(p)) {
 
                 if (gi.isOn()) {
+                    Platform.runLater(() -> node
+                            .fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY)));
 
-                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY));
                     // log.info(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
                 } else {
 
                     gi.setOn(true);
                     gi.setTime((new Date()).getTime());
-                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), positionX, positionY));
+                    Platform.runLater(() -> node
+                            .fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), positionX, positionY)));
+
                     // log.info(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
                 }
             } else {// gaze is not on the shape
@@ -139,7 +142,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
                     gi.setOn(false);
                     gi.setTime(-1);
-                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), positionX, positionY));
+                    Platform.runLater(() -> node
+                            .fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), positionX, positionY)));
                     // log.info(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
                 } else {// gaze was not on the shape previously
                     // nothing to do
