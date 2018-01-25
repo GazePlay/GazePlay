@@ -102,6 +102,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     public void clear() {
         shapesEventFilter.clear();
         shapesEventHandler.clear();
+        gazeMotionListeners.clear();
     }
 
     void onGazeUpdate(Point2D gazePosition) {
