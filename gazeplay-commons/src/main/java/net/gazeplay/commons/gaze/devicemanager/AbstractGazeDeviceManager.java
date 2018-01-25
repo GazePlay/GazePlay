@@ -4,7 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.gaze.SecondScreen;
+import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
-    private final SecondScreen secondScreen;
+    private final List<GazeMotionListener> gazeMotionListeners = new ArrayList<>();
 
     @Getter
     private final List<GazeInfos> shapesEventFilter = new ArrayList<>();
@@ -25,15 +25,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     @Getter
     private final List<GazeInfos> shapesEventHandler = new ArrayList<>();
 
-    @Getter
-    private Stats stats;
-
     public AbstractGazeDeviceManager() {
-        this(null);
-    }
 
-    public AbstractGazeDeviceManager(SecondScreen secondScreen) {
-        this.secondScreen = secondScreen;
     }
 
     @Override
@@ -43,8 +36,19 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     public abstract void destroy();
 
     @Override
-    public void addStats(Stats newStats) {
-        stats = newStats;
+    public void addGazeMotionListener(GazeMotionListener listener) {
+        this.gazeMotionListeners.add(listener);
+    }
+
+    @Override
+    public void removeGazeMotionListener(GazeMotionListener listener) {
+        this.gazeMotionListeners.remove(listener);
+    }
+
+    private void notifyAllGazeMotionListeners(Point2D position) {
+        for (GazeMotionListener l : this.gazeMotionListeners) {
+            l.gazeMoved(position);
+        }
     }
 
     @Override
@@ -103,17 +107,10 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     void onGazeUpdate(Point2D gazePosition) {
         // log.info("gazedata = " + gazePosition);
 
-        if (secondScreen != null) {
-            secondScreen.light(gazePosition);
-        }
+        notifyAllGazeMotionListeners(gazePosition);
 
         final double positionX = gazePosition.getX();
         final double positionY = gazePosition.getY();
-
-        Stats stats = this.stats;
-        if (stats != null) {
-            stats.incHeatMap((int) positionX, (int) positionY);
-        }
 
         for (GazeInfos gi : shapesEventFilter) {
             final Node node = gi.getNode();

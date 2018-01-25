@@ -1,6 +1,7 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
 import javafx.scene.Node;
+import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.utils.stats.Stats;
 
 public interface GazeDeviceManager {
@@ -9,7 +10,9 @@ public interface GazeDeviceManager {
 
     void destroy();
 
-    void addStats(Stats newStats);
+    void addGazeMotionListener(GazeMotionListener listener);
+
+    void removeGazeMotionListener(GazeMotionListener listener);
 
     void addEventFilter(Node gs);
 

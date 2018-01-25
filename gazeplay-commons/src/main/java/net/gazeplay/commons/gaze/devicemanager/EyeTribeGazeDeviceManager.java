@@ -17,10 +17,6 @@ class EyeTribeGazeDeviceManager extends AbstractGazeDeviceManager implements IGa
         super();
     }
 
-    public EyeTribeGazeDeviceManager(SecondScreen secondScreen) {
-        super(secondScreen);
-    }
-
     @Override
     public void init() {
         gazeManager = GazeManager.getInstance();

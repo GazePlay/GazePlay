@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
  * Created by schwab on 10/09/2016.
  */
 @Slf4j
-public class SecondScreen {
+public class SecondScreen implements GazeMotionListener {
 
     private static final int pixelWidth = 20;
     private static final int lightingLength = 20;
@@ -78,5 +78,10 @@ public class SecondScreen {
     public static void light(javafx.geometry.Point2D rawCoordinates) {
 
         T[(int) (rawCoordinates.getX() / pixelWidth)][(int) (rawCoordinates.getY() / pixelWidth)].enter();
+    }
+
+    @Override
+    public void gazeMoved(javafx.geometry.Point2D position) {
+        light(position);
     }
 }

@@ -6,6 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -25,7 +26,7 @@ import java.util.Collections;
  * Created by schwab on 16/08/2017.
  */
 @Slf4j
-public abstract class Stats {
+public abstract class Stats implements GazeMotionListener {
 
     private final double heatMapPixelSize = computeHeatMapPixelSize();
 
@@ -156,6 +157,13 @@ public abstract class Stats {
 
         saveRawHeatMap(heatMapCSVPath);
         savePNGHeatMap(heatMapPNGPath);
+    }
+
+    @Override
+    public void gazeMoved(javafx.geometry.Point2D position) {
+        final int positionX = (int) position.getX();
+        final int positionY = (int) position.getY();
+        incHeatMap(positionX, positionY);
     }
 
     public void incHeatMap(int X, int Y) {
