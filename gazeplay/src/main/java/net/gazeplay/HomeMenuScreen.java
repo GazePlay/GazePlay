@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.gaze.SecondScreen;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
@@ -191,6 +192,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         GameContext gameContext = GameContext.newInstance(gazePlay);
 
+        // SecondScreen secondScreen = SecondScreen.launch();
+
         gazePlay.onGameLaunch(gameContext);
 
         GameSpec.GameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
@@ -198,6 +201,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Stats stats = gameLauncher.createNewStats(gameContext.getScene());
 
         gameContext.getGazeDeviceManager().addGazeMotionListener(stats);
+        // gameContext.getGazeDeviceManager().addGazeMotionListener(secondScreen);
 
         gameContext.createToggleFullScreenButtonInGameScreen(gazePlay);
         gameContext.createHomeButtonInGameScreen(gazePlay, stats);

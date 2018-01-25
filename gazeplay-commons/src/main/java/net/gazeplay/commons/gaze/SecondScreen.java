@@ -1,6 +1,5 @@
 package net.gazeplay.commons.gaze;
 
-import com.theeyetribe.clientsdk.data.Point2D;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -20,23 +19,31 @@ public class SecondScreen implements GazeMotionListener {
     private static final int pixelWidth = 20;
     private static final int lightingLength = 20;
     private static final Color lightingColor = Color.BLUE;
-    private static Lighting[][] T;
 
-    private SecondScreen() {
+    private final Stage stage2;
 
+    private final Lighting[][] lightings;
+
+    private SecondScreen(Stage stage2, Lighting[][] lightings) {
+        this.stage2 = stage2;
+        this.lightings = lightings;
     }
 
     public static SecondScreen launch() {
-
         ObservableList<Screen> screens = Screen.getScreens();
 
-        if (screens.size() < 2)
-            return null;
+        final Screen screen1 = screens.get(0);
 
-        Screen screen1 = screens.get(0);
-        Screen screen2 = screens.get(1);
+        final Screen screen2;
+        if (screens.size() == 1) {
+            screen2 = screens.get(0);
+        } else {
+            screen2 = screens.get(1);
+        }
+
         log.info("screen1.getBounds() = " + screen1.getBounds());
         log.info("screen2.getBounds() = " + screen2.getBounds());
+
         Stage stage2 = new Stage();
         stage2.setScene(new Scene(new Label("primary")));
         stage2.setX(screen2.getVisualBounds().getMinX());
@@ -46,38 +53,48 @@ public class SecondScreen implements GazeMotionListener {
         Group root = new Group();
         Scene scene = new Scene(root, screen1.getBounds().getWidth(), screen1.getBounds().getHeight(), Color.BLACK);
 
-        makeLighting(root, screen2.getBounds());
+        Lighting[][] lightings = makeLighting(root, screen2.getBounds());
 
         stage2.setScene(scene);
 
         stage2.show();
 
-        SecondScreen sc = new SecondScreen();
+        SecondScreen sc = new SecondScreen(stage2, lightings);
         return sc;
     }
 
-    private static void makeLighting(Group root, Rectangle2D RScreen) {
+    private static Lighting[][] makeLighting(Group root, Rectangle2D screen2Bounds) {
 
-        int width = (int) RScreen.getWidth();
-        int height = (int) RScreen.getHeight();
+        int width = (int) screen2Bounds.getWidth();
+        int height = (int) screen2Bounds.getHeight();
 
-        T = new Lighting[width / pixelWidth][height / pixelWidth];
-        for (int i = 0; i < T.length; i++)
-            for (int j = 0; j < T[i].length; j++) {
+        final Lighting[][] lightings = new Lighting[width / pixelWidth][height / pixelWidth];
 
-                T[i][j] = new Lighting(i * pixelWidth, j * pixelWidth, pixelWidth, lightingLength, lightingColor);
-                root.getChildren().add(T[i][j]);
+        for (int i = 0; i < lightings.length; i++) {
+            for (int j = 0; j < lightings[i].length; j++) {
+                lightings[i][j] = new Lighting(i * pixelWidth, j * pixelWidth, pixelWidth, lightingLength,
+                        lightingColor);
+                root.getChildren().add(lightings[i][j]);
             }
+        }
+
+        return lightings;
     }
 
-    public static void light(Point2D rawCoordinates) {
-
-        T[(int) (rawCoordinates.x / pixelWidth)][(int) (rawCoordinates.y / pixelWidth)].enter();
+    public void close() {
+        stage2.close();
     }
 
-    public static void light(javafx.geometry.Point2D rawCoordinates) {
-
-        T[(int) (rawCoordinates.getX() / pixelWidth)][(int) (rawCoordinates.getY() / pixelWidth)].enter();
+    public void light(javafx.geometry.Point2D rawCoordinates) {
+        int x = (int) (rawCoordinates.getX() / pixelWidth);
+        int y = (int) (rawCoordinates.getY() / pixelWidth);
+        if (x < 0 || x >= lightings.length) {
+            return;
+        }
+        if (y < 0 || y >= lightings[x].length) {
+            return;
+        }
+        lightings[x][y].enter();
     }
 
     @Override
