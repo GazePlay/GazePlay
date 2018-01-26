@@ -1,5 +1,7 @@
 package net.gazeplay;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -199,13 +201,35 @@ public class GameContext extends GraphicalContext<Pane> {
             }
         };
 
-        Image buttonGraphics = new Image("data/common/images/fullscreen.png");
+        Button button = new Button();
+        configureFullScreenToggleButton(gazePlay.isFullScreen(), button);
 
-        Button button = new Button("FullScreen", new ImageView(buttonGraphics));
+        gazePlay.getFullScreenProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean wasFullScreen,
+                    Boolean isFullScreen) {
+                configureFullScreenToggleButton(isFullScreen, button);
+            }
+        });
+
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
         // button.recomputeSizeAndPosition(scene);
         menuHBox.getChildren().add(button);
+    }
+
+    private void configureFullScreenToggleButton(Boolean isFullScreen, Button button) {
+        final Image buttonGraphics;
+        final String label;
+        if (isFullScreen) {
+            buttonGraphics = new Image("data/common/images/fullscreen-exit.png");
+            label = "Exit FullScreen";
+        } else {
+            buttonGraphics = new Image("data/common/images/fullscreen-enter.png");
+            label = "Enter FullScreen";
+        }
+        button.setGraphic(new ImageView(buttonGraphics));
+        button.setText(label);
     }
 
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
