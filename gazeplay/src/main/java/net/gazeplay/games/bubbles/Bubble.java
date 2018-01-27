@@ -4,12 +4,14 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
@@ -60,10 +62,16 @@ public class Bubble extends Parent implements GameLifeCycle {
         photos = Utils.images(Utils.getImagesFolder() + "portraits" + Utils.FILESEPARATOR);
 
         if (useBackgroundImage) {
-            gameContext.getScene().setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
-        }
 
-        gameContext.getChildren().add(this);
+            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+            Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
+
+            gameContext.getChildren().add(imageRectangle);
+
+            gameContext.getChildren().add(this);
+        }
 
         this.fragments = buildFragments(type);
 

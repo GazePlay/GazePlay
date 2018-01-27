@@ -23,7 +23,7 @@ Vous trouverez des informations supplémentaires [ici](https://openclassrooms.co
 ## Pull request
 Il vous sera demandé de faire *a minima* une *pull request* **quotidienne** afin d'éviter que votre code s'éloigne trop de la branche principale. Chaque pull resquest doit être documentée au mieux. En faisant le lien, entre autres, avec l'issue correspondante.
 
-Chaque requête sera examinée par un des contributeur. 
+Chaque requête sera examinée par un des contributeurs. 
 
 ##Maven
 Selon [Wikipedia](https://fr.wikipedia.org/wiki/Apache_Maven),
