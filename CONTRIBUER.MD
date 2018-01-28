@@ -10,6 +10,7 @@ GazePlay est un projet open source hébergé sur GitHub.
 
 À part cette page, destinée aux étudiants francophone, la langue de développement de GazePlay est l'**anglais**.
 
+##Ouvrir un ticket
 La manière la plus simple pour contribuer est d'ouvrir un ticket (*issue*). Vous pouvez déclarer y un bug, proposer une amélioration, un nouveau jeu, ... Ce ticket pourra être discuté par tous les contributeurs (y compris les autres stagières) et finalement accepté par Didier Schwab.
 
 ## Coder
@@ -27,13 +28,18 @@ Afin de faire une *pull request*, toujours faire un *maven clean install* qui a 
 
 Chaque requête sera examinée par un des contributeurs.
 
-##Maven
-Selon [Wikipedia](https://fr.wikipedia.org/wiki/Apache_Maven),
-Maven est un outil de gestion et d'automatisation de production des projets logiciels Java. Maven est généralement intégré à un IDE
+## Maven
+Maven est un outil de gestion et d'automatisation de production des projets logiciels Java ([Wikipedia](https://fr.wikipedia.org/wiki/Apache_Maven)). Maven est généralement intégré à son IDE.
 
+Vous trouverez des informations complémentaires sur le site https://maven.apache.org
 
+Pour l'utilisation commune de *maven*, vous devrez faire au départ pour installer tous les packages puis avant toute *pull request*
 
-##Utilitaires
+'''
+mvn clean install
+'''
+
+## Utilitaires
 
 ### Sl4J
 
@@ -41,7 +47,7 @@ Simple Logging Facade for Java (https://www.slf4j.org). Gère les affichages sur
 
 **Par conséquent, l'usage des System.out ou System.err sont à proscrire dans GazePlay.**
 
-Pour l'utiliser, il suffit de mettre avant l'ouverture de la classe @Sl4J puis de l'utiliser dans le code.
+Pour l'utiliser, il suffit de mettre avant l'ouverture de la classe @Sl4J puis de l'utiliser dans le code (voir *Lombok*).
 
 Par exemple,
 ```
@@ -61,5 +67,14 @@ https://www.tutorialspoint.com/log4j/log4j_logging_levels.htm
 
 
 ### Lombok
+
+Lombok permet de simplifier le code Java. Le principe est de placer en début de classe des balises qui seront remplacées à la compilation par le code machine correspondant.
+
+Par exemple :
+- @slf4j pour la gestion des logs
+- @getter pour les accesseurs des attributs d'une classe
+- @setter pour les mutateurs des attributs d'une classe
+
+Plus d'informations : 
 https://projectlombok.org
 
