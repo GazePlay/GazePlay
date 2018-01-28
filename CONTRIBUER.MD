@@ -4,7 +4,7 @@ Cette page est destinée aux étudiants réalisant un stage encadré par Didier 
 
 Tout contributeur peut s'inspirer de cette page mais n'a évidement pas l'obligation de chercher l'approbation *a priori* de Didier Schwab. 
 
-##Git et GitHub
+## Git et GitHub
 
 GazePlay est un projet open source hébergé sur GitHub.
 
@@ -23,16 +23,43 @@ Vous trouverez des informations supplémentaires [ici](https://openclassrooms.co
 ## Pull request
 Il vous sera demandé de faire *a minima* une *pull request* **quotidienne** afin d'éviter que votre code s'éloigne trop de la branche principale. Chaque pull resquest doit être documentée au mieux. En faisant le lien, entre autres, avec l'issue correspondante.
 
-Chaque requête sera examinée par un des contributeurs. 
+Afin de faire une *pull request*, toujours faire un *maven clean install* qui a pour effet d'uniformiser le code (indentations, espaces,...).
+
+Chaque requête sera examinée par un des contributeurs.
 
 ##Maven
 Selon [Wikipedia](https://fr.wikipedia.org/wiki/Apache_Maven),
-Maven est un outil de gestion et d'automatisation de production des projets logiciels Java. Maven est généralement intégré à son IDE
+Maven est un outil de gestion et d'automatisation de production des projets logiciels Java. Maven est généralement intégré à un IDE
+
 
 
 ##Utilitaires
 
-log
+### Sl4J
 
-lombok
+Simple Logging Facade for Java (https://www.slf4j.org). Gère les affichages sur la console ou dans le fichier de debug gazeplay.log (situé automatiquement dans le répertoire par défaut de GazePlay).
+
+**Par conséquent, l'usage des System.out ou System.err sont à proscrire dans GazePlay.**
+
+Pour l'utiliser, il suffit de mettre avant l'ouverture de la classe @Sl4J puis de l'utiliser dans le code.
+
+Par exemple,
+```
+int x = 3;
+int y = 4
+log.info("positionX : {} ; positionY : {}", x, y);
+```
+
+affiche 
+
+```
+positionX : 3 ; positionY : 4
+```
+
+Plus d'informations et niveaux de messages : 
+https://www.tutorialspoint.com/log4j/log4j_logging_levels.htm
+
+
+### Lombok
+https://projectlombok.org
 
