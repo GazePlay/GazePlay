@@ -29,14 +29,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.EyeTracker;
+import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.layout.BuiltInUiTheme;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -295,14 +296,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         final String cssfile = configuration.getCssfile();
 
-        BuiltInUiTheme selected = null;
-        for (BuiltInUiTheme builtInUiTheme : BuiltInUiTheme.values()) {
-            themesBox.getItems().add(builtInUiTheme);
+        themesBox.getItems().addAll(BuiltInUiTheme.values());
 
-            if (builtInUiTheme.getStyleSheetPath().equals(cssfile)) {
-                selected = builtInUiTheme;
-            }
-        }
+        Optional<BuiltInUiTheme> configuredTheme = BuiltInUiTheme.findFromConfigPropertyValue(cssfile);
+
+        BuiltInUiTheme selected = configuredTheme.orElse(BuiltInUiTheme.DEFAULT_THEME);
+
         themesBox.setConverter(new StringConverter<BuiltInUiTheme>() {
             @Override
             public String toString(BuiltInUiTheme object) {
@@ -324,19 +323,18 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             @Override
             public void changed(ObservableValue<? extends BuiltInUiTheme> observable, BuiltInUiTheme oldValue,
                     BuiltInUiTheme newValue) {
-                log.info(newValue + "");
-
-                String newPropertyValue = newValue.getStyleSheetPath();
+                String newPropertyValue = newValue.getPreferredConfigPropertyValue();
 
                 ConfigurationBuilder.createFromPropertiesResource().withCssFile(newPropertyValue)
                         .saveConfigIgnoringExceptions();
 
                 Scene scene = configurationContext.getScene();
 
-                scene.getStylesheets().remove(0);
-                scene.getStylesheets().add(newPropertyValue);
-
-                log.info(scene.getStylesheets().toString());
+                scene.getStylesheets().removeAll(scene.getStylesheets());
+                String styleSheetPath = newValue.getStyleSheetPath();
+                if (styleSheetPath != null) {
+                    scene.getStylesheets().add(styleSheetPath);
+                }
             }
         });
 
