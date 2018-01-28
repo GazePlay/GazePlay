@@ -23,19 +23,21 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.gaze.EyeTracker;
+import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.layout.Themes;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -168,7 +170,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             Text label = new Text(multilinguism.getTrad("LayoutFile", config.getLanguage()) + colon);
 
-            ChoiceBox<Themes> input = buildStyleThemeChooser(config, configurationContext);
+            ChoiceBox<BuiltInUiTheme> input = buildStyleThemeChooser(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -288,54 +290,51 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     /**
      * Fonction to use to permit to user to select between several theme
      */
-    private static ChoiceBox<Themes> buildStyleThemeChooser(Configuration configuration,
+    private static ChoiceBox<BuiltInUiTheme> buildStyleThemeChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
-        ChoiceBox<Themes> themesBox = new ChoiceBox<>();
-        Themes[] TThemes = Themes.values();
+        ChoiceBox<BuiltInUiTheme> themesBox = new ChoiceBox<>();
 
-        int firstPos = 1;
-
-        for (int i = 0; i < TThemes.length; i++) {
-            themesBox.getItems().add(TThemes[i]);
-        }
         final String cssfile = configuration.getCssfile();
 
-        if (cssfile.indexOf("orange") > 0) {
-            themesBox.getSelectionModel().select(0);
-        } else if (cssfile.indexOf("green") > 0) {
-            themesBox.getSelectionModel().select(1);
-        } else if (cssfile.indexOf("light-blue") > 0) {
-            themesBox.getSelectionModel().select(2);
-        } else
-            themesBox.getSelectionModel().select(3);
+        themesBox.getItems().addAll(BuiltInUiTheme.values());
+
+        Optional<BuiltInUiTheme> configuredTheme = BuiltInUiTheme.findFromConfigPropertyValue(cssfile);
+
+        BuiltInUiTheme selected = configuredTheme.orElse(BuiltInUiTheme.DEFAULT_THEME);
+
+        themesBox.setConverter(new StringConverter<BuiltInUiTheme>() {
+            @Override
+            public String toString(BuiltInUiTheme object) {
+                return object.getLabel();
+            }
+
+            @Override
+            public BuiltInUiTheme fromString(String string) {
+                return null;
+            }
+        });
+
+        themesBox.getSelectionModel().select(selected);
+
         themesBox.setPrefWidth(prefWidth);
         themesBox.setPrefHeight(prefHeight);
 
-        themesBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+        themesBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BuiltInUiTheme>() {
             @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                log.info(newValue + "");
-
-                String newPropertyValue;
-
-                if (TThemes[newValue.intValue()].toString().equals("green"))
-                    newPropertyValue = "data/stylesheets/main-green.css";
-                else if (TThemes[newValue.intValue()].toString().equals("blue"))
-                    newPropertyValue = "data/stylesheets/main-blue.css";
-                else if (TThemes[newValue.intValue()].toString().equals("light_blue"))
-                    newPropertyValue = "data/stylesheets/main-light-blue.css";
-                else
-                    newPropertyValue = "data/stylesheets/main-orange.css";
+            public void changed(ObservableValue<? extends BuiltInUiTheme> observable, BuiltInUiTheme oldValue,
+                    BuiltInUiTheme newValue) {
+                String newPropertyValue = newValue.getPreferredConfigPropertyValue();
 
                 ConfigurationBuilder.createFromPropertiesResource().withCssFile(newPropertyValue)
                         .saveConfigIgnoringExceptions();
 
                 Scene scene = configurationContext.getScene();
 
-                scene.getStylesheets().remove(0);
-                scene.getStylesheets().add(newPropertyValue);
-
-                log.info(scene.getStylesheets().toString());
+                scene.getStylesheets().removeAll(scene.getStylesheets());
+                String styleSheetPath = newValue.getStyleSheetPath();
+                if (styleSheetPath != null) {
+                    scene.getStylesheets().add(styleSheetPath);
+                }
             }
         });
 

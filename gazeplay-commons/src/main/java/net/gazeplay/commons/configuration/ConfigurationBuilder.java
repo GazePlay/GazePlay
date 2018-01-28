@@ -7,6 +7,8 @@ import net.gazeplay.commons.utils.games.Utils;
 import java.io.*;
 import java.util.Properties;
 
+import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
+
 @Slf4j
 public class ConfigurationBuilder implements Cloneable {
 
@@ -25,7 +27,7 @@ public class ConfigurationBuilder implements Cloneable {
     private static String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
     private static String DEFAULT_VALUE_LANGUAGE = "fra";
     private static int DEFAULT_VALUE_FIXATION_LENGTH = 500;
-    private static String DEFAULT_VALUE_CSS_FILE = "data/stylesheets/main-green.css";
+    private static String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     private static String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static int DEFAULT_VALUE_QUESTION_LENGTH = 5000;
 
@@ -192,7 +194,17 @@ public class ConfigurationBuilder implements Cloneable {
     }
 
     private Properties toProperties() {
-        Properties properties = new Properties();
+        Properties properties = new Properties() {
+
+            @Override
+            public Object setProperty(String key, String value) {
+                if (value == null) {
+                    return this.remove(key);
+                }
+                return super.setProperty(key, value);
+            }
+
+        };
 
         // FIXME why is this not saved to file ? -> Certainly no longer usefull (see issue #102)
         // properties.setProperty(PROPERTY_NAME_GAZEMODE, this.gazeMode);
