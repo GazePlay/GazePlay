@@ -47,6 +47,8 @@ public class GameContext extends GraphicalContext<Pane> {
         gamingRoot.setStyle("-fx-background-color: black;");
 
         HBox menuHBox = createHBox();
+        // Adapt the size and position of buttons to screen width
+        menuHBox.maxWidthProperty().bind(root.widthProperty());
         menuHBox.toFront();
 
         Rectangle blindFoldPanel = new Rectangle(0, 0, 0, 0);
