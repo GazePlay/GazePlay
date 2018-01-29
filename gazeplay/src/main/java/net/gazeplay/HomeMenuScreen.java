@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
@@ -203,8 +204,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         gameContext.getGazeDeviceManager().addGazeMotionListener(stats);
         // gameContext.getGazeDeviceManager().addGazeMotionListener(secondScreen);
 
-        gameContext.createToggleFullScreenButtonInGameScreen(gazePlay);
-        gameContext.createHomeButtonInGameScreen(gazePlay, stats);
+        gameContext.createControlPanel(gazePlay, stats);
 
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, stats);
         currentGame.launch();
