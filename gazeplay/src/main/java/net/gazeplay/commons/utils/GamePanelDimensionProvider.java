@@ -27,7 +27,7 @@ public class GamePanelDimensionProvider {
         // fallback method
         if (result.getWidth() == 0 || result.getHeight() == 0) {
             result = new Dimension2D(scene.getWidth(), scene.getHeight() * 0.9 - 24);
-            log.info("fall back result = {}", result);
+            log.info("result = {}", result);
         }
 
         return result;
