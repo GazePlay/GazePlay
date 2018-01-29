@@ -47,8 +47,6 @@ public class GameContext extends GraphicalContext<Pane> {
         gamingRoot.setStyle("-fx-background-color: black;");
 
         HBox menuHBox = createHBox();
-        // Adapt the size and position of buttons to screen width
-        menuHBox.maxWidthProperty().bind(root.widthProperty());
         menuHBox.toFront();
 
         Rectangle blindFoldPanel = new Rectangle(0, 0, 0, 0);
@@ -105,18 +103,13 @@ public class GameContext extends GraphicalContext<Pane> {
         // hbox.setStyle("-fx-background-color: lightgrey;");
         // hbox.setBackground(new BackgroundFill()):
 
-        // Duplicated code (see line bellow)
-        //hbox.backgroundProperty()
-          //      .setValue(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        hbox.backgroundProperty()
+                .setValue(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 
         hbox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 
         hbox.setStyle(
-                "-fx-background-color: rgba(0, 0, 0, 1);"
-                + " -fx-background-radius: 8px; -fx-border-radius: 8px;"
-                + " -fx-border-width: 5px; "
-                + " -fx-border-color: rgba(60, 63, 65, 0.7);"
-                + " -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+                "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
         return hbox;
     }
