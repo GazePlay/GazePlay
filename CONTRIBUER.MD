@@ -80,25 +80,15 @@ https://projectlombok.org
 
 ### Findbugs
 
-in order to
+Findbugs permet d'éviter l'introduction de bugs qui pourraient être automatiquement détectés grâce à une analyse statique du code.
 
-prevent introduction of bugs that can be detected automatically by static analysis of code,
-and locate existing ones.
-Configuration of findbugs so that existing errors are ignored for the moment
-
-Existing bugs are excludes per configuration.
-
-Should be useful already to avoid introduction of new bugs.
-When you have time, just un-ignore some bugs, and start fixing them.
-
-Findbugs makes the build (a lot) longer.
-You can speed up the build by skipping findbugs entirely if you build a lot today
+La configuration utilisée dans GazePlay exclut la recherche des bugs car il rend les builds bien plus longs.
 
 '''
 mvn clean install -Dfindbugs.skip=true
 '''
 
-but make sure to run a full build before committing or proposing a pull request.
+Assurez-vous que l'utilisation de findbugs ne trouve pas de bug avant de faire un *pull request*.
 
 '''
 mvn clean install -Dfindbugs.skip=false
@@ -108,11 +98,10 @@ Plus d'informations sur http://findbugs.sourceforge.net
 
 ### TravisCI
 
-Now Didier, just enable TravisCI for the project ```schwabdidier/GazePlay```
-see instructions https://docs.travis-ci.com/user/getting-started/
+Travis CI est un logiciel libre d'intégration continue ([Wikipedia](https://fr.wikipedia.org/wiki/Travis_CI)). L'intégration continue est un ensemble de pratiques utilisées en génie logiciel consistant à vérifier à chaque modification de code source que le résultat des modifications ne produit pas de régression dans l'application développée ([Wikipedia](https://fr.wikipedia.org/wiki/Intégration_continue)).
+ 
+TravisCI construit un *build* pour chaque *commit*, pour chaque *pull request* et ainsi trouver plus rapidement les problèmes.
 
-TravisCI will run a build for every commit; for every pull request
-and help find issues sooner
+Un badge est ajouté en haut du README.md, indiquant le status de la branche principale (qui devrait toujours être en *build | passing*).
 
-A badge is added at the top of the README.md, indicating the status of the master branch (should always be "build | passing")
-
+En savoir plus https://docs.travis-ci.com/user/getting-started/
