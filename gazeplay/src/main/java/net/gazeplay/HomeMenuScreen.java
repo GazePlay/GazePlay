@@ -33,7 +33,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -129,6 +128,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
               + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
+    @Override
     public ObservableList<Node> getChildren() {
         return root.getChildren();
     }
@@ -167,7 +167,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private Pane createGamePane(List<GameSpec> games, Configuration config) {
         List<String> gamesLabels = generateTranslatedGamesNames(games, config);
 
-        GridPane gamesPane = new GridPane();
+        GridPane gamesGrid = new GridPane();
         
         int nbCol = 5;
         int nbRow = gcd(gamesLabels.size(), nbCol);
@@ -177,23 +177,23 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             
             String gameLabel = gamesLabels.get(i);
             Pane gamePane = this.createGamePane(gameLabel, i);
-            gamesPane.add(gamePane, i % nbCol, i / nbCol);
+            gamesGrid.add(gamePane, i % nbCol, i / nbCol);
         }
         
         // Adding appropriate resize constraints
         for (int j = 0; j < nbCol; j++) {
             ColumnConstraints cc = new ColumnConstraints();
             cc.setHgrow(Priority.ALWAYS);
-            gamesPane.getColumnConstraints().add(cc);
+            gamesGrid.getColumnConstraints().add(cc);
         }
 
         for (int j = 0; j < nbRow; j++) {
             RowConstraints rc = new RowConstraints();
             rc.setVgrow(Priority.ALWAYS);
-            gamesPane.getRowConstraints().add(rc);
+            gamesGrid.getRowConstraints().add(rc);
         }
             
-        return gamesPane;
+        return gamesGrid;
     }
     
     /**
@@ -283,8 +283,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         gameContext.createToggleFullScreenButtonInGameScreen(gazePlay);
         gameContext.createHomeButtonInGameScreen(gazePlay, stats);
 
-        GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, stats);
-        currentGame.launch();
+        GameLifeCycle currentGamelife = gameLauncher.createNewGame(gameContext, stats);
+        currentGamelife.launch();
     }
 
     private Rectangle createExitButton() {
