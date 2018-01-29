@@ -90,13 +90,6 @@ public class GameContext extends GraphicalContext<Pane> {
                 gamePanelDimensionProvider, randomPositionGenerator, root, gazeDeviceManager);
     }
 
-    private static void resizeBlindFoldPanel(Rectangle blindFoldPanel, HBox menuHBox) {
-        blindFoldPanel.setX(0);
-        blindFoldPanel.setY(0);
-        blindFoldPanel.setWidth(menuHBox.getWidth());
-        blindFoldPanel.setHeight(menuHBox.getHeight());
-    }
-
     public static HBox createHBox() {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_RIGHT);
