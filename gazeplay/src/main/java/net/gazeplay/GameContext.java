@@ -52,6 +52,8 @@ public class GameContext extends GraphicalContext<Pane> {
         menuHBox.toFront();
 
         Rectangle blindFoldPanel = new Rectangle(0, 0, 0, 0);
+        blindFoldPanel.widthProperty().bind(menuHBox.widthProperty());
+        blindFoldPanel.heightProperty().bind(menuHBox.heightProperty());
 
         StackPane bottomStackPane = new StackPane();
         bottomStackPane.getChildren().add(blindFoldPanel);
@@ -60,14 +62,12 @@ public class GameContext extends GraphicalContext<Pane> {
         EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                resizeBlindFoldPanel(blindFoldPanel, menuHBox);
                 blindFoldPanel.toBack();
             }
         };
         EventHandler<MouseEvent> mouseExitControlPanelEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                resizeBlindFoldPanel(blindFoldPanel, menuHBox);
                 blindFoldPanel.toFront();
             }
         };
@@ -88,13 +88,6 @@ public class GameContext extends GraphicalContext<Pane> {
 
         return new GameContext(gazePlay, gamingRoot, scene, bravo, bottomStackPane, menuHBox,
                 gamePanelDimensionProvider, randomPositionGenerator, root, gazeDeviceManager);
-    }
-
-    private static void resizeBlindFoldPanel(Rectangle blindFoldPanel, HBox menuHBox) {
-        blindFoldPanel.setX(0);
-        blindFoldPanel.setY(0);
-        blindFoldPanel.setWidth(menuHBox.getWidth());
-        blindFoldPanel.setHeight(menuHBox.getHeight());
     }
 
     public static HBox createHBox() {
