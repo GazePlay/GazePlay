@@ -35,9 +35,9 @@ Vous trouverez des informations complémentaires sur le site https://maven.apach
 
 Pour l'utilisation commune de *maven*, vous devrez faire au départ pour installer tous les packages puis avant toute *pull request*
 
-'''
+```
 mvn clean install
-'''
+```
 
 ## Utilitaires
 
@@ -84,15 +84,15 @@ Findbugs permet d'éviter l'introduction de bugs qui pourraient être automatiqu
 
 La configuration utilisée dans GazePlay exclut la recherche des bugs car il rend les builds bien plus longs.
 
-'''
+```
 mvn clean install -Dfindbugs.skip=true
-'''
+```
 
 Assurez-vous que l'utilisation de findbugs ne trouve pas de bug avant de faire un *pull request*.
 
-'''
+```
 mvn clean install -Dfindbugs.skip=false
-'''
+```
 
 Plus d'informations sur http://findbugs.sourceforge.net
 
