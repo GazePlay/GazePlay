@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
@@ -26,7 +27,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.gaze.SecondScreen;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
@@ -75,10 +75,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.getChildren().add(configurationButton);
 
+        Button toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
+
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
         rightControlPane.setAlignment(Pos.CENTER);
-        // rightControlPane.getChildren().add(exitButton);
+        rightControlPane.getChildren().add(toggleFullScreenButton);
 
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);
@@ -203,8 +205,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         gameContext.getGazeDeviceManager().addGazeMotionListener(stats);
         // gameContext.getGazeDeviceManager().addGazeMotionListener(secondScreen);
 
-        gameContext.createToggleFullScreenButtonInGameScreen(gazePlay);
-        gameContext.createHomeButtonInGameScreen(gazePlay, stats);
+        gameContext.createControlPanel(gazePlay, stats);
 
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, stats);
         currentGame.launch();
