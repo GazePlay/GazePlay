@@ -30,11 +30,6 @@ public class Hand extends Parent {
 
     private final ImageView pie;
 
-    private double handTranslateX = 0;
-    private double handTranslateY = 0;
-    private double pieTranslateX = 0;
-    private double pieTranslateY = 0;
-
     public Hand() {
         recomputePosition();
 
@@ -57,10 +52,10 @@ public class Hand extends Parent {
     public void recomputePosition() {
         Pane parent = (Pane) this.getParent();
         if (parent != null) {
-            handTranslateX = (parent.getWidth() - maxSize) / 2;
-            handTranslateY = parent.getHeight() - maxSize;
-            pieTranslateX = (parent.getWidth() - size) / 2;
-            pieTranslateY = parent.getHeight() - maxSize;
+            double handTranslateX = (parent.getWidth() - maxSize) / 2;
+            double handTranslateY = parent.getHeight() - maxSize;
+            double pieTranslateX = (parent.getWidth() - size) / 2;
+            double pieTranslateY = parent.getHeight() - maxSize;
 
             hand.setTranslateX(handTranslateX);
             hand.setTranslateY(handTranslateY);
@@ -94,13 +89,13 @@ public class Hand extends Parent {
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(pie.fitHeightProperty(), size)));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(pie.fitWidthProperty(), size)));
         timeline2.getKeyFrames()
-                .add(new KeyFrame(new Duration(1), new KeyValue(hand.translateXProperty(), handTranslateX)));
+                .add(new KeyFrame(new Duration(1), new KeyValue(hand.translateXProperty(), hand.getTranslateX())));
         timeline2.getKeyFrames()
-                .add(new KeyFrame(new Duration(1), new KeyValue(hand.translateYProperty(), handTranslateY)));
+                .add(new KeyFrame(new Duration(1), new KeyValue(hand.translateYProperty(), hand.getTranslateY())));
         timeline2.getKeyFrames()
-                .add(new KeyFrame(new Duration(1), new KeyValue(pie.translateXProperty(), pieTranslateX)));
+                .add(new KeyFrame(new Duration(1), new KeyValue(pie.translateXProperty(), pie.getTranslateX())));
         timeline2.getKeyFrames()
-                .add(new KeyFrame(new Duration(1), new KeyValue(pie.translateYProperty(), pieTranslateY)));
+                .add(new KeyFrame(new Duration(1), new KeyValue(pie.translateYProperty(), pie.getTranslateY())));
 
         SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
 
