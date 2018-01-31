@@ -1,16 +1,12 @@
 package net.gazeplay.games.creampie;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.games.creampie.event.TouchEvent;
 
 /**
  * Created by schwab on 17/08/2016.
@@ -45,8 +41,6 @@ public class Hand extends Parent {
 
         this.getChildren().add(pie);
         this.getChildren().add(hand);
-
-        this.addEventHandler(TouchEvent.TOUCH, (TouchEvent te) -> touch(te));
     }
 
     public void recomputePosition() {
@@ -65,18 +59,22 @@ public class Hand extends Parent {
         }
     }
 
-    private void touch(TouchEvent te) {
-        recomputePosition();
+    public void onTargetHit(Target target) {
+        Animation animation = createAnimation(target);
+        animation.play();
+        Utils.playSound("data/creampie/sounds/missile.mp3");
+    }
 
+    private Animation createAnimation(Target target) {
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
 
         timeline.getKeyFrames().add(new KeyFrame(new Duration(200), new KeyValue(hand.fitHeightProperty(), size)));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(200), new KeyValue(hand.fitWidthProperty(), size)));
-        timeline.getKeyFrames()
-                .add(new KeyFrame(new Duration(2000), new KeyValue(pie.translateXProperty(), te.x - maxSize)));
-        timeline.getKeyFrames()
-                .add(new KeyFrame(new Duration(2000), new KeyValue(pie.translateYProperty(), te.y - maxSize)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
+                new KeyValue(pie.translateXProperty(), target.getCenterX() - maxSize)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
+                new KeyValue(pie.translateYProperty(), target.getCenterY() - maxSize)));
         timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(2000), new KeyValue(pie.fitHeightProperty(), maxSize * 2)));
         timeline.getKeyFrames()
@@ -97,10 +95,6 @@ public class Hand extends Parent {
         timeline2.getKeyFrames()
                 .add(new KeyFrame(new Duration(1), new KeyValue(pie.translateYProperty(), pie.getTranslateY())));
 
-        SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
-
-        sequence.play();
-
-        Utils.playSound("data/creampie/sounds/missile.mp3");
+        return new SequentialTransition(timeline, timeline2);
     }
 }

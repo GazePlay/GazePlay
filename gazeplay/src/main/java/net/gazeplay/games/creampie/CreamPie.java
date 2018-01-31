@@ -18,7 +18,7 @@ public class CreamPie implements GameLifeCycle {
 
     private final Hand hand;
 
-    private final Target portrait;
+    private final Target target;
 
     public CreamPie(GameContext gameContext, Stats stats) {
         super();
@@ -29,9 +29,9 @@ public class CreamPie implements GameLifeCycle {
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
 
         hand = new Hand();
-        portrait = new Target(randomPositionGenerator, hand, stats, gameContext, availableImages);
+        target = new Target(randomPositionGenerator, hand, stats, gameContext, availableImages);
 
-        gameContext.getChildren().add(portrait);
+        gameContext.getChildren().add(target);
         gameContext.getChildren().add(hand);
     }
 

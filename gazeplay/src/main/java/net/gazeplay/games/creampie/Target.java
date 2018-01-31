@@ -23,7 +23,7 @@ import net.gazeplay.commons.utils.stats.Stats;
  */
 public class Target extends Portrait {
 
-    private Hand hand;
+    private final Hand hand;
 
     EventHandler<Event> enterEvent;
 
@@ -75,7 +75,7 @@ public class Target extends Portrait {
 
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
-        hand.fireEvent(new net.gazeplay.games.creampie.event.TouchEvent(getCenterX(), getCenterY()));
+        hand.onTargetHit(this);
 
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
