@@ -1,9 +1,6 @@
 package net.gazeplay.games.creampie;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -77,6 +74,11 @@ public class Target extends Portrait {
 
         hand.onTargetHit(this);
 
+        Animation animation = createAnimation();
+        animation.play();
+    }
+
+    private Animation createAnimation() {
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
 
@@ -100,7 +102,7 @@ public class Target extends Portrait {
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(visibleProperty(), true)));
 
         SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
-        sequence.play();
+
         sequence.setOnFinished(new EventHandler<ActionEvent>() {
 
             @Override
@@ -110,5 +112,7 @@ public class Target extends Portrait {
                 stats.start();
             }
         });
+
+        return sequence;
     }
 }
