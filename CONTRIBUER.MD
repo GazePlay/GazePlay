@@ -10,7 +10,7 @@ GazePlay est un projet open source hébergé sur GitHub.
 
 À part cette page, destinée aux étudiants francophone, la langue de développement de GazePlay est l'**anglais**.
 
-##Ouvrir un ticket
+## Ouvrir un ticket
 La manière la plus simple pour contribuer est d'ouvrir un ticket (*issue*). Vous pouvez déclarer y un bug, proposer une amélioration, un nouveau jeu, ... Ce ticket pourra être discuté par tous les contributeurs (y compris les autres stagières) et finalement accepté par Didier Schwab.
 
 ## Coder
