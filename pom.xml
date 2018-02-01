@@ -5,7 +5,7 @@
 	<groupId>com.github.schwabdidier</groupId>
 	<artifactId>gazeplay-project</artifactId>
 	<packaging>pom</packaging>
-	<version>1.1.1-SNAPSHOT</version>
+	<version>1.2</version>
 
 	<licenses>
 		<license>
@@ -17,7 +17,7 @@
 		<url>https://github.com/schwabdidier/GazePlay</url>
 		<connection>scm:git:ssh://git@github.com/schwabdidier/GazePlay.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/schwabdidier/GazePlay.git</developerConnection>
-	  <tag>gazeplay-project-1.0.6</tag>
+	  <tag>1.1.1</tag>
   </scm>
 
 
