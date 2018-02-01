@@ -48,7 +48,7 @@ public class Bravo extends Rectangle {
 
     private final String pictureResourceLocation;
 
-  //  private final String soundResourceLocation;
+    // private final String soundResourceLocation;
 
     private final URL soundResourceUrl;
 
@@ -63,7 +63,7 @@ public class Bravo extends Rectangle {
     public Bravo(String pictureResourceLocation, String soundResourceLocation) {
         super(0, 0, 0, 0);
         this.pictureResourceLocation = pictureResourceLocation;
-    //    this.soundResourceLocation = soundResourceLocation;
+        // this.soundResourceLocation = soundResourceLocation;
 
         ClassLoader classLoader = this.getClass().getClassLoader();
 
