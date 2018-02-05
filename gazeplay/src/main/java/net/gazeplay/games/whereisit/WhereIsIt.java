@@ -305,7 +305,8 @@ public class WhereIsIt implements GameLifeCycle {
             if (!folder.isDirectory())
                 continue;
 
-            final File[] files = folder.listFiles();
+            //final File[] files = folder.listFiles();
+            final File[] files = getFiles(folder);
 
             log.info("files = {}", files);
 
@@ -348,6 +349,43 @@ public class WhereIsIt implements GameLifeCycle {
 
         return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question,
                 pictograms);
+    }
+
+
+    /**
+     * Return all files which don't start with a point
+     *
+     * @param folder
+     * @return a tab with all Files in a folder which don't start with a .
+     *
+     */
+    private File[] getFiles(File folder) {
+
+        File[] files = folder.listFiles();
+
+        int nbElementsToKeep = 0;
+
+        for(File file : files) {
+            log.info("{}", file.getName());
+            if(!file.getName().startsWith(".")){
+
+                nbElementsToKeep++;
+            }
+        }
+
+        File[] list = new File[nbElementsToKeep];
+
+        int i = 0;
+
+        for(File file : files) {
+            log.info("{}", file.getName());
+            if(!file.getName().startsWith(".")){
+
+                list[i++] = file;
+            }
+        }
+
+        return list;
     }
 
     private void error(String language) {

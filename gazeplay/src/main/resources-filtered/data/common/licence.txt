@@ -1,4 +1,4 @@
-GAZEPLAY Copyright (C) 2016-2017 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
+GAZEPLAY Copyright (C) 2016-2018 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
 
 Version : ${project.version} (${build.date})
 
