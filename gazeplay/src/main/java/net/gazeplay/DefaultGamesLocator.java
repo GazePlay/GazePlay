@@ -17,6 +17,8 @@ import net.gazeplay.games.ninja.NinjaStats;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
+import net.gazeplay.games.cups.CupsAndBalls;
+import net.gazeplay.games.cups.CupsAndBallsStats;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,18 @@ public class DefaultGamesLocator implements GamesLocator {
             @Override
             public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
                 return new Ninja(gameContext, stats);
+            }
+        }));
+
+        result.add(new GameSpec("Cups and Balls", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new CupsAndBallsStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new CupsAndBalls(gameContext, stats, 3, 3, 3);
             }
         }));
 
