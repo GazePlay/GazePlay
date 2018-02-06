@@ -305,7 +305,7 @@ public class WhereIsIt implements GameLifeCycle {
             if (!folder.isDirectory())
                 continue;
 
-            //final File[] files = folder.listFiles();
+            // final File[] files = folder.listFiles();
             final File[] files = getFiles(folder);
 
             log.info("files = {}", files);
@@ -351,7 +351,6 @@ public class WhereIsIt implements GameLifeCycle {
                 pictograms);
     }
 
-
     /**
      * Return all files which don't start with a point
      *
@@ -365,9 +364,9 @@ public class WhereIsIt implements GameLifeCycle {
 
         int nbElementsToKeep = 0;
 
-        for(File file : files) {
+        for (File file : files) {
             log.info("{}", file.getName());
-            if(!file.getName().startsWith(".")){
+            if (!file.getName().startsWith(".")) {
 
                 nbElementsToKeep++;
             }
@@ -377,9 +376,9 @@ public class WhereIsIt implements GameLifeCycle {
 
         int i = 0;
 
-        for(File file : files) {
+        for (File file : files) {
             log.info("{}", file.getName());
-            if(!file.getName().startsWith(".")){
+            if (!file.getName().startsWith(".")) {
 
                 list[i++] = file;
             }

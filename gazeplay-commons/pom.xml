@@ -85,7 +85,8 @@
 		<dependency>
 			<groupId>com.github.coylz</groupId>
 			<artifactId>TobiiStreamEngineForJava</artifactId>
-			<version>3.0</version>
+			<version>master-3.0-gc277290-1</version>
+		 <type>jar</type>
 		</dependency>
 
 	</dependencies>
