@@ -2,6 +2,7 @@ package net.gazeplay;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import java.math.BigInteger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -39,10 +40,20 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.GamePane;
 
 @Data
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
+
+    /**
+     * Number of game per row displayed on home screen. TODO : Make this depends on screen width.
+     */
+    public static final int NB_GAME_PER_ROW = 5;
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
@@ -59,6 +70,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     @Getter
     private final ChoiceBox<String> cbxGames;
+    
+    // WaffleBuffer's homescreen
+    @Getter
+    private Pane gamesPane;
 
     private final List<GameSpec> games;
 
@@ -110,6 +125,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         centerCenterPane.setAlignment(Pos.TOP_CENTER);
         centerCenterPane.getChildren().add(cbxGames);
         centerCenterPane.getChildren().add(gamePickerChoicePane);
+        
+        // WaffleBuffer's homescreen
+        /*gamesPane = createGamesPane(games, config);
+        StackPane centerCenterPane = new StackPane();
+        centerCenterPane.setAlignment(Pos.CENTER);
+        centerCenterPane.getChildren().add(gamesPane);*/
+        
 
         VBox leftPanel = new VBox();
         leftPanel.getChildren().add(menuBar);
@@ -131,6 +153,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
+    @Override
     public ObservableList<Node> getChildren() {
         return root.getChildren();
     }
@@ -149,6 +172,50 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         this.cbxGames.getItems().clear();
         this.cbxGames.getItems().addAll(gamesLabels);
+        // WaffleBuffer's home screen
+        //updateGamesPanelsTitles(gamesLabels);
+    }
+
+    /**
+     * Get the greatest common divisor between two integers. TODO : Also this function should go elswhere but i'm not
+     * sure where exactly.
+     * 
+     * @param a
+     *            One of the int.
+     * @param b
+     *            One of the int.
+     * @return 0 if a == b, the gcd otherwise.
+     */
+    public static int gcd(int a, int b) {
+        BigInteger b1 = BigInteger.valueOf(a);
+        BigInteger b2 = BigInteger.valueOf(b);
+        BigInteger gcd = b1.gcd(b2);
+        return gcd.intValue();
+    }
+
+    /**
+     * This command is called when games have to be updated (example: when language changed)
+     */
+    private Pane createGamesPane(List<GameSpec> games, Configuration config) {
+        List<String> gamesLabels = generateTranslatedGamesNames(games, config);
+
+        GridPane gamesGrid = new GridPane();
+        gamesGrid.setHgap(10);
+        gamesGrid.setVgap(5);
+
+        int nbCol = HomeMenuScreen.NB_GAME_PER_ROW;
+        int nbRow = gcd(gamesLabels.size(), nbCol);
+
+        // For each game, create its corresponding graphical choice
+        for (int i = 0; i < gamesLabels.size(); i++) {
+
+            String gameLabel = gamesLabels.get(i);
+            Pane gamePane = this.createGamePane(gameLabel, i);
+            gamesGrid.add(gamePane, i % nbCol, i / nbCol);
+            GridPane.setHgrow(gamePane, Priority.ALWAYS);
+        }
+
+        return gamesGrid;
     }
 
     /**
@@ -157,15 +224,69 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private ChoiceBox<String> createChoiceBox(List<GameSpec> games, Configuration config) {
         List<String> gamesLabels = generateTranslatedGamesNames(games, config);
 
-        ChoiceBox<String> cbxGames = new ChoiceBox<>();
-        cbxGames.getItems().addAll(gamesLabels);
-        cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+        ChoiceBox<String> cbxGamesTmp = new ChoiceBox<>();
+        cbxGamesTmp.getItems().addAll(gamesLabels);
+        cbxGamesTmp.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 chooseGame(newValue.intValue());
             }
         });
-        return cbxGames;
+        return cbxGamesTmp;
+    }
+    
+    /**
+     * Update all GamePane titles. Used by onLanguageChanged.
+     * 
+     * @param gamesLabels
+     *            The list of games labels. All labels in the list should have the same index as the GamePane in
+     *            this.gamesPane.
+     */
+    private void updateGamesPanelsTitles(List<String> gamesLabels) {
+
+        for (int i = 0; i < gamesLabels.size(); i++) {
+
+            String gameLabel = gamesLabels.get(i);
+
+            try {
+                Node n = this.gamesPane.getChildren().get(i);
+                ((GamePane) n).getGameLabel().setText(gameLabel);
+            } catch (ClassCastException e) {
+                log.error(e.getMessage());
+            } catch (IndexOutOfBoundsException e) {
+                log.error("Invalid indexes between gamesLabel and gamesPane.");
+                break;
+            }
+
+        }
+    }
+
+    /**
+     * Crate a Pane which will then be displayed in home screen for game choice.
+     * 
+     * @param gameLabel
+     *            The title of the game (in its current selected language).
+     * @param gameIndex
+     *            The index of the corresponding game to use with choosGame() call.
+     * @return The created game Pane.
+     */
+    private Pane createGamePane(String gameLabel, int gameIndex) {
+        // The main gamePane
+        BorderPane gamePane = new GamePane(gameLabel);
+
+        // Add a listener to launch the game when clicked or gazed at.
+        // TODO : see if this is suffecient for eye tracking use. Maybe we will need
+        // some timed choice.
+        EventHandler<Event> enterEvent = (Event e) -> {
+            if (e.getEventType() == MouseEvent.MOUSE_CLICKED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                this.chooseGame(gameIndex);
+            }
+        };
+
+        gamePane.addEventFilter(MouseEvent.ANY, enterEvent);
+        gamePane.addEventFilter(GazeEvent.ANY, enterEvent);
+
+        return gamePane;
     }
 
     private List<String> generateTranslatedGamesNames(List<GameSpec> games, Configuration config) {
@@ -295,8 +416,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         gameContext.createControlPanel(gazePlay, stats);
 
-        GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, stats);
-        currentGame.launch();
+        GameLifeCycle currentGameTmp = gameLauncher.createNewGame(gameContext, stats);
+        currentGameTmp.launch();
     }
 
     private Rectangle createExitButton() {

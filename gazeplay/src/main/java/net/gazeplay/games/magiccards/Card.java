@@ -133,9 +133,7 @@ public class Card extends Parent {
 
                         gameContext.clear();
 
-                        gameInstance.launch();
-
-                        stats.start();
+                        gameInstance.beginPlay(gameInstance.getNbLines(), gameInstance.getNbColumns());
 
                         gameContext.onGameStarted();
                     }
