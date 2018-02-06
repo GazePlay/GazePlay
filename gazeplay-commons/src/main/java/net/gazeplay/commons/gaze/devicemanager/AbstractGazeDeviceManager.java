@@ -120,7 +120,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
             // log.info("localPosition = " + localPosition);
 
-            if (node.contains(localPosition)) {
+            if (localPosition != null && node.contains(localPosition)) {
 
                 if (gi.isOn()) {
                     Platform.runLater(() -> node

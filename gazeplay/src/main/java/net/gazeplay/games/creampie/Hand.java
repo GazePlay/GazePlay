@@ -1,17 +1,12 @@
 package net.gazeplay.games.creampie;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.games.creampie.event.TouchEvent;
 
 /**
  * Created by schwab on 17/08/2016.
@@ -21,59 +16,40 @@ public class Hand extends Parent {
     private static final int size = 40;
     private static final int maxSize = 100;
 
-    private Rectangle hand;
-    private Rectangle pie;
+    private static final String IMAGES_BASE_PATH = "data/creampie/images";
 
-    private double handTranslateX = 0;
-    private double handTranslateY = 0;
-    private double pieTranslateX = 0;
-    private double pieTranslateY = 0;
+    private static final String PIE_IMAGE_PATH = IMAGES_BASE_PATH + "/gateau.png";
+
+    private static final String HAND_IMAGE_PATH = IMAGES_BASE_PATH + "/hand.png";
+
+    private final ImageView hand;
+
+    private final ImageView pie;
 
     public Hand() {
         recomputePosition();
 
-        hand = new Rectangle(0, 0, maxSize, maxSize);
+        hand = new ImageView(new Image(HAND_IMAGE_PATH));
+        hand.setFitWidth(maxSize);
+        hand.setFitHeight(maxSize);
+        hand.setPreserveRatio(true);
 
-        hand.setFill(new ImagePattern(new Image("data/creampie/images/hand.png")));
-
-        hand.setTranslateX(handTranslateX);
-        hand.setTranslateY(handTranslateY);
-
-        this.getChildren().add(hand);
-
-        // log.info(ClassLoader.getSystemResourceAsStream("data/creampie/images/hand.png"));
-
-        // background = new ImageView(new
-        // Image(ClassLoader.getSystemResourceAsStream("data/creampie/images/hand.png")));
-        // background.setFitHeight(maxSize);
-        // background.setPreserveRatio(true);
-
-        // pie = new ImageView(new Image("file:data/creampie/images/gateau.png"));
-        // pie = new ImageView(new Image(ClassLoader.getSystemResourceAsStream("data/creampie/images/gateau.png")));
-
-        pie = new Rectangle(0, 0, size, size);
-
-        pie.setFill(new ImagePattern(new Image("data/creampie/images/gateau.png")));
-
-        pie.setTranslateX(pieTranslateX);
-        pie.setTranslateY(pieTranslateY);
+        pie = new ImageView(new Image(PIE_IMAGE_PATH));
+        pie.setFitWidth(size);
+        pie.setFitHeight(size);
+        pie.setPreserveRatio(true);
 
         this.getChildren().add(pie);
-        pie.toBack();
-
-        // pie.setFitHeight(size);
-        // pie.setPreserveRatio(true);
-
-        this.addEventHandler(TouchEvent.TOUCH, (TouchEvent te) -> touch(te));
+        this.getChildren().add(hand);
     }
 
     public void recomputePosition() {
         Pane parent = (Pane) this.getParent();
         if (parent != null) {
-            handTranslateX = (parent.getWidth() - maxSize) / 2;
-            handTranslateY = parent.getHeight() - maxSize;
-            pieTranslateX = (parent.getWidth() - size) / 2;
-            pieTranslateY = parent.getHeight() - maxSize;
+            double handTranslateX = (parent.getWidth() - maxSize) / 2;
+            double handTranslateY = parent.getHeight() - maxSize;
+            double pieTranslateX = (parent.getWidth() - size) / 2;
+            double pieTranslateY = parent.getHeight() - maxSize;
 
             hand.setTranslateX(handTranslateX);
             hand.setTranslateY(handTranslateY);
@@ -83,40 +59,42 @@ public class Hand extends Parent {
         }
     }
 
-    private void touch(TouchEvent te) {
-        recomputePosition();
+    public void onTargetHit(Target target) {
+        Animation animation = createAnimation(target);
+        animation.play();
+        Utils.playSound("data/creampie/sounds/missile.mp3");
+    }
 
+    private Animation createAnimation(Target target) {
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
 
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(200), new KeyValue(hand.heightProperty(), size)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(200), new KeyValue(hand.widthProperty(), size)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(200), new KeyValue(hand.fitHeightProperty(), size)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(200), new KeyValue(hand.fitWidthProperty(), size)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
+                new KeyValue(pie.translateXProperty(), target.getCenterX() - maxSize)));
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
+                new KeyValue(pie.translateYProperty(), target.getCenterY() - maxSize)));
         timeline.getKeyFrames()
-                .add(new KeyFrame(new Duration(2000), new KeyValue(pie.translateXProperty(), te.x - maxSize)));
+                .add(new KeyFrame(new Duration(2000), new KeyValue(pie.fitHeightProperty(), maxSize * 2)));
         timeline.getKeyFrames()
-                .add(new KeyFrame(new Duration(2000), new KeyValue(pie.translateYProperty(), te.y - maxSize)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(pie.heightProperty(), maxSize * 2)));
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(pie.widthProperty(), maxSize * 2)));
+                .add(new KeyFrame(new Duration(2000), new KeyValue(pie.fitWidthProperty(), maxSize * 2)));
         timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(2000), new KeyValue(pie.rotateProperty(), pie.getRotate() + 360)));
 
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(hand.heightProperty(), maxSize)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(hand.widthProperty(), maxSize)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(pie.heightProperty(), size)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(pie.widthProperty(), size)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(hand.fitHeightProperty(), maxSize)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(hand.fitWidthProperty(), maxSize)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(pie.fitHeightProperty(), size)));
+        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(pie.fitWidthProperty(), size)));
         timeline2.getKeyFrames()
-                .add(new KeyFrame(new Duration(1), new KeyValue(hand.translateXProperty(), handTranslateX)));
+                .add(new KeyFrame(new Duration(1), new KeyValue(hand.translateXProperty(), hand.getTranslateX())));
         timeline2.getKeyFrames()
-                .add(new KeyFrame(new Duration(1), new KeyValue(hand.translateYProperty(), handTranslateY)));
+                .add(new KeyFrame(new Duration(1), new KeyValue(hand.translateYProperty(), hand.getTranslateY())));
         timeline2.getKeyFrames()
-                .add(new KeyFrame(new Duration(1), new KeyValue(pie.translateXProperty(), pieTranslateX)));
+                .add(new KeyFrame(new Duration(1), new KeyValue(pie.translateXProperty(), pie.getTranslateX())));
         timeline2.getKeyFrames()
-                .add(new KeyFrame(new Duration(1), new KeyValue(pie.translateYProperty(), pieTranslateY)));
+                .add(new KeyFrame(new Duration(1), new KeyValue(pie.translateYProperty(), pie.getTranslateY())));
 
-        SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
-
-        sequence.play();
-
-        Utils.playSound("data/creampie/sounds/missile.mp3");
+        return new SequentialTransition(timeline, timeline2);
     }
 }

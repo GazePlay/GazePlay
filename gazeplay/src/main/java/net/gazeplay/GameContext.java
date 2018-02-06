@@ -1,7 +1,5 @@
 package net.gazeplay;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -12,8 +10,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -144,6 +140,14 @@ public class GameContext extends GraphicalContext<Pane> {
         rootBorderPane.setBottom(bottomPane);
     }
 
+    public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
+        Button toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
+        menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
+
+        HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats);
+        menuHBox.getChildren().add(homeButton);
+    }
+
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
         HomeButton homeButton = new HomeButton();
 
@@ -181,50 +185,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
-        // homeButton.recomputeSizeAndPosition(scene);
-        menuHBox.getChildren().add(homeButton);
-
         return homeButton;
-    }
-
-    public void createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
-
-        EventHandler<Event> eventHandler = new EventHandler<javafx.event.Event>() {
-            @Override
-            public void handle(javafx.event.Event e) {
-                gazePlay.toggleFullScreen();
-            }
-        };
-
-        Button button = new Button();
-        configureFullScreenToggleButton(gazePlay.isFullScreen(), button);
-
-        gazePlay.getFullScreenProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean wasFullScreen,
-                    Boolean isFullScreen) {
-                configureFullScreenToggleButton(isFullScreen, button);
-            }
-        });
-
-        button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
-        // button.recomputeSizeAndPosition(scene);
-        menuHBox.getChildren().add(button);
-    }
-
-    private void configureFullScreenToggleButton(Boolean isFullScreen, Button button) {
-        final Image buttonGraphics;
-        final String label;
-        if (isFullScreen) {
-            buttonGraphics = new Image("data/common/images/fullscreen-exit.png");
-            label = "Exit FullScreen";
-        } else {
-            buttonGraphics = new Image("data/common/images/fullscreen-enter.png");
-            label = "Enter FullScreen";
-        }
-        button.setGraphic(new ImageView(buttonGraphics));
-        button.setText(label);
     }
 
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
