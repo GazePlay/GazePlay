@@ -14,6 +14,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 
 /**
  * Created by schwab on 17/09/2016.
@@ -28,14 +29,16 @@ public class MagicCards implements GameLifeCycle {
         private final int winnerImageIndexAmongDisplayedImages;
     }
 
-    private static final float cardRatio = 0.75f;
+    private static final float CARD_RATIO = 0.75f;
 
-    private static final int minHeight = 30;
+    private static final int MIN_HEIGHT = 30;
 
     private final GameContext gameContext;
 
-    private final int nbLines;
-    private final int nbColumns;
+    @Getter
+    private int nbLines;
+    @Getter
+    private int nbColumns;
 
     private final Stats stats;
 
@@ -46,15 +49,41 @@ public class MagicCards implements GameLifeCycle {
     public MagicCards(GameContext gameContext, int nbLines, int nbColumns, Stats stats) {
         super();
         this.gameContext = gameContext;
+
+        // Default values passed in constructor. Real values passed in config screen
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
+
         this.stats = stats;
 
         images = Utils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
     }
 
+    /**
+     * Launch the configuration screen first.
+     */
     @Override
     public void launch() {
+
+        beginPlay(nbLines, nbColumns);
+        // WaffleBuffer Configuration screen
+        /*MagicCardConfigScreen confScreen = new MagicCardConfigScreen(gameContext, this);
+        confScreen.displayConfigurationScreen();*/
+    }
+
+    /**
+     * Begin the game.
+     * 
+     * @param nbLines
+     *            The number of card in a line.
+     * @param nbColumns
+     *            The number of card in a column.
+     */
+    public void beginPlay(int nbLines, int nbColumns) {
+
+        this.nbColumns = nbColumns;
+        this.nbLines = nbLines;
+
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
         final int cardsCount = nbColumns * nbLines;
@@ -103,7 +132,7 @@ public class MagicCards implements GameLifeCycle {
         log.info("Width{} ; height{}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
 
         final double cardHeight = computeCardHeight(gameDimension2D, nbLines);
-        final double cardWidth = cardHeight * cardRatio;
+        final double cardWidth = cardHeight * CARD_RATIO;
 
         log.info("cardWidth{} ; cardHeight{}", cardWidth, cardHeight);
 
@@ -132,7 +161,7 @@ public class MagicCards implements GameLifeCycle {
                 }
 
                 double positionX = width / 2 + (width + cardWidth) * currentColumnIndex;
-                double positionY = minHeight / 2 + (minHeight + cardHeight) * currentLineIndex;
+                double positionY = MIN_HEIGHT / 2 + (MIN_HEIGHT + cardHeight) * currentLineIndex;
 
                 log.info("positionX : {} ; positionY : {}", positionX, positionY);
 

@@ -80,3 +80,19 @@
     -fx-fill: white;
     -fx-font-size: 20;
 }
+
+/* Home screen game Panes */
+.gamePane {
+-fx-background-color: linear-gradient(palegreen, #9898fb);
+-fx-background-radius: 30;
+-fx-background-insets: 5;
+-fx-font-size: 18pt;
+-fx-padding: 10 10 10 10;
+}
+
+.gamePane:hover {
+-fx-text-fill: black;
+-fx-background-color: linear-gradient(#98fb98, #008000);
+}
+
+/* Home screen game Panes */
