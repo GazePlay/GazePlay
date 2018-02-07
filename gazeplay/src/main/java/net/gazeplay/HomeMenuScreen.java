@@ -158,6 +158,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
               + "-fx-border-width: 5px; "
               + "-fx-border-color: rgba(60, 63, 65, 0.7); "
               + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0); ");
+        
+        
     }
 
     @Override
@@ -366,27 +368,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
             Button button = new Button(gameName);
             button.getStyleClass().add("gameChooserButton");
-            
-            
-            // TODO : make the button take as much height as possible
-            /*choicePanel.heightProperty().addListener((o) -> {
-                
-                System.out.println(choicePanel.getHeight());
-                log.info("choicePanel height {}, button width : {}", choicePanel.getHeight(), button.getPrefWidth());
-                
-                
-                // For some reasons it can return infinity
-                if(Double.isInfinite(choicePanel.getHeight())) {
-                    return;
-                }
-                int nbGamesRow = (int) ((games.size() * button.getWidth()) / (choicePanel.getPrefWrapLength() + choicePanel.getHgap()));
-                log.info("nbGameRow : {}", nbGamesRow);
-                if(nbGamesRow - choicePanel.getVgap() * nbGamesRow <= 0) {
-                    return;
-                }
-                button.setPrefHeight(choicePanel.getHeight() / (nbGamesRow - choicePanel.getVgap() * nbGamesRow));
-                log.info("Button pref height {}", button.getPrefHeight());
-            });*/
             
 
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
