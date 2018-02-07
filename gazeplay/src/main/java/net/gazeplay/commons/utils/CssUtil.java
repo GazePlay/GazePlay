@@ -33,6 +33,9 @@ public class CssUtil {
         }
 
         stylesheets.removeAll(stylesheets);
+
+        stylesheets.add("data/stylesheets/base.css");
+
         if (styleSheetPath != null) {
             stylesheets.add(styleSheetPath);
         }
