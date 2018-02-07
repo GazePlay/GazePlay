@@ -40,6 +40,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -125,6 +126,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         centerCenterPane.setAlignment(Pos.TOP_CENTER);
         centerCenterPane.getChildren().add(cbxGames);
         centerCenterPane.getChildren().add(gamePickerChoicePane);
+        VBox.setVgrow(gamePickerChoicePane, Priority.ALWAYS);
         
         // WaffleBuffer's homescreen
         /*gamesPane = createGamesPane(games, config);
@@ -320,7 +322,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePane.setAlignment(Pos.CENTER);
         for (GameSpec gameSpec : gameSpecs) {
             Button button = new Button(gameSpec.getVariationHint());
-            button.setId("gameChooserButton");
+            button.getStyleClass().add("gameVariationChooserButton");
             choicePane.getChildren().add(button);
 
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -347,6 +349,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         FlowPane choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
+        //choicePanel.maxHeightProperty().unbind();
 
         Multimap<String, GameSpec> gamesByNameCode = LinkedHashMultimap.create();
         for (GameSpec gameSpec : games) {
@@ -354,13 +357,37 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         }
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
+        
+        
 
         for (String gameNameCode : gamesByNameCode.keySet()) {
 
             String gameName = multilinguism.getTrad(gameNameCode, config.getLanguage());
 
             Button button = new Button(gameName);
-            button.setId("gameVariationChooserButton");
+            button.getStyleClass().add("gameChooserButton");
+            
+            
+            // TODO : make the button take as much height as possible
+            /*choicePanel.heightProperty().addListener((o) -> {
+                
+                System.out.println(choicePanel.getHeight());
+                log.info("choicePanel height {}, button width : {}", choicePanel.getHeight(), button.getPrefWidth());
+                
+                
+                // For some reasons it can return infinity
+                if(Double.isInfinite(choicePanel.getHeight())) {
+                    return;
+                }
+                int nbGamesRow = (int) ((games.size() * button.getWidth()) / (choicePanel.getPrefWrapLength() + choicePanel.getHgap()));
+                log.info("nbGameRow : {}", nbGamesRow);
+                if(nbGamesRow - choicePanel.getVgap() * nbGamesRow <= 0) {
+                    return;
+                }
+                button.setPrefHeight(choicePanel.getHeight() / (nbGamesRow - choicePanel.getVgap() * nbGamesRow));
+                log.info("Button pref height {}", button.getPrefHeight());
+            });*/
+            
 
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override

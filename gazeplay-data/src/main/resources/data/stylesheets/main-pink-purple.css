@@ -63,11 +63,8 @@
 }
 .button{
 
-    -fx-font-weight: bold;
     -fx-background-color: linear-gradient(lightpink, hotpink);
     -fx-text-fill: black;
-    -fx-background-radius: 30;
-    -fx-background-insets: 0;
 }
 
 .button:hover {

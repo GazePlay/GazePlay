@@ -1,16 +1,23 @@
 
-#gameChooserButton {
+.button {
+    -fx-font-weight: bold;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+}
+
+.gameChooserButton {
     -fx-pref-width: 36em;
-    -fx-pref-height: 12em;
+    -fx-pref-height: 100%;
+    -fx-pref-height: 10em;
     -fx-min-width: 18em;
     -fx-min-height: 4em;
     -fx-background-radius: 0;
     -fx-background-insets: 4;
 }
 
-#gameVariationChooserButton {
+.gameVariationChooserButton {
     -fx-pref-width: 36em;
-    -fx-pref-height: 12em;
+    -fx-pref-height: 10em;
     -fx-min-width: 18em;
     -fx-min-height: 4em;
     -fx-background-radius: 0;

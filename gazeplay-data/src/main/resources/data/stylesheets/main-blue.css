@@ -61,13 +61,15 @@
 
     -fx-text-fill: white;
 }
+
 .button{
 
-    -fx-font-weight: bold;
     -fx-background-color: linear-gradient(#9898fb, #000080);
     -fx-text-fill: white;
-    -fx-background-radius: 30;
-    -fx-background-insets: 0;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(#98fb98, #008000);
 }
 
 #title{
@@ -94,5 +96,4 @@
 -fx-text-fill: black;
 -fx-background-color: linear-gradient(#98fb98, #008000);
 }
-
 /* Home screen game Panes */

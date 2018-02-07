@@ -63,12 +63,14 @@
 }
 .button{
 
-    -fx-font-weight: bold;
     -fx-background-color: linear-gradient(#ff5400, #be1d00);
     -fx-text-fill: black;
-    -fx-background-radius: 30;
-    -fx-background-insets: 0;
 }
+
+.button:hover {
+    -fx-background-color: linear-gradient(#98fb98, #008000);
+}
+
 
 #title{
     -fx-fill: white;
