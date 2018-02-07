@@ -1,5 +1,7 @@
 package net.gazeplay;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -11,15 +13,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuBar;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import lombok.Data;
@@ -29,11 +30,13 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
+import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,8 +103,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         cbxGames = createChoiceBox(games, config);
         cbxGames.getSelectionModel().clearSelection();
 
-        StackPane centerCenterPane = new StackPane();
+        Pane gamePickerChoicePane = createGamePickerChoicePane(games, config);
+
+        VBox centerCenterPane = new VBox();
+        centerCenterPane.setSpacing(40);
+        centerCenterPane.setAlignment(Pos.TOP_CENTER);
         centerCenterPane.getChildren().add(cbxGames);
+        centerCenterPane.getChildren().add(gamePickerChoicePane);
 
         VBox leftPanel = new VBox();
         leftPanel.getChildren().add(menuBar);
@@ -173,6 +181,86 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                     }
                     return pair.getValue() + " " + variationHint;
                 }).collect(Collectors.toList());
+    }
+
+    private Stage createDialog(Stage primaryStage, Collection<GameSpec> gameSpecs) {
+        // initialize the confirmation dialog
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initOwner(primaryStage);
+        dialog.setOnCloseRequest(windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
+
+        FlowPane choicePane = new FlowPane();
+        choicePane.setAlignment(Pos.CENTER);
+        for (GameSpec gameSpec : gameSpecs) {
+            Button button = new Button(gameSpec.getVariationHint());
+            button.setId("gameChooserButton");
+            choicePane.getChildren().add(button);
+
+            button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    dialog.close();
+                    chooseGame(gameSpec);
+                }
+            });
+        }
+
+        Scene scene = new Scene(choicePane, Color.TRANSPARENT);
+
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        CssUtil.setPreferredStylesheets(config, scene);
+
+        dialog.setScene(scene);
+        // scene.getStylesheets().add(getClass().getResource("modal-dialog.css").toExternalForm());
+
+        return dialog;
+    }
+
+    private Pane createGamePickerChoicePane(List<GameSpec> games, Configuration config) {
+
+        FlowPane choicePanel = new FlowPane();
+        choicePanel.setAlignment(Pos.CENTER);
+
+        Multimap<String, GameSpec> gamesByNameCode = LinkedHashMultimap.create();
+        for (GameSpec gameSpec : games) {
+            gamesByNameCode.put(gameSpec.getNameCode(), gameSpec);
+        }
+
+        Multilinguism multilinguism = Multilinguism.getSingleton();
+
+        for (String gameNameCode : gamesByNameCode.keySet()) {
+
+            String gameName = multilinguism.getTrad(gameNameCode, config.getLanguage());
+
+            Button button = new Button(gameName);
+            button.setId("gameVariationChooserButton");
+
+            button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    Collection<GameSpec> gameSpecs = gamesByNameCode.get(gameNameCode);
+
+                    if (gameSpecs.size() > 1) {
+                        log.info("gameSpecs = {}", gameSpecs);
+                        getScene().getRoot().setEffect(new BoxBlur());
+                        Stage dialog = createDialog(getGazePlay().getPrimaryStage(), gameSpecs);
+
+                        String dialogTitle = gameName + " : "
+                                + multilinguism.getTrad("Choose Game Variante", config.getLanguage());
+                        dialog.setTitle(dialogTitle);
+                        dialog.show();
+                    } else {
+                        GameSpec onlyGameSpec = gameSpecs.iterator().next();
+                        chooseGame(onlyGameSpec);
+                    }
+                }
+            });
+
+            choicePanel.getChildren().add(button);
+        }
+
+        return choicePanel;
     }
 
     private void chooseGame(int gameIndex) {

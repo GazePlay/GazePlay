@@ -1,0 +1,18 @@
+
+#gameChooserButton {
+    -fx-pref-width: 36em;
+    -fx-pref-height: 12em;
+    -fx-min-width: 18em;
+    -fx-min-height: 4em;
+    -fx-background-radius: 0;
+    -fx-background-insets: 4;
+}
+
+#gameVariationChooserButton {
+    -fx-pref-width: 36em;
+    -fx-pref-height: 12em;
+    -fx-min-width: 18em;
+    -fx-min-height: 4em;
+    -fx-background-radius: 0;
+    -fx-background-insets: 4;
+}
