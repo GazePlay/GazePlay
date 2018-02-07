@@ -72,9 +72,6 @@ public abstract class Stats implements GazeMotionListener {
         recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
         recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
 
-        gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
-        gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
-
         int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
         int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
         log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
@@ -189,7 +186,12 @@ public abstract class Stats implements GazeMotionListener {
 
     public void start() {
 
+        // Start recording events when start is called
+        gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+        gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+
         beginTime = System.currentTimeMillis();
+        zeroTime = System.currentTimeMillis();
     }
 
     public int getNbGoals() {

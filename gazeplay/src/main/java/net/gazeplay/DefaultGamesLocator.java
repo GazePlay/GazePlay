@@ -53,7 +53,7 @@ public class DefaultGamesLocator implements GamesLocator {
             }
         }));
 
-        result.add(new GameSpec("MagicCards", "(2x2)", new GameSpec.GameLauncher() {
+        result.add(new GameSpec("MagicCards", new GameSpec.GameLauncher() {
             @Override
             public Stats createNewStats(Scene scene) {
                 return new MagicCardsGamesStats(scene);
@@ -61,43 +61,8 @@ public class DefaultGamesLocator implements GamesLocator {
 
             @Override
             public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+
                 return new MagicCards(gameContext, 2, 2, stats);
-            }
-        }));
-
-        result.add(new GameSpec("MagicCards", "(2x3)", new GameSpec.GameLauncher() {
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new MagicCardsGamesStats(scene);
-            }
-
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
-                return new MagicCards(gameContext, 2, 3, stats);
-            }
-        }));
-
-        result.add(new GameSpec("MagicCards", "(3x2)", new GameSpec.GameLauncher() {
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new MagicCardsGamesStats(scene);
-            }
-
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
-                return new MagicCards(gameContext, 3, 2, stats);
-            }
-        }));
-
-        result.add(new GameSpec("MagicCards", "(3x3)", new GameSpec.GameLauncher() {
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new MagicCardsGamesStats(scene);
-            }
-
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
-                return new MagicCards(gameContext, 3, 3, stats);
             }
         }));
 
