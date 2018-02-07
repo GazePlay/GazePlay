@@ -71,7 +71,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     @Getter
     private final ChoiceBox<String> cbxGames;
-    
+
     // WaffleBuffer's homescreen
     @Getter
     private Pane gamesPane;
@@ -127,13 +127,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         centerCenterPane.getChildren().add(cbxGames);
         centerCenterPane.getChildren().add(gamePickerChoicePane);
         VBox.setVgrow(gamePickerChoicePane, Priority.ALWAYS);
-        
+
         // WaffleBuffer's homescreen
-        /*gamesPane = createGamesPane(games, config);
-        StackPane centerCenterPane = new StackPane();
-        centerCenterPane.setAlignment(Pos.CENTER);
-        centerCenterPane.getChildren().add(gamesPane);*/
-        
+        /*
+         * gamesPane = createGamesPane(games, config); StackPane centerCenterPane = new StackPane();
+         * centerCenterPane.setAlignment(Pos.CENTER); centerCenterPane.getChildren().add(gamesPane);
+         */
 
         VBox leftPanel = new VBox();
         leftPanel.getChildren().add(menuBar);
@@ -151,15 +150,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setBottom(bottomPane);
         root.setCenter(centerPanel);
 
-        root.setStyle(
-                "-fx-background-color: rgba(0, 0, 0, 1); "
-              + "-fx-background-radius: 8px; "
-              + "-fx-border-radius: 8px; "
-              + "-fx-border-width: 5px; "
-              + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-              + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0); ");
-        
-        
+        root.setStyle("-fx-background-color: rgba(0, 0, 0, 1); " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0); ");
+
     }
 
     @Override
@@ -182,7 +176,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         this.cbxGames.getItems().clear();
         this.cbxGames.getItems().addAll(gamesLabels);
         // WaffleBuffer's home screen
-        //updateGamesPanelsTitles(gamesLabels);
+        // updateGamesPanelsTitles(gamesLabels);
     }
 
     /**
@@ -243,7 +237,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         });
         return cbxGamesTmp;
     }
-    
+
     /**
      * Update all GamePane titles. Used by onLanguageChanged.
      * 
@@ -351,7 +345,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         FlowPane choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
-        //choicePanel.maxHeightProperty().unbind();
+        // choicePanel.maxHeightProperty().unbind();
 
         Multimap<String, GameSpec> gamesByNameCode = LinkedHashMultimap.create();
         for (GameSpec gameSpec : games) {
@@ -359,8 +353,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         }
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
-        
-        
 
         for (String gameNameCode : gamesByNameCode.keySet()) {
 
@@ -368,7 +360,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
             Button button = new Button(gameName);
             button.getStyleClass().add("gameChooserButton");
-            
 
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override

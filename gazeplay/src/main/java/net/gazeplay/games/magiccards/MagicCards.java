@@ -67,8 +67,10 @@ public class MagicCards implements GameLifeCycle {
 
         beginPlay(nbLines, nbColumns);
         // WaffleBuffer Configuration screen
-        /*MagicCardConfigScreen confScreen = new MagicCardConfigScreen(gameContext, this);
-        confScreen.displayConfigurationScreen();*/
+        /*
+         * MagicCardConfigScreen confScreen = new MagicCardConfigScreen(gameContext, this);
+         * confScreen.displayConfigurationScreen();
+         */
     }
 
     /**
