@@ -8,6 +8,7 @@ public class Target extends StackPane {
     Boolean explode;
     Point destination;
     Transition t;
+    
 
     Target() {
         super();

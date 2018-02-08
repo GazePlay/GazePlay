@@ -43,28 +43,23 @@ public class Biboule extends Parent implements GameLifeCycle {
     private final Stats stats;
 
     private final Image biboule;
+    private final Image flash;
 
     private final Point[] endPoints;
 
-    // private final int originx;
-
-    // private final int originy;
-
     private final EventHandler<Event> enterEvent;
 
+    
+    //done
     public Biboule(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
-
         biboule = new Image("data/biboule/images/Biboules.png");
-
+        flash = new Image("data/biboule/images/Flash.png");
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        
-
         log.info("dimension2D = {}", dimension2D);
-
-         centerX = 8.7 * dimension2D.getWidth() / 29.7;
-         centerY = 11 * dimension2D.getHeight() / 21;
+        centerX = 8.7 * dimension2D.getWidth() / 29.7;
+        centerY = 11 * dimension2D.getHeight() / 21;
 
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageRectangle.setFill(new ImagePattern(new Image("data/biboule/images/Backgroung.jpg")));
@@ -93,7 +88,6 @@ public class Biboule extends Parent implements GameLifeCycle {
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    // log.info(e.getEventType());
                     enter((Target) e.getTarget());
                     stats.incNbGoals();
                     stats.start();
@@ -103,24 +97,24 @@ public class Biboule extends Parent implements GameLifeCycle {
 
     }
 
+    //done
     @Override
     public void launch() {
-
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
             newCircle();
         }
-
         stats.start();
 
     }
 
+    //done
     @Override
     public void dispose() {
 
     }
 
     public void explose(Target sp) {
-    	
+ 
         newCircle();
     }
     
@@ -144,28 +138,22 @@ public class Biboule extends Parent implements GameLifeCycle {
     }
 
     private void enter(Target t) {
-    	
+    	t.t.stop();
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
     	t.getChildren().get(1).setOpacity(1);
-        FadeTransition ft = new FadeTransition(Duration.millis(500));
+        FadeTransition ft = new FadeTransition(Duration.millis(500),t);
         ft.setFromValue(1);
         ft.setToValue(0);
+        ft.play();
         ft.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-            	if(!t.explode) {
-                    t.explode=true;
-            		 Timeline timeline = new Timeline();
-            	        timeline.getKeyFrames()
-            	                .add(new KeyFrame(new Duration(1), new KeyValue(t.translateXProperty(), -maxRadius * 5)));
-
-            	        timeline.play();
-            		explose(t);
-            	}
+            	restart(t);
             }
         });
-        ft.play();
+        
+       
 
     }
 
@@ -191,19 +179,19 @@ public class Biboule extends Parent implements GameLifeCycle {
     private Target buildCircle() {
 
         Target sp = new Target();
-        ImageView C = new ImageView(newPhoto());
-
+        ImageView C = new ImageView(biboule);
         double radius = minRadius;
         C.setFitHeight(radius);
         C.setFitWidth(radius * 5 / 4);
 
-        ImageView C2 = new ImageView(new Image("data/biboule/images/Flash.png"));
+        ImageView C2 = new ImageView(flash);
 
         C2.setFitHeight(radius);
         C2.setFitWidth(radius * 5 / 4);
 
         sp.getChildren().addAll(C,C2);
         sp.getChildren().get(1).setOpacity(0);
+        
         return sp;
     }
 
@@ -224,6 +212,8 @@ public class Biboule extends Parent implements GameLifeCycle {
         st.setByY(5);
         ParallelTransition pt = new ParallelTransition();
         pt.getChildren().addAll(tt1, st);
+        sp.t=pt;
+        
         pt.play();     
 
         pt.setOnFinished(new EventHandler<ActionEvent>() {
@@ -244,15 +234,12 @@ public class Biboule extends Parent implements GameLifeCycle {
         pt.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                sp.getChildren().get(1).setOpacity(0);
                 moveCircle(sp);
             }
         });
         pt.play();
-
-    }
-
-    protected Image newPhoto() {
-        return biboule;
+        
 
     }
 }
