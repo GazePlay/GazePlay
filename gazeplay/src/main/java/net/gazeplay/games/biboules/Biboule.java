@@ -34,28 +34,30 @@ public class Biboule extends Parent implements GameLifeCycle {
 
     private static final int maxTimeLength = 7;
     private static final int minTimeLength = 4;
-    
+
     private double centerX;
     private double centerY;
 
     private final GameContext gameContext;
 
+    private Image blue;
+    private Image green;
+    private Image yellow;
+    private Image orange;
+    private Image red;
+    private Image flash;
+    
     private final Stats stats;
-
-    private final Image biboule;
-    private final Image flash;
 
     private final Point[] endPoints;
 
     private final EventHandler<Event> enterEvent;
 
-    
-    //done
+    // done
     public Biboule(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
-        biboule = new Image("data/biboule/images/Biboules.png");
-        flash = new Image("data/biboule/images/Flash.png");
+
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
         centerX = 8.7 * dimension2D.getWidth() / 29.7;
@@ -63,9 +65,15 @@ public class Biboule extends Parent implements GameLifeCycle {
 
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageRectangle.setFill(new ImagePattern(new Image("data/biboule/images/Backgroung.jpg")));
-
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
+        
+        blue =new Image("data/biboule/images/BlueBiboule.png");
+        green =new Image("data/biboule/images/GreenBiboule.png");
+        yellow =new Image("data/biboule/images/YellowBiboule.png");
+        orange =new Image("data/biboule/images/OrangeBiboule.png");
+        red =new Image("data/biboule/images/RedBiboule.png");
+        flash =new Image("data/biboule/images/Flash.png");
 
         Point[] points = new Point[10];
         points[0] = new Point(0, 0);
@@ -79,7 +87,7 @@ public class Biboule extends Parent implements GameLifeCycle {
         points[5] = new Point(0, imageRectangle.getHeight() / 2);
         points[6] = new Point(imageRectangle.getWidth() / 2, 0);
 
-        points[7] = new Point(0, imageRectangle.getHeight());
+        points[7] = new Point(imageRectangle.getWidth(), imageRectangle.getHeight());
         this.endPoints = points;
 
         enterEvent = new EventHandler<Event>() {
@@ -97,7 +105,7 @@ public class Biboule extends Parent implements GameLifeCycle {
 
     }
 
-    //done
+    // done
     @Override
     public void launch() {
         for (int i = 0; i < 10; i++) {
@@ -107,56 +115,50 @@ public class Biboule extends Parent implements GameLifeCycle {
 
     }
 
-    //done
+    // done
     @Override
     public void dispose() {
 
     }
 
-    public void explose(Target sp) {
- 
-        newCircle();
-    }
-    
-    private Transition restartTransition (Target t) {
-    	FadeTransition ft = new FadeTransition(Duration.millis(1),t);
+
+    private Transition restartTransition(Target t) {
+    	
+        FadeTransition ft = new FadeTransition(Duration.millis(1), t);
         ft.setFromValue(0);
         ft.setToValue(1);
-        
+
         TranslateTransition tt1 = new TranslateTransition(Duration.millis(1), t);
         tt1.setToY(0);
         tt1.setToX(0);
-        
+
         ScaleTransition st = new ScaleTransition(Duration.millis(1), t);
         st.setToX(1);
         st.setToY(1);
-        
+
         ParallelTransition pt = new ParallelTransition();
         pt.getChildren().addAll(ft, tt1, st);
-        
-       return pt;
+
+        return pt;
     }
 
     private void enter(Target t) {
-    	t.t.stop();
+        t.t.stop();
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
-    	t.getChildren().get(1).setOpacity(1);
-        FadeTransition ft = new FadeTransition(Duration.millis(500),t);
+        t.getChildren().get(0).setOpacity(1);
+        FadeTransition ft = new FadeTransition(Duration.millis(500),  t);
         ft.setFromValue(1);
         ft.setToValue(0);
         ft.play();
         ft.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-            	restart(t);
+                restart(t);
             }
         });
-        
-       
 
     }
-
 
     private void newCircle() {
 
@@ -176,22 +178,39 @@ public class Biboule extends Parent implements GameLifeCycle {
         moveCircle(sp);
     }
 
+    private void resize(ImageView i) {
+        double d = minRadius;
+        i.setFitHeight(d);
+        i.setFitWidth(d * 5 / 4);
+    }
+
     private Target buildCircle() {
 
         Target sp = new Target();
-        ImageView C = new ImageView(biboule);
-        double radius = minRadius;
-        C.setFitHeight(radius);
-        C.setFitWidth(radius * 5 / 4);
 
-        ImageView C2 = new ImageView(flash);
+        ImageView b1 = new ImageView(blue);
+        ImageView b2 = new ImageView(green);
+        ImageView b3 = new ImageView(yellow);
+        ImageView b4 = new ImageView(orange);
+        ImageView b5 = new ImageView(red);
 
-        C2.setFitHeight(radius);
-        C2.setFitWidth(radius * 5 / 4);
+        ImageView f = new ImageView(flash);
 
-        sp.getChildren().addAll(C,C2);
-        sp.getChildren().get(1).setOpacity(0);
-        
+        resize(b1);
+        resize(b2);
+        resize(b3);
+        resize(b4);
+        resize(b5);
+
+        resize(f);
+
+        sp.getChildren().addAll(f, b1,b2,b3,b4,b5 );
+        sp.getChildren().get(0).setOpacity(0);
+        sp.getChildren().get(5).setOpacity(0);
+        sp.getChildren().get(2).setOpacity(0);
+        sp.getChildren().get(3).setOpacity(0);   
+        sp.getChildren().get(4).setOpacity(0);
+
         return sp;
     }
 
@@ -208,38 +227,61 @@ public class Biboule extends Parent implements GameLifeCycle {
         sp.destination = randomPoint;
 
         ScaleTransition st = new ScaleTransition(new Duration(timelength), sp);
-        st.setByX(5);
-        st.setByY(5);
+        st.setByX(10);
+        st.setByY(10);
         ParallelTransition pt = new ParallelTransition();
-        pt.getChildren().addAll(tt1, st);
-        sp.t=pt;
+
+        FadeTransition btog = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(2));
+        FadeTransition gtoy = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(3));
+        FadeTransition ytoo = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(4));
+        FadeTransition otor = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(5));
         
-        pt.play();     
+        btog.setFromValue(0);
+        gtoy.setFromValue(0);
+        ytoo.setFromValue(0);
+        otor.setFromValue(0);
+
+        btog.setToValue(1);
+        gtoy.setToValue(1);
+        ytoo.setToValue(1);
+        otor.setToValue(1);
+
+        SequentialTransition seqt = new SequentialTransition(btog, gtoy, ytoo, otor);
+
+        pt.getChildren().addAll(seqt,tt1, st);
+
+        sp.t = pt;
+
+        pt.play();
 
         pt.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 sp.setLayoutX(centerX);
                 sp.setLayoutY(centerY);
-            	restart(sp);
+                restart(sp);
             }
         });
 
     }
-    
-    public void restart( Target sp) {
-       Transition pt = restartTransition(sp);
+
+    public void restart(Target sp) {
+        Transition pt = restartTransition(sp);
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
         pt.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                sp.getChildren().get(1).setOpacity(0);
+            	 sp.getChildren().get(2).setOpacity(0);
+                 sp.getChildren().get(3).setOpacity(0);
+                 sp.getChildren().get(4).setOpacity(0);
+                 sp.getChildren().get(5).setOpacity(0);
+                 
+                 sp.getChildren().get(0).setOpacity(0);
                 moveCircle(sp);
             }
         });
         pt.play();
-        
 
     }
 }
