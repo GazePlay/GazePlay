@@ -46,7 +46,7 @@ public class Biboule extends Parent implements GameLifeCycle {
     private Image orange;
     private Image red;
     private Image flash;
-    
+
     private final Stats stats;
 
     private final Point[] endPoints;
@@ -67,13 +67,13 @@ public class Biboule extends Parent implements GameLifeCycle {
         imageRectangle.setFill(new ImagePattern(new Image("data/biboule/images/Backgroung.jpg")));
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
-        
-        blue =new Image("data/biboule/images/BlueBiboule.png");
-        green =new Image("data/biboule/images/GreenBiboule.png");
-        yellow =new Image("data/biboule/images/YellowBiboule.png");
-        orange =new Image("data/biboule/images/OrangeBiboule.png");
-        red =new Image("data/biboule/images/RedBiboule.png");
-        flash =new Image("data/biboule/images/Flash.png");
+
+        blue = new Image("data/biboule/images/BlueBiboule.png");
+        green = new Image("data/biboule/images/GreenBiboule.png");
+        yellow = new Image("data/biboule/images/YellowBiboule.png");
+        orange = new Image("data/biboule/images/OrangeBiboule.png");
+        red = new Image("data/biboule/images/RedBiboule.png");
+        flash = new Image("data/biboule/images/Flash.png");
 
         Point[] points = new Point[10];
         points[0] = new Point(0, 0);
@@ -121,9 +121,8 @@ public class Biboule extends Parent implements GameLifeCycle {
 
     }
 
-
     private Transition restartTransition(Target t) {
-    	
+
         FadeTransition ft = new FadeTransition(Duration.millis(1), t);
         ft.setFromValue(0);
         ft.setToValue(1);
@@ -147,7 +146,7 @@ public class Biboule extends Parent implements GameLifeCycle {
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
         t.getChildren().get(0).setOpacity(1);
-        FadeTransition ft = new FadeTransition(Duration.millis(500),  t);
+        FadeTransition ft = new FadeTransition(Duration.millis(500), t);
         ft.setFromValue(1);
         ft.setToValue(0);
         ft.play();
@@ -204,11 +203,11 @@ public class Biboule extends Parent implements GameLifeCycle {
 
         resize(f);
 
-        sp.getChildren().addAll(f, b1,b2,b3,b4,b5 );
+        sp.getChildren().addAll(f, b1, b2, b3, b4, b5);
         sp.getChildren().get(0).setOpacity(0);
         sp.getChildren().get(5).setOpacity(0);
         sp.getChildren().get(2).setOpacity(0);
-        sp.getChildren().get(3).setOpacity(0);   
+        sp.getChildren().get(3).setOpacity(0);
         sp.getChildren().get(4).setOpacity(0);
 
         return sp;
@@ -235,7 +234,7 @@ public class Biboule extends Parent implements GameLifeCycle {
         FadeTransition gtoy = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(3));
         FadeTransition ytoo = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(4));
         FadeTransition otor = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(5));
-        
+
         btog.setFromValue(0);
         gtoy.setFromValue(0);
         ytoo.setFromValue(0);
@@ -248,7 +247,7 @@ public class Biboule extends Parent implements GameLifeCycle {
 
         SequentialTransition seqt = new SequentialTransition(btog, gtoy, ytoo, otor);
 
-        pt.getChildren().addAll(seqt,tt1, st);
+        pt.getChildren().addAll(seqt, tt1, st);
 
         sp.t = pt;
 
@@ -272,12 +271,12 @@ public class Biboule extends Parent implements GameLifeCycle {
         pt.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-            	 sp.getChildren().get(2).setOpacity(0);
-                 sp.getChildren().get(3).setOpacity(0);
-                 sp.getChildren().get(4).setOpacity(0);
-                 sp.getChildren().get(5).setOpacity(0);
-                 
-                 sp.getChildren().get(0).setOpacity(0);
+                sp.getChildren().get(2).setOpacity(0);
+                sp.getChildren().get(3).setOpacity(0);
+                sp.getChildren().get(4).setOpacity(0);
+                sp.getChildren().get(5).setOpacity(0);
+
+                sp.getChildren().get(0).setOpacity(0);
                 moveCircle(sp);
             }
         });
