@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -47,6 +48,8 @@ public class Biboule extends Parent implements GameLifeCycle {
     private Image red;
     private Image flash;
     
+    private Node hand;
+    
     private final Stats stats;
 
     private final Point[] endPoints;
@@ -67,6 +70,9 @@ public class Biboule extends Parent implements GameLifeCycle {
         imageRectangle.setFill(new ImagePattern(new Image("data/biboule/images/Backgroung.jpg")));
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
+        
+       
+        
         
         blue =new Image("data/biboule/images/BlueBiboule.png");
         green =new Image("data/biboule/images/GreenBiboule.png");
@@ -108,6 +114,18 @@ public class Biboule extends Parent implements GameLifeCycle {
     // done
     @Override
     public void launch() {
+    	 Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+    	 ImageView iv = new ImageView(new Image("data/biboule/images/hand.png"));
+         double x =  dimension2D.getHeight()/2;
+         iv.setPreserveRatio(true);
+         iv.setFitHeight(x);
+         iv.setLayoutY(0);
+         iv.setLayoutX(3*(dimension2D.getWidth()/7));
+         iv.setLayoutY(dimension2D.getHeight()/2);
+         this.getChildren().add(iv);
+         hand = this.getChildren().get(0);
+         this.gameContext.resetBordersToFront();
+    	
         for (int i = 0; i < 10; i++) {
             newCircle();
         }
@@ -166,9 +184,9 @@ public class Biboule extends Parent implements GameLifeCycle {
         sp.toBack();
 
         this.getChildren().add(sp);
-        this.gameContext.resetBordersToFront();
-
         gameContext.getGazeDeviceManager().addEventFilter(sp);
+           
+        this.getChildren().get(this.getChildren().indexOf(hand)).toFront();
 
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
@@ -221,10 +239,14 @@ public class Biboule extends Parent implements GameLifeCycle {
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), sp);
         double min = Math.ceil(0);
         double max = Math.floor(7);
-        Point randomPoint = endPoints[(int) (Math.floor(Math.random() * (max - min + 1)) + min)];
+        int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
+        Point randomPoint = endPoints[r];
         tt1.setToY(-centerY + randomPoint.y);
         tt1.setToX(-centerX + randomPoint.x);
         sp.destination = randomPoint;
+
+        if (r == 2) { this.getChildren().get(this.getChildren().indexOf(sp)).toFront();
+        }else {this.getChildren().get(this.getChildren().indexOf(sp)).toBack();}
 
         ScaleTransition st = new ScaleTransition(new Duration(timelength), sp);
         st.setByX(10);
