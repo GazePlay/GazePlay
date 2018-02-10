@@ -48,7 +48,7 @@ public class Biboule extends Parent implements GameLifeCycle {
     private Image red;
     private Image flash;
     private Node hand;
-  
+
     private final Stats stats;
 
     private final Point[] endPoints;
@@ -110,18 +110,18 @@ public class Biboule extends Parent implements GameLifeCycle {
     // done
     @Override
     public void launch() {
-    	 Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-    	 ImageView iv = new ImageView(new Image("data/biboule/images/hand.png"));
-         double x =  dimension2D.getHeight()/2;
-         iv.setPreserveRatio(true);
-         iv.setFitHeight(x);
-         iv.setLayoutY(0);
-         iv.setLayoutX(3*(dimension2D.getWidth()/7));
-         iv.setLayoutY(dimension2D.getHeight()/2);
-         this.getChildren().add(iv);
-         hand = this.getChildren().get(0);
-         this.gameContext.resetBordersToFront();
-    	
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        ImageView iv = new ImageView(new Image("data/biboule/images/hand.png"));
+        double x = dimension2D.getHeight() / 2;
+        iv.setPreserveRatio(true);
+        iv.setFitHeight(x);
+        iv.setLayoutY(0);
+        iv.setLayoutX(3 * (dimension2D.getWidth() / 7));
+        iv.setLayoutY(dimension2D.getHeight() / 2);
+        this.getChildren().add(iv);
+        hand = this.getChildren().get(0);
+        this.gameContext.resetBordersToFront();
+
         for (int i = 0; i < 10; i++) {
             newCircle();
         }
@@ -180,7 +180,7 @@ public class Biboule extends Parent implements GameLifeCycle {
 
         this.getChildren().add(sp);
         gameContext.getGazeDeviceManager().addEventFilter(sp);
-           
+
         this.getChildren().get(this.getChildren().indexOf(hand)).toFront();
 
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
@@ -240,8 +240,11 @@ public class Biboule extends Parent implements GameLifeCycle {
         tt1.setToX(-centerX + randomPoint.x);
         sp.destination = randomPoint;
 
-        if (r == 2) { this.getChildren().get(this.getChildren().indexOf(sp)).toFront();
-        }else {this.getChildren().get(this.getChildren().indexOf(sp)).toBack();}
+        if (r == 2) {
+            this.getChildren().get(this.getChildren().indexOf(sp)).toFront();
+        } else {
+            this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
+        }
 
         ScaleTransition st = new ScaleTransition(new Duration(timelength), sp);
         st.setByX(10);
