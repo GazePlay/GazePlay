@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -47,7 +48,8 @@ public class Biboule extends Parent implements GameLifeCycle {
     private Image orange;
     private Image red;
     private Image flash;
-    private Node hand;
+
+    private StackPane hand;
 
     private final Stats stats;
 
@@ -111,18 +113,25 @@ public class Biboule extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        ImageView iv = new ImageView(new Image("data/biboule/images/hand.png"));
+        ImageView iv1 = new ImageView(new Image("data/biboule/images/hand.png"));
+        ImageView iv2 = new ImageView(new Image("data/biboule/images/handMagic.png"));
+        StackPane iv = new StackPane();
         double x = dimension2D.getHeight() / 2;
-        iv.setPreserveRatio(true);
-        iv.setFitHeight(x);
+        iv1.setPreserveRatio(true);
+        iv1.setFitHeight(x);
+        iv2.setPreserveRatio(true);
+        iv2.setFitHeight(x);
+        iv.getChildren().addAll(iv1, iv2);
+        iv.getChildren().get(1).setOpacity(0);
         iv.setLayoutY(0);
         iv.setLayoutX(3 * (dimension2D.getWidth() / 7));
         iv.setLayoutY(dimension2D.getHeight() / 2);
         this.getChildren().add(iv);
-        hand = this.getChildren().get(0);
+        hand = (StackPane) this.getChildren().get(0);
+        this.getChildren().get(this.getChildren().indexOf(hand)).toFront();
         this.gameContext.resetBordersToFront();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             newCircle();
         }
         stats.start();
@@ -156,15 +165,21 @@ public class Biboule extends Parent implements GameLifeCycle {
     }
 
     private void enter(Target t) {
-        t.t.stop();
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
+        t.t.pause();
         t.getChildren().get(0).setOpacity(1);
+        hand.getChildren().get(1).setOpacity(1);
         FadeTransition ft = new FadeTransition(Duration.millis(500), t);
         ft.setFromValue(1);
         ft.setToValue(0);
-        ft.play();
-        ft.setOnFinished(new EventHandler<ActionEvent>() {
+        FadeTransition ft2 = new FadeTransition(Duration.millis(500), hand.getChildren().get(1));
+        ft2.setFromValue(1);
+        ft2.setToValue(0);
+        ParallelTransition st = new ParallelTransition();
+        st.getChildren().addAll(ft, ft2);
+        st.play();
+        st.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 restart(t);
