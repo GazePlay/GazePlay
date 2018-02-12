@@ -4,16 +4,16 @@
  * Inspired by http://fxexperience.com/2011/12/styling-fx-buttons-with-css/
  */
 
-.progress-indicator {
-
-    -fx-control-inner-background: palegreen;
-    -fx-progress-color: blue;
-}
-
 .choice-box {
     -fx-background-color: linear-gradient(palegreen, #9898fb);
     -fx-text-fill: black;
     -fx-mark-color: orange;
+}
+
+.progress-indicator {
+
+    -fx-control-inner-background: palegreen;
+    -fx-progress-color: blue;
 }
 
 /* Selected item text color on the control itself */

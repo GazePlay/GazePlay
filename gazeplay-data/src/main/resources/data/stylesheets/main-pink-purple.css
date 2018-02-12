@@ -4,16 +4,16 @@
  * Inspired by http://fxexperience.com/2011/12/styling-fx-buttons-with-css/
  */
 
-.progress-indicator {
-
-    -fx-control-inner-background: lightpink;
-    -fx-progress-color: #9370db;
-}
-
 .choice-box {
     -fx-background-color: linear-gradient(lightpink, hotpink);
     -fx-text-fill: black;
     -fx-mark-color: silver;
+}
+
+.progress-indicator {
+
+    -fx-control-inner-background: lightpink;
+    -fx-progress-color: #9370db;
 }
 
 /* Selected item text color on the control itself */
@@ -55,5 +55,6 @@
 }
 
 .button:hover {
-    -fx-background-color: linear-gradient(#9370db, #663399);
+
+    -fx-background-color: linear-gradient(#98fb98, #008000);
 }

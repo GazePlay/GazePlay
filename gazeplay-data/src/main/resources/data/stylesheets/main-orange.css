@@ -9,6 +9,12 @@
     -fx-text-fill: black;
 }
 
+.progress-indicator {
+
+    -fx-control-inner-background: #ff5400;
+    -fx-progress-color: #98fb98;
+}
+
 /* Selected item text color on the control itself */
 .choice-box > .label {
 
