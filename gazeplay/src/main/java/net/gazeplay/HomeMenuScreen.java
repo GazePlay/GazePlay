@@ -44,6 +44,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
+    /**
+     * The horizontal growing factor for buttons to adapt screen size.
+     */
+    private final static double GAME_CHOOSER_BUTTON_HGROW_FACTOR = 3.6;
+
+    /**
+     * The vertical growing factor for buttons to adapt screen size.
+     */
+    private final static double GAME_CHOOSER_BUTTON_VGROW_FACTOR = 8.5;
+
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
         GamesLocator gamesLocator = new DefaultGamesLocator();
@@ -127,10 +137,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setBottom(bottomPane);
         root.setCenter(centerPanel);
 
-        root.setStyle(
-                "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        root.setStyle("-fx-background-color: rgba(0, 0, 0, 1); " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
+    @Override
     public ObservableList<Node> getChildren() {
         return root.getChildren();
     }
@@ -194,7 +206,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePane.setAlignment(Pos.CENTER);
         for (GameSpec gameSpec : gameSpecs) {
             Button button = new Button(gameSpec.getVariationHint());
-            button.setId("gameChooserButton");
+            button.getStyleClass().add("gameVariationChooserButton");
             choicePane.getChildren().add(button);
 
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -234,7 +246,27 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             String gameName = multilinguism.getTrad(gameNameCode, config.getLanguage());
 
             Button button = new Button(gameName);
-            button.setId("gameVariationChooserButton");
+
+            button.getStyleClass().add("gameChooserButton");
+
+            Stage primaryStage = GazePlay.getInstance().getPrimaryStage();
+
+            // Adapt buttons size to screen size
+            primaryStage.heightProperty().addListener((o) -> {
+                if (choicePanel.getHeight() > 0) {
+                    log.info("screen height : {}", primaryStage.getHeight());
+
+                    button.setPrefHeight(primaryStage.getHeight() / GAME_CHOOSER_BUTTON_VGROW_FACTOR);
+                }
+            });
+
+            primaryStage.widthProperty().addListener((o) -> {
+                if (choicePanel.getHeight() > 0) {
+                    log.info("screen width : {}", primaryStage.getWidth());
+
+                    button.setPrefWidth(primaryStage.getWidth() / GAME_CHOOSER_BUTTON_HGROW_FACTOR);
+                }
+            });
 
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
