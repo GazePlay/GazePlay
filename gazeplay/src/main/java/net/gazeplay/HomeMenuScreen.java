@@ -254,16 +254,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             // Adapt buttons size to screen size
             primaryStage.heightProperty().addListener((o) -> {
                 if (choicePanel.getHeight() > 0) {
-                    log.info("screen height : {}", primaryStage.getHeight());
-
                     button.setPrefHeight(primaryStage.getHeight() / GAME_CHOOSER_BUTTON_VGROW_FACTOR);
                 }
             });
 
             primaryStage.widthProperty().addListener((o) -> {
                 if (choicePanel.getHeight() > 0) {
-                    log.info("screen width : {}", primaryStage.getWidth());
-
                     button.setPrefWidth(primaryStage.getWidth() / GAME_CHOOSER_BUTTON_HGROW_FACTOR);
                 }
             });
