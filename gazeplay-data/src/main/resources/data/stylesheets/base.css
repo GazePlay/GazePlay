@@ -53,20 +53,20 @@
     -fx-font-size: 20;
 }
 
-#gameChooserButton {
-    -fx-pref-width: 36em;
-    -fx-pref-height: 12em;
+.gameChooserButton {
+    /*-fx-pref-width: 32em;*/
+    /*-fx-pref-height: 10em;*/
     -fx-min-width: 18em;
     -fx-min-height: 4em;
     -fx-background-radius: 0;
-    -fx-background-insets: 4;
+    -fx-background-insets: 8;
 }
 
-#gameVariationChooserButton {
-    -fx-pref-width: 36em;
-    -fx-pref-height: 12em;
+.gameVariationChooserButton {
+    -fx-pref-width: 32em;
+    -fx-pref-height: 10em;
     -fx-min-width: 18em;
     -fx-min-height: 4em;
     -fx-background-radius: 0;
-    -fx-background-insets: 4;
+    -fx-background-insets: 6;
 }
