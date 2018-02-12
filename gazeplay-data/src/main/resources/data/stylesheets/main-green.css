@@ -10,10 +10,10 @@
     -fx-mark-color: orange;
 }
 
-.progress-indicator{
+.progress-indicator {
 
     -fx-control-inner-background: palegreen;
-    -fx-progress-color:blue;
+    -fx-progress-color: blue;
 }
 
 /* Selected item text color on the control itself */
@@ -28,29 +28,33 @@
     -fx-background-color: linear-gradient(#98fb98, #008000);
     -fx-text-fill: black;
 }
+
 /* Focused item background color in the list*/
 .choice-box .menu-item:focused {
 
     -fx-text-fill: black;
     -fx-background-color: linear-gradient(#ff5400, #be1d00);
 }
+
 /* Text color of non-focused items in the list*/
 .choice-box .menu-item > .label {
 
     -fx-text-fill: white;
 }
+
 /* Text color of focused item in the list*/
 .choice-box .menu-item:focused > .label {
 
     -fx-text-fill: black;
 }
-.button{
-    
+
+.button {
+
     -fx-background-color: linear-gradient(#98fb98, #008000);
     -fx-text-fill: black;
 }
 
-.button:hover{
+.button:hover {
 
     -fx-background-color: linear-gradient(#ff5400, #be1d00);
 }

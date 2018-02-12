@@ -4,7 +4,7 @@
  * Inspired by http://fxexperience.com/2011/12/styling-fx-buttons-with-css/
  */
 
-.progress-indicator{
+.progress-indicator {
 
     -fx-control-inner-background: lightpink;
     -fx-progress-color: #9370db;
@@ -28,23 +28,27 @@
     -fx-background-color: linear-gradient(lightpink, hotpink);
     -fx-text-fill: black;
 }
+
 /* Focused item background color in the list*/
 .choice-box .menu-item:focused {
 
     -fx-text-fill: black;
     -fx-background-color: linear-gradient(#9370db, #663399);
 }
+
 /* Text color of non-focused items in the list*/
 .choice-box .menu-item > .label {
 
     -fx-text-fill: white;
 }
+
 /* Text color of focused item in the list*/
 .choice-box .menu-item:focused > .label {
 
     -fx-text-fill: black;
 }
-.button{
+
+.button {
 
     -fx-background-color: linear-gradient(lightpink, hotpink);
     -fx-text-fill: black;

@@ -1,6 +1,5 @@
 
-
-.root{
+.root {
     -fx-font-size: 11pt;
     -fx-font-family: 'sans-serif';
     -fx-base: rgb(32, 45, 47);
@@ -35,19 +34,19 @@
     -fx-background-insets: 0;
 }
 
-.button{
+.button {
 
     -fx-font-weight: bold;
     -fx-background-radius: 30;
     -fx-background-insets: 0;
 }
 
-#title{
+#title {
     -fx-fill: white;
     -fx-font-size: 60;
 }
 
-#item{
+#item {
 
     -fx-fill: white;
     -fx-font-size: 20;
