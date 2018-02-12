@@ -25,9 +25,6 @@ public class GazePlay extends Application {
     @Getter
     private Stage primaryStage;
 
-    @Getter
-    private Configuration configuration;
-
     public GazePlay() {
         instance = this;
     }
@@ -45,8 +42,7 @@ public class GazePlay extends Application {
 
         primaryStage.setMaximized(false);
 
-        this.configuration = ConfigurationBuilder.createFromPropertiesResource().build();
-        homeMenuScreen = HomeMenuScreen.newInstance(this, configuration);
+        homeMenuScreen = HomeMenuScreen.newInstance(this, ConfigurationBuilder.createFromPropertiesResource().build());
         homeMenuScreen.setUpOnStage(primaryStage);
 
         primaryStage.centerOnScreen();

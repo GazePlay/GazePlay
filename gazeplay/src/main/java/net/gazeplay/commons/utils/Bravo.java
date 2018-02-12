@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
 import lombok.Setter;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
 /**
@@ -64,7 +65,9 @@ public class Bravo extends Rectangle {
     private boolean enableRewardSound;
 
     public Bravo() {
-        this(defaultPictureResourceLocation, defaultSoundResourceLocation, DEFAULT_VALUE_ENABLE_REWARD_SOUND);
+
+        this(defaultPictureResourceLocation, defaultSoundResourceLocation,
+                ConfigurationBuilder.createFromPropertiesResource().build().isEnableRewardSound());
     }
 
     public Bravo(String pictureResourceLocation, String soundResourceLocation, boolean enableRewardSound) {
