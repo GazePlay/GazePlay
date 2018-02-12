@@ -39,6 +39,8 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import javafx.event.EventType;
+import javafx.scene.control.CheckBox;
 
 @Slf4j
 public class ConfigurationContext extends GraphicalContext<BorderPane> {
@@ -196,6 +198,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             ChoiceBox<Double> input = buildQuestionLengthChooserMenu(config, configurationContext);
 
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        
+        {
+            Text label = new Text(multilinguism.getTrad("EnableRewardSound", config.getLanguage()) + colon);
+            CheckBox input = buildEnableRewardSoundBox(config, configurationContext);
+            
             addToGrid(grid, currentFormRow, label, input);
         }
 
@@ -501,6 +510,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
         }
         return null;
+    }
+    
+    private static CheckBox buildEnableRewardSoundBox(Configuration configuration, ConfigurationContext configurationContext) {
+        CheckBox enableBox = new CheckBox();
+        
+        enableBox.setSelected(configuration.isEnableRewardSound());
+        enableBox.addEventHandler(EventType.ROOT, (t) -> {
+            enableBox.setSelected(!enableBox.isSelected());
+            ConfigurationBuilder.createFromPropertiesResource().withEnableRewardSound(enableBox.isSelected())
+                        .saveConfigIgnoringExceptions();
+        });
+        
+        return enableBox;
     }
 
 }

@@ -24,6 +24,8 @@ public class Configuration {
     private final String whereIsItDir;
 
     private final int questionLength;
+    
+    private final boolean enableRewardSound;
 
     protected Configuration(ConfigurationBuilder builder) {
         this.gazeMode = builder.gazeMode;
@@ -34,6 +36,7 @@ public class Configuration {
         this.cssfile = builder.cssfile;
         this.whereIsItDir = builder.whereIsItDir;
         this.questionLength = builder.questionLength;
+        this.enableRewardSound = builder.enableRewardSound;
     }
 
 }
