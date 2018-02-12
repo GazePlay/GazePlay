@@ -4,52 +4,28 @@
  * Inspired by http://fxexperience.com/2011/12/styling-fx-buttons-with-css/
  */
 
-.root{
-    -fx-font-size: 11pt;
-    -fx-font-family: 'sans-serif';
-    -fx-base: rgb(32, 45, 47);
-    -fx-background: white;
-}
-
-.progress-indicator{
-
-    -fx-control-inner-background: palegreen;
-    -fx-progress-color:blue;
-}
-
 .choice-box {
     -fx-background-color: linear-gradient(#ff5400, #be1d00);
-    -fx-background-radius: 30;
-    -fx-background-insets: 0;
     -fx-text-fill: black;
-    -fx-mark-color: orange;
-    -fx-alignment: baseline-center;
 }
 
 /* Selected item text color on the control itself */
 .choice-box > .label {
 
     -fx-text-fill: black;
-    -fx-font-weight: bold;
 }
 
 /* Background color of the whole context menu*/
 .choice-box .context-menu {
 
-    -fx-font-weight: bold;
     -fx-background-color: linear-gradient(#ff5400, #be1d00);
     -fx-text-fill: black;
-    -fx-background-radius: 30;
-    -fx-background-insets: 0;
 }
 /* Focused item background color in the list*/
 .choice-box .menu-item:focused {
 
     -fx-text-fill: black;
-    -fx-font-size: 25pt;
     -fx-background-color: linear-gradient(#98fb98, #008000);
-    -fx-background-radius: 30;
-    -fx-background-insets: 0;
 }
 /* Text color of non-focused items in the list*/
 .choice-box .menu-item > .label {
@@ -63,20 +39,6 @@
 }
 .button{
 
-    -fx-font-weight: bold;
     -fx-background-color: linear-gradient(#ff5400, #be1d00);
     -fx-text-fill: black;
-    -fx-background-radius: 30;
-    -fx-background-insets: 0;
-}
-
-#title{
-    -fx-fill: white;
-    -fx-font-size: 60;
-}
-
-#item{
-
-    -fx-fill: white;
-    -fx-font-size: 20;
 }

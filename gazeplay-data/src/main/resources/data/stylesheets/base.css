@@ -1,4 +1,58 @@
 
+
+.root{
+    -fx-font-size: 11pt;
+    -fx-font-family: 'sans-serif';
+    -fx-base: rgb(32, 45, 47);
+    -fx-background: white;
+}
+
+.choice-box {
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+    -fx-alignment: baseline-center;
+}
+
+/* Selected item text color on the control itself */
+.choice-box > .label {
+
+    -fx-font-weight: bold;
+}
+
+/* Background color of the whole context menu*/
+.choice-box .context-menu {
+
+    -fx-font-weight: bold;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+}
+
+/* Focused item background color in the list*/
+.choice-box .menu-item:focused {
+
+    -fx-font-size: 25pt;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+}
+
+.button{
+
+    -fx-font-weight: bold;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+}
+
+#title{
+    -fx-fill: white;
+    -fx-font-size: 60;
+}
+
+#item{
+
+    -fx-fill: white;
+    -fx-font-size: 20;
+}
+
 #gameChooserButton {
     -fx-pref-width: 36em;
     -fx-pref-height: 12em;
