@@ -4,3 +4,6 @@ target
 *.ipr
 *.iws
 /bin/
+.project
+.classpath
+.settings
