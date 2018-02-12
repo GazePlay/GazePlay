@@ -42,12 +42,3 @@
     -fx-background-color: linear-gradient(#ff5400, #be1d00);
     -fx-text-fill: black;
 }
-
-#title{
-    -fx-fill: white;
-}
-
-#item{
-
-    -fx-fill: white;
-}

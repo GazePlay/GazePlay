@@ -49,12 +49,3 @@
     -fx-background-color: linear-gradient(palegreen, #9898fb);
     -fx-text-fill: black;
 }
-
-#title{
-    -fx-fill: white;
-}
-
-#item{
-
-    -fx-fill: white;
-}

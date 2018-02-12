@@ -49,14 +49,3 @@
     -fx-background-color: linear-gradient(#98fb98, #008000);
     -fx-text-fill: black;
 }
-
-#title{
-    -fx-fill: white;
-    -fx-font-size: 60;
-}
-
-#item{
-
-    -fx-fill: white;
-    -fx-font-size: 20;
-}

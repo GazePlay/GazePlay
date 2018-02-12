@@ -53,12 +53,3 @@
 .button:hover {
     -fx-background-color: linear-gradient(#9370db, #663399);
 }
-
-#title{
-    -fx-fill: white;
-}
-
-#item{
-
-    -fx-fill: white;
-}
