@@ -31,7 +31,7 @@ public class ConfigurationBuilder implements Cloneable {
     private static String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     private static String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static int DEFAULT_VALUE_QUESTION_LENGTH = 5000;
-    private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
+    public static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
 
     private static String getFileDirectoryDefaultValue() {
         return Utils.getGazePlayFolder() + "files" + Utils.FILESEPARATOR;
@@ -79,7 +79,7 @@ public class ConfigurationBuilder implements Cloneable {
     protected String whereIsItDir = DEFAULT_VALUE_WHEREISIT_DIR;
 
     protected int questionLength = DEFAULT_VALUE_QUESTION_LENGTH;
-    
+
     protected boolean enableRewardSound = DEFAULT_VALUE_ENABLE_REWARD_SOUND;
 
     public ConfigurationBuilder() {
@@ -141,7 +141,7 @@ public class ConfigurationBuilder implements Cloneable {
         copy.questionLength = value;
         return copy;
     }
-    
+
     public ConfigurationBuilder withEnableRewardSound(Boolean value) {
         ConfigurationBuilder copy = copy();
         copy.enableRewardSound = value;
@@ -200,7 +200,7 @@ public class ConfigurationBuilder implements Cloneable {
                         PROPERTY_NAME_QUESTION_LENGTH);
             }
         }
-        
+
         buffer = prop.getProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND);
         if (buffer != null) {
             enableRewardSound = Boolean.parseBoolean(buffer);

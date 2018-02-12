@@ -24,7 +24,7 @@ public class Configuration {
     private final String whereIsItDir;
 
     private final int questionLength;
-    
+
     private final boolean enableRewardSound;
 
     protected Configuration(ConfigurationBuilder builder) {

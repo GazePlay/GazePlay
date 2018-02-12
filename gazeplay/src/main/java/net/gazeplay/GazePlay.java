@@ -7,6 +7,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
 /**
@@ -23,6 +24,9 @@ public class GazePlay extends Application {
 
     @Getter
     private Stage primaryStage;
+
+    @Getter
+    private Configuration configuration;
 
     public GazePlay() {
         instance = this;
@@ -41,7 +45,8 @@ public class GazePlay extends Application {
 
         primaryStage.setMaximized(false);
 
-        homeMenuScreen = HomeMenuScreen.newInstance(this, ConfigurationBuilder.createFromPropertiesResource().build());
+        this.configuration = ConfigurationBuilder.createFromPropertiesResource().build();
+        homeMenuScreen = HomeMenuScreen.newInstance(this, configuration);
         homeMenuScreen.setUpOnStage(primaryStage);
 
         primaryStage.centerOnScreen();

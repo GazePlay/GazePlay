@@ -38,6 +38,7 @@ public class GameContext extends GraphicalContext<Pane> {
         CssUtil.setPreferredStylesheets(config, scene);
 
         Bravo bravo = new Bravo();
+        bravo.setEnableRewardSound(gazePlay.getConfiguration().isEnableRewardSound());
 
         Pane gamingRoot = new Pane();
         gamingRoot.setStyle("-fx-background-color: black;");

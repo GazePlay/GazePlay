@@ -200,11 +200,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
-        
+
         {
             Text label = new Text(multilinguism.getTrad("EnableRewardSound", config.getLanguage()) + colon);
             CheckBox input = buildEnableRewardSoundBox(config, configurationContext);
-            
+
             addToGrid(grid, currentFormRow, label, input);
         }
 
@@ -511,17 +511,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         return null;
     }
-    
-    private static CheckBox buildEnableRewardSoundBox(Configuration configuration, ConfigurationContext configurationContext) {
+
+    private static CheckBox buildEnableRewardSoundBox(Configuration configuration,
+            ConfigurationContext configurationContext) {
         CheckBox enableBox = new CheckBox();
-        
+
         enableBox.setSelected(configuration.isEnableRewardSound());
-        enableBox.addEventHandler(EventType.ROOT, (t) -> {
-            enableBox.setSelected(!enableBox.isSelected());
+
+        enableBox.selectedProperty().addListener((o) -> {
+
             ConfigurationBuilder.createFromPropertiesResource().withEnableRewardSound(enableBox.isSelected())
-                        .saveConfigIgnoringExceptions();
+                    .saveConfigIgnoringExceptions();
         });
-        
+
         return enableBox;
     }
 
