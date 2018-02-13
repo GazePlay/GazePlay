@@ -36,8 +36,8 @@ public class CupsAndBalls implements GameLifeCycle {
     private int nbExchanges;
 
     private javafx.geometry.Dimension2D dimension2D;
-    private int openCupDuration = 5000;
-    private int exchangeCupDuration = 5000;
+    private int openCupDuration = 200;
+    private int exchangeCupDuration = 200;
 
     private Random random = new Random();
 
@@ -135,7 +135,7 @@ public class CupsAndBalls implements GameLifeCycle {
                 newPos = currentCup.getPositionCup().calculateXY(finalCellX, finalCellY);
                 currentCup.getPositionCup().setCellX(finalCellX);
                 currentCup.getPositionCup().setCellY(finalCellY);
-                currentCup.progressBarUpdatePosition(newPos.getX() - initPos.getX(), newPos.getY() - initPos.getY());
+                currentCup.progressBarUpdatePosition(newPos.getX(), newPos.getY());
                 if (currentCup.containsBall()) {
                     currentCup.getBall().updatePosition(newPos.getX(), newPos.getY());
                 }

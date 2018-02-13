@@ -9,6 +9,7 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
@@ -47,9 +48,6 @@ public class Cup extends Parent {
 
     private final CupsAndBalls gameInstance;
 
-    /**
-     * true if the cup has been revealed
-     */
     private boolean revealed = false;
 
     private Timeline timelineProgressBar;
@@ -73,7 +71,8 @@ public class Cup extends Parent {
 
         this.gameInstance = gameInstance;
 
-        this.progressIndicator = createProgressIndicator();
+        this.progressIndicator = createProgressIndicator(item.getX(), item.getY());
+        progressIndicator.toFront();
 
         this.enterEvent = buildEvent();
 
@@ -95,24 +94,22 @@ public class Cup extends Parent {
         Point newPosCup = positionCup.calculateXY(newCellX, newCellY);
         item.setX(newPosCup.getX());
         item.setY(newPosCup.getY());
-        progressIndicator = createProgressIndicator();
     }
 
-    public void progressBarUpdatePosition(double xTransition, double yTransition) {
+    public void progressBarUpdatePosition(double newXCupPos, double newYCupPos) {
         gameContext.getChildren().remove(progressIndicator);
-        progressIndicator.setTranslateX(xTransition);
-        progressIndicator.setTranslateY(yTransition);
-        gameContext.getChildren().add(progressIndicator);
+        progressIndicator = createProgressIndicator(newXCupPos, newYCupPos);
+        progressIndicator.toFront();
     }
 
-    private ProgressIndicator createProgressIndicator() {
+    private ProgressIndicator createProgressIndicator(double xCupPos, double yCupPos) {
         ProgressIndicator indicator = new ProgressIndicator(0);
-        double indicatorWidth = item.getWidth() * 1.2; // 0.645
-        double indicatorHeight = item.getHeight() * 1.2;
+        double indicatorWidth = item.getWidth() * 0.645;
+        double indicatorHeight = item.getHeight() * 0.645;
         indicator.setPrefSize(indicatorWidth, indicatorHeight);
-        indicator.setTranslateX(item.getX() + (item.getWidth() - indicatorWidth) / 2);
-        indicator.setTranslateY(item.getY() + (item.getHeight() - indicatorHeight) / 2);
-        // indicator.setOpacity(0);
+        indicator.setTranslateX(xCupPos + (item.getWidth() - indicatorWidth) / 2);
+        indicator.setTranslateY(yCupPos + (item.getHeight() - indicatorHeight) / 2);
+        indicator.setOpacity(0);
         gameContext.getChildren().add(indicator);
         return indicator;
     }
@@ -120,7 +117,7 @@ public class Cup extends Parent {
     private void onCorrectCupSelected() {
         stats.incNbGoals();
 
-        // progressIndicator.setOpacity(0);
+        progressIndicator.setOpacity(0);
 
         // gameInstance.openAllIncorrectCups();
 
@@ -157,7 +154,7 @@ public class Cup extends Parent {
             item.setVisible(false);
         });
         revealBallTransition.play();
-        // progressIndicator.setOpacity(0);
+        progressIndicator.setOpacity(0);
     }
 
     private EventHandler<Event> buildEvent() {
@@ -169,17 +166,14 @@ public class Cup extends Parent {
                     return;
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
+                    log.info("ENTERED");
                     progressIndicator.setOpacity(1);
                     progressIndicator.setProgress(0);
 
-                    /* DO THIS PART */
                     timelineProgressBar = new Timeline();
 
                     timelineProgressBar.getKeyFrames().add(
                             new KeyFrame(new Duration(2000), new KeyValue(progressIndicator.progressProperty(), 1)));
-
-                    // timelineChoice.play();
 
                     timelineProgressBar.play();
 
@@ -201,9 +195,10 @@ public class Cup extends Parent {
                         }
                     });
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                    log.info("EXITED");
                     timelineProgressBar.stop();
 
-                    // progressIndicator.setOpacity(0);
+                    progressIndicator.setOpacity(0);
                     progressIndicator.setProgress(0);
                 }
             }

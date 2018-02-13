@@ -1,17 +1,18 @@
 package net.gazeplay;
 
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -143,7 +144,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     }
 
-    private Stage createDialog(Stage primaryStage, Collection<GameSpec> gameSpecs) {
+    private Stage createDialog(Stage primaryStage, GameSpec gameSpec) {
         // initialize the confirmation dialog
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -152,8 +153,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         FlowPane choicePane = new FlowPane();
         choicePane.setAlignment(Pos.CENTER);
-        for (GameSpec gameSpec : gameSpecs) {
-            Button button = new Button(gameSpec.getVariationHint());
+        for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
+            Button button = new Button(variant.getLabel());
             button.getStyleClass().add("gameVariationChooserButton");
             choicePane.getChildren().add(button);
 
@@ -161,7 +162,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     dialog.close();
-                    chooseGame(gameSpec);
+                    chooseGame(gameSpec, variant);
                 }
             });
         }
@@ -182,78 +183,94 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         FlowPane choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
 
-        Multimap<String, GameSpec> gamesByNameCode = LinkedHashMultimap.create();
-        for (GameSpec gameSpec : games) {
-            gamesByNameCode.put(gameSpec.getNameCode(), gameSpec);
-        }
-
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
-        for (String gameNameCode : gamesByNameCode.keySet()) {
+        for (GameSpec gameSpec : games) {
+            final GameSummary gameSummary = gameSpec.getGameSummary();
 
-            String gameName = multilinguism.getTrad(gameNameCode, config.getLanguage());
+            String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
 
-            Button button = new Button(gameName);
+            StackPane gameCard = new StackPane();
+            gameCard.getStyleClass().add("gameChooserButton");
+            gameCard.getStyleClass().add("button");
 
-            button.getStyleClass().add("gameChooserButton");
+            Label text = new Label(gameName);
+
+            if (gameSummary.getGameTypeIndicatorImageLocation() != null) {
+                Image buttonGraphics = new Image(gameSummary.getGameTypeIndicatorImageLocation());
+                ImageView imageView = new ImageView(buttonGraphics);
+                imageView.setFitWidth(32);
+                imageView.setFitHeight(32);
+                StackPane.setAlignment(imageView, Pos.TOP_LEFT);
+                gameCard.getChildren().add(imageView);
+            }
+
+            if (gameSummary.getThumbnailLocation() != null) {
+                Image buttonGraphics = new Image(gameSummary.getThumbnailLocation());
+                ImageView imageView = new ImageView(buttonGraphics);
+                imageView.setFitWidth(32);
+                imageView.setPreserveRatio(true);
+
+                int thumbnailBorderSize = 20;
+                gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> imageView
+                        .setFitWidth(newValue.doubleValue() - thumbnailBorderSize));
+                gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> imageView
+                        .setFitHeight(newValue.doubleValue() - thumbnailBorderSize));
+                StackPane.setAlignment(imageView, Pos.CENTER);
+                gameCard.getChildren().add(imageView);
+            }
+
+            StackPane.setAlignment(text, Pos.BOTTOM_RIGHT);
+            text.setPadding(new Insets(20, 20, 20, 20));
+            gameCard.getChildren().add(text);
 
             Stage primaryStage = GazePlay.getInstance().getPrimaryStage();
 
             // Adapt buttons size to screen size
             primaryStage.heightProperty().addListener((o) -> {
                 if (choicePanel.getHeight() > 0) {
-                    button.setPrefHeight(primaryStage.getHeight() / GAME_CHOOSER_BUTTON_VGROW_FACTOR);
+                    gameCard.setPrefHeight(primaryStage.getHeight() / GAME_CHOOSER_BUTTON_VGROW_FACTOR);
                 }
             });
 
             primaryStage.widthProperty().addListener((o) -> {
                 if (choicePanel.getHeight() > 0) {
-                    button.setPrefWidth(primaryStage.getWidth() / GAME_CHOOSER_BUTTON_HGROW_FACTOR);
+                    gameCard.setPrefWidth(primaryStage.getWidth() / GAME_CHOOSER_BUTTON_HGROW_FACTOR);
                 }
             });
 
-            button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    Collection<GameSpec> gameSpecs = gamesByNameCode.get(gameNameCode);
+                    Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
-                    if (gameSpecs.size() > 1) {
-                        log.info("gameSpecs = {}", gameSpecs);
+                    if (variants.size() > 1) {
+                        log.info("variants = {}", variants);
                         getScene().getRoot().setEffect(new BoxBlur());
-                        Stage dialog = createDialog(getGazePlay().getPrimaryStage(), gameSpecs);
+                        Stage dialog = createDialog(getGazePlay().getPrimaryStage(), gameSpec);
 
                         String dialogTitle = gameName + " : "
                                 + multilinguism.getTrad("Choose Game Variante", config.getLanguage());
                         dialog.setTitle(dialogTitle);
                         dialog.show();
                     } else {
-                        GameSpec onlyGameSpec = gameSpecs.iterator().next();
-                        chooseGame(onlyGameSpec);
+                        if (variants.size() == 1) {
+                            GameSpec.GameVariant onlyGameVariant = variants.iterator().next();
+                            chooseGame(gameSpec, onlyGameVariant);
+                        } else {
+                            chooseGame(gameSpec, null);
+                        }
                     }
                 }
             });
 
-            choicePanel.getChildren().add(button);
+            choicePanel.getChildren().add(gameCard);
         }
 
         return choicePanel;
     }
 
-    private void chooseGame(int gameIndex) {
-        log.info("Game number: " + gameIndex);
-
-        if (gameIndex == -1) {
-            return;
-        }
-
-        GameSpec selectedGameSpec = games.get(gameIndex);
-
-        chooseGame(selectedGameSpec);
-    }
-
-    private void chooseGame(GameSpec selectedGameSpec) {
-        log.info(selectedGameSpec.getNameCode() + " " + selectedGameSpec.getVariationHint());
-
+    private void chooseGame(GameSpec selectedGameSpec, GameSpec.GameVariant gameVariant) {
         GazePlay gazePlay = getGazePlay();
 
         GameContext gameContext = GameContext.newInstance(gazePlay);
@@ -271,7 +288,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         gameContext.createControlPanel(gazePlay, stats);
 
-        GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, stats);
+        GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
         currentGame.launch();
     }
 
