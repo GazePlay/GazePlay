@@ -13,6 +13,9 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
+import lombok.Setter;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
 /**
  * Created by schwab on 30/10/2016.
@@ -56,11 +59,18 @@ public class Bravo extends Rectangle {
 
     private SequentialTransition fullTransition;
 
+    private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = ConfigurationBuilder.DEFAULT_VALUE_ENABLE_REWARD_SOUND;
+
+    @Setter
+    private boolean enableRewardSound;
+
     public Bravo() {
-        this(defaultPictureResourceLocation, defaultSoundResourceLocation);
+
+        this(defaultPictureResourceLocation, defaultSoundResourceLocation,
+                ConfigurationBuilder.createFromPropertiesResource().build().isEnableRewardSound());
     }
 
-    public Bravo(String pictureResourceLocation, String soundResourceLocation) {
+    public Bravo(String pictureResourceLocation, String soundResourceLocation, boolean enableRewardSound) {
         super(0, 0, 0, 0);
         this.pictureResourceLocation = pictureResourceLocation;
         // this.soundResourceLocation = soundResourceLocation;
@@ -72,6 +82,8 @@ public class Bravo extends Rectangle {
         soundClip = new AudioClip(soundResourceUrl.toExternalForm());
 
         fullTransition = createFullTransition();
+
+        this.enableRewardSound = enableRewardSound;
     }
 
     public void playWinTransition(Scene scene, EventHandler<ActionEvent> onFinishedEventHandler) {
@@ -98,8 +110,12 @@ public class Bravo extends Rectangle {
 
             log.debug("Playing graphic animation ...");
             fullTransition.play();
-            log.debug("Playing sound animation ...");
-            soundClip.play(0.2);
+
+            if (this.enableRewardSound) {
+                log.debug("Playing sound animation ...");
+                soundClip.play(0.2);
+            }
+
             log.debug("Finished JavaFX task");
         };
 

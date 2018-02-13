@@ -3,6 +3,8 @@ package net.gazeplay;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.biboules.Biboule;
+import net.gazeplay.games.biboules.BibouleGamesStats;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
@@ -329,6 +331,18 @@ public class DefaultGamesLocator implements GamesLocator {
             @Override
             public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
                 return new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, 3, 3, false, gameContext, stats);
+            }
+        }));
+
+        result.add(new GameSpec("Biboules", new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new BibouleGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+                return new Biboule(gameContext, stats);
             }
         }));
 

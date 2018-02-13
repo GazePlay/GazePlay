@@ -96,6 +96,12 @@ mvn clean install -Dfindbugs.skip=false
 
 Plus d'informations sur http://findbugs.sourceforge.net
 
+### formatter-maven-plugin
+
+Ce plugin est automatiquement appelé lorsqu'on réalise un appel à Maven. Il permet de réaliser un certain nombre d'opérations comme la normalisation des fins de ligne, des espaces, ...
+
+Plus d'informations sur http://code.revelc.net/formatter-maven-plugin/
+
 ### TravisCI
 
 Travis CI est un logiciel libre d'intégration continue ([Wikipedia](https://fr.wikipedia.org/wiki/Travis_CI)). L'intégration continue est un ensemble de pratiques utilisées en génie logiciel consistant à vérifier à chaque modification de code source que le résultat des modifications ne produit pas de régression dans l'application développée ([Wikipedia](https://fr.wikipedia.org/wiki/Intégration_continue)).
@@ -105,3 +111,5 @@ TravisCI construit un *build* pour chaque *commit*, pour chaque *pull request* e
 Un badge est ajouté en haut du README.md, indiquant le status de la branche principale (qui devrait toujours être en *build | passing*).
 
 En savoir plus https://docs.travis-ci.com/user/getting-started/
+
+
