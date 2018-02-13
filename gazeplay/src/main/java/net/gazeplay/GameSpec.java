@@ -15,7 +15,7 @@ public class GameSpec {
     }
 
     @Getter
-    private final String nameCode;
+    private GameSummary gameSummary;
 
     @Getter
     private final String variationHint;
@@ -23,16 +23,14 @@ public class GameSpec {
     @Getter
     private final GameLauncher gameLauncher;
 
-    public GameSpec(String nameCode, String variationHint, GameLauncher gameLauncher) {
-        this.nameCode = nameCode;
+    public GameSpec(GameSummary gameSummary, String variationHint, GameLauncher gameLauncher) {
+        this.gameSummary = gameSummary;
         this.variationHint = variationHint;
         this.gameLauncher = gameLauncher;
     }
 
-    public GameSpec(String nameCode, GameLauncher gameLauncher) {
-        this.nameCode = nameCode;
-        this.variationHint = null;
-        this.gameLauncher = gameLauncher;
+    public GameSpec(GameSummary gameSummary, GameLauncher gameLauncher) {
+        this(gameSummary, null, gameLauncher);
     }
 
 }

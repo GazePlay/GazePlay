@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -182,16 +183,16 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         FlowPane choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
 
-        Multimap<String, GameSpec> gamesByNameCode = LinkedHashMultimap.create();
+        Multimap<GameSummary, GameSpec> gamesByGameId = LinkedHashMultimap.create();
         for (GameSpec gameSpec : games) {
-            gamesByNameCode.put(gameSpec.getNameCode(), gameSpec);
+            gamesByGameId.put(gameSpec.getGameSummary(), gameSpec);
         }
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
-        for (String gameNameCode : gamesByNameCode.keySet()) {
+        for (GameSummary gameSummary : gamesByGameId.keySet()) {
 
-            String gameName = multilinguism.getTrad(gameNameCode, config.getLanguage());
+            String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
 
             Button button = new Button(gameName);
 
@@ -212,10 +213,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 }
             });
 
+            if (gameSummary.getThumbnailLocation() != null) {
+                Image buttonGraphics = new Image(gameSummary.getThumbnailLocation());
+                ImageView imageView = new ImageView(buttonGraphics);
+                imageView.setFitWidth(32);
+                imageView.setFitHeight(32);
+                button.setGraphic(imageView);
+                button.setGraphicTextGap(16);
+            }
+
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    Collection<GameSpec> gameSpecs = gamesByNameCode.get(gameNameCode);
+                    Collection<GameSpec> gameSpecs = gamesByGameId.get(gameSummary);
 
                     if (gameSpecs.size() > 1) {
                         log.info("gameSpecs = {}", gameSpecs);
@@ -252,7 +262,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     private void chooseGame(GameSpec selectedGameSpec) {
-        log.info(selectedGameSpec.getNameCode() + " " + selectedGameSpec.getVariationHint());
+        log.info(selectedGameSpec.getGameSummary().getNameCode() + " " + selectedGameSpec.getVariationHint());
 
         GazePlay gazePlay = getGazePlay();
 
