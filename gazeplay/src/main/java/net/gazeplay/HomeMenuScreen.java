@@ -2,8 +2,6 @@ package net.gazeplay;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -11,7 +9,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
@@ -22,9 +19,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import lombok.Data;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
@@ -38,7 +33,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Slf4j
@@ -66,9 +60,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         return new HomeMenuScreen(gazePlay, games, scene, root, config);
     }
-
-    @Getter
-    private final ChoiceBox<String> cbxGames;
 
     private final List<GameSpec> games;
 
@@ -110,15 +101,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().add(exitButton);
 
-        cbxGames = createChoiceBox(games, config);
-        cbxGames.getSelectionModel().clearSelection();
-
         Pane gamePickerChoicePane = createGamePickerChoicePane(games, config);
 
         VBox centerCenterPane = new VBox();
         centerCenterPane.setSpacing(40);
         centerCenterPane.setAlignment(Pos.TOP_CENTER);
-        centerCenterPane.getChildren().add(cbxGames);
         centerCenterPane.getChildren().add(gamePickerChoicePane);
 
         VBox leftPanel = new VBox();
@@ -149,50 +136,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     @Override
     public void setUpOnStage(Stage stage) {
-        cbxGames.getSelectionModel().clearSelection();
-
         super.setUpOnStage(stage);
     }
 
     public void onLanguageChanged() {
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        final List<String> gamesLabels = generateTranslatedGamesNames(games, config);
-
-        this.cbxGames.getItems().clear();
-        this.cbxGames.getItems().addAll(gamesLabels);
-    }
-
-    /**
-     * This command is called when games have to be updated (example: when language changed)
-     */
-    private ChoiceBox<String> createChoiceBox(List<GameSpec> games, Configuration config) {
-        List<String> gamesLabels = generateTranslatedGamesNames(games, config);
-
-        ChoiceBox<String> cbxGames = new ChoiceBox<>();
-        cbxGames.getItems().addAll(gamesLabels);
-        cbxGames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                chooseGame(newValue.intValue());
-            }
-        });
-        return cbxGames;
-    }
-
-    private List<String> generateTranslatedGamesNames(List<GameSpec> games, Configuration config) {
-        final String language = config.getLanguage();
-        final Multilinguism multilinguism = Multilinguism.getSingleton();
-
-        return games.stream()
-                .map(gameSpec -> new Pair<>(gameSpec, multilinguism.getTrad(gameSpec.getNameCode(), language)))
-                .map(pair -> {
-                    String variationHint = pair.getKey().getVariationHint();
-                    if (variationHint == null) {
-                        return pair.getValue();
-                    }
-                    return pair.getValue() + " " + variationHint;
-                }).collect(Collectors.toList());
     }
 
     private Stage createDialog(Stage primaryStage, Collection<GameSpec> gameSpecs) {
