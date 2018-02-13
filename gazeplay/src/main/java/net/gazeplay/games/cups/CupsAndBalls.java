@@ -1,5 +1,8 @@
 package net.gazeplay.games.cups;
 
+import net.gazeplay.games.cups.utils.PositionCup;
+import net.gazeplay.games.cups.utils.Action;
+import net.gazeplay.games.cups.utils.Strategy;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
@@ -31,8 +34,10 @@ public class CupsAndBalls implements GameLifeCycle {
     private final int nbLines;
     private final int nbColumns;
     private int nbExchanges;
-    
+
     private javafx.geometry.Dimension2D dimension2D;
+    private int openCupDuration = 5000;
+    private int exchangeCupDuration = 5000;
 
     private Random random = new Random();
 
@@ -44,10 +49,10 @@ public class CupsAndBalls implements GameLifeCycle {
         this.cups = new Cup[nbCups];
         this.nbColumns = nbCups;
         this.nbLines = nbCups;
-        this.nbExchanges = nbCups*nbCups;
+        this.nbExchanges = nbCups * nbCups;
     }
-    
-    public CupsAndBalls(GameContext gameContext, Stats stats, int nbCups, int nbExchanges){
+
+    public CupsAndBalls(GameContext gameContext, Stats stats, int nbCups, int nbExchanges) {
         this(gameContext, stats, nbCups);
         this.nbExchanges = nbExchanges;
     }
@@ -59,12 +64,12 @@ public class CupsAndBalls implements GameLifeCycle {
         Image winPicture = new Image("data/common/images/bravo.png");
         double imageWidth = dimension2D.getHeight() / (nbColumns * 1.5);
         double imageHeight = dimension2D.getHeight() / nbColumns;
-       
+
         int ballInCup = random.nextInt(nbCups);
         Point posCup;
         for (int indexCup = 0; indexCup < cups.length; indexCup++) {
-             PositionCup position = new PositionCup(indexCup, nbColumns / 2, nbColumns, nbLines, dimension2D.getHeight(),
-                dimension2D.getWidth(), imageWidth, imageHeight);
+            PositionCup position = new PositionCup(indexCup, nbColumns / 2, nbColumns, nbLines, dimension2D.getHeight(),
+                    dimension2D.getWidth(), imageWidth, imageHeight);
             posCup = position.calculateXY(position.getCellX(), position.getCellY());
             Rectangle cupRectangle = new Rectangle(posCup.getX(), posCup.getY(), imageWidth, imageHeight);
             cupRectangle.setFill(new ImagePattern(cupPicture, 0, 0, 1, 1, true));
@@ -86,20 +91,21 @@ public class CupsAndBalls implements GameLifeCycle {
     public void launch() {
         init();
         TranslateTransition revealBallTransition = null;
-        for (int indexCup = 0; indexCup < cups.length; indexCup++){
-            if (cups[indexCup].containsBall()){
-                revealBallTransition = new TranslateTransition(Duration.millis(1000/*3000*/), cups[indexCup].getItem());
-                revealBallTransition.setByY(-ball.getRadius()*8);
+        for (int indexCup = 0; indexCup < cups.length; indexCup++) {
+            if (cups[indexCup].containsBall()) {
+                revealBallTransition = new TranslateTransition(Duration.millis(openCupDuration),
+                        cups[indexCup].getItem());
+                revealBallTransition.setByY(-ball.getRadius() * 8);
                 revealBallTransition.setAutoReverse(true);
                 revealBallTransition.setCycleCount(2);
             }
         }
-        
+
         Strategy strategy = new Strategy(nbCups, nbExchanges);
         ArrayList<Action> actions = strategy.chooseStrategy(cups);
-        if (revealBallTransition != null){
+        if (revealBallTransition != null) {
             revealBallTransition.play();
-            revealBallTransition.setOnFinished(e->{
+            revealBallTransition.setOnFinished(e -> {
                 ball.getItem().setVisible(false);
                 createNewTransition(actions);
             });
@@ -108,43 +114,46 @@ public class CupsAndBalls implements GameLifeCycle {
 
     @Override
     public void dispose() {
-        
+
     }
-    
-    private void createNewTransition(ArrayList<Action> actions){
+
+    private void createNewTransition(ArrayList<Action> actions) {
         int initCellX = actions.get(0).getInitCellX();
         int initCellY = actions.get(0).getInitCellY();
         int finalCellX = actions.get(0).getTargetCellX();
         int finalCellY = actions.get(0).getTargetCellY();
-        
+
         Rectangle cupToMove = null;
         Point initPos = null;
         Point newPos = null;
-        for (int indexCup = 0; indexCup < nbCups; indexCup++){
+        for (int indexCup = 0; indexCup < nbCups; indexCup++) {
             Cup currentCup = cups[indexCup];
-            if (currentCup.getPositionCup().getCellX() == initCellX && currentCup.getPositionCup().getCellY() == initCellY){
+            if (currentCup.getPositionCup().getCellX() == initCellX
+                    && currentCup.getPositionCup().getCellY() == initCellY) {
                 cupToMove = currentCup.getItem();
                 initPos = currentCup.getPositionCup().calculateXY(initCellX, initCellY);
                 newPos = currentCup.getPositionCup().calculateXY(finalCellX, finalCellY);
                 currentCup.getPositionCup().setCellX(finalCellX);
                 currentCup.getPositionCup().setCellY(finalCellY);
-                if (currentCup.containsBall()){
+                currentCup.progressBarUpdatePosition(newPos.getX() - initPos.getX(), newPos.getY() - initPos.getY());
+                if (currentCup.containsBall()) {
                     currentCup.getBall().updatePosition(newPos.getX(), newPos.getY());
                 }
             }
         }
-        
-        if (newPos == null || initPos == null || cupToMove == null){
+
+        if (newPos == null || initPos == null || cupToMove == null) {
             log.error("The cup positions haven't been set up properly");
         }
-        
-        TranslateTransition movementTransition = new TranslateTransition(Duration.millis(1000/*2000*/), cupToMove);
-        movementTransition.setByX(newPos.getX()-initPos.getX());
-        movementTransition.setByY(newPos.getY()-initPos.getY());
-        
+
+        TranslateTransition movementTransition = new TranslateTransition(Duration.millis(exchangeCupDuration),
+                cupToMove);
+        movementTransition.setByX(newPos.getX() - initPos.getX());
+        movementTransition.setByY(newPos.getY() - initPos.getY());
+
         movementTransition.setOnFinished(e -> {
             actions.remove(0);
-            if (actions.size() > 0){
+            if (actions.size() > 0) {
                 createNewTransition(actions);
                 movementTransition.setOnFinished(e2 -> {
                     ball.getItem().setVisible(true);
@@ -153,12 +162,10 @@ public class CupsAndBalls implements GameLifeCycle {
         });
         movementTransition.play();
     }
-    
-    public void removeAllIncorrectCups(){
-        for (Cup cup : cups){
-            if (!cup.containsBall()){
-                cup.getItem().setVisible(false);
-            }
-        }
-    }
+
+    /*
+     * public void openAllIncorrectCups() { TranslateTransition revealCup; for (Cup cup : cups) { if
+     * (!cup.containsBall()) { revealCup = new TranslateTransition(Duration.millis(openCupDuration), cup);
+     * revealCup.setByY(-ball.getRadius() * 8); revealCup.play(); } } }
+     */
 }

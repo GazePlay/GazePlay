@@ -1,4 +1,4 @@
-package net.gazeplay.games.cups;
+package net.gazeplay.games.cups.utils;
 
 import javafx.scene.Scene;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;

@@ -20,7 +20,7 @@ import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
 import net.gazeplay.games.cups.CupsAndBalls;
-import net.gazeplay.games.cups.CupsAndBallsStats;
+import net.gazeplay.games.cups.utils.CupsAndBallsStats;
 
 import java.util.ArrayList;
 import java.util.List;

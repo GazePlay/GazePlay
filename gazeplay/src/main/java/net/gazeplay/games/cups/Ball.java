@@ -11,10 +11,12 @@ import net.gazeplay.GameContext;
 @Slf4j
 public class Ball {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private double radius;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private Color color;
     @Setter
     private Cup theCup;
@@ -35,9 +37,9 @@ public class Ball {
         updatePosition(theCup.getItem().getX(), theCup.getItem().getY());
     }
 
-    public void updatePosition(double newXPosCup, double newYPosCup) { 
+    public void updatePosition(double newXPosCup, double newYPosCup) {
         this.XCenterPos = newXPosCup + theCup.getItem().getWidth() / 2;
-        this.YCenterPos = newYPosCup + theCup.getItem().getHeight() - 2*radius;
+        this.YCenterPos = newYPosCup + theCup.getItem().getHeight() - 2 * radius;
         item.setCenterX(XCenterPos);
         item.setCenterY(YCenterPos);
     }

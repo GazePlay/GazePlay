@@ -1,4 +1,4 @@
-package net.gazeplay.games.cups;
+package net.gazeplay.games.cups.utils;
 
 import java.awt.Point;
 import lombok.Getter;
@@ -7,9 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PositionCup {
-    @Getter @Setter
+    @Getter
+    @Setter
     private int cellX;
-    @Getter @Setter
+    @Getter
+    @Setter
     private int cellY;
     private int maxCellsX;
     private int maxCellsY;
