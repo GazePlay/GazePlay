@@ -1,7 +1,5 @@
 package net.gazeplay;
 
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -144,7 +142,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     }
 
-    private Stage createDialog(Stage primaryStage, Collection<GameSpec> gameSpecs) {
+    private Stage createDialog(Stage primaryStage, GameSpec gameSpec) {
         // initialize the confirmation dialog
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -153,8 +151,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         FlowPane choicePane = new FlowPane();
         choicePane.setAlignment(Pos.CENTER);
-        for (GameSpec gameSpec : gameSpecs) {
-            Button button = new Button(gameSpec.getVariationHint());
+        for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
+            Button button = new Button(variant.getLabel());
             button.getStyleClass().add("gameVariationChooserButton");
             choicePane.getChildren().add(button);
 
@@ -162,7 +160,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     dialog.close();
-                    chooseGame(gameSpec);
+                    chooseGame(gameSpec, variant);
                 }
             });
         }
@@ -183,14 +181,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         FlowPane choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
 
-        Multimap<GameSummary, GameSpec> gamesByGameId = LinkedHashMultimap.create();
-        for (GameSpec gameSpec : games) {
-            gamesByGameId.put(gameSpec.getGameSummary(), gameSpec);
-        }
-
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
-        for (GameSummary gameSummary : gamesByGameId.keySet()) {
+        for (GameSpec gameSpec : games) {
+            final GameSummary gameSummary = gameSpec.getGameSummary();
 
             String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
 
@@ -225,20 +219,24 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    Collection<GameSpec> gameSpecs = gamesByGameId.get(gameSummary);
+                    Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
-                    if (gameSpecs.size() > 1) {
-                        log.info("gameSpecs = {}", gameSpecs);
+                    if (variants.size() > 1) {
+                        log.info("variants = {}", variants);
                         getScene().getRoot().setEffect(new BoxBlur());
-                        Stage dialog = createDialog(getGazePlay().getPrimaryStage(), gameSpecs);
+                        Stage dialog = createDialog(getGazePlay().getPrimaryStage(), gameSpec);
 
                         String dialogTitle = gameName + " : "
                                 + multilinguism.getTrad("Choose Game Variante", config.getLanguage());
                         dialog.setTitle(dialogTitle);
                         dialog.show();
                     } else {
-                        GameSpec onlyGameSpec = gameSpecs.iterator().next();
-                        chooseGame(onlyGameSpec);
+                        if (variants.size() == 1) {
+                            GameSpec.GameVariant onlyGameVariant = variants.iterator().next();
+                            chooseGame(gameSpec, onlyGameVariant);
+                        } else {
+                            chooseGame(gameSpec, null);
+                        }
                     }
                 }
             });
@@ -249,21 +247,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return choicePanel;
     }
 
-    private void chooseGame(int gameIndex) {
-        log.info("Game number: " + gameIndex);
-
-        if (gameIndex == -1) {
-            return;
-        }
-
-        GameSpec selectedGameSpec = games.get(gameIndex);
-
-        chooseGame(selectedGameSpec);
-    }
-
-    private void chooseGame(GameSpec selectedGameSpec) {
-        log.info(selectedGameSpec.getGameSummary().getNameCode() + " " + selectedGameSpec.getVariationHint());
-
+    private void chooseGame(GameSpec selectedGameSpec, GameSpec.GameVariant gameVariant) {
         GazePlay gazePlay = getGazePlay();
 
         GameContext gameContext = GameContext.newInstance(gazePlay);
@@ -281,7 +265,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         gameContext.createControlPanel(gazePlay, stats);
 
-        GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, stats);
+        GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
         currentGame.launch();
     }
 
