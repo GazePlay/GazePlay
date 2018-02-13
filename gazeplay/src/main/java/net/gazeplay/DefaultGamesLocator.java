@@ -65,7 +65,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 return new Ninja(gameContext, stats);
             }
         }));
-        
+
         result.add(new GameSpec(new GameSummary("Cups and Balls", DEFAULT_SEARCHING_GAME_THUMBNAIL),
                 new GameSpec.GameLauncher() {
                     @Override
@@ -79,7 +79,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new CupsAndBalls(gameContext, stats, 3, 3);
                     }
                 }));
-        
+
         result.add(new GameSpec(new GameSummary("MagicCards", DEFAULT_SEARCHING_GAME_THUMBNAIL),
                 new GameSpec.GameVariantGenerator() {
                     @Override
