@@ -32,7 +32,11 @@ public class Multilinguism {
     }
 
     public String getTrad(String key, String language) {
-        return i18n.translate(key, language);
+        String translate = i18n.translate(key, language);
+        if (translate == null) {
+            return "[untranslated!] " + key;
+        }
+        return translate;
     }
 
 }

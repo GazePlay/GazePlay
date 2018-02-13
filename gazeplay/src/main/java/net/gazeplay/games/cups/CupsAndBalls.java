@@ -1,15 +1,26 @@
 package net.gazeplay.games.cups;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Random;
+import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+@Slf4j
 public class CupsAndBalls implements GameLifeCycle {
 
     private final GameContext gameContext;
@@ -19,43 +30,54 @@ public class CupsAndBalls implements GameLifeCycle {
     private int nbCups;
     private final int nbLines;
     private final int nbColumns;
+    private int nbExchanges;
     
     private javafx.geometry.Dimension2D dimension2D;
-    
-    Random random = new Random();
 
-    public CupsAndBalls(GameContext gameContext, Stats stats, int nbCups, int nbLines, int nbColumns) {
+    private Random random = new Random();
+
+    public CupsAndBalls(GameContext gameContext, Stats stats, int nbCups) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
         this.nbCups = nbCups;
         this.cups = new Cup[nbCups];
-        this.nbColumns = nbColumns;
-        this.nbLines = nbLines;
+        this.nbColumns = nbCups;
+        this.nbLines = nbCups;
+        this.nbExchanges = nbCups*nbCups;
     }
     
-    private void init(){
+    public CupsAndBalls(GameContext gameContext, Stats stats, int nbCups, int nbExchanges){
+        this(gameContext, stats, nbCups);
+        this.nbExchanges = nbExchanges;
+    }
+
+    private void init() {
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         Image cupPicture = new Image("data/cups/images/cup.png");
-        double imageWidth = dimension2D.getHeight()/(nbColumns*1.5);
-        double imageHeight = dimension2D.getHeight()/nbColumns;
-        PositionCup position = new PositionCup(0, nbColumns/2, nbColumns, nbLines, dimension2D.getHeight(), dimension2D.getWidth(), imageWidth, imageHeight);
+        Image winPicture = new Image("data/common/images/bravo.png");
+        double imageWidth = dimension2D.getHeight() / (nbColumns * 1.5);
+        double imageHeight = dimension2D.getHeight() / nbColumns;
+       
         int ballInCup = random.nextInt(nbCups);
-        for (int index = 0; index < cups.length; index++) {
-            Point cupPos = position.calculateXY(position.getCellX(), position.getCellY());
-            Rectangle cupRectangle = new Rectangle(cupPos.getX(), cupPos.getY(), imageWidth, imageHeight);
+        Point posCup;
+        for (int indexCup = 0; indexCup < cups.length; indexCup++) {
+             PositionCup position = new PositionCup(indexCup, nbColumns / 2, nbColumns, nbLines, dimension2D.getHeight(),
+                dimension2D.getWidth(), imageWidth, imageHeight);
+            posCup = position.calculateXY(position.getCellX(), position.getCellY());
+            Rectangle cupRectangle = new Rectangle(posCup.getX(), posCup.getY(), imageWidth, imageHeight);
             cupRectangle.setFill(new ImagePattern(cupPicture, 0, 0, 1, 1, true));
-            cups[index] = new Cup(cupRectangle, position, gameContext);
-            if (index == ballInCup){
-                cups[index].setBall(true);
-                ball = new Ball(10, Color.RED, cups[index], gameContext);
+            cups[indexCup] = new Cup(cupRectangle, position, gameContext, stats, this);
+            if (indexCup == ballInCup) {
+                cups[indexCup].setWinner(true);
+                cups[indexCup].giveBall(true);
+                ball = new Ball(20, Color.RED, cups[indexCup]);
+                cups[indexCup].setBall(ball);
                 gameContext.getChildren().add(ball.getItem());
-            }else{
-                cups[index].setBall(false);
+            } else {
+                cups[indexCup].giveBall(false);
             }
-            position.setCellX(position.getCellX() + 1);
-            position.setCellY(position.getCellY());
             gameContext.getChildren().add(cupRectangle);
         }
     }
@@ -63,13 +85,80 @@ public class CupsAndBalls implements GameLifeCycle {
     @Override
     public void launch() {
         init();
+        TranslateTransition revealBallTransition = null;
+        for (int indexCup = 0; indexCup < cups.length; indexCup++){
+            if (cups[indexCup].containsBall()){
+                revealBallTransition = new TranslateTransition(Duration.millis(1000/*3000*/), cups[indexCup].getItem());
+                revealBallTransition.setByY(-ball.getRadius()*8);
+                revealBallTransition.setAutoReverse(true);
+                revealBallTransition.setCycleCount(2);
+            }
+        }
         
-        gameContext.getChildren().add(cups[2]);
+        Strategy strategy = new Strategy(nbCups, nbExchanges);
+        ArrayList<Action> actions = strategy.chooseStrategy(cups);
+        if (revealBallTransition != null){
+            revealBallTransition.play();
+            revealBallTransition.setOnFinished(e->{
+                ball.getItem().setVisible(false);
+                createNewTransition(actions);
+            });
+        }
     }
 
     @Override
     public void dispose() {
-
+        
     }
-
+    
+    private void createNewTransition(ArrayList<Action> actions){
+        int initCellX = actions.get(0).getInitCellX();
+        int initCellY = actions.get(0).getInitCellY();
+        int finalCellX = actions.get(0).getTargetCellX();
+        int finalCellY = actions.get(0).getTargetCellY();
+        
+        Rectangle cupToMove = null;
+        Point initPos = null;
+        Point newPos = null;
+        for (int indexCup = 0; indexCup < nbCups; indexCup++){
+            Cup currentCup = cups[indexCup];
+            if (currentCup.getPositionCup().getCellX() == initCellX && currentCup.getPositionCup().getCellY() == initCellY){
+                cupToMove = currentCup.getItem();
+                initPos = currentCup.getPositionCup().calculateXY(initCellX, initCellY);
+                newPos = currentCup.getPositionCup().calculateXY(finalCellX, finalCellY);
+                currentCup.getPositionCup().setCellX(finalCellX);
+                currentCup.getPositionCup().setCellY(finalCellY);
+                if (currentCup.containsBall()){
+                    currentCup.getBall().updatePosition(newPos.getX(), newPos.getY());
+                }
+            }
+        }
+        
+        if (newPos == null || initPos == null || cupToMove == null){
+            log.error("The cup positions haven't been set up properly");
+        }
+        
+        TranslateTransition movementTransition = new TranslateTransition(Duration.millis(1000/*2000*/), cupToMove);
+        movementTransition.setByX(newPos.getX()-initPos.getX());
+        movementTransition.setByY(newPos.getY()-initPos.getY());
+        
+        movementTransition.setOnFinished(e -> {
+            actions.remove(0);
+            if (actions.size() > 0){
+                createNewTransition(actions);
+                movementTransition.setOnFinished(e2 -> {
+                    ball.getItem().setVisible(true);
+                });
+            }
+        });
+        movementTransition.play();
+    }
+    
+    public void removeAllIncorrectCups(){
+        for (Cup cup : cups){
+            if (!cup.containsBall()){
+                cup.getItem().setVisible(false);
+            }
+        }
+    }
 }

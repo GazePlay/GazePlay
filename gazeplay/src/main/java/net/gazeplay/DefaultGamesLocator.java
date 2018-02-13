@@ -63,7 +63,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
             @Override
             public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
-                return new CupsAndBalls(gameContext, stats, 3, 3, 3);
+                return new CupsAndBalls(gameContext, stats, 3, 3);
             }
         }));
 
