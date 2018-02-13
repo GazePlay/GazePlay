@@ -3,10 +3,12 @@ package net.gazeplay;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
@@ -188,35 +190,56 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
             String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
 
-            Button button = new Button(gameName);
+            StackPane gameCard = new StackPane();
+            gameCard.getStyleClass().add("gameChooserButton");
+            gameCard.getStyleClass().add("button");
 
-            button.getStyleClass().add("gameChooserButton");
+            Label text = new Label(gameName);
+
+            if (gameSummary.getGameTypeIndicatorImageLocation() != null) {
+                Image buttonGraphics = new Image(gameSummary.getGameTypeIndicatorImageLocation());
+                ImageView imageView = new ImageView(buttonGraphics);
+                imageView.setFitWidth(32);
+                imageView.setFitHeight(32);
+                StackPane.setAlignment(imageView, Pos.TOP_LEFT);
+                gameCard.getChildren().add(imageView);
+            }
+
+            if (gameSummary.getThumbnailLocation() != null) {
+                Image buttonGraphics = new Image(gameSummary.getThumbnailLocation());
+                ImageView imageView = new ImageView(buttonGraphics);
+                imageView.setFitWidth(32);
+                imageView.setPreserveRatio(true);
+
+                int thumbnailBorderSize = 20;
+                gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> imageView
+                        .setFitWidth(newValue.doubleValue() - thumbnailBorderSize));
+                gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> imageView
+                        .setFitHeight(newValue.doubleValue() - thumbnailBorderSize));
+                StackPane.setAlignment(imageView, Pos.CENTER);
+                gameCard.getChildren().add(imageView);
+            }
+
+            StackPane.setAlignment(text, Pos.BOTTOM_RIGHT);
+            text.setPadding(new Insets(20, 20, 20, 20));
+            gameCard.getChildren().add(text);
 
             Stage primaryStage = GazePlay.getInstance().getPrimaryStage();
 
             // Adapt buttons size to screen size
             primaryStage.heightProperty().addListener((o) -> {
                 if (choicePanel.getHeight() > 0) {
-                    button.setPrefHeight(primaryStage.getHeight() / GAME_CHOOSER_BUTTON_VGROW_FACTOR);
+                    gameCard.setPrefHeight(primaryStage.getHeight() / GAME_CHOOSER_BUTTON_VGROW_FACTOR);
                 }
             });
 
             primaryStage.widthProperty().addListener((o) -> {
                 if (choicePanel.getHeight() > 0) {
-                    button.setPrefWidth(primaryStage.getWidth() / GAME_CHOOSER_BUTTON_HGROW_FACTOR);
+                    gameCard.setPrefWidth(primaryStage.getWidth() / GAME_CHOOSER_BUTTON_HGROW_FACTOR);
                 }
             });
 
-            if (gameSummary.getThumbnailLocation() != null) {
-                Image buttonGraphics = new Image(gameSummary.getThumbnailLocation());
-                ImageView imageView = new ImageView(buttonGraphics);
-                imageView.setFitWidth(32);
-                imageView.setFitHeight(32);
-                button.setGraphic(imageView);
-                button.setGraphicTextGap(16);
-            }
-
-            button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
@@ -241,7 +264,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 }
             });
 
-            choicePanel.getChildren().add(button);
+            choicePanel.getChildren().add(gameCard);
         }
 
         return choicePanel;
