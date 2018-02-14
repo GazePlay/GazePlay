@@ -1,17 +1,24 @@
 package net.gazeplay.games.biboules;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
@@ -43,6 +50,10 @@ public class Biboule extends Parent implements GameLifeCycle {
     private Image orange;
     private Image red;
     private Image flash;
+    
+    private String date;
+    private Label text;
+    private int score;
 
     private StackPane hand;
 
@@ -56,6 +67,9 @@ public class Biboule extends Parent implements GameLifeCycle {
     public Biboule(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
+        LocalDate localDate = LocalDate.now();
+        date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
+        score = 0;
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
@@ -70,12 +84,10 @@ public class Biboule extends Parent implements GameLifeCycle {
         EventHandler<Event> handEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-
                 if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
                     double x = ((MouseEvent) e).getX();
                     double y = ((MouseEvent) e).getY();
                    hand.setRotate(getAngle(new Point(x, y)));
-
                 }
             }
         };
@@ -133,6 +145,13 @@ public class Biboule extends Parent implements GameLifeCycle {
     // done
     @Override
     public void launch() {
+    	
+    	Label sc = new Label();
+
+       
+    	
+    	sc.setText(date + "\n\t" + "Score:" + score);
+    	sc.setTextFill(Color.WHITE);;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         ImageView iv1 = new ImageView(new Image("data/biboule/images/hand.png"));
         ImageView iv2 = new ImageView(new Image("data/biboule/images/handMagic.png"));
@@ -149,8 +168,20 @@ public class Biboule extends Parent implements GameLifeCycle {
         iv.setLayoutY(dimension2D.getHeight()/2);
         this.getChildren().add(iv);
         hand = (StackPane) this.getChildren().get(0);
-        this.getChildren().get(this.getChildren().indexOf(hand)).toBack();
+        hand.toFront();
+
+        
+
+    	sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight()/15));
+    	sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
+    	sc.setLayoutY(1.8 * dimension2D.getHeight() / 21);
+    	text = sc;
+    	this.getChildren().add(sc);
+    	
+        
+        
         this.gameContext.resetBordersToFront();
+        iv.setMouseTransparent(true);
 
         for (int i = 0; i < 5; i++) {
             newCircle();
@@ -189,6 +220,10 @@ public class Biboule extends Parent implements GameLifeCycle {
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
         t.t.stop();
+        
+
+    	text.setText(date + "\n\t" + "Score:" + score++);
+        
         t.getChildren().get(0).setOpacity(1);
         hand.getChildren().get(1).setOpacity(1);
         FadeTransition ft = new FadeTransition(Duration.millis(500), t);
@@ -278,7 +313,8 @@ public class Biboule extends Parent implements GameLifeCycle {
         if (r == 2) {
             this.getChildren().get(this.getChildren().indexOf(sp)).toFront();
         } else {
-            this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
+            this.getChildren().get(this.getChildren().indexOf(sp)).toBack(); 
+            text.toBack();
         }
 
         ScaleTransition st = new ScaleTransition(new Duration(timelength), sp);
