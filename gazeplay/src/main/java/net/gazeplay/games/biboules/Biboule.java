@@ -1,29 +1,31 @@
 package net.gazeplay.games.biboules;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Screen;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.Random;
 
 /**
  * Created by schwab on 28/08/2016.
@@ -48,6 +50,10 @@ public class Biboule extends Parent implements GameLifeCycle {
     private Image orange;
     private Image red;
     private Image flash;
+    
+    private String date;
+    private Label text;
+    private int score;
 
     private StackPane hand;
 
@@ -61,16 +67,31 @@ public class Biboule extends Parent implements GameLifeCycle {
     public Biboule(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
+        LocalDate localDate = LocalDate.now();
+        date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
+        score = 0;
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
         centerX = 8.7 * dimension2D.getWidth() / 29.7;
-        centerY = 11 * dimension2D.getHeight() / 21;
+        centerY = 10 * dimension2D.getHeight() / 21;
 
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageRectangle.setFill(new ImagePattern(new Image("data/biboule/images/Backgroung.jpg")));
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
+
+        EventHandler<Event> handEvent = new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+                if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                    double x = ((MouseEvent) e).getX();
+                    double y = ((MouseEvent) e).getY();
+                   hand.setRotate(getAngle(new Point(x, y)));
+                }
+            }
+        };
+        imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
 
         blue = new Image("data/biboule/images/BlueBiboule.png");
         green = new Image("data/biboule/images/GreenBiboule.png");
@@ -109,14 +130,33 @@ public class Biboule extends Parent implements GameLifeCycle {
 
     }
 
+    public float getAngle(Point target) {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        float angle = (float) Math
+                .toDegrees(Math.atan2(target.x - (dimension2D.getWidth() / 2), -target.y + (dimension2D.getHeight())));
+
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        return angle;
+    }
+
     // done
     @Override
     public void launch() {
+    	
+    	Label sc = new Label();
+
+       
+    	
+    	sc.setText(date + "\n\t" + "Score:" + score);
+    	sc.setTextFill(Color.WHITE);;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         ImageView iv1 = new ImageView(new Image("data/biboule/images/hand.png"));
         ImageView iv2 = new ImageView(new Image("data/biboule/images/handMagic.png"));
         StackPane iv = new StackPane();
-        double x = dimension2D.getHeight() / 2;
+        double x = dimension2D.getHeight();
         iv1.setPreserveRatio(true);
         iv1.setFitHeight(x);
         iv2.setPreserveRatio(true);
@@ -125,11 +165,23 @@ public class Biboule extends Parent implements GameLifeCycle {
         iv.getChildren().get(1).setOpacity(0);
         iv.setLayoutY(0);
         iv.setLayoutX(3 * (dimension2D.getWidth() / 7));
-        iv.setLayoutY(dimension2D.getHeight() / 2);
+        iv.setLayoutY(dimension2D.getHeight()/2);
         this.getChildren().add(iv);
         hand = (StackPane) this.getChildren().get(0);
-        this.getChildren().get(this.getChildren().indexOf(hand)).toFront();
+        hand.toFront();
+
+        
+
+    	sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight()/15));
+    	sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
+    	sc.setLayoutY(1.8 * dimension2D.getHeight() / 21);
+    	text = sc;
+    	this.getChildren().add(sc);
+    	
+        
+        
         this.gameContext.resetBordersToFront();
+        iv.setMouseTransparent(true);
 
         for (int i = 0; i < 5; i++) {
             newCircle();
@@ -167,7 +219,11 @@ public class Biboule extends Parent implements GameLifeCycle {
     private void enter(Target t) {
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
-        t.t.pause();
+        t.t.stop();
+        
+
+    	text.setText(date + "\n\t" + "Score:" + score++);
+        
         t.getChildren().get(0).setOpacity(1);
         hand.getChildren().get(1).setOpacity(1);
         FadeTransition ft = new FadeTransition(Duration.millis(500), t);
@@ -179,10 +235,12 @@ public class Biboule extends Parent implements GameLifeCycle {
         ParallelTransition st = new ParallelTransition();
         st.getChildren().addAll(ft, ft2);
         st.play();
+
         st.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                restart(t);
+                getChildren().remove((getChildren().indexOf(t)));
+                newCircle();
             }
         });
 
@@ -192,11 +250,8 @@ public class Biboule extends Parent implements GameLifeCycle {
 
         Target sp = buildCircle();
         sp.toBack();
-
         this.getChildren().add(sp);
         gameContext.getGazeDeviceManager().addEventFilter(sp);
-
-        this.getChildren().get(this.getChildren().indexOf(hand)).toFront();
 
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
@@ -258,7 +313,8 @@ public class Biboule extends Parent implements GameLifeCycle {
         if (r == 2) {
             this.getChildren().get(this.getChildren().indexOf(sp)).toFront();
         } else {
-            this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
+            this.getChildren().get(this.getChildren().indexOf(sp)).toBack(); 
+            text.toBack();
         }
 
         ScaleTransition st = new ScaleTransition(new Duration(timelength), sp);
@@ -292,9 +348,8 @@ public class Biboule extends Parent implements GameLifeCycle {
         pt.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                sp.setLayoutX(centerX);
-                sp.setLayoutY(centerY);
-                restart(sp);
+                getChildren().remove((getChildren().indexOf(sp)));
+                newCircle();
             }
         });
 

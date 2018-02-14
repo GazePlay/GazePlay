@@ -8,7 +8,7 @@ public class BibouleGamesStats extends ShootGamesStats {
     public BibouleGamesStats(Scene scene) {
 
         super(scene);
-        this.gameName = "bubbles";
+        this.gameName = "biboules";
     }
 
     public void incNbGoals() {
