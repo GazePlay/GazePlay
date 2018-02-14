@@ -34,6 +34,8 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Collection;
 import java.util.List;
+import javafx.application.Platform;
+import javafx.stage.StageStyle;
 
 @Data
 @Slf4j
@@ -149,10 +151,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(primaryStage);
+        dialog.initStyle(StageStyle.UTILITY);
         dialog.setOnCloseRequest(windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
 
         FlowPane choicePane = new FlowPane();
         choicePane.setAlignment(Pos.CENTER);
+
+        GazePlay gazePlay = GazePlay.getInstance();
+
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             Button button = new Button(variant.getLabel());
             button.getStyleClass().add("gameVariationChooserButton");
@@ -253,6 +259,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                                 + multilinguism.getTrad("Choose Game Variante", config.getLanguage());
                         dialog.setTitle(dialogTitle);
                         dialog.show();
+
+                        dialog.toFront();
+                        dialog.setAlwaysOnTop(true);
+
                     } else {
                         if (variants.size() == 1) {
                             GameSpec.GameVariant onlyGameVariant = variants.iterator().next();
