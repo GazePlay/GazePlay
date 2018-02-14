@@ -67,9 +67,28 @@ public class GazePlay extends Application {
     }
 
     public void toggleFullScreen() {
+
+        // Check if it was maximized
+        if (primaryStage.isMaximized()) {
+            primaryStage.setMaximized(false);
+        }
+
         boolean fullScreen = !primaryStage.isFullScreen();
         log.info("fullScreen = {}", fullScreen);
         primaryStage.setFullScreen(fullScreen);
+        primaryStage.show();
+    }
+
+    public void toggleMaximized() {
+
+        // Check if it was fullscreen
+        if (primaryStage.isFullScreen()) {
+            primaryStage.setFullScreen(false);
+        }
+
+        boolean maximized = !primaryStage.isMaximized();
+        log.info("maximized = {}", maximized);
+        primaryStage.setMaximized(maximized);
         primaryStage.show();
     }
 

@@ -26,7 +26,6 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
-
 /**
  * Created by schwab on 28/08/2016.
  */
@@ -50,7 +49,7 @@ public class Biboule extends Parent implements GameLifeCycle {
     private Image orange;
     private Image red;
     private Image flash;
-    
+
     private String date;
     private Label text;
     private int score;
@@ -87,7 +86,7 @@ public class Biboule extends Parent implements GameLifeCycle {
                 if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
                     double x = ((MouseEvent) e).getX();
                     double y = ((MouseEvent) e).getY();
-                   hand.setRotate(getAngle(new Point(x, y)));
+                    hand.setRotate(getAngle(new Point(x, y)));
                 }
             }
         };
@@ -145,13 +144,12 @@ public class Biboule extends Parent implements GameLifeCycle {
     // done
     @Override
     public void launch() {
-    	
-    	Label sc = new Label();
 
-       
-    	
-    	sc.setText(date + "\n\t" + "Score:" + score);
-    	sc.setTextFill(Color.WHITE);;
+        Label sc = new Label();
+
+        sc.setText(date + "\n\t" + "Score:" + score);
+        sc.setTextFill(Color.WHITE);
+        ;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         ImageView iv1 = new ImageView(new Image("data/biboule/images/hand.png"));
         ImageView iv2 = new ImageView(new Image("data/biboule/images/handMagic.png"));
@@ -165,21 +163,17 @@ public class Biboule extends Parent implements GameLifeCycle {
         iv.getChildren().get(1).setOpacity(0);
         iv.setLayoutY(0);
         iv.setLayoutX(3 * (dimension2D.getWidth() / 7));
-        iv.setLayoutY(dimension2D.getHeight()/2);
+        iv.setLayoutY(dimension2D.getHeight() / 2);
         this.getChildren().add(iv);
         hand = (StackPane) this.getChildren().get(0);
         hand.toFront();
 
-        
+        sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight() / 15));
+        sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
+        sc.setLayoutY(1.8 * dimension2D.getHeight() / 21);
+        text = sc;
+        this.getChildren().add(sc);
 
-    	sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight()/15));
-    	sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
-    	sc.setLayoutY(1.8 * dimension2D.getHeight() / 21);
-    	text = sc;
-    	this.getChildren().add(sc);
-    	
-        
-        
         this.gameContext.resetBordersToFront();
         iv.setMouseTransparent(true);
 
@@ -220,10 +214,9 @@ public class Biboule extends Parent implements GameLifeCycle {
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
         t.t.stop();
-        
 
-    	text.setText(date + "\n\t" + "Score:" + score++);
-        
+        text.setText(date + "\n\t" + "Score:" + score++);
+
         t.getChildren().get(0).setOpacity(1);
         hand.getChildren().get(1).setOpacity(1);
         FadeTransition ft = new FadeTransition(Duration.millis(500), t);
@@ -313,7 +306,7 @@ public class Biboule extends Parent implements GameLifeCycle {
         if (r == 2) {
             this.getChildren().get(this.getChildren().indexOf(sp)).toFront();
         } else {
-            this.getChildren().get(this.getChildren().indexOf(sp)).toBack(); 
+            this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
             text.toBack();
         }
 
