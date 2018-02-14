@@ -74,7 +74,7 @@ public class Biboule extends Parent implements GameLifeCycle {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
         centerX = 8.7 * dimension2D.getWidth() / 29.7;
-        centerY = 11 * dimension2D.getHeight() / 21;
+        centerY = 10 * dimension2D.getHeight() / 21;
 
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageRectangle.setFill(new ImagePattern(new Image("data/biboule/images/Backgroung.jpg")));
