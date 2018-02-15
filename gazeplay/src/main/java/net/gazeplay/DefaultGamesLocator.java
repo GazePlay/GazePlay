@@ -18,6 +18,8 @@ import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
+import net.gazeplay.games.robots.Robot;
+import net.gazeplay.games.robots.RobotGamesStats;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
@@ -293,6 +295,17 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Biboule(gameContext, stats);
                     }
                 }));
+        result.add(new GameSpec(new GameSummary("Robots", DEFAULT_AIMING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new RobotGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
+                return new Robot(gameContext, stats);
+            }
+        }));
 
         log.info("Games found : {}", result.size());
 
