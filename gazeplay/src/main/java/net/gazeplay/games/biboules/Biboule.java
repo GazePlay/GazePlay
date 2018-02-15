@@ -56,7 +56,7 @@ public class Biboule extends Parent implements GameLifeCycle {
 
     private StackPane hand;
     private ImageView cage;
-    
+
     private Boolean left;
 
     private final Stats stats;
@@ -92,7 +92,7 @@ public class Biboule extends Parent implements GameLifeCycle {
                     hand.setRotate(getAngle(new Point(x, y)));
                 }
 
-              }
+            }
         };
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
         imageRectangle.addEventFilter(GazeEvent.ANY, handEvent);
@@ -145,65 +145,63 @@ public class Biboule extends Parent implements GameLifeCycle {
 
         return angle;
     }
-    
-    public void magicCage() {
-    	Timeline timeline = new Timeline();
-    	timeline.getKeyFrames().add(new KeyFrame(new Duration(8000)));
-    	 log.info("****LEFT****= {}", left);
-    	
-    	timeline.setOnFinished(new EventHandler<ActionEvent>() {
-             @Override
-             public void handle(ActionEvent actionEvent) {
-                 if (moveCage(left)) {
-                	 left = !left;
-                 }
-                 magicCage();
-             }
-         });
-    	timeline.play();
-        
-    }
-    
-    public boolean moveCage(Boolean left) {
-    	
-    	boolean leftorright = false;
-    	
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D(); 
-    	double x = cage.getBoundsInParent().getMinY();
-    	double y = cage.getBoundsInParent().getMinX();
-    	
-    	
-    	//Move UP
-    	Timeline timeline = new Timeline();
-    	timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                new KeyValue(cage.layoutYProperty(), x -(dimension2D.getHeight() / 5), Interpolator.EASE_OUT)));
 
-    	
-    	int rd = (int) (Math.random()*2);
-    	Timeline timeline3 = new Timeline();
-    	if( rd==1) {
-	    	//Move Left or Right
-	    	double val;
-	    	if (left) {
-	    		val = y + (dimension2D.getWidth() / 2.5);
-	    	}else {
-	    		val =  y - (dimension2D.getWidth() / 2.5);
-	    	}
-	    	timeline3.getKeyFrames().add(new KeyFrame(new Duration(3000),
-	                new KeyValue(cage.layoutXProperty(), val , Interpolator.EASE_OUT)));
-	    	leftorright = true;
-    	}
-    	
-    	//Move DOWN
-     	Timeline timeline2 = new Timeline();
-     	timeline2.getKeyFrames().add(new KeyFrame(new Duration(500),
-                 new KeyValue(cage.layoutYProperty(), x, Interpolator.EASE_OUT)));
-         
-     	SequentialTransition st = new SequentialTransition();
-     	st.getChildren().addAll(timeline,timeline3,timeline2);
-    	st.play();
-    	
-    	return leftorright;
+    public void magicCage() {
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(8000)));
+        log.info("****LEFT****= {}", left);
+
+        timeline.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if (moveCage(left)) {
+                    left = !left;
+                }
+                magicCage();
+            }
+        });
+        timeline.play();
+
+    }
+
+    public boolean moveCage(Boolean left) {
+
+        boolean leftorright = false;
+
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        double x = cage.getBoundsInParent().getMinY();
+        double y = cage.getBoundsInParent().getMinX();
+
+        // Move UP
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
+                new KeyValue(cage.layoutYProperty(), x - (dimension2D.getHeight() / 5), Interpolator.EASE_OUT)));
+
+        int rd = (int) (Math.random() * 2);
+        Timeline timeline3 = new Timeline();
+        if (rd == 1) {
+            // Move Left or Right
+            double val;
+            if (left) {
+                val = y + (dimension2D.getWidth() / 2.5);
+            } else {
+                val = y - (dimension2D.getWidth() / 2.5);
+            }
+            timeline3.getKeyFrames().add(
+                    new KeyFrame(new Duration(3000), new KeyValue(cage.layoutXProperty(), val, Interpolator.EASE_OUT)));
+            leftorright = true;
+        }
+
+        // Move DOWN
+        Timeline timeline2 = new Timeline();
+        timeline2.getKeyFrames()
+                .add(new KeyFrame(new Duration(500), new KeyValue(cage.layoutYProperty(), x, Interpolator.EASE_OUT)));
+
+        SequentialTransition st = new SequentialTransition();
+        st.getChildren().addAll(timeline, timeline3, timeline2);
+        st.play();
+
+        return leftorright;
     }
 
     // done
@@ -241,25 +239,23 @@ public class Biboule extends Parent implements GameLifeCycle {
 
         this.gameContext.resetBordersToFront();
         iv.setMouseTransparent(true);
-        
-        
 
         cage = new ImageView(new Image("data/biboule/images/Biboules.png"));
-        cage.setLayoutX( 8.5 * dimension2D.getWidth() / 29.7);
-        cage.setLayoutY( 8.5 * dimension2D.getHeight() / 21);
-        double y = dimension2D.getHeight()/6.5;
+        cage.setLayoutX(8.5 * dimension2D.getWidth() / 29.7);
+        cage.setLayoutY(8.5 * dimension2D.getHeight() / 21);
+        double y = dimension2D.getHeight() / 6.5;
         cage.setPreserveRatio(true);
         cage.setFitHeight(y);
         cage.toBack();
         left = true;
         this.getChildren().add(cage);
-        
+
         for (int i = 0; i < 5; i++) {
             newCircle();
         }
-        
+
         magicCage();
-        
+
         stats.start();
 
     }
@@ -330,7 +326,7 @@ public class Biboule extends Parent implements GameLifeCycle {
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
         double x = (cage.getBoundsInParent().getMinX());
         sp.setLayoutX(x);
-        double y = (cage.getBoundsInParent().getMinY() + cage.getBoundsInParent().getMaxY())/2;
+        double y = (cage.getBoundsInParent().getMinY() + cage.getBoundsInParent().getMaxY()) / 2;
         sp.setLayoutY(y);
 
         moveCircle(sp);
@@ -387,7 +383,7 @@ public class Biboule extends Parent implements GameLifeCycle {
 
         if (r == 2) {
             this.getChildren().get(this.getChildren().indexOf(sp)).toFront();
-        } else {
+        } else { 
             this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
             text.toBack();
             cage.toBack();
