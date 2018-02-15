@@ -166,20 +166,27 @@ public class Biboule extends Parent implements GameLifeCycle {
 
     public boolean moveCage(Boolean left) {
 
+        double min = Math.ceil(0);
+        double max = Math.floor(2);
+        int rd = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
+
         boolean leftorright = false;
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double x = cage.getBoundsInParent().getMinY();
         double y = cage.getBoundsInParent().getMinX();
 
-        // Move UP
         Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                new KeyValue(cage.layoutYProperty(), x - (dimension2D.getHeight() / 5), Interpolator.EASE_OUT)));
-
-        int rd = (int) (Math.random() * 2);
+        Timeline timeline2 = new Timeline();
         Timeline timeline3 = new Timeline();
-        if (rd == 1) {
+
+        if ((rd == 2) || (rd == 0)) {
+            // Move UP
+            timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
+                    new KeyValue(cage.layoutYProperty(), x - (dimension2D.getHeight() / 5), Interpolator.EASE_OUT)));
+        }
+
+        if ((rd == 1) || (rd == 2)) {
             // Move Left or Right
             double val;
             if (left) {
@@ -192,11 +199,11 @@ public class Biboule extends Parent implements GameLifeCycle {
             leftorright = true;
         }
 
-        // Move DOWN
-        Timeline timeline2 = new Timeline();
-        timeline2.getKeyFrames()
-                .add(new KeyFrame(new Duration(500), new KeyValue(cage.layoutYProperty(), x, Interpolator.EASE_OUT)));
-
+        if ((rd == 2) || (rd == 0)) {
+            // Move DOWN
+            timeline2.getKeyFrames().add(
+                    new KeyFrame(new Duration(500), new KeyValue(cage.layoutYProperty(), x, Interpolator.EASE_OUT)));
+        }
         SequentialTransition st = new SequentialTransition();
         st.getChildren().addAll(timeline, timeline3, timeline2);
         st.play();
@@ -383,7 +390,7 @@ public class Biboule extends Parent implements GameLifeCycle {
 
         if (r == 2) {
             this.getChildren().get(this.getChildren().indexOf(sp)).toFront();
-        } else { 
+        } else {
             this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
             text.toBack();
             cage.toBack();
