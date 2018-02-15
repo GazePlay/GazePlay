@@ -231,8 +231,8 @@ public class Robot extends Parent implements GameLifeCycle {
         iv2.setFitHeight(x);
 
         sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight() / 18));
-        //sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
-        //sc.setLayoutY(hand.getHeight());
+        // sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
+        // sc.setLayoutY(hand.getHeight());
         text = sc;
         iv.getChildren().addAll(iv1, iv2, text);
         iv.getChildren().get(1).setOpacity(0);
@@ -244,9 +244,9 @@ public class Robot extends Parent implements GameLifeCycle {
         hand.toFront();
         text.toFront();
 
-        //this.getChildren().add(sc);
+        // this.getChildren().add(sc);
 
-        //this.gameContext.resetBordersToFront();
+        // this.gameContext.resetBordersToFront();
         iv.setMouseTransparent(true);
 
         cage = new ImageView(new Image("data/robot/images/ship.png"));
