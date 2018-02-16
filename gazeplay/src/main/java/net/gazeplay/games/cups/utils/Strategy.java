@@ -15,7 +15,8 @@ public class Strategy {
     private ArrayList<Action> actions;
 
     private enum Strategies {
-        movement_rotation
+        rotation_up_down,
+        rotation_move_closest_in_place
     };
 
     public Strategy(int nbCups, int nbIterations) {
@@ -48,17 +49,21 @@ public class Strategy {
             int strategy_choice = random.nextInt(Strategies.values().length);
 
             switch (Strategies.values()[strategy_choice]) {
-            case movement_rotation:
-                log.info("Strategy chosen : movement_rotation");
-                movement_rotation(cupToMove.getPositionCup().getCellX(), cupToSwitch.getPositionCup().getCellX(),
-                        moveUp);
-                break;
+                case rotation_up_down:
+                    log.info("Strategy chosen : rotation_up_down");
+                    rotation_up_down(cupToMove.getPositionCup().getCellX(), cupToSwitch.getPositionCup().getCellX(),
+                            moveUp);
+                    break;
+                /*case rotation_move_closest_in_place:
+                    log.info("Strategy chosen : rotation_move_closest_in_place");
+                    rotation_move_closest_in_place(cupToMove.getPositionCup().getCellX(), cupToSwitch.getPositionCup().getCellX(), moveUp);
+*/
             }
         }
         return actions;
     }
 
-    private void movement_rotation(int startCellX, int targetCellX, boolean moveUp) {
+    private void rotation_up_down(int startCellX, int targetCellX, boolean moveUp) {
         if (moveUp) {
             actions.add(new Action(startCellX, 1, startCellX, 0));
             actions.add(new Action(startCellX, 0, targetCellX, 0));
@@ -76,4 +81,21 @@ public class Strategy {
         }
     }
 
+    private void rotation_move_closest_in_place(int startCellX, int targetCellX, boolean moveUp){
+        if (moveUp) {
+            actions.add(new Action(startCellX, 1, startCellX, 0));
+            actions.add(new Action(startCellX, 0, targetCellX, 0));
+            actions.add(new Action(targetCellX, 1, targetCellX, 2));
+            actions.add(new Action(targetCellX, 2, startCellX, 2));
+            actions.add(new Action(startCellX, 2, startCellX, 1));
+            actions.add(new Action(targetCellX, 0, targetCellX, 1));
+        } else {
+            actions.add(new Action(startCellX, 1, startCellX, 2));
+            actions.add(new Action(startCellX, 2, targetCellX, 2));
+            actions.add(new Action(targetCellX, 1, targetCellX, 0));
+            actions.add(new Action(targetCellX, 0, startCellX, 0));
+            actions.add(new Action(startCellX, 0, startCellX, 1));
+            actions.add(new Action(targetCellX, 2, targetCellX, 1));
+        }
+    }
 }
