@@ -91,8 +91,7 @@ public class CupsAndBalls implements GameLifeCycle {
         TranslateTransition revealBallTransition = null;
         for (int indexCup = 0; indexCup < cups.length; indexCup++) {
             if (cups[indexCup].containsBall()) {
-                revealBallTransition = new TranslateTransition(Duration.millis(openCupSpeed),
-                        cups[indexCup].getItem());
+                revealBallTransition = new TranslateTransition(Duration.millis(openCupSpeed), cups[indexCup].getItem());
                 revealBallTransition.setByY(-ballRadius * 8);
                 revealBallTransition.setAutoReverse(true);
                 revealBallTransition.setCycleCount(2);
@@ -101,7 +100,7 @@ public class CupsAndBalls implements GameLifeCycle {
 
         Strategy strategy = new Strategy(nbCups, nbExchanges);
         ArrayList<Action> actions = strategy.chooseStrategy(cups);
-        for (Cup cup : cups){
+        for (Cup cup : cups) {
             cup.setActionsToDo(actions.size());
         }
         if (revealBallTransition != null) {
@@ -156,7 +155,7 @@ public class CupsAndBalls implements GameLifeCycle {
             actions.remove(0);
             if (actions.size() > 0) {
                 createNewTransition(actions);
-                for (Cup cup : cups){
+                for (Cup cup : cups) {
                     cup.increaseActionsDone();
                 }
             }
@@ -164,16 +163,16 @@ public class CupsAndBalls implements GameLifeCycle {
         movementTransition.play();
     }
 
-    public void openAllIncorrectCups() { 
-        TranslateTransition revealCup; 
-        for (Cup cup : cups) { 
-            if(!cup.containsBall() && !cup.isRevealed()) {
+    public void openAllIncorrectCups() {
+        TranslateTransition revealCup;
+        for (Cup cup : cups) {
+            if (!cup.containsBall() && !cup.isRevealed()) {
                 revealCup = new TranslateTransition(Duration.millis(openCupSpeed), cup.getItem());
-                revealCup.setByY(-ballRadius * 8); 
+                revealCup.setByY(-ballRadius * 8);
                 revealCup.play();
                 cup.setRevealed(true);
-            } 
-        } 
+            }
+        }
     }
 
 }
