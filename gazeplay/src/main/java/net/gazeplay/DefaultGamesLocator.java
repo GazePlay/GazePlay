@@ -72,7 +72,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Ninja(gameContext, stats);
                     }
                 }));
-
+/*
         result.add(new GameSpec(new GameSummary("Cups and Balls", DEFAULT_SEARCHING_GAME_THUMBNAIL),
                 new GameSpec.GameLauncher() {
                     @Override
@@ -86,7 +86,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new CupsAndBalls(gameContext, stats, 3, 3);
                     }
                 }));
-
+*/
         result.add(new GameSpec(
                 new GameSummary("MagicCards", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/magic-card-1.jpg"),
                 new GameSpec.GameVariantGenerator() {
@@ -308,7 +308,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 return new Robot(gameContext, stats);
             }
         }));
-
+/*
         result.add(new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
             @Override
             public Stats createNewStats(Scene scene) {
@@ -320,6 +320,8 @@ public class DefaultGamesLocator implements GamesLocator {
                 return new Divisor(gameContext, stats);
             }
         }));
+
+        */
 
         log.info("Games found : {}", result.size());
 
