@@ -7,12 +7,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 import javafx.animation.TranslateTransition;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -20,7 +15,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -36,8 +30,9 @@ public class CupsAndBalls implements GameLifeCycle {
     private int nbExchanges;
 
     private javafx.geometry.Dimension2D dimension2D;
-    private int openCupDuration = 200;
-    private int exchangeCupDuration = 200;
+    private int openCupSpeed = 2000;
+    private int exchangeCupDuration = 2000;
+    private int ballRadius = 20;
 
     private Random random = new Random();
 
@@ -73,17 +68,20 @@ public class CupsAndBalls implements GameLifeCycle {
             posCup = position.calculateXY(position.getCellX(), position.getCellY());
             Rectangle cupRectangle = new Rectangle(posCup.getX(), posCup.getY(), imageWidth, imageHeight);
             cupRectangle.setFill(new ImagePattern(cupPicture, 0, 0, 1, 1, true));
-            cups[indexCup] = new Cup(cupRectangle, position, gameContext, stats, this);
+            cups[indexCup] = new Cup(cupRectangle, position, gameContext, stats, this, openCupSpeed);
             if (indexCup == ballInCup) {
                 cups[indexCup].setWinner(true);
                 cups[indexCup].giveBall(true);
-                ball = new Ball(20, Color.RED, cups[indexCup]);
+                ball = new Ball(ballRadius, Color.RED, cups[indexCup]);
                 cups[indexCup].setBall(ball);
+                cups[indexCup].setBallRadius(ballRadius);
                 gameContext.getChildren().add(ball.getItem());
             } else {
                 cups[indexCup].giveBall(false);
+                cups[indexCup].setBallRadius(ballRadius);
             }
             gameContext.getChildren().add(cupRectangle);
+            cups[indexCup].getProgressIndicator().toFront();
         }
     }
 
@@ -93,9 +91,9 @@ public class CupsAndBalls implements GameLifeCycle {
         TranslateTransition revealBallTransition = null;
         for (int indexCup = 0; indexCup < cups.length; indexCup++) {
             if (cups[indexCup].containsBall()) {
-                revealBallTransition = new TranslateTransition(Duration.millis(openCupDuration),
+                revealBallTransition = new TranslateTransition(Duration.millis(openCupSpeed),
                         cups[indexCup].getItem());
-                revealBallTransition.setByY(-ball.getRadius() * 8);
+                revealBallTransition.setByY(-ballRadius * 8);
                 revealBallTransition.setAutoReverse(true);
                 revealBallTransition.setCycleCount(2);
             }
@@ -103,6 +101,9 @@ public class CupsAndBalls implements GameLifeCycle {
 
         Strategy strategy = new Strategy(nbCups, nbExchanges);
         ArrayList<Action> actions = strategy.chooseStrategy(cups);
+        for (Cup cup : cups){
+            cup.setActionsToDo(actions.size());
+        }
         if (revealBallTransition != null) {
             revealBallTransition.play();
             revealBallTransition.setOnFinished(e -> {
@@ -155,17 +156,24 @@ public class CupsAndBalls implements GameLifeCycle {
             actions.remove(0);
             if (actions.size() > 0) {
                 createNewTransition(actions);
-                movementTransition.setOnFinished(e2 -> {
-                    ball.getItem().setVisible(true);
-                });
+                for (Cup cup : cups){
+                    cup.increaseActionsDone();
+                }
             }
         });
         movementTransition.play();
     }
 
-    /*
-     * public void openAllIncorrectCups() { TranslateTransition revealCup; for (Cup cup : cups) { if
-     * (!cup.containsBall()) { revealCup = new TranslateTransition(Duration.millis(openCupDuration), cup);
-     * revealCup.setByY(-ball.getRadius() * 8); revealCup.play(); } } }
-     */
+    public void openAllIncorrectCups() { 
+        TranslateTransition revealCup; 
+        for (Cup cup : cups) { 
+            if(!cup.containsBall() && !cup.isRevealed()) {
+                revealCup = new TranslateTransition(Duration.millis(openCupSpeed), cup.getItem());
+                revealCup.setByY(-ballRadius * 8); 
+                revealCup.play();
+                cup.setRevealed(true);
+            } 
+        } 
+    }
+
 }
