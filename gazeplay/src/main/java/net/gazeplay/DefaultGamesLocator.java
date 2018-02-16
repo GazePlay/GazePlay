@@ -285,7 +285,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(
-                new GameSpec(new GameSummary("Biboules", DEFAULT_AIMING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+                new GameSpec(new GameSummary("Biboules", DEFAULT_AIMING_GAME_THUMBNAIL,"data/Thumbnails/biboules.jpeg"), new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new BibouleGamesStats(scene);
@@ -297,7 +297,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Biboule(gameContext, stats);
                     }
                 }));
-        result.add(new GameSpec(new GameSummary("Robots", DEFAULT_AIMING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+        result.add(new GameSpec(new GameSummary("Robots", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/robots.jpeg"), new GameSpec.GameLauncher() {
             @Override
             public Stats createNewStats(Scene scene) {
                 return new RobotGamesStats(scene);
