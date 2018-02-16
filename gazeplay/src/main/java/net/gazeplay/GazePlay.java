@@ -7,7 +7,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
 /**
@@ -67,6 +66,7 @@ public class GazePlay extends Application {
     }
 
     public void toggleFullScreen() {
+
         boolean fullScreen = !primaryStage.isFullScreen();
         log.info("fullScreen = {}", fullScreen);
         primaryStage.setFullScreen(fullScreen);
