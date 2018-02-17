@@ -14,6 +14,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by schwab on 17/09/2016.
@@ -58,7 +59,9 @@ public class MagicCards implements GameLifeCycle {
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
         final int cardsCount = nbColumns * nbLines;
-        final int winnerCardIndex = (int) (cardsCount * Math.random());
+        // final int winnerCardIndex = (int) (cardsCount * Math.random());
+        Random r = new Random();
+        final int winnerCardIndex = r.nextInt(cardsCount);
         List<Card> cardList = createCards(winnerCardIndex, config);
 
         currentRoundDetails = new RoundDetails(cardList, winnerCardIndex);

@@ -324,6 +324,7 @@ public class Utils {
 
             out.println(S);
             out.flush();
+            out.close();
         } catch (FileNotFoundException e) {
             log.error("Exception", e);
         }

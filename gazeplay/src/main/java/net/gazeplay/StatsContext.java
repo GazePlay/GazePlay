@@ -179,7 +179,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            ImageView heatMap = StatsDisplay.BuildHeatChart(stats, scene);
+            ImageView heatMap = StatsDisplay.buildHeatChart(stats, scene);
             heatMap.setFitWidth(scene.getWidth() * 0.35);
             heatMap.setFitHeight(scene.getHeight() * 0.35);
 
