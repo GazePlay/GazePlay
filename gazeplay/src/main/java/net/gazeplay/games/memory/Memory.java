@@ -30,7 +30,7 @@ public class Memory implements GameLifeCycle {
     public class RoundDetails {
         public final List<MemoryCard> cardList;
     }
-    
+
     private int nbRemainingPeers;
 
     private final GameContext gameContext;
@@ -40,13 +40,12 @@ public class Memory implements GameLifeCycle {
 
     private final Stats stats;
 
-    private Image[] imagesAvail; 
+    private Image[] imagesAvail;
 
     /*
-     * HashMap of images selected for this game and their associated id
-     * The id is the same for the 2 same images
+     * HashMap of images selected for this game and their associated id The id is the same for the 2 same images
      */
-    public HashMap<Integer, Image> images; 
+    public HashMap<Integer, Image> images;
 
     public RoundDetails currentRoundDetails;
 
@@ -64,15 +63,14 @@ public class Memory implements GameLifeCycle {
 
     }
 
-
     private HashMap<Integer, Image> selectionAleaImages() {
         ArrayList<Integer> indUsed = new ArrayList<Integer>(); // id already used
         int alea;
         final int cardsCount = nbColumns * nbLines;
-        HashMap<Integer, Image> res = new HashMap<Integer, Image>(); 
+        HashMap<Integer, Image> res = new HashMap<Integer, Image>();
         Random rdm = new Random();
         for (int i = 0; i < cardsCount / 2; i++) {
-            do { 
+            do {
                 alea = rdm.nextInt(imagesAvail.length);
             } while (indUsed.contains(alea));
             indUsed.add(alea);
@@ -88,7 +86,7 @@ public class Memory implements GameLifeCycle {
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
         final int cardsCount = nbColumns * nbLines;
 
-        images = selectionAleaImages(); 
+        images = selectionAleaImages();
 
         List<MemoryCard> cardList = createCards(images, config);
 
@@ -189,7 +187,7 @@ public class Memory implements GameLifeCycle {
         do {
             value = rdm.nextInt(images.size());
         } while ((!images.containsKey(value)) || (indUsed.containsKey(value) && (indUsed.get(value) == 2)));
-        // While selected image is already used 2 times (if it appears ) 
+        // While selected image is already used 2 times (if it appears )
         return value;
     }
 

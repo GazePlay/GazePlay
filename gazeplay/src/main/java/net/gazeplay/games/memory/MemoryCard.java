@@ -112,7 +112,7 @@ public class MemoryCard extends Parent {
 
         gameInstance.removeSelectedCards();
 
-        /* No more cards  to play : End of this game : Begin a new Game */
+        /* No more cards to play : End of this game : Begin a new Game */
         if (gameInstance.getnbRemainingPeers() == 0) {
 
             gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
