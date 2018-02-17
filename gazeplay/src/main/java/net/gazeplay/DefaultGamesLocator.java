@@ -18,6 +18,7 @@ import net.gazeplay.games.divisor.Divisor;
 import net.gazeplay.games.divisor.DivisorStats;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
+import net.gazeplay.games.memory.Memory;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
 import net.gazeplay.games.robots.Robot;
@@ -292,6 +293,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Biboule(gameContext, stats);
                     }
                 }));
+
         result.add(new GameSpec(new GameSummary("Robots", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/robots.jpeg"),
                 new GameSpec.GameLauncher() {
                     @Override
@@ -305,6 +307,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Robot(gameContext, stats);
                     }
                 }));
+
         /*
          * result.add(new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL), new
          * GameSpec.GameLauncher() {
@@ -315,6 +318,36 @@ public class DefaultGamesLocator implements GamesLocator {
          * stats) { return new Divisor(gameContext, stats); } }));
          * 
          */
+
+        result.add(new GameSpec(
+                new GameSummary("Memory", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/magic-card-1.jpg"),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.DimensionGameVariant(2, 2),
+
+                                new GameSpec.DimensionGameVariant(2, 3),
+
+                                new GameSpec.DimensionGameVariant(3, 2),
+
+                                new GameSpec.DimensionGameVariant(3, 3)
+
+                        ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new MagicCardsGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext,
+                                               GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                return new Memory(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
+            }
+        }));
 
         log.info("Games found : {}", result.size());
 
