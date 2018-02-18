@@ -11,10 +11,9 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.memory.MemoryCard;
 
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -51,9 +50,13 @@ public class Memory implements GameLifeCycle {
 
     public int nbTurnedCards;
 
-    // nbLines * nbColumns must be a multiple of 2
     public Memory(GameContext gameContext, int nbLines, int nbColumns, Stats stats) {
         super();
+        int cardsCount = nbLines * nbColumns;
+        if ((cardsCount & 1) != 0) {
+            // nbLines * nbColumns must be a multiple of 2
+            throw new IllegalArgumentException("Cards count must be an even number in this game");
+        }
         this.nbRemainingPeers = (nbLines * nbColumns) / 2;
         this.gameContext = gameContext;
         this.nbLines = nbLines;
