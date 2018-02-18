@@ -74,7 +74,7 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
                     SerialPort.PARITY_NONE);
 
             // open the streams
-            input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+            input = new BufferedReader(new InputStreamReader(serialPort.getInputStream(), "UTF-8"));
             output = serialPort.getOutputStream();
 
             // add event listeners
@@ -100,7 +100,7 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
 
         try {
             log.info("Envoi : " + s);
-            output.write(s.getBytes());
+            output.write(s.getBytes("UTF-8"));
         } catch (IOException e) {
             log.error("Exception", e);
         }

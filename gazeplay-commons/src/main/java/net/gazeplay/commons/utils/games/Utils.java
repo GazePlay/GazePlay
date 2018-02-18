@@ -317,31 +317,10 @@ public class Utils {
 
     }
 
-    public static void save(String S, File F) {
-
-        try {
-            PrintWriter out = new PrintWriter(F);
-
-            out.println(S);
-            out.flush();
-            out.close();
-        } catch (FileNotFoundException e) {
-            log.error("Exception", e);
-        }
-    }
-
-    public static PrintWriter getInfoStatsFile(String folder) {
-
-        PrintWriter out = null;
-
-        try {
-            out = new PrintWriter(folder + Utils.now() + "-info-game.csv");
-
-        } catch (FileNotFoundException e) {
-            log.error("Exception", e);
-        }
-
-        return out;
+    public static File createInfoStatsFile(String outputDirectoryPath) {
+        final File outputDirectory = new File(outputDirectoryPath);
+        final String fileName = Utils.now() + "-info-game.csv";
+        return new File(outputDirectory, fileName);
     }
 
     public static boolean copyFromJar(String filePath, String destinationPath) {

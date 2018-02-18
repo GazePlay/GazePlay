@@ -36,7 +36,7 @@ public class I18N {
                 throw new FileNotFoundException("Resource was not found : " + resourceLocation);
             }
 
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
 
                 Map<Entry, String> traductions = new HashMap<>(1000);
 

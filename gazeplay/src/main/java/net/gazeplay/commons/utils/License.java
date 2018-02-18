@@ -4,7 +4,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -14,10 +13,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
+import org.apache.commons.io.IOUtils;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.Charset;
 
 /**
  * Created by schwab on 22/12/2016.
@@ -49,7 +49,6 @@ public class License extends Rectangle {
     }
 
     private Text licence(double width, double height) {
-
         Text text = new Text();
 
         text.setX(width * 0.1);
@@ -58,65 +57,23 @@ public class License extends Rectangle {
 
         text.setFill(new Color(1, 1, 1, 1));
 
-        StringBuilder licence = new StringBuilder(10000);
-        String line;
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader("data/common/licence.txt"));
-
-            while ((line = br.readLine()) != null) {
-                licence.append('\n');
-                licence.append(line);
-            }
-            br.close();
-        } catch (IOException e) {
-            log.error("Exception", e);
-        }
-
-        text.setText(licence.toString());
+        String content = loadLicenseContentAsString();
+        text.setText(content);
 
         return text;
 
     }
 
-    private ScrollPane licencesp(double width, double height) {
+    private String loadLicenseContentAsString() {
+        URL resource = getClass().getClassLoader().getResource("data/common/licence.txt");
 
-        ScrollPane sp = new ScrollPane();
-
-        Text text = new Text();
-
-        text.setX(width * 0.1);
-        text.setY(height * 0.1);
-        text.setFont(new Font(20));
-
-        text.setFill(new Color(1, 1, 1, 1));
-
-        StringBuilder licence = new StringBuilder(10000);
-        String line;
-
+        String content;
         try {
-            BufferedReader br = new BufferedReader(new FileReader("data/common/licence.txt"));
-
-            while ((line = br.readLine()) != null) {
-                licence.append('\n');
-                licence.append(line);
-            }
-            br.close();
+            content = IOUtils.toString(resource, Charset.forName("UTF-8"));
         } catch (IOException e) {
-            log.error("Exception", e);
+            content = "Failed to load license content";
         }
-
-        text.setText(licence.toString());
-
-        sp.setContent(text);
-        sp.setFitToHeight(true);
-        sp.setFitToWidth(true);
-        sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        sp.setVmax(height);
-        // sp.setPrefSize(width*0.8, height*0.8);
-
-        return sp;
-
+        return content;
     }
 
 }
