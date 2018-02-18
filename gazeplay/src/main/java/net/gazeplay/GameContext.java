@@ -151,47 +151,36 @@ public class GameContext extends GraphicalContext<Pane> {
     }
 
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
-        HomeButton homeButton = new HomeButton();
 
-        EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
-            @Override
-            public void handle(javafx.event.Event e) {
-
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
-                    scene.setCursor(Cursor.WAIT); // Change cursor to wait style
-
-                    stats.stop();
-                    gazeDeviceManager.clear();
-                    gazeDeviceManager.destroy();
-
-                    log.info("stats = " + stats);
-
-                    Runnable asynchronousStatsPersistTask = new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                stats.saveStats();
-                            } catch (IOException e) {
-                                log.error("Failed to save stats file", e);
-                            }
-                        }
-                    };
-                    Thread asynchronousStatsPersistThread = new Thread(asynchronousStatsPersistTask);
-                    asynchronousStatsPersistThread.start();
-
-                    StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
-
-                    gazePlay.onDisplayStats(statsContext);
-
-                    scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
-                }
-            }
+        EventHandler<Event> homeEvent = e -> {
+            scene.setCursor(Cursor.WAIT); // Change cursor to wait style
+            homeButtonClicked(stats, gazePlay);
+            scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 
+        HomeButton homeButton = new HomeButton();
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-
         return homeButton;
+    }
+
+    private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay) {
+        stats.stop();
+        gazeDeviceManager.clear();
+        gazeDeviceManager.destroy();
+
+        Runnable asynchronousStatsPersistTask = () -> {
+            try {
+                stats.saveStats();
+            } catch (IOException e) {
+                log.error("Failed to save stats file", e);
+            }
+        };
+        Thread asynchronousStatsPersistThread = new Thread(asynchronousStatsPersistTask);
+        asynchronousStatsPersistThread.start();
+
+        StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
+
+        gazePlay.onDisplayStats(statsContext);
     }
 
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
