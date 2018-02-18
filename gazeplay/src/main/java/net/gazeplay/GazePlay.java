@@ -1,5 +1,6 @@
 package net.gazeplay;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.application.Application;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.geometry.Rectangle2D;
@@ -24,6 +25,7 @@ public class GazePlay extends Application {
     @Getter
     private Stage primaryStage;
 
+    @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
     public GazePlay() {
         instance = this;
     }

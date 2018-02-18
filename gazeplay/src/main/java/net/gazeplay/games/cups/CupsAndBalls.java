@@ -1,11 +1,5 @@
 package net.gazeplay.games.cups;
 
-import net.gazeplay.games.cups.utils.PositionCup;
-import net.gazeplay.games.cups.utils.Action;
-import net.gazeplay.games.cups.utils.Strategy;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Random;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -16,6 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.cups.utils.Action;
+import net.gazeplay.games.cups.utils.PositionCup;
+import net.gazeplay.games.cups.utils.Strategy;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 @Slf4j
 public class CupsAndBalls implements GameLifeCycle {
@@ -56,7 +57,6 @@ public class CupsAndBalls implements GameLifeCycle {
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         Image cupPicture = new Image("data/cups/images/cup.png");
-        Image winPicture = new Image("data/common/images/bravo.png");
         double imageWidth = dimension2D.getHeight() / (nbColumns * 1.5);
         double imageHeight = dimension2D.getHeight() / nbColumns;
 

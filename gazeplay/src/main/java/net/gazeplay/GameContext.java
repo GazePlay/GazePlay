@@ -24,6 +24,8 @@ import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.io.IOException;
+
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
 
@@ -168,7 +170,11 @@ public class GameContext extends GraphicalContext<Pane> {
                     Runnable asynchronousStatsPersistTask = new Runnable() {
                         @Override
                         public void run() {
-                            stats.saveStats();
+                            try {
+                                stats.saveStats();
+                            } catch (IOException e) {
+                                log.error("Failed to save stats file", e);
+                            }
                         }
                     };
                     Thread asynchronousStatsPersistThread = new Thread(asynchronousStatsPersistTask);
