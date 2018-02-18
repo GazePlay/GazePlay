@@ -14,8 +14,6 @@ import net.gazeplay.games.bubbles.BubbleType;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
-import net.gazeplay.games.divisor.Divisor;
-import net.gazeplay.games.divisor.DivisorStats;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.memory.Memory;
@@ -26,8 +24,6 @@ import net.gazeplay.games.robots.RobotGamesStats;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
-import net.gazeplay.games.cups.CupsAndBalls;
-import net.gazeplay.games.cups.utils.CupsAndBallsStats;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -332,7 +328,11 @@ public class DefaultGamesLocator implements GamesLocator {
 
                                         new GameSpec.DimensionGameVariant(3, 2),
 
-                                        new GameSpec.DimensionGameVariant(3, 3)
+                                        new GameSpec.DimensionGameVariant(3, 4),
+
+                                        new GameSpec.DimensionGameVariant(4, 3),
+
+                                        new GameSpec.DimensionGameVariant(5, 4)
 
                         ));
                             }
