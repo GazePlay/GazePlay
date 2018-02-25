@@ -154,7 +154,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             Button button = new Button(variant.getLabel());
             button.getStyleClass().add("gameChooserButton");
-            button.getStyleClass().add("variant");
+            button.getStyleClass().add("gameVariation");
             button.getStyleClass().add("button");
             choicePane.getChildren().add(button);
 

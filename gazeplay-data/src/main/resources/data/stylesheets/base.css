@@ -64,11 +64,7 @@
     -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.8), 10, 0, 0, 0);
 }
 
-.gameChooserButton.variant {
-    -fx-pref-width: 32em;
-    -fx-pref-height: 10em;
-    -fx-min-width: 18em;
-    -fx-min-height: 4em;
+.gameChooserButton.gameVariation {
 }
 
 .gameChooserButtonThumbnail {
