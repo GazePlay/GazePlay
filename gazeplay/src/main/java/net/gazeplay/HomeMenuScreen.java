@@ -301,6 +301,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         gameContext.createControlPanel(gazePlay, stats);
 
+        if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
+            BackgroundMusicManager.getInstance()
+                    .playRemoteSound(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
+        }
+
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
         currentGame.launch();
     }
