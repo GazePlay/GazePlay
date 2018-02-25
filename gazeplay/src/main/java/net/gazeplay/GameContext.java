@@ -29,156 +29,153 @@ import java.io.IOException;
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
 
-	public static GameContext newInstance(GazePlay gazePlay) {
+    public static GameContext newInstance(GazePlay gazePlay) {
 
-		BorderPane root = new BorderPane();
+        BorderPane root = new BorderPane();
 
-		Scene scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
-				Color.BLACK);
+        Scene scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
+                Color.BLACK);
 
-		final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-		CssUtil.setPreferredStylesheets(config, scene);
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        CssUtil.setPreferredStylesheets(config, scene);
 
-		Bravo bravo = new Bravo();
+        Bravo bravo = new Bravo();
 
-		Pane gamingRoot = new Pane();
-		gamingRoot.setStyle("-fx-background-color: black;");
+        Pane gamingRoot = new Pane();
+        gamingRoot.setStyle("-fx-background-color: black;");
 
-		HBox controlPanel = createControlPanel();
-		// Adapt the size and position of buttons to screen width
-		controlPanel.maxWidthProperty().bind(root.widthProperty());
-		controlPanel.toFront();
+        HBox controlPanel = createControlPanel();
+        // Adapt the size and position of buttons to screen width
+        controlPanel.maxWidthProperty().bind(root.widthProperty());
+        controlPanel.toFront();
 
-		Rectangle blindFoldPanel = new Rectangle(0, 0, 0, 0);
-		blindFoldPanel.widthProperty().bind(controlPanel.widthProperty());
-		blindFoldPanel.heightProperty().bind(controlPanel.heightProperty());
+        Rectangle blindFoldPanel = new Rectangle(0, 0, 0, 0);
+        blindFoldPanel.widthProperty().bind(controlPanel.widthProperty());
+        blindFoldPanel.heightProperty().bind(controlPanel.heightProperty());
 
-		StackPane autoHiddingControlPanel = new StackPane();
-		autoHiddingControlPanel.getChildren().add(blindFoldPanel);
-		autoHiddingControlPanel.getChildren().add(controlPanel);
+        StackPane autoHiddingControlPanel = new StackPane();
+        autoHiddingControlPanel.getChildren().add(blindFoldPanel);
+        autoHiddingControlPanel.getChildren().add(controlPanel);
 
-		EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> blindFoldPanel.toBack();
-		EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent -> blindFoldPanel.toFront();
+        EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> blindFoldPanel.toBack();
+        EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent -> blindFoldPanel.toFront();
 
-		autoHiddingControlPanel.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
-		autoHiddingControlPanel.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
+        autoHiddingControlPanel.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
+        autoHiddingControlPanel.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
 
-		mouseEnterControlPanelEventHandler.handle(null);
+        mouseEnterControlPanelEventHandler.handle(null);
 
-		root.setBottom(autoHiddingControlPanel);
-		root.setCenter(gamingRoot);
+        root.setBottom(autoHiddingControlPanel);
+        root.setCenter(gamingRoot);
 
-		GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot, scene);
+        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot, scene);
 
-		RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
+        RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
-		GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
+        GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
-		return new GameContext(gazePlay, gamingRoot, scene, bravo, autoHiddingControlPanel, controlPanel,
-				gamePanelDimensionProvider, randomPositionGenerator, root, gazeDeviceManager);
-	}
+        return new GameContext(gazePlay, gamingRoot, scene, bravo, autoHiddingControlPanel, controlPanel,
+                gamePanelDimensionProvider, randomPositionGenerator, root, gazeDeviceManager);
+    }
 
-	public static HBox createControlPanel() {
-		HBox hbox = new HBox();
-		hbox.setAlignment(Pos.CENTER_RIGHT);
-		ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(hbox);
+    public static HBox createControlPanel() {
+        HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER_RIGHT);
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(hbox);
 
-		hbox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        hbox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 
-		hbox.setStyle("-fx-background-color: rgba(0, 0, 0, 1);"
-				+ " -fx-background-radius: 8px;"
-				+ " -fx-border-radius: 8px;"
-				+ " -fx-border-width: 5px;"
-				+ " -fx-border-color: rgba(60, 63, 65, 0.7);"
-				+ " -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        hbox.setStyle("-fx-background-color: rgba(0, 0, 0, 1);" + " -fx-background-radius: 8px;"
+                + " -fx-border-radius: 8px;" + " -fx-border-width: 5px;" + " -fx-border-color: rgba(60, 63, 65, 0.7);"
+                + " -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
-		return hbox;
-	}
+        return hbox;
+    }
 
-	private final Bravo bravo;
+    private final Bravo bravo;
 
-	private final Pane bottomPane;
+    private final Pane bottomPane;
 
-	private final HBox menuHBox;
+    private final HBox menuHBox;
 
-	@Getter
-	private final RandomPositionGenerator randomPositionGenerator;
+    @Getter
+    private final RandomPositionGenerator randomPositionGenerator;
 
-	@Getter
-	private final GamePanelDimensionProvider gamePanelDimensionProvider;
+    @Getter
+    private final GamePanelDimensionProvider gamePanelDimensionProvider;
 
-	private final BorderPane rootBorderPane;
+    private final BorderPane rootBorderPane;
 
-	@Getter
-	private final GazeDeviceManager gazeDeviceManager;
+    @Getter
+    private final GazeDeviceManager gazeDeviceManager;
 
-	private GameContext(GazePlay gazePlay, Pane gamingRoot, Scene scene, Bravo bravo, Pane bottomPane, HBox menuHBox,
-						GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
-						BorderPane rootBorderPane, GazeDeviceManager gazeDeviceManager) {
-		super(gazePlay, gamingRoot, scene);
-		this.bravo = bravo;
-		this.bottomPane = bottomPane;
-		this.menuHBox = menuHBox;
-		this.gamePanelDimensionProvider = gamePanelDimensionProvider;
-		this.randomPositionGenerator = randomPositionGenerator;
-		this.rootBorderPane = rootBorderPane;
-		this.gazeDeviceManager = gazeDeviceManager;
-	}
+    private GameContext(GazePlay gazePlay, Pane gamingRoot, Scene scene, Bravo bravo, Pane bottomPane, HBox menuHBox,
+            GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
+            BorderPane rootBorderPane, GazeDeviceManager gazeDeviceManager) {
+        super(gazePlay, gamingRoot, scene);
+        this.bravo = bravo;
+        this.bottomPane = bottomPane;
+        this.menuHBox = menuHBox;
+        this.gamePanelDimensionProvider = gamePanelDimensionProvider;
+        this.randomPositionGenerator = randomPositionGenerator;
+        this.rootBorderPane = rootBorderPane;
+        this.gazeDeviceManager = gazeDeviceManager;
+    }
 
-	public void resetBordersToFront() {
-		rootBorderPane.setBottom(null);
-		rootBorderPane.setBottom(bottomPane);
-	}
+    public void resetBordersToFront() {
+        rootBorderPane.setBottom(null);
+        rootBorderPane.setBottom(bottomPane);
+    }
 
-	public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
-		Button toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
-		menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
+    public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
+        Button toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
+        menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
-		HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats);
-		menuHBox.getChildren().add(homeButton);
-	}
+        HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats);
+        menuHBox.getChildren().add(homeButton);
+    }
 
-	public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
+    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
 
-		EventHandler<Event> homeEvent = e -> {
-			scene.setCursor(Cursor.WAIT); // Change cursor to wait style
-			homeButtonClicked(stats, gazePlay);
-			scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
-		};
+        EventHandler<Event> homeEvent = e -> {
+            scene.setCursor(Cursor.WAIT); // Change cursor to wait style
+            homeButtonClicked(stats, gazePlay);
+            scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
+        };
 
-		HomeButton homeButton = new HomeButton();
-		homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-		return homeButton;
-	}
+        HomeButton homeButton = new HomeButton();
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+        return homeButton;
+    }
 
-	private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay) {
-		stats.stop();
-		gazeDeviceManager.clear();
-		gazeDeviceManager.destroy();
+    private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay) {
+        stats.stop();
+        gazeDeviceManager.clear();
+        gazeDeviceManager.destroy();
 
-		Runnable asynchronousStatsPersistTask = () -> {
-			try {
-				stats.saveStats();
-			} catch (IOException e) {
-				log.error("Failed to save stats file", e);
-			}
-		};
-		Thread asynchronousStatsPersistThread = new Thread(asynchronousStatsPersistTask);
-		asynchronousStatsPersistThread.start();
+        Runnable asynchronousStatsPersistTask = () -> {
+            try {
+                stats.saveStats();
+            } catch (IOException e) {
+                log.error("Failed to save stats file", e);
+            }
+        };
+        Thread asynchronousStatsPersistThread = new Thread(asynchronousStatsPersistTask);
+        asynchronousStatsPersistThread.start();
 
-		StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
+        StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
 
-		gazePlay.onDisplayStats(statsContext);
-	}
+        gazePlay.onDisplayStats(statsContext);
+    }
 
-	public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
-		getChildren().add(bravo);
-		bravo.playWinTransition(scene, delay, onFinishedEventHandler);
-	}
+    public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
+        getChildren().add(bravo);
+        bravo.playWinTransition(scene, delay, onFinishedEventHandler);
+    }
 
-	@Override
-	public ObservableList<Node> getChildren() {
-		return root.getChildren();
-	}
+    @Override
+    public ObservableList<Node> getChildren() {
+        return root.getChildren();
+    }
 
 }
