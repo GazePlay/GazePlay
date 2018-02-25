@@ -8,7 +8,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
@@ -20,22 +19,23 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.ui.I18NLabel;
+import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Collection;
 import java.util.List;
-import javafx.application.Platform;
-import javafx.stage.StageStyle;
 
 @Data
 @Slf4j
@@ -142,10 +142,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         super.setUpOnStage(stage);
     }
 
-    public void onLanguageChanged() {
-
-    }
-
     private Stage createDialog(Stage primaryStage, GameSpec gameSpec) {
         // initialize the confirmation dialog
         final Stage dialog = new Stage();
@@ -191,6 +187,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
+        final Translator translator = getGazePlay().getTranslator();
+
         for (GameSpec gameSpec : games) {
             final GameSummary gameSummary = gameSpec.getGameSummary();
 
@@ -200,7 +198,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             gameCard.getStyleClass().add("gameChooserButton");
             gameCard.getStyleClass().add("button");
 
-            Label text = new Label(gameName);
+            I18NLabel text = new I18NLabel(translator, gameSummary.getNameCode());
 
             if (gameSummary.getGameTypeIndicatorImageLocation() != null) {
                 Image buttonGraphics = new Image(gameSummary.getGameTypeIndicatorImageLocation());
