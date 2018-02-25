@@ -1,3 +1,10 @@
+.gameChooserButton {
+    -fx-min-width: 22em;
+    -fx-min-height: 5em;
+    -fx-pref-width: 22em;
+    -fx-pref-height: 8em;
+}
+
 .gameChooserButtonTitle {
     -fx-font-size: 12pt;
 }

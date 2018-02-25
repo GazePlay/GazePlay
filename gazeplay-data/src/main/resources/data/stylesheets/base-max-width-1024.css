@@ -1,8 +1,8 @@
 .gameChooserButton {
-    -fx-min-width: 22em;
+    -fx-min-width: 20em;
     -fx-min-height: 5em;
-    -fx-pref-width: 22em;
-    -fx-pref-height: 8em;
+    -fx-pref-width: 20em;
+    -fx-pref-height: 5em;
 }
 
 .gameVariationChooserButton {

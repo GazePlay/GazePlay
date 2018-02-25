@@ -11,6 +11,8 @@ import net.gazeplay.commons.utils.games.Utils;
 import java.io.File;
 import java.util.Optional;
 
+import static net.gazeplay.commons.utils.games.Utils.FILESEPARATOR;
+
 @Slf4j
 public class CssUtil {
 
@@ -45,7 +47,7 @@ public class CssUtil {
             stylesheets.add(styleSheetPath);
         }
 
-        Utils.addStylesheets(stylesheets);
+        addStylesheets(stylesheets);
         log.info(stylesheets.toString());
     }
 
@@ -61,6 +63,29 @@ public class CssUtil {
                 return;
             }
         }
+    }
+
+    /**
+     * @return CSS files found in the styles folder
+     */
+    public static void addStylesheets(ObservableList<String> styleSheets) {
+        final File styleFolder = new File(getStylesFolder());
+        if (styleFolder.exists()) {
+            File[] filesInStyleFolder = styleFolder.listFiles();
+            assert filesInStyleFolder != null;
+            for (File f : filesInStyleFolder) {
+                if (f.toString().endsWith(".css")) {
+                    styleSheets.add("file://" + f.toString());
+                }
+            }
+        }
+    }
+
+    /**
+     * @return styles directory for GazePlay : in the default directory of GazePlay, a folder called styles
+     */
+    public static String getStylesFolder() {
+        return Utils.getGazePlayFolder() + "styles" + FILESEPARATOR;
     }
 
 }

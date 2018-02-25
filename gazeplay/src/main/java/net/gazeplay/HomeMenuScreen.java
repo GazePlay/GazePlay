@@ -147,8 +147,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         FlowPane choicePane = new FlowPane();
         choicePane.setAlignment(Pos.CENTER);
 
-        GazePlay gazePlay = GazePlay.getInstance();
-
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             Button button = new Button(variant.getLabel());
             button.getStyleClass().add("gameChooserButton");
@@ -182,9 +180,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.setAlignment(Pos.CENTER);
         choicePanel.setHgap(10);
         choicePanel.setVgap(10);
+        choicePanel.setOpaqueInsets(new Insets(20, 20, 20, 20));
 
         ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
         choicePanelScroller.setFitToWidth(true);
+        choicePanelScroller.setFitToHeight(true);
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
@@ -205,8 +205,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 Image buttonGraphics = new Image(gameSummary.getGameTypeIndicatorImageLocation());
                 ImageView imageView = new ImageView(buttonGraphics);
                 imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
-                imageView.setFitWidth(32);
-                imageView.setFitHeight(32);
+                imageView.setPreserveRatio(true);
+
+                gameCard.heightProperty().addListener(
+                        (observableValue, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() / 5));
+
                 StackPane.setAlignment(imageView, Pos.TOP_RIGHT);
                 gameCard.getChildren().add(imageView);
             }
@@ -227,7 +230,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
 
             StackPane.setAlignment(text, Pos.BOTTOM_RIGHT);
-            text.setPadding(new Insets(20, 20, 20, 20));
             gameCard.getChildren().add(text);
 
             gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
