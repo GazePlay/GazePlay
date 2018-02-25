@@ -276,7 +276,8 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Biboules", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/biboules.jpeg"),
+                new GameSummary("Biboules", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/biboules.jpeg",
+                        "https://opengameart.org/sites/default/files/TalkingCuteChiptune_0.mp3"),
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -290,7 +291,9 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Robots", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/robots.jpeg"),
+        result.add(new GameSpec(
+                new GameSummary("Robots", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/robots.jpeg",
+                        "https://opengameart.org/sites/default/files/DST-TowerDefenseTheme_1.mp3"),
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
