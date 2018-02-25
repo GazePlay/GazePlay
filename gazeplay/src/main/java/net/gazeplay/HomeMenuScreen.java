@@ -25,6 +25,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
@@ -143,7 +144,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         resourceLocation = "https://opengameart.org/sites/default/files/Acrostics%20%5BFinished%5D.wav";
         resourceLocation = "https://opengameart.org/sites/default/files/audio_preview/Acrostics%20%5BFinished%5D.wav.ogg";
         resourceLocation = "https://opengameart.org/sites/default/files/010614songidea%28copycat%29_0.mp3";
-        Utils.playRemoteSound(resourceLocation);
+        BackgroundMusicManager.getInstance().playRemoteSound(resourceLocation);
     }
 
     private Stage createDialog(Stage primaryStage, GameSpec gameSpec) {
