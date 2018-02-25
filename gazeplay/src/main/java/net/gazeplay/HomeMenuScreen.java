@@ -20,6 +20,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
@@ -34,8 +35,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Collection;
 import java.util.List;
-import javafx.application.Platform;
-import javafx.stage.StageStyle;
 
 @Data
 @Slf4j
@@ -161,7 +160,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             Button button = new Button(variant.getLabel());
-            button.getStyleClass().add("gameVariationChooserButton");
+            button.getStyleClass().add("gameChooserButton");
+            button.getStyleClass().add("variant");
+            button.getStyleClass().add("button");
             choicePane.getChildren().add(button);
 
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -188,6 +189,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         FlowPane choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
+        choicePanel.setHgap(10);
+        choicePanel.setVgap(10);
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
@@ -202,27 +205,30 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
             Label text = new Label(gameName);
 
+            text.getStyleClass().add("gameChooserButtonTitle");
+
             if (gameSummary.getGameTypeIndicatorImageLocation() != null) {
                 Image buttonGraphics = new Image(gameSummary.getGameTypeIndicatorImageLocation());
                 ImageView imageView = new ImageView(buttonGraphics);
+                imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
                 imageView.setFitWidth(32);
                 imageView.setFitHeight(32);
-                StackPane.setAlignment(imageView, Pos.TOP_LEFT);
+                StackPane.setAlignment(imageView, Pos.TOP_RIGHT);
                 gameCard.getChildren().add(imageView);
             }
 
             if (gameSummary.getThumbnailLocation() != null) {
                 Image buttonGraphics = new Image(gameSummary.getThumbnailLocation());
                 ImageView imageView = new ImageView(buttonGraphics);
-                imageView.setFitWidth(32);
+                imageView.getStyleClass().add("gameChooserButtonThumbnail");
                 imageView.setPreserveRatio(true);
 
-                int thumbnailBorderSize = 20;
+                int thumbnailBorderSize = 28;
                 gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> imageView
                         .setFitWidth(newValue.doubleValue() - thumbnailBorderSize));
                 gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> imageView
                         .setFitHeight(newValue.doubleValue() - thumbnailBorderSize));
-                StackPane.setAlignment(imageView, Pos.CENTER);
+                StackPane.setAlignment(imageView, Pos.CENTER_LEFT);
                 gameCard.getChildren().add(imageView);
             }
 
