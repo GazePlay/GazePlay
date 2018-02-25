@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.CssUtil;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Data
 @Slf4j
@@ -48,6 +49,8 @@ public abstract class GraphicalContext<T> {
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
         CssUtil.setPreferredStylesheets(config, scene);
+
+        BackgroundMusicManager.getInstance().stop();
 
         stage.show();
         log.info("Finished setup stage with the game scene");
