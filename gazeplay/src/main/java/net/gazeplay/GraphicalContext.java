@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Data;
@@ -96,7 +97,16 @@ public abstract class GraphicalContext<T> {
             buttonGraphics = new Image("data/common/images/fullscreen-enter.png");
             label = "Enter FullScreen";
         }
-        button.setGraphic(new ImageView(buttonGraphics));
+        ImageView imageView = new ImageView(buttonGraphics);
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(Screen.getPrimary().getBounds().getWidth() / 40);
+        button.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                imageView.setFitHeight(newValue.doubleValue() / 2d);
+            }
+        });
+        button.setGraphic(imageView);
         button.setText(label);
     }
 
