@@ -137,7 +137,7 @@ public abstract class GraphicalContext<T> {
         slider.setMajorTickUnit(0.25);
         slider.setSnapToTicks(true);
         slider.setValue(BackgroundMusicManager.getInstance().volumeProperty().getValue());
-        BackgroundMusicManager.getInstance().volumeProperty().bind(slider.valueProperty());
+        BackgroundMusicManager.getInstance().volumeProperty().bindBidirectional(slider.valueProperty());
         return slider;
     }
 
