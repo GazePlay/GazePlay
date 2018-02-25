@@ -57,6 +57,10 @@
     /*-fx-pref-height: 10em;*/
     -fx-min-width: 18em;
     -fx-min-height: 4em;
+    -fx-pref-width: 44em;
+    -fx-pref-height: 11em;
+    
+    
     -fx-background-radius: 0;
     -fx-background-insets: 0;
     -fx-border-insets: 10px;
@@ -94,4 +98,34 @@
     -fx-font-weight: bold;
     -fx-font-smoothing-type: lcd;
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+.scroll-pane {
+    -fx-background-color: black;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: black;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: lightgrey;
+    -fx-background-radius: 5em;
 }

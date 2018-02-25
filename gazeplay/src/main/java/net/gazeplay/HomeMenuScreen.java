@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -39,16 +40,6 @@ import java.util.List;
 @Data
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
-
-    /**
-     * The horizontal growing factor for buttons to adapt screen size.
-     */
-    private final static double GAME_CHOOSER_BUTTON_HGROW_FACTOR = 3.6;
-
-    /**
-     * The vertical growing factor for buttons to adapt screen size.
-     */
-    private final static double GAME_CHOOSER_BUTTON_VGROW_FACTOR = 8.5;
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
@@ -103,7 +94,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().add(exitButton);
 
-        Pane gamePickerChoicePane = createGamePickerChoicePane(games, config);
+        ScrollPane gamePickerChoicePane = createGamePickerChoicePane(games, config);
 
         VBox centerCenterPane = new VBox();
         centerCenterPane.setSpacing(40);
@@ -185,12 +176,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
-    private Pane createGamePickerChoicePane(List<GameSpec> games, Configuration config) {
+    private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config) {
 
         FlowPane choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
         choicePanel.setHgap(10);
         choicePanel.setVgap(10);
+
+        ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
+        choicePanelScroller.setFitToWidth(true);
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
@@ -236,21 +230,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             text.setPadding(new Insets(20, 20, 20, 20));
             gameCard.getChildren().add(text);
 
-            Stage primaryStage = GazePlay.getInstance().getPrimaryStage();
-
-            // Adapt buttons size to screen size
-            primaryStage.heightProperty().addListener((o) -> {
-                if (choicePanel.getHeight() > 0) {
-                    gameCard.setPrefHeight(primaryStage.getHeight() / GAME_CHOOSER_BUTTON_VGROW_FACTOR);
-                }
-            });
-
-            primaryStage.widthProperty().addListener((o) -> {
-                if (choicePanel.getHeight() > 0) {
-                    gameCard.setPrefWidth(primaryStage.getWidth() / GAME_CHOOSER_BUTTON_HGROW_FACTOR);
-                }
-            });
-
             gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
@@ -283,7 +262,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             choicePanel.getChildren().add(gameCard);
         }
 
-        return choicePanel;
+        return choicePanelScroller;
     }
 
     private void chooseGame(GameSpec selectedGameSpec, GameSpec.GameVariant gameVariant) {
