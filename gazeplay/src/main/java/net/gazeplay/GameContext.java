@@ -14,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.utils.*;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.IOException;
@@ -122,12 +124,20 @@ public class GameContext extends GraphicalContext<Pane> {
         this.gazeDeviceManager = gazeDeviceManager;
     }
 
+    @Override
+    public void setUpOnStage(Stage stage) {
+        BackgroundMusicManager.getInstance().pauseAll();
+        super.setUpOnStage(stage);
+    }
+
     public void resetBordersToFront() {
         rootBorderPane.setBottom(null);
         rootBorderPane.setBottom(bottomPane);
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
+        menuHBox.getChildren().add(createSoundControlPane());
+
         Button toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 

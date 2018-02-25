@@ -73,6 +73,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         leftControlPane.setAlignment(Pos.CENTER);
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.getChildren().add(configurationButton);
+        leftControlPane.getChildren().add(createSoundControlPane());
 
         Button toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
 
@@ -136,15 +137,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     public void playBackgroundMusic() {
-        String resourceLocation;
-        resourceLocation = "data/common/music/021914bgm2(happytune).mp3";
-        resourceLocation = "data/common/music/010614songidea(copycat).mp3";
-        resourceLocation = "https://opengameart.org/sites/default/files/07%20Snowfall_1.ogg";
-        resourceLocation = "https://opengameart.org/sites/default/files/021914bgm2%28happytune%29_0.mp3";
-        resourceLocation = "https://opengameart.org/sites/default/files/Acrostics%20%5BFinished%5D.wav";
-        resourceLocation = "https://opengameart.org/sites/default/files/audio_preview/Acrostics%20%5BFinished%5D.wav.ogg";
-        resourceLocation = "https://opengameart.org/sites/default/files/010614songidea%28copycat%29_0.mp3";
-        BackgroundMusicManager.getInstance().playRemoteSound(resourceLocation);
+        String resourceLocation1;
+        resourceLocation1 = "https://opengameart.org/sites/default/files/010614songidea%28copycat%29_0.mp3";
+        BackgroundMusicManager.getInstance().playRemoteSound(resourceLocation1);
+
+        // String resourceLocation2;
+        // resourceLocation2 = "https://opengameart.org/sites/default/files/021914bgm2%28happytune%29_0.mp3";
+        // BackgroundMusicManager.getInstance().playRemoteSound(resourceLocation2);
     }
 
     private Stage createDialog(Stage primaryStage, GameSpec gameSpec) {
