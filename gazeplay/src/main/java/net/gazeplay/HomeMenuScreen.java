@@ -147,6 +147,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         FlowPane choicePane = new FlowPane();
         choicePane.setAlignment(Pos.CENTER);
 
+        ScrollPane choicePanelScroller = new ScrollPane(choicePane);
+        choicePanelScroller.setFitToWidth(true);
+        choicePanelScroller.setFitToHeight(true);
+
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             Button button = new Button(variant.getLabel());
             button.getStyleClass().add("gameChooserButton");
@@ -163,7 +167,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             });
         }
 
-        Scene scene = new Scene(choicePane, Color.TRANSPARENT);
+        Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
         CssUtil.setPreferredStylesheets(config, scene);
