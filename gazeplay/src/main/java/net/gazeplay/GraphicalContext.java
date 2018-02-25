@@ -8,9 +8,12 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -21,6 +24,8 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.ui.I18NLabel;
+import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
@@ -49,8 +54,6 @@ public abstract class GraphicalContext<T> {
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
         CssUtil.setPreferredStylesheets(config, scene);
-
-        BackgroundMusicManager.getInstance().stop();
 
         stage.show();
         log.info("Finished setup stage with the game scene");
@@ -111,6 +114,28 @@ public abstract class GraphicalContext<T> {
         });
         button.setGraphic(imageView);
         button.setText(label);
+    }
+
+    public TitledPane createSoundControlPane() {
+        I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Music");
+        pane.setCollapsible(false);
+
+        GridPane grid = new GridPane();
+        grid.add(new I18NLabel(getGazePlay().getTranslator(), "Volume"), 0, 0);
+        grid.add(createMediaVolumeSlider(gazePlay), 0, 1);
+
+        pane.setContent(grid);
+
+        return pane;
+    }
+
+    public Slider createMediaVolumeSlider(@NonNull GazePlay gazePlay) {
+        Slider slider = new Slider();
+        slider.setMin(0);
+        slider.setMax(1);
+        slider.setValue(BackgroundMusicManager.getInstance().volumeProperty().getValue());
+        BackgroundMusicManager.getInstance().volumeProperty().bind(slider.valueProperty());
+        return slider;
     }
 
     public void onGameStarted() {
