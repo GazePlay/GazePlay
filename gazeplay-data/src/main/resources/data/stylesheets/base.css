@@ -7,7 +7,7 @@
 }
 
 .choice-box {
-    -fx-background-radius: 30;
+    -fx-background-radius: 0;
     -fx-background-insets: 0;
     -fx-alignment: baseline-center;
 }
@@ -22,7 +22,7 @@
 .choice-box .context-menu {
 
     -fx-font-weight: bold;
-    -fx-background-radius: 30;
+    -fx-background-radius: 0;
     -fx-background-insets: 0;
 }
 
@@ -30,14 +30,14 @@
 .choice-box .menu-item:focused {
 
     -fx-font-size: 25pt;
-    -fx-background-radius: 30;
+    -fx-background-radius: 0;
     -fx-background-insets: 0;
 }
 
 .button {
 
     -fx-font-weight: bold;
-    -fx-background-radius: 30;
+    -fx-background-radius: 0;
     -fx-background-insets: 0;
 }
 
