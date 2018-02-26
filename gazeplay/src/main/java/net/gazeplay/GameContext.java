@@ -27,6 +27,8 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.IOException;
+import javafx.application.Platform;
+import javafx.scene.control.Label;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
@@ -148,7 +150,8 @@ public class GameContext extends GraphicalContext<Pane> {
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
 
         EventHandler<Event> homeEvent = e -> {
-            scene.setCursor(Cursor.WAIT); // Change cursor to wait style
+            
+            getScene().setCursor(Cursor.WAIT); // Change cursor to wait style
             homeButtonClicked(stats, gazePlay);
             BackgroundMusicManager.getInstance().pauseAll();
             scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
