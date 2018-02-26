@@ -43,7 +43,7 @@ public class Card extends Parent {
 
     private final double initX;
     private final double initY;
-    
+
     private final MagicCards gameInstance;
 
     /**
@@ -57,10 +57,9 @@ public class Card extends Parent {
     final Stats stats;
 
     final EventHandler<Event> enterEvent;
-    
+
     /**
-     * Use a comme Timeline object so we can stop the current animation to 
-     * prevent overlapses.
+     * Use a comme Timeline object so we can stop the current animation to prevent overlapses.
      */
     private Timeline currentTimeline;
 
@@ -83,7 +82,7 @@ public class Card extends Parent {
 
         this.initWidth = width;
         this.initHeight = height;
-        
+
         this.initX = positionX;
         this.initY = positionY;
 
@@ -98,7 +97,7 @@ public class Card extends Parent {
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
-        
+
         // Prevent null pointer exception
         currentTimeline = new Timeline();
     }
@@ -175,7 +174,7 @@ public class Card extends Parent {
     }
 
     private EventHandler<Event> buildEvent() {
-        
+
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -241,11 +240,11 @@ public class Card extends Parent {
                             .add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth)));
                     currentTimeline.getKeyFrames()
                             .add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight)));
-                    
+
                     // Be sure that the card is properly positionned at the end
                     currentTimeline.setOnFinished((event) -> {
-                       card.setX(initX);
-                       card.setY(initY);
+                        card.setX(initX);
+                        card.setY(initY);
                     });
 
                     currentTimeline.play();
