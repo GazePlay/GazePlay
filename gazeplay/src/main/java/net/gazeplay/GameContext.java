@@ -27,8 +27,6 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.IOException;
-import javafx.application.Platform;
-import javafx.scene.control.Label;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
