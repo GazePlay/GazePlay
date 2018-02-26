@@ -150,8 +150,7 @@ public class GameContext extends GraphicalContext<Pane> {
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
 
         EventHandler<Event> homeEvent = e -> {
-
-            getScene().setCursor(Cursor.WAIT); // Change cursor to wait style
+            scene.setCursor(Cursor.WAIT); // Change cursor to wait style
             homeButtonClicked(stats, gazePlay);
             BackgroundMusicManager.getInstance().pauseAll();
             scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
