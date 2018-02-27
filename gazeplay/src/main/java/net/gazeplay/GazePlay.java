@@ -1,5 +1,6 @@
 package net.gazeplay;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.application.Application;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.geometry.Rectangle2D;
@@ -7,7 +8,11 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.ui.DefaultTranslator;
+import net.gazeplay.commons.ui.Translator;
 
 /**
  * Created by schwab on 17/12/2016.
@@ -24,6 +29,10 @@ public class GazePlay extends Application {
     @Getter
     private Stage primaryStage;
 
+    @Getter
+    private Translator translator;
+
+    @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
     public GazePlay() {
         instance = this;
     }
@@ -41,7 +50,12 @@ public class GazePlay extends Application {
 
         primaryStage.setMaximized(false);
 
-        homeMenuScreen = HomeMenuScreen.newInstance(this, ConfigurationBuilder.createFromPropertiesResource().build());
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Multilinguism multilinguism = Multilinguism.getSingleton();
+
+        translator = new DefaultTranslator(config, multilinguism);
+
+        homeMenuScreen = HomeMenuScreen.newInstance(this, config);
         homeMenuScreen.setUpOnStage(primaryStage);
 
         primaryStage.centerOnScreen();

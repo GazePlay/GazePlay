@@ -12,6 +12,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
 import javafx.scene.input.MouseEvent;
@@ -19,7 +20,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -30,20 +30,21 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
+import net.gazeplay.commons.ui.I18NText;
+import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Languages;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import javafx.event.EventType;
-import javafx.scene.control.CheckBox;
 
 @Slf4j
 public class ConfigurationContext extends GraphicalContext<BorderPane> {
+
+    private static final String COLON = "Colon";
 
     private static double prefWidth = 200;
 
@@ -78,7 +79,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         root.setBottom(bottomControlPane);
 
-        GridPane gridPane = buildConfigGridPane(this);
+        GridPane gridPane = buildConfigGridPane(this, gazePlay);
         root.setCenter(gridPane);
 
         root.setStyle(
@@ -114,22 +115,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    private static GridPane buildConfigGridPane(ConfigurationContext configurationContext) {
+    private static GridPane buildConfigGridPane(ConfigurationContext configurationContext, GazePlay gazePlay) {
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-
-        Multilinguism multilinguism = Multilinguism.getSingleton();
-
-        // to add or not a space before colon (:) according to the language
-        String colon = multilinguism.getTrad("Colon", config.getLanguage());
-        if (colon.equals("_noSpace"))
-            colon = ": ";
-        else
-            colon = " : ";
-
-        log.info("ConfigurationButton");
-
-        log.info(config.toString());
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -137,7 +125,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         grid.setVgap(50);
         // grid.setPadding(new Insets(50, 50, 50, 50));
 
-        Text configTitleText = new Text(multilinguism.getTrad("ConfigTitle", config.getLanguage()));
+        final Translator translator = gazePlay.getTranslator();
+
+        I18NText configTitleText = new I18NText(translator, "ConfigTitle");
         // configTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20)); should be managed with css
         configTitleText.setId("title");
         configTitleText.setTextAlignment(TextAlignment.CENTER);
@@ -146,7 +136,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         AtomicInteger currentFormRow = new AtomicInteger(1);
 
         {
-            Text label = new Text(multilinguism.getTrad("Lang", config.getLanguage()) + colon);
+            I18NText label = new I18NText(translator, "Lang", COLON);
 
             ChoiceBox<Languages> input = buildLanguageChooser(config, configurationContext);
 
@@ -154,7 +144,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text(multilinguism.getTrad("EyeTracker", config.getLanguage()) + colon);
+            I18NText label = new I18NText(translator, "EyeTracker", COLON);
 
             ChoiceBox<EyeTracker> input = buildEyeTrackerConfigChooser(config, configurationContext);
 
@@ -162,7 +152,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text(multilinguism.getTrad("FileDir", config.getLanguage()) + colon);
+            I18NText label = new I18NText(translator, "FileDir", COLON);
 
             Button input = buildDirectoryChooser(config, configurationContext);
 
@@ -170,7 +160,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text(multilinguism.getTrad("LayoutFile", config.getLanguage()) + colon);
+            I18NText label = new I18NText(translator, "LayoutFile", COLON);
 
             ChoiceBox<BuiltInUiTheme> input = buildStyleThemeChooser(config, configurationContext);
 
@@ -178,7 +168,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text(multilinguism.getTrad("FixationLength", config.getLanguage()) + colon);
+            I18NText label = new I18NText(translator, "FixationLength", COLON);
 
             ChoiceBox<Double> input = buildFixLengthChooserMenu(config, configurationContext);
 
@@ -186,7 +176,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text(multilinguism.getTrad("WhereIsItDirectory", config.getLanguage()) + colon);
+            I18NText label = new I18NText(translator, "WhereIsItDirectory", COLON);
 
             Button input = buildWhereIsItDirectoryChooser(config, configurationContext);
 
@@ -194,7 +184,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text(multilinguism.getTrad("QuestionLength", config.getLanguage()) + colon);
+            I18NText label = new I18NText(translator, "QuestionLength", COLON);
 
             ChoiceBox<Double> input = buildQuestionLengthChooserMenu(config, configurationContext);
 
@@ -202,7 +192,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text(multilinguism.getTrad("EnableRewardSound", config.getLanguage()) + colon);
+            I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
             CheckBox input = buildEnableRewardSoundBox(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
@@ -211,7 +201,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return grid;
     }
 
-    private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, Text label, Control input) {
+    private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, Control input) {
 
         final int COLUMN_INDEX_LABEL = 0;
         final int COLUMN_INDEX_INPUT = 1;
@@ -467,11 +457,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 ConfigurationBuilder.createFromPropertiesResource().withLanguage(newValue.name())
                         .saveConfigIgnoringExceptions();
 
-                configurationContext.getGazePlay().getHomeMenuScreen().onLanguageChanged();
-
-                GridPane gridPane = buildConfigGridPane(configurationContext);
-                configurationContext.getRoot().setCenter(null);
-                configurationContext.getRoot().setCenter(gridPane);
+                configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
             }
         });
 

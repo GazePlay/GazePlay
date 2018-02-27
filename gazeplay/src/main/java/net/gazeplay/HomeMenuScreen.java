@@ -8,8 +8,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,36 +20,28 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.ui.I18NLabel;
+import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Collection;
 import java.util.List;
-import javafx.application.Platform;
-import javafx.stage.StageStyle;
 
 @Data
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
-
-    /**
-     * The horizontal growing factor for buttons to adapt screen size.
-     */
-    private final static double GAME_CHOOSER_BUTTON_HGROW_FACTOR = 3.6;
-
-    /**
-     * The vertical growing factor for buttons to adapt screen size.
-     */
-    private final static double GAME_CHOOSER_BUTTON_VGROW_FACTOR = 8.5;
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
@@ -81,6 +73,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         leftControlPane.setAlignment(Pos.CENTER);
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.getChildren().add(configurationButton);
+        leftControlPane.getChildren().add(createSoundControlPane());
 
         Button toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
 
@@ -104,7 +97,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().add(exitButton);
 
-        Pane gamePickerChoicePane = createGamePickerChoicePane(games, config);
+        ScrollPane gamePickerChoicePane = createGamePickerChoicePane(games, config);
 
         VBox centerCenterPane = new VBox();
         centerCenterPane.setSpacing(40);
@@ -140,10 +133,17 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     @Override
     public void setUpOnStage(Stage stage) {
         super.setUpOnStage(stage);
+        playBackgroundMusic();
     }
 
-    public void onLanguageChanged() {
+    public void playBackgroundMusic() {
+        String resourceLocation1;
+        resourceLocation1 = "https://opengameart.org/sites/default/files/010614songidea%28copycat%29_0.mp3";
+        BackgroundMusicManager.getInstance().playRemoteSound(resourceLocation1);
 
+        // String resourceLocation2;
+        // resourceLocation2 = "https://opengameart.org/sites/default/files/021914bgm2%28happytune%29_0.mp3";
+        // BackgroundMusicManager.getInstance().playRemoteSound(resourceLocation2);
     }
 
     private Stage createDialog(Stage primaryStage, GameSpec gameSpec) {
@@ -157,11 +157,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         FlowPane choicePane = new FlowPane();
         choicePane.setAlignment(Pos.CENTER);
 
-        GazePlay gazePlay = GazePlay.getInstance();
+        ScrollPane choicePanelScroller = new ScrollPane(choicePane);
+        choicePanelScroller.setFitToWidth(true);
+        choicePanelScroller.setFitToHeight(true);
 
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             Button button = new Button(variant.getLabel());
-            button.getStyleClass().add("gameVariationChooserButton");
+            button.getStyleClass().add("gameChooserButton");
+            button.getStyleClass().add("gameVariation");
+            button.getStyleClass().add("button");
             choicePane.getChildren().add(button);
 
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -173,7 +177,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             });
         }
 
-        Scene scene = new Scene(choicePane, Color.TRANSPARENT);
+        Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
         CssUtil.setPreferredStylesheets(config, scene);
@@ -184,12 +188,21 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
-    private Pane createGamePickerChoicePane(List<GameSpec> games, Configuration config) {
+    private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config) {
 
         FlowPane choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
+        choicePanel.setHgap(10);
+        choicePanel.setVgap(10);
+        choicePanel.setOpaqueInsets(new Insets(20, 20, 20, 20));
+
+        ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
+        choicePanelScroller.setFitToWidth(true);
+        choicePanelScroller.setFitToHeight(true);
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
+
+        final Translator translator = getGazePlay().getTranslator();
 
         for (GameSpec gameSpec : games) {
             final GameSummary gameSummary = gameSpec.getGameSummary();
@@ -200,50 +213,40 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             gameCard.getStyleClass().add("gameChooserButton");
             gameCard.getStyleClass().add("button");
 
-            Label text = new Label(gameName);
+            I18NLabel text = new I18NLabel(translator, gameSummary.getNameCode());
+
+            text.getStyleClass().add("gameChooserButtonTitle");
 
             if (gameSummary.getGameTypeIndicatorImageLocation() != null) {
                 Image buttonGraphics = new Image(gameSummary.getGameTypeIndicatorImageLocation());
                 ImageView imageView = new ImageView(buttonGraphics);
-                imageView.setFitWidth(32);
-                imageView.setFitHeight(32);
-                StackPane.setAlignment(imageView, Pos.TOP_LEFT);
+                imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
+                imageView.setPreserveRatio(true);
+
+                gameCard.heightProperty().addListener(
+                        (observableValue, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() / 5));
+
+                StackPane.setAlignment(imageView, Pos.TOP_RIGHT);
                 gameCard.getChildren().add(imageView);
             }
 
             if (gameSummary.getThumbnailLocation() != null) {
                 Image buttonGraphics = new Image(gameSummary.getThumbnailLocation());
                 ImageView imageView = new ImageView(buttonGraphics);
-                imageView.setFitWidth(32);
+                imageView.getStyleClass().add("gameChooserButtonThumbnail");
                 imageView.setPreserveRatio(true);
 
-                int thumbnailBorderSize = 20;
+                int thumbnailBorderSize = 28;
                 gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> imageView
                         .setFitWidth(newValue.doubleValue() - thumbnailBorderSize));
                 gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> imageView
                         .setFitHeight(newValue.doubleValue() - thumbnailBorderSize));
-                StackPane.setAlignment(imageView, Pos.CENTER);
+                StackPane.setAlignment(imageView, Pos.CENTER_LEFT);
                 gameCard.getChildren().add(imageView);
             }
 
             StackPane.setAlignment(text, Pos.BOTTOM_RIGHT);
-            text.setPadding(new Insets(20, 20, 20, 20));
             gameCard.getChildren().add(text);
-
-            Stage primaryStage = GazePlay.getInstance().getPrimaryStage();
-
-            // Adapt buttons size to screen size
-            primaryStage.heightProperty().addListener((o) -> {
-                if (choicePanel.getHeight() > 0) {
-                    gameCard.setPrefHeight(primaryStage.getHeight() / GAME_CHOOSER_BUTTON_VGROW_FACTOR);
-                }
-            });
-
-            primaryStage.widthProperty().addListener((o) -> {
-                if (choicePanel.getHeight() > 0) {
-                    gameCard.setPrefWidth(primaryStage.getWidth() / GAME_CHOOSER_BUTTON_HGROW_FACTOR);
-                }
-            });
 
             gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
@@ -277,7 +280,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             choicePanel.getChildren().add(gameCard);
         }
 
-        return choicePanel;
+        return choicePanelScroller;
     }
 
     private void chooseGame(GameSpec selectedGameSpec, GameSpec.GameVariant gameVariant) {
@@ -297,6 +300,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         // gameContext.getGazeDeviceManager().addGazeMotionListener(secondScreen);
 
         gameContext.createControlPanel(gazePlay, stats);
+
+        if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
+            BackgroundMusicManager.getInstance()
+                    .playRemoteSound(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
+        }
 
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
         currentGame.launch();

@@ -1,5 +1,5 @@
 ,fra,eng,deu,spa
-Colon,_space,_noSpace,_noSpace,
+Colon, : ,: ,: ,
 Creampie,Tartes à la crème,Cream pies,Sahnetorte,
 Ninja,Ninja !,Ninja !,Ninja !,
 MagicCards,Cartes magiques,Magic cards,Zauberkarten,
@@ -35,4 +35,8 @@ WII-error,Vérifiez le répertoire du jeu « Où est-ce ? ».,Check « Where
 QuestionLength,Durée d’affichage des question,Question Display Length,Dauer der Veröffentlichung von Fragen,
 Cups and Balls,Gobelets Pass Pass,Cups and Balls,Bechertrick,Tazas y bolas
 Biboules,Biboules,Biboules,Biboules,Biboules
+Robots,Robots,Robots,Roboters,Robots
+Memory,Memory,Memory,Memory,Memory
 EnableRewardSound,Activer le son « bravo »,Enable "Reward" sound,Aktiviere den Sound "Bravo",Aktivigu la sonon "Bravo"
+Music,Musique,Music,Musik,Musica
+Volume,Volume,Volume,Volume,Volume

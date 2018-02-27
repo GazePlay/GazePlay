@@ -6,6 +6,8 @@ import javafx.scene.shape.Circle;
 import lombok.Getter;
 import net.gazeplay.commons.utils.games.Utils;
 
+import java.util.Random;
+
 /**
  * Created by schwab on 12/08/2016.
  */
@@ -42,7 +44,9 @@ public class Portrait extends Circle {
 
     protected Image pickRandomImage(Image[] availableImages) {
         int count = availableImages.length;
-        int index = (int) (count * Math.random());
+        // int index = (int) (count * Math.random());
+        Random r = new Random();
+        int index = r.nextInt(count);
         return availableImages[index];
     }
 

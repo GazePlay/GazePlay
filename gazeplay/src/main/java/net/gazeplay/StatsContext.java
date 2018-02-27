@@ -15,6 +15,8 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.ui.I18NText;
+import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.HomeButton;
@@ -31,6 +33,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Data
 public class StatsContext extends GraphicalContext<BorderPane> {
 
+    public static final String COLON = "Colon";
+
     public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
         BorderPane root = new BorderPane();
 
@@ -42,7 +46,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
     private final Stats stats;
 
-    private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, Text label, Text value) {
+    private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, Text value) {
 
         final int COLUMN_INDEX_LABEL = 0;
         final int COLUMN_INDEX_VALUE = 1;
@@ -70,24 +74,18 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
-        // to add or not a space before colon (:) according to the language
-        String colon = multilinguism.getTrad("Colon", config.getLanguage());
-        if (colon.equals("_noSpace")) {
-            colon = ": ";
-        } else {
-            colon = " : ";
-        }
-
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(100);
         grid.setVgap(50);
         // grid.setPadding(new Insets(50, 50, 50, 50));
 
+        final Translator translator = gazePlay.getTranslator();
+
         AtomicInteger currentFormRow = new AtomicInteger(1);
 
         {
-            Text label = new Text(multilinguism.getTrad("TotalLength", config.getLanguage()) + colon);
+            I18NText label = new I18NText(translator, "TotalLength", COLON);
 
             Text value = new Text(StatsDisplay.convert(stats.getTotalLength()));
 
@@ -95,15 +93,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            final Text label;
+            final I18NText label;
             if (stats instanceof BubblesGamesStats) {
-                label = new Text(multilinguism.getTrad("BubbleShoot", config.getLanguage()) + colon);
+                label = new I18NText(translator, "BubbleShoot", COLON);
             } else if (stats instanceof ShootGamesStats) {
-                label = new Text(multilinguism.getTrad("Shoots", config.getLanguage()) + colon);
+                label = new I18NText(translator, "Shoots", COLON);
             } else if (stats instanceof HiddenItemsGamesStats) {
-                label = new Text(multilinguism.getTrad("HiddenItemsShoot", config.getLanguage()) + colon);
+                label = new I18NText(translator, "HiddenItemsShoot", COLON);
             } else {
-                label = new Text(multilinguism.getTrad("Score", config.getLanguage()) + colon);
+                label = new I18NText(translator, "Score", COLON);
             }
 
             Text value = new Text(String.valueOf(stats.getNbGoals()));
@@ -112,7 +110,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text(multilinguism.getTrad("Length", config.getLanguage()) + colon);
+            I18NText label = new I18NText(translator, "Length", COLON);
 
             Text value = new Text(StatsDisplay.convert(stats.getLength()));
 
@@ -120,12 +118,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text();
+            final I18NText label;
 
             if (stats instanceof ShootGamesStats) {
-                label = new Text(multilinguism.getTrad("ShootaverageLength", config.getLanguage()) + colon);
-            } else if (stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
-                label = new Text(multilinguism.getTrad("AverageLength", config.getLanguage()) + colon);
+                label = new I18NText(translator, "ShootaverageLength", COLON);
+            } else {
+                label = new I18NText(translator, "AverageLength", COLON);
             }
 
             Text value = new Text(StatsDisplay.convert(stats.getAverageLength()));
@@ -134,12 +132,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text();
+            final I18NText label;
 
             if (stats instanceof ShootGamesStats) {
-                label = new Text(multilinguism.getTrad("ShootmedianLength", config.getLanguage()) + colon);
-            } else if (stats instanceof HiddenItemsGamesStats || stats instanceof BubblesGamesStats) {
-                label = new Text(multilinguism.getTrad("MedianLength", config.getLanguage()) + colon);
+                label = new I18NText(translator, "ShootmedianLength", COLON);
+            } else {
+                label = new I18NText(translator, "MedianLength", COLON);
             }
 
             Text value = new Text(StatsDisplay.convert(stats.getMedianLength()));
@@ -148,7 +146,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text(multilinguism.getTrad("StandDev", config.getLanguage()) + colon);
+            I18NText label = new I18NText(translator, "StandDev", COLON);
 
             Text value = new Text(StatsDisplay.convert((long) stats.getSD()));
 
@@ -156,18 +154,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            Text label = new Text();
-            Text value = new Text();
-
             if (stats instanceof ShootGamesStats && !(stats instanceof BubblesGamesStats)
                     && ((ShootGamesStats) stats).getNbUnCountedShoots() != 0) {
 
-                label = new Text(multilinguism.getTrad("label", config.getLanguage()) + colon);
+                final I18NText label = new I18NText(translator, "label", COLON);
 
-                value = new Text(String.valueOf(((ShootGamesStats) stats).getNbUnCountedShoots()));
+                final Text value = new Text(String.valueOf(((ShootGamesStats) stats).getNbUnCountedShoots()));
+
+                addToGrid(grid, currentFormRow, label, value);
             }
-
-            addToGrid(grid, currentFormRow, label, value);
         }
 
         VBox centerPane = new VBox();
@@ -179,7 +174,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            ImageView heatMap = StatsDisplay.BuildHeatChart(stats, scene);
+            ImageView heatMap = StatsDisplay.buildHeatChart(stats, scene);
             heatMap.setFitWidth(scene.getWidth() * 0.35);
             heatMap.setFitHeight(scene.getHeight() * 0.35);
 

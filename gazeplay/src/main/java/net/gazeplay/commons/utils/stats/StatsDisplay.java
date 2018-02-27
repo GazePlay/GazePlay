@@ -127,7 +127,7 @@ public class StatsDisplay {
         return lineChart;
     }
 
-    public static ImageView BuildHeatChart(Stats stats, Scene scene) {
+    public static ImageView buildHeatChart(Stats stats, Scene scene) {
 
         HeatMapUtils.buildHeatMap(stats.getHeatMap());
 

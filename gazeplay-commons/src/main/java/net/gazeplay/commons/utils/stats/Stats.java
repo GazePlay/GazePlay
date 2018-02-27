@@ -11,10 +11,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.games.Utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -99,34 +96,17 @@ public abstract class Stats implements GazeMotionListener {
         return result;
     }
 
-    protected void saveRawHeatMap(File file) {
-
-        PrintWriter out = null;
-
-        try {
-            out = new PrintWriter(file);
-
-        } catch (FileNotFoundException e) {
-            log.error("Exception", e);
-            return;
-        } finally {
-
-            if (out != null)
-                out.close();
-        }
-
-        for (int i = 0; i < heatMap.length; i++) {
-
-            for (int j = 0; j < heatMap[0].length - 1; j++) {
-
-                out.print((int) heatMap[i][j]);
-                out.print(", ");
+    protected void saveRawHeatMap(File file) throws IOException {
+        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
+            for (int i = 0; i < heatMap.length; i++) {
+                for (int j = 0; j < heatMap[0].length - 1; j++) {
+                    out.print((int) heatMap[i][j]);
+                    out.print(", ");
+                }
+                out.print((int) heatMap[i][heatMap[i].length - 1]);
+                out.println("");
             }
-
-            out.print((int) heatMap[i][heatMap[i].length - 1]);
-            out.println("");
         }
-        out.flush();
     }
 
     public void savePNGHeatMap(File destination) {
@@ -141,7 +121,7 @@ public abstract class Stats implements GazeMotionListener {
         }
     }
 
-    public void saveStats() {
+    public void saveStats() throws IOException {
 
         File saveFile = new File(Utils.getStatsFolder());
         saveFile.mkdir();

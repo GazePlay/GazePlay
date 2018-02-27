@@ -1,6 +1,5 @@
 package net.gazeplay.commons.utils.games;
 
-import javafx.collections.ObservableList;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -201,32 +200,6 @@ public class Utils {
     }
 
     /**
-     * @return styles directory for GazePlay : in the default directory of GazePlay, a folder called styles
-     */
-    public static String getStylesFolder() {
-
-        return getGazePlayFolder() + "styles" + FILESEPARATOR;
-    }
-
-    /**
-     * @return CSS files found in the styles folder
-     */
-    public static void addStylesheets(ObservableList<String> styleSheets) {
-
-        File F = new File(getStylesFolder());
-
-        if (F.exists()) {
-
-            File[] Tfiles = F.listFiles();
-            for (int i = 0; i < Tfiles.length; i++) {
-
-                if (Tfiles[i].toString().endsWith(".css"))
-                    styleSheets.add("file://" + Tfiles[i].toString());
-            }
-        }
-    }
-
-    /**
      * @return Temp directory for GazePlay : in the default directory of GazePlay, a folder called Temp
      */
     public static String getTempFolder() {
@@ -317,30 +290,10 @@ public class Utils {
 
     }
 
-    public static void save(String S, File F) {
-
-        try {
-            PrintWriter out = new PrintWriter(F);
-
-            out.println(S);
-            out.flush();
-        } catch (FileNotFoundException e) {
-            log.error("Exception", e);
-        }
-    }
-
-    public static PrintWriter getInfoStatsFile(String folder) {
-
-        PrintWriter out = null;
-
-        try {
-            out = new PrintWriter(folder + Utils.now() + "-info-game.csv");
-
-        } catch (FileNotFoundException e) {
-            log.error("Exception", e);
-        }
-
-        return out;
+    public static File createInfoStatsFile(String outputDirectoryPath) {
+        final File outputDirectory = new File(outputDirectoryPath);
+        final String fileName = Utils.now() + "-info-game.csv";
+        return new File(outputDirectory, fileName);
     }
 
     public static boolean copyFromJar(String filePath, String destinationPath) {

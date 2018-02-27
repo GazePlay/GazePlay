@@ -19,6 +19,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by schwab on 26/12/2016.
@@ -108,7 +109,10 @@ public class Target extends Portrait {
     }
 
     private void move() {
-        final int length = (int) (2000 * Math.random()) + 1000;// between 1 and 3 seconds
+        // final int length = (int) (2000 * Math.random()) + 1000;// between 1 and 3 seconds
+
+        Random r = new Random();
+        final int length = r.nextInt(2000) + 1000;// between 1 and 3 seconds
 
         final Position currentPosition = new Position((int) getCenterX(), (int) getCenterY());
         final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
