@@ -15,8 +15,7 @@ public class Strategy {
     private ArrayList<Action> actions;
 
     private enum Strategies {
-        rotation_up_down,
-        rotation_move_closest_in_place
+        rotation_up_down, rotation_move_closest_in_place
     };
 
     public Strategy(int nbCups, int nbIterations) {
@@ -49,15 +48,16 @@ public class Strategy {
             int strategy_choice = random.nextInt(Strategies.values().length);
 
             switch (Strategies.values()[strategy_choice]) {
-                case rotation_up_down:
-                    log.info("Strategy chosen : rotation_up_down");
-                    rotation_up_down(cupToMove.getPositionCup().getCellX(), cupToSwitch.getPositionCup().getCellX(),
-                            moveUp);
-                    break;
-                /*case rotation_move_closest_in_place:
-                    log.info("Strategy chosen : rotation_move_closest_in_place");
-                    rotation_move_closest_in_place(cupToMove.getPositionCup().getCellX(), cupToSwitch.getPositionCup().getCellX(), moveUp);
-*/
+            case rotation_up_down:
+                log.info("Strategy chosen : rotation_up_down");
+                rotation_up_down(cupToMove.getPositionCup().getCellX(), cupToSwitch.getPositionCup().getCellX(),
+                        moveUp);
+                break;
+            /*
+             * case rotation_move_closest_in_place: log.info("Strategy chosen : rotation_move_closest_in_place");
+             * rotation_move_closest_in_place(cupToMove.getPositionCup().getCellX(),
+             * cupToSwitch.getPositionCup().getCellX(), moveUp);
+             */
             }
         }
         return actions;
@@ -81,7 +81,7 @@ public class Strategy {
         }
     }
 
-    private void rotation_move_closest_in_place(int startCellX, int targetCellX, boolean moveUp){
+    private void rotation_move_closest_in_place(int startCellX, int targetCellX, boolean moveUp) {
         if (moveUp) {
             actions.add(new Action(startCellX, 1, startCellX, 0));
             actions.add(new Action(startCellX, 0, targetCellX, 0));

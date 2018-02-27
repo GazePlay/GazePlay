@@ -33,7 +33,7 @@ public class Cup {
     @Getter
     @Setter
     private int ballRadius;
-    
+
     private int openCupSpeed;
     private int fixationDurationNeeded;
 
@@ -53,7 +53,8 @@ public class Cup {
 
     private final CupsAndBalls gameInstance;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean revealed = false;
 
     private Timeline timelineProgressBar;
@@ -65,11 +66,12 @@ public class Cup {
     private boolean winner;
     @Getter
     private int actionsDone;
-    @Getter @Setter
+    @Getter
+    @Setter
     private int actionsToDo;
 
-    public Cup(Rectangle item, PositionCup positionCup, GameContext gameContext, Stats stats,
-            CupsAndBalls gameInstance, int openCupSpeed) {
+    public Cup(Rectangle item, PositionCup positionCup, GameContext gameContext, Stats stats, CupsAndBalls gameInstance,
+            int openCupSpeed) {
         this.actionsDone = 0;
         this.actionsToDo = 0;
         this.openCupSpeed = openCupSpeed;
@@ -84,13 +86,13 @@ public class Cup {
         this.stats = stats;
 
         this.gameInstance = gameInstance;
-        
+
         this.enterEvent = buildEvent();
-        
+
         this.progressIndicator = createProgressIndicator(item.getX(), item.getY(), this.enterEvent);
 
         gameContext.getGazeDeviceManager().addEventFilter(item);
-        
+
         item.addEventFilter(MouseEvent.ANY, enterEvent);
         item.addEventFilter(GazeEvent.ANY, enterEvent);
     }
@@ -124,10 +126,10 @@ public class Cup {
         indicator.setTranslateY(yCupPos + (item.getHeight() - indicatorHeight) / 2);
         indicator.setOpacity(0);
         gameContext.getGazeDeviceManager().addEventFilter(indicator);
-        
+
         indicator.addEventFilter(MouseEvent.ANY, enterEvent);
         indicator.addEventFilter(GazeEvent.ANY, enterEvent);
-        
+
         gameContext.getChildren().add(indicator);
         return indicator;
     }
@@ -164,12 +166,12 @@ public class Cup {
         revealBallTransition.play();
     }
 
-    private void onWrongCupSelected() { 
+    private void onWrongCupSelected() {
         progressIndicator.setOpacity(0);
         TranslateTransition revealBallTransition = new TranslateTransition(Duration.millis(openCupSpeed), item);
-        
+
         revealBallTransition.setByY(-ballRadius * 8);
-        
+
         revealBallTransition.play();
     }
 
@@ -178,7 +180,7 @@ public class Cup {
             @Override
             public void handle(Event e) {
 
-                if (revealed || actionsDone < actionsToDo-1)
+                if (revealed || actionsDone < actionsToDo - 1)
                     return;
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
@@ -187,8 +189,8 @@ public class Cup {
 
                     timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames().add(
-                            new KeyFrame(new Duration(fixationDurationNeeded), new KeyValue(progressIndicator.progressProperty(), 1)));
+                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationDurationNeeded),
+                            new KeyValue(progressIndicator.progressProperty(), 1)));
 
                     timelineProgressBar.play();
 
@@ -218,8 +220,8 @@ public class Cup {
             }
         };
     }
-    
-    public void increaseActionsDone(){
+
+    public void increaseActionsDone() {
         actionsDone++;
     }
 }
