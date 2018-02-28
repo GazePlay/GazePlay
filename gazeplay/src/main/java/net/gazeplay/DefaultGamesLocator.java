@@ -279,7 +279,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new ShooterGamesStats(scene,"biboule");
+                        return new ShooterGamesStats(scene, "biboule");
                     }
 
                     @Override
@@ -295,7 +295,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new ShooterGamesStats(scene,"robot");
+                        return new ShooterGamesStats(scene, "robot");
                     }
 
                     @Override

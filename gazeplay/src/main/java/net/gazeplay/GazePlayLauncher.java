@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
-import java.util.jar.Attributes; 
+import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 @Slf4j
@@ -32,7 +32,7 @@ public class GazePlayLauncher {
             throw new RuntimeException("Failed to load the version info", e);
         }
 
-        for (int i = 0; i < 5; i++) { 
+        for (int i = 0; i < 5; i++) {
             log.info("***********************");
         }
         log.info("GazePlay");

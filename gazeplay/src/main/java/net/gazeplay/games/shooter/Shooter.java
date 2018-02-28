@@ -89,7 +89,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
-        
+
         EventHandler<Event> handEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -108,12 +108,12 @@ public class Shooter extends Parent implements GameLifeCycle {
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
         imageRectangle.addEventFilter(GazeEvent.ANY, handEvent);
 
-        blue = new Image("data/" + gameType + "/images/Blue.png",true);
-        green = new Image("data/" + gameType + "/images/Green.png",true);
-        yellow = new Image("data/" + gameType + "/images/Yellow.png",true);
-        orange = new Image("data/" + gameType + "/images/Orange.png",true);
-        red = new Image("data/" + gameType + "/images/Red.png",true);
-        flash = new Image("data/" + gameType + "/images/Flash.png",true);
+        blue = new Image("data/" + gameType + "/images/Blue.png");
+        green = new Image("data/" + gameType + "/images/Green.png");
+        yellow = new Image("data/" + gameType + "/images/Yellow.png");
+        orange = new Image("data/" + gameType + "/images/Orange.png");
+        red = new Image("data/" + gameType + "/images/Red.png");
+        flash = new Image("data/" + gameType + "/images/Flash.png");
 
         cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
 
@@ -235,7 +235,7 @@ public class Shooter extends Parent implements GameLifeCycle {
     // done
     @Override
     public void launch() {
-    	
+
         Label sc = new Label();
 
         String cst;
@@ -415,7 +415,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         ImageView b3 = new ImageView(yellow);
         ImageView b4 = new ImageView(orange);
         ImageView b5 = new ImageView(red);
-
         ImageView f = new ImageView(flash);
 
         resize(b1);
