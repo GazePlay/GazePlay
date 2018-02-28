@@ -62,7 +62,8 @@ public class Memory implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
-        this.imagesAvail = Utils.images("Memory");
+
+        this.imagesAvail = Utils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
 
     }
 
