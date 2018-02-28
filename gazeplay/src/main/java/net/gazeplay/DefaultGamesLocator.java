@@ -5,8 +5,6 @@ import com.google.common.collect.Sets;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.biboules.Biboule;
-import net.gazeplay.games.biboules.BibouleGamesStats;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
@@ -19,9 +17,9 @@ import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.memory.Memory;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
-import net.gazeplay.games.robots.Robot;
-import net.gazeplay.games.robots.RobotGamesStats;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
+import net.gazeplay.games.shooter.Shooter;
+import net.gazeplay.games.shooter.ShooterGamesStats;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
 
@@ -281,13 +279,13 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new BibouleGamesStats(scene);
+                        return new ShooterGamesStats(scene,"biboule");
                     }
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
                             Stats stats) {
-                        return new Biboule(gameContext, stats);
+                        return new Shooter(gameContext, stats, "biboule");
                     }
                 }));
 
@@ -297,13 +295,13 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new RobotGamesStats(scene);
+                        return new ShooterGamesStats(scene,"robot");
                     }
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
                             Stats stats) {
-                        return new Robot(gameContext, stats);
+                        return new Shooter(gameContext, stats, "robot");
                     }
                 }));
 
