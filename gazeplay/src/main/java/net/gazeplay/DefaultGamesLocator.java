@@ -12,13 +12,15 @@ import net.gazeplay.games.bubbles.BubbleType;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
+import net.gazeplay.games.cups.CupsAndBalls;
+import net.gazeplay.games.cups.utils.CupsAndBallsStats;
 import net.gazeplay.games.drawonvideo.VideoPlayerWithLiveFeedbackApp;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.memory.Memory;
-import net.gazeplay.games.openmemory.OpenMemory;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
+import net.gazeplay.games.openmemory.OpenMemory;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.shooter.Shooter;
 import net.gazeplay.games.shooter.ShooterGamesStats;
@@ -28,8 +30,6 @@ import net.gazeplay.games.whereisit.WhereIsItStats;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import net.gazeplay.games.cups.CupsAndBalls;
-import net.gazeplay.games.cups.utils.CupsAndBallsStats;
 
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
@@ -408,7 +408,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
         result.add(new GameSpec(
                 new GameSummary("Video Player with Feedback", DEFAULT_SEARCHING_GAME_THUMBNAIL,
-                        "data/common/images/target.png"),
+                        "data/common/images/youtube-logo-128.png"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
