@@ -12,6 +12,7 @@ import net.gazeplay.games.bubbles.BubbleType;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
+import net.gazeplay.games.drawonvideo.VideoPlayerWithLiveFeedbackApp;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.memory.Memory;
@@ -334,12 +335,12 @@ public class DefaultGamesLocator implements GamesLocator {
         /*
          * result.add(new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL), new
          * GameSpec.GameLauncher() {
-         * 
+         *
          * @Override public Stats createNewStats(Scene scene) { return new DivisorStats(scene); }
-         * 
+         *
          * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats
          * stats) { return new Divisor(gameContext, stats); } }));
-         * 
+         *
          */
 
         result.add(
@@ -402,6 +403,22 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                         return new OpenMemory(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
+                    }
+                }));
+
+        result.add(new GameSpec(
+                new GameSummary("Video Player with Feedback", DEFAULT_SEARCHING_GAME_THUMBNAIL,
+                        "data/common/images/target.png"),
+                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "Video Player with Feedback");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new VideoPlayerWithLiveFeedbackApp(gameContext, stats);
                     }
                 }));
 

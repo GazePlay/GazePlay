@@ -7,9 +7,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
-@Slf4j
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class DrawBuilder {
 
     @Setter
@@ -52,14 +53,48 @@ public class DrawBuilder {
                 graphicsContext.closePath();
             }
         });
+
+        canvas.addEventFilter(GazeEvent.GAZE_MOVED, new EventHandler<GazeEvent>() {
+
+            AtomicInteger rateLimiter = new AtomicInteger(0);
+
+            private static final int RATE_LIMIT = 5;
+
+            @Override
+            public void handle(GazeEvent event) {
+                // log.info("GAZE_MOVED : event = " + event);
+                int rateLimiterValue = rateLimiter.incrementAndGet();
+                if (rateLimiterValue == RATE_LIMIT) {
+                    rateLimiter.set(0);
+
+                    graphicsContext.lineTo(event.getX(), event.getY());
+                    // graphicsContext.setStroke(colorPicker.pickColor());
+                    graphicsContext.stroke();
+                }
+            }
+        });
+
+        canvas.addEventFilter(GazeEvent.GAZE_ENTERED, new EventHandler<GazeEvent>() {
+            @Override
+            public void handle(GazeEvent event) {
+                graphicsContext.setStroke(colorPicker.pickColor());
+                graphicsContext.beginPath();
+            }
+        });
+
+        canvas.addEventFilter(GazeEvent.GAZE_EXITED, new EventHandler<GazeEvent>() {
+            @Override
+            public void handle(GazeEvent event) {
+                graphicsContext.closePath();
+            }
+        });
+
         return canvas;
     }
 
     private void initDraw(GraphicsContext gc) {
         double canvasWidth = gc.getCanvas().getWidth();
         double canvasHeight = gc.getCanvas().getHeight();
-
-        log.info("canvasWidth = {}, canvasHeight = {}", canvasWidth, canvasHeight);
 
         gc.clearRect(0, 0, canvasWidth, canvasHeight);
 

@@ -1,52 +1,55 @@
 package net.gazeplay.games.drawonvideo;
 
-import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import net.gazeplay.GameContext;
+import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.draw.DrawBuilder;
 import net.gazeplay.games.draw.ProgressiveColorPicker;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VideoPlayerWithLiveFeedbackApp extends Application {
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
     private static final String videoId;
-
-    Dimension2D videoDimension = new Dimension2D(1280, 720); // 720p
-
-    Dimension2D canvasDimension = new Dimension2D(videoDimension.getWidth(), videoDimension.getHeight() - 80);
-
-    double canvasOpacityWhilePlaying = 0.1d;
-
-    double canvasOpacityWhileOutside = 0.7d;
-
-    /**
-     * configure the frequency of the canvas switch, when using 3 canvas
-     */
-    long canvasSwitchFrequency = 500;
-
-    int canvasCount = 12;
 
     static {
         videoId = "YE7VzlLtp-4"; // big buck bunny
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
+    private final Dimension2D videoDimension = new Dimension2D(1280, 720); // 720p
+
+    private final Dimension2D canvasDimension = new Dimension2D(videoDimension.getWidth(),
+            videoDimension.getHeight() - 80);
+
+    private final double canvasOpacityWhilePlaying = 0.1d;
+
+    private final double canvasOpacityWhileOutside = 0.7d;
+
+    /**
+     * configure the frequency of the canvas switch, when using 3 canvas
+     */
+    private final long canvasSwitchFrequency = 500;
+
+    private final int canvasCount = 12;
+
+    private final GameContext gameContext;
+
+    private final Stats stats;
+
+    public VideoPlayerWithLiveFeedbackApp(GameContext gameContext, Stats stats) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
 
         String videoUrl = "http://www.youtube.com/embed/" + videoId + "?autoplay=1";
 
@@ -60,22 +63,46 @@ public class VideoPlayerWithLiveFeedbackApp extends Application {
         drawBuilder.setColorPicker(new ProgressiveColorPicker());
 
         List<Canvas> canvasList = new ArrayList<>();
+
+        EventHandler<Event> exitedEventHandler = new EventHandler<Event>() {
+            @Override
+            public void handle(Event mouseEvent) {
+                for (Canvas canvas : canvasList) {
+                    canvas.setOpacity(canvasOpacityWhileOutside);
+                }
+            }
+        };
+        EventHandler<Event> enteredEventHandler = new EventHandler<Event>() {
+            @Override
+            public void handle(Event mouseEvent) {
+                for (Canvas canvas : canvasList) {
+                    drawBuilder.clear(canvas);
+                    canvas.setOpacity(canvasOpacityWhilePlaying);
+                    canvas.setVisible(true);
+                }
+            }
+        };
+
         for (int i = 0; i < canvasCount; i++) {
-            canvasList.add(drawBuilder.createCanvas(canvasDimension));
+            Canvas canvas = drawBuilder.createCanvas(canvasDimension);
+            canvas.widthProperty().bind(gameContext.getRoot().widthProperty());
+            canvas.heightProperty().bind(gameContext.getRoot().heightProperty());
+            canvasList.add(canvas);
         }
 
         StackPane root = new StackPane();
         root.getChildren().add(webview);
         root.getChildren().addAll(canvasList);
+        root.prefWidthProperty().bind(gameContext.getRoot().widthProperty());
+        root.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
 
-        Scene scene = new Scene(root, videoDimension.getWidth(), videoDimension.getHeight());
-        stage.setScene(scene);
+        gameContext.getChildren().add(root);
 
         for (Canvas canvas : canvasList) {
             canvas.setOpacity(canvasOpacityWhilePlaying);
         }
 
-        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        root.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 // set the canvas to invisible
@@ -86,24 +113,13 @@ public class VideoPlayerWithLiveFeedbackApp extends Application {
                 }
             }
         });
-        scene.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                for (Canvas canvas : canvasList) {
-                    canvas.setOpacity(canvasOpacityWhileOutside);
-                }
-            }
-        });
-        scene.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                for (Canvas canvas : canvasList) {
-                    drawBuilder.clear(canvas);
-                    canvas.setOpacity(canvasOpacityWhilePlaying);
-                    canvas.setVisible(true);
-                }
-            }
-        });
+
+        root.addEventFilter(MouseEvent.MOUSE_EXITED, exitedEventHandler);
+        root.addEventFilter(MouseEvent.MOUSE_ENTERED, enteredEventHandler);
+
+        // root.addEventFilter(GazeEvent.GAZE_EXITED, exitedEventHandler);
+        // root.addEventFilter(GazeEvent.GAZE_ENTERED, enteredEventHandler);
+        // gameContext.getGazeDeviceManager().addEventFilter(root);
 
         Runnable canvasSwitchingTask = new Runnable() {
 
@@ -143,6 +159,10 @@ public class VideoPlayerWithLiveFeedbackApp extends Application {
                         @Override
                         public void run() {
                             activeCanvas.toFront();
+                            if (previousCanvas != null) {
+                                gameContext.getGazeDeviceManager().removeEventFilter(previousCanvas);
+                            }
+                            gameContext.getGazeDeviceManager().addEventFilter(activeCanvas);
                             if (nextCanvas != null) {
                                 if (nextCanvas != activeCanvas) {
                                     drawBuilder.clear(nextCanvas);
@@ -155,11 +175,16 @@ public class VideoPlayerWithLiveFeedbackApp extends Application {
         };
         Thread canvasSwitchingThread = new Thread(canvasSwitchingTask);
 
-        stage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
-        stage.show();
-        stage.setTitle(this.getClass().getSimpleName());
-
         canvasSwitchingThread.start();
     }
 
+    @Override
+    public void launch() {
+
+    }
+
+    @Override
+    public void dispose() {
+
+    }
 }
