@@ -31,8 +31,8 @@ public class CupsAndBalls implements GameLifeCycle {
     private int nbExchanges;
 
     private javafx.geometry.Dimension2D dimension2D;
-    private int openCupSpeed = 200;
-    private int exchangeCupDuration = 200;
+    private int openCupSpeed = 1500;
+    private int exchangeCupDuration = 1500;
     private int ballRadius = 20;
 
     private Random random = new Random();
@@ -48,8 +48,6 @@ public class CupsAndBalls implements GameLifeCycle {
         this.nbColumns = nbCups;
         this.nbLines = nbCups;
         this.nbExchanges = nbCups * nbCups;
-        this.strategy = new Strategy(nbCups, nbExchanges, nbColumns, nbLines);
-        this.actions = strategy.chooseStrategy(cups);
     }
 
     public CupsAndBalls(GameContext gameContext, Stats stats, int nbCups, int nbExchanges) {
@@ -63,7 +61,7 @@ public class CupsAndBalls implements GameLifeCycle {
         Image cupPicture = new Image("data/cups/images/cup.png");
         double imageWidth = dimension2D.getHeight() / (nbColumns * 1.5);
         double imageHeight = dimension2D.getHeight() / nbColumns;
-        
+
         int ballInCup = random.nextInt(nbCups);
         Point posCup;
         for (int indexCup = 0; indexCup < cups.length; indexCup++) {
@@ -101,6 +99,9 @@ public class CupsAndBalls implements GameLifeCycle {
                 revealBallTransition.setCycleCount(2);
             }
         }
+
+        this.strategy = new Strategy(nbCups, nbExchanges, nbColumns, nbLines);
+        this.actions = strategy.chooseStrategy();
 
         for (Cup cup : cups) {
             cup.setActionsToDo(actions.size());
