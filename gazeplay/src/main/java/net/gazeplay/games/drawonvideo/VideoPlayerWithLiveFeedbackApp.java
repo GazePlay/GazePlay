@@ -46,6 +46,8 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
     private final Stats stats;
 
+    private final WebView webview;
+
     public VideoPlayerWithLiveFeedbackApp(GameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
@@ -53,7 +55,7 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
         String videoUrl = "http://www.youtube.com/embed/" + videoId + "?autoplay=1";
 
-        WebView webview = new WebView();
+        webview = new WebView();
         webview.getEngine().load(videoUrl);
         webview.setPrefSize(videoDimension.getWidth(), videoDimension.getHeight());
 
@@ -185,6 +187,8 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        if (webview != null) {
+            webview.getEngine().load(null);
+        }
     }
 }
