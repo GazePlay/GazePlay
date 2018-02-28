@@ -76,8 +76,19 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
-                        return Sets.newLinkedHashSet(
-                                Lists.newArrayList(new GameSpec.CupsGameVariant(3), new GameSpec.CupsGameVariant(5)));
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.CupsGameVariant(2),
+
+                                new GameSpec.CupsGameVariant(3),
+
+                                new GameSpec.CupsGameVariant(4),
+
+                                new GameSpec.CupsGameVariant(5),
+
+                                new GameSpec.CupsGameVariant(6)
+
+                ));
                     }
                 }, new GameSpec.GameLauncher<Stats, GameSpec.CupsGameVariant>() {
                     @Override
