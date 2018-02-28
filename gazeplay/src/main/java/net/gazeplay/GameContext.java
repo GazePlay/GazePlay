@@ -135,21 +135,21 @@ public class GameContext extends GraphicalContext<Pane> {
         rootBorderPane.setBottom(bottomPane);
     }
 
-    public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
+    public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
         menuHBox.getChildren().add(createSoundControlPane());
 
         Button toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
-        HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats);
+        HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
         menuHBox.getChildren().add(homeButton);
     }
 
-    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
+    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats, @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> homeEvent = e -> {
             scene.setCursor(Cursor.WAIT); // Change cursor to wait style
-            homeButtonClicked(stats, gazePlay);
+            homeButtonClicked(stats, gazePlay, currentGame);
             BackgroundMusicManager.getInstance().pauseAll();
             scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
@@ -159,7 +159,9 @@ public class GameContext extends GraphicalContext<Pane> {
         return homeButton;
     }
 
-    private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay) {
+    private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
+        currentGame.dispose();
+        
         stats.stop();
         gazeDeviceManager.clear();
         gazeDeviceManager.destroy();
