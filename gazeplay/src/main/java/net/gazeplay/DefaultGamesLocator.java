@@ -17,6 +17,7 @@ import net.gazeplay.games.creampie.CreampieStats;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.memory.Memory;
+import net.gazeplay.games.openmemory.OpenMemory;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
 import net.gazeplay.games.robots.Robot;
@@ -349,6 +350,37 @@ public class DefaultGamesLocator implements GamesLocator {
                                 return new Memory(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
                             }
                         }));
+        result.add(new GameSpec(
+                new GameSummary("OpenMemory", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/memory.jpeg"),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.DimensionGameVariant(2, 2),
+
+                                new GameSpec.DimensionGameVariant(2, 3),
+
+                                new GameSpec.DimensionGameVariant(3, 2),
+
+                                new GameSpec.DimensionGameVariant(3, 4),
+
+                                new GameSpec.DimensionGameVariant(4, 3)
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new MagicCardsGamesStats(scene);
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new OpenMemory(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
+                    }
+                }));
 
         log.info("Games found : {}", result.size());
 
