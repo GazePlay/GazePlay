@@ -1,4 +1,4 @@
-package net.gazeplay.games.memory;
+package net.gazeplay.games.openmemory;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Random;
 
 @Slf4j
-public class Memory implements GameLifeCycle {
+public class OpenMemory implements GameLifeCycle {
 
     private static final float cardRatio = 0.75f;
 
@@ -27,7 +27,7 @@ public class Memory implements GameLifeCycle {
     @Data
     @AllArgsConstructor
     public class RoundDetails {
-        public final List<MemoryCard> cardList;
+        public final List<OpenMemoryCard> cardList;
     }
 
     private int nbRemainingPeers;
@@ -50,7 +50,7 @@ public class Memory implements GameLifeCycle {
 
     public int nbTurnedCards;
 
-    public Memory(GameContext gameContext, int nbLines, int nbColumns, Stats stats) {
+    public OpenMemory(GameContext gameContext, int nbLines, int nbColumns, Stats stats) {
         super();
         int cardsCount = nbLines * nbColumns;
         if ((cardsCount & 1) != 0) {
@@ -92,7 +92,7 @@ public class Memory implements GameLifeCycle {
 
         images = selectionAleaImages();
 
-        List<MemoryCard> cardList = createCards(images, config);
+        List<OpenMemoryCard> cardList = createCards(images, config);
 
         nbRemainingPeers = cardsCount / 2;
 
@@ -117,18 +117,18 @@ public class Memory implements GameLifeCycle {
         if (this.currentRoundDetails == null) {
             return;
         }
-        List<MemoryCard> cardsToHide = new ArrayList<>();
-        for (MemoryCard pictureCard : this.currentRoundDetails.cardList) {
-            if (pictureCard.isTurned()) {
+        List<OpenMemoryCard> cardsToHide = new ArrayList<>();
+        for (OpenMemoryCard pictureCard : this.currentRoundDetails.cardList) {
+            if (pictureCard.isSelected()) {
                 cardsToHide.add(pictureCard);
             }
         }
         nbRemainingPeers = nbRemainingPeers - 1;
-        // remove all turned cards
+        // remove all selected cards
         gameContext.getChildren().removeAll(cardsToHide);
     }
 
-    private List<MemoryCard> createCards(HashMap<Integer, Image> im, Configuration config) {
+    private List<OpenMemoryCard> createCards(HashMap<Integer, Image> im, Configuration config) {
         javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         log.info("Width{} ; height{}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
@@ -142,7 +142,7 @@ public class Memory implements GameLifeCycle {
 
         log.info("width{} ", width);
 
-        List<MemoryCard> result = new ArrayList<>();
+        List<OpenMemoryCard> result = new ArrayList<>();
 
         // HashMap <index, number of times the index was used >
         HashMap<Integer, Integer> indUsed = new HashMap<Integer, Integer>();
@@ -168,8 +168,8 @@ public class Memory implements GameLifeCycle {
 
                 Image image = images.get(id);
 
-                MemoryCard card = new MemoryCard(positionX, positionY, cardWidth, cardHeight, image, id, gameContext,
-                        stats, this, fixationlength);
+                OpenMemoryCard card = new OpenMemoryCard(positionX, positionY, cardWidth, cardHeight, image, id,
+                        gameContext, stats, this, fixationlength);
 
                 result.add(card);
             }
