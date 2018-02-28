@@ -10,28 +10,35 @@ import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 @Slf4j
 public class Strategy {
     private int nbCups;
-    private int nbIterations;
+    private int nbExchanges;
     @Getter
     private ArrayList<Action> actions;
+    private int maxCellsX;
+    private int maxCellsY;
 
     private enum Strategies {
-        rotation_up_down, rotation_move_closest_in_place
+        rotation_up_down/* , rotation_move_closest_in_place */
     };
 
-    public Strategy(int nbCups, int nbIterations) {
+    public Strategy(int nbCups, int nbExchanges, int maxCellsX, int maxCellsY) {
         this.nbCups = nbCups;
-        this.nbIterations = nbIterations;
+        this.nbExchanges = nbExchanges;
         this.actions = new ArrayList<Action>();
+        this.maxCellsX = maxCellsX;
+        this.maxCellsY = maxCellsY;
     }
 
     public ArrayList<Action> chooseStrategy(Cup[] cups) {
+        if (maxCellsX < 3) {
+            return actions;
+        }
         Random random = new Random();
         boolean moveUp;
         Cup cupToMove;
         Cup cupToSwitch;
-        for (int iteration = 0; iteration < nbIterations; iteration++) {
+        for (int iteration = 0; iteration < nbExchanges; iteration++) {
             ArrayList<Integer> numbersToChoose = new ArrayList<>();
-            for (int index = 0; index < nbCups; index++) {
+            for (int index = 0; index < maxCellsX; index++) {
                 numbersToChoose.add(index);
             }
             ArrayList randomNumbers = new ArrayList<>();
