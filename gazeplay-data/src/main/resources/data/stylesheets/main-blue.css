@@ -58,3 +58,9 @@
 
     -fx-background-color: linear-gradient(#98fb98, #008000);
 }
+
+/* Items with a background color corresponding to current them */
+.bg-colored {
+    -fx-background-color: linear-gradient(#98fb98, #008000);
+    -fx-text-fill: white;
+}
