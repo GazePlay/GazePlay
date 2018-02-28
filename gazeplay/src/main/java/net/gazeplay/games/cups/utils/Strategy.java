@@ -10,92 +10,128 @@ import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 @Slf4j
 public class Strategy {
     private int nbCups;
-    private int nbIterations;
+    private int nbExchanges;
     @Getter
     private ArrayList<Action> actions;
+    private int maxCellsX;
+    private int maxCellsY;
 
     private enum Strategies {
         rotation_up_down, rotation_move_closest_in_place
     };
 
-    public Strategy(int nbCups, int nbIterations) {
+    public Strategy(int nbCups, int nbExchanges, int maxCellsX, int maxCellsY) {
         this.nbCups = nbCups;
-        this.nbIterations = nbIterations;
+        this.nbExchanges = nbExchanges;
         this.actions = new ArrayList<Action>();
+        this.maxCellsX = maxCellsX;
+        this.maxCellsY = maxCellsY;
     }
 
-    public ArrayList<Action> chooseStrategy(Cup[] cups) {
-        Random random = new Random();
-        boolean moveUp;
-        Cup cupToMove;
-        Cup cupToSwitch;
-        for (int iteration = 0; iteration < nbIterations; iteration++) {
-            ArrayList<Integer> numbersToChoose = new ArrayList<>();
-            for (int index = 0; index < nbCups; index++) {
-                numbersToChoose.add(index);
-            }
-            ArrayList randomNumbers = new ArrayList<>();
-            for (int index = 0; index < 2; index++) {
-                int cupChoice = random.nextInt(numbersToChoose.size());
-                randomNumbers.add(numbersToChoose.get(cupChoice));
-                numbersToChoose.remove(cupChoice);
-            }
+    public ArrayList<Action> chooseStrategy() {
+        for (int iteration = 0; iteration < nbExchanges; iteration++) {
 
-            cupToMove = cups[(Integer) randomNumbers.get(0)];
-            cupToSwitch = cups[(Integer) randomNumbers.get(1)];
-            moveUp = random.nextBoolean();
-
-            int strategy_choice = random.nextInt(Strategies.values().length);
+            Random randomGenerator = new Random();
+            int strategy_choice = randomGenerator.nextInt(Strategies.values().length);
 
             switch (Strategies.values()[strategy_choice]) {
             case rotation_up_down:
                 log.info("Strategy chosen : rotation_up_down");
-                rotation_up_down(cupToMove.getPositionCup().getCellX(), cupToSwitch.getPositionCup().getCellX(),
-                        moveUp);
+
+                ArrayList<Integer> cupsExchangeCellsXrud = randomCupTwoChoices(false);
+                ArrayList<Integer> cupsExchangeCellsYrud = randomCupTwoChoices(true);
+
+                rotation_up_down(cupsExchangeCellsXrud.get(0), cupsExchangeCellsXrud.get(1),
+                        cupsExchangeCellsYrud.get(0), cupsExchangeCellsYrud.get(1));
                 break;
-            /*
-             * case rotation_move_closest_in_place: log.info("Strategy chosen : rotation_move_closest_in_place");
-             * rotation_move_closest_in_place(cupToMove.getPositionCup().getCellX(),
-             * cupToSwitch.getPositionCup().getCellX(), moveUp);
-             */
+            case rotation_move_closest_in_place:
+                log.info("Strategy chosen : rotation_move_closest_in_place");
+
+                ArrayList<Integer> cupsExchangeCellsXrmcip = randomCupTwoChoices(false);
+                Integer cupStartCellYrmcip = randomCupOneChoice(true);
+
+                rotation_move_closest_in_place(cupsExchangeCellsXrmcip.get(0), cupsExchangeCellsXrmcip.get(1),
+                        cupStartCellYrmcip);
+                break;
             }
         }
         return actions;
     }
 
-    private void rotation_up_down(int startCellX, int targetCellX, boolean moveUp) {
-        if (moveUp) {
-            actions.add(new Action(startCellX, 1, startCellX, 0));
-            actions.add(new Action(startCellX, 0, targetCellX, 0));
-            actions.add(new Action(targetCellX, 1, targetCellX, 2));
-            actions.add(new Action(targetCellX, 2, startCellX, 2));
-            actions.add(new Action(startCellX, 2, startCellX, 1));
-            actions.add(new Action(targetCellX, 0, targetCellX, 1));
-        } else {
-            actions.add(new Action(startCellX, 1, startCellX, 2));
-            actions.add(new Action(startCellX, 2, targetCellX, 2));
-            actions.add(new Action(targetCellX, 1, targetCellX, 0));
-            actions.add(new Action(targetCellX, 0, startCellX, 0));
-            actions.add(new Action(startCellX, 0, startCellX, 1));
-            actions.add(new Action(targetCellX, 2, targetCellX, 1));
-        }
+    private void rotation_up_down(Integer startCellX, Integer targetCellX, Integer firstCupMoveToY,
+            Integer secondCupMoveToY) {
+        actions.add(new Action(startCellX, maxCellsY / 2, startCellX, firstCupMoveToY));
+        actions.add(new Action(startCellX, firstCupMoveToY, targetCellX, firstCupMoveToY));
+        actions.add(new Action(targetCellX, maxCellsY / 2, targetCellX, secondCupMoveToY));
+        actions.add(new Action(targetCellX, secondCupMoveToY, startCellX, secondCupMoveToY));
+        actions.add(new Action(startCellX, secondCupMoveToY, startCellX, maxCellsY / 2));
+        actions.add(new Action(targetCellX, firstCupMoveToY, targetCellX, maxCellsY / 2));
     }
 
-    private void rotation_move_closest_in_place(int startCellX, int targetCellX, boolean moveUp) {
-        if (moveUp) {
-            actions.add(new Action(startCellX, 1, startCellX, 0));
-            actions.add(new Action(startCellX, 0, targetCellX, 0));
-            actions.add(new Action(targetCellX, 1, targetCellX, 2));
-            actions.add(new Action(targetCellX, 2, startCellX, 2));
-            actions.add(new Action(startCellX, 2, startCellX, 1));
-            actions.add(new Action(targetCellX, 0, targetCellX, 1));
+    private void rotation_move_closest_in_place(Integer startCellX, Integer targetCellX, Integer firstCupMoveToY) {
+        actions.add(new Action(startCellX, maxCellsY / 2, startCellX, firstCupMoveToY));
+        actions.add(new Action(startCellX, firstCupMoveToY, targetCellX, firstCupMoveToY));
+        if (Math.abs(startCellX - targetCellX) == 1) {
+            actions.add(new Action(targetCellX, maxCellsY / 2, startCellX, maxCellsY / 2));
         } else {
-            actions.add(new Action(startCellX, 1, startCellX, 2));
-            actions.add(new Action(startCellX, 2, targetCellX, 2));
-            actions.add(new Action(targetCellX, 1, targetCellX, 0));
-            actions.add(new Action(targetCellX, 0, startCellX, 0));
-            actions.add(new Action(startCellX, 0, startCellX, 1));
-            actions.add(new Action(targetCellX, 2, targetCellX, 1));
+            if (startCellX < targetCellX) {
+                for (int index = startCellX + 1; index <= targetCellX; index++) {
+                    actions.add(new Action(index, maxCellsY / 2, index - 1, maxCellsY / 2));
+                }
+            } else if (startCellX > targetCellX) {
+                for (int index = startCellX - 1; index >= targetCellX; index--) {
+                    actions.add(new Action(index, maxCellsY / 2, index + 1, maxCellsY / 2));
+                }
+            }
+
         }
+        actions.add(new Action(targetCellX, firstCupMoveToY, targetCellX, maxCellsY / 2));
+    }
+
+    public Integer randomCupOneChoice(boolean isYChoice) {
+        ArrayList<Integer> numbersToChooseFrom = new ArrayList();
+        for (int index = 0; index < maxCellsX; index++) {
+            if (isYChoice && index == maxCellsY / 2) {
+                continue;
+            }
+            numbersToChooseFrom.add(index);
+        }
+        Random randomGenerator = new Random();
+        int cupChoice;
+        if (!isYChoice) {
+            cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
+        } else {
+            cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
+        }
+        return numbersToChooseFrom.get(cupChoice);
+    }
+
+    public ArrayList randomCupTwoChoices(boolean isYChoice) {
+        ArrayList<Integer> numbersToChooseFrom = new ArrayList();
+        for (int index = 0; index < maxCellsX; index++) {
+            if (isYChoice && index == maxCellsY / 2) {
+                continue;
+            }
+            numbersToChooseFrom.add(index);
+        }
+        ArrayList<Integer> choices = new ArrayList();
+        Random randomGenerator = new Random();
+        for (int index = 0; index < 2; index++) {
+            int cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
+            choices.add(numbersToChooseFrom.get(cupChoice));
+            numbersToChooseFrom.remove(cupChoice);
+            if (isYChoice) {
+                if (cupChoice < maxCellsY / 2) {
+                    for (Integer i = 0; i < cupChoice; i++) {
+                        numbersToChooseFrom.remove(i);
+                    }
+                } else {
+                    for (Integer i = cupChoice; i < maxCellsY; i++) {
+                        numbersToChooseFrom.remove(i);
+                    }
+                }
+            }
+        }
+        return choices;
     }
 }

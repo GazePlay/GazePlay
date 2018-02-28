@@ -55,7 +55,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     public void addEventFilter(Node gs) {
         shapesEventFilter.add(new GazeInfos(gs));
         final int nodesEventFilterListSize = shapesEventFilter.size();
-        log.info("nodesEventFilterListSize = {}", nodesEventFilterListSize);
+        // log.info("nodesEventFilterListSize = {}", nodesEventFilterListSize);
     }
 
     @Override
