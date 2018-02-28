@@ -1,4 +1,4 @@
-package net.gazeplay.games.robots;
+package net.gazeplay.games.shooter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,13 +24,16 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.shooter.Point;
+import net.gazeplay.games.shooter.Target;
 
 /**
  * Created by schwab on 28/08/2016.
  */
 @Slf4j
-public class Robot extends Parent implements GameLifeCycle {
+public class Shooter extends Parent implements GameLifeCycle {
 
     private static final int maxRadius = 70;
     private static final int minRadius = 30;
@@ -59,6 +62,8 @@ public class Robot extends Parent implements GameLifeCycle {
 
     private Boolean left;
 
+    private String gameType;
+
     private final Stats stats;
 
     private final Point[] endPoints;
@@ -66,29 +71,35 @@ public class Robot extends Parent implements GameLifeCycle {
     private final EventHandler<Event> enterEvent;
 
     // done
-    public Robot(GameContext gameContext, Stats stats) {
+    public Shooter(GameContext gameContext, Stats stats, String type) {
         this.gameContext = gameContext;
         this.stats = stats;
         LocalDate localDate = LocalDate.now();
         date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
         score = 0;
+        gameType = type;
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
         centerX = 8.7 * dimension2D.getWidth() / 29.7;
         centerY = 10 * dimension2D.getHeight() / 21;
+        hand = new StackPane();
 
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        imageRectangle.setFill(new ImagePattern(new Image("data/robot/images/Background.jpg")));
+        imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
 
         EventHandler<Event> handEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
                     double x = ((MouseEvent) e).getX();
                     double y = ((MouseEvent) e).getY();
+                    hand.setRotate(getAngle(new Point(x, y)));
+                } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    double x = ((GazeEvent) e).getX();
+                    double y = ((GazeEvent) e).getY();
                     hand.setRotate(getAngle(new Point(x, y)));
                 }
 
@@ -97,12 +108,14 @@ public class Robot extends Parent implements GameLifeCycle {
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
         imageRectangle.addEventFilter(GazeEvent.ANY, handEvent);
 
-        blue = new Image("data/robot/images/Blue.png");
-        green = new Image("data/robot/images/Green.png");
-        yellow = new Image("data/robot/images/Yellow.png");
-        orange = new Image("data/robot/images/Orange.png");
-        red = new Image("data/robot/images/Red.png");
-        flash = new Image("data/robot/images/Flash.png");
+        blue = new Image("data/" + gameType + "/images/Blue.png");
+        green = new Image("data/" + gameType + "/images/Green.png");
+        yellow = new Image("data/" + gameType + "/images/Yellow.png");
+        orange = new Image("data/" + gameType + "/images/Orange.png");
+        red = new Image("data/" + gameType + "/images/Red.png");
+        flash = new Image("data/" + gameType + "/images/Flash.png");
+
+        cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
 
         Point[] points = new Point[10];
         points[0] = new Point(0, 0);
@@ -149,7 +162,6 @@ public class Robot extends Parent implements GameLifeCycle {
     public void magicCage() {
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(new KeyFrame(new Duration(8000)));
-        log.info("****LEFT****= {}", left);
 
         timeline.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
@@ -189,11 +201,20 @@ public class Robot extends Parent implements GameLifeCycle {
         if ((rd == 1) || (rd == 2)) {
             // Move Left or Right
             double val;
-            if (left) {
-                val = y + (dimension2D.getWidth() / 2.5);
-            } else {
-                val = y - (dimension2D.getWidth() / 2.5);
+
+            double cst;
+            if (gameType.equals("biboule")) {
+                cst = 2.5;
+            } else {// equals robot
+                cst = 3;
             }
+
+            if (left) {
+                val = y + (dimension2D.getWidth() / cst);
+            } else {
+                val = y - (dimension2D.getWidth() / cst);
+            }
+
             timeline3.getKeyFrames().add(
                     new KeyFrame(new Duration(3000), new KeyValue(cage.layoutXProperty(), val, Interpolator.EASE_OUT)));
             leftorright = true;
@@ -217,12 +238,19 @@ public class Robot extends Parent implements GameLifeCycle {
 
         Label sc = new Label();
 
-        sc.setText("Score:" + score);
+        String cst;
+        if (gameType.equals("biboule")) {
+            cst = date + "\n\t" + "Score:" + score;
+        } else {// equals robot
+            cst = "Score:" + score;
+        }
+        sc.setText(cst);
         sc.setTextFill(Color.WHITE);
         ;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        ImageView iv1 = new ImageView(new Image("data/robot/images/hand.png"));
-        ImageView iv2 = new ImageView(new Image("data/robot/images/handMagic.png"));
+        ImageView iv1 = new ImageView(new Image("data/" + gameType + "/images/hand.png"));
+        ImageView iv2 = new ImageView(new Image("data/" + gameType + "/images/handShot.png"));
+
         StackPane iv = new StackPane();
         double x = dimension2D.getHeight();
         iv1.setPreserveRatio(true);
@@ -230,29 +258,46 @@ public class Robot extends Parent implements GameLifeCycle {
         iv2.setPreserveRatio(true);
         iv2.setFitHeight(x);
 
-        sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight() / 18));
-        // sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
-        // sc.setLayoutY(hand.getHeight());
-        text = sc;
-        iv.getChildren().addAll(iv1, iv2, text);
+        iv.getChildren().addAll(iv1, iv2);
         iv.getChildren().get(1).setOpacity(0);
         iv.setLayoutY(0);
         iv.setLayoutX(3 * (dimension2D.getWidth() / 7));
-        iv.setLayoutY(dimension2D.getHeight() / 2);
+
+        double cst2;
+        if (gameType.equals("biboule")) {
+            cst2 = 2;
+        } else {// equals robot
+            cst2 = 1.7;
+        }
+        iv.setLayoutY(dimension2D.getHeight() / cst2);
+
         this.getChildren().add(iv);
         hand = (StackPane) this.getChildren().get(0);
         hand.toFront();
-        text.toFront();
 
-        // this.getChildren().add(sc);
+        sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight() / 18));
 
-        // this.gameContext.resetBordersToFront();
+        if (gameType.equals("biboule")) {
+            sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
+            sc.setLayoutY(1.8 * dimension2D.getHeight() / 21);
+        }
+        text = sc;
+        this.getChildren().add(sc);
+
+        this.gameContext.resetBordersToFront();
         iv.setMouseTransparent(true);
 
-        cage = new ImageView(new Image("data/robot/images/ship.png"));
         cage.setLayoutX(8.5 * dimension2D.getWidth() / 29.7);
-        cage.setLayoutY(8.5 * dimension2D.getHeight() / 21);
-        double y = dimension2D.getHeight() / 6.5;
+
+        double y;
+        if (gameType.equals("biboule")) {
+            cage.setLayoutY(8.5 * dimension2D.getHeight() / 21);
+            y = dimension2D.getHeight() / 6.5;
+        } else {// equals robot
+            cage.setLayoutY(3.5 * dimension2D.getHeight() / 21);
+            y = dimension2D.getHeight() / 8.5;
+        }
+
         cage.setPreserveRatio(true);
         cage.setFitHeight(y);
         cage.toBack();
@@ -300,14 +345,26 @@ public class Robot extends Parent implements GameLifeCycle {
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
         t.t.stop();
 
-        text.setText("Score:" + score++);
+        String cst;
+        if (gameType.equals("biboule")) {
+            cst = date + "\n\t" + "Score:" + score++;
+        } else {// equals robot
+            cst = "Score:" + score++;
+        }
+
+        text.setText(cst);
+
+        double min = Math.ceil(1);
+        double max = Math.floor(3);
+        int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
+        Utils.playSound("data/" + gameType + "/sounds/hand_sound" + r + ".mp3");
 
         t.getChildren().get(0).setOpacity(1);
-        hand.getChildren().get(2).setOpacity(1);
+        hand.getChildren().get(1).setOpacity(1);
         FadeTransition ft = new FadeTransition(Duration.millis(500), t);
         ft.setFromValue(1);
         ft.setToValue(0);
-        FadeTransition ft2 = new FadeTransition(Duration.millis(500), hand.getChildren().get(2));
+        FadeTransition ft2 = new FadeTransition(Duration.millis(500), hand.getChildren().get(1));
         ft2.setFromValue(1);
         ft2.setToValue(0);
         ParallelTransition st = new ParallelTransition();
@@ -337,6 +394,8 @@ public class Robot extends Parent implements GameLifeCycle {
         sp.setLayoutX(x);
         double y = (cage.getBoundsInParent().getMinY() + cage.getBoundsInParent().getMaxY()) / 2;
         sp.setLayoutY(y);
+        sp.centerX = x;
+        sp.centerY = y;
 
         moveCircle(sp);
     }
@@ -356,7 +415,6 @@ public class Robot extends Parent implements GameLifeCycle {
         ImageView b3 = new ImageView(yellow);
         ImageView b4 = new ImageView(orange);
         ImageView b5 = new ImageView(red);
-
         ImageView f = new ImageView(flash);
 
         resize(b1);
@@ -386,8 +444,8 @@ public class Robot extends Parent implements GameLifeCycle {
         double max = Math.floor(7);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
         Point randomPoint = endPoints[r];
-        tt1.setToY(-centerY + randomPoint.y);
-        tt1.setToX(-centerX + randomPoint.x);
+        tt1.setToY(-sp.centerY + randomPoint.y);
+        tt1.setToX(-sp.centerX + randomPoint.x);
         sp.destination = randomPoint;
 
         if (r == 2) {
