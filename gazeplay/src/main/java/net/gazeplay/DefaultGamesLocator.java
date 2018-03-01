@@ -12,12 +12,15 @@ import net.gazeplay.games.bubbles.BubbleType;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
+import net.gazeplay.games.cups.CupsAndBalls;
+import net.gazeplay.games.cups.utils.CupsAndBallsStats;
+import net.gazeplay.games.drawonvideo.VideoPlayerWithLiveFeedbackApp;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.memory.Memory;
-import net.gazeplay.games.openmemory.OpenMemory;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
+import net.gazeplay.games.openmemory.OpenMemory;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.shooter.Shooter;
 import net.gazeplay.games.shooter.ShooterGamesStats;
@@ -27,8 +30,6 @@ import net.gazeplay.games.whereisit.WhereIsItStats;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import net.gazeplay.games.cups.CupsAndBalls;
-import net.gazeplay.games.cups.utils.CupsAndBallsStats;
 
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
@@ -334,12 +335,12 @@ public class DefaultGamesLocator implements GamesLocator {
         /*
          * result.add(new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL), new
          * GameSpec.GameLauncher() {
-         * 
+         *
          * @Override public Stats createNewStats(Scene scene) { return new DivisorStats(scene); }
-         * 
+         *
          * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats
          * stats) { return new Divisor(gameContext, stats); } }));
-         * 
+         *
          */
 
         result.add(
@@ -402,6 +403,35 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                         return new OpenMemory(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
+                    }
+                }));
+
+        result.add(new GameSpec(new GameSummary("Video Player with Feedback", DEFAULT_SEARCHING_GAME_THUMBNAIL,
+                "data/common/images/youtube-logo-128.png"), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.StringGameVariant("Big Buck Bunny", "YE7VzlLtp-4"),
+
+                                new GameSpec.StringGameVariant("Caminandes 2: Gran Dillama - Blender Animated Short",
+                                        "Z4C82eyhwgU"),
+
+                                new GameSpec.StringGameVariant("Caminandes 3: Llamigos - Funny 3D Animated Short",
+                                        "SkVqJ1SGeL0")
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.StringGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "Video Player with Feedback");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.StringGameVariant gameVariant,
+                            Stats stats) {
+                        return new VideoPlayerWithLiveFeedbackApp(gameContext, stats, gameVariant.getValue());
                     }
                 }));
 

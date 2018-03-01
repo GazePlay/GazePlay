@@ -42,6 +42,19 @@ public class GameSpec {
     }
 
     @Data
+    public static class StringGameVariant implements GameVariant {
+
+        private final String label;
+
+        private final String value;
+
+        @Override
+        public String getLabel() {
+            return label;
+        }
+    }
+
+    @Data
     public static class CupsGameVariant implements GameVariant {
         private final int noCups;
 

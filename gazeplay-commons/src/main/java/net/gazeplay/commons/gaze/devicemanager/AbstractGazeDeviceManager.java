@@ -7,8 +7,9 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -20,10 +21,10 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     private final List<GazeMotionListener> gazeMotionListeners = new CopyOnWriteArrayList<>();
 
     @Getter
-    private final List<GazeInfos> shapesEventFilter = new CopyOnWriteArrayList<>();
+    private final Map<IdentityKey<Node>, GazeInfos> shapesEventFilter = new ConcurrentHashMap<>();
 
     @Getter
-    private final List<GazeInfos> shapesEventHandler = new CopyOnWriteArrayList<>();
+    private final Map<IdentityKey<Node>, GazeInfos> shapesEventHandler = new ConcurrentHashMap<>();
 
     public AbstractGazeDeviceManager() {
 
@@ -53,45 +54,34 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     @Override
     public void addEventFilter(Node gs) {
-        shapesEventFilter.add(new GazeInfos(gs));
+        shapesEventFilter.put(new IdentityKey<>(gs), new GazeInfos(gs));
         final int nodesEventFilterListSize = shapesEventFilter.size();
         // log.info("nodesEventFilterListSize = {}", nodesEventFilterListSize);
     }
 
     @Override
     public void addEventHandler(Node gs) {
-        shapesEventHandler.add(new GazeInfos(gs));
+        shapesEventHandler.put(new IdentityKey<>(gs), new GazeInfos(gs));
     }
 
     @Override
     public void removeEventFilter(Node gs) {
-        int i;
-
-        try {
-            for (i = 0; i < shapesEventFilter.size() && shapesEventFilter.get(i).getNode() != null
-                    && !shapesEventFilter.get(i).getNode().equals(gs); i++)
-                ;
-
-            if (i < shapesEventFilter.size()) {
-
-                shapesEventFilter.remove(i);
+        GazeInfos removed = shapesEventFilter.remove(new IdentityKey<>(gs));
+        if (removed == null) {
+            log.warn("EventFilter to remove not found");
+        } else {
+            if (removed.isOn()) {
+                Platform.runLater(() -> removed.getNode()
+                        .fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, System.currentTimeMillis(), 0, 0)));
             }
-        } catch (Exception e) {
-
-            log.debug(e.getMessage());
-            System.exit(0);
         }
     }
 
     @Override
     public void removeEventHandler(Node gs) {
-        int i;
-
-        for (i = 0; i < shapesEventHandler.size() && !shapesEventHandler.get(i).getNode().equals(gs); i++)
-            ;
-
-        if (i < shapesEventHandler.size()) {
-            shapesEventHandler.remove(i);
+        GazeInfos removed = shapesEventHandler.remove(new IdentityKey<>(gs));
+        if (removed == null) {
+            log.warn("EventHandler to remove not found");
         }
     }
 
@@ -113,7 +103,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         final double positionX = gazePositionOnScreen.getX();
         final double positionY = gazePositionOnScreen.getY();
 
-        for (GazeInfos gi : shapesEventFilter) {
+        for (GazeInfos gi : shapesEventFilter.values()) {
             final Node node = gi.getNode();
 
             Point2D localPosition = node.screenToLocal(positionX, positionY);
@@ -130,7 +120,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                 } else {
 
                     gi.setOn(true);
-                    gi.setTime((new Date()).getTime());
+                    gi.setTime(System.currentTimeMillis());
                     Platform.runLater(() -> node
                             .fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), positionX, positionY)));
 

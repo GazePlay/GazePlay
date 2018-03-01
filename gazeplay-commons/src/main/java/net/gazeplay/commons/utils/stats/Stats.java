@@ -23,7 +23,7 @@ import java.util.Collections;
  * Created by schwab on 16/08/2017.
  */
 @Slf4j
-public abstract class Stats implements GazeMotionListener {
+public class Stats implements GazeMotionListener {
 
     private final double heatMapPixelSize = computeHeatMapPixelSize();
 
@@ -58,7 +58,12 @@ public abstract class Stats implements GazeMotionListener {
     }
 
     public Stats(Scene gameContextScene) {
+        this(gameContextScene, null);
+    }
+
+    public Stats(Scene gameContextScene, String gameName) {
         this.gameContextScene = gameContextScene;
+        this.gameName = gameName;
 
         nbGoals = 0;
         beginTime = 0;
