@@ -65,7 +65,6 @@ class Target extends Portrait {
     }
 
     private void move() {
-        Random r = new Random();
         final int length = speed * 1000;
 
         final Position newPosition = randomPosGenerator.newRandomPosition(getInitialRadius());
