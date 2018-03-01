@@ -77,7 +77,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(
-                                Lists.newArrayList(new GameSpec.CupsGameVariant(3), new GameSpec.CupsGameVariant(5)));
+                                Lists.newArrayList(new GameSpec.CupsGameVariant(3), new GameSpec.CupsGameVariant(5), new GameSpec.CupsGameVariant(100)));
                     }
                 }, new GameSpec.GameLauncher<Stats, GameSpec.CupsGameVariant>() {
                     @Override
@@ -87,7 +87,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.CupsGameVariant gameVariant,
                             Stats stats) {
-                        return new CupsAndBalls(gameContext, stats, gameVariant.getNoCups(), 3);
+                        return new CupsAndBalls(gameContext, stats, gameVariant.getNoCups(), 50);
                     }
                 }));
 

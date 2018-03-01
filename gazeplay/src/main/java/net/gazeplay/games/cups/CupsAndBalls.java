@@ -31,8 +31,8 @@ public class CupsAndBalls implements GameLifeCycle {
     private int nbExchanges;
 
     private javafx.geometry.Dimension2D dimension2D;
-    private int openCupSpeed = 1500;
-    private int exchangeCupDuration = 1500;
+    private  int openCupSpeed = 50;
+    private int exchangeCupDuration = 50;
     private int ballRadius = 20;
 
     private Random random = new Random();
