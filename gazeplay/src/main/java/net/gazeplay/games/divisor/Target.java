@@ -37,7 +37,7 @@ class Target extends Portrait {
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats, Image[] images,
             int level) {
-        super((int)200/(level+1), randomPositionGenerator, images);
+        super((int) 200 / (level + 1), randomPositionGenerator, images);
         this.level = level;
         this.difficulty = 3;
         this.speed = 1;
@@ -55,7 +55,7 @@ class Target extends Portrait {
                 }
             }
         };
-        
+
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventHandler(GazeEvent.ANY, enterEvent);
 
