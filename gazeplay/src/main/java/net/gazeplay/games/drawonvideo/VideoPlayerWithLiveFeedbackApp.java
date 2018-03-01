@@ -20,12 +20,6 @@ import java.util.List;
 
 public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
-    private static final String videoId;
-
-    static {
-        videoId = "YE7VzlLtp-4"; // big buck bunny
-    }
-
     private final Dimension2D videoDimension = new Dimension2D(1280, 720); // 720p
 
     private final Dimension2D canvasDimension = new Dimension2D(videoDimension.getWidth(),
@@ -48,12 +42,12 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
     private final WebView webview;
 
-    public VideoPlayerWithLiveFeedbackApp(GameContext gameContext, Stats stats) {
+    public VideoPlayerWithLiveFeedbackApp(GameContext gameContext, Stats stats, String youtubeVideoId) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
 
-        String videoUrl = "http://www.youtube.com/embed/" + videoId + "?autoplay=1";
+        String videoUrl = "http://www.youtube.com/embed/" + youtubeVideoId + "?autoplay=1";
 
         webview = new WebView();
         webview.getEngine().load(videoUrl);

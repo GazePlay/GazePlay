@@ -145,7 +145,8 @@ public class GameContext extends GraphicalContext<Pane> {
         menuHBox.getChildren().add(homeButton);
     }
 
-    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats, @NonNull GameLifeCycle currentGame) {
+    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
+            @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> homeEvent = e -> {
             scene.setCursor(Cursor.WAIT); // Change cursor to wait style
@@ -159,9 +160,10 @@ public class GameContext extends GraphicalContext<Pane> {
         return homeButton;
     }
 
-    private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
+    private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay,
+            @NonNull GameLifeCycle currentGame) {
         currentGame.dispose();
-        
+
         stats.stop();
         gazeDeviceManager.clear();
         gazeDeviceManager.destroy();

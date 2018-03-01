@@ -300,14 +300,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         // gameContext.getGazeDeviceManager().addGazeMotionListener(secondScreen);
 
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
-        
+
         gameContext.createControlPanel(gazePlay, stats, currentGame);
 
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
             BackgroundMusicManager.getInstance()
                     .playRemoteSound(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
         }
-        
+
         currentGame.launch();
     }
 

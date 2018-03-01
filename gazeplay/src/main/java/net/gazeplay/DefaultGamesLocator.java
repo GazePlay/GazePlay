@@ -406,19 +406,32 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(
-                new GameSummary("Video Player with Feedback", DEFAULT_SEARCHING_GAME_THUMBNAIL,
-                        "data/common/images/youtube-logo-128.png"),
-                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+        result.add(new GameSpec(new GameSummary("Video Player with Feedback", DEFAULT_SEARCHING_GAME_THUMBNAIL,
+                "data/common/images/youtube-logo-128.png"), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.StringGameVariant("Big Buck Bunny", "YE7VzlLtp-4"),
+
+                                new GameSpec.StringGameVariant("Caminandes 2: Gran Dillama - Blender Animated Short",
+                                        "Z4C82eyhwgU"),
+
+                                new GameSpec.StringGameVariant("Caminandes 3: Llamigos - Funny 3D Animated Short",
+                                        "SkVqJ1SGeL0")
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.StringGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new Stats(scene, "Video Player with Feedback");
                     }
 
                     @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext,
-                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new VideoPlayerWithLiveFeedbackApp(gameContext, stats);
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.StringGameVariant gameVariant,
+                            Stats stats) {
+                        return new VideoPlayerWithLiveFeedbackApp(gameContext, stats, gameVariant.getValue());
                     }
                 }));
 
