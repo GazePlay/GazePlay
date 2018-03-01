@@ -22,7 +22,7 @@ public class Divisor implements GameLifeCycle {
     @Override
     public void launch() {
         Target target = new Target(gameContext, gameContext.getRandomPositionGenerator(), stats,
-                Portrait.loadAllImages());
+                Portrait.loadAllImages(), 0);
         gameContext.getChildren().add(target);
     }
 
