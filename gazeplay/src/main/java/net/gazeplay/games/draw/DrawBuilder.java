@@ -96,6 +96,7 @@ public class DrawBuilder {
         double canvasWidth = gc.getCanvas().getWidth();
         double canvasHeight = gc.getCanvas().getHeight();
 
+        gc.setFill(Color.WHITE);
         gc.clearRect(0, 0, canvasWidth, canvasHeight);
 
         gc.setStroke(borderRectangleColor);
