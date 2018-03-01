@@ -1,6 +1,10 @@
 package net.gazeplay;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -19,21 +23,23 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.CustomButton;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Collection;
@@ -63,6 +69,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, Scene scene, BorderPane root, Configuration config) {
         super(gazePlay, root, scene);
         this.games = games;
+
+        root.setStyle("-fx-background-color: rgba(0, 0, 0, 1); " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
         Rectangle exitButton = createExitButton();
 
@@ -101,7 +111,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         VBox centerCenterPane = new VBox();
         centerCenterPane.setSpacing(40);
-        centerCenterPane.setAlignment(Pos.TOP_CENTER);
+        centerCenterPane.setAlignment(Pos.CENTER);
         centerCenterPane.getChildren().add(gamePickerChoicePane);
 
         VBox leftPanel = new VBox();
@@ -120,9 +130,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setBottom(bottomPane);
         root.setCenter(centerPanel);
 
-        root.setStyle("-fx-background-color: rgba(0, 0, 0, 1); " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
     @Override
@@ -188,6 +195,43 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
+    private void startGameLoop(ImageView backgroundImageView1, ImageView backgroundImageView2, Image image,
+            String style, ScrollPane choicePanelScroller) {
+        backgroundImageView1.setStyle(style);
+        backgroundImageView2.setStyle(style);
+
+        double imageRatio = image.getWidth() / image.getHeight();
+        log.info("imageRatio = {}", imageRatio);
+
+        double choicePanelScrollerHeight = backgroundImageView1.getFitHeight();
+        log.info("choicePanelScrollerHeight = {}", choicePanelScrollerHeight);
+
+        // double actualImageWidth = choicePanelScrollerHeight * imageRatio;
+        double actualImageWidth = backgroundImageView1.getFitWidth();
+        if (actualImageWidth == 0) {
+            actualImageWidth = Screen.getPrimary().getBounds().getWidth();
+        }
+        log.info("actualImageWidth = {}", actualImageWidth);
+
+        backgroundImageView1.setTranslateX(0);
+        backgroundImageView2.setTranslateX(actualImageWidth);
+
+        Timeline timeline1 = new Timeline();
+
+        timeline1.getKeyFrames().add(new KeyFrame(new Duration(image.getWidth() * 10),
+                new KeyValue(backgroundImageView2.translateXProperty(), 0)));
+        timeline1.getKeyFrames().add(new KeyFrame(new Duration(image.getWidth() * 10),
+                new KeyValue(backgroundImageView1.translateXProperty(), -actualImageWidth)));
+        timeline1.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                startGameLoop(backgroundImageView1, backgroundImageView2, image, style, choicePanelScroller);
+            }
+        });
+
+        timeline1.play();
+    }
+
     private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config) {
 
         FlowPane choicePanel = new FlowPane();
@@ -196,9 +240,36 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.setVgap(10);
         choicePanel.setOpaqueInsets(new Insets(20, 20, 20, 20));
 
-        ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
+        Image image = new Image(getClass().getClassLoader()
+                .getResource("data/common/images/phaser-game-design-background-26.png").toString());
+
+        ImageView backgroundImageView1 = new ImageView(image);
+        backgroundImageView1.setPreserveRatio(true);
+
+        ImageView backgroundImageView2 = new ImageView(image);
+        backgroundImageView2.setPreserveRatio(true);
+
+        String style = "-fx-border-style: none;" + "-fx-border-width: 0;" + "-fx-padding: 0;"
+                + "-fx-background-radius: 0; ";
+
+        StackPane backgroundScrollpaneContent = new StackPane();
+        backgroundScrollpaneContent.setAlignment(Pos.CENTER);
+        backgroundScrollpaneContent.getChildren().add(backgroundImageView1);
+        backgroundScrollpaneContent.getChildren().add(backgroundImageView2);
+        backgroundScrollpaneContent.getChildren().add(choicePanel);
+
+        ScrollPane choicePanelScroller = new ScrollPane(backgroundScrollpaneContent);
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
+        choicePanelScroller.setPannable(true);
+        choicePanelScroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        choicePanelScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        backgroundImageView1.fitHeightProperty().bind(backgroundScrollpaneContent.heightProperty());
+        backgroundImageView2.fitHeightProperty().bind(backgroundScrollpaneContent.heightProperty());
+
+        choicePanelScroller.prefViewportWidthProperty().bind(backgroundScrollpaneContent.prefWidthProperty());
+        choicePanelScroller.prefViewportHeightProperty().bind(backgroundScrollpaneContent.prefHeightProperty());
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
@@ -279,6 +350,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
             choicePanel.getChildren().add(gameCard);
         }
+
+        startGameLoop(backgroundImageView1, backgroundImageView2, image, style, choicePanelScroller);
 
         return choicePanelScroller;
     }
