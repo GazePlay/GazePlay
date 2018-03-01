@@ -282,7 +282,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
             StackPane gameCard = new StackPane();
             gameCard.getStyleClass().add("gameChooserButton");
-            gameCard.getStyleClass().add("button");
+            //gameCard.getStyleClass().add("button");
 
             I18NLabel text = new I18NLabel(translator, gameSummary.getNameCode());
 
