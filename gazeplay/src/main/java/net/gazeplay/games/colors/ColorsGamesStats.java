@@ -12,11 +12,11 @@ import net.gazeplay.commons.utils.stats.SelectionGamesStats;
  *
  * @author medard
  */
-public class ColorsGamesStats extends SelectionGamesStats{
-    
-    //TODO
+public class ColorsGamesStats extends SelectionGamesStats {
+
+    // TODO
     public ColorsGamesStats(Scene gameContextScene) {
         super(gameContextScene);
     }
-    
+
 }

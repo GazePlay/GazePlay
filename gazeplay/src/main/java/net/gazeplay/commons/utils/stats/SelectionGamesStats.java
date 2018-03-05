@@ -11,11 +11,11 @@ import javafx.scene.Scene;
  *
  * @author medard
  */
-public class SelectionGamesStats extends Stats{
-    
-    //TODO
+public class SelectionGamesStats extends Stats {
+
+    // TODO
     public SelectionGamesStats(Scene gameContextScene) {
         super(gameContextScene);
     }
-    
+
 }

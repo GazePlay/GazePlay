@@ -383,8 +383,8 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new OpenMemory(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
                     }
                 }));
-        
-        result.add(new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL), 
+
+        result.add(new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL),
 
                 new GameSpec.GameLauncher() {
                     @Override
