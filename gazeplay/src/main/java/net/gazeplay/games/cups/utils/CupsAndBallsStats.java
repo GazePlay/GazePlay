@@ -11,5 +11,5 @@ public class CupsAndBallsStats extends HiddenItemsGamesStats {
         super(scene);
         this.gameName = "cups";
     }
-    
+
 }
