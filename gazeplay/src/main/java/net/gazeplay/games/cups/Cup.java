@@ -11,7 +11,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -157,8 +156,6 @@ public class Cup {
                         gameContext.clear();
 
                         gameInstance.launch();
-
-                        stats.start();
 
                         gameContext.onGameStarted();
                     }

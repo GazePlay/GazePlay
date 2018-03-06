@@ -31,11 +31,11 @@ public class CupsAndBalls implements GameLifeCycle {
     private int nbExchanges;
 
     private javafx.geometry.Dimension2D dimension2D;
-    private int openCupSpeed = 1500;
-    private int exchangeCupDuration = 1500;
-    private int ballRadius = 20;
+    private final int openCupSpeed = 1000;
+    private final int exchangeCupDuration = 1000;
+    private final int ballRadius = 20;
 
-    private Random random = new Random();
+    private final Random random = new Random();
     Strategy strategy;
     ArrayList<Action> actions;
 
@@ -43,6 +43,7 @@ public class CupsAndBalls implements GameLifeCycle {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
+        this.stats.start();
         this.nbCups = nbCups;
         this.cups = new Cup[nbCups];
         this.nbColumns = nbCups;
