@@ -27,6 +27,8 @@ import net.gazeplay.games.shooter.Shooter;
 import net.gazeplay.games.shooter.ShooterGamesStats;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
+import net.gazeplay.games.divisor.Divisor;
+import net.gazeplay.games.divisor.DivisorStats;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -322,16 +324,17 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        /*
-         * result.add(new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL), new
-         * GameSpec.GameLauncher() {
-         *
-         * @Override public Stats createNewStats(Scene scene) { return new DivisorStats(scene); }
-         *
-         * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats
-         * stats) { return new Divisor(gameContext, stats); } }));
-         *
-         */
+        result.add(new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new DivisorStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
+                return new Divisor(gameContext, stats);
+            }
+        }));
 
         result.add(
                 new GameSpec(new GameSummary("Memory", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/memory.jpeg"),
@@ -396,8 +399,39 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
+        result.add(new GameSpec(
+                new GameSummary("Cups and Balls", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/cups.jpg"),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.CupsGameVariant(2),
+
+                                new GameSpec.CupsGameVariant(3),
+
+                                new GameSpec.CupsGameVariant(4),
+
+                                new GameSpec.CupsGameVariant(5),
+
+                                new GameSpec.CupsGameVariant(6)
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.CupsGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new CupsAndBallsStats(scene);
+                    }
+
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.CupsGameVariant gameVariant,
+                            Stats stats) {
+                        return new CupsAndBalls(gameContext, stats, gameVariant.getNoCups(), 3);
+                    }
+                }));
+
         result.add(new GameSpec(new GameSummary("Video Player with Feedback", DEFAULT_SEARCHING_GAME_THUMBNAIL,
-                "data/common/images/youtube-logo-128.png"), new GameSpec.GameVariantGenerator() {
+                "data/Thumbnails/youtube-logo-128.png"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -426,7 +460,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Scribble", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/common/images/bravo.png"),
+                new GameSummary("Scribble", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/scribble.jpeg"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
