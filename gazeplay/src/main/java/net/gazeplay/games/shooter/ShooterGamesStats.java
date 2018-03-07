@@ -1,14 +1,14 @@
-package net.gazeplay.games.biboules;
+package net.gazeplay.games.shooter;
 
 import javafx.scene.Scene;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
 
-public class BibouleGamesStats extends ShootGamesStats {
+public class ShooterGamesStats extends ShootGamesStats {
 
-    public BibouleGamesStats(Scene scene) {
+    public ShooterGamesStats(Scene scene, String gameType) {
 
         super(scene);
-        this.gameName = "biboules";
+        this.gameName = gameType;
     }
 
     public void incNbGoals() {

@@ -11,7 +11,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -145,23 +144,24 @@ public class Cup {
         revealBallTransition.setByY(-ballRadius * 8);
         ball.getItem().setVisible(true);
 
-        /*
-         * revealBallTransition.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-         * 
-         * @Override public void handle(ActionEvent actionEvent) {
-         * 
-         * gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
-         * 
-         * @Override public void handle(ActionEvent actionEvent) { gameInstance.dispose();
-         * 
-         * gameContext.clear();
-         * 
-         * gameInstance.launch();
-         * 
-         * stats.start();
-         * 
-         * gameContext.onGameStarted(); } }); } });
-         */
+        revealBallTransition.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                gameContext.playWinTransition(2000, new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+
+                        gameInstance.dispose();
+
+                        gameContext.clear();
+
+                        gameInstance.launch();
+
+                        gameContext.onGameStarted();
+                    }
+                });
+            }
+        });
 
         revealBallTransition.play();
     }

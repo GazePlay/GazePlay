@@ -9,7 +9,9 @@ import javafx.event.EventTarget;
 import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 public class GazeEvent extends InputEvent {
 
     public static final EventType<GazeEvent> ANY = new EventType<>(Event.ANY, "GAZE");

@@ -27,6 +27,8 @@ public class Configuration {
 
     private final boolean enableRewardSound;
 
+    private final String menuButtonsOrientation;
+
     protected Configuration(ConfigurationBuilder builder) {
         this.gazeMode = builder.gazeMode;
         this.eyetracker = builder.eyetracker;
@@ -37,6 +39,7 @@ public class Configuration {
         this.whereIsItDir = builder.whereIsItDir;
         this.questionLength = builder.questionLength;
         this.enableRewardSound = builder.enableRewardSound;
+        this.menuButtonsOrientation = builder.menuButtonsOrientation;
     }
 
 }

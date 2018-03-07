@@ -21,6 +21,7 @@ public class ConfigurationBuilder implements Cloneable {
     private static String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
     private static String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
+    private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
 
     private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
@@ -81,6 +82,8 @@ public class ConfigurationBuilder implements Cloneable {
     protected int questionLength = DEFAULT_VALUE_QUESTION_LENGTH;
 
     protected boolean enableRewardSound = DEFAULT_VALUE_ENABLE_REWARD_SOUND;
+
+    protected String menuButtonsOrientation;
 
     public ConfigurationBuilder() {
 
@@ -148,6 +151,12 @@ public class ConfigurationBuilder implements Cloneable {
         return copy;
     }
 
+    public ConfigurationBuilder withMenuButtonsOrientation(String value) {
+        ConfigurationBuilder copy = copy();
+        copy.menuButtonsOrientation = value;
+        return copy;
+    }
+
     public void populateFromProperties(Properties prop) {
         String buffer;
 
@@ -206,6 +215,11 @@ public class ConfigurationBuilder implements Cloneable {
             enableRewardSound = Boolean.parseBoolean(buffer);
         }
 
+        buffer = prop.getProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION);
+        if (buffer != null) {
+            menuButtonsOrientation = buffer;
+        }
+
     }
 
     private Properties toProperties() {
@@ -232,6 +246,7 @@ public class ConfigurationBuilder implements Cloneable {
         properties.setProperty(PROPERTY_NAME_WHEREISIT_DIR, this.whereIsItDir);
         properties.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Integer.toString(this.questionLength));
         properties.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND, Boolean.toString(this.enableRewardSound));
+        properties.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, this.menuButtonsOrientation);
 
         return properties;
     }
