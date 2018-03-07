@@ -475,8 +475,8 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new DrawApplication(gameContext, stats);
                     }
                 }));
-      
-       result.add(new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+
+        result.add(new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL),
 
                 new GameSpec.GameLauncher() {
                     @Override
@@ -488,6 +488,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
                             Stats stats) {
                         return new ColorsGame(gameContext);
+                    }
+                }));
 
         log.info("Games found : {}", result.size());
 
