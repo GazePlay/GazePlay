@@ -262,7 +262,6 @@ public class Stats implements GazeMotionListener {
     }
 
     public void incNbGoals() {
-
         long last = System.currentTimeMillis() - beginTime;
         nbGoals++;
         length += last;
