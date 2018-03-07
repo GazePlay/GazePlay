@@ -24,8 +24,10 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.I18NTitledPane;
+import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
@@ -77,7 +79,7 @@ public abstract class GraphicalContext<T> {
             }
         };
 
-        Button button = new Button();
+        I18NButton button = new I18NButton(gazePlay.getTranslator(), null);
         configureFullScreenToggleButton(gazePlay.isFullScreen(), button);
 
         gazePlay.getFullScreenProperty().addListener(new ChangeListener<Boolean>() {
@@ -93,7 +95,7 @@ public abstract class GraphicalContext<T> {
         return button;
     }
 
-    private void configureFullScreenToggleButton(Boolean isFullScreen, Button button) {
+    private void configureFullScreenToggleButton(Boolean isFullScreen, I18NButton button) {
         final Image buttonGraphics;
         final String label;
         if (isFullScreen) {
@@ -113,7 +115,7 @@ public abstract class GraphicalContext<T> {
             }
         });
         button.setGraphic(imageView);
-        button.setText(label);
+        button.setTooltip(new I18NTooltip(gazePlay.getTranslator(), label));
     }
 
     public TitledPane createSoundControlPane() {

@@ -198,6 +198,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        {
+            I18NText label = new I18NText(translator, "Menu Orientation (restart game to take effect)", COLON);
+            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
         return grid;
     }
 
@@ -513,4 +520,41 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return enableBox;
     }
 
+    private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(Configuration configuration,
+            ConfigurationContext configurationContext) {
+        ChoiceBox<GameButtonOrientation> choiceBox = new ChoiceBox<>();
+
+        choiceBox.getItems().addAll(GameButtonOrientation.values());
+
+        GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
+        choiceBox.getSelectionModel().select(selectedValue);
+
+        choiceBox.setPrefWidth(prefWidth);
+        choiceBox.setPrefHeight(prefHeight);
+
+        choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<GameButtonOrientation>() {
+            @Override
+            public void changed(ObservableValue<? extends GameButtonOrientation> observable,
+                    GameButtonOrientation oldValue, GameButtonOrientation newValue) {
+                final String newPropertyValue = newValue.name();
+                ConfigurationBuilder.createFromPropertiesResource().withMenuButtonsOrientation(newPropertyValue)
+                        .saveConfigIgnoringExceptions();
+            }
+        });
+
+        return choiceBox;
+    }
+
+    private static GameButtonOrientation findSelectedGameButtonOrientation(Configuration configuration) {
+        final String configValue = configuration.getMenuButtonsOrientation();
+        if (configValue == null) {
+            return null;
+        }
+        try {
+            return GameButtonOrientation.valueOf(configValue);
+        } catch (IllegalArgumentException e) {
+            log.warn("IllegalArgumentException : unsupported GameButtonOrientation value : {}", configValue, e);
+            return null;
+        }
+    }
 }
