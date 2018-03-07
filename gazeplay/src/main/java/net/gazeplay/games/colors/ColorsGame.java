@@ -186,8 +186,7 @@ public class ColorsGame implements GameLifeCycle {
      * @see http://www.codecodex.com/wiki/Implementing_the_flood_fill_algorithm
      */
     private static boolean isEqualRgba(int[] pix1, int[] pix2) {
-        
-        
+
         return pix1[0] == pix2[0] && pix1[1] == pix2[1] && pix1[2] == pix2[2] && pix1[3] == pix2[3];
     }
 }
