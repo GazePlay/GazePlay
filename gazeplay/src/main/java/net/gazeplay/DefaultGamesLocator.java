@@ -34,6 +34,8 @@ import net.gazeplay.games.divisor.DivisorStats;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import net.gazeplay.games.colors.ColorsGame;
+import net.gazeplay.games.colors.ColorsGamesStats;
 
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
@@ -487,6 +489,21 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                         return new Piano(gameContext, stats);
+                    }
+                }));
+
+        result.add(new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new ColorsGamesStats(scene);
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new ColorsGame(gameContext);
                     }
                 }));
 
