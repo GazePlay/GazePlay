@@ -109,7 +109,6 @@ public class Shooter extends Parent implements GameLifeCycle {
             public void handle(GazeEvent e) {
                 double x = e.getX();
                 double y = e.getY();
-                log.info("*********x******* = {}", x);
                 hand.setRotate(getAngle(new Point(x, y)));
             }
         };
