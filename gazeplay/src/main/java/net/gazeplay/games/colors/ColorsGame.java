@@ -1,11 +1,10 @@
 package net.gazeplay.games.colors;
 
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
@@ -22,6 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 /**
  * Game where you select a color in order to colorize a white and black draw.
@@ -39,23 +41,50 @@ public class ColorsGame implements GameLifeCycle {
 
     // public static final String DEFAULT_IMAGE_URL =
     // "https://www.publicdomainpictures.net/pictures/190000/velka/outlnes-katze.jpg";
+    // public static final String DEFAULT_IMAGE_URL =
+    // "https://www.publicdomainpictures.net/pictures/160000/velka/girl-and-dog-coloring-page.jpg";
     public static final String DEFAULT_IMAGE_URL = "http://www.supercoloring.com/sites/default/files/styles/coloring_full/public/cif/2015/07/hatsune-miku-coloring-page.png";
 
     /**
-     * On a [0, 1] scale
+     * On a [0, 1] scale, determine the threshold in the difference between two colors to consider that they are equals.
      */
     public static final double COLOR_EQUALITY_THRESHOLD = 10 / 255;
+
+    /**
+     * Distance between two gaze event to consider that the gaze is moving.
+     */
+    public static final double GAZE_MOVING_THRESHOLD = 25;
+
+    private GazeProgressIndicator gazeProgressIndicator;
+
+    private Configuration config;
+
+    private PixelWriter pixelWriter;
+
+    private PixelReader pixelReader;
+
+    private WritableImage writableImg;
+
+    private Rectangle rectangle;
 
     public ColorsGame(GameContext gameContext) {
 
         this.gameContext = gameContext;
 
         root = gameContext.getRoot();
-
     }
 
     @Override
     public void launch() {
+
+        config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+        this.gazeProgressIndicator = new GazeProgressIndicator(GAZE_MOVING_THRESHOLD, GAZE_MOVING_THRESHOLD,
+                config.getFixationlength());
+
+        // TODO : translate somewhere appropriate, or maybe direclty on the gaze
+        gazeProgressIndicator.setTranslateX(25);
+        gazeProgressIndicator.setTranslateY(25);
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -85,7 +114,7 @@ public class ColorsGame implements GameLifeCycle {
 
     private void buildDraw(String imgURL, double width, double height) {
 
-        Rectangle rectangle = new Rectangle(width, height);
+        rectangle = new Rectangle(width, height);
 
         Image img = new Image(imgURL, width, height, false, true);
 
@@ -111,10 +140,9 @@ public class ColorsGame implements GameLifeCycle {
             return;
         }
 
-        final WritableImage writableImg = new WritableImage(tmpPixelReader, (int) image.getWidth(),
-                (int) image.getHeight());
-        final PixelWriter pixelWriter = writableImg.getPixelWriter();
-        final PixelReader pixelReader = writableImg.getPixelReader();
+        writableImg = new WritableImage(tmpPixelReader, (int) image.getWidth(), (int) image.getHeight());
+        pixelWriter = writableImg.getPixelWriter();
+        pixelReader = writableImg.getPixelReader();
 
         // log.info("Pixel format = {}", pixelReader.getPixelFormat());
 
@@ -133,23 +161,106 @@ public class ColorsGame implements GameLifeCycle {
             rectangle.setFill(new ImagePattern(writableImg));
         });
 
-        rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
+        EventHandler<Event> eventHandler = buildEventHandler(pixelReader, pixelWriter, writableImg, rectangle);
 
-            log.info("clicked at x= {}, y = {}", event.getSceneX(), event.getSceneY());
+        rectangle.addEventFilter(MouseEvent.ANY, eventHandler);
+        rectangle.addEventFilter(GazeEvent.ANY, eventHandler);
 
-            Color color = pixelReader.getColor((int) event.getSceneX(), (int) event.getSceneY());
-            // log.info("R = {}, G = {}, B = {}, A = {}", color.getRed(), color.getGreen(), color.getBlue(),
-            // color.getOpacity());
+    }
 
-            if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor())) {
-                javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(),
-                        (int) event.getSceneX(), (int) event.getSceneY(), (int) writableImg.getWidth(),
-                        (int) writableImg.getHeight());
+    public EventHandler<Event> buildEventHandler(final PixelReader pixelReader, final PixelWriter pixelWriter,
+            final WritableImage writableImg, final Rectangle rectangle) {
+
+        return new EventHandler<Event>() {
+
+            private double gazeXOrigin;
+            private double gazeYOrigin;
+
+            @Override
+            public void handle(Event event) {
+
+                if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+
+                    MouseEvent mouseEvent = (MouseEvent) event;
+                    // log.info("clicked at x= {}, y = {}", mouseEvent.getSceneX(), mouseEvent.getSceneY());
+                    colorize(mouseEvent.getX(), mouseEvent.getY());
+
+                } else if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                    GazeEvent gazeEvent = (GazeEvent) event;
+                    gazeXOrigin = gazeEvent.getX();
+                    gazeYOrigin = gazeEvent.getY();
+
+                    gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
+
+                        colorize(gazeXOrigin, gazeYOrigin);
+                    });
+
+                    gazeProgressIndicator.play();
+                } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
+
+                    GazeEvent gazeEvent = (GazeEvent) event;
+
+                    // If gaze still around first point
+                    if (gazeXOrigin - GAZE_MOVING_THRESHOLD < gazeEvent.getX()
+                            && gazeXOrigin + GAZE_MOVING_THRESHOLD > gazeEvent.getX()
+                            && gazeYOrigin - GAZE_MOVING_THRESHOLD < gazeEvent.getY()
+                            && gazeYOrigin + GAZE_MOVING_THRESHOLD > gazeEvent.getY()) {
+
+                        // Do nothin
+                    }
+                    // If gaze move far away
+                    else {
+
+                        gazeXOrigin = gazeEvent.getX();
+                        gazeYOrigin = gazeEvent.getY();
+
+                        gazeProgressIndicator.stop();
+                        gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
+
+                            colorize(gazeXOrigin, gazeYOrigin);
+                        });
+
+                        gazeProgressIndicator.play();
+                    }
+                }
+                // If gaze quit
+                else if (event.getEventType() == GazeEvent.GAZE_EXITED) {
+                    gazeProgressIndicator.stop();
+                } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
+
+                    MouseEvent mouseEvent = (MouseEvent) event;
+                    gazeXOrigin = mouseEvent.getX();
+                    gazeYOrigin = mouseEvent.getY();
+
+                    gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
+
+                        colorize(gazeXOrigin, gazeYOrigin);
+                    });
+
+                    gazeProgressIndicator.play();
+                } else if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
+
+                }
             }
 
-            rectangle.setFill(new ImagePattern(writableImg));
-            rectangle.toBack();
-        });
+        };
+
+    }
+
+    public void colorize(final double x, final double y) {
+
+        Color color = pixelReader.getColor((int) x, (int) y);
+        // log.info("R = {}, G = {}, B = {}, A = {}", color.getRed(), color.getGreen(), color.getBlue(),
+        // color.getOpacity());
+
+        if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor())) {
+            javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(), (int) x, (int) y,
+                    (int) writableImg.getWidth(), (int) writableImg.getHeight());
+        }
+
+        rectangle.setFill(new ImagePattern(writableImg));
+        rectangle.toBack();
     }
 
     public void javaFXFloodFill(final PixelWriter pixelWriter, final PixelReader pixelReader, Color newColor, int x,
@@ -161,22 +272,20 @@ public class ColorsGame implements GameLifeCycle {
         floodInColumnAndLine(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
     }
 
-    public void floodInColumnAndLineRec(final PixelWriter pixelWriter, final PixelReader pixelReader,
-            final Color newColor, final int x, final int y, final int width, final int height, final Color oldColor) {
-
-        int fillL = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, true, oldColor);
-        int fillR = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, false, oldColor);
-
-        // log.info("fillL = {}, fillR = {}", fillL, fillR);
-
-        // checks if applicable up or down
-        for (int i = fillL; i <= fillR; i++) {
-            if (y > 0 && isEqualColors(pixelReader.getColor(i, y - 1), oldColor))
-                floodInColumnAndLineRec(pixelWriter, pixelReader, newColor, i, y - 1, width, height, oldColor);
-            if (y < height - 1 && isEqualColors(pixelReader.getColor(i, y + 1), oldColor))
-                floodInColumnAndLineRec(pixelWriter, pixelReader, newColor, i, y + 1, width, height, oldColor);
-        }
-    }
+    /*
+     * public void floodInColumnAndLineRec(final PixelWriter pixelWriter, final PixelReader pixelReader, final Color
+     * newColor, final int x, final int y, final int width, final int height, final Color oldColor) {
+     * 
+     * int fillL = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, true, oldColor); int fillR =
+     * floodInLine(pixelWriter, pixelReader, newColor, x, y, width, false, oldColor);
+     * 
+     * // log.info("fillL = {}, fillR = {}", fillL, fillR);
+     * 
+     * // checks if applicable up or down for (int i = fillL; i <= fillR; i++) { if (y > 0 &&
+     * isEqualColors(pixelReader.getColor(i, y - 1), oldColor)) floodInColumnAndLineRec(pixelWriter, pixelReader,
+     * newColor, i, y - 1, width, height, oldColor); if (y < height - 1 && isEqualColors(pixelReader.getColor(i, y + 1),
+     * oldColor)) floodInColumnAndLineRec(pixelWriter, pixelReader, newColor, i, y + 1, width, height, oldColor); } }
+     */
 
     private class HorizontalZone {
         public int leftX;
@@ -268,27 +377,23 @@ public class ColorsGame implements GameLifeCycle {
         return currentX;
     }
 
-    public void awtEditing(Image img, Rectangle rectangle) {
-        BufferedImage buffImg = SwingFXUtils.fromFXImage(img, null);
-
-        if (buffImg == null) {
-            log.info("Unable to write into image");
-        }
-        rectangle.setFill(new ImagePattern(img));
-        // testRect.setFill(Color.RED);
-        rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, (event) -> {
-
-            Point loc = new Point((int) event.getSceneX(), (int) event.getSceneY());
-
-            log.info("clicked : {}", loc.getX(), loc.getY());
-
-            awtFloodFill(buffImg, colorToolBox.getSelectedColorBox().getColor(), loc);
-
-            Image newImg = SwingFXUtils.toFXImage(buffImg, null);
-            rectangle.setFill(new ImagePattern(newImg));
-        });
-
-    }
+    /*
+     * public void awtEditing(Image img, Rectangle rectangle) { BufferedImage buffImg = SwingFXUtils.fromFXImage(img,
+     * null);
+     * 
+     * if (buffImg == null) { log.info("Unable to write into image"); } rectangle.setFill(new ImagePattern(img)); //
+     * testRect.setFill(Color.RED); rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, (event) -> {
+     * 
+     * Point loc = new Point((int) event.getSceneX(), (int) event.getSceneY());
+     * 
+     * log.info("clicked : {}", loc.getX(), loc.getY());
+     * 
+     * awtFloodFill(buffImg, colorToolBox.getSelectedColorBox().getColor(), loc);
+     * 
+     * Image newImg = SwingFXUtils.toFXImage(buffImg, null); rectangle.setFill(new ImagePattern(newImg)); });
+     * 
+     * }
+     */
 
     /**
      * Fills the selected pixel and all surrounding pixels of the same color with the fill color.
@@ -303,25 +408,21 @@ public class ColorsGame implements GameLifeCycle {
      *             if loc is out of bounds of the image
      * @see http://www.codecodex.com/wiki/Implementing_the_flood_fill_algorithm
      */
-    public static void awtFloodFill(BufferedImage img, Color fillColor, Point loc) {
-        if (loc.x < 0 || loc.x >= img.getWidth() || loc.y < 0 || loc.y >= img.getHeight())
-            throw new IllegalArgumentException();
-
-        WritableRaster raster = img.getRaster();
-        int[] fill = new int[] { (int) (fillColor.getRed() * 255), (int) (fillColor.getGreen() * 255),
-                (int) (fillColor.getBlue() * 255), (int) fillColor.getOpacity() * 255 };
-        int[] old = raster.getPixel(loc.x, loc.y, new int[4]);
-        old[3] = (int) fillColor.getOpacity() * 255;
-
-        // log.info("Color = {}", fill);
-        // log.info("R = {}, G={},B={}", (int) (fillColor.getRed() * 255), fillColor.getGreen(), fillColor.getBlue());
-
-        // Checks trivial case where loc is of the fill color
-        if (isEqualRgba(fill, old))
-            return;
-
-        floodLoop(raster, loc.x, loc.y, fill, old);
-    }
+    /*
+     * public static void awtFloodFill(BufferedImage img, Color fillColor, Point loc) { if (loc.x < 0 || loc.x >=
+     * img.getWidth() || loc.y < 0 || loc.y >= img.getHeight()) throw new IllegalArgumentException();
+     * 
+     * WritableRaster raster = img.getRaster(); int[] fill = new int[] { (int) (fillColor.getRed() * 255), (int)
+     * (fillColor.getGreen() * 255), (int) (fillColor.getBlue() * 255), (int) fillColor.getOpacity() * 255 }; int[] old
+     * = raster.getPixel(loc.x, loc.y, new int[4]); old[3] = (int) fillColor.getOpacity() * 255;
+     * 
+     * // log.info("Color = {}", fill); // log.info("R = {}, G={},B={}", (int) (fillColor.getRed() * 255),
+     * fillColor.getGreen(), fillColor.getBlue());
+     * 
+     * // Checks trivial case where loc is of the fill color if (isEqualRgba(fill, old)) return;
+     * 
+     * floodLoop(raster, loc.x, loc.y, fill, old); }
+     */
 
     /**
      * Recursively fills surrounding pixels of the old color
@@ -333,39 +434,21 @@ public class ColorsGame implements GameLifeCycle {
      * @param old
      * @see http://www.codecodex.com/wiki/Implementing_the_flood_fill_algorithm
      */
-    private static void floodLoop(WritableRaster raster, int x, int y, int[] fill, int[] old) {
-        java.awt.Rectangle bounds = raster.getBounds();
-        int[] aux = { 255, 255, 255, 255 };
-
-        // finds the left side, filling along the way
-        int fillL = x;
-        do {
-            raster.setPixel(fillL, y, fill);
-            fillL--;
-            /*
-             * log.info("FillL = {}, pixel = {}", fillL, raster.getPixel(fillL, y, aux)); log.info("OldPixel = {}",
-             * old); log.info("IsEqual = {}", isEqualRgba(raster.getPixel(fillL, y, aux), old));
-             */
-
-        } while (fillL >= 0 && isEqualRgba(raster.getPixel(fillL, y, aux), old));
-        fillL++;
-
-        // find the right right side, filling along the way
-        int fillR = x;
-        do {
-            raster.setPixel(fillR, y, fill);
-            fillR++;
-        } while (fillR < bounds.width - 1 && isEqualRgba(raster.getPixel(fillR, y, aux), old));
-        fillR--;
-
-        // checks if applicable up or down
-        for (int i = fillL; i <= fillR; i++) {
-            if (y > 0 && isEqualRgba(raster.getPixel(i, y - 1, aux), old))
-                floodLoop(raster, i, y - 1, fill, old);
-            if (y < bounds.height - 1 && isEqualRgba(raster.getPixel(i, y + 1, aux), old))
-                floodLoop(raster, i, y + 1, fill, old);
-        }
-    }
+    /*
+     * private static void floodLoop(WritableRaster raster, int x, int y, int[] fill, int[] old) { java.awt.Rectangle
+     * bounds = raster.getBounds(); int[] aux = { 255, 255, 255, 255 };
+     * 
+     * // finds the left side, filling along the way int fillL = x; do { raster.setPixel(fillL, y, fill); fillL--;
+     * 
+     * } while (fillL >= 0 && isEqualRgba(raster.getPixel(fillL, y, aux), old)); fillL++;
+     * 
+     * // find the right right side, filling along the way int fillR = x; do { raster.setPixel(fillR, y, fill); fillR++;
+     * } while (fillR < bounds.width - 1 && isEqualRgba(raster.getPixel(fillR, y, aux), old)); fillR--;
+     * 
+     * // checks if applicable up or down for (int i = fillL; i <= fillR; i++) { if (y > 0 &&
+     * isEqualRgba(raster.getPixel(i, y - 1, aux), old)) floodLoop(raster, i, y - 1, fill, old); if (y < bounds.height -
+     * 1 && isEqualRgba(raster.getPixel(i, y + 1, aux), old)) floodLoop(raster, i, y + 1, fill, old); } }
+     */
 
     /**
      * Returns true if RGBA arrays are equivalent, false otherwise Could use Arrays.equals(int[], int[]), but this is
@@ -376,10 +459,11 @@ public class ColorsGame implements GameLifeCycle {
      * @return
      * @see http://www.codecodex.com/wiki/Implementing_the_flood_fill_algorithm
      */
-    private static boolean isEqualRgba(int[] pix1, int[] pix2) {
-
-        return pix1[0] == pix2[0] && pix1[1] == pix2[1] && pix1[2] == pix2[2] && pix1[3] == pix2[3];
-    }
+    /*
+     * private static boolean isEqualRgba(int[] pix1, int[] pix2) {
+     * 
+     * return pix1[0] == pix2[0] && pix1[1] == pix2[1] && pix1[2] == pix2[2] && pix1[3] == pix2[3]; }
+     */
 
     /**
      * Detect if a color is close enough to another one to be considered the same.
