@@ -4,9 +4,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
-import java.util.List;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.control.TitledPane;
@@ -19,9 +17,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.GazePlay;
 
 /**
  * Game where you select a color in order to colorize a white and black draw.
@@ -37,12 +37,14 @@ public class ColorsGame implements GameLifeCycle {
 
     private ColorToolBox colorToolBox;
 
+    // public static final String DEFAULT_IMAGE_URL =
+    // "https://www.publicdomainpictures.net/pictures/190000/velka/outlnes-katze.jpg";
     public static final String DEFAULT_IMAGE_URL = "http://www.supercoloring.com/sites/default/files/styles/coloring_full/public/cif/2015/07/hatsune-miku-coloring-page.png";
 
     /**
      * On a [0, 1] scale
      */
-    public static final int COLOR_EQUALITY_THRESHOLD = 10 / 255;
+    public static final double COLOR_EQUALITY_THRESHOLD = 10 / 255;
 
     public ColorsGame(GameContext gameContext) {
 
@@ -87,8 +89,10 @@ public class ColorsGame implements GameLifeCycle {
 
         Image img = new Image(imgURL, width, height, false, true);
 
-        // awtEditing(img, rectangle);
-        javaFXEditing(img, rectangle);
+        if (!img.isError()) {
+            // awtEditing(img, rectangle);
+            javaFXEditing(img, rectangle);
+        }
 
         root.getChildren().add(rectangle);
 
@@ -112,18 +116,36 @@ public class ColorsGame implements GameLifeCycle {
         final PixelWriter pixelWriter = writableImg.getPixelWriter();
         final PixelReader pixelReader = writableImg.getPixelReader();
 
-        log.info("Pixel format = {}", pixelReader.getPixelFormat());
+        // log.info("Pixel format = {}", pixelReader.getPixelFormat());
+
+        final Stage stage = GazePlay.getInstance().getPrimaryStage();
+
+        // Resizing not really working
+        // TODO : fix click coordinates which are not good
+        stage.widthProperty().addListener((observable) -> {
+
+            rectangle.setWidth(stage.getWidth());
+            rectangle.setFill(new ImagePattern(writableImg));
+        });
+
+        stage.heightProperty().addListener((observable) -> {
+            rectangle.setHeight(stage.getHeight());
+            rectangle.setFill(new ImagePattern(writableImg));
+        });
 
         rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
 
-            // log.info("clicked : {}", event.getSceneX(), event.getSceneY());
+            log.info("clicked at x= {}, y = {}", event.getSceneX(), event.getSceneY());
 
             Color color = pixelReader.getColor((int) event.getSceneX(), (int) event.getSceneY());
             // log.info("R = {}, G = {}, B = {}, A = {}", color.getRed(), color.getGreen(), color.getBlue(),
             // color.getOpacity());
 
-            javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(),
-                    (int) event.getSceneX(), (int) event.getSceneY(), (int) image.getWidth(), (int) image.getHeight());
+            if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor())) {
+                javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(),
+                        (int) event.getSceneX(), (int) event.getSceneY(), (int) writableImg.getWidth(),
+                        (int) writableImg.getHeight());
+            }
 
             rectangle.setFill(new ImagePattern(writableImg));
             rectangle.toBack();
@@ -135,8 +157,8 @@ public class ColorsGame implements GameLifeCycle {
 
         final Color oldColor = pixelReader.getColor(x, y);
 
-        floodInColumnAndLineRec(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
-        // floodInColumnAndLine(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
+        // floodInColumnAndLineRec(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
+        floodInColumnAndLine(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
     }
 
     public void floodInColumnAndLineRec(final PixelWriter pixelWriter, final PixelReader pixelReader,
@@ -145,7 +167,7 @@ public class ColorsGame implements GameLifeCycle {
         int fillL = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, true, oldColor);
         int fillR = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, false, oldColor);
 
-        log.info("fillL = {}, fillR = {}", fillL, fillR);
+        // log.info("fillL = {}, fillR = {}", fillL, fillR);
 
         // checks if applicable up or down
         for (int i = fillL; i <= fillR; i++) {
@@ -166,6 +188,11 @@ public class ColorsGame implements GameLifeCycle {
             this.rightX = rX;
             this.y = y;
         }
+
+        @Override
+        public String toString() {
+            return "HorizontalZone{" + "leftX=" + leftX + ", rightX=" + rightX + ", y=" + y + '}';
+        }
     }
 
     private final Deque<HorizontalZone> horiZones = new ArrayDeque<HorizontalZone>();
@@ -182,6 +209,7 @@ public class ColorsGame implements GameLifeCycle {
         while (horiZones.size() > 0) {
 
             HorizontalZone zone = horiZones.pop();
+            log.info("zone : {}", zone.toString());
             searchZone(zone, oldColor, pixelReader, pixelWriter, newColor, width, height);
         }
     }
@@ -193,39 +221,21 @@ public class ColorsGame implements GameLifeCycle {
         int leftX = floodInLine(pixelWriter, pixelReader, newColor, zone.leftX, zone.y, width, true, oldColor);
         int rightX = floodInLine(pixelWriter, pixelReader, newColor, zone.rightX, zone.y, width, false, oldColor);
 
-        for (int i = leftX; i <= rightX && i < width; ++i) {
+        for (int i = leftX; i <= rightX; ++i) {
 
             // Search for available zone to colorize upward
             if (zone.y > 0 && isEqualColors(pixelReader.getColor(i, zone.y - 1), oldColor)) {
 
-                int newLeftX = i;
-                pixelWriter.setColor(i, zone.y - 1, newColor);
-                ++i;
-                // Search for the end of the zone
-                while (i <= rightX && i < width && isEqualColors(pixelReader.getColor(i, zone.y - 1), oldColor)) {
-
-                    pixelWriter.setColor(i, zone.y - 1, newColor);
-                    ++i;
-                }
-
-                int newRightX = i;
+                int newLeftX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y - 1, width, true, oldColor);
+                int newRightX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y - 1, width, false, oldColor);
 
                 horiZones.add(new HorizontalZone(newLeftX, newRightX, zone.y - 1));
             }
-            // Search for available zone to colorize upward
+            // Search for available zone to colorize downward
             if (zone.y < height - 1 && isEqualColors(pixelReader.getColor(i, zone.y + 1), oldColor)) {
 
-                int newLeftX = i;
-                pixelWriter.setColor(i, zone.y + 1, newColor);
-                ++i;
-                // Search for the end of the zone
-                while (i <= rightX && i < width && isEqualColors(pixelReader.getColor(i, zone.y + 1), oldColor)) {
-
-                    pixelWriter.setColor(i, zone.y + 1, newColor);
-                    ++i;
-                }
-
-                int newRightX = i;
+                int newLeftX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y + 1, width, true, oldColor);
+                int newRightX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y + 1, width, false, oldColor);
 
                 horiZones.add(new HorizontalZone(newLeftX, newRightX, zone.y + 1));
             }
