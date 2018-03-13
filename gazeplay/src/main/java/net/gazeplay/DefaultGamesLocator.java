@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Set;
 import net.gazeplay.games.colors.ColorsGame;
 import net.gazeplay.games.colors.ColorsGamesStats;
+import net.gazeplay.games.room.Room;
+import net.gazeplay.games.room.RoomStats;
 
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
@@ -76,6 +78,18 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Ninja(gameContext, stats);
                     }
                 }));
+
+        result.add(new GameSpec(new GameSummary("Room", DEFAULT_SEARCHING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new RoomStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
+                return new Room(gameContext, stats);
+            }
+        }));
 
         result.add(new GameSpec(
                 new GameSummary("Cups and Balls", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/cups.jpg"),
