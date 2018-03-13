@@ -121,7 +121,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
-        grid.setHgap(100);
+        grid.setHgap(50);
         grid.setVgap(50);
         // grid.setPadding(new Insets(50, 50, 50, 50));
 
