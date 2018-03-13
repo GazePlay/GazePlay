@@ -5,13 +5,13 @@ import lombok.Getter;
 public class Action {
 
     @Getter
-    private int initCellX;
+    private final int initCellX;
     @Getter
-    private int initCellY;
+    private final int initCellY;
     @Getter
-    private int targetCellX;
+    private final int targetCellX;
     @Getter
-    private int targetCellY;
+    private final int targetCellY;
 
     public Action(int initCellX, int initCellY, int targetCellX, int targetCellY) {
         this.initCellX = initCellX;

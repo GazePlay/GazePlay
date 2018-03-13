@@ -4,17 +4,15 @@ import java.util.ArrayList;
 import java.util.Random;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.games.cups.Cup;
-import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 @Slf4j
 public class Strategy {
-    private int nbCups;
-    private int nbExchanges;
+    private final int nbCups;
+    private final int nbExchanges;
     @Getter
-    private ArrayList<Action> actions;
-    private int maxCellsX;
-    private int maxCellsY;
+    private final ArrayList<Action> actions;
+    private final int maxCellsX;
+    private final int maxCellsY;
 
     private enum Strategies {
         rotation_up_down, rotation_move_closest_in_place
@@ -23,7 +21,7 @@ public class Strategy {
     public Strategy(int nbCups, int nbExchanges, int maxCellsX, int maxCellsY) {
         this.nbCups = nbCups;
         this.nbExchanges = nbExchanges;
-        this.actions = new ArrayList<Action>();
+        this.actions = new ArrayList<>();
         this.maxCellsX = maxCellsX;
         this.maxCellsY = maxCellsY;
     }
