@@ -22,13 +22,13 @@ public class Divisor implements GameLifeCycle {
     @Override
     public void launch() {
         Target target = new Target(gameContext, gameContext.getRandomPositionGenerator(), stats,
-                Portrait.loadAllImages(), 0);
+                Portrait.loadAllImages(), 0, System.currentTimeMillis(), this);
         gameContext.getChildren().add(target);
     }
 
     @Override
     public void dispose() {
-
+        this.gameContext.getChildren().removeAll();
     }
 
 }

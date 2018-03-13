@@ -1,14 +1,14 @@
 package net.gazeplay.games.divisor;
 
-import java.util.Random;
-import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Circle;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
@@ -30,26 +30,27 @@ class Target extends Portrait {
     private final Stats stats;
     private final int difficulty;
     private final int level;
-    private final int speed;
     private final EventHandler<Event> enterEvent;
     private final GameContext gameContext;
+    private final Divisor gameInstance;
     private final Image[] images;
+    private final long startTime;
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats, Image[] images,
-            int level) {
+            int level, long start, Divisor gameInstance) {
         super((int) 200 / (level + 1), randomPositionGenerator, images);
         this.level = level;
         this.difficulty = 3;
-        this.speed = 1;
         this.randomPosGenerator = randomPositionGenerator;
         this.gameContext = gameContext;
+        this.gameInstance = gameInstance;
         this.stats = stats;
         this.images = images;
+        this.startTime = start;
 
         enterEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
                     enter();
                 }
@@ -65,11 +66,9 @@ class Target extends Portrait {
     }
 
     private void move() {
-        final int length = speed * 1000;
-
         final Position newPosition = randomPosGenerator.newRandomPosition(getInitialRadius());
 
-        TranslateTransition translation = new TranslateTransition(new Duration(length), this);
+        TranslateTransition translation = new TranslateTransition(new Duration(3000), this);
         translation.setByX(-this.getCenterX() + newPosition.getX());
         translation.setByY(-this.getCenterY() + newPosition.getY());
         translation.setOnFinished(new EventHandler<ActionEvent>() {
@@ -95,29 +94,44 @@ class Target extends Portrait {
     }
 
     private void enter() {
-        Transition runningTranslation = currentTranslation;
-        if (runningTranslation != null) {
-            runningTranslation.stop();
+        if (currentTranslation != null) {
+            currentTranslation.stop();
         }
 
         this.removeEventFilter(MouseEvent.ANY, enterEvent);
         this.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-        this.gameContext.getChildren().remove(this);
+        gameContext.getChildren().remove(this);
 
-        if (this.level < this.difficulty) {
+        if (level < difficulty) {
             createChildren();
-        } else if (this.level == this.difficulty && this.gameContext.getChildren().isEmpty()) {
-            log.info("VICTOIRE !!!");
+        } else if (gameContext.getChildren().isEmpty()) {
+            long totalTime = (System.currentTimeMillis() - startTime) / 1000;
+            Label l = new Label("Temps : " + Long.toString(totalTime) + "s");
+            l.setTextFill(Color.WHITE);
+            l.setFont(Font.font(50));
+            l.setLineSpacing(10);
+            l.setLayoutX(15);
+            l.setLayoutY(14);
+            gameContext.getChildren().add(l);
+            gameContext.playWinTransition(50, new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    gameInstance.dispose();
+                    gameContext.clear();
+                    gameInstance.launch();
+                }
+            });
         }
     }
 
     private void createChildren() {
         for (int i = 0; i < 2; i++) {
-            Target target = new Target(this.gameContext, this.randomPosGenerator, this.stats, this.images,
-                    this.level + 1);
-            this.gameContext.getChildren().add(target);
+            Target target = new Target(gameContext, randomPosGenerator, stats, images, level + 1, startTime,
+                    gameInstance);
+            target.setPosition(this.getPosition());
+            gameContext.getChildren().add(target);
         }
     }
-
 }
