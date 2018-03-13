@@ -35,7 +35,7 @@ public class ConfigurationBuilder implements Cloneable {
     public static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
 
     private static String getFileDirectoryDefaultValue() {
-        return Utils.getGazePlayFolder() + "files" + Utils.FILESEPARATOR;
+        return Utils.getGazePlayFolder() + "files" /* + Utils.FILESEPARATOR */;
     }
 
     private static Properties loadProperties(String propertiesFilePath) throws IOException {

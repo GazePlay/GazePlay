@@ -401,37 +401,6 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(
-                new GameSummary("Cups and Balls", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/cups.jpg"),
-                new GameSpec.GameVariantGenerator() {
-                    @Override
-                    public Set<GameSpec.GameVariant> getVariants() {
-                        return Sets.newLinkedHashSet(Lists.newArrayList(
-
-                                new GameSpec.CupsGameVariant(2),
-
-                                new GameSpec.CupsGameVariant(3),
-
-                                new GameSpec.CupsGameVariant(4),
-
-                                new GameSpec.CupsGameVariant(5),
-
-                                new GameSpec.CupsGameVariant(6)
-
-                ));
-                    }
-                }, new GameSpec.GameLauncher<Stats, GameSpec.CupsGameVariant>() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new CupsAndBallsStats(scene);
-                    }
-
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.CupsGameVariant gameVariant,
-                            Stats stats) {
-                        return new CupsAndBalls(gameContext, stats, gameVariant.getNoCups(), 3);
-                    }
-                }));
-
         result.add(new GameSpec(new GameSummary("Video Player with Feedback", DEFAULT_SEARCHING_GAME_THUMBNAIL,
                 "data/Thumbnails/youtube-logo-128.png"), new GameSpec.GameVariantGenerator() {
                     @Override

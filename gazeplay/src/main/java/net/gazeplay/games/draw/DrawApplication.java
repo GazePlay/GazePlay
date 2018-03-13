@@ -20,7 +20,7 @@ public class DrawApplication implements GameLifeCycle {
 
         Rectangle2D bounds = Screen.getPrimary().getBounds();
 
-        Dimension2D canvasDimension = new Dimension2D(bounds.getWidth() / 2, bounds.getHeight() / 2);
+        Dimension2D canvasDimension = new Dimension2D(bounds.getWidth()/2, bounds.getHeight()/2);
 
         Canvas canvas = drawBuilder.createCanvas(canvasDimension);
 
