@@ -7,21 +7,17 @@ package net.gazeplay.games.colors;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GazePlay;
 
 @Slf4j
 public class ColorToolBox extends BorderPane {
@@ -29,8 +25,8 @@ public class ColorToolBox extends BorderPane {
     /**
      * Pourcents use to compute height and width.
      */
-    public static final double WIDTH_POURCENT = 0.25;
-    public static final double HEIGHT_POURCENT = 0.8;
+    public static final double WIDTH_POURCENT = 0.10;
+    public static final double HEIGHT_POURCENT = 0.80;
 
     public static final double SPACING_PX = 10;
 
@@ -47,30 +43,17 @@ public class ColorToolBox extends BorderPane {
      * The index of the first color displayed (then followed by the NB_COLORS_DISPLAYED next colors).
      */
     private int firstColorDisplayed;
-    private static final Integer NB_COLORS_DISPLAYED = 6;
+    public static final Integer NB_COLORS_DISPLAYED = 6;
 
     @Getter
     private ColorBox selectedColorBox;
 
-    public ColorToolBox() {
+    public ColorToolBox(final Pane root) {
         super();
-
-        final ReadOnlyDoubleProperty height = GazePlay.getInstance().getPrimaryStage().heightProperty();
-        final ReadOnlyDoubleProperty width = GazePlay.getInstance().getPrimaryStage().widthProperty();
-
-        height.addListener((observable) -> {
-
-            this.setPrefHeight(height.doubleValue() * HEIGHT_POURCENT);
-        });
-
-        width.addListener((observable) -> {
-
-            this.setPrefHeight(width.doubleValue() * WIDTH_POURCENT);
-        });
 
         this.selectedColorBox = null;
 
-        this.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+        // this.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
 
         mainPane = new VBox();
         this.setCenter(mainPane);
@@ -101,7 +84,7 @@ public class ColorToolBox extends BorderPane {
 
             color = colors.get(i);
 
-            colorBox = new ColorBox(color);
+            colorBox = new ColorBox(color, root, this);
             mouseHandler = new ColorMouseEventHandler(colorBox);
 
             if (i < NB_COLORS_DISPLAYED) {

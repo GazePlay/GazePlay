@@ -28,8 +28,8 @@ public class GazeProgressIndicator extends ProgressIndicator implements IGazePro
     public GazeProgressIndicator(double width, double height, final double duration) {
         super(0);
 
-        this.setMinWidth(width * 0.9);
-        this.setMinHeight(width * 0.9);
+        this.setMinWidth(width);
+        this.setMinHeight(width);
         this.setOpacity(0);
 
         this.duration = duration;
