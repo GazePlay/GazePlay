@@ -23,6 +23,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.animation.*;
 import javafx.event.ActionEvent;
@@ -63,6 +65,9 @@ public class Piano extends Parent implements GameLifeCycle {
     private Tile E;
     private Tile F;
     private Tile G;
+    private char FirstChar;
+
+    private List<Tile> TilesTab;
 
     private final Stats stats;
 
@@ -88,26 +93,34 @@ public class Piano extends Parent implements GameLifeCycle {
         F = new Tile();
         G = new Tile();
 
+        TilesTab = new ArrayList<Tile>();
+
         instru = new Instru();
-        /*Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        imageRectangle.setFill(new ImagePattern(new Image("data/biboule/images/Background.jpg")));
-        gameContext.getChildren().add(imageRectangle);*/
+        /*
+         * Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+         * imageRectangle.setFill(new ImagePattern(new Image("data/biboule/images/Background.jpg")));
+         * gameContext.getChildren().add(imageRectangle);
+         */
         gameContext.getChildren().add(this);
     }
 
     @Override
     public void launch() {
         this.gameContext.resetBordersToFront();
-
         CreateArcs();
+        this.gameContext.getChildren().addAll(TilesTab);
+
         try {
             parser = new Parser();
-            Path filePath = Paths.get("gazeplay-data\\src\\main\\resources\\data\\pianosight\\songs\\AuClairDeLaLune.txt");
+            Path filePath = Paths
+                    .get("gazeplay-data\\src\\main\\resources\\data\\pianosight\\songs\\AuClairDeLaLune.txt");
             filePath = filePath.toAbsolutePath();
             FileReader input = new FileReader(filePath.toFile());
             parser.bufRead = new BufferedReader(input);
             parser.myLine = null;
             parser.myLine = parser.bufRead.readLine();
+            FirstChar = parser.nextChar();
+            TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -139,44 +152,53 @@ public class Piano extends Parent implements GameLifeCycle {
         return note;
     }
 
+    public int getNoteIndex(char c) {
+        int note;
+        if (c == 'G') {
+            note = 6;
+        } else if (c == 'A') {
+            note = 1;
+        } else if (c == 'B') {
+            note = 2;
+        } else if (c == 'C') {
+            note = 3;
+        } else if (c == 'D') {
+            note = 4;
+        } else if (c == 'E') {
+            note = 5;
+        } else {
+            note = 6;
+        }
+        return note;
+    }
+
     public void CreateArc(int index, double angle) {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double size = dimension2D.getHeight() / 3;
-        Arc a3 = new Arc(centerX, centerY, size, size, index * (360 / 7), angle);
+        Tile a3 = new Tile(centerX, centerY, size, size, index * (360 / 7), angle);
         a3.setType(ArcType.ROUND);
         a3.setStroke(Color.BLACK);
         a3.setFill(Color.AQUA);
         a3.setStrokeWidth(10);
-        int note = 55;
         a3.setVisible(true);
-
-        
         EventHandler<Event> tileEventEnter = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                char c = 'A';
                 try {
-                    c = parser.nextChar();
+                    TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.AQUA);
+                    FirstChar = parser.nextChar();
+                    TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
                 } catch (IOException e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
-                instru.note_on(getNote(c));
+                instru.note_on(getNote(FirstChar));
             }
         };
-        EventHandler<Event> tileEventExit = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                instru.note_off(note);
-            }
-        };
-        
-
         a3.addEventHandler(GazeEvent.ANY, tileEventEnter);
-        //this.addEventFilter(GazeEvent.GAZE_EXITED, tileEventExit);
+        // this.addEventFilter(GazeEvent.GAZE_EXITED, tileEventExit);
         a3.addEventHandler(MouseEvent.MOUSE_ENTERED, tileEventEnter);
-        a3.addEventHandler(MouseEvent.MOUSE_EXITED, tileEventExit);
-        this.getChildren().add(a3);
+
+        TilesTab.add(index, a3);
     }
 
     public void CreateArcs() {

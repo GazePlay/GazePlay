@@ -1,5 +1,6 @@
 package net.gazeplay.games.pianosight;
 
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
 
 import lombok.extern.slf4j.Slf4j;
@@ -8,13 +9,17 @@ import lombok.extern.slf4j.Slf4j;
  * Created by schwab on 28/08/2016.
  */
 @Slf4j
-public class Tile {
+public class Tile extends Arc {
 
     int note;
-    Arc arc;
 
     public Tile() {
+        super();
         note = 0;
-        arc = new Arc();
+    }
+
+    public Tile(double d1, double d2, double d3, double d4, int i, double d5) {
+        super(d1, d2, d3, d4, i, d5);
+
     }
 }
