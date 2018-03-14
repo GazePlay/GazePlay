@@ -2,6 +2,7 @@ package net.gazeplay.games.colors;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -132,7 +133,7 @@ public class ColorsGame implements GameLifeCycle {
 
     private void buildToolBox(double width, double height) {
 
-        this.colorToolBox = new ColorToolBox();
+        this.colorToolBox = new ColorToolBox(this.root);
         Node colorToolBoxPane = new TitledPane("Colors", colorToolBox);
 
         this.root.getChildren().add(colorToolBoxPane);
@@ -320,7 +321,7 @@ public class ColorsGame implements GameLifeCycle {
                         gazeProgressIndicator.play();
                     }
                 } else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
-                    log.info("mouse exited = ({},{})", currentX, currentY);
+                    // log.info("mouse exited = ({},{})", currentX, currentY);
                     gazeProgressIndicator.stop();
                 }
             }

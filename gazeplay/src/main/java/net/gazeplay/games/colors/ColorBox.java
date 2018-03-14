@@ -1,15 +1,13 @@
 package net.gazeplay.games.colors;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
-/**
- *
- * @author Thomas MEDARD
- */
+@Slf4j
 public class ColorBox extends ToggleButton {
 
     @Getter
@@ -17,16 +15,33 @@ public class ColorBox extends ToggleButton {
 
     private Boolean selected;
 
-    public static final double COLOR_BOX_WIDTH_PX = 200;
-    public static final double COLOR_BOX_HEIGHT_PX = 100;
+    private final ColorToolBox toolBox;
 
-    public ColorBox(final Color color) {
+    public static final double COLOR_BOX_WIDTH_PX = 200;
+
+    public ColorBox(final Color color, final Pane root, final ColorToolBox toolBox) {
         super("");
 
-        Rectangle graphic = new Rectangle(COLOR_BOX_WIDTH_PX, COLOR_BOX_HEIGHT_PX, color);
+        this.toolBox = toolBox;
+
+        final Rectangle graphic = new Rectangle(COLOR_BOX_WIDTH_PX, computeHeight(root), color);
         this.setGraphic(graphic);
 
         this.color = color;
+
+        root.heightProperty().addListener((observable) -> {
+
+            double newHeight = this.computeHeight(root);
+            log.info("new Height = {}", newHeight);
+            graphic.setHeight(newHeight);
+        });
+    }
+
+    private double computeHeight(final Pane root) {
+
+        double freeSpace = root.getHeight() * ColorToolBox.HEIGHT_POURCENT - ColorToolBox.MAIN_INSETS.getTop()
+                + ColorToolBox.MAIN_INSETS.getBottom() + ColorToolBox.SPACING_PX;
+        return freeSpace / ColorToolBox.NB_COLORS_DISPLAYED;
     }
 
     public void select(Rectangle test) {
