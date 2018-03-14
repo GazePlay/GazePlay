@@ -6,13 +6,20 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.shooter.Shooter;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -21,6 +28,7 @@ import java.util.List;
 import javafx.scene.input.MouseEvent;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
+@Slf4j
 public class Piano extends Parent implements GameLifeCycle {
 
     private static final int maxRadius = 70;
@@ -91,8 +99,9 @@ public class Piano extends Parent implements GameLifeCycle {
             Path filePath = Paths
                     .get("gazeplay-data\\src\\main\\resources\\data\\pianosight\\songs\\AuClairDeLaLune.txt");
             filePath = filePath.toAbsolutePath();
-            FileReader input = new FileReader(filePath.toFile());
-            parser.bufRead = new BufferedReader(input);
+            InputStream inputStream = new FileInputStream(filePath.toFile().getAbsoluteFile());
+            Reader fileReader = new InputStreamReader(inputStream, "UTF-8");
+            parser.bufRead = new BufferedReader(fileReader);
             parser.myLine = null;
             parser.myLine = parser.bufRead.readLine();
             FirstChar = parser.nextChar();
@@ -160,16 +169,30 @@ public class Piano extends Parent implements GameLifeCycle {
         EventHandler<Event> tileEventEnter = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.AQUA);
-                instru.note_on(getNote(FirstChar));
-                FirstChar = parser.nextChar();
-                TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+                if (((Tile) e.getTarget()).note == getNoteIndex(FirstChar)) {
+
+                    char precChar = FirstChar;
+                    instru.note_on(getNote(FirstChar));
+                    FirstChar = parser.nextChar();
+                    if (TilesTab.get(getNoteIndex(FirstChar)).getFill() == Color.YELLOW) {
+
+                        TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.RED);
+                    } else if (TilesTab.get(getNoteIndex(FirstChar)).getFill() == Color.RED) {
+
+                        TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+                    } else {
+
+                        TilesTab.get(getNoteIndex(precChar)).setFill(Color.AQUA);
+                        TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+                    }
+                }
 
             }
         };
         a3.addEventHandler(GazeEvent.ANY, tileEventEnter);
         // this.addEventFilter(GazeEvent.GAZE_EXITED, tileEventExit);
         a3.addEventHandler(MouseEvent.MOUSE_ENTERED, tileEventEnter);
+        a3.note = index;
 
         TilesTab.add(index, a3);
     }
