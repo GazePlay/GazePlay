@@ -20,11 +20,11 @@ public class Parser {
                 return c;
             } else {
                 try {
-					myLine = bufRead.readLine();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                    myLine = bufRead.readLine();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
                 currentIndex = 0;
                 return nextChar();
             }

@@ -31,8 +31,8 @@ public class Piano extends Parent implements GameLifeCycle {
 
     // private final EventHandler<Event> enterEvent;
 
-    private static double centerX;
-    private static double centerY;
+    private double centerX;
+    private double centerY;
 
     private Tile A;
     private Tile B;
@@ -162,9 +162,9 @@ public class Piano extends Parent implements GameLifeCycle {
             public void handle(Event e) {
                 TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.AQUA);
                 instru.note_on(getNote(FirstChar));
-				FirstChar = parser.nextChar();
-				TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
-                
+                FirstChar = parser.nextChar();
+                TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+
             }
         };
         a3.addEventHandler(GazeEvent.ANY, tileEventEnter);
