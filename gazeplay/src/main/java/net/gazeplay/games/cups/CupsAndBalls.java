@@ -92,9 +92,9 @@ public class CupsAndBalls implements GameLifeCycle {
     public void launch() {
         init();
         TranslateTransition revealBallTransition = null;
-        for (int indexCup = 0; indexCup < cups.length; indexCup++) {
-            if (cups[indexCup].containsBall()) {
-                revealBallTransition = new TranslateTransition(Duration.millis(openCupSpeed), cups[indexCup].getItem());
+        for (Cup cup : cups) {
+            if (cup.containsBall()) {
+                revealBallTransition = new TranslateTransition(Duration.millis(openCupSpeed), cup.getItem());
                 revealBallTransition.setByY(-ballRadius * 8);
                 revealBallTransition.setAutoReverse(true);
                 revealBallTransition.setCycleCount(2);

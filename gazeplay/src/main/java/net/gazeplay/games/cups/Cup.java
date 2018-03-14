@@ -24,7 +24,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 public class Cup {
 
     @Getter
-    private Rectangle item;
+    private final Rectangle item;
     private boolean hasBall;
     @Getter
     @Setter
@@ -33,11 +33,11 @@ public class Cup {
     @Setter
     private int ballRadius;
 
-    private int openCupSpeed;
-    private int fixationDurationNeeded;
+    private final int openCupSpeed;
+    private final int fixationDurationNeeded;
 
     @Getter
-    private PositionCup positionCup;
+    private final PositionCup positionCup;
 
     @Getter
     private final double widthItem;
@@ -47,7 +47,6 @@ public class Cup {
     @Setter
     private ProgressIndicator progressIndicator;
 
-    /* Taken from Magic Cards */
     private final GameContext gameContext;
 
     private final CupsAndBalls gameInstance;
@@ -144,23 +143,16 @@ public class Cup {
         revealBallTransition.setByY(-ballRadius * 8);
         ball.getItem().setVisible(true);
 
-        revealBallTransition.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                gameContext.playWinTransition(2000, new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
+        revealBallTransition.onFinishedProperty().set((EventHandler<ActionEvent>) (ActionEvent actionEvent) -> {
+            gameContext.playWinTransition(2000, (ActionEvent actionEvent1) -> {
+                gameInstance.dispose();
 
-                        gameInstance.dispose();
+                gameContext.clear();
 
-                        gameContext.clear();
+                gameInstance.launch();
 
-                        gameInstance.launch();
-
-                        gameContext.onGameStarted();
-                    }
-                });
-            }
+                gameContext.onGameStarted();
+            });
         });
 
         revealBallTransition.play();
@@ -176,47 +168,38 @@ public class Cup {
     }
 
     private EventHandler<Event> buildEvent() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return (Event e) -> {
+            if (revealed || actionsDone < actionsToDo - 1)
+                return;
 
-                if (revealed || actionsDone < actionsToDo - 1)
-                    return;
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
 
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    progressIndicator.setOpacity(1);
-                    progressIndicator.setProgress(0);
+                timelineProgressBar = new Timeline();
 
-                    timelineProgressBar = new Timeline();
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationDurationNeeded),
+                        new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationDurationNeeded),
-                            new KeyValue(progressIndicator.progressProperty(), 1)));
+                timelineProgressBar.play();
 
-                    timelineProgressBar.play();
+                timelineProgressBar.setOnFinished((ActionEvent actionEvent) -> {
+                    revealed = true;
 
-                    timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
+                    item.removeEventFilter(MouseEvent.ANY, enterEvent);
+                    item.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
+                    if (winner) {
+                        onCorrectCupSelected();
+                    } else {
+                        onWrongCupSelected();
+                    }
+                });
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                timelineProgressBar.stop();
 
-                            revealed = true;
-
-                            item.removeEventFilter(MouseEvent.ANY, enterEvent);
-                            item.removeEventFilter(GazeEvent.ANY, enterEvent);
-
-                            if (winner) {
-                                onCorrectCupSelected();
-                            } else {
-                                onWrongCupSelected();
-                            }
-                        }
-                    });
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                    timelineProgressBar.stop();
-
-                    progressIndicator.setOpacity(0);
-                    progressIndicator.setProgress(0);
-                }
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
             }
         };
     }

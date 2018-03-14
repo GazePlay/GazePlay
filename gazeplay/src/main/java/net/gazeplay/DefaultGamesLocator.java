@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Set;
 import net.gazeplay.games.colors.ColorsGame;
 import net.gazeplay.games.colors.ColorsGamesStats;
+import net.gazeplay.games.room.Room;
+import net.gazeplay.games.room.RoomStats;
 
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
@@ -76,6 +78,18 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Ninja(gameContext, stats);
                     }
                 }));
+
+        result.add(new GameSpec(new GameSummary("Room", DEFAULT_SEARCHING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new RoomStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
+                return new Room(gameContext, stats);
+            }
+        }));
 
         result.add(new GameSpec(
                 new GameSummary("Cups and Balls", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/cups.jpg"),
@@ -398,37 +412,6 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                         return new OpenMemory(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
-                    }
-                }));
-
-        result.add(new GameSpec(
-                new GameSummary("Cups and Balls", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/cups.jpg"),
-                new GameSpec.GameVariantGenerator() {
-                    @Override
-                    public Set<GameSpec.GameVariant> getVariants() {
-                        return Sets.newLinkedHashSet(Lists.newArrayList(
-
-                                new GameSpec.CupsGameVariant(2),
-
-                                new GameSpec.CupsGameVariant(3),
-
-                                new GameSpec.CupsGameVariant(4),
-
-                                new GameSpec.CupsGameVariant(5),
-
-                                new GameSpec.CupsGameVariant(6)
-
-                ));
-                    }
-                }, new GameSpec.GameLauncher<Stats, GameSpec.CupsGameVariant>() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new CupsAndBallsStats(scene);
-                    }
-
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.CupsGameVariant gameVariant,
-                            Stats stats) {
-                        return new CupsAndBalls(gameContext, stats, gameVariant.getNoCups(), 3);
                     }
                 }));
 
