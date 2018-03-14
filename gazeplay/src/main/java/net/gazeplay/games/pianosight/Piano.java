@@ -19,6 +19,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -30,6 +32,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.games.shooter.Point;
@@ -86,9 +89,9 @@ public class Piano extends Parent implements GameLifeCycle {
         G = new Tile();
 
         instru = new Instru();
-        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        /*Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageRectangle.setFill(new ImagePattern(new Image("data/biboule/images/Background.jpg")));
-        gameContext.getChildren().add(imageRectangle);
+        gameContext.getChildren().add(imageRectangle);*/
         gameContext.getChildren().add(this);
     }
 
@@ -99,8 +102,9 @@ public class Piano extends Parent implements GameLifeCycle {
         CreateArcs();
         try {
             parser = new Parser();
-            File f = new File("data/pianosight/songs/AuClairDeLaLune.txt");
-            FileReader input = new FileReader(f);
+            Path filePath = Paths.get("gazeplay-data\\src\\main\\resources\\data\\pianosight\\songs\\AuClairDeLaLune.txt");
+            filePath = filePath.toAbsolutePath();
+            FileReader input = new FileReader(filePath.toFile());
             parser.bufRead = new BufferedReader(input);
             parser.myLine = null;
             parser.myLine = parser.bufRead.readLine();
@@ -141,10 +145,12 @@ public class Piano extends Parent implements GameLifeCycle {
         Arc a3 = new Arc(centerX, centerY, size, size, index * (360 / 7), angle);
         a3.setType(ArcType.ROUND);
         a3.setStroke(Color.BLACK);
-        a3.setFill(Color.WHITE);
-        a3.setStrokeWidth(3);
+        a3.setFill(Color.AQUA);
+        a3.setStrokeWidth(10);
         int note = 55;
+        a3.setVisible(true);
 
+        
         EventHandler<Event> tileEventEnter = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -164,11 +170,12 @@ public class Piano extends Parent implements GameLifeCycle {
                 instru.note_off(note);
             }
         };
+        
 
+        a3.addEventHandler(GazeEvent.ANY, tileEventEnter);
+        //this.addEventFilter(GazeEvent.GAZE_EXITED, tileEventExit);
         a3.addEventHandler(MouseEvent.MOUSE_ENTERED, tileEventEnter);
         a3.addEventHandler(MouseEvent.MOUSE_EXITED, tileEventExit);
-        a3.addEventHandler(GazeEvent.GAZE_ENTERED, tileEventEnter);
-        a3.addEventHandler(GazeEvent.GAZE_EXITED, tileEventExit);
         this.getChildren().add(a3);
     }
 
