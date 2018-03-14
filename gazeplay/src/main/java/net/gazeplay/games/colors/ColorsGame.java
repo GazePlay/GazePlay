@@ -33,20 +33,29 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 @Slf4j
 public class ColorsGame implements GameLifeCycle {
 
+    /**
+     * The game context provided.
+     */
     private final GameContext gameContext;
 
+    /**
+     * The root where to draw everything
+     */
     private final Pane root;
 
+    /**
+     * The tool box object.
+     */
     private ColorToolBox colorToolBox;
 
-    // public static final String DEFAULT_IMAGE_URL =
-    // "https://www.publicdomainpictures.net/pictures/190000/velka/outlnes-katze.jpg";
-    // public static final String DEFAULT_IMAGE_URL =
-    // "https://www.publicdomainpictures.net/pictures/160000/velka/girl-and-dog-coloring-page.jpg";
+    /**
+     * The default image url to display
+     */
     public static final String DEFAULT_IMAGE_URL = "http://www.supercoloring.com/sites/default/files/styles/coloring_full/public/cif/2015/07/hatsune-miku-coloring-page.png";
 
     /**
-     * On a [0, 1] scale, determine the threshold in the difference between two colors to consider that they are equals.
+     * On a [0, 1] scale, used to determine the threshold in the difference between two colors to consider that they are
+     * equals.
      */
     public static final double COLOR_EQUALITY_THRESHOLD = 10 / 255;
 
@@ -55,16 +64,39 @@ public class ColorsGame implements GameLifeCycle {
      */
     public static final double GAZE_MOVING_THRESHOLD = 25;
 
+    /**
+     * Distance of the current cursor or gaze position in x and y for the gaze indicator.
+     */
+    public static final double GAZE_INDICATOR_DISTANCE = 5;
+
+    /**
+     * The gaze progress indicator to show time before colorization.
+     */
     private GazeProgressIndicator gazeProgressIndicator;
 
+    /**
+     * The configuration
+     */
     private Configuration config;
 
+    /**
+     * The pixel writer to into wich we modify pixels
+     */
     private PixelWriter pixelWriter;
 
+    /**
+     * The pixel reader into wich we read pixels
+     */
     private PixelReader pixelReader;
 
+    /**
+     * The image linked to the pixelReader and pixelWriter
+     */
     private WritableImage writableImg;
 
+    /**
+     * The rectangle in which the writableImg is painted
+     */
     private Rectangle rectangle;
 
     public ColorsGame(GameContext gameContext) {
@@ -79,12 +111,8 @@ public class ColorsGame implements GameLifeCycle {
 
         config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        this.gazeProgressIndicator = new GazeProgressIndicator(15, 15,
-                config.getFixationlength());
+        this.gazeProgressIndicator = new GazeProgressIndicator(15, 15, config.getFixationlength());
 
-        // TODO : translate somewhere appropriate, or maybe direclty on the gaze
-        gazeProgressIndicator.setTranslateX(250);
-        gazeProgressIndicator.setTranslateY(250);
         gazeProgressIndicator.toFront();
         this.root.getChildren().add(gazeProgressIndicator);
 
@@ -145,21 +173,28 @@ public class ColorsGame implements GameLifeCycle {
         writableImg = new WritableImage(tmpPixelReader, (int) rectangle.getWidth(), (int) rectangle.getHeight());
         pixelWriter = writableImg.getPixelWriter();
         pixelReader = writableImg.getPixelReader();
-        
+
         final Stage stage = GazePlay.getInstance().getPrimaryStage();
 
         // Resizing not really working
         stage.widthProperty().addListener((observable) -> {
 
-            rectangle.setWidth(stage.getWidth());
+            javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+            double width = dimension2D.getWidth();
+            rectangle.setWidth(width);
             rectangle.setFill(new ImagePattern(writableImg));
-            
+
         });
 
         stage.heightProperty().addListener((observable) -> {
-            rectangle.setHeight(stage.getHeight());
+
+            javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+            double height = dimension2D.getHeight();
+            rectangle.setHeight(height);
             rectangle.setFill(new ImagePattern(writableImg));
-            
+
         });
 
         EventHandler<Event> eventHandler = buildEventHandler(pixelReader, pixelWriter, writableImg, rectangle);
@@ -176,7 +211,7 @@ public class ColorsGame implements GameLifeCycle {
 
             private Double gazeXOrigin = 0.;
             private Double gazeYOrigin = 0.;
-            
+
             private Double currentX = 0.;
             private Double currentY = 0.;
 
@@ -192,11 +227,13 @@ public class ColorsGame implements GameLifeCycle {
                 } else if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
 
                     GazeEvent gazeEvent = (GazeEvent) event;
-                    
+
                     gazeXOrigin = gazeEvent.getX();
                     gazeYOrigin = gazeEvent.getY();
                     currentX = gazeXOrigin;
                     currentY = gazeYOrigin;
+
+                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
 
                     gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
 
@@ -210,9 +247,10 @@ public class ColorsGame implements GameLifeCycle {
                     currentX = gazeEvent.getX();
                     currentY = gazeEvent.getY();
 
+                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
+
                     // If gaze still around first point
-                    if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX
-                            && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
+                    if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
                             && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
                             && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
 
@@ -244,6 +282,8 @@ public class ColorsGame implements GameLifeCycle {
                     currentX = gazeXOrigin;
                     currentY = gazeYOrigin;
 
+                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
+
                     gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
 
                         colorize(currentX, currentY);
@@ -256,9 +296,10 @@ public class ColorsGame implements GameLifeCycle {
                     currentX = mouseEvent.getX();
                     currentY = mouseEvent.getY();
 
+                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
+
                     // If mouse still around first point
-                    if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX
-                            && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
+                    if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
                             && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
                             && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
 
@@ -278,27 +319,41 @@ public class ColorsGame implements GameLifeCycle {
 
                         gazeProgressIndicator.play();
                     }
-                }
-                else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
+                } else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
+                    log.info("mouse exited = ({},{})", currentX, currentY);
                     gazeProgressIndicator.stop();
                 }
             }
 
         };
+    }
+
+    public void moveGazeIndicator(final double x, final double y) {
+
+        if (x < 0 || y < 0 || x > rectangle.getWidth() || y > rectangle.getHeight()) {
+            return;
+        }
+
+        // log.info("gazeIndicator pos = ({},{})", x, y);
+
+        gazeProgressIndicator.setTranslateX(x);
+        gazeProgressIndicator.setTranslateY(y);
 
     }
 
     /**
      * Fill a zone with the current selected color.
-     * @param x The x coordinates of the point to fill from.
-     * @param y The y coordinates of the point to fill from.
+     * 
+     * @param x
+     *            The x coordinates of the point to fill from.
+     * @param y
+     *            The y coordinates of the point to fill from.
      */
     public void colorize(final double x, final double y) {
-        
-        
+
         int pixelX = (int) (x * writableImg.getWidth() / rectangle.getWidth());
-        int pixelY = (int) (y * writableImg.getHeight()/ rectangle.getHeight());
-        //log.info("pixel at x= {}, y = {}", pixelX, pixelY);
+        int pixelY = (int) (y * writableImg.getHeight() / rectangle.getHeight());
+        // log.info("pixel at x= {}, y = {}", pixelX, pixelY);
 
         Color color = pixelReader.getColor((int) pixelX, (int) pixelY);
         // log.info("R = {}, G = {}, B = {}, A = {}", color.getRed(), color.getGreen(), color.getBlue(),
@@ -368,7 +423,7 @@ public class ColorsGame implements GameLifeCycle {
         while (horiZones.size() > 0) {
 
             HorizontalZone zone = horiZones.pop();
-            //log.info("zone : {}", zone.toString());
+            // log.info("zone : {}", zone.toString());
             searchZone(zone, oldColor, pixelReader, pixelWriter, newColor, width, height);
         }
     }
