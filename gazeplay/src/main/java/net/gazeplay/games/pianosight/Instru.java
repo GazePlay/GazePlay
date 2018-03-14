@@ -26,12 +26,13 @@ public class Instru {
 
     public Instru() {
 
+        // On récupère le synthétiseur, on l'ouvre et on obtient un canal
         try {
-            // On récupère le synthétiseur, on l'ouvre et on obtient un canal
             synthetiseur = MidiSystem.getSynthesizer();
             synthetiseur.open();
-        } catch (MidiUnavailableException ex) {
-            Logger.getLogger(Instru.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MidiUnavailableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         canal = synthetiseur.getChannels()[0];
 
