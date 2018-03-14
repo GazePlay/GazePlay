@@ -90,9 +90,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
 
-        gameContext.getChildren().get(gameContext.getChildren().indexOf(imageRectangle)).setFocusTraversable(false);
-        ;
-
         EventHandler<Event> handEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -109,12 +106,10 @@ public class Shooter extends Parent implements GameLifeCycle {
             public void handle(GazeEvent e) {
                 double x = e.getX();
                 double y = e.getY();
-                log.info("*********x******* = {}", x);
                 hand.setRotate(getAngle(new Point(x, y)));
             }
         };
-        gameContext.getChildren().get(gameContext.getChildren().indexOf(imageRectangle)).addEventFilter(MouseEvent.ANY,
-                handEvent);
+        imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
         this.addEventFilter(GazeEvent.ANY, handEventGaze);
 
         blue = new Image("data/" + gameType + "/images/Blue.png");
