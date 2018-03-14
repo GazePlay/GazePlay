@@ -160,14 +160,11 @@ public class Piano extends Parent implements GameLifeCycle {
         EventHandler<Event> tileEventEnter = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                try {
-                    TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.AQUA);
-                    FirstChar = parser.nextChar();
-                    TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.AQUA);
                 instru.note_on(getNote(FirstChar));
+				FirstChar = parser.nextChar();
+				TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+                
             }
         };
         a3.addEventHandler(GazeEvent.ANY, tileEventEnter);

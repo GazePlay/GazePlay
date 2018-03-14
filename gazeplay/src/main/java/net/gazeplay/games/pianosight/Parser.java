@@ -9,17 +9,22 @@ public class Parser {
     BufferedReader bufRead;
     int currentIndex;
 
-    public Parser() throws IOException {
+    public Parser() {
     }
 
-    public char nextChar() throws IOException {
+    public char nextChar() {
         if (myLine != null) {
             if (currentIndex < myLine.length()) {
                 char c = myLine.charAt(currentIndex);
                 currentIndex++;
                 return c;
             } else {
-                myLine = bufRead.readLine();
+                try {
+					myLine = bufRead.readLine();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 currentIndex = 0;
                 return nextChar();
             }
