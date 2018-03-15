@@ -1,13 +1,21 @@
 package net.gazeplay.games.divisor;
 
+import java.util.Random;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
@@ -35,10 +43,12 @@ class Target extends Portrait {
     private final Divisor gameInstance;
     private final Image[] images;
     private final long startTime;
+    private final Dimension2D dimension;
+    // private Image explosion;
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats, Image[] images,
             int level, long start, Divisor gameInstance) {
-        super((int) 200 / (level + 1), randomPositionGenerator, images);
+        super((int) 180 / (level + 1), randomPositionGenerator, images);
         this.level = level;
         this.difficulty = 3;
         this.randomPosGenerator = randomPositionGenerator;
@@ -47,12 +57,16 @@ class Target extends Portrait {
         this.stats = stats;
         this.images = images;
         this.startTime = start;
+        this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        // this.explosion = new Image("data/divisor/images/explosion.png");
 
         enterEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    enter();
+                    double x = ((MouseEvent) e).getX();
+                    double y = ((MouseEvent) e).getY();
+                    enter((int) x, (int) y);
                 }
             }
         };
@@ -66,71 +80,99 @@ class Target extends Portrait {
     }
 
     private void move() {
-        final Position newPosition = randomPosGenerator.newRandomPosition(getInitialRadius());
+        Target bubble = this;
 
-        TranslateTransition translation = new TranslateTransition(new Duration(3000), this);
-        translation.setByX(-this.getCenterX() + newPosition.getX());
-        translation.setByY(-this.getCenterY() + newPosition.getY());
-        translation.setOnFinished(new EventHandler<ActionEvent>() {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(20), new EventHandler<ActionEvent>() {
+            Random r = new Random();
+            int dx = r.nextInt(3) + 4;
+            int dy = r.nextInt(3) + 4;
+
+            double height = dimension.getHeight();
+            double width = dimension.getWidth();
+
             @Override
-            public void handle(ActionEvent actionEvent) {
+            public void handle(ActionEvent t) {
+                Position newPos = new Position(bubble.getPosition().getX() + dx, bubble.getPosition().getY() + dy);
+                bubble.setPosition(newPos);
 
-                Target.this.setScaleX(1);
-                Target.this.setScaleY(1);
-                Target.this.setScaleZ(1);
+                if (newPos.getX() <= (bubble.getRadius()) || newPos.getX() >= (width - bubble.getRadius())) {
+                    dx = -dx;
+                }
 
-                Target.this.setPosition(newPosition);
-
-                Target.this.setTranslateX(0);
-                Target.this.setTranslateY(0);
-                Target.this.setTranslateZ(0);
-
-                move();
+                if (newPos.getY() <= (bubble.getRadius()) || newPos.getY() >= (height - bubble.getRadius())) {
+                    dy = -dy;
+                }
             }
-        });
-
-        currentTranslation = translation;
-        translation.play();
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
-    private void enter() {
+    private void enter(int x, int y) {
         if (currentTranslation != null) {
             currentTranslation.stop();
         }
 
+        explose(x, y);
+    }
+
+    public void explose(int x, int y) {
         this.removeEventFilter(MouseEvent.ANY, enterEvent);
         this.removeEventFilter(GazeEvent.ANY, enterEvent);
 
+        Circle c = new Circle();
+        c.setCenterX(x);
+        c.setCenterY(y);
+        c.setRadius((int) 180 / (level + 1));
+        // c.setFill(new ImagePattern(explosion, 0, 0, 1, 1, true));
+        c.setFill(Color.WHITE);
+        this.gameContext.getChildren().add(c);
+
+        FadeTransition ft = new FadeTransition(Duration.millis(500), this);
+        ft.setFromValue(1);
+        ft.setToValue(0);
+
+        ParallelTransition pt = new ParallelTransition();
+        pt.getChildren().add(ft);
+        pt.play();
+
         gameContext.getChildren().remove(this);
 
-        if (level < difficulty) {
-            createChildren();
-        } else if (gameContext.getChildren().isEmpty()) {
-            long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-            Label l = new Label("Temps : " + Long.toString(totalTime) + "s");
-            l.setTextFill(Color.WHITE);
-            l.setFont(Font.font(50));
-            l.setLineSpacing(10);
-            l.setLayoutX(15);
-            l.setLayoutY(14);
-            gameContext.getChildren().add(l);
-            gameContext.playWinTransition(50, new EventHandler<ActionEvent>() {
+        pt.setOnFinished(new EventHandler<ActionEvent>() {
 
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    gameInstance.dispose();
-                    gameContext.clear();
-                    gameInstance.launch();
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                gameContext.getChildren().remove(c);
+                if (level < difficulty) {
+                    createChildren(x, y);
+                } else if (gameContext.getChildren().isEmpty()) {
+                    long totalTime = (System.currentTimeMillis() - startTime) / 1000;
+                    Label l = new Label("Temps : " + Long.toString(totalTime) + "s");
+                    l.setTextFill(Color.WHITE);
+                    l.setFont(Font.font(50));
+                    l.setLineSpacing(10);
+                    l.setLayoutX(15);
+                    l.setLayoutY(14);
+                    gameContext.getChildren().add(l);
+                    gameContext.playWinTransition(50, new EventHandler<ActionEvent>() {
+
+                        @Override
+                        public void handle(ActionEvent actionEvent) {
+                            gameInstance.dispose();
+                            gameContext.clear();
+                            gameInstance.launch();
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
     }
 
-    private void createChildren() {
+    private void createChildren(int x, int y) {
         for (int i = 0; i < 2; i++) {
             Target target = new Target(gameContext, randomPosGenerator, stats, images, level + 1, startTime,
                     gameInstance);
-            target.setPosition(this.getPosition());
+            target.setPosition(new Position(x, y));
             gameContext.getChildren().add(target);
         }
     }
