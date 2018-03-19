@@ -58,6 +58,7 @@ class Target extends Portrait {
         this.images = images;
         this.startTime = start;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        //this.explosion = new Image("data/divisor/images/explosion.png");
         
 
         enterEvent = new EventHandler<Event>() {
@@ -169,7 +170,7 @@ class Target extends Portrait {
     
     private int randomDirection() {
         Random r = new Random();
-        int x = r.nextInt(3) + 30;
+        int x = r.nextInt(3) + 4;
         if (r.nextInt(2) >= 1) {
             x = -x;
         }
