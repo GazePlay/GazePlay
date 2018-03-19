@@ -44,7 +44,7 @@ class Target extends Portrait {
     private final Image[] images;
     private final long startTime;
     private final Dimension2D dimension;
-    // private Image explosion;
+    //private Image explosion;
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats, Image[] images,
             int level, long start, Divisor gameInstance) {
@@ -58,7 +58,7 @@ class Target extends Portrait {
         this.images = images;
         this.startTime = start;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        // this.explosion = new Image("data/divisor/images/explosion.png");
+        
 
         enterEvent = new EventHandler<Event>() {
             @Override
@@ -83,9 +83,8 @@ class Target extends Portrait {
         Target bubble = this;
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(20), new EventHandler<ActionEvent>() {
-            Random r = new Random();
-            int dx = r.nextInt(3) + 4;
-            int dy = r.nextInt(3) + 4;
+            int dx = randomDirection();
+            int dy = randomDirection();
 
             double height = dimension.getHeight();
             double width = dimension.getWidth();
@@ -124,7 +123,7 @@ class Target extends Portrait {
         c.setCenterX(x);
         c.setCenterY(y);
         c.setRadius((int) 180 / (level + 1));
-        // c.setFill(new ImagePattern(explosion, 0, 0, 1, 1, true));
+        //c.setFill(new ImagePattern(explosion, 0, 0, 1, 1, true));
         c.setFill(Color.WHITE);
         this.gameContext.getChildren().add(c);
 
@@ -166,6 +165,15 @@ class Target extends Portrait {
                 }
             }
         });
+    }
+    
+    private int randomDirection() {
+        Random r = new Random();
+        int x = r.nextInt(3) + 30;
+        if (r.nextInt(2) >= 1) {
+            x = -x;
+        }
+        return x;
     }
 
     private void createChildren(int x, int y) {
