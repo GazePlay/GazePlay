@@ -1,10 +1,14 @@
 package net.gazeplay.games.pianosight;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.shape.Arc;
 
 public class Tile extends Arc {
 
     int note;
+    EventHandler<Event> tileEventEnter;
+    EventHandler<Event> tileEventExited;
 
     public Tile() {
         super();

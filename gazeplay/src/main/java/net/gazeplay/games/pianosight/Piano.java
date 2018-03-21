@@ -1,34 +1,33 @@
 package net.gazeplay.games.pianosight;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.shooter.Shooter;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
 
 import javafx.scene.input.MouseEvent;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -56,7 +55,9 @@ public class Piano extends Parent implements GameLifeCycle {
     private Tile G;
     private char FirstChar;
 
+    private Circle subC;
     private List<Shape> TilesTab;
+    private List<Shape> ShapeTab;
 
     private final Stats stats;
 
@@ -82,29 +83,34 @@ public class Piano extends Parent implements GameLifeCycle {
         F = new Tile();
         G = new Tile();
 
+        subC = new Circle(centerX, centerY, dimension2D.getHeight() / 4);
+
         TilesTab = new ArrayList<Shape>();
+        ShapeTab = new ArrayList<Shape>();
 
         instru = new Instru();
 
-        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        imageRectangle.setFill(new ImagePattern(new Image("data/pianosight/images/Background.jpg")));
-        gameContext.getChildren().add(imageRectangle);
-
+        /*
+         * Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+         * imageRectangle.setFill(new ImagePattern(new Image("data/pianosight/images/Background.jpg")));
+         * gameContext.getChildren().add(imageRectangle);
+         */
         gameContext.getChildren().add(this);
     }
 
     @Override
     public void launch() {
         this.gameContext.resetBordersToFront();
+
+        this.getChildren().add(subC);
         CreateArcs();
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
         Circle c = new Circle(centerX, centerY, dimension2D.getHeight() / 4);
         c.setFill(Color.BLACK);
 
-        this.getChildren().addAll(TilesTab);
         this.getChildren().add(c);
-
+        this.getChildren().addAll(this.TilesTab);
+        this.getChildren().get(this.getChildren().indexOf(c)).toFront();
         try {
             parser = new Parser();
             Path filePath = Paths
@@ -120,6 +126,20 @@ public class Piano extends Parent implements GameLifeCycle {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Sequencer sequencer;
+        // Get default sequencer.
+        /*
+         * try { sequencer = MidiSystem.getSequencer(); if (sequencer != null) { sequencer.open(); try { Path filePath =
+         * Paths .get("gazeplay-data\\src\\main\\resources\\data\\pianosight\\songs\\RIVER.mid"); filePath =
+         * filePath.toAbsolutePath(); Sequence mySeq = MidiSystem.getSequence(filePath.toFile().getAbsoluteFile());
+         * sequencer.setSequence(mySeq); for (int i = 0; i < sequencer.getSequence().getTracks().length; i++) { for (int
+         * j = 0; j < sequencer.getSequence().getTracks()[i].size(); j++) {
+         * log.info("*****************I*********** = {}", i); log.info("*****************J*********** = {}",
+         * sequencer.getSequence().getTracks()[i].get(j).getMessage().getMessage()); } } // sequencer.start(); } catch
+         * (Exception e) { } } } catch (MidiUnavailableException e1) { e1.printStackTrace(); }
+         */
+        stats.start();
     }
 
     @Override
@@ -176,25 +196,35 @@ public class Piano extends Parent implements GameLifeCycle {
         a3.setFill(color1);
         a3.setStrokeWidth(10);
         a3.setVisible(true);
+
+        Shape a = Shape.subtract(a3, subC);
+        if (a != null)
+            ShapeTab.add(a);
+
         EventHandler<Event> tileEventEnter = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
+               
                 if (((Tile) e.getTarget()).note == getNoteIndex(FirstChar)) {
 
                     char precChar = FirstChar;
-                    instru.note_on(getNote(FirstChar));
                     FirstChar = parser.nextChar();
-                    if (FirstChar != '\0') {
-                        if (TilesTab.get(getNoteIndex(FirstChar)).getFill() == Color.YELLOW) {
+                    if (precChar != '\0') {
+                        instru.note_on(getNote(precChar));
+                        if (FirstChar != '\0') {
+                            if (TilesTab.get(getNoteIndex(FirstChar)).getFill() == Color.YELLOW) {
 
-                            TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.ORANGE);
-                        } else if (TilesTab.get(getNoteIndex(FirstChar)).getFill() == Color.ORANGE) {
+                                TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.ORANGE);
+                            } else if (TilesTab.get(getNoteIndex(FirstChar)).getFill() == Color.ORANGE) {
 
-                            TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+                                TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+                            } else {
+
+                                TilesTab.get(getNoteIndex(precChar)).setFill(color1);
+                                TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+                            }
                         } else {
-
-                            TilesTab.get(getNoteIndex(precChar)).setFill(color1);
-                            TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+                            TilesTab.get(getNoteIndex(precChar)).setFill(color2);
                         }
                     } else {
                         TilesTab.get(getNoteIndex(precChar)).setFill(color2);
@@ -204,8 +234,8 @@ public class Piano extends Parent implements GameLifeCycle {
                     TilesTab.get(((Tile) e.getTarget()).note).setFill(color2);
 
                 }
-
             }
+
         };
 
         EventHandler<Event> tileEventExited = new EventHandler<Event>() {
@@ -218,11 +248,16 @@ public class Piano extends Parent implements GameLifeCycle {
             }
         };
 
-        a3.addEventHandler(GazeEvent.ANY, tileEventEnter);
-        // this.addEventFilter(GazeEvent.GAZE_EXITED, tileEventExit);
-        a3.addEventHandler(MouseEvent.MOUSE_ENTERED, tileEventEnter);
-        a3.addEventHandler(MouseEvent.MOUSE_EXITED, tileEventExited);
+        a3.tileEventEnter = tileEventEnter;
+        a3.tileEventExited = tileEventExited;
+
+        a3.addEventFilter(MouseEvent.MOUSE_ENTERED, a3.tileEventEnter);
+        a3.addEventFilter(MouseEvent.MOUSE_EXITED, a3.tileEventExited);
+        a3.addEventFilter(GazeEvent.GAZE_ENTERED, a3.tileEventEnter);
+        a3.addEventFilter(GazeEvent.GAZE_EXITED, a3.tileEventExited);
         a3.note = index;
+
+        gameContext.getGazeDeviceManager().addEventFilter(a3);
 
         TilesTab.add(index, a3);
     }
