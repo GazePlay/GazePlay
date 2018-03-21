@@ -5,19 +5,29 @@
  */
 package net.gazeplay.games.colors;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javax.imageio.ImageIO;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GazePlay;
 
 @Slf4j
 public class ColorToolBox extends BorderPane {
@@ -26,11 +36,16 @@ public class ColorToolBox extends BorderPane {
      * Pourcents use to compute height and width.
      */
     public static final double WIDTH_POURCENT = 0.10;
-    public static final double HEIGHT_POURCENT = 0.80;
+    public static final double HEIGHT_POURCENT = 0.60;
 
     public static final double SPACING_PX = 10;
 
     public static final Insets MAIN_INSETS = new Insets(50, 15, 50, 15);
+
+    /**
+     * The size of the next and previous
+     */
+    public static final double PAGE_MOVING_BUTTONS_SIZE_PIXEL = 0;
 
     private final VBox mainPane;
 
@@ -43,15 +58,25 @@ public class ColorToolBox extends BorderPane {
      * The index of the first color displayed (then followed by the NB_COLORS_DISPLAYED next colors).
      */
     private int firstColorDisplayed;
-    public static final Integer NB_COLORS_DISPLAYED = 6;
+    public static final Integer NB_COLORS_DISPLAYED = 5;
+
+    private final ColorsGame colorsGame;
+
+    private final Pane root;
+
+    private final ColorBox customBox;
+
+    private final ColorPicker colorPicker;
 
     @Getter
     private ColorBox selectedColorBox;
 
-    public ColorToolBox(final Pane root) {
+    public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
         super();
 
         this.selectedColorBox = null;
+        this.colorsGame = colorsGame;
+        this.root = root;
 
         // this.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -66,16 +91,14 @@ public class ColorToolBox extends BorderPane {
         // COLORS
 
         List<Color> colors = new ArrayList<Color>();
-        colors.add(Color.AZURE);
-        colors.add(Color.BEIGE);
-        colors.add(Color.BLUEVIOLET);
-        colors.add(Color.CORNFLOWERBLUE);
-        colors.add(Color.DARKGOLDENROD);
-        colors.add(Color.DIMGREY);
-        // 6
         colors.add(Color.RED);
         colors.add(Color.BLUE);
+        colors.add(Color.GREEN);
+        colors.add(Color.WHITE);
+        colors.add(Color.DARKGOLDENROD);
+        // 5
 
+        // Build color boxes
         colorBoxes = new ArrayList<ColorBox>();
         ToggleGroup group = new ToggleGroup();
         firstColorDisplayed = 0;
@@ -87,26 +110,42 @@ public class ColorToolBox extends BorderPane {
             colorBox = new ColorBox(color, root, this);
             mouseHandler = new ColorMouseEventHandler(colorBox);
 
-            if (i < NB_COLORS_DISPLAYED) {
-                mainPane.getChildren().add(colorBox);
-            }
-
             colorBox.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseHandler);
             colorBox.setToggleGroup(group);
             colorBoxes.add(colorBox);
+
+            if (i < NB_COLORS_DISPLAYED) {
+                mainPane.getChildren().add(colorBox);
+            }
 
             if (this.selectedColorBox == null) {
                 colorBox.select();
                 selectedColorBox = colorBox;
             }
         }
-        Button previousPallet = new Button("<");
-        Button nextPallet = new Button(">");
+
+        colorPicker = new ColorPicker(Color.WHITE);
+
+        customBox = new ColorBox((colorPicker.getValue()), root, this);
+
+        colorPicker.setOnAction((event) -> {
+            customBox.setColor(colorPicker.getValue());
+        });
+
+        mouseHandler = new ColorMouseEventHandler(customBox);
+        customBox.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseHandler);
+        customBox.setToggleGroup(group);
+
+        Button previousPallet = new Button("");
+        previousPallet.setPrefHeight(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
+        previousPallet.setPrefWidth(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
+        Button nextPallet = new Button("");
+        nextPallet.setPrefHeight(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
+        nextPallet.setPrefWidth(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
 
         nextPallet.setOnAction((event) -> {
 
             firstColorDisplayed += NB_COLORS_DISPLAYED;
-            mainPane.getChildren().clear();
 
             updatePallet(previousPallet, nextPallet);
         });
@@ -118,7 +157,6 @@ public class ColorToolBox extends BorderPane {
         previousPallet.setOnAction((event) -> {
 
             firstColorDisplayed -= NB_COLORS_DISPLAYED;
-            mainPane.getChildren().clear();
 
             updatePallet(previousPallet, nextPallet);
         });
@@ -127,10 +165,105 @@ public class ColorToolBox extends BorderPane {
             previousPallet.setDisable(true);
         }
 
-        this.setRight(nextPallet);
-        this.setLeft(previousPallet);
+        this.updatePallet(previousPallet, nextPallet);
+
+        /*
+         * this.setRight(nextPallet); this.setLeft(previousPallet);
+         */
+
+        final Pane imageManager = buildImageManager();
+        this.setBottom(imageManager);
 
         this.getStyleClass().add("bg-colored");
+    }
+
+    private Pane buildImageManager() {
+
+        final HBox bottomBox = new HBox(7);
+
+        final FileChooser imageChooser = new FileChooser();
+        configureImageFileChooser(imageChooser);
+        imageChooser.setTitle("Choose an image to load");
+
+        final Stage stage = GazePlay.getInstance().getPrimaryStage();
+
+        Button imageChooserButton = new Button("Load image");
+        imageChooserButton.setOnAction((event) -> {
+
+            final File imageFile = imageChooser.showOpenDialog(stage);
+            if (imageFile != null) {
+
+                Image image = new Image(imageFile.toURI().toString());
+
+                this.colorsGame.updateImage(image);
+            }
+        });
+
+        final FileChooser imageSaveChooser = new FileChooser();
+        configureImageFileSaver(imageSaveChooser);
+        imageSaveChooser.setTitle("Save your image");
+        Button imageSaverButton = new Button("Save image");
+        imageSaverButton.setOnAction((event) -> {
+
+            final File imageFile = imageSaveChooser.showSaveDialog(stage);
+            if (imageFile != null) {
+
+                try {
+                    String name = imageFile.getName();
+                    String extension = name.substring(1 + name.lastIndexOf(".")).toLowerCase();
+
+                    if (!checkFormat(extension)) {
+                        extension = "jpeg";
+                    }
+
+                    saveImageToFile(colorsGame.getWritableImg(), imageFile, extension);
+                } catch (IOException ex) {
+                    log.error("Error while saving image : " + ex.toString());
+                }
+            }
+        });
+
+        bottomBox.getChildren().add(imageChooserButton);
+        bottomBox.getChildren().add(imageSaverButton);
+
+        return bottomBox;
+    }
+
+    /**
+     * Write an image to a File without.
+     * 
+     * @param image
+     *            The image to write.
+     * @param file
+     *            The file to write the image into.
+     */
+    private static void saveImageToFile(final Image image, final File file, final String format) throws IOException {
+
+        ImageIO.write(SwingFXUtils.fromFXImage(image, null), format, file);
+    }
+
+    private static void configureImageFileChooser(final FileChooser imageFileChooser) {
+        imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Images", "*.*"),
+                new FileChooser.ExtensionFilter("JPG", "*.jpg"), new FileChooser.ExtensionFilter("PNG", "*.png"));
+    }
+
+    private static void configureImageFileSaver(final FileChooser imageFileChooser) {
+        imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JPG", "*.jpg"),
+                new FileChooser.ExtensionFilter("PNG", "*.png"));
+    }
+
+    private static boolean checkFormat(final String format) {
+
+        String input = format.toLowerCase();
+        switch (input) {
+        case "png":
+        case "jpg":
+        case "jpeg":
+            return true;
+
+        default:
+            return false;
+        }
     }
 
     private class ColorMouseEventHandler implements EventHandler<MouseEvent> {
@@ -157,6 +290,8 @@ public class ColorToolBox extends BorderPane {
 
     private void updatePallet(Button previousPallet, Button nextPallet) {
 
+        mainPane.getChildren().clear();
+
         for (int i = firstColorDisplayed; i < firstColorDisplayed + NB_COLORS_DISPLAYED && i < colorBoxes.size(); ++i) {
             mainPane.getChildren().add(colorBoxes.get(i));
         }
@@ -175,5 +310,13 @@ public class ColorToolBox extends BorderPane {
         } else if (firstColorDisplayed - NB_COLORS_DISPLAYED < 0) {
             previousPallet.setDisable(true);
         }
+
+        this.buildAddCustomCostomColorButton();
+    }
+
+    private void buildAddCustomCostomColorButton() {
+
+        mainPane.getChildren().add(customBox);
+        mainPane.getChildren().add(colorPicker);
     }
 }

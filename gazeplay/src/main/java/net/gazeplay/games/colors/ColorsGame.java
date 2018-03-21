@@ -2,7 +2,6 @@ package net.gazeplay.games.colors;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -18,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
@@ -93,12 +93,18 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The image linked to the pixelReader and pixelWriter
      */
+    @Getter
     private WritableImage writableImg;
 
     /**
      * The rectangle in which the writableImg is painted
      */
     private Rectangle rectangle;
+
+    /**
+     * The event to fill a zone.
+     */
+    private EventHandler<Event> colorizeEventHandler;
 
     public ColorsGame(GameContext gameContext) {
 
@@ -133,7 +139,7 @@ public class ColorsGame implements GameLifeCycle {
 
     private void buildToolBox(double width, double height) {
 
-        this.colorToolBox = new ColorToolBox(this.root);
+        this.colorToolBox = new ColorToolBox(this.root, this);
         Node colorToolBoxPane = new TitledPane("Colors", colorToolBox);
 
         this.root.getChildren().add(colorToolBoxPane);
@@ -151,7 +157,7 @@ public class ColorsGame implements GameLifeCycle {
 
         if (!img.isError()) {
             // awtEditing(img, rectangle);
-            javaFXEditing(img, rectangle);
+            javaFXEditing(img);
         }
 
         root.getChildren().add(rectangle);
@@ -159,7 +165,41 @@ public class ColorsGame implements GameLifeCycle {
         rectangle.toBack();
     }
 
-    public void javaFXEditing(Image image, Rectangle rectangle) {
+    public void javaFXEditing(Image image) {
+
+        this.updateImage(image);
+
+        final Stage stage = GazePlay.getInstance().getPrimaryStage();
+
+        // Resizing not really working
+        root.widthProperty().addListener((observable) -> {
+
+            javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+            double width = dimension2D.getWidth();
+            rectangle.setWidth(width);
+            rectangle.setFill(new ImagePattern(writableImg));
+
+        });
+
+        root.heightProperty().addListener((observable) -> {
+
+            javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+            double height = dimension2D.getHeight();
+            rectangle.setHeight(height);
+            rectangle.setFill(new ImagePattern(writableImg));
+
+        });
+
+        EventHandler<Event> eventHandler = buildEventHandler();
+
+        rectangle.addEventFilter(MouseEvent.ANY, eventHandler);
+        rectangle.addEventFilter(GazeEvent.ANY, eventHandler);
+
+    }
+
+    public void updateImage(final Image image) {
 
         rectangle.setFill(new ImagePattern(image));
 
@@ -171,42 +211,14 @@ public class ColorsGame implements GameLifeCycle {
             return;
         }
 
-        writableImg = new WritableImage(tmpPixelReader, (int) rectangle.getWidth(), (int) rectangle.getHeight());
+        writableImg = new WritableImage(tmpPixelReader, (int) image.getWidth(), (int) image.getHeight());
         pixelWriter = writableImg.getPixelWriter();
         pixelReader = writableImg.getPixelReader();
-
-        final Stage stage = GazePlay.getInstance().getPrimaryStage();
-
-        // Resizing not really working
-        stage.widthProperty().addListener((observable) -> {
-
-            javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-            double width = dimension2D.getWidth();
-            rectangle.setWidth(width);
-            rectangle.setFill(new ImagePattern(writableImg));
-
-        });
-
-        stage.heightProperty().addListener((observable) -> {
-
-            javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-            double height = dimension2D.getHeight();
-            rectangle.setHeight(height);
-            rectangle.setFill(new ImagePattern(writableImg));
-
-        });
-
-        EventHandler<Event> eventHandler = buildEventHandler(pixelReader, pixelWriter, writableImg, rectangle);
-
-        rectangle.addEventFilter(MouseEvent.ANY, eventHandler);
-        rectangle.addEventFilter(GazeEvent.ANY, eventHandler);
-
     }
 
-    public EventHandler<Event> buildEventHandler(final PixelReader pixelReader, final PixelWriter pixelWriter,
-            final WritableImage writableImg, final Rectangle rectangle) {
+    public EventHandler<Event> buildEventHandler() {
+
+        final ColorsGame game = this;
 
         return new EventHandler<Event>() {
 

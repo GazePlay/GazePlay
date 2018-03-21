@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ColorBox extends ToggleButton {
 
     @Getter
-    private final Color color;
+    private Color color;
 
     private Boolean selected;
 
@@ -19,12 +19,14 @@ public class ColorBox extends ToggleButton {
 
     public static final double COLOR_BOX_WIDTH_PX = 200;
 
+    private final Rectangle graphic;
+
     public ColorBox(final Color color, final Pane root, final ColorToolBox toolBox) {
         super("");
 
         this.toolBox = toolBox;
 
-        final Rectangle graphic = new Rectangle(COLOR_BOX_WIDTH_PX, computeHeight(root), color);
+        graphic = new Rectangle(COLOR_BOX_WIDTH_PX, computeHeight(root), color);
         this.setGraphic(graphic);
 
         this.color = color;
@@ -57,5 +59,10 @@ public class ColorBox extends ToggleButton {
     public void unselect() {
 
         this.setSelected(false);
+    }
+
+    public void setColor(final Color color) {
+        this.color = color;
+        this.graphic.setFill(color);
     }
 }
