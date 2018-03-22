@@ -104,7 +104,7 @@ public class Blocs implements GameLifeCycle {
 
         double width = dimension2D.getWidth() / nbColomns;
         double height = dimension2D.getHeight() / nbLines;
-
+        
         for (int i = 0; i < nbColomns; i++)
             for (int j = 0; j < nbLines; j++) {
 

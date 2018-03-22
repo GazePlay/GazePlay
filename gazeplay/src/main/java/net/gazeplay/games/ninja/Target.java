@@ -14,6 +14,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.net.URL;
@@ -73,10 +74,7 @@ public class Target extends Portrait {
     }
 
     private void playHitSound() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL soundResourceUrl = classLoader.getResource(audioClipResourceLocation);
-        javafx.scene.media.AudioClip soundClip = new javafx.scene.media.AudioClip(soundResourceUrl.toExternalForm());
-        soundClip.play();
+        Utils.playSound(audioClipResourceLocation);
     }
 
     private List<Portrait> generateMiniBallsPortraits(RandomPositionGenerator randomPositionGenerator,

@@ -111,7 +111,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
             // log.info("localPosition = " + localPosition);
 
             
-            if (localPosition != null && node.contains(localPosition)) {
+            if (localPosition != null && node.contains(localPosition) ) {
                 if (gi.isOn()) {
                     Platform.runLater(() -> node
                             .fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY)));
