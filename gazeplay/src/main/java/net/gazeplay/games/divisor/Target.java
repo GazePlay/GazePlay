@@ -79,6 +79,13 @@ class Target extends Portrait {
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventHandler(GazeEvent.ANY, enterEvent);
 
+        // this.setPosition(new Position((int) (this.dimension.getWidth()/2), (int) (this.dimension.getHeight())));
+
+        /*
+         * if (this.getPosition().getY() >= (dimension.getHeight() - this.getRadius())) { this.setPosition(new
+         * Position(this.getPosition().getX(), (int) (this.getPosition().getY()-this.getRadius()))); }
+         */
+
         move();
 
         stats.start();
@@ -128,8 +135,7 @@ class Target extends Portrait {
         c.setCenterX(x);
         c.setCenterY(y);
         c.setRadius((int) 180 / (level + 1));
-        // c.setFill(new ImagePattern(explosion, 0, 0, 1, 1, true));
-        c.setFill(Color.WHITE);
+        c.setFill(new ImagePattern(explosion, 0, 0, 1, 1, true));
         this.gameContext.getChildren().add(c);
 
         FadeTransition ft = new FadeTransition(Duration.millis(500), this);
