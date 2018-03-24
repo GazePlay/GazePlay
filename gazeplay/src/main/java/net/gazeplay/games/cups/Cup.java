@@ -90,6 +90,7 @@ public class Cup {
 
         this.progressIndicator = createProgressIndicator(item.getX(), item.getY());
         
+        
         createEvent();
 
     }
@@ -130,12 +131,11 @@ public class Cup {
         indicator.setTranslateX(xCupPos + (item.getFitWidth() - indicatorWidth) / 2);
         indicator.setTranslateY(yCupPos + (item.getFitHeight() - indicatorHeight) / 2);
         indicator.setOpacity(0);
-
-       /* indicator.addEventFilter(MouseEvent.ANY, enterEvent);
+        indicator.addEventFilter(MouseEvent.ANY, enterEvent);
         indicator.addEventFilter(GazeEvent.ANY, enterEvent);
         
 
-        gameContext.getGazeDeviceManager().addEventFilter(indicator);*/
+       /* gameContext.getGazeDeviceManager().addEventFilter(indicator);*/
 
         gameContext.getChildren().add(indicator);
         return indicator;
