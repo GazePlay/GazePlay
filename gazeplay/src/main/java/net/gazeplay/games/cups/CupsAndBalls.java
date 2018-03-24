@@ -119,7 +119,7 @@ public class CupsAndBalls implements GameLifeCycle {
                 createNewTransition(actions);
             });
         }
-        
+
     }
 
     @Override
