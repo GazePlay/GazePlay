@@ -110,7 +110,10 @@ public class Shooter extends Parent implements GameLifeCycle {
             }
         };
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
-        this.addEventFilter(GazeEvent.ANY, handEventGaze);
+        imageRectangle.addEventFilter(GazeEvent.ANY, handEventGaze);
+        
+
+        gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
 
         blue = new Image("data/" + gameType + "/images/Blue.png");
         green = new Image("data/" + gameType + "/images/Green.png");
@@ -380,7 +383,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         double max = Math.floor(3);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
         Utils.playSound("data/" + gameType + "/sounds/hand_sound" + r + ".mp3");
-
         t.getChildren().get(0).setOpacity(1);
 
         hand.getChildren().get(1).setOpacity(1);

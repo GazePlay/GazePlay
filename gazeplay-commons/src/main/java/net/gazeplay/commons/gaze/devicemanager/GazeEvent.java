@@ -8,19 +8,27 @@ import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
+import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.ToString;
 
 @ToString
 public class GazeEvent extends InputEvent {
 
-    public static final EventType<GazeEvent> ANY = new EventType<>(Event.ANY, "GAZE");
-
-    public static final EventType<GazeEvent> GAZE_ENTERED = new EventType<>(GazeEvent.ANY, "GAZE_ENTERED");
-
-    public static final EventType<GazeEvent> GAZE_EXITED = new EventType<>(GazeEvent.ANY, "GAZE_EXITED");
+    public static final EventType<GazeEvent> ANY = new EventType<>(InputEvent.ANY, "GAZE");
 
     public static final EventType<GazeEvent> GAZE_MOVED = new EventType<>(GazeEvent.ANY, "GAZE_MOVED");
+
+    public static final EventType<GazeEvent> GAZE_ENTERED_TARGET = new EventType<GazeEvent>(GazeEvent.ANY,
+            "GAZE_ENTERED_TARGET");
+
+    public static final EventType<GazeEvent> GAZE_EXITED_TARGET = new EventType<GazeEvent>(GazeEvent.ANY,
+            "GAZE_EXITED_TARGET");
+
+    public static final EventType<GazeEvent> GAZE_ENTERED = new EventType<>(GazeEvent.GAZE_ENTERED_TARGET,
+            "GAZE_ENTERED");
+
+    public static final EventType<GazeEvent> GAZE_EXITED = new EventType<>(GazeEvent.GAZE_EXITED_TARGET, "GAZE_EXITED");
 
     @Getter
     private final long time;

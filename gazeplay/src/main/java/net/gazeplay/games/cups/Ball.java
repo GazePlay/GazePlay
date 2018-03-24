@@ -36,8 +36,8 @@ public final class Ball {
     }
 
     public void updatePosition(double newXPosCup, double newYPosCup) {
-        this.XCenterPos = newXPosCup + theCup.getItem().getWidth() / 2;
-        this.YCenterPos = newYPosCup + theCup.getItem().getHeight() - 2 * radius;
+        this.XCenterPos = newXPosCup + theCup.getItem().getFitWidth() / 2;
+        this.YCenterPos = newYPosCup + theCup.getItem().getFitHeight() - 2 * radius;
         item.setCenterX(XCenterPos);
         item.setCenterY(YCenterPos);
     }

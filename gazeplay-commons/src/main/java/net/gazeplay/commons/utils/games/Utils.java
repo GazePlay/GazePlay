@@ -185,6 +185,7 @@ public class Utils {
         try {
             Media media = new Media(path);
             MediaPlayer mp = new MediaPlayer(media);
+            mp.setVolume(BackgroundMusicManager.getInstance().volumeProperty().getValue());
             mp.play();
         } catch (Exception e) {
             log.error("Exception", e);
