@@ -28,9 +28,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.shooter.Point;
 import net.gazeplay.games.shooter.Target;
 
-/**
- * Created by schwab on 28/08/2016.
- */
 @Slf4j
 public class Shooter extends Parent implements GameLifeCycle {
 
@@ -111,9 +108,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         };
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
         imageRectangle.addEventFilter(GazeEvent.ANY, handEventGaze);
-        
-
-        gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
 
         blue = new Image("data/" + gameType + "/images/Blue.png");
         green = new Image("data/" + gameType + "/images/Green.png");
@@ -441,6 +435,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
+
         double x = (cage.getBoundsInParent().getMinX());
         sp.setLayoutX(x);
         double y = (cage.getBoundsInParent().getMinY() + cage.getBoundsInParent().getMaxY()) / 2;

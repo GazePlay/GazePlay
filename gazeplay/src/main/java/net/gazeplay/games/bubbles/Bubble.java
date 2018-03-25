@@ -147,7 +147,7 @@ public class Bubble extends Parent implements GameLifeCycle {
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
                     new KeyValue(fragment.centerXProperty(), Xcenter, Interpolator.LINEAR)));
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(fragment.centerYProperty(),Ycenter, Interpolator.EASE_OUT)));
+                    new KeyValue(fragment.centerYProperty(), Ycenter, Interpolator.EASE_OUT)));
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
             double XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
@@ -182,11 +182,10 @@ public class Bubble extends Parent implements GameLifeCycle {
     }
 
     private void enter(Circle target) {
-    	
 
-    	double Xcenter = target.getCenterX();
-    	double Ycenter = target.getCenterY();
-    	
+        double Xcenter = target.getCenterX();
+        double Ycenter = target.getCenterY();
+
         Timeline timeline = new Timeline();
 
         timeline.getKeyFrames()
@@ -198,9 +197,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         target.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-        
-        
-        explose(Xcenter,Ycenter); //instead of C to avoid wrong position of the explosion
+        explose(Xcenter, Ycenter); // instead of C to avoid wrong position of the explosion
     }
 
     private void newCircle() {

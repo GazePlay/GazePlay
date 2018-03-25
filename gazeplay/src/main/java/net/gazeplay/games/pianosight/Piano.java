@@ -204,7 +204,7 @@ public class Piano extends Parent implements GameLifeCycle {
         EventHandler<Event> tileEventEnter = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-               
+
                 if (((Tile) e.getTarget()).note == getNoteIndex(FirstChar)) {
 
                     char precChar = FirstChar;

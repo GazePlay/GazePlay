@@ -79,18 +79,16 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Ninja(gameContext, stats);
                     }
                 }));
-/*
-        result.add(new GameSpec(new GameSummary("Room", DEFAULT_SEARCHING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new RoomStats(scene);
-            }
 
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
-                return new Room(gameContext, stats);
-            }
-        }));*/
+        /*
+         * result.add(new GameSpec(new GameSummary("Room", DEFAULT_SEARCHING_GAME_THUMBNAIL), new
+         * GameSpec.GameLauncher() {
+         * 
+         * @Override public Stats createNewStats(Scene scene) { return new RoomStats(scene); }
+         * 
+         * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats
+         * stats) { return new Room(gameContext, stats); } }));
+         */
 
         result.add(new GameSpec(
                 new GameSummary("Cups and Balls", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/cups.jpg"),
@@ -340,7 +338,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Shooter(gameContext, stats, "robot");
                     }
                 }));
-/*
+
         result.add(new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
             @Override
             public Stats createNewStats(Scene scene) {
@@ -349,10 +347,22 @@ public class DefaultGamesLocator implements GamesLocator {
 
             @Override
             public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
-                return new Divisor(gameContext, stats);
+                return new Divisor(gameContext, stats, false);
             }
         }));
-*/
+
+        result.add(new GameSpec(new GameSummary("Lapins", DEFAULT_AIMING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new DivisorStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
+                return new Divisor(gameContext, stats, true);
+            }
+        }));
+
         result.add(
                 new GameSpec(new GameSummary("Memory", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/memory.jpeg"),
                         new GameSpec.GameVariantGenerator() {
