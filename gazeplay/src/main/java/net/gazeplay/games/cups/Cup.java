@@ -89,8 +89,7 @@ public class Cup {
         this.enterEvent = buildEvent();
 
         this.progressIndicator = createProgressIndicator(item.getX(), item.getY());
-        
-        
+
         createEvent();
 
     }
@@ -99,10 +98,10 @@ public class Cup {
 
         this.item.addEventFilter(MouseEvent.ANY, enterEvent);
         this.item.addEventFilter(GazeEvent.ANY, enterEvent);
-        
+
         this.gameContext.getGazeDeviceManager().addEventFilter(this.item);
     }
-    
+
     public boolean containsBall() {
         return hasBall;
     }
@@ -133,9 +132,8 @@ public class Cup {
         indicator.setOpacity(0);
         indicator.addEventFilter(MouseEvent.ANY, enterEvent);
         indicator.addEventFilter(GazeEvent.ANY, enterEvent);
-        
 
-       /* gameContext.getGazeDeviceManager().addEventFilter(indicator);*/
+        /* gameContext.getGazeDeviceManager().addEventFilter(indicator); */
 
         gameContext.getChildren().add(indicator);
         return indicator;
@@ -157,7 +155,7 @@ public class Cup {
                 gameInstance.dispose();
 
                 gameContext.clear();
-                
+
                 gameInstance.launch();
 
                 gameContext.onGameStarted();
@@ -178,14 +176,12 @@ public class Cup {
 
     private EventHandler<Event> buildEvent() {
         return (Event e) -> {
-        	
-        	
+
             if (revealed || actionsDone < actionsToDo - 1)
                 return;
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-            	
-            	
+
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
 
@@ -206,13 +202,12 @@ public class Cup {
                         onWrongCupSelected();
                     }
                 });
-                
 
                 timelineProgressBar.play();
-                
+
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-            	if (timelineProgressBar != null)
-            		timelineProgressBar.stop();
+                if (timelineProgressBar != null)
+                    timelineProgressBar.stop();
 
                 progressIndicator.setOpacity(0);
                 progressIndicator.setProgress(0);
