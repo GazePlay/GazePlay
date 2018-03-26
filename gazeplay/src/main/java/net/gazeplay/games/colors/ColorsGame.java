@@ -37,6 +37,7 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The game context provided.
      */
+    @Getter
     private final GameContext gameContext;
 
     /**
@@ -78,6 +79,7 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The configuration
      */
+    @Getter
     private Configuration config;
 
     /**
@@ -192,6 +194,8 @@ public class ColorsGame implements GameLifeCycle {
 
         });
 
+        gameContext.getGazeDeviceManager().addEventFilter(rectangle);
+        
         EventHandler<Event> eventHandler = buildEventHandler();
 
         rectangle.addEventFilter(MouseEvent.ANY, eventHandler);
@@ -240,6 +244,8 @@ public class ColorsGame implements GameLifeCycle {
                 } else if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
 
                     GazeEvent gazeEvent = (GazeEvent) event;
+                    
+                    //log.info("Gaze event : {}", gazeEvent);
 
                     gazeXOrigin = gazeEvent.getX();
                     gazeYOrigin = gazeEvent.getY();
@@ -253,7 +259,7 @@ public class ColorsGame implements GameLifeCycle {
                         colorize(currentX, currentY);
                     });
 
-                    gazeProgressIndicator.play();
+                    gazeProgressIndicator.start();
                 } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
 
                     GazeEvent gazeEvent = (GazeEvent) event;
@@ -281,7 +287,7 @@ public class ColorsGame implements GameLifeCycle {
                             colorize(currentX, currentY);
                         });
 
-                        gazeProgressIndicator.play();
+                        gazeProgressIndicator.start();
                     }
                 }
                 // If gaze quit
@@ -302,7 +308,7 @@ public class ColorsGame implements GameLifeCycle {
                         colorize(currentX, currentY);
                     });
 
-                    gazeProgressIndicator.play();
+                    gazeProgressIndicator.start();
                 } else if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
 
                     MouseEvent mouseEvent = (MouseEvent) event;
@@ -330,7 +336,7 @@ public class ColorsGame implements GameLifeCycle {
                             colorize(currentX, currentY);
                         });
 
-                        gazeProgressIndicator.play();
+                        gazeProgressIndicator.start();
                     }
                 } else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
                     // log.info("mouse exited = ({},{})", currentX, currentY);

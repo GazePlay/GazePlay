@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -26,6 +26,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 
@@ -60,6 +61,7 @@ public class ColorToolBox extends BorderPane {
     private int firstColorDisplayed;
     public static final Integer NB_COLORS_DISPLAYED = 5;
 
+    @Getter
     private final ColorsGame colorsGame;
 
     private final Pane root;
@@ -68,7 +70,7 @@ public class ColorToolBox extends BorderPane {
 
     private final ColorPicker colorPicker;
 
-    @Getter
+    @Getter @Setter
     private ColorBox selectedColorBox;
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
@@ -86,7 +88,7 @@ public class ColorToolBox extends BorderPane {
         mainPane.setPadding(MAIN_INSETS);
 
         ColorBox colorBox;
-        EventHandler<MouseEvent> mouseHandler;
+        EventHandler<Event> eventHandler;
 
         // COLORS
 
@@ -108,9 +110,6 @@ public class ColorToolBox extends BorderPane {
             color = colors.get(i);
 
             colorBox = new ColorBox(color, root, this);
-            mouseHandler = new ColorMouseEventHandler(colorBox);
-
-            colorBox.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseHandler);
             colorBox.setToggleGroup(group);
             colorBoxes.add(colorBox);
 
@@ -131,9 +130,7 @@ public class ColorToolBox extends BorderPane {
         colorPicker.setOnAction((event) -> {
             customBox.setColor(colorPicker.getValue());
         });
-
-        mouseHandler = new ColorMouseEventHandler(customBox);
-        customBox.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseHandler);
+        
         customBox.setToggleGroup(group);
 
         Button previousPallet = new Button("");
@@ -263,28 +260,6 @@ public class ColorToolBox extends BorderPane {
 
         default:
             return false;
-        }
-    }
-
-    private class ColorMouseEventHandler implements EventHandler<MouseEvent> {
-
-        private final ColorBox colorBox;
-
-        public ColorMouseEventHandler(final ColorBox colorBox) {
-            this.colorBox = colorBox;
-        }
-
-        @Override
-        public void handle(MouseEvent event) {
-
-            // If already selected, then do nothing
-            if (selectedColorBox.equals(colorBox)) {
-                return;
-            }
-
-            selectedColorBox.unselect();
-            colorBox.select();
-            selectedColorBox = colorBox;
         }
     }
 
