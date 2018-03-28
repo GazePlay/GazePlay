@@ -107,7 +107,7 @@ public class Shooter extends Parent implements GameLifeCycle {
             }
         };
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
-        imageRectangle.addEventFilter(GazeEvent.ANY, handEventGaze);
+        this.addEventFilter(GazeEvent.ANY, handEventGaze);
 
         blue = new Image("data/" + gameType + "/images/Blue.png");
         green = new Image("data/" + gameType + "/images/Green.png");
@@ -323,11 +323,21 @@ public class Shooter extends Parent implements GameLifeCycle {
         left = true;
         this.getChildren().add(cage);
 
-        for (int i = 0; i < 5; i++) {
-            newCircle();
-        }
+        Timeline waitbeforestart = new Timeline();
+        waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
+        waitbeforestart.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
 
-        magicCage();
+                for (int i = 0; i < 5; i++) {
+                    newCircle();
+                }
+
+                magicCage();
+            }
+
+        });
+        waitbeforestart.play();
 
         stats.start();
 
