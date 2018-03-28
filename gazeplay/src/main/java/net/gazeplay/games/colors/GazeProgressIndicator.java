@@ -42,7 +42,7 @@ public class GazeProgressIndicator extends ProgressIndicator implements IGazePro
     }
 
     @Override
-    public void play() {
+    public void start() {
 
         this.setOpacity(1);
         this.setProgress(0);
