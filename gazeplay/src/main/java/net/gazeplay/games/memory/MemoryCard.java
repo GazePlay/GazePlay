@@ -228,8 +228,8 @@ public class MemoryCard extends Parent {
                                     @Override
                                     public void handle(ActionEvent actionEvent) {
 
-                                        if (timelineCard!=null)
-                                        timelineCard.stop();
+                                        if (timelineCard != null)
+                                            timelineCard.stop();
 
                                         if (id == cardAlreadyTurned) {
                                             onCorrectCardSelected();
@@ -248,8 +248,8 @@ public class MemoryCard extends Parent {
                     Timeline timeline = new Timeline();
 
                     timeline.play();
-                    if (timelineProgressBar!=null)
-                    timelineProgressBar.stop();
+                    if (timelineProgressBar != null)
+                        timelineProgressBar.stop();
 
                     progressIndicator.setOpacity(0);
                     progressIndicator.setProgress(0);

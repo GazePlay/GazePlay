@@ -224,8 +224,8 @@ public class OpenMemoryCard extends Parent {
 
                     timeline.play();
 
-                    if (timelineProgressBar!=null)
-                    timelineProgressBar.stop();
+                    if (timelineProgressBar != null)
+                        timelineProgressBar.stop();
 
                     progressIndicator.setOpacity(0);
                     progressIndicator.setProgress(0);
