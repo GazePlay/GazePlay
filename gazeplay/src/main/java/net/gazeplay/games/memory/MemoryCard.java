@@ -103,6 +103,8 @@ public class MemoryCard extends Parent {
             if (gameInstance.currentRoundDetails.cardList.get(i).turned == true) {
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(MouseEvent.ANY, enterEvent);
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(GazeEvent.ANY, enterEvent);
+                gameContext.getGazeDeviceManager()
+                        .removeEventFilter(gameInstance.currentRoundDetails.cardList.get(i).card);
 
             }
         }
