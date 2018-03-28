@@ -5,6 +5,7 @@
  */
 package net.gazeplay.games.colors;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -130,6 +132,7 @@ public class ColorToolBox extends BorderPane {
         colorPicker.setOnAction((event) -> {
             customBox.setColor(colorPicker.getValue());
         });
+        colorPicker.prefWidthProperty().bind(customBox.widthProperty());
         
         customBox.setToggleGroup(group);
 
@@ -202,15 +205,17 @@ public class ColorToolBox extends BorderPane {
         Button imageSaverButton = new Button("Save image");
         imageSaverButton.setOnAction((event) -> {
 
-            final File imageFile = imageSaveChooser.showSaveDialog(stage);
+            File imageFile = imageSaveChooser.showSaveDialog(stage);
             if (imageFile != null) {
 
                 try {
                     String name = imageFile.getName();
                     String extension = name.substring(1 + name.lastIndexOf(".")).toLowerCase();
-
+                    
                     if (!checkFormat(extension)) {
-                        extension = "jpeg";
+                        extension = "png";
+                        name += extension;
+                        imageFile = new File(imageFile.getAbsolutePath() + "." + extension);
                     }
 
                     saveImageToFile(colorsGame.getWritableImg(), imageFile, extension);
@@ -227,16 +232,15 @@ public class ColorToolBox extends BorderPane {
     }
 
     /**
-     * Write an image to a File without.
-     * 
-     * @param image
-     *            The image to write.
-     * @param file
-     *            The file to write the image into.
+     * Write an image to a File using Java Swing.
+     * @param image The image to write.
+     * @param file  The file to write the image into.
+     * @param format The image format to use ("png" is the only one working correctly).
      */
     private static void saveImageToFile(final Image image, final File file, final String format) throws IOException {
 
-        ImageIO.write(SwingFXUtils.fromFXImage(image, null), format, file);
+        BufferedImage swingImg = SwingFXUtils.fromFXImage(image, null);
+        ImageIO.write(swingImg, format, file);
     }
 
     private static void configureImageFileChooser(final FileChooser imageFileChooser) {
@@ -245,17 +249,13 @@ public class ColorToolBox extends BorderPane {
     }
 
     private static void configureImageFileSaver(final FileChooser imageFileChooser) {
-        imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JPG", "*.jpg"),
-                new FileChooser.ExtensionFilter("PNG", "*.png"));
+        imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("png", "*.png"));
     }
 
     private static boolean checkFormat(final String format) {
 
-        String input = format.toLowerCase();
-        switch (input) {
+        switch (format) {
         case "png":
-        case "jpg":
-        case "jpeg":
             return true;
 
         default:
@@ -291,7 +291,7 @@ public class ColorToolBox extends BorderPane {
 
     private void buildAddCustomCostomColorButton() {
 
-        mainPane.getChildren().add(customBox);
-        mainPane.getChildren().add(colorPicker);
+        Pane customColorPane = new VBox(customBox, colorPicker);
+        mainPane.getChildren().add(customColorPane);
     }
 }

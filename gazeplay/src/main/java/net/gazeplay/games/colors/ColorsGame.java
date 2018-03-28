@@ -2,6 +2,8 @@ package net.gazeplay.games.colors;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -131,6 +133,8 @@ public class ColorsGame implements GameLifeCycle {
         double height = dimension2D.getHeight();
 
         buildToolBox(width, height);
+        
+        log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
         buildDraw(DEFAULT_IMAGE_URL, width, height);
     }
 
@@ -154,8 +158,20 @@ public class ColorsGame implements GameLifeCycle {
     private void buildDraw(String imgURL, double width, double height) {
 
         rectangle = new Rectangle(width, height);
+        
+        // When size will be calculated, update size of rectangle, but do this only
+        // once
+        ChangeListener listener = (ChangeListener) new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                updateRectangle();
+                colorToolBox.widthProperty().removeListener(this);
+            }
+        };
+        
+        colorToolBox.widthProperty().addListener(listener);
 
-        Image img = new Image(imgURL, width, height, false, true);
+        Image img = new Image(imgURL);
 
         if (!img.isError()) {
             // awtEditing(img, rectangle);
@@ -167,7 +183,7 @@ public class ColorsGame implements GameLifeCycle {
         rectangle.toBack();
     }
 
-    public void javaFXEditing(Image image) {
+    private void javaFXEditing(Image image) {
 
         this.updateImage(image);
 
@@ -176,21 +192,13 @@ public class ColorsGame implements GameLifeCycle {
         // Resizing not really working
         root.widthProperty().addListener((observable) -> {
 
-            javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-            double width = dimension2D.getWidth();
-            rectangle.setWidth(width);
-            rectangle.setFill(new ImagePattern(writableImg));
+            updateRectangle();
 
         });
 
         root.heightProperty().addListener((observable) -> {
 
-            javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-            double height = dimension2D.getHeight();
-            rectangle.setHeight(height);
-            rectangle.setFill(new ImagePattern(writableImg));
+            updateRectangle();
 
         });
 
@@ -202,10 +210,28 @@ public class ColorsGame implements GameLifeCycle {
         rectangle.addEventFilter(GazeEvent.ANY, eventHandler);
 
     }
+    
+    private void updateRectangle() {
+        
+        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        
+        double width = dimension2D.getWidth() - colorToolBox.getWidth();
+        double height = dimension2D.getHeight();
+        
+        rectangle.setTranslateX(colorToolBox.getWidth());
+        
+        rectangle.setWidth(width);
+        rectangle.setHeight(height);
+        
+        rectangle.setFill(new ImagePattern(writableImg));
+    }
 
+    /**
+     * Change the current image to displat and update everything so it can be 
+     * colorized.
+     * @param image The new image to colorize.
+     */
     public void updateImage(final Image image) {
-
-        rectangle.setFill(new ImagePattern(image));
 
         final PixelReader tmpPixelReader = image.getPixelReader();
 
@@ -214,13 +240,15 @@ public class ColorsGame implements GameLifeCycle {
             log.error("Colors : unable to read pixels from image");
             return;
         }
+        
+        rectangle.setFill(new ImagePattern(image));
 
         writableImg = new WritableImage(tmpPixelReader, (int) image.getWidth(), (int) image.getHeight());
         pixelWriter = writableImg.getPixelWriter();
         pixelReader = writableImg.getPixelReader();
     }
 
-    public EventHandler<Event> buildEventHandler() {
+    private EventHandler<Event> buildEventHandler() {
 
         final ColorsGame game = this;
 
@@ -238,7 +266,7 @@ public class ColorsGame implements GameLifeCycle {
                 if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
                     MouseEvent mouseEvent = (MouseEvent) event;
-                    log.info("clicked at x= {}, y = {}", currentX, currentY);
+                    //log.info("clicked at x= {}, y = {}", currentX, currentY);
                     colorize(currentX, currentY);
 
                 } else if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
@@ -347,26 +375,25 @@ public class ColorsGame implements GameLifeCycle {
         };
     }
 
-    public void moveGazeIndicator(final double x, final double y) {
+    private void moveGazeIndicator(final double x, final double y) {
 
         if (x < 0 || y < 0 || x > rectangle.getWidth() || y > rectangle.getHeight()) {
             return;
         }
 
-        // log.info("gazeIndicator pos = ({},{})", x, y);
+        // We need to take into account that the 0 from event is top left corner of rectangle
+        // but not actually the top left corner of screen.
+        double newX = x + colorToolBox.getWidth();
 
-        gazeProgressIndicator.setTranslateX(x);
+        gazeProgressIndicator.setTranslateX(newX);
         gazeProgressIndicator.setTranslateY(y);
 
     }
 
     /**
      * Fill a zone with the current selected color.
-     * 
-     * @param x
-     *            The x coordinates of the point to fill from.
-     * @param y
-     *            The y coordinates of the point to fill from.
+     * @param x The x coordinates of the point to fill from.
+     * @param y The y coordinates of the point to fill from.
      */
     public void colorize(final double x, final double y) {
 
@@ -387,7 +414,7 @@ public class ColorsGame implements GameLifeCycle {
         rectangle.toBack();
     }
 
-    public void javaFXFloodFill(final PixelWriter pixelWriter, final PixelReader pixelReader, Color newColor, int x,
+    private void javaFXFloodFill(final PixelWriter pixelWriter, final PixelReader pixelReader, Color newColor, int x,
             int y, int width, int height) {
 
         final Color oldColor = pixelReader.getColor(x, y);
@@ -395,22 +422,10 @@ public class ColorsGame implements GameLifeCycle {
         // floodInColumnAndLineRec(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
         floodInColumnAndLine(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
     }
-
-    /*
-     * public void floodInColumnAndLineRec(final PixelWriter pixelWriter, final PixelReader pixelReader, final Color
-     * newColor, final int x, final int y, final int width, final int height, final Color oldColor) {
-     * 
-     * int fillL = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, true, oldColor); int fillR =
-     * floodInLine(pixelWriter, pixelReader, newColor, x, y, width, false, oldColor);
-     * 
-     * // log.info("fillL = {}, fillR = {}", fillL, fillR);
-     * 
-     * // checks if applicable up or down for (int i = fillL; i <= fillR; i++) { if (y > 0 &&
-     * isEqualColors(pixelReader.getColor(i, y - 1), oldColor)) floodInColumnAndLineRec(pixelWriter, pixelReader,
-     * newColor, i, y - 1, width, height, oldColor); if (y < height - 1 && isEqualColors(pixelReader.getColor(i, y + 1),
-     * oldColor)) floodInColumnAndLineRec(pixelWriter, pixelReader, newColor, i, y + 1, width, height, oldColor); } }
+    
+    /**
+     * Objects used internally that represents a horizontal line of pixels
      */
-
     private class HorizontalZone {
         public int leftX;
         public int rightX;
@@ -430,7 +445,7 @@ public class ColorsGame implements GameLifeCycle {
 
     private final Deque<HorizontalZone> horiZones = new ArrayDeque<HorizontalZone>();
 
-    public void floodInColumnAndLine(final PixelWriter pixelWriter, final PixelReader pixelReader, final Color newColor,
+    private void floodInColumnAndLine(final PixelWriter pixelWriter, final PixelReader pixelReader, final Color newColor,
             final int x, final int y, final int width, final int height, final Color oldColor) {
 
         int leftX = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, true, oldColor);
@@ -500,94 +515,6 @@ public class ColorsGame implements GameLifeCycle {
 
         return currentX;
     }
-
-    /*
-     * public void awtEditing(Image img, Rectangle rectangle) { BufferedImage buffImg = SwingFXUtils.fromFXImage(img,
-     * null);
-     * 
-     * if (buffImg == null) { log.info("Unable to write into image"); } rectangle.setFill(new ImagePattern(img)); //
-     * testRect.setFill(Color.RED); rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, (event) -> {
-     * 
-     * Point loc = new Point((int) event.getSceneX(), (int) event.getSceneY());
-     * 
-     * log.info("clicked : {}", loc.getX(), loc.getY());
-     * 
-     * awtFloodFill(buffImg, colorToolBox.getSelectedColorBox().getColor(), loc);
-     * 
-     * Image newImg = SwingFXUtils.toFXImage(buffImg, null); rectangle.setFill(new ImagePattern(newImg)); });
-     * 
-     * }
-     */
-
-    /**
-     * Fills the selected pixel and all surrounding pixels of the same color with the fill color.
-     * 
-     * @param img
-     *            image on which operation is applied
-     * @param fillColor
-     *            color to be filled in
-     * @param loc
-     *            location at which to start fill
-     * @throws IllegalArgumentException
-     *             if loc is out of bounds of the image
-     * @see http://www.codecodex.com/wiki/Implementing_the_flood_fill_algorithm
-     */
-    /*
-     * public static void awtFloodFill(BufferedImage img, Color fillColor, Point loc) { if (loc.x < 0 || loc.x >=
-     * img.getWidth() || loc.y < 0 || loc.y >= img.getHeight()) throw new IllegalArgumentException();
-     * 
-     * WritableRaster raster = img.getRaster(); int[] fill = new int[] { (int) (fillColor.getRed() * 255), (int)
-     * (fillColor.getGreen() * 255), (int) (fillColor.getBlue() * 255), (int) fillColor.getOpacity() * 255 }; int[] old
-     * = raster.getPixel(loc.x, loc.y, new int[4]); old[3] = (int) fillColor.getOpacity() * 255;
-     * 
-     * // log.info("Color = {}", fill); // log.info("R = {}, G={},B={}", (int) (fillColor.getRed() * 255),
-     * fillColor.getGreen(), fillColor.getBlue());
-     * 
-     * // Checks trivial case where loc is of the fill color if (isEqualRgba(fill, old)) return;
-     * 
-     * floodLoop(raster, loc.x, loc.y, fill, old); }
-     */
-
-    /**
-     * Recursively fills surrounding pixels of the old color
-     * 
-     * @param raster
-     * @param x
-     * @param y
-     * @param fill
-     * @param old
-     * @see http://www.codecodex.com/wiki/Implementing_the_flood_fill_algorithm
-     */
-    /*
-     * private static void floodLoop(WritableRaster raster, int x, int y, int[] fill, int[] old) { java.awt.Rectangle
-     * bounds = raster.getBounds(); int[] aux = { 255, 255, 255, 255 };
-     * 
-     * // finds the left side, filling along the way int fillL = x; do { raster.setPixel(fillL, y, fill); fillL--;
-     * 
-     * } while (fillL >= 0 && isEqualRgba(raster.getPixel(fillL, y, aux), old)); fillL++;
-     * 
-     * // find the right right side, filling along the way int fillR = x; do { raster.setPixel(fillR, y, fill); fillR++;
-     * } while (fillR < bounds.width - 1 && isEqualRgba(raster.getPixel(fillR, y, aux), old)); fillR--;
-     * 
-     * // checks if applicable up or down for (int i = fillL; i <= fillR; i++) { if (y > 0 &&
-     * isEqualRgba(raster.getPixel(i, y - 1, aux), old)) floodLoop(raster, i, y - 1, fill, old); if (y < bounds.height -
-     * 1 && isEqualRgba(raster.getPixel(i, y + 1, aux), old)) floodLoop(raster, i, y + 1, fill, old); } }
-     */
-
-    /**
-     * Returns true if RGBA arrays are equivalent, false otherwise Could use Arrays.equals(int[], int[]), but this is
-     * probably a little faster...
-     * 
-     * @param pix1
-     * @param pix2
-     * @return
-     * @see http://www.codecodex.com/wiki/Implementing_the_flood_fill_algorithm
-     */
-    /*
-     * private static boolean isEqualRgba(int[] pix1, int[] pix2) {
-     * 
-     * return pix1[0] == pix2[0] && pix1[1] == pix2[1] && pix1[2] == pix2[2] && pix1[3] == pix2[3]; }
-     */
 
     /**
      * Detect if a color is close enough to another one to be considered the same.
