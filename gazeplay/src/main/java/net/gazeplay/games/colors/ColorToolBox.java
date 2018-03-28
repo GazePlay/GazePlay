@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -50,6 +51,15 @@ public class ColorToolBox extends BorderPane {
      */
     public static final double PAGE_MOVING_BUTTONS_SIZE_PIXEL = 0;
 
+    public static final Integer NB_COLORS_DISPLAYED = 5;
+
+    public static final double COLORIZE_BUTTONS_SIZE_PX = 64;
+
+    public static final String COLORS_IMAGES_PATH = "data/colors/images/";
+
+    public static final String COLORIZE_BUTTON_IMAGE_NAME = COLORS_IMAGES_PATH + "palette.png";
+    public static final String STOP_COLORIZE_BUTTON_IMAGE_NAME = "data/common/images/error.png";
+
     private final VBox mainPane;
 
     /**
@@ -61,7 +71,6 @@ public class ColorToolBox extends BorderPane {
      * The index of the first color displayed (then followed by the NB_COLORS_DISPLAYED next colors).
      */
     private int firstColorDisplayed;
-    public static final Integer NB_COLORS_DISPLAYED = 5;
 
     @Getter
     private final ColorsGame colorsGame;
@@ -72,12 +81,13 @@ public class ColorToolBox extends BorderPane {
 
     private final ColorPicker colorPicker;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private ColorBox selectedColorBox;
-    
+
     @Getter
     private final Pane imageManager;
-    
+
     @Getter
     private final Pane colorziationPane;
 
@@ -94,7 +104,7 @@ public class ColorToolBox extends BorderPane {
         this.setCenter(mainPane);
         mainPane.setSpacing(SPACING_PX);
         mainPane.setPadding(MAIN_INSETS);
-        
+
         imageManager = buildImageManager();
         colorziationPane = buildColorizationPane();
 
@@ -120,8 +130,7 @@ public class ColorToolBox extends BorderPane {
 
             color = colors.get(i);
 
-            colorBox = new ColorBox(color, root, this);
-            colorBox.setToggleGroup(group);
+            colorBox = new ColorBox(color, root, this, group);
             colorBoxes.add(colorBox);
 
             if (i < NB_COLORS_DISPLAYED) {
@@ -136,14 +145,12 @@ public class ColorToolBox extends BorderPane {
 
         colorPicker = new ColorPicker(Color.WHITE);
 
-        customBox = new ColorBox((colorPicker.getValue()), root, this);
+        customBox = new ColorBox((colorPicker.getValue()), root, this, group);
 
         colorPicker.setOnAction((event) -> {
             customBox.setColor(colorPicker.getValue());
         });
         colorPicker.prefWidthProperty().bind(customBox.widthProperty());
-        
-        customBox.setToggleGroup(group);
 
         Button previousPallet = new Button("");
         previousPallet.setPrefHeight(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
@@ -179,7 +186,7 @@ public class ColorToolBox extends BorderPane {
         /*
          * this.setRight(nextPallet); this.setLeft(previousPallet);
          */
-        
+
         this.setBottom(imageManager);
         this.setTop(colorziationPane);
 
@@ -221,7 +228,7 @@ public class ColorToolBox extends BorderPane {
                 try {
                     String name = imageFile.getName();
                     String extension = name.substring(1 + name.lastIndexOf(".")).toLowerCase();
-                    
+
                     if (!checkFormat(extension)) {
                         extension = "png";
                         name += extension;
@@ -243,9 +250,13 @@ public class ColorToolBox extends BorderPane {
 
     /**
      * Write an image to a File using Java Swing.
-     * @param image The image to write.
-     * @param file  The file to write the image into.
-     * @param format The image format to use ("png" is the only one working correctly).
+     * 
+     * @param image
+     *            The image to write.
+     * @param file
+     *            The file to write the image into.
+     * @param format
+     *            The image format to use ("png" is the only one working correctly).
      */
     private static void saveImageToFile(final Image image, final File file, final String format) throws IOException {
 
@@ -304,27 +315,54 @@ public class ColorToolBox extends BorderPane {
         Pane customColorPane = new VBox(customBox, colorPicker);
         mainPane.getChildren().add(customColorPane);
     }
-    
+
     private Pane buildColorizationPane() {
-        
-        Button colorize = new Button("Color !");
-        Button stopColorize = new Button ("No color...");
-        
+
+        Image buttonImg = null;
+        try {
+            buttonImg = new Image(COLORIZE_BUTTON_IMAGE_NAME, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX, false,
+                    true);
+        } catch (IllegalArgumentException e) {
+            log.warn(e.toString() + " : " + COLORIZE_BUTTON_IMAGE_NAME);
+        }
+
+        Button colorize;
+        if (buttonImg != null) {
+            colorize = new Button("", new ImageView(buttonImg));
+        } else {
+            colorize = new Button();
+        }
+
+        buttonImg = null;
+        try {
+            buttonImg = new Image(STOP_COLORIZE_BUTTON_IMAGE_NAME, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX,
+                    false, true);
+        } catch (IllegalArgumentException e) {
+            log.warn(e.toString() + " : " + STOP_COLORIZE_BUTTON_IMAGE_NAME);
+        }
+
+        Button stopColorize;
+        if (buttonImg != null) {
+            stopColorize = new Button("", new ImageView(buttonImg));
+        } else {
+            stopColorize = new Button("");
+        }
+
         colorize.setOnAction((event) -> {
             colorsGame.setEnableColorization(false);
             colorize.setVisible(false);
             stopColorize.setVisible(true);
         });
-        
+
         stopColorize.setOnAction((event) -> {
             colorsGame.setEnableColorization(true);
             stopColorize.setVisible(false);
             colorize.setVisible(true);
         });
         stopColorize.setVisible(false);
-        
+
         Pane colorPane = new StackPane(colorize, stopColorize);
-        
+
         return colorPane;
     }
 }
