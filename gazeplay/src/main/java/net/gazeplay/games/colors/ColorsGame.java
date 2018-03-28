@@ -20,6 +20,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
@@ -64,12 +65,12 @@ public class ColorsGame implements GameLifeCycle {
     public static final double COLOR_EQUALITY_THRESHOLD = 10 / 255;
 
     /**
-     * Distance between two gaze event to consider that the gaze is moving.
+     * Distance in pixel between two gaze event to consider that the gaze is moving.
      */
     public static final double GAZE_MOVING_THRESHOLD = 25;
 
     /**
-     * Distance of the current cursor or gaze position in x and y for the gaze indicator.
+     * Distance in pixel of the current cursor or gaze position in x and y for the gaze indicator.
      */
     public static final double GAZE_INDICATOR_DISTANCE = 5;
 
@@ -104,11 +105,16 @@ public class ColorsGame implements GameLifeCycle {
      * The rectangle in which the writableImg is painted
      */
     private Rectangle rectangle;
-
+    
     /**
-     * The event to fill a zone.
+     * Should we enableColorization.
      */
-    private EventHandler<Event> colorizeEventHandler;
+    private boolean enableColorization = true;
+    
+    /**
+     * The colorization event handler
+     */
+    private EventHandler<Event> colorizationEventHandler;
 
     public ColorsGame(GameContext gameContext) {
 
@@ -146,7 +152,9 @@ public class ColorsGame implements GameLifeCycle {
     private void buildToolBox(double width, double height) {
 
         this.colorToolBox = new ColorToolBox(this.root, this);
-        Node colorToolBoxPane = new TitledPane("Colors", colorToolBox);
+        TitledPane colorToolBoxPane = new TitledPane("Colors", colorToolBox);
+        colorToolBoxPane.setCollapsible(false);
+        colorToolBoxPane.setAnimated(false);
 
         this.root.getChildren().add(colorToolBoxPane);
 
@@ -204,10 +212,10 @@ public class ColorsGame implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(rectangle);
         
-        EventHandler<Event> eventHandler = buildEventHandler();
+        colorizationEventHandler = buildEventHandler();
 
-        rectangle.addEventFilter(MouseEvent.ANY, eventHandler);
-        rectangle.addEventFilter(GazeEvent.ANY, eventHandler);
+        rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler);
+        rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler);
 
     }
     
@@ -547,5 +555,25 @@ public class ColorsGame implements GameLifeCycle {
         }
 
         return redEq && greEq && bluEq;
+    }
+    
+    public void setEnableColorization(boolean enable) {
+        
+        // If we want to stop colorization
+        if(!enable) {
+            // Hide away the gazeProgressIndicator
+            gazeProgressIndicator.stop();
+            
+            // Stop registering colorization events
+            rectangle.removeEventFilter(MouseEvent.ANY, colorizationEventHandler);
+            rectangle.removeEventFilter(GazeEvent.ANY, colorizationEventHandler);
+            
+        }
+        else {
+            rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler);
+            rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler);
+        }
+        
+        this.enableColorization = enable;
     }
 }

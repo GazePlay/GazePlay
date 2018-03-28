@@ -39,11 +39,11 @@ public class ColorToolBox extends BorderPane {
      * Pourcents use to compute height and width.
      */
     public static final double WIDTH_POURCENT = 0.10;
-    public static final double HEIGHT_POURCENT = 0.60;
+    public static final double HEIGHT_POURCENT = 0.80;
 
     public static final double SPACING_PX = 10;
 
-    public static final Insets MAIN_INSETS = new Insets(50, 15, 50, 15);
+    public static final Insets MAIN_INSETS = new Insets(10, 15, 10, 15);
 
     /**
      * The size of the next and previous
@@ -74,6 +74,12 @@ public class ColorToolBox extends BorderPane {
 
     @Getter @Setter
     private ColorBox selectedColorBox;
+    
+    @Getter
+    private final Pane imageManager;
+    
+    @Getter
+    private final Pane colorziationPane;
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
         super();
@@ -88,6 +94,9 @@ public class ColorToolBox extends BorderPane {
         this.setCenter(mainPane);
         mainPane.setSpacing(SPACING_PX);
         mainPane.setPadding(MAIN_INSETS);
+        
+        imageManager = buildImageManager();
+        colorziationPane = buildColorizationPane();
 
         ColorBox colorBox;
         EventHandler<Event> eventHandler;
@@ -170,9 +179,9 @@ public class ColorToolBox extends BorderPane {
         /*
          * this.setRight(nextPallet); this.setLeft(previousPallet);
          */
-
-        final Pane imageManager = buildImageManager();
+        
         this.setBottom(imageManager);
+        this.setTop(colorziationPane);
 
         this.getStyleClass().add("bg-colored");
     }
@@ -180,6 +189,7 @@ public class ColorToolBox extends BorderPane {
     private Pane buildImageManager() {
 
         final HBox bottomBox = new HBox(7);
+        bottomBox.setPadding(new Insets(0, 5, 2, 5));
 
         final FileChooser imageChooser = new FileChooser();
         configureImageFileChooser(imageChooser);
@@ -293,5 +303,28 @@ public class ColorToolBox extends BorderPane {
 
         Pane customColorPane = new VBox(customBox, colorPicker);
         mainPane.getChildren().add(customColorPane);
+    }
+    
+    private Pane buildColorizationPane() {
+        
+        Button colorize = new Button("Color !");
+        Button stopColorize = new Button ("No color...");
+        
+        colorize.setOnAction((event) -> {
+            colorsGame.setEnableColorization(false);
+            colorize.setVisible(false);
+            stopColorize.setVisible(true);
+        });
+        
+        stopColorize.setOnAction((event) -> {
+            colorsGame.setEnableColorization(true);
+            stopColorize.setVisible(false);
+            colorize.setVisible(true);
+        });
+        stopColorize.setVisible(false);
+        
+        Pane colorPane = new StackPane(colorize, stopColorize);
+        
+        return colorPane;
     }
 }

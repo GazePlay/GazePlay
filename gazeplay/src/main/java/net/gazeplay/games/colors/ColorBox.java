@@ -32,15 +32,15 @@ public class ColorBox extends ToggleButton {
         
         this.toolBox = toolBox;
         
-        graphic = new Rectangle(COLOR_BOX_WIDTH_PX, computeHeight(root), color);
+        graphic = new Rectangle(COLOR_BOX_WIDTH_PX, computeHeight(), color);
         this.setGraphic(graphic);
         
         this.color = color;
         
         root.heightProperty().addListener((observable) -> {
             
-            double newHeight = this.computeHeight(root);
-            //log.info("new Height = {}", newHeight);
+            double newHeight = this.computeHeight();
+            log.info("new Height = {}", newHeight);
             graphic.setHeight(newHeight);
         });
         
@@ -52,11 +52,24 @@ public class ColorBox extends ToggleButton {
         this.addEventHandler(GazeEvent.ANY, eventHandler);
     }
     
-    private double computeHeight(final Pane root) {
+    /**
+     * Automatically compute free space in the tool box.
+     * @return The computed height that every color box should have
+     */
+    private double computeHeight() {
         
-        double freeSpace = root.getHeight() * ColorToolBox.HEIGHT_POURCENT - ColorToolBox.MAIN_INSETS.getTop()
-                + ColorToolBox.MAIN_INSETS.getBottom() + ColorToolBox.SPACING_PX;
-        return freeSpace / ColorToolBox.NB_COLORS_DISPLAYED;
+        javafx.geometry.Dimension2D dimension2D = toolBox.getColorsGame().getGameContext().getGamePanelDimensionProvider().getDimension2D();
+        
+        double totalHeight = dimension2D.getHeight() * ColorToolBox.HEIGHT_POURCENT;
+        
+        // Compute free space taking into account every elements in the tool box
+        double freeSpace = totalHeight - (ColorToolBox.MAIN_INSETS.getTop()
+                + ColorToolBox.MAIN_INSETS.getBottom() + ColorToolBox.SPACING_PX + 
+                toolBox.getImageManager().getHeight()) + 
+                toolBox.getColorziationPane().getHeight();
+        
+        // + 1 for the curstom color box
+        return freeSpace / (ColorToolBox.NB_COLORS_DISPLAYED + 1);
     }
     
     public void select(Rectangle test) {
