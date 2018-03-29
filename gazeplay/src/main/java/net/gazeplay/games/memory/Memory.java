@@ -65,6 +65,20 @@ public class Memory implements GameLifeCycle {
 
         this.imagesAvail = Utils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
 
+        // If there is not enough images in the folder : complete with defaults images
+        int nbImagesFolder = this.imagesAvail.length;
+        if (nbImagesFolder < cardsCount / 2) {
+            Image[] imagesAvail2 = this.imagesAvail;
+            this.imagesAvail = new Image[cardsCount / 2];
+            for (int i = 0; i < nbImagesFolder; i++) {
+                this.imagesAvail[i] = imagesAvail2[i];
+            }
+            Image[] def = Utils.images(Utils.getImagesFolder() + "default" + Utils.FILESEPARATOR);
+            for (int i = nbImagesFolder; i < cardsCount / 2; i++) {
+                this.imagesAvail[i] = def[i - nbImagesFolder];
+            }
+        }
+
     }
 
     private HashMap<Integer, Image> selectionAleaImages() {

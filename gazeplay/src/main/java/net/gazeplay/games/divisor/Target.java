@@ -68,23 +68,39 @@ class Target extends Portrait {
         enterEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
                     double x = ((MouseEvent) e).getX();
                     double y = ((MouseEvent) e).getY();
+                    enter((int) x, (int) y);
+                } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    double x = ((GazeEvent) e).getX();
+                    double y = ((GazeEvent) e).getY();
                     enter((int) x, (int) y);
                 }
             }
         };
 
-        this.addEventFilter(MouseEvent.ANY, enterEvent);
-        this.addEventHandler(GazeEvent.ANY, enterEvent);
+        if (level != 0) {
+            Timeline waitbeforestart = new Timeline();
 
-        // this.setPosition(new Position((int) (this.dimension.getWidth()/2), (int) (this.dimension.getHeight())));
+            waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
+            waitbeforestart.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
 
-        /*
-         * if (this.getPosition().getY() >= (dimension.getHeight() - this.getRadius())) { this.setPosition(new
-         * Position(this.getPosition().getX(), (int) (this.getPosition().getY()-this.getRadius()))); }
-         */
+                    addevent();
+
+                }
+
+            });
+            waitbeforestart.play();
+        } else {
+            addevent();
+        }
+
+        if (this.getPosition().getY() + this.getRadius() > (int) dimension.getHeight()) {
+            this.setPosition(new Position(this.getPosition().getX(), this.getPosition().getY() - this.getRadius() * 2));
+        }
 
         move();
 
@@ -142,13 +158,13 @@ class Target extends Portrait {
         ft.setFromValue(1);
         ft.setToValue(0);
 
-        ParallelTransition pt = new ParallelTransition();
-        pt.getChildren().add(ft);
-        pt.play();
+        /*
+         * ParallelTransition pt = new ParallelTransition(); pt.getChildren().add(ft); pt.play();
+         */
 
         gameContext.getChildren().remove(this);
 
-        pt.setOnFinished(new EventHandler<ActionEvent>() {
+        ft.setOnFinished(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -176,6 +192,8 @@ class Target extends Portrait {
                 }
             }
         });
+
+        ft.play();
     }
 
     private int randomDirection() {
@@ -187,12 +205,25 @@ class Target extends Portrait {
         return x;
     }
 
+    public void addevent() {
+        this.addEventFilter(MouseEvent.ANY, enterEvent);
+        this.addEventFilter(GazeEvent.ANY, enterEvent);
+
+        gameContext.getGazeDeviceManager().addEventFilter(this);
+    }
+
     private void createChildren(int x, int y) {
         for (int i = 0; i < 2; i++) {
             Target target = new Target(gameContext, randomPosGenerator, stats, images, level + 1, startTime,
                     gameInstance);
+
+            if (y + target.getRadius() > (int) dimension.getHeight()) {
+                y = (int) dimension.getHeight() - (int) target.getRadius() * 2;
+            }
+
             target.setPosition(new Position(x, y));
             gameContext.getChildren().add(target);
+
         }
     }
 }

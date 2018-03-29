@@ -99,6 +99,8 @@ public class OpenMemoryCard extends Parent {
             if (gameInstance.currentRoundDetails.cardList.get(i).selected == true) {
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(MouseEvent.ANY, enterEvent);
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(GazeEvent.ANY, enterEvent);
+                gameContext.getGazeDeviceManager()
+                        .removeEventFilter(gameInstance.currentRoundDetails.cardList.get(i).card);
 
             }
         }
@@ -222,7 +224,8 @@ public class OpenMemoryCard extends Parent {
 
                     timeline.play();
 
-                    timelineProgressBar.stop();
+                    if (timelineProgressBar != null)
+                        timelineProgressBar.stop();
 
                     progressIndicator.setOpacity(0);
                     progressIndicator.setProgress(0);

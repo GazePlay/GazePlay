@@ -11,7 +11,7 @@ public interface IGazeProgressIndicator {
 
     public void setOnFinish(EventHandler<ActionEvent> handler);
 
-    public void play();
+    public void start();
 
     public void stop();
 }
