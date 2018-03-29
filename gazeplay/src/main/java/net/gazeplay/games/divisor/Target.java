@@ -95,19 +95,12 @@ class Target extends Portrait {
             });
             waitbeforestart.play();
         } else {
-
-            this.addEventFilter(MouseEvent.ANY, enterEvent);
-            this.addEventFilter(GazeEvent.ANY, enterEvent);
-
-            gameContext.getGazeDeviceManager().addEventFilter(this);
+            addevent();
         }
 
-        // this.setPosition(new Position((int) (this.dimension.getWidth()/2), (int) (this.dimension.getHeight())));
-
-        /*
-         * if (this.getPosition().getY() >= (dimension.getHeight() - this.getRadius())) { this.setPosition(new
-         * Position(this.getPosition().getX(), (int) (this.getPosition().getY()-this.getRadius()))); }
-         */
+        if (this.getPosition().getY() + this.getRadius() > (int) dimension.getHeight()) {
+            this.setPosition(new Position(this.getPosition().getX(), this.getPosition().getY() - this.getRadius() * 2));
+        }
 
         move();
 
@@ -223,8 +216,12 @@ class Target extends Portrait {
         for (int i = 0; i < 2; i++) {
             Target target = new Target(gameContext, randomPosGenerator, stats, images, level + 1, startTime,
                     gameInstance);
-            target.setPosition(new Position(x, y));
 
+            if (y + target.getRadius() > (int) dimension.getHeight()) {
+                y = (int) dimension.getHeight() - (int) target.getRadius() * 2;
+            }
+
+            target.setPosition(new Position(x, y));
             gameContext.getChildren().add(target);
 
         }
