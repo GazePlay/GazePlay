@@ -339,7 +339,7 @@ public class DefaultGamesLocator implements GamesLocator {
             }
         }));
 
-        result.add(new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+        result.add(new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL,"data/Thumbnails/divisor.jpeg"), new GameSpec.GameLauncher() {
             @Override
             public Stats createNewStats(Scene scene) {
                 return new DivisorStats(scene);
