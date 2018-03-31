@@ -54,8 +54,9 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The default image to display
      */
- //   public static final String DEFAULT_IMAGE = "http://www.supercoloring.com/sites/default/files/styles/coloring_full/public/cif/2015/07/hatsune-miku-coloring-page.png";
-     public static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
+    // public static final String DEFAULT_IMAGE =
+    // "http://www.supercoloring.com/sites/default/files/styles/coloring_full/public/cif/2015/07/hatsune-miku-coloring-page.png";
+    public static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
     /**
      * On a [0, 1] scale, used to determine the threshold in the difference between two colors to consider that they are
