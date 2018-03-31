@@ -451,11 +451,11 @@ public class DefaultGamesLocator implements GamesLocator {
 
                                 new GameSpec.StringGameVariant("Tchoupi et ses amis", "aPX6q1HC4Ho"),
 
-                                new GameSpec.StringGameVariant("Tchoupi à l'école", "a_KH2U2wqok"),
+                                //new GameSpec.StringGameVariant("Tchoupi à l'école", "a_KH2U2wqok"),
 
-                                new GameSpec.StringGameVariant("Princesse sofia rencontre Belle", "szptWdF2B5s"),
+                                new GameSpec.StringGameVariant("Princesse sofia rencontre Belle", "szptWdF2B5s")
 
-                                new GameSpec.StringGameVariant("Lulu Vroumette", "2Eg7r6WGWhQ")
+                                //new GameSpec.StringGameVariant("Lulu Vroumette", "2Eg7r6WGWhQ")
 
                 ));
                     }
