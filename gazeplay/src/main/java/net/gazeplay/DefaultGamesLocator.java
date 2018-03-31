@@ -443,7 +443,19 @@ public class DefaultGamesLocator implements GamesLocator {
                                         "Z4C82eyhwgU"),
 
                                 new GameSpec.StringGameVariant("Caminandes 3: Llamigos - Funny 3D Animated Short",
-                                        "SkVqJ1SGeL0")
+                                        "SkVqJ1SGeL0"),
+
+                                new GameSpec.StringGameVariant("1H de Petit Ours Brun", "PUIou9gUVos"),
+
+                                new GameSpec.StringGameVariant("Zou s'amuse", "f9qKQ5snhOI"),
+
+                                new GameSpec.StringGameVariant("Tchoupi et ses amis", "aPX6q1HC4Ho"),
+
+                                new GameSpec.StringGameVariant("Tchoupi à l'école", "a_KH2U2wqok"),
+
+                                new GameSpec.StringGameVariant("Princesse sofia rencontre Belle", "szptWdF2B5s"),
+
+                                new GameSpec.StringGameVariant("Lulu Vroumette", "2Eg7r6WGWhQ")
 
                 ));
                     }
@@ -489,23 +501,17 @@ public class DefaultGamesLocator implements GamesLocator {
                                 return new Piano(gameContext, stats);
                             }
                         }));
-
-        result.add(
-                new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/color.jpeg"),
-
-                        new GameSpec.GameLauncher() {
-                            @Override
-                            public Stats createNewStats(Scene scene) {
-                                return new ColorsGamesStats(scene);
-                            }
-
-                            @Override
-                            public GameLifeCycle createNewGame(GameContext gameContext,
-                                    GameSpec.GameVariant gameVariant, Stats stats) {
-                                return new ColorsGame(gameContext);
-                            }
-                        }));
-
+        /*
+         * result.add( new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL,
+         * "data/Thumbnails/color.jpeg"),
+         * 
+         * new GameSpec.GameLauncher() {
+         * 
+         * @Override public Stats createNewStats(Scene scene) { return new ColorsGamesStats(scene); }
+         * 
+         * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats
+         * stats) { return new ColorsGame(gameContext); } }));
+         */
         log.info("Games found : {}", result.size());
 
         return result;
