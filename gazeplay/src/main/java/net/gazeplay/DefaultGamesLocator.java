@@ -470,7 +470,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+        result.add(new GameSpec(new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/piano.jpeg"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
