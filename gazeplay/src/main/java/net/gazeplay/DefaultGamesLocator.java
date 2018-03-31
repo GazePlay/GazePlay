@@ -36,15 +36,15 @@ import java.util.List;
 import java.util.Set;
 import net.gazeplay.games.colors.ColorsGame;
 import net.gazeplay.games.colors.ColorsGamesStats;
-import net.gazeplay.games.room.Room;
-import net.gazeplay.games.room.RoomStats;
 
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
 
-    public static final String DEFAULT_AIMING_GAME_THUMBNAIL = "data/common/images/target.png";
+    public static final String DEFAULT_AIMING_GAME_THUMBNAIL = "data/common/images/skillsThumbnails/target.png";
 
-    public static final String DEFAULT_SEARCHING_GAME_THUMBNAIL = "data/common/images/searching-magnifying-glass.png";
+    public static final String DEFAULT_SEARCHING_GAME_THUMBNAIL = "data/common/images/skillsThumbnails/searching-magnifying-glass.png";
+
+    public static final String DEFAULT_MEMORIZATION_GAME_THUMBNAIL = "data/common/images/skillsThumbnails/male-brain.png";
 
     @Override
     public List<GameSpec> listGames() {
@@ -194,7 +194,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("WhereIsTheAnimal", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/animals.jpeg"),
+                new GameSummary("WhereIsTheAnimal", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/animals.jpeg"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -226,7 +226,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("WhereIsTheColor", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/colors.jpeg"),
+                new GameSummary("WhereIsTheColor", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/colors.jpeg"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -257,7 +257,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("WhereIsIt", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/whereisit.jpeg"),
+                new GameSummary("WhereIsIt", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/whereisit.jpeg"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -320,7 +320,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Cups and Balls", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/cups.jpg"),
+                new GameSummary("Cups and Balls", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/cups.jpg"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -370,7 +370,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         }));
 
         result.add(
-                new GameSpec(new GameSummary("Memory", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/memory.jpeg"),
+                new GameSpec(new GameSummary("Memory", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/memory.jpeg"),
                         new GameSpec.GameVariantGenerator() {
                             @Override
                             public Set<GameSpec.GameVariant> getVariants() {
