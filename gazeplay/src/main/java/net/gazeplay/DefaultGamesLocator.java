@@ -351,7 +351,7 @@ public class DefaultGamesLocator implements GamesLocator {
             }
         }));
 
-        result.add(new GameSpec(new GameSummary("Lapins", DEFAULT_AIMING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+        result.add(new GameSpec(new GameSummary("Lapins", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/rabbits.jpeg"), new GameSpec.GameLauncher() {
             @Override
             public Stats createNewStats(Scene scene) {
                 return new DivisorStats(scene);
