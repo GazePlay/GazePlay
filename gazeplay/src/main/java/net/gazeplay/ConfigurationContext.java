@@ -199,7 +199,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            I18NText label = new I18NText(translator, "Menu Orientation (restart game to take effect)", COLON);
+            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
             ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
