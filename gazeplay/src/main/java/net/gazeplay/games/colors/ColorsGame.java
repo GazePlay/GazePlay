@@ -52,9 +52,10 @@ public class ColorsGame implements GameLifeCycle {
     private ColorToolBox colorToolBox;
 
     /**
-     * The default image url to display
+     * The default image to display
      */
-    public static final String DEFAULT_IMAGE_URL = "http://www.supercoloring.com/sites/default/files/styles/coloring_full/public/cif/2015/07/hatsune-miku-coloring-page.png";
+ //   public static final String DEFAULT_IMAGE = "http://www.supercoloring.com/sites/default/files/styles/coloring_full/public/cif/2015/07/hatsune-miku-coloring-page.png";
+     public static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
     /**
      * On a [0, 1] scale, used to determine the threshold in the difference between two colors to consider that they are
@@ -139,7 +140,7 @@ public class ColorsGame implements GameLifeCycle {
         buildToolBox(width, height);
 
         log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
-        buildDraw(DEFAULT_IMAGE_URL, width, height);
+        buildDraw(DEFAULT_IMAGE, width, height);
     }
 
     @Override
@@ -180,7 +181,7 @@ public class ColorsGame implements GameLifeCycle {
         Image img = new Image(imgURL);
 
         if (!img.isError()) {
-            // awtEditing(img, rectangle);
+
             javaFXEditing(img);
         }
 
@@ -308,7 +309,7 @@ public class ColorsGame implements GameLifeCycle {
                             && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
                             && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
 
-                        // Do nothin
+                        // Do nothing
                     }
                     // If gaze move far away
                     else {
