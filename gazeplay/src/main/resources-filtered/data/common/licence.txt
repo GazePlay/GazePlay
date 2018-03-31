@@ -7,16 +7,21 @@ contact : didier.schwab@univ-grenoble-alpes.fr
 Ce logiciel a été réalisé par Didier Schwab dans le cadre d'un projet de recherche
 au sein de l'équipe getalp (Groupe d'Étude en Traduction Automatique/Traitement
 Automatisé des Langues et de la parole) du LIG (Laboratoire d'Informatique de Grenoble)
-dont les partenaire accadémiques sont l'Université Grenoble Alpes, le CNRS, Grenoble INP, l'INRIA.
+dont les partenaire académiques sont l'Université Grenoble Alpes, le CNRS, Grenoble INP, l'INRIA.
 
 Plusieurs étudiants ont contribué au développement des jeux et/ou aux idées dans le cadre
-de leur formation : Rajaa BARHTAOUI, Amela FEJZA
+de leur formation :
+- en 2017-2018 : Rajaa BARHTAOUI (Univ.Grenoble Alpes), Amela FEJZA (Grenoble INP)
+- en 2018-2019 : Mélanie CARRIÈRE (Univ.Grenoble Alpes), Dumitru CORINI (Univ.Grenoble Alpes),
+ Vincent GIVAUDAN (Univ.Grenoble Alpes), Thomas MEDARD (Univ.Grenoble Alpes), Sébastien RIOU (Grenoble INP)
 
 Merci également à la communauté open source pour son aide : Yann Robert (Maven, logs, lombok,...)
 
+Merci à Loïc Vial (lolo la science) en particulier pour le lien entre la bibliothèque Tobii en C++ et Java
+
 Plusieurs personnes ont également contribué par leurs idées, par leur aide technique ou matérielle :
 Sandra Chaulet, Francis Jambon, Émilie Janots, Claire Lemaire, Frédéric Pons, François Portet,
-Céline Chalbos Schwab, Andon Tchechmedjiev, John Tranier, Loïc Vial (dit lolo la science)
+Céline Chalbos Schwab, Andon Tchechmedjiev, John Tranier,
 et bien sûr Tess, ainsi que toutes ses petites copines inspiratrices.
 
  -------------------------------------------------------------------

@@ -451,13 +451,13 @@ public class DefaultGamesLocator implements GamesLocator {
 
                                 new GameSpec.StringGameVariant("Tchoupi et ses amis", "aPX6q1HC4Ho"),
 
-                                //new GameSpec.StringGameVariant("Tchoupi à l'école", "a_KH2U2wqok"),
+                                // new GameSpec.StringGameVariant("Tchoupi à l'école", "a_KH2U2wqok"),
 
                                 new GameSpec.StringGameVariant("Princesse sofia rencontre Belle", "szptWdF2B5s")
 
-                                //new GameSpec.StringGameVariant("Lulu Vroumette", "2Eg7r6WGWhQ")
+                        // new GameSpec.StringGameVariant("Lulu Vroumette", "2Eg7r6WGWhQ")
 
-                ));
+                        ));
                     }
                 }, new GameSpec.GameLauncher<Stats, GameSpec.StringGameVariant>() {
                     @Override
@@ -486,7 +486,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new DrawApplication(gameContext, stats);
                     }
                 }));
-
+/*
         result.add(
                 new GameSpec(new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/piano.jpeg"),
                         new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
@@ -501,7 +501,7 @@ public class DefaultGamesLocator implements GamesLocator {
                                 return new Piano(gameContext, stats);
                             }
                         }));
-        /*
+
          * result.add( new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL,
          * "data/Thumbnails/color.jpeg"),
          * 
