@@ -38,7 +38,7 @@ public class ColorBox extends StackPane {
         Configuration config = toolBox.getColorsGame().getConfig();
         this.progressIndicator = new GazeProgressIndicator(this.getWidth(), this.getHeight(),
                 config.getFixationlength());
-        
+
         progressIndicator.getStyleClass().add("withoutTextProgress");
 
         button = new ToggleButton();
