@@ -12,29 +12,23 @@ public class ImageUtils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
 
-    public static Image[] images(String folder) {
+    public static Image[] images(String imagesDirectoryPath) {
+        final File directoryFile = new File(imagesDirectoryPath);
+        log.info("Try to find images in folder : {}", imagesDirectoryPath);
+        if (directoryFile.exists()) {
+            Image[] images = getImages(imagesDirectoryPath);
 
-        log.info("Try to find images in folder : " + folder);
-
-        if ((new File(folder)).exists()) {
-
-            Image[] T = getImages(folder);
-
-            if (T.length != 0) {
-
-                log.debug("I found " + T.length + " images in folder : " + folder);
-                return T;
+            if (images.length != 0) {
+                log.debug("I found {} images in folder : {}", images.length, imagesDirectoryPath);
+                return images;
             } else {
-
-                log.info("No image in folder : " + folder);
+                log.info("No image in folder : {}", imagesDirectoryPath);
                 return defaultImage();
             }
         } else {
-
-            log.info("Folder doesn't exist : " + folder);
+            log.info("Folder doesn't exist : {}", imagesDirectoryPath);
             return defaultImage();
         }
-
     }
 
     private static Image[] getImages(String folder) {
