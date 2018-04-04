@@ -88,7 +88,7 @@ public class ImageUtils {
 
     private static boolean isImage(String filename) {
         if (filename.startsWith(".")) {
-            // Problems with filenames starting with a point on Windows
+            // Problems with filenames starting with a dot on Windows
             return false;
         }
         String mimetype = new MimetypesFileTypeMap().getContentType(filename);
