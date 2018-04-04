@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,25 +61,28 @@ public class ImageUtils {
 
     private static List<Image> defaultImages() {
         List<Image> result = new ArrayList<>();
+        result.add(loadImage("data/common/default/images/animal-807308_1920.png"));
+        result.add(loadImage("data/common/default/images/bulldog-1047518_1920.jpg"));
+        result.add(loadImage("data/common/default/images/businessman-607786_1920.png"));
+        result.add(loadImage("data/common/default/images/businessman-607834_1920.png"));
+        result.add(loadImage("data/common/default/images/crocodile-614386_1920.png"));
+        result.add(loadImage("data/common/default/images/goldfish-30837_1280.png"));
+        result.add(loadImage("data/common/default/images/graphic_missbone17.gif"));
+        result.add(loadImage("data/common/default/images/nurse-37322_1280.png"));
+        result.add(loadImage("data/common/default/images/owl-161583_1280.png"));
         result.add(
-                new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/animal-807308_1920.png")));
-        result.add(new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/bulldog-1047518_1920.jpg")));
-        result.add(new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/businessman-607786_1920.png")));
-        result.add(new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/businessman-607834_1920.png")));
-        result.add(new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/crocodile-614386_1920.png")));
-        result.add(
-                new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/goldfish-30837_1280.png")));
-        result.add(
-                new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/graphic_missbone17.gif")));
-        result.add(new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/nurse-37322_1280.png")));
-        result.add(new Image(ClassLoader.getSystemResourceAsStream("data/common/default/images/owl-161583_1280.png")));
-        result.add(new Image(ClassLoader.getSystemResourceAsStream(
-                "data/common/default/images/pez-payaso-animales-el-mar-pintado-por-teoalmeyra-9844979.jpg")));
+                loadImage("data/common/default/images/pez-payaso-animales-el-mar-pintado-por-teoalmeyra-9844979.jpg"));
         return result;
+    }
+
+    private static Image loadImage(String resourceLocation) {
+        try {
+            try (InputStream resourceInputStream = ClassLoader.getSystemResourceAsStream(resourceLocation)) {
+                return new Image(resourceInputStream);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load resource " + resourceLocation + " as an Image", e);
+        }
     }
 
     private static boolean isImage(String file) {
