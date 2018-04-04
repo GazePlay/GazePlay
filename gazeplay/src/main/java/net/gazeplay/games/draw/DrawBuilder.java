@@ -7,14 +7,17 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.DefaultGamesLocator;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
 public class DrawBuilder {
 
     @Setter
-    private Color borderRectangleColor = Color.BLACK;
+    private Color borderRectangleColor = Color.WHITE;
 
     @Setter
     private ColorPicker colorPicker = new RandomColorPicker();
@@ -22,8 +25,16 @@ public class DrawBuilder {
     @Setter
     private int drawLineWidth = 8;
 
+    public Canvas createCanvas(Dimension2D canvasDimension, double coefficient) {
+        Canvas canvas = createCanvas(canvasDimension);
+        canvas.setLayoutX(canvasDimension.getWidth() * (coefficient - 1) / 2);
+        canvas.setLayoutY(canvasDimension.getHeight() * (coefficient - 1) / 2);
+        return canvas;
+    }
+
     public Canvas createCanvas(Dimension2D canvasDimension) {
         Canvas canvas = new Canvas(canvasDimension.getWidth(), canvasDimension.getHeight());
+
         final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         initDraw(graphicsContext);
 
@@ -62,12 +73,12 @@ public class DrawBuilder {
 
             @Override
             public void handle(GazeEvent event) {
-                // log.info("GAZE_MOVED : event = " + event);
+                log.info("GAZE_MOVED : event = " + event);
                 int rateLimiterValue = rateLimiter.incrementAndGet();
                 if (rateLimiterValue == RATE_LIMIT) {
                     rateLimiter.set(0);
 
-                    graphicsContext.lineTo(event.getX(), event.getY());
+                    graphicsContext.lineTo(event.getX() - canvas.getLayoutX(), event.getY() - canvas.getLayoutY());
                     // graphicsContext.setStroke(colorPicker.pickColor());
                     graphicsContext.stroke();
                 }

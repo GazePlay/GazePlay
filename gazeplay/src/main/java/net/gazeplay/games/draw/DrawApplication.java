@@ -20,9 +20,12 @@ public class DrawApplication implements GameLifeCycle {
 
         Rectangle2D bounds = Screen.getPrimary().getBounds();
 
-        Dimension2D canvasDimension = new Dimension2D(bounds.getWidth() / 2, bounds.getHeight() / 2);
+        double coefficient = 1.5;
 
-        Canvas canvas = drawBuilder.createCanvas(canvasDimension);
+        Dimension2D canvasDimension = new Dimension2D(bounds.getWidth() / coefficient,
+                bounds.getHeight() / coefficient);
+
+        Canvas canvas = drawBuilder.createCanvas(canvasDimension, coefficient);
 
         StackPane root = new StackPane();
         root.getChildren().add(canvas);
@@ -30,7 +33,9 @@ public class DrawApplication implements GameLifeCycle {
         root.prefWidthProperty().bind(gameContext.getRoot().widthProperty());
         root.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
 
-        gameContext.getChildren().add(root);
+        gameContext.getGazeDeviceManager().addEventFilter(canvas);
+        gameContext.getChildren().add(canvas);
+
     }
 
     @Override
