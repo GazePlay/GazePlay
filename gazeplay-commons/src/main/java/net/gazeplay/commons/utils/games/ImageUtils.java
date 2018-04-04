@@ -17,8 +17,7 @@ public class ImageUtils {
 
     public static List<Image> loadAllImagesInDirectory(String imagesDirectoryPath) {
         final File directoryFile = new File(imagesDirectoryPath);
-        List<Image> result = loadAllImagesInDirectory(directoryFile);
-        return result;
+        return loadAllImagesInDirectory(directoryFile);
     }
 
     private static List<Image> loadAllImagesInDirectory(File directoryFile) {
