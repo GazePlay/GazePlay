@@ -32,12 +32,12 @@ public class Utils {
 
     private static final String tempFolder = "temp";
 
-    public static Image[] getImages(String folder) {
+    private static Image[] getImages(String folder) {
 
         return getImages(folder, -1);
     }
 
-    public static Image[] getImages(final String folder, final int nbMax) {
+    private static Image[] getImages(final String folder, final int nbMax) {
 
         File directory = new File(folder);
 
@@ -83,7 +83,7 @@ public class Utils {
         return images;
     }
 
-    public static boolean isImage(String file) {
+    private static boolean isImage(String file) {
         String mimetype = new MimetypesFileTypeMap().getContentType(file);
         log.debug("{} : mimetype = {}", file, mimetype);
         return mimetype.startsWith("image");
@@ -213,7 +213,7 @@ public class Utils {
      *         but can be configured through interface and/or GazePlay.properties file
      */
 
-    public static String getFilesFolder() {
+    private static String getFilesFolder() {
 
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
         String filesFolder = config.getFiledir();
