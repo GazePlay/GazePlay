@@ -19,6 +19,7 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.AspectRatioImageRectangleUtil;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -70,7 +71,7 @@ public class Blocs implements GameLifeCycle {
         this.useTrail = useTrail;
         this.stats = stats;
 
-        images = Utils.images(Utils.getImagesFolder() + "blocs" + Utils.FILESEPARATOR);
+        images = ImageUtils.images(Utils.getImagesFolder() + "blocs" + Utils.FILESEPARATOR);
 
         hasColors = colors;
 

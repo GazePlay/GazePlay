@@ -9,6 +9,7 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -63,7 +64,7 @@ public class Memory implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        this.imagesAvail = Utils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
+        this.imagesAvail = ImageUtils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
 
         // If there is not enough images in the folder : complete with defaults images
         int nbImagesFolder = this.imagesAvail.length;
@@ -73,7 +74,7 @@ public class Memory implements GameLifeCycle {
             for (int i = 0; i < nbImagesFolder; i++) {
                 this.imagesAvail[i] = imagesAvail2[i];
             }
-            Image[] def = Utils.images(Utils.getImagesFolder() + "default" + Utils.FILESEPARATOR);
+            Image[] def = ImageUtils.images(Utils.getImagesFolder() + "default" + Utils.FILESEPARATOR);
             for (int i = nbImagesFolder; i < cardsCount / 2; i++) {
                 this.imagesAvail[i] = def[i - nbImagesFolder];
             }

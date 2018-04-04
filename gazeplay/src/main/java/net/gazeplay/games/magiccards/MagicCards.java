@@ -9,6 +9,7 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -51,7 +52,7 @@ public class MagicCards implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        images = Utils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
+        images = ImageUtils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
     }
 
     @Override

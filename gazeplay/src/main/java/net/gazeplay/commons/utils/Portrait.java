@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import lombok.Getter;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.Random;
@@ -14,7 +15,7 @@ import java.util.Random;
 public class Portrait extends Circle {
 
     public static Image[] loadAllImages() {
-        return Utils.images(Utils.getImagesFolder() + "portraits");
+        return ImageUtils.images(Utils.getImagesFolder() + "portraits");
     }
 
     @Getter
