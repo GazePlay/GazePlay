@@ -42,17 +42,19 @@ public class ImageUtils {
         List<Image> result = new ArrayList<>();
 
         final String[] filenames = directoryFile.list();
-        for (String imagePath : filenames) {
-            final String fileUrl = "file:" + directoryFile.getAbsoluteFile() + FILESEPARATOR + imagePath;
-            boolean added;
-            if (!imagePath.startsWith(".") && isImage(fileUrl)) { // Problems with filenames starting with a point on
-                // Windows
-                result.add(new Image(fileUrl));
-                added = true;
-            } else {
-                added = false;
+        if (filenames != null) {
+            for (String currentFilename : filenames) {
+                final String fileUrl = "file:" + directoryFile.getAbsoluteFile() + FILESEPARATOR + currentFilename;
+                boolean added;
+
+                if (isImage(currentFilename)) {
+                    result.add(new Image(fileUrl));
+                    added = true;
+                } else {
+                    added = false;
+                }
+                log.debug("{} : added = {}", fileUrl, added);
             }
-            log.debug("{} : added = {}", fileUrl, added);
         }
 
         return result;
@@ -84,9 +86,13 @@ public class ImageUtils {
         }
     }
 
-    private static boolean isImage(String file) {
-        String mimetype = new MimetypesFileTypeMap().getContentType(file);
-        log.debug("{} : mimetype = {}", file, mimetype);
+    private static boolean isImage(String filename) {
+        if (filename.startsWith(".")) {
+            // Problems with filenames starting with a point on Windows
+            return false;
+        }
+        String mimetype = new MimetypesFileTypeMap().getContentType(filename);
+        log.debug("{} : mimetype = {}", filename, mimetype);
         return mimetype.startsWith("image");
     }
 
