@@ -48,7 +48,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final boolean image;
 
-    private final Image[] photos;
+    private final List<Image> photos;
 
     private final List<Circle> fragments;
 
@@ -265,7 +265,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     protected Image newPhoto() {
 
-        return photos[new Random().nextInt(photos.length)];
+        return photos.get(new Random().nextInt(photos.size()));
 
     }
 }

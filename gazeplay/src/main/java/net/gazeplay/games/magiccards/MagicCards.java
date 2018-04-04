@@ -41,7 +41,7 @@ public class MagicCards implements GameLifeCycle {
 
     private final Stats stats;
 
-    private final Image[] images;
+    private final List<Image> images;
 
     private RoundDetails currentRoundDetails;
 
@@ -160,8 +160,8 @@ public class MagicCards implements GameLifeCycle {
     }
 
     private Image getRandomImage() {
-        int value = (int) Math.floor(Math.random() * images.length);
-        return images[value];
+        int value = (int) Math.floor(Math.random() * images.size());
+        return images.get(value);
     }
 
 }

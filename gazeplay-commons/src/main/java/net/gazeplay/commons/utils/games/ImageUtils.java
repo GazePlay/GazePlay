@@ -15,10 +15,10 @@ public class ImageUtils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
 
-    public static Image[] loadAllImagesInDirectory(String imagesDirectoryPath) {
+    public static List<Image> loadAllImagesInDirectory(String imagesDirectoryPath) {
         final File directoryFile = new File(imagesDirectoryPath);
-        List<Image> images = loadAllImagesInDirectory(directoryFile);
-        return images.toArray(new Image[images.size()]);
+        List<Image> result = loadAllImagesInDirectory(directoryFile);
+        return result;
     }
 
     private static List<Image> loadAllImagesInDirectory(File directoryFile) {
