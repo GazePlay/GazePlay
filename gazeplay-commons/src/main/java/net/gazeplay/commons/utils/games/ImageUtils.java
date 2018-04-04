@@ -14,37 +14,39 @@ public class ImageUtils {
 
     public static Image[] images(String imagesDirectoryPath) {
         final File directoryFile = new File(imagesDirectoryPath);
-        log.info("Try to find images in folder : {}", imagesDirectoryPath);
+        return images(directoryFile);
+    }
+
+    private static Image[] images(File directoryFile) {
+        log.info("Try to find images in folder : {}", directoryFile);
         if (directoryFile.exists()) {
-            Image[] images = getImages(imagesDirectoryPath);
+            Image[] images = getImages(directoryFile);
 
             if (images.length != 0) {
-                log.debug("I found {} images in folder : {}", images.length, imagesDirectoryPath);
+                log.debug("I found {} images in folder : {}", images.length, directoryFile);
                 return images;
             } else {
-                log.info("No image in folder : {}", imagesDirectoryPath);
+                log.info("No image in folder : {}", directoryFile);
                 return defaultImage();
             }
         } else {
-            log.info("Folder doesn't exist : {}", imagesDirectoryPath);
+            log.info("Folder doesn't exist : {}", directoryFile);
             return defaultImage();
         }
     }
 
-    private static Image[] getImages(String folder) {
-        return getImages(folder, -1);
+    private static Image[] getImages(File directoryFile) {
+        return getImages(directoryFile, -1);
     }
 
-    private static Image[] getImages(final String folder, final int nbMax) {
+    private static Image[] getImages(final File directoryFile, final int nbMax) {
+        ArrayList<Image> images = new ArrayList<>();
 
-        File directory = new File(folder);
-
-        ArrayList<Image> images = new ArrayList<>(directory.list().length);
-
-        for (String imagePath : directory.list()) {
-            final String fileUrl = "file:" + directory.getAbsoluteFile() + FILESEPARATOR + imagePath;
+        final String[] filenames = directoryFile.list();
+        for (String imagePath : filenames) {
+            final String fileUrl = "file:" + directoryFile.getAbsoluteFile() + FILESEPARATOR + imagePath;
             boolean added;
-            if (!imagePath.startsWith(".") && isImage(fileUrl)) { // Problems with files starting with a point on
+            if (!imagePath.startsWith(".") && isImage(fileUrl)) { // Problems with filenames starting with a point on
                 // Windows
                 images.add(new Image(fileUrl));
                 added = true;
