@@ -1,8 +1,5 @@
 package net.gazeplay.games.room;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.EventType;
 import javafx.geometry.Pos;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -10,8 +7,6 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -37,30 +32,13 @@ public class Room implements GameLifeCycle {
 
     private PerspectiveCamera camera;
 
-    private double mousePosX;
-    private double mousePosY;
-    private double mouseOldX;
-    private double mouseOldY;
-    private double mouseDeltaX;
-    private double mouseDeltaY;
-    private static final double MOUSE_SPEED = 0.1;
-    private static final double ROTATION_SPEED = 2.0;
-
-    private static double initPosGazeManagerX;
-    private static double initPosGazeManagerY;
-
-    private double gazePosX;
-    private double gazePosY;
-    private double gazeOldX;
-    private double gazeOldY;
-    private double gazeDeltaX;
-    private double gazeDeltaY;
     private javafx.geometry.Dimension2D dimension2D;
     private final Rotate rotateX;
     private final Rotate rotateY;
 
     private static double xLength;
     private static double yLength;
+
     // The positions of the sides compared to the origin
     private double positionCamera;
 
@@ -135,7 +113,7 @@ public class Room implements GameLifeCycle {
         rotateY = new Rotate(0, Rotate.Y_AXIS);
         xLength = dimension2D.getWidth();
         yLength = dimension2D.getHeight();
-        positionCamera = -xLength/2;
+        positionCamera = -xLength / 2;
     }
 
     @Override
@@ -205,8 +183,6 @@ public class Room implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouthWest);
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouth);
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouthEast);
-
-        final BooleanProperty gazeMove = new SimpleBooleanProperty(false);
 
         rectangleArrowNorthWest.setOnMouseMoved((event) -> {
             rotateX.setAngle(rotateX.getAngle() + 0.25);

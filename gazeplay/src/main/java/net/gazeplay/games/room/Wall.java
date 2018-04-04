@@ -4,27 +4,21 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.transform.Rotate;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GameContext;
-import net.gazeplay.commons.gaze.GazeMotionListener;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 @Slf4j
 public class Wall {
 
     // The size of the X of the cube(this is the length on the X axis)
-    private static double xLength;
+    private double xLength;
     // The size of the Y of the cube(this is the length on the Y axis)
-    private static double yLength;
+    private double yLength;
 
     // The short size of a side of the cube (this is the thickness of each side)
     private static final double thickness = 0.1;
 
     // The positions of the sides compared to the origin
-    private static double positionWall;
+    private double positionWall;
 
     // Image rightImage = new Image("data/room/front.jpg", WIDTH, HEIGHT, true, true);
 
@@ -65,7 +59,6 @@ public class Wall {
             this.box.setTranslateZ(positiveAxisMultiplier * positionWall);
             break;
         }
-
     }
 
     public Box getItem() {
