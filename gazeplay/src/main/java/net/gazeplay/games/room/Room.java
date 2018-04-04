@@ -135,7 +135,7 @@ public class Room implements GameLifeCycle {
         rotateY = new Rotate(0, Rotate.Y_AXIS);
         xLength = dimension2D.getWidth();
         yLength = dimension2D.getHeight();
-        positionCamera = -xLength / 2;
+        positionCamera = -xLength/2;
     }
 
     @Override
@@ -167,7 +167,7 @@ public class Room implements GameLifeCycle {
         camera = new PerspectiveCamera(true);
         camera.setVerticalFieldOfView(false);
 
-        camera.setNearClip(0.00001);
+        camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.getTransforms().addAll(rotateX, rotateY, new Translate(0, 0, positionCamera));
 

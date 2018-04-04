@@ -19,7 +19,7 @@ public class Wall {
     private static double xLength;
     // The size of the Y of the cube(this is the length on the Y axis)
     private static double yLength;
-    
+
     // The short size of a side of the cube (this is the thickness of each side)
     private static final double thickness = 0.1;
 
@@ -55,9 +55,13 @@ public class Wall {
         case "Z":
             this.box = new Box(xLength, yLength, thickness);
             this.positionWall = xLength / 2;
-            // this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, rightImage, rightImage, rightImage,
-            // rightImage));
-            this.box.setMaterial(new PhongMaterial(Color.BLUE));
+            if (positiveAxisMultiplier == 1) {
+                Image frontImage = new Image("data/room/front.jpg");
+                this.box.setMaterial(
+                        new PhongMaterial(Color.TRANSPARENT, frontImage, frontImage, frontImage, frontImage));
+            } else {
+                this.box.setMaterial(new PhongMaterial(Color.BLUE));
+            }
             this.box.setTranslateZ(positiveAxisMultiplier * positionWall);
             break;
         }
