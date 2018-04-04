@@ -12,12 +12,12 @@ public class ImageUtils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
 
-    public static Image[] images(String imagesDirectoryPath) {
+    public static Image[] loadAllImagesInDirectory(String imagesDirectoryPath) {
         final File directoryFile = new File(imagesDirectoryPath);
-        return images(directoryFile);
+        return loadAllImagesInDirectory(directoryFile);
     }
 
-    private static Image[] images(File directoryFile) {
+    private static Image[] loadAllImagesInDirectory(File directoryFile) {
         log.info("Try to find images in folder : {}", directoryFile);
         if (directoryFile.exists()) {
             Image[] images = getImages(directoryFile);

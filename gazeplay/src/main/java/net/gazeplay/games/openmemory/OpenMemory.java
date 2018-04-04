@@ -64,7 +64,8 @@ public class OpenMemory implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        this.imagesAvail = ImageUtils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
+        this.imagesAvail = ImageUtils
+                .loadAllImagesInDirectory(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
 
         // If there is not enough images in the folder : complete with defaults images
         int nbImagesDebut = this.imagesAvail.length;
@@ -74,7 +75,8 @@ public class OpenMemory implements GameLifeCycle {
             for (int i = 0; i < nbImagesDebut; i++) {
                 this.imagesAvail[i] = imagesAvail2[i];
             }
-            Image[] def = ImageUtils.images(Utils.getImagesFolder() + "default" + Utils.FILESEPARATOR);
+            Image[] def = ImageUtils
+                    .loadAllImagesInDirectory(Utils.getImagesFolder() + "default" + Utils.FILESEPARATOR);
             for (int i = nbImagesDebut; i < cardsCount / 2; i++) {
                 this.imagesAvail[i] = def[i - nbImagesDebut];
             }

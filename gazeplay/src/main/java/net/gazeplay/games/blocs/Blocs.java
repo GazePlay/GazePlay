@@ -71,7 +71,7 @@ public class Blocs implements GameLifeCycle {
         this.useTrail = useTrail;
         this.stats = stats;
 
-        images = ImageUtils.images(Utils.getImagesFolder() + "blocs" + Utils.FILESEPARATOR);
+        images = ImageUtils.loadAllImagesInDirectory(Utils.getImagesFolder() + "blocs" + Utils.FILESEPARATOR);
 
         hasColors = colors;
 
