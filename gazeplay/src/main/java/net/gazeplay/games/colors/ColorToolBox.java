@@ -19,6 +19,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -32,6 +33,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 @Slf4j
 public class ColorToolBox extends BorderPane {
@@ -58,7 +61,7 @@ public class ColorToolBox extends BorderPane {
     public static final String COLORS_IMAGES_PATH = "data/colors/images/";
 
     public static final String COLORIZE_BUTTON_IMAGE_NAME = COLORS_IMAGES_PATH + "palette.png";
-    public static final String STOP_COLORIZE_BUTTON_IMAGE_NAME = "data/common/images/error.png";
+    public static final String STOP_COLORIZE_BUTTON_IMAGE_PATH = "data/common/images/error.png";
 
     private final VBox mainPane;
 
@@ -329,39 +332,75 @@ public class ColorToolBox extends BorderPane {
         Button colorize;
         if (buttonImg != null) {
             colorize = new Button("", new ImageView(buttonImg));
+            colorize.setPrefHeight(buttonImg.getHeight());
         } else {
-            colorize = new Button();
+            colorize = new Button("C");
         }
 
         buttonImg = null;
         try {
-            buttonImg = new Image(STOP_COLORIZE_BUTTON_IMAGE_NAME, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX,
+            buttonImg = new Image(STOP_COLORIZE_BUTTON_IMAGE_PATH, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX,
                     false, true);
         } catch (IllegalArgumentException e) {
-            log.warn(e.toString() + " : " + STOP_COLORIZE_BUTTON_IMAGE_NAME);
+            log.warn(e.toString() + " : " + STOP_COLORIZE_BUTTON_IMAGE_PATH);
         }
 
         Button stopColorize;
         if (buttonImg != null) {
             stopColorize = new Button("", new ImageView(buttonImg));
+            stopColorize.setPrefHeight(stopColorize.getHeight());
         } else {
-            stopColorize = new Button("");
+            stopColorize = new Button("S");
         }
 
-        colorize.setOnAction((event) -> {
+        Configuration config = this.getColorsGame().getConfig();
+        GazeProgressIndicator stopColorizeButtonIndicator = new GazeProgressIndicator(stopColorize.getWidth(),
+                stopColorize.getHeight(), config.getFixationlength());
+
+        GazeProgressIndicator colorizeButtonIndicator = new GazeProgressIndicator(colorize.getWidth(),
+                colorize.getHeight(), config.getFixationlength());
+
+        colorizeButtonIndicator.getStyleClass().add("withoutTextProgress");
+        stopColorizeButtonIndicator.getStyleClass().add("withoutTextProgress");
+
+        Pane colorizeButtonPane = new StackPane(colorize, colorizeButtonIndicator);
+        Pane stopColorizeButtonPane = new StackPane(stopColorize, stopColorizeButtonIndicator);
+
+        EventHandler enableColorizeButton = (EventHandler) (Event event1) -> {
+
             colorsGame.setEnableColorization(false);
-            colorize.setVisible(false);
-            stopColorize.setVisible(true);
-        });
+            colorizeButtonPane.setVisible(false);
+            stopColorizeButtonPane.setVisible(true);
+        };
 
-        stopColorize.setOnAction((event) -> {
+        EventHandler disableColorizeButton = (EventHandler) (Event event1) -> {
             colorsGame.setEnableColorization(true);
-            stopColorize.setVisible(false);
-            colorize.setVisible(true);
-        });
-        stopColorize.setVisible(false);
+            stopColorizeButtonPane.setVisible(false);
+            colorizeButtonPane.setVisible(true);
+        };
 
-        Pane colorPane = new StackPane(colorize, stopColorize);
+        stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
+        colorizeButtonIndicator.setOnFinish(enableColorizeButton);
+
+        EventHandler stopColorizeIndicatorEvent = stopColorizeButtonIndicator.buildEventHandler();
+
+        EventHandler enableColorizeIndicatorEvent = colorizeButtonIndicator.buildEventHandler();
+
+        stopColorizeButtonPane.addEventFilter(MouseEvent.ANY, stopColorizeIndicatorEvent);
+        stopColorizeButtonPane.addEventFilter(GazeEvent.ANY, stopColorizeIndicatorEvent);
+
+        colorizeButtonPane.addEventFilter(MouseEvent.ANY, enableColorizeIndicatorEvent);
+        colorizeButtonPane.addEventFilter(GazeEvent.ANY, enableColorizeIndicatorEvent);
+
+        getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(stopColorizeButtonPane);
+        getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(colorizeButtonPane);
+
+        stopColorizeButtonPane.setVisible(false);
+
+        colorizeButtonIndicator.toFront();
+        stopColorizeButtonIndicator.toFront();
+
+        Pane colorPane = new StackPane(colorizeButtonPane, stopColorizeButtonPane);
 
         return colorPane;
     }

@@ -38,15 +38,8 @@ public class ColorBox extends StackPane {
         Configuration config = toolBox.getColorsGame().getConfig();
         this.progressIndicator = new GazeProgressIndicator(this.getWidth(), this.getHeight(),
                 config.getFixationlength());
-        // this.gazeProgressIndicator = new GazeProgressIndicator(50, 50, config.getFixationlength());
 
-        this.widthProperty().addListener((observable) -> {
-            progressIndicator.setPrefWidth(this.getWidth() - 10);
-        });
-
-        this.heightProperty().addListener((observable) -> {
-            progressIndicator.setPrefHeight(this.getHeight() - 10);
-        });
+        progressIndicator.getStyleClass().add("withoutTextProgress");
 
         button = new ToggleButton();
         button.setToggleGroup(group);

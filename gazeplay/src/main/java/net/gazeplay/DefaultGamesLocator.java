@@ -486,6 +486,22 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new DrawApplication(gameContext, stats);
                     }
                 }));
+
+        result.add(new GameSpec(new GameSummary("Colors", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new ColorsGamesStats(scene);
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new ColorsGame(gameContext);
+                    }
+                }));
+
         /*
          * result.add( new GameSpec(new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL,
          * "data/Thumbnails/piano.jpeg"), new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
