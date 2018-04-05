@@ -81,6 +81,14 @@ public class Utils {
         }
     }
 
+    public static InputStream getInputStream(String ressource) {
+
+        log.info("Try to play " + ressource);
+
+        return ClassLoader.getSystemResourceAsStream(ressource);
+
+    }
+
     /**
      * @return Default directory for GazePlay : in user's home directory, in a folder called GazePlay
      */

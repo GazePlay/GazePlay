@@ -2,6 +2,7 @@ package net.gazeplay.games.pianosight;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 
 public class Tile extends Arc {
@@ -9,6 +10,8 @@ public class Tile extends Arc {
     int note;
     EventHandler<Event> tileEventEnter;
     EventHandler<Event> tileEventExited;
+    Color color1;
+    Color color2;
 
     public Tile() {
         super();
