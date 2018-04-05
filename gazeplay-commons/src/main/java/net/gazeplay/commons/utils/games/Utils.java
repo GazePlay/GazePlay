@@ -80,13 +80,12 @@ public class Utils {
             log.error("Exception", e);
         }
     }
-    
+
     public static InputStream getInputStream(String ressource) {
 
         log.info("Try to play " + ressource);
 
         return ClassLoader.getSystemResourceAsStream(ressource);
-        
 
     }
 

@@ -11,6 +11,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,6 +49,7 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -75,8 +78,9 @@ public class Piano extends Parent implements GameLifeCycle {
     private char FirstChar;
 
     private Circle circ;
-    private List<Shape> TilesTab;
-    private List<Shape> ShapeTab;
+    private List<Tile> TilesTab;
+    private Jukebox Jukebox;
+    private String fileName;
 
     private final Stats stats;
 
@@ -85,9 +89,9 @@ public class Piano extends Parent implements GameLifeCycle {
     private final Instru instru;
 
     private Parser parser;
-    
+
     private int nbFragments = 5;
-    
+
     private final List<ImageView> fragments;
 
     // done
@@ -105,15 +109,14 @@ public class Piano extends Parent implements GameLifeCycle {
         E = new Tile();
         F = new Tile();
         G = new Tile();
-        
+
         this.fragments = buildFragments();
 
         this.getChildren().addAll(fragments);
 
-        //subC = new Circle(centerX, centerY, dimension2D.getHeight() / 4);
+        // subC = new Circle(centerX, centerY, dimension2D.getHeight() / 4);
 
-        TilesTab = new ArrayList<Shape>();
-        ShapeTab = new ArrayList<Shape>();
+        TilesTab = new ArrayList<Tile>();
 
         instru = new Instru();
 
@@ -123,34 +126,25 @@ public class Piano extends Parent implements GameLifeCycle {
          * gameContext.getChildren().add(imageRectangle);
          */
         gameContext.getChildren().add(this);
+
+       
+        Jukebox = new Jukebox(gameContext);
+        
+
     }
 
     private List<ImageView> buildFragments() {
         List<ImageView> fragments = new ArrayList<>(nbFragments);
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        
+
         for (int i = 0; i < nbFragments; i++) {
-        	
-        	String s;
-        	switch (i) {
-        	case 0:  s = "data/biboule/images/Yellow.png";
-        			break;
-            case 1:  s = "data/biboule/images/Orange.png";
-                     break;
-            case 2:  s = "data/biboule/images/Red.png";
-            		break;
-            case 3:  s = "data/biboule/images/Blue.png";
-            		break;
-            case 4:  s = "data/biboule/images/Green.png";
-            		break;
-            default: s = "data/biboule/images/Yellow.png";
-            		break;
-        	};
+
+            String s = "data/pianosight/images/" + i + ".png";
 
             ImageView fragment = new ImageView(new Image(s));
             fragment.setOpacity(0);
             fragment.setPreserveRatio(true);
-            fragment.setFitHeight( dimension2D.getHeight()/10);
+            fragment.setFitHeight(dimension2D.getHeight() / 10);
             fragment.setVisible(true);
             fragment.setX(-100);
             fragment.setY(-100);
@@ -167,15 +161,30 @@ public class Piano extends Parent implements GameLifeCycle {
         for (int i = 0; i < nbFragments; i++) {
 
             ImageView fragment = fragments.get(i);
-            
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(fragment.xProperty(), Xcenter, Interpolator.LINEAR)));
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(fragment.yProperty(), Ycenter, Interpolator.EASE_OUT)));
+
+            timeline.getKeyFrames().add(
+                    new KeyFrame(new Duration(1), new KeyValue(fragment.xProperty(), Xcenter, Interpolator.LINEAR)));
+            timeline.getKeyFrames().add(
+                    new KeyFrame(new Duration(1), new KeyValue(fragment.yProperty(), Ycenter, Interpolator.EASE_OUT)));
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
-            double XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth() ;
-            double YendValue = Math.random() * Screen.getPrimary().getBounds().getHeight();
+            int worh = (int) (Math.random() * 4);
+
+            double XendValue;
+            double YendValue;
+            if (worh == 0) {
+                XendValue = 0;
+                YendValue = Math.random() * Screen.getPrimary().getBounds().getHeight();
+            } else if (worh == 1) {
+                XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
+                YendValue = 0;
+            } else if (worh == 2) {
+                XendValue = Screen.getPrimary().getBounds().getWidth();
+                YendValue = Math.random() * Screen.getPrimary().getBounds().getHeight();
+            } else {
+                XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
+                YendValue = Screen.getPrimary().getBounds().getHeight();
+            }
 
             timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000),
                     new KeyValue(fragment.xProperty(), XendValue, Interpolator.LINEAR)));
@@ -189,7 +198,31 @@ public class Piano extends Parent implements GameLifeCycle {
         sequence.play();
 
     }
-    
+
+    public void loadMusic(boolean b) throws IOException {
+    	InputStream inputStream;
+    	Reader fileReader;
+    	if (b) {
+	    	fileName = Jukebox.getS();
+	        if (fileName == null) {
+	        	return;
+	        }else {
+	        	
+	        	File f = new File(fileName);
+	        	fileReader = new InputStreamReader(new FileInputStream(f), "UTF-8");
+	        }
+    	}else {
+    		fileName = "AuClairDeLaLune.txt";
+    		inputStream = Utils.getInputStream("data/pianosight/songs/"+fileName);
+    		fileReader = new InputStreamReader(inputStream, "UTF-8");
+    	}
+        parser = new Parser();
+        parser.bufRead = new BufferedReader(fileReader);
+        parser.myLine = null;
+        parser.myLine = parser.bufRead.readLine();
+        FirstChar = parser.nextChar();
+        TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+    }
     
     @Override
     public void launch() {
@@ -203,32 +236,29 @@ public class Piano extends Parent implements GameLifeCycle {
         this.getChildren().add(circ);
         this.getChildren().addAll(this.TilesTab);
         this.getChildren().get(this.getChildren().indexOf(circ)).toFront();
+        ImageView iv = new ImageView(new Image("data/pianosight/images/1.png"));
+        Button b = new Button("Open",iv);
+        b.setPrefWidth(dimension2D.getWidth()/7);
+        b.setPrefHeight(dimension2D.getHeight()/7);
+        iv.setPreserveRatio(true);
+        iv.setFitHeight(b.getPrefHeight() );
+        b.setOnMousePressed(evt -> {
+            try {
+				loadMusic(true);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        });
+        this.getChildren().add(b);
+        
         try {
-            parser = new Parser();
-           
-            InputStream inputStream =Utils.getInputStream("data/pianosight/songs/AuClairDeLaLune.txt");
-            Reader fileReader = new InputStreamReader(inputStream, "UTF-8");
-            parser.bufRead = new BufferedReader(fileReader);
-            parser.myLine = null;
-            parser.myLine = parser.bufRead.readLine();
-            FirstChar = parser.nextChar();
-            TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+
+            loadMusic(false);
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        Sequencer sequencer;
-        // Get default sequencer.
-        /*
-         * try { sequencer = MidiSystem.getSequencer(); if (sequencer != null) { sequencer.open(); try { Path filePath =
-         * Paths .get("gazeplay-data\\src\\main\\resources\\data\\pianosight\\songs\\RIVER.mid"); filePath =
-         * filePath.toAbsolutePath(); Sequence mySeq = MidiSystem.getSequence(filePath.toFile().getAbsoluteFile());
-         * sequencer.setSequence(mySeq); for (int i = 0; i < sequencer.getSequence().getTracks().length; i++) { for (int
-         * j = 0; j < sequencer.getSequence().getTracks()[i].size(); j++) {
-         * log.info("*****************I*********** = {}", i); log.info("*****************J*********** = {}",
-         * sequencer.getSequence().getTracks()[i].get(j).getMessage().getMessage()); } } // sequencer.start(); } catch
-         * (Exception e) { } } } catch (MidiUnavailableException e1) { e1.printStackTrace(); }
-         */
         stats.start();
     }
 
@@ -291,13 +321,11 @@ public class Piano extends Parent implements GameLifeCycle {
         EventHandler<Event> tileEventEnter = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-            	
-            	/*if (circ.isHover()&&((Tile)e.getTarget()).isHover()) {
-            		log.info("pas dedans");
-            	}else if(circ.isHover()) {
-            		((Tile)e.getTarget()).fireEvent(e);
-            		log.info("dans le cercle");
-            	}else*/
+
+                /*
+                 * if (circ.isHover()&&((Tile)e.getTarget()).isHover()) { log.info("pas dedans"); }else
+                 * if(circ.isHover()) { ((Tile)e.getTarget()).fireEvent(e); log.info("dans le cercle"); }else
+                 */
                 if (((Tile) e.getTarget()).note == getNoteIndex(FirstChar)) {
 
                     char precChar = FirstChar;
@@ -306,24 +334,24 @@ public class Piano extends Parent implements GameLifeCycle {
                         instru.note_on(getNote(precChar));
                         double x;
                         double y;
-                       
+
                         if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                        	MouseEvent me = (MouseEvent) e;
-                        	x = me.getX();
-                        	y = me.getY();
-                        }else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                        	GazeEvent ge = (GazeEvent) e;
-                        	x = ge.getX();
-                        	y = ge.getY();
-                        }else {
-                        	x = centerX + size*Math.cos(Math.toRadians(-theta));
-                            y = centerY + size*Math.sin(Math.toRadians(-theta));
-                        	explose(x,y);
-                            double theta = (((index+1) * 360) / 7 - origin);
-                             x = centerX + size*Math.cos(Math.toRadians(-theta));
-                             y = centerY + size*Math.sin(Math.toRadians(-theta));
+                            MouseEvent me = (MouseEvent) e;
+                            x = me.getX();
+                            y = me.getY();
+                        } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                            GazeEvent ge = (GazeEvent) e;
+                            x = ge.getX();
+                            y = ge.getY();
+                        } else {
+                            x = centerX + size * Math.cos(Math.toRadians(-theta));
+                            y = centerY + size * Math.sin(Math.toRadians(-theta));
+                            explose(x, y);
+                            double theta = (((index + 1) * 360) / 7 - origin);
+                            x = centerX + size * Math.cos(Math.toRadians(-theta));
+                            y = centerY + size * Math.sin(Math.toRadians(-theta));
                         }
-                        explose(x,y);
+                        explose(x, y);
                         if (FirstChar != '\0') {
                             if (TilesTab.get(getNoteIndex(FirstChar)).getFill() == Color.YELLOW) {
 
@@ -336,7 +364,7 @@ public class Piano extends Parent implements GameLifeCycle {
                                 TilesTab.get(getNoteIndex(precChar)).setFill(color1);
                                 TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
                             }
-                            
+
                         } else {
                             TilesTab.get(getNoteIndex(precChar)).setFill(color2);
                         }
@@ -348,7 +376,7 @@ public class Piano extends Parent implements GameLifeCycle {
                     TilesTab.get(((Tile) e.getTarget()).note).setFill(color2);
 
                 }
-               
+
             }
 
         };
