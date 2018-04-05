@@ -486,25 +486,39 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new DrawApplication(gameContext, stats);
                     }
                 }));
-        /*
-         * result.add( new GameSpec(new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL,
-         * "data/Thumbnails/piano.jpeg"), new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
-         * 
-         * @Override public Stats createNewStats(Scene scene) { return new Stats(scene, "Piano"); }
-         * 
-         * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.DimensionGameVariant
-         * gameVariant, Stats stats) { return new Piano(gameContext, stats); } }));
-         * 
-         * result.add( new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL,
-         * "data/Thumbnails/color.jpeg"),
-         * 
-         * new GameSpec.GameLauncher() {
-         * 
-         * @Override public Stats createNewStats(Scene scene) { return new ColorsGamesStats(scene); }
-         * 
-         * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats
-         * stats) { return new ColorsGame(gameContext); } }));
-         */
+
+        result.add(new GameSpec(new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "Piano");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new Piano(gameContext, stats);
+                    }
+                }));
+
+        result.add(
+                new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/color.jpeg"),
+
+                        new GameSpec.GameLauncher() {
+
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new ColorsGamesStats(scene);
+                            }
+
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.GameVariant gameVariant, Stats stats) {
+                                return new ColorsGame(gameContext);
+                            }
+                        }));
+
         log.info("Games found : {}", result.size());
 
         return result;
