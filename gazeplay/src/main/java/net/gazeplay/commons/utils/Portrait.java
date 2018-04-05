@@ -4,8 +4,10 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import lombok.Getter;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -13,14 +15,14 @@ import java.util.Random;
  */
 public class Portrait extends Circle {
 
-    public static Image[] loadAllImages() {
-        return Utils.images(Utils.getImagesFolder() + "portraits");
+    public static List<Image> loadAllImages() {
+        return ImageUtils.loadAllImagesInDirectory(Utils.getImagesSubDirectory("portraits"));
     }
 
     @Getter
     private final int initialRadius;
 
-    public Portrait(int initialRadius, RandomPositionGenerator randomPositionGenerator, Image[] availableImages) {
+    public Portrait(int initialRadius, RandomPositionGenerator randomPositionGenerator, List<Image> availableImages) {
         super(initialRadius);
         this.initialRadius = initialRadius;
 
@@ -42,12 +44,12 @@ public class Portrait extends Circle {
         return new Position((int) getCenterX() + (int) getTranslateX(), (int) getCenterY() + (int) getTranslateY());
     }
 
-    protected Image pickRandomImage(Image[] availableImages) {
-        int count = availableImages.length;
+    protected Image pickRandomImage(List<Image> availableImages) {
+        int count = availableImages.size();
         // int index = (int) (count * Math.random());
         Random r = new Random();
         int index = r.nextInt(count);
-        return availableImages[index];
+        return availableImages.get(index);
     }
 
 }

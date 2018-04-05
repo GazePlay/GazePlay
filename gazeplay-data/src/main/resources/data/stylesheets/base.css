@@ -117,3 +117,11 @@
     -fx-background-color: lightgrey;
     -fx-background-radius: 5em;
 }
+
+.withoutTextProgress {
+    -fx-padding: 0 0 -16 0;
+}
+
+.withoutTextProgress .percentage{
+    -fx-fill: null;
+}

@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -47,7 +48,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final boolean image;
 
-    private final Image[] photos;
+    private final List<Image> photos;
 
     private final List<Circle> fragments;
 
@@ -59,7 +60,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.stats = stats;
         this.image = useBackgroundImage;
 
-        photos = Utils.images(Utils.getImagesFolder() + "portraits" + Utils.FILESEPARATOR);
+        photos = ImageUtils.loadAllImagesInDirectory(Utils.getImagesSubDirectory("portraits"));
 
         if (useBackgroundImage) {
 
@@ -264,7 +265,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     protected Image newPhoto() {
 
-        return photos[new Random().nextInt(photos.length)];
+        return photos.get(new Random().nextInt(photos.size()));
 
     }
 }

@@ -15,6 +15,8 @@ import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.List;
+
 /**
  * Created by schwab on 26/12/2016.
  */
@@ -32,10 +34,10 @@ public class Target extends Portrait {
 
     private final Stats stats;
 
-    private final Image[] availableImages;
+    private final List<Image> availableImages;
 
     public Target(RandomPositionGenerator randomPositionGenerator, Hand hand, Stats stats, GameContext gameContext,
-            Image[] availableImages) {
+            List<Image> availableImages) {
 
         super(radius, randomPositionGenerator, availableImages);
 
