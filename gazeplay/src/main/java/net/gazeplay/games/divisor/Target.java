@@ -1,9 +1,7 @@
 package net.gazeplay.games.divisor;
 
-import java.util.Random;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
-import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -26,6 +24,9 @@ import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.List;
+import java.util.Random;
+
 /**
  *
  * @author vincent
@@ -41,13 +42,13 @@ class Target extends Portrait {
     private final EventHandler<Event> enterEvent;
     private final GameContext gameContext;
     private final Divisor gameInstance;
-    private final Image[] images;
+    private final List<Image> images;
     private final long startTime;
     private final Dimension2D dimension;
     private Image explosion;
 
-    public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats, Image[] images,
-            int level, long start, Divisor gameInstance) {
+    public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
+            List<Image> images, int level, long start, Divisor gameInstance) {
         super((int) 180 / (level + 1), randomPositionGenerator, images);
         this.level = level;
         this.difficulty = 3;

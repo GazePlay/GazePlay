@@ -3,7 +3,6 @@ package net.gazeplay.commons.utils.games;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.extern.slf4j.Slf4j;
@@ -11,13 +10,11 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import org.apache.commons.io.IOUtils;
 
-import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 
@@ -31,63 +28,6 @@ public class Utils {
     public static final String LINESEPARATOR = System.getProperties().getProperty("line.separator");
 
     private static final String tempFolder = "temp";
-
-    public static Image[] getImages(String folder) {
-
-        return getImages(folder, -1);
-    }
-
-    public static Image[] getImages(final String folder, final int nbMax) {
-
-        File directory = new File(folder);
-
-        ArrayList<Image> images = new ArrayList<>(directory.list().length);
-
-        for (String imagePath : directory.list()) {
-            final String fileUrl = "file:" + directory.getAbsoluteFile() + FILESEPARATOR + imagePath;
-            boolean added;
-            if (!imagePath.startsWith(".") && isImage(fileUrl)) { // Problems with files starting with a point on
-                // Windows
-                images.add(new Image(fileUrl));
-                added = true;
-            } else {
-                added = false;
-            }
-            log.debug("{} : added = {}", fileUrl, added);
-        }
-
-        Image[] Timages = obj2im(images.toArray());
-
-        if (nbMax <= 0) {
-            return Timages;
-        }
-
-        Image[] rimages = new Image[nbMax];
-
-        for (int i = 0; i < nbMax; i++) {
-            rimages[i] = Timages[(int) (Math.random() * Timages.length)];
-        }
-
-        return rimages;
-    }
-
-    private static Image[] obj2im(Object[] objects) {
-
-        Image[] images = new Image[objects.length];
-
-        for (int i = 0; i < objects.length; i++) {
-
-            images[i] = (Image) objects[i];
-        }
-
-        return images;
-    }
-
-    public static boolean isImage(String file) {
-        String mimetype = new MimetypesFileTypeMap().getContentType(file);
-        log.debug("{} : mimetype = {}", file, mimetype);
-        return mimetype.startsWith("image");
-    }
 
     public static MenuBar buildLicence() {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
@@ -114,57 +54,6 @@ public class Utils {
         } catch (IOException e) {
             return "Failed to load the license file";
         }
-    }
-
-    public static Image[] images(String folder) {
-
-        log.info("Try to find images in folder : " + folder);
-
-        if ((new File(folder)).exists()) {
-
-            Image[] T = getImages(folder);
-
-            if (T.length != 0) {
-
-                log.debug("I found " + T.length + " images in folder : " + folder);
-                return T;
-            } else {
-
-                log.info("No image in folder : " + folder);
-                return defaultImage();
-            }
-        } else {
-
-            log.info("Folder doesn't exist : " + folder);
-            return defaultImage();
-        }
-
-    }
-
-    private static Image[] defaultImage() {
-
-        Image[] defaultImages = new Image[10];
-        defaultImages[0] = new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/animal-807308_1920.png"));
-        defaultImages[1] = new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/bulldog-1047518_1920.jpg"));
-        defaultImages[2] = new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/businessman-607786_1920.png"));
-        defaultImages[3] = new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/businessman-607834_1920.png"));
-        defaultImages[4] = new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/crocodile-614386_1920.png"));
-        defaultImages[5] = new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/goldfish-30837_1280.png"));
-        defaultImages[6] = new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/graphic_missbone17.gif"));
-        defaultImages[7] = new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/nurse-37322_1280.png"));
-        defaultImages[8] = new Image(
-                ClassLoader.getSystemResourceAsStream("data/common/default/images/owl-161583_1280.png"));
-        defaultImages[9] = new Image(ClassLoader.getSystemResourceAsStream(
-                "data/common/default/images/pez-payaso-animales-el-mar-pintado-por-teoalmeyra-9844979.jpg"));
-        return defaultImages;
     }
 
     public static void playSound(String ressource) {
@@ -213,7 +102,7 @@ public class Utils {
      *         but can be configured through interface and/or GazePlay.properties file
      */
 
-    public static String getFilesFolder() {
+    private static String getFilesFolder() {
 
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
         String filesFolder = config.getFiledir();
@@ -226,9 +115,14 @@ public class Utils {
      * @return images directory for GazePlay : in the files directory another folder called images
      */
 
-    public static String getImagesFolder() {
+    public static File getBaseImagesDirectory() {
+        File filesDirectory = new File(getFilesFolder());
+        return new File(filesDirectory, "images");
+    }
 
-        return getFilesFolder() + FILESEPARATOR + "images" + FILESEPARATOR;
+    public static File getImagesSubDirectory(String subfolderName) {
+        File baseImagesDirectory = getBaseImagesDirectory();
+        return new File(baseImagesDirectory, subfolderName);
     }
 
     /**

@@ -7,6 +7,8 @@ import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.List;
+
 /**
  * Created by schwab on 12/08/2016.
  */
@@ -25,7 +27,7 @@ public class CreamPie implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
 
-        final Image[] availableImages = Portrait.loadAllImages();
+        final List<Image> availableImages = Portrait.loadAllImages();
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
 
         hand = new Hand();
