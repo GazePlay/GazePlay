@@ -60,7 +60,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.stats = stats;
         this.image = useBackgroundImage;
 
-        photos = ImageUtils.loadAllImagesInDirectory(Utils.getImagesFolder() + "portraits" + Utils.FILESEPARATOR);
+        photos = ImageUtils.loadAllImagesInDirectory(Utils.getImagesSubDirectory("portraits"));
 
         if (useBackgroundImage) {
 

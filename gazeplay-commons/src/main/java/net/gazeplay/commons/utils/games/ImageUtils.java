@@ -15,12 +15,7 @@ public class ImageUtils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
 
-    public static List<Image> loadAllImagesInDirectory(String imagesDirectoryPath) {
-        final File directoryFile = new File(imagesDirectoryPath);
-        return loadAllImagesInDirectory(directoryFile);
-    }
-
-    private static List<Image> loadAllImagesInDirectory(File directoryFile) {
+    public static List<Image> loadAllImagesInDirectory(File directoryFile) {
         log.info("Try to find images in folder : {}", directoryFile);
         if (directoryFile.exists()) {
             List<Image> images = getImages(directoryFile);

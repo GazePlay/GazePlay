@@ -3,7 +3,6 @@ package net.gazeplay.commons.utils.games;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import org.apache.commons.io.IOUtils;
 
-import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -117,9 +115,14 @@ public class Utils {
      * @return images directory for GazePlay : in the files directory another folder called images
      */
 
-    public static String getImagesFolder() {
+    public static File getBaseImagesDirectory() {
+        File filesDirectory = new File(getFilesFolder());
+        return new File(filesDirectory, "images");
+    }
 
-        return getFilesFolder() + FILESEPARATOR + "images" + FILESEPARATOR;
+    public static File getImagesSubDirectory(String subfolderName) {
+        File baseImagesDirectory = getBaseImagesDirectory();
+        return new File(baseImagesDirectory, subfolderName);
     }
 
     /**

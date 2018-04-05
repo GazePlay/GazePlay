@@ -64,8 +64,7 @@ public class Memory implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        this.imagesAvail = ImageUtils
-                .loadAllImagesInDirectory(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
+        this.imagesAvail = ImageUtils.loadAllImagesInDirectory(Utils.getImagesSubDirectory("magiccards"));
 
         // If there is not enough images in the folder : complete with defaults images
         int nbImagesFolder = this.imagesAvail.size();
@@ -74,8 +73,7 @@ public class Memory implements GameLifeCycle {
             this.imagesAvail = new ArrayList<>();
             this.imagesAvail.addAll(imagesAvail2);
 
-            List<Image> def = ImageUtils
-                    .loadAllImagesInDirectory(Utils.getImagesFolder() + "default" + Utils.FILESEPARATOR);
+            List<Image> def = ImageUtils.loadAllImagesInDirectory(Utils.getImagesSubDirectory("default"));
             for (int i = nbImagesFolder; i < cardsCount / 2; i++) {
                 this.imagesAvail.add(def.get(i - nbImagesFolder));
             }
