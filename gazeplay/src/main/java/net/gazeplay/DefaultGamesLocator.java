@@ -30,6 +30,8 @@ import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
 import net.gazeplay.games.divisor.Divisor;
 import net.gazeplay.games.divisor.DivisorStats;
+import net.gazeplay.games.moles.MoleStats;
+import net.gazeplay.games.moles.Moles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -500,6 +502,21 @@ public class DefaultGamesLocator implements GamesLocator {
                             Stats stats) {
                         return new ColorsGame(gameContext);
                     }
+                }));
+        result.add(new GameSpec(
+                new GameSummary("WackAMole", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/wackAMole.png"),
+                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new MoleStats(scene);
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new Moles(gameContext, stats);
+                    }
+
                 }));
 
         /*
