@@ -37,7 +37,8 @@ Cups and Balls,Gobelets Pass Pass,Cups and Balls,Bechertrick,Tazas y bolas
 Biboules,Biboules,Biballs,Biboles,Biboules
 Robots,Robots,Robots,Roboters,Robots
 Memory,Memory,Memory,Memory,Memory
-"EnableRewardSound,Activer le son « bravo »,""Enable """"Reward"""" sound"",""Aktiviere den Sound """"Bravo"""""",""Aktivigu la sonon """"Bravo""""""",,,,
+EnableRewardSound,Activer le son « bravo »,Enable Reward sound,Aktiviere den Sound Bravo,Aktivigu la sonon Bravo
+,,,,
 Music,Musique,Music,Musik,Musica
 Volume,Volume,Volume,Volume,Volume
 OpenMemory,Vise les pairs !,OpenMemory,Fokus auf Peers !,OpenMemory
