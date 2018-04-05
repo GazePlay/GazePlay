@@ -22,6 +22,7 @@ import net.gazeplay.games.memory.Memory;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
 import net.gazeplay.games.openmemory.OpenMemory;
+import net.gazeplay.games.pianosight.Piano;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.shooter.Shooter;
 import net.gazeplay.games.shooter.ShooterGamesStats;
@@ -39,9 +40,11 @@ import net.gazeplay.games.colors.ColorsGamesStats;
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
 
-    public static final String DEFAULT_AIMING_GAME_THUMBNAIL = "data/common/images/target.png";
+    public static final String DEFAULT_AIMING_GAME_THUMBNAIL = "data/common/images/skillsThumbnails/target.png";
 
-    public static final String DEFAULT_SEARCHING_GAME_THUMBNAIL = "data/common/images/searching-magnifying-glass.png";
+    public static final String DEFAULT_SEARCHING_GAME_THUMBNAIL = "data/common/images/skillsThumbnails/searching-magnifying-glass.png";
+
+    public static final String DEFAULT_MEMORIZATION_GAME_THUMBNAIL = "data/common/images/skillsThumbnails/male-brain.png";
 
     @Override
     public List<GameSpec> listGames() {
@@ -77,25 +80,15 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(
-                new GameSummary("Cups and Balls", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/cups.jpg"),
-                new GameSpec.GameVariantGenerator() {
-                    @Override
-                    public Set<GameSpec.GameVariant> getVariants() {
-                        return Sets.newLinkedHashSet(
-                                Lists.newArrayList(new GameSpec.CupsGameVariant(3), new GameSpec.CupsGameVariant(5)));
-                    }
-                }, new GameSpec.GameLauncher<Stats, GameSpec.CupsGameVariant>() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new CupsAndBallsStats(scene);
-                    }
-
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.CupsGameVariant gameVariant,
-                            Stats stats) {
-                        return new CupsAndBalls(gameContext, stats, gameVariant.getNoCups(), 3);
-                    }
-                }));
+        /*
+         * result.add(new GameSpec(new GameSummary("Room", DEFAULT_SEARCHING_GAME_THUMBNAIL), new
+         * GameSpec.GameLauncher() {
+         * 
+         * @Override public Stats createNewStats(Scene scene) { return new RoomStats(scene); }
+         * 
+         * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats
+         * stats) { return new Room(gameContext, stats); } }));
+         */
 
         result.add(new GameSpec(
                 new GameSummary("MagicCards", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/magic-card-1.jpg"),
@@ -200,9 +193,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(
-                new GameSummary("WhereIsTheAnimal", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/animals.jpeg"),
-                new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(new GameSummary("WhereIsTheAnimal", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+                "data/Thumbnails/animals.jpeg"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -233,7 +225,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("WhereIsTheColor", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/colors.jpeg"),
+                new GameSummary("WhereIsTheColor", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/colors.jpeg"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -264,7 +256,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("WhereIsIt", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/whereisit.jpeg"),
+                new GameSummary("WhereIsIt", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/whereisit.jpeg"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -326,49 +318,87 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new DivisorStats(scene);
-            }
+        result.add(new GameSpec(
+                new GameSummary("Cups and Balls", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/cups.jpg"),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(
+                                Lists.newArrayList(new GameSpec.CupsGameVariant(3), new GameSpec.CupsGameVariant(5)));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.CupsGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new CupsAndBallsStats(scene);
+                    }
 
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
-                return new Divisor(gameContext, stats);
-            }
-        }));
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.CupsGameVariant gameVariant,
+                            Stats stats) {
+                        return new CupsAndBalls(gameContext, stats, gameVariant.getNoCups(), 3);
+                    }
+                }));
 
         result.add(
-                new GameSpec(new GameSummary("Memory", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/memory.jpeg"),
-                        new GameSpec.GameVariantGenerator() {
-                            @Override
-                            public Set<GameSpec.GameVariant> getVariants() {
-                                return Sets.newLinkedHashSet(Lists.newArrayList(
-
-                                        new GameSpec.DimensionGameVariant(2, 2),
-
-                                        new GameSpec.DimensionGameVariant(2, 3),
-
-                                        new GameSpec.DimensionGameVariant(3, 2),
-
-                                        new GameSpec.DimensionGameVariant(3, 4),
-
-                                        new GameSpec.DimensionGameVariant(4, 3)
-
-                        ));
-                            }
-                        }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/divisor.jpeg"),
+                        new GameSpec.GameLauncher() {
                             @Override
                             public Stats createNewStats(Scene scene) {
-                                return new MagicCardsGamesStats(scene);
+                                return new DivisorStats(scene);
                             }
 
                             @Override
                             public GameLifeCycle createNewGame(GameContext gameContext,
-                                    GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                                return new Memory(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
+                                    GameSpec.GameVariant gameVariant, Stats stats) {
+                                return new Divisor(gameContext, stats, false);
                             }
                         }));
+
+        result.add(
+                new GameSpec(new GameSummary("Lapins", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/rabbits.jpeg"),
+                        new GameSpec.GameLauncher() {
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new DivisorStats(scene);
+                            }
+
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.GameVariant gameVariant, Stats stats) {
+                                return new Divisor(gameContext, stats, true);
+                            }
+                        }));
+
+        result.add(new GameSpec(
+                new GameSummary("Memory", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/memory.jpeg"),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.DimensionGameVariant(2, 2),
+
+                                new GameSpec.DimensionGameVariant(2, 3),
+
+                                new GameSpec.DimensionGameVariant(3, 2),
+
+                                new GameSpec.DimensionGameVariant(3, 4),
+
+                                new GameSpec.DimensionGameVariant(4, 3)
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new MagicCardsGamesStats(scene);
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new Memory(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
+                    }
+                }));
         result.add(new GameSpec(
                 new GameSummary("OpenMemory", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/memory.jpeg"),
                 new GameSpec.GameVariantGenerator() {
@@ -401,37 +431,6 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(
-                new GameSummary("Cups and Balls", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/cups.jpg"),
-                new GameSpec.GameVariantGenerator() {
-                    @Override
-                    public Set<GameSpec.GameVariant> getVariants() {
-                        return Sets.newLinkedHashSet(Lists.newArrayList(
-
-                                new GameSpec.CupsGameVariant(2),
-
-                                new GameSpec.CupsGameVariant(3),
-
-                                new GameSpec.CupsGameVariant(4),
-
-                                new GameSpec.CupsGameVariant(5),
-
-                                new GameSpec.CupsGameVariant(6)
-
-                ));
-                    }
-                }, new GameSpec.GameLauncher<Stats, GameSpec.CupsGameVariant>() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new CupsAndBallsStats(scene);
-                    }
-
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.CupsGameVariant gameVariant,
-                            Stats stats) {
-                        return new CupsAndBalls(gameContext, stats, gameVariant.getNoCups(), 3);
-                    }
-                }));
-
         result.add(new GameSpec(new GameSummary("Video Player with Feedback", DEFAULT_SEARCHING_GAME_THUMBNAIL,
                 "data/Thumbnails/youtube-logo-128.png"), new GameSpec.GameVariantGenerator() {
                     @Override
@@ -444,9 +443,21 @@ public class DefaultGamesLocator implements GamesLocator {
                                         "Z4C82eyhwgU"),
 
                                 new GameSpec.StringGameVariant("Caminandes 3: Llamigos - Funny 3D Animated Short",
-                                        "SkVqJ1SGeL0")
+                                        "SkVqJ1SGeL0"),
 
-                ));
+                                new GameSpec.StringGameVariant("1H de Petit Ours Brun", "PUIou9gUVos"),
+
+                                new GameSpec.StringGameVariant("Zou s'amuse", "f9qKQ5snhOI"),
+
+                                new GameSpec.StringGameVariant("Tchoupi et ses amis", "aPX6q1HC4Ho"),
+
+                                // new GameSpec.StringGameVariant("Tchoupi à l'école", "a_KH2U2wqok"),
+
+                                new GameSpec.StringGameVariant("Princesse sofia rencontre Belle", "szptWdF2B5s")
+
+                        // new GameSpec.StringGameVariant("Lulu Vroumette", "2Eg7r6WGWhQ")
+
+                        ));
                     }
                 }, new GameSpec.GameLauncher<Stats, GameSpec.StringGameVariant>() {
                     @Override
@@ -491,6 +502,25 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
+        /*
+         * result.add( new GameSpec(new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL,
+         * "data/Thumbnails/piano.jpeg"), new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+         * 
+         * @Override public Stats createNewStats(Scene scene) { return new Stats(scene, "Piano"); }
+         * 
+         * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.DimensionGameVariant
+         * gameVariant, Stats stats) { return new Piano(gameContext, stats); } }));
+         * 
+         * result.add( new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL,
+         * "data/Thumbnails/color.jpeg"),
+         * 
+         * new GameSpec.GameLauncher() {
+         * 
+         * @Override public Stats createNewStats(Scene scene) { return new ColorsGamesStats(scene); }
+         * 
+         * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats
+         * stats) { return new ColorsGame(gameContext); } }));
+         */
         log.info("Games found : {}", result.size());
 
         return result;

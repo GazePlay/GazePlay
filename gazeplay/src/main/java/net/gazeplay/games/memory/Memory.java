@@ -9,6 +9,7 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -39,7 +40,7 @@ public class Memory implements GameLifeCycle {
 
     private final Stats stats;
 
-    private Image[] imagesAvail;
+    private List<Image> imagesAvail;
 
     /*
      * HashMap of images selected for this game and their associated id The id is the same for the 2 same images
@@ -63,7 +64,20 @@ public class Memory implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        this.imagesAvail = Utils.images(Utils.getImagesFolder() + "magiccards" + Utils.FILESEPARATOR);
+        this.imagesAvail = ImageUtils.loadAllImagesInDirectory(Utils.getImagesSubDirectory("magiccards"));
+
+        // If there is not enough images in the folder : complete with defaults images
+        int nbImagesFolder = this.imagesAvail.size();
+        if (nbImagesFolder < cardsCount / 2) {
+            List<Image> imagesAvail2 = this.imagesAvail;
+            this.imagesAvail = new ArrayList<>();
+            this.imagesAvail.addAll(imagesAvail2);
+
+            List<Image> def = ImageUtils.loadAllImagesInDirectory(Utils.getImagesSubDirectory("default"));
+            for (int i = nbImagesFolder; i < cardsCount / 2; i++) {
+                this.imagesAvail.add(def.get(i - nbImagesFolder));
+            }
+        }
 
     }
 
@@ -75,12 +89,12 @@ public class Memory implements GameLifeCycle {
         Random rdm = new Random();
         for (int i = 0; i < cardsCount / 2; i++) {
             do {
-                alea = rdm.nextInt(imagesAvail.length);
+                alea = rdm.nextInt(imagesAvail.size());
             } while (indUsed.contains(alea));
             indUsed.add(alea);
             // We put 2 times the couple (image, id) in the hashmap
-            res.put(i, imagesAvail[alea]);
-            res.put(i, imagesAvail[alea]);
+            res.put(i, imagesAvail.get(alea));
+            res.put(i, imagesAvail.get(alea));
         }
         return res;
     }

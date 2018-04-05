@@ -1,15 +1,13 @@
 package net.gazeplay.games.cups;
 
-import javafx.scene.effect.Lighting;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GameContext;
 
 @Slf4j
-public class Ball {
+public final class Ball {
 
     @Getter
     @Setter
@@ -21,7 +19,7 @@ public class Ball {
     @Setter
     private Cup theCup;
     @Getter
-    private Circle item;
+    private final Circle item;
 
     @Getter
     private double XCenterPos;
@@ -38,8 +36,8 @@ public class Ball {
     }
 
     public void updatePosition(double newXPosCup, double newYPosCup) {
-        this.XCenterPos = newXPosCup + theCup.getItem().getWidth() / 2;
-        this.YCenterPos = newYPosCup + theCup.getItem().getHeight() - 2 * radius;
+        this.XCenterPos = newXPosCup + theCup.getItem().getFitWidth() / 2;
+        this.YCenterPos = newYPosCup + theCup.getItem().getFitHeight() - 2 * radius;
         item.setCenterX(XCenterPos);
         item.setCenterY(YCenterPos);
     }

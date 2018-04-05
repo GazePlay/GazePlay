@@ -18,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
@@ -29,9 +28,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.shooter.Point;
 import net.gazeplay.games.shooter.Target;
 
-/**
- * Created by schwab on 28/08/2016.
- */
 @Slf4j
 public class Shooter extends Parent implements GameLifeCycle {
 
@@ -55,6 +51,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     private String date;
     private Label text;
+    private Label textb;
     private int score;
 
     private StackPane hand;
@@ -97,16 +94,20 @@ public class Shooter extends Parent implements GameLifeCycle {
                     double x = ((MouseEvent) e).getX();
                     double y = ((MouseEvent) e).getY();
                     hand.setRotate(getAngle(new Point(x, y)));
-                } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    double x = ((GazeEvent) e).getX();
-                    double y = ((GazeEvent) e).getY();
-                    hand.setRotate(getAngle(new Point(x, y)));
                 }
+            }
+        };
 
+        EventHandler<GazeEvent> handEventGaze = new EventHandler<GazeEvent>() {
+            @Override
+            public void handle(GazeEvent e) {
+                double x = e.getX();
+                double y = e.getY();
+                hand.setRotate(getAngle(new Point(x, y)));
             }
         };
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
-        imageRectangle.addEventFilter(GazeEvent.ANY, handEvent);
+        this.addEventFilter(GazeEvent.ANY, handEventGaze);
 
         blue = new Image("data/" + gameType + "/images/Blue.png");
         green = new Image("data/" + gameType + "/images/Green.png");
@@ -137,10 +138,12 @@ public class Shooter extends Parent implements GameLifeCycle {
             public void handle(Event e) {
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                    enter((Target) e.getTarget());
-                    stats.incNbGoals();
-                    stats.start();
+                    if (!((Target) e.getTarget()).done) {
+                        ((Target) e.getTarget()).done = true;
+                        enter((Target) e.getTarget());
+                        stats.incNbGoals();
+                        stats.start();
+                    }
                 }
             }
         };
@@ -237,12 +240,16 @@ public class Shooter extends Parent implements GameLifeCycle {
     public void launch() {
 
         Label sc = new Label();
+        Label tc = new Label();
 
         String cst;
         if (gameType.equals("biboule")) {
             cst = date + "\n\t" + "Score:" + score;
         } else {// equals robot
-            cst = "Score:" + score;
+            tc.setText("Score:");
+            tc.setTextFill(Color.WHITE);
+            cst = "" + score;
+
         }
         sc.setText(cst);
         sc.setTextFill(Color.WHITE);
@@ -272,14 +279,25 @@ public class Shooter extends Parent implements GameLifeCycle {
         iv.setLayoutY(dimension2D.getHeight() / cst2);
 
         this.getChildren().add(iv);
-        hand = (StackPane) this.getChildren().get(0);
+        hand = (StackPane) this.getChildren().get(this.getChildren().indexOf(iv));
         hand.toFront();
 
-        sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight() / 18));
-
         if (gameType.equals("biboule")) {
+            sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight() / 18));
             sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
             sc.setLayoutY(1.8 * dimension2D.getHeight() / 21);
+        } else {
+            sc.setFont(Font.font(dimension2D.getHeight() / 20));
+            sc.setLineSpacing(10);
+            sc.setLayoutX(16 * dimension2D.getWidth() / 29.7);
+            sc.setLayoutY(15.2 * dimension2D.getHeight() / 21);
+
+            tc.setFont(Font.font(dimension2D.getHeight() / 20));
+            tc.setLineSpacing(10);
+            tc.setLayoutX(15 * dimension2D.getWidth() / 29.7);
+            tc.setLayoutY(14 * dimension2D.getHeight() / 21);
+
+            this.getChildren().add(tc);
         }
         text = sc;
         this.getChildren().add(sc);
@@ -294,6 +312,7 @@ public class Shooter extends Parent implements GameLifeCycle {
             cage.setLayoutY(8.5 * dimension2D.getHeight() / 21);
             y = dimension2D.getHeight() / 6.5;
         } else {// equals robot
+            textb = tc;
             cage.setLayoutY(3.5 * dimension2D.getHeight() / 21);
             y = dimension2D.getHeight() / 8.5;
         }
@@ -304,11 +323,21 @@ public class Shooter extends Parent implements GameLifeCycle {
         left = true;
         this.getChildren().add(cage);
 
-        for (int i = 0; i < 5; i++) {
-            newCircle();
-        }
+        Timeline waitbeforestart = new Timeline();
+        waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
+        waitbeforestart.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
 
-        magicCage();
+                for (int i = 0; i < 5; i++) {
+                    newCircle();
+                }
+
+                magicCage();
+            }
+
+        });
+        waitbeforestart.play();
 
         stats.start();
 
@@ -349,7 +378,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         if (gameType.equals("biboule")) {
             cst = date + "\n\t" + "Score:" + score++;
         } else {// equals robot
-            cst = "Score:" + score++;
+            cst = "" + score++;
         }
 
         text.setText(cst);
@@ -358,8 +387,8 @@ public class Shooter extends Parent implements GameLifeCycle {
         double max = Math.floor(3);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
         Utils.playSound("data/" + gameType + "/sounds/hand_sound" + r + ".mp3");
-
         t.getChildren().get(0).setOpacity(1);
+
         hand.getChildren().get(1).setOpacity(1);
         FadeTransition ft = new FadeTransition(Duration.millis(500), t);
         ft.setFromValue(1);
@@ -367,14 +396,40 @@ public class Shooter extends Parent implements GameLifeCycle {
         FadeTransition ft2 = new FadeTransition(Duration.millis(500), hand.getChildren().get(1));
         ft2.setFromValue(1);
         ft2.setToValue(0);
-        ParallelTransition st = new ParallelTransition();
-        st.getChildren().addAll(ft, ft2);
-        st.play();
 
-        st.setOnFinished(new EventHandler<ActionEvent>() {
+        if (t.animDone) {
+            t.animDone = false;
+            ScaleTransition st = new ScaleTransition(Duration.millis(100), hand);
+            st.setFromX(1);
+            st.setFromY(1);
+            st.setToX(0.7);
+            st.setToY(0.7);
+            ScaleTransition st2 = new ScaleTransition(Duration.millis(100), hand);
+            st.setFromX(0.7);
+            st.setFromY(0.7);
+            st2.setToX(1);
+            st2.setToY(1);
+            SequentialTransition seqt = new SequentialTransition();
+            seqt.getChildren().addAll(st, st2);
+            seqt.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    t.animDone = true;
+                }
+            });
+            seqt.play();
+        }
+
+        ParallelTransition pt = new ParallelTransition();
+        pt.getChildren().addAll(ft, ft2);
+        pt.play();
+
+        pt.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                getChildren().remove((getChildren().indexOf(t)));
+                int i = getChildren().indexOf(t);
+                if (i != -1)
+                    getChildren().remove(i);
                 newCircle();
             }
         });
@@ -390,6 +445,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
+
         double x = (cage.getBoundsInParent().getMinX());
         sp.setLayoutX(x);
         double y = (cage.getBoundsInParent().getMinY() + cage.getBoundsInParent().getMaxY()) / 2;
@@ -453,6 +509,9 @@ public class Shooter extends Parent implements GameLifeCycle {
         } else {
             this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
             text.toBack();
+            if (!gameType.equals("biboule")) {
+                textb.toBack();
+            }
             cage.toBack();
         }
 

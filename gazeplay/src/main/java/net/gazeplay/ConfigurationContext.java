@@ -121,7 +121,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
-        grid.setHgap(100);
+        grid.setHgap(50);
         grid.setVgap(50);
         // grid.setPadding(new Insets(50, 50, 50, 50));
 
@@ -199,7 +199,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            I18NText label = new I18NText(translator, "Menu Orientation (restart game to take effect)", COLON);
+            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
             ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);

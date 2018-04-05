@@ -1,14 +1,20 @@
 package net.gazeplay.games.divisor;
 
-import java.util.Random;
-import javafx.animation.Transition;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
@@ -17,6 +23,9 @@ import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
 import net.gazeplay.commons.utils.stats.Stats;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -30,34 +39,69 @@ class Target extends Portrait {
     private final Stats stats;
     private final int difficulty;
     private final int level;
-    private final int speed;
     private final EventHandler<Event> enterEvent;
     private final GameContext gameContext;
-    private final Image[] images;
+    private final Divisor gameInstance;
+    private final List<Image> images;
+    private final long startTime;
+    private final Dimension2D dimension;
+    private Image explosion;
 
-    public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats, Image[] images,
-            int level) {
-        super((int) 200 / (level + 1), randomPositionGenerator, images);
+    public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
+            List<Image> images, int level, long start, Divisor gameInstance) {
+        super((int) 180 / (level + 1), randomPositionGenerator, images);
         this.level = level;
         this.difficulty = 3;
-        this.speed = 1;
         this.randomPosGenerator = randomPositionGenerator;
         this.gameContext = gameContext;
+        this.gameInstance = gameInstance;
         this.stats = stats;
         this.images = images;
+        this.startTime = start;
+        this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        try {
+            this.explosion = new Image("data/divisor/images/explosion.png");
+        } catch (Exception e) {
+            log.info("Fichier non trouvé " + e.getMessage());
+        }
 
         enterEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    enter();
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                    double x = ((MouseEvent) e).getX();
+                    double y = ((MouseEvent) e).getY();
+                    enter((int) x, (int) y);
+                } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    double x = ((GazeEvent) e).getX();
+                    double y = ((GazeEvent) e).getY();
+                    enter((int) x, (int) y);
                 }
             }
         };
 
-        this.addEventFilter(MouseEvent.ANY, enterEvent);
-        this.addEventHandler(GazeEvent.ANY, enterEvent);
+        if (level != 0) {
+            Timeline waitbeforestart = new Timeline();
+
+            waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
+            waitbeforestart.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+
+                    addevent();
+
+                }
+
+            });
+            waitbeforestart.play();
+        } else {
+            addevent();
+        }
+
+        if (this.getPosition().getY() + this.getRadius() > (int) dimension.getHeight()) {
+            this.setPosition(new Position(this.getPosition().getX(), this.getPosition().getY() - this.getRadius() * 2));
+        }
 
         move();
 
@@ -65,59 +109,122 @@ class Target extends Portrait {
     }
 
     private void move() {
-        final int length = speed * 1000;
+        Target bubble = this;
 
-        final Position newPosition = randomPosGenerator.newRandomPosition(getInitialRadius());
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(20), new EventHandler<ActionEvent>() {
+            int dx = randomDirection();
+            int dy = randomDirection();
 
-        TranslateTransition translation = new TranslateTransition(new Duration(length), this);
-        translation.setByX(-this.getCenterX() + newPosition.getX());
-        translation.setByY(-this.getCenterY() + newPosition.getY());
-        translation.setOnFinished(new EventHandler<ActionEvent>() {
+            double height = dimension.getHeight();
+            double width = dimension.getWidth();
+
             @Override
-            public void handle(ActionEvent actionEvent) {
+            public void handle(ActionEvent t) {
+                Position newPos = new Position(bubble.getPosition().getX() + dx, bubble.getPosition().getY() + dy);
+                bubble.setPosition(newPos);
 
-                Target.this.setScaleX(1);
-                Target.this.setScaleY(1);
-                Target.this.setScaleZ(1);
+                if (newPos.getX() <= (bubble.getRadius()) || newPos.getX() >= (width - bubble.getRadius())) {
+                    dx = -dx;
+                }
 
-                Target.this.setPosition(newPosition);
-
-                Target.this.setTranslateX(0);
-                Target.this.setTranslateY(0);
-                Target.this.setTranslateZ(0);
-
-                move();
+                if (newPos.getY() <= (bubble.getRadius()) || newPos.getY() >= (height - bubble.getRadius())) {
+                    dy = -dy;
+                }
             }
-        });
-
-        currentTranslation = translation;
-        translation.play();
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
-    private void enter() {
-        Transition runningTranslation = currentTranslation;
-        if (runningTranslation != null) {
-            runningTranslation.stop();
+    private void enter(int x, int y) {
+        if (currentTranslation != null) {
+            currentTranslation.stop();
         }
 
+        explose(x, y);
+    }
+
+    public void explose(int x, int y) {
         this.removeEventFilter(MouseEvent.ANY, enterEvent);
         this.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-        this.gameContext.getChildren().remove(this);
+        Circle c = new Circle();
+        c.setCenterX(x);
+        c.setCenterY(y);
+        c.setRadius((int) 180 / (level + 1));
+        c.setFill(new ImagePattern(explosion, 0, 0, 1, 1, true));
+        this.gameContext.getChildren().add(c);
 
-        if (this.level < this.difficulty) {
-            createChildren();
-        } else if (this.level == this.difficulty && this.gameContext.getChildren().isEmpty()) {
-            log.info("VICTOIRE !!!");
-        }
+        FadeTransition ft = new FadeTransition(Duration.millis(500), this);
+        ft.setFromValue(1);
+        ft.setToValue(0);
+
+        /*
+         * ParallelTransition pt = new ParallelTransition(); pt.getChildren().add(ft); pt.play();
+         */
+
+        gameContext.getChildren().remove(this);
+
+        ft.setOnFinished(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                gameContext.getChildren().remove(c);
+                if (level < difficulty) {
+                    createChildren(x, y);
+                } else if (gameContext.getChildren().isEmpty()) {
+                    long totalTime = (System.currentTimeMillis() - startTime) / 1000;
+                    Label l = new Label("Temps : " + Long.toString(totalTime) + "s");
+                    l.setTextFill(Color.WHITE);
+                    l.setFont(Font.font(50));
+                    l.setLineSpacing(10);
+                    l.setLayoutX(15);
+                    l.setLayoutY(14);
+                    gameContext.getChildren().add(l);
+                    gameContext.playWinTransition(50, new EventHandler<ActionEvent>() {
+
+                        @Override
+                        public void handle(ActionEvent actionEvent) {
+                            gameInstance.dispose();
+                            gameContext.clear();
+                            gameInstance.launch();
+                        }
+                    });
+                }
+            }
+        });
+
+        ft.play();
     }
 
-    private void createChildren() {
+    private int randomDirection() {
+        Random r = new Random();
+        int x = r.nextInt(3) + 4;
+        if (r.nextInt(2) >= 1) {
+            x = -x;
+        }
+        return x;
+    }
+
+    public void addevent() {
+        this.addEventFilter(MouseEvent.ANY, enterEvent);
+        this.addEventFilter(GazeEvent.ANY, enterEvent);
+
+        gameContext.getGazeDeviceManager().addEventFilter(this);
+    }
+
+    private void createChildren(int x, int y) {
         for (int i = 0; i < 2; i++) {
-            Target target = new Target(this.gameContext, this.randomPosGenerator, this.stats, this.images,
-                    this.level + 1);
-            this.gameContext.getChildren().add(target);
+            Target target = new Target(gameContext, randomPosGenerator, stats, images, level + 1, startTime,
+                    gameInstance);
+
+            if (y + target.getRadius() > (int) dimension.getHeight()) {
+                y = (int) dimension.getHeight() - (int) target.getRadius() * 2;
+            }
+
+            target.setPosition(new Position(x, y));
+            gameContext.getChildren().add(target);
+
         }
     }
-
 }

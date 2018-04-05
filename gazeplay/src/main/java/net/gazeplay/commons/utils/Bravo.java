@@ -16,6 +16,7 @@ import java.net.URL;
 import lombok.Setter;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 /**
  * Created by schwab on 30/10/2016.
@@ -113,7 +114,7 @@ public class Bravo extends Rectangle {
 
             if (this.enableRewardSound) {
                 log.debug("Playing sound animation ...");
-                soundClip.play(0.2);
+                soundClip.play(BackgroundMusicManager.getInstance().volumeProperty().getValue());
             }
 
             log.debug("Finished JavaFX task");

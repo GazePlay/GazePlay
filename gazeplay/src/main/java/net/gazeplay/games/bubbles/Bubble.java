@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -47,7 +48,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final boolean image;
 
-    private final Image[] photos;
+    private final List<Image> photos;
 
     private final List<Circle> fragments;
 
@@ -59,7 +60,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.stats = stats;
         this.image = useBackgroundImage;
 
-        photos = Utils.images(Utils.getImagesFolder() + "portraits" + Utils.FILESEPARATOR);
+        photos = ImageUtils.loadAllImagesInDirectory(Utils.getImagesSubDirectory("portraits"));
 
         if (useBackgroundImage) {
 
@@ -132,7 +133,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         return fragments;
     }
 
-    public void explose(Circle C) {
+    public void explose(double Xcenter, double Ycenter) {
 
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
@@ -145,9 +146,9 @@ public class Bubble extends Parent implements GameLifeCycle {
              * fragment.setCenterX(C.getCenterX()); fragment.setCenterY(C.getCenterY()); fragment.setOpacity(1);
              */
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(fragment.centerXProperty(), C.getCenterX(), Interpolator.LINEAR)));
+                    new KeyValue(fragment.centerXProperty(), Xcenter, Interpolator.LINEAR)));
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(fragment.centerYProperty(), C.getCenterY(), Interpolator.EASE_OUT)));
+                    new KeyValue(fragment.centerYProperty(), Ycenter, Interpolator.EASE_OUT)));
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
             double XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
@@ -183,6 +184,9 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private void enter(Circle target) {
 
+        double Xcenter = target.getCenterX();
+        double Ycenter = target.getCenterY();
+
         Timeline timeline = new Timeline();
 
         timeline.getKeyFrames()
@@ -194,7 +198,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         target.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-        explose(target);
+        explose(Xcenter, Ycenter); // instead of C to avoid wrong position of the explosion
     }
 
     private void newCircle() {
@@ -261,7 +265,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     protected Image newPhoto() {
 
-        return photos[new Random().nextInt(photos.length)];
+        return photos.get(new Random().nextInt(photos.size()));
 
     }
 }

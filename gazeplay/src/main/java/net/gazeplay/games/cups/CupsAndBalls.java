@@ -2,9 +2,11 @@ package net.gazeplay.games.cups;
 
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
@@ -69,8 +71,11 @@ public class CupsAndBalls implements GameLifeCycle {
             PositionCup position = new PositionCup(indexCup, nbColumns / 2, nbColumns, nbLines, dimension2D.getHeight(),
                     dimension2D.getWidth(), imageWidth, imageHeight);
             posCup = position.calculateXY(position.getCellX(), position.getCellY());
-            Rectangle cupRectangle = new Rectangle(posCup.getX(), posCup.getY(), imageWidth, imageHeight);
-            cupRectangle.setFill(new ImagePattern(cupPicture, 0, 0, 1, 1, true));
+            ImageView cupRectangle = new ImageView(cupPicture);
+            cupRectangle.setX(posCup.getX());
+            cupRectangle.setY(posCup.getY());
+            cupRectangle.setFitWidth(imageWidth);
+            cupRectangle.setFitHeight(imageHeight);
             cups[indexCup] = new Cup(cupRectangle, position, gameContext, stats, this, openCupSpeed);
             if (indexCup == ballInCup) {
                 cups[indexCup].setWinner(true);
@@ -92,9 +97,9 @@ public class CupsAndBalls implements GameLifeCycle {
     public void launch() {
         init();
         TranslateTransition revealBallTransition = null;
-        for (int indexCup = 0; indexCup < cups.length; indexCup++) {
-            if (cups[indexCup].containsBall()) {
-                revealBallTransition = new TranslateTransition(Duration.millis(openCupSpeed), cups[indexCup].getItem());
+        for (Cup cup : cups) {
+            if (cup.containsBall()) {
+                revealBallTransition = new TranslateTransition(Duration.millis(openCupSpeed), cup.getItem());
                 revealBallTransition.setByY(-ballRadius * 8);
                 revealBallTransition.setAutoReverse(true);
                 revealBallTransition.setCycleCount(2);
@@ -114,6 +119,7 @@ public class CupsAndBalls implements GameLifeCycle {
                 createNewTransition(actions);
             });
         }
+
     }
 
     @Override
@@ -127,7 +133,7 @@ public class CupsAndBalls implements GameLifeCycle {
         int finalCellX = actions.get(0).getTargetCellX();
         int finalCellY = actions.get(0).getTargetCellY();
 
-        Rectangle cupToMove = null;
+        ImageView cupToMove = null;
         Point initPos = null;
         Point newPos = null;
         for (int indexCup = 0; indexCup < nbCups; indexCup++) {
@@ -158,10 +164,11 @@ public class CupsAndBalls implements GameLifeCycle {
         movementTransition.setOnFinished(e -> {
             actions.remove(0);
             if (actions.size() > 0) {
-                createNewTransition(actions);
                 for (Cup cup : cups) {
                     cup.increaseActionsDone();
                 }
+
+                createNewTransition(actions);
             }
         });
         movementTransition.play();

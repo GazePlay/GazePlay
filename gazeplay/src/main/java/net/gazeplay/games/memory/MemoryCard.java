@@ -103,6 +103,8 @@ public class MemoryCard extends Parent {
             if (gameInstance.currentRoundDetails.cardList.get(i).turned == true) {
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(MouseEvent.ANY, enterEvent);
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(GazeEvent.ANY, enterEvent);
+                gameContext.getGazeDeviceManager()
+                        .removeEventFilter(gameInstance.currentRoundDetails.cardList.get(i).card);
 
             }
         }
@@ -225,7 +227,9 @@ public class MemoryCard extends Parent {
                                 timelineCard.setOnFinished(new EventHandler<ActionEvent>() {
                                     @Override
                                     public void handle(ActionEvent actionEvent) {
-                                        timelineCard.stop();
+
+                                        if (timelineCard != null)
+                                            timelineCard.stop();
 
                                         if (id == cardAlreadyTurned) {
                                             onCorrectCardSelected();
@@ -244,8 +248,8 @@ public class MemoryCard extends Parent {
                     Timeline timeline = new Timeline();
 
                     timeline.play();
-
-                    timelineProgressBar.stop();
+                    if (timelineProgressBar != null)
+                        timelineProgressBar.stop();
 
                     progressIndicator.setOpacity(0);
                     progressIndicator.setProgress(0);

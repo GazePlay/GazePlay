@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -24,7 +25,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 public class Cup {
 
     @Getter
-    private Rectangle item;
+    private final ImageView item;
     private boolean hasBall;
     @Getter
     @Setter
@@ -33,11 +34,11 @@ public class Cup {
     @Setter
     private int ballRadius;
 
-    private int openCupSpeed;
-    private int fixationDurationNeeded;
+    private final int openCupSpeed;
+    private final int fixationDurationNeeded;
 
     @Getter
-    private PositionCup positionCup;
+    private final PositionCup positionCup;
 
     @Getter
     private final double widthItem;
@@ -47,7 +48,6 @@ public class Cup {
     @Setter
     private ProgressIndicator progressIndicator;
 
-    /* Taken from Magic Cards */
     private final GameContext gameContext;
 
     private final CupsAndBalls gameInstance;
@@ -69,15 +69,15 @@ public class Cup {
     @Setter
     private int actionsToDo;
 
-    public Cup(Rectangle item, PositionCup positionCup, GameContext gameContext, Stats stats, CupsAndBalls gameInstance,
+    public Cup(ImageView item, PositionCup positionCup, GameContext gameContext, Stats stats, CupsAndBalls gameInstance,
             int openCupSpeed) {
         this.actionsDone = 0;
         this.actionsToDo = 0;
         this.openCupSpeed = openCupSpeed;
-        this.fixationDurationNeeded = 2000;
+        this.fixationDurationNeeded = 1500;
         this.item = item;
-        this.widthItem = item.getWidth();
-        this.heightItem = item.getHeight();
+        this.widthItem = item.getFitWidth();
+        this.heightItem = item.getFitHeight();
         this.positionCup = positionCup;
 
         this.gameContext = gameContext;
@@ -88,12 +88,18 @@ public class Cup {
 
         this.enterEvent = buildEvent();
 
-        this.progressIndicator = createProgressIndicator(item.getX(), item.getY(), this.enterEvent);
+        this.progressIndicator = createProgressIndicator(item.getX(), item.getY());
 
-        gameContext.getGazeDeviceManager().addEventFilter(item);
+        createEvent();
 
-        item.addEventFilter(MouseEvent.ANY, enterEvent);
-        item.addEventFilter(GazeEvent.ANY, enterEvent);
+    }
+
+    public void createEvent() {
+
+        this.item.addEventFilter(MouseEvent.ANY, enterEvent);
+        this.item.addEventFilter(GazeEvent.ANY, enterEvent);
+
+        this.gameContext.getGazeDeviceManager().addEventFilter(this.item);
     }
 
     public boolean containsBall() {
@@ -112,22 +118,22 @@ public class Cup {
 
     public void progressBarUpdatePosition(double newXCupPos, double newYCupPos) {
         gameContext.getChildren().remove(progressIndicator);
-        progressIndicator = createProgressIndicator(newXCupPos, newYCupPos, enterEvent);
+        progressIndicator = createProgressIndicator(newXCupPos, newYCupPos);
         progressIndicator.toFront();
     }
 
-    private ProgressIndicator createProgressIndicator(double xCupPos, double yCupPos, EventHandler<Event> enterEvent) {
+    private ProgressIndicator createProgressIndicator(double xCupPos, double yCupPos) {
         ProgressIndicator indicator = new ProgressIndicator(0);
-        double indicatorWidth = item.getWidth() * 0.645;
-        double indicatorHeight = item.getHeight() * 0.645;
+        double indicatorWidth = item.getFitWidth() * 0.645;
+        double indicatorHeight = item.getFitHeight() * 0.645;
         indicator.setPrefSize(indicatorWidth, indicatorHeight);
-        indicator.setTranslateX(xCupPos + (item.getWidth() - indicatorWidth) / 2);
-        indicator.setTranslateY(yCupPos + (item.getHeight() - indicatorHeight) / 2);
+        indicator.setTranslateX(xCupPos + (item.getFitWidth() - indicatorWidth) / 2);
+        indicator.setTranslateY(yCupPos + (item.getFitHeight() - indicatorHeight) / 2);
         indicator.setOpacity(0);
-        gameContext.getGazeDeviceManager().addEventFilter(indicator);
-
         indicator.addEventFilter(MouseEvent.ANY, enterEvent);
         indicator.addEventFilter(GazeEvent.ANY, enterEvent);
+
+        /* gameContext.getGazeDeviceManager().addEventFilter(indicator); */
 
         gameContext.getChildren().add(indicator);
         return indicator;
@@ -144,23 +150,16 @@ public class Cup {
         revealBallTransition.setByY(-ballRadius * 8);
         ball.getItem().setVisible(true);
 
-        revealBallTransition.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                gameContext.playWinTransition(2000, new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
+        revealBallTransition.setOnFinished((EventHandler<ActionEvent>) (ActionEvent actionEvent) -> {
+            gameContext.playWinTransition(2000, (ActionEvent actionEvent1) -> {
+                gameInstance.dispose();
 
-                        gameInstance.dispose();
+                gameContext.clear();
 
-                        gameContext.clear();
+                gameInstance.launch();
 
-                        gameInstance.launch();
-
-                        gameContext.onGameStarted();
-                    }
-                });
-            }
+                gameContext.onGameStarted();
+            });
         });
 
         revealBallTransition.play();
@@ -176,47 +175,42 @@ public class Cup {
     }
 
     private EventHandler<Event> buildEvent() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return (Event e) -> {
 
-                if (revealed || actionsDone < actionsToDo - 1)
-                    return;
+            if (revealed || actionsDone < actionsToDo - 1)
+                return;
 
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    progressIndicator.setOpacity(1);
-                    progressIndicator.setProgress(0);
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    timelineProgressBar = new Timeline();
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
 
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationDurationNeeded),
-                            new KeyValue(progressIndicator.progressProperty(), 1)));
+                timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.play();
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationDurationNeeded),
+                        new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                    timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
+                timelineProgressBar.setOnFinished((ActionEvent actionEvent) -> {
+                    revealed = true;
 
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
+                    item.removeEventFilter(MouseEvent.ANY, enterEvent);
+                    item.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-                            revealed = true;
+                    if (winner) {
+                        onCorrectCupSelected();
+                    } else {
+                        onWrongCupSelected();
+                    }
+                });
 
-                            item.removeEventFilter(MouseEvent.ANY, enterEvent);
-                            item.removeEventFilter(GazeEvent.ANY, enterEvent);
+                timelineProgressBar.play();
 
-                            if (winner) {
-                                onCorrectCupSelected();
-                            } else {
-                                onWrongCupSelected();
-                            }
-                        }
-                    });
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                if (timelineProgressBar != null)
                     timelineProgressBar.stop();
 
-                    progressIndicator.setOpacity(0);
-                    progressIndicator.setProgress(0);
-                }
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
             }
         };
     }

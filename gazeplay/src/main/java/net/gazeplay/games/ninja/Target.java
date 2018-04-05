@@ -14,9 +14,9 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -39,7 +39,7 @@ public class Target extends Portrait {
 
     private final List<Portrait> miniBallsPortraits;
 
-    private final Image[] availableImages;
+    private final List<Image> availableImages;
 
     private final EventHandler<Event> enterEvent;
 
@@ -50,7 +50,7 @@ public class Target extends Portrait {
     private TranslateTransition currentTranslation;
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
-            Image[] availableImages) {
+            List<Image> availableImages) {
         super(radius, randomPositionGenerator, availableImages);
 
         this.randomPositionGenerator = randomPositionGenerator;
@@ -73,14 +73,11 @@ public class Target extends Portrait {
     }
 
     private void playHitSound() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL soundResourceUrl = classLoader.getResource(audioClipResourceLocation);
-        javafx.scene.media.AudioClip soundClip = new javafx.scene.media.AudioClip(soundResourceUrl.toExternalForm());
-        soundClip.play();
+        Utils.playSound(audioClipResourceLocation);
     }
 
     private List<Portrait> generateMiniBallsPortraits(RandomPositionGenerator randomPositionGenerator,
-            Image[] availableImages, int count) {
+            List<Image> availableImages, int count) {
         List<Portrait> result = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             Portrait miniPortrait = new Portrait(ballRadius, randomPositionGenerator, availableImages);

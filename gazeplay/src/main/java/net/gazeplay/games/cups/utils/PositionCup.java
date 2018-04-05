@@ -13,15 +13,15 @@ public class PositionCup {
     @Getter
     @Setter
     private int cellY;
-    private int maxCellsX;
-    private int maxCellsY;
+    private final int maxCellsX;
+    private final int maxCellsY;
 
-    private double screenHeight;
-    private double screenWidth;
+    private final double screenHeight;
+    private final double screenWidth;
     @Getter
-    private double imageWidth;
+    private final double imageWidth;
     @Getter
-    private double imageHeight;
+    private final double imageHeight;
 
     public PositionCup(int initCellX, int initCellY, int maxCellsX, int maxCellsY, double screenHeight,
             double screenWidth, double imageWidth, double imageHeight) {

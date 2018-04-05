@@ -19,8 +19,11 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.AspectRatioImageRectangleUtil;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
+
+import java.util.List;
 
 public class Blocs implements GameLifeCycle {
 
@@ -39,7 +42,7 @@ public class Blocs implements GameLifeCycle {
     private final boolean hasColors;
 
     private final int trail = 10;
-    private final Image[] images;
+    private final List<Image> images;
 
     @Data
     public static class CurrentRoundDetails {
@@ -70,7 +73,7 @@ public class Blocs implements GameLifeCycle {
         this.useTrail = useTrail;
         this.stats = stats;
 
-        images = Utils.images(Utils.getImagesFolder() + "blocs" + Utils.FILESEPARATOR);
+        images = ImageUtils.loadAllImagesInDirectory(Utils.getImagesSubDirectory("blocs"));
 
         hasColors = colors;
 
@@ -80,8 +83,8 @@ public class Blocs implements GameLifeCycle {
     }
 
     private void setHiddenPicture(GameContext gameContext) {
-        final int randomPictureIndex = (int) Math.floor(Math.random() * images.length);
-        final Image randomPicture = images[randomPictureIndex];
+        final int randomPictureIndex = (int) Math.floor(Math.random() * images.size());
+        final Image randomPicture = images.get(randomPictureIndex);
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
