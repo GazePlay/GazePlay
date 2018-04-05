@@ -84,7 +84,7 @@ class Target extends Portrait {
         if (level != 0) {
             Timeline waitbeforestart = new Timeline();
 
-            waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
+            waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(0.6)));
             waitbeforestart.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
@@ -145,6 +145,8 @@ class Target extends Portrait {
     }
 
     public void explose(int x, int y) {
+        stats.incNbGoals();
+
         this.removeEventFilter(MouseEvent.ANY, enterEvent);
         this.removeEventFilter(GazeEvent.ANY, enterEvent);
 
@@ -155,13 +157,9 @@ class Target extends Portrait {
         c.setFill(new ImagePattern(explosion, 0, 0, 1, 1, true));
         this.gameContext.getChildren().add(c);
 
-        FadeTransition ft = new FadeTransition(Duration.millis(500), this);
+        FadeTransition ft = new FadeTransition(Duration.millis(300), this);
         ft.setFromValue(1);
         ft.setToValue(0);
-
-        /*
-         * ParallelTransition pt = new ParallelTransition(); pt.getChildren().add(ft); pt.play();
-         */
 
         gameContext.getChildren().remove(this);
 
