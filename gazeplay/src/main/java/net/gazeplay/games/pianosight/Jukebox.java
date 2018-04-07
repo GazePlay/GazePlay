@@ -24,42 +24,38 @@ public class Jukebox extends Pane {
     HBox musiques;
     String s;
     GameContext gc;
-    
+
     public String getS() {
-    	String s = null;
-    	 FileChooser fileChooser = new FileChooser();
-    	 fileChooser.setTitle("Open Resource File");
-    	 fileChooser.getExtensionFilters().addAll(
-    	         new ExtensionFilter("Text Files", "*.txt"));
-    	 File selectedFile = fileChooser.showOpenDialog(gc.getGazePlay().getPrimaryStage());
-    	 if (selectedFile != null) {
-    	   s = selectedFile.getAbsolutePath();
-    	 }
-    	 return s;
+        String s = null;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.txt"));
+        File selectedFile = fileChooser.showOpenDialog(gc.getGazePlay().getPrimaryStage());
+        if (selectedFile != null) {
+            s = selectedFile.getAbsolutePath();
+        }
+        return s;
     }
-    
+
     public String getSSwing() {
-    	JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser();
         int returnVal = chooser.showOpenDialog(null);
         s = chooser.getSelectedFile().getName();
         return s;
     }
 
     public Jukebox(GameContext gctx) {
-        super();     
-        gc =gctx;
-        
-        /*URL fileURL =  ClassLoader.getSystemResource("data/pianosight/songs/AuClairDeLaLune.txt");
-        try {
-                    URLConnection ucon = fileURL.openConnection(); 
-                      BufferedReader buf = new BufferedReader(new InputStreamReader(ucon.getInputStream())); 
-         
-                      String ligne = "";
-                      while ( ( ligne = buf.readLine() ) != null){
-                          System.out.println(ligne +"\n"); 
-                      }
-                } catch (IOException e) {}
-      */
+        super();
+        gc = gctx;
+
+        /*
+         * URL fileURL = ClassLoader.getSystemResource("data/pianosight/songs/AuClairDeLaLune.txt"); try { URLConnection
+         * ucon = fileURL.openConnection(); BufferedReader buf = new BufferedReader(new
+         * InputStreamReader(ucon.getInputStream()));
+         * 
+         * String ligne = ""; while ( ( ligne = buf.readLine() ) != null){ System.out.println(ligne +"\n"); } } catch
+         * (IOException e) {}
+         */
     }
 
 }

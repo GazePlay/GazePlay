@@ -127,9 +127,7 @@ public class Piano extends Parent implements GameLifeCycle {
          */
         gameContext.getChildren().add(this);
 
-       
         Jukebox = new Jukebox(gameContext);
-        
 
     }
 
@@ -200,22 +198,22 @@ public class Piano extends Parent implements GameLifeCycle {
     }
 
     public void loadMusic(boolean b) throws IOException {
-    	InputStream inputStream;
-    	Reader fileReader;
-    	if (b) {
-	    	fileName = Jukebox.getS();
-	        if (fileName == null) {
-	        	return;
-	        }else {
-	        	
-	        	File f = new File(fileName);
-	        	fileReader = new InputStreamReader(new FileInputStream(f), "UTF-8");
-	        }
-    	}else {
-    		fileName = "AuClairDeLaLune.txt";
-    		inputStream = Utils.getInputStream("data/pianosight/songs/"+fileName);
-    		fileReader = new InputStreamReader(inputStream, "UTF-8");
-    	}
+        InputStream inputStream;
+        Reader fileReader;
+        if (b) {
+            fileName = Jukebox.getS();
+            if (fileName == null) {
+                return;
+            } else {
+
+                File f = new File(fileName);
+                fileReader = new InputStreamReader(new FileInputStream(f), "UTF-8");
+            }
+        } else {
+            fileName = "AuClairDeLaLune.txt";
+            inputStream = Utils.getInputStream("data/pianosight/songs/" + fileName);
+            fileReader = new InputStreamReader(inputStream, "UTF-8");
+        }
         parser = new Parser();
         parser.bufRead = new BufferedReader(fileReader);
         parser.myLine = null;
@@ -223,7 +221,7 @@ public class Piano extends Parent implements GameLifeCycle {
         FirstChar = parser.nextChar();
         TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
     }
-    
+
     @Override
     public void launch() {
         this.gameContext.resetBordersToFront();
@@ -237,25 +235,25 @@ public class Piano extends Parent implements GameLifeCycle {
         this.getChildren().addAll(this.TilesTab);
         this.getChildren().get(this.getChildren().indexOf(circ)).toFront();
         ImageView iv = new ImageView(new Image("data/pianosight/images/1.png"));
-        Button b = new Button("Open",iv);
-        b.setPrefWidth(dimension2D.getWidth()/7);
-        b.setPrefHeight(dimension2D.getHeight()/7);
+        Button b = new Button("Open", iv);
+        b.setPrefWidth(dimension2D.getWidth() / 7);
+        b.setPrefHeight(dimension2D.getHeight() / 7);
         iv.setPreserveRatio(true);
-        iv.setFitHeight(b.getPrefHeight() );
+        iv.setFitHeight(b.getPrefHeight());
         b.setOnMousePressed(evt -> {
             try {
-				loadMusic(true);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+                loadMusic(true);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         });
         this.getChildren().add(b);
-        
+
         try {
 
             loadMusic(false);
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }
