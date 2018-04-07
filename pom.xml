@@ -30,6 +30,8 @@
 		<findbugs.includeTests>true</findbugs.includeTests>
 		<findbugs.threshold>High</findbugs.threshold>
 
+		<skipFormatterFormat>false</skipFormatterFormat>
+		<skipFormatterValidate>true</skipFormatterValidate>
 	</properties>
 
 	<modules>
@@ -238,9 +240,22 @@
 				</configuration>
 				<executions>
 					<execution>
+						<id>formatterValidate</id>
+						<goals>
+							<goal>validate</goal>
+						</goals>
+						<configuration>
+							<skip>${skipFormatterValidate}</skip>
+						</configuration>
+					</execution>
+					<execution>
+						<id>formatterFormat</id>
 						<goals>
 							<goal>format</goal>
 						</goals>
+						<configuration>
+							<skip>${skipFormatterFormat}</skip>
+						</configuration>
 					</execution>
 				</executions>
 				<dependencies>
