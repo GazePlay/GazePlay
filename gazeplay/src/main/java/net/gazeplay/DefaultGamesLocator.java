@@ -32,6 +32,8 @@ import net.gazeplay.games.divisor.Divisor;
 import net.gazeplay.games.divisor.DivisorStats;
 import net.gazeplay.games.moles.MoleStats;
 import net.gazeplay.games.moles.Moles;
+import net.gazeplay.games.order.OrderStats;
+import net.gazeplay.games.order.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +81,20 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
                             Stats stats) {
                         return new Ninja(gameContext, stats);
+                    }
+                }));
+
+        result.add(new GameSpec(new GameSummary("Order", DEFAULT_MEMORIZATION_GAME_THUMBNAIL),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new OrderStats(scene);
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new Order(gameContext, stats);
                     }
                 }));
 
