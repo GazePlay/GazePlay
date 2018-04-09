@@ -14,6 +14,8 @@ import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
 import net.gazeplay.games.cups.CupsAndBalls;
 import net.gazeplay.games.cups.utils.CupsAndBallsStats;
+import net.gazeplay.games.room.Room;
+import net.gazeplay.games.room.RoomStats;
 import net.gazeplay.games.draw.DrawApplication;
 import net.gazeplay.games.drawonvideo.VideoPlayerWithLiveFeedbackApp;
 import net.gazeplay.games.magiccards.MagicCards;
@@ -82,15 +84,17 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        /*
-         * result.add(new GameSpec(new GameSummary("Room", DEFAULT_SEARCHING_GAME_THUMBNAIL), new
-         * GameSpec.GameLauncher() {
-         * 
-         * @Override public Stats createNewStats(Scene scene) { return new RoomStats(scene); }
-         * 
-         * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats
-         * stats) { return new Room(gameContext, stats); } }));
-         */
+        result.add(new GameSpec(new GameSummary("Room", DEFAULT_SEARCHING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new RoomStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
+                return new Room(gameContext, stats);
+            }
+        }));
 
         result.add(new GameSpec(
                 new GameSummary("MagicCards", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/magic-card-1.jpg"),

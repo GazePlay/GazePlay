@@ -41,7 +41,7 @@ EnableRewardSound,Activer le son « bravo »,Enable Reward sound,Aktiviere den 
 MenuOrientation,Orientation du menu (nécessite de relancer le jeu),Menu Orientation (restart game to take effect),Menüorientierung (erfordert Neustart des Spiels),Orientación del menú (requiere reiniciar el juego)
 Music,Musique,Music,Musik,Musica
 Volume,Volume,Volume,Volume,Volume
-OpenMemory,Memory ouvert,OpenMemory,OpenMemory,OpenMemory
+OpenMemory,Vise les pairs !,OpenMemory,Fokus auf Peers !,OpenMemory
 Video Player with Feedback,Lecteur Video avec retour,Video Player with Feedback,Video Player mit Feedback,Reproductor de video con comentarios
 Choose Game Variante,Choisi une variante,Choose Variante,Wählen Sie Variante,Elija Variante
 Enter FullScreen,Mettre en Plein écran,Enter FullScreen,Vollbild,Pantalla completa
@@ -52,3 +52,4 @@ Lapins,Lapins,Rabbits,Conejos,Kaninchen
 Divisor,Diviseur,Divisor,Divisor,Divisor
 Piano,Piano,Piano,Piano,Piano
 Colors!,Coloriage,Coloring,Färbung,Colorante
+Room,La Chambre,The Room,Das Zimmer,La Habitación
