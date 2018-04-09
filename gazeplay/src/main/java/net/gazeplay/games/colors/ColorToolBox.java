@@ -94,6 +94,8 @@ public class ColorToolBox extends BorderPane {
     @Getter
     private final Pane colorziationPane;
 
+    private EventHandler disableColorizeButton = null;
+
     public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
         super();
 
@@ -269,7 +271,8 @@ public class ColorToolBox extends BorderPane {
 
     private static void configureImageFileChooser(final FileChooser imageFileChooser) {
         imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Images", "*.*"),
-                new FileChooser.ExtensionFilter("JPG", "*.jpg"), new FileChooser.ExtensionFilter("PNG", "*.png"));
+                new FileChooser.ExtensionFilter("JPG", "*.jpg"), new FileChooser.ExtensionFilter("PNG", "*.png"),
+                new FileChooser.ExtensionFilter("GIF", "*.gif"));
     }
 
     private static void configureImageFileSaver(final FileChooser imageFileChooser) {
@@ -371,12 +374,18 @@ public class ColorToolBox extends BorderPane {
             colorsGame.setEnableColorization(false);
             colorizeButtonPane.setVisible(false);
             stopColorizeButtonPane.setVisible(true);
+            stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
+            colorizeButtonIndicator.setOnFinish(null);
+            log.info("Colorizing disabled");
         };
 
-        EventHandler disableColorizeButton = (EventHandler) (Event event1) -> {
+        disableColorizeButton = (EventHandler) (Event event1) -> {
             colorsGame.setEnableColorization(true);
             stopColorizeButtonPane.setVisible(false);
             colorizeButtonPane.setVisible(true);
+            stopColorizeButtonIndicator.setOnFinish(null);
+            colorizeButtonIndicator.setOnFinish(enableColorizeButton);
+            log.info("Colorizing enabled");
         };
 
         stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
