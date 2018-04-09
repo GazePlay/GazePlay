@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -17,6 +18,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -140,7 +142,7 @@ public class ColorsGame implements GameLifeCycle {
 
         buildToolBox(width, height);
 
-        log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
+        // log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
         buildDraw(DEFAULT_IMAGE, width, height);
     }
 
@@ -272,6 +274,12 @@ public class ColorsGame implements GameLifeCycle {
             @Override
             public void handle(Event event) {
 
+                GazePlay gazePlay = GazePlay.getInstance();
+
+                double gameWidth = gazePlay.getPrimaryStage().getWidth();
+                double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
+                double widthDiff = 0;/* screenWidth - gameWidth; */
+
                 if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
                     MouseEvent mouseEvent = (MouseEvent) event;
@@ -284,7 +292,7 @@ public class ColorsGame implements GameLifeCycle {
 
                     // log.info("Gaze event : {}", gazeEvent);
 
-                    gazeXOrigin = gazeEvent.getX();
+                    gazeXOrigin = gazeEvent.getX() - (ColorBox.COLOR_BOX_WIDTH_PX + widthDiff);
                     gazeYOrigin = gazeEvent.getY();
                     currentX = gazeXOrigin;
                     currentY = gazeYOrigin;
@@ -300,7 +308,7 @@ public class ColorsGame implements GameLifeCycle {
                 } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
 
                     GazeEvent gazeEvent = (GazeEvent) event;
-                    currentX = gazeEvent.getX();
+                    currentX = gazeEvent.getX() - (ColorBox.COLOR_BOX_WIDTH_PX + widthDiff);
                     currentY = gazeEvent.getY();
 
                     moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
