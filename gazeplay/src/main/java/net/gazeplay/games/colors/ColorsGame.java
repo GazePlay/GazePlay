@@ -2,12 +2,14 @@ package net.gazeplay.games.colors;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Optional;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -28,6 +30,7 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.ui.Translator;
 
 /**
  * Game where you select a color in order to colorize a white and black draw.
@@ -57,7 +60,7 @@ public class ColorsGame implements GameLifeCycle {
      * The default image to display
      */
     // public static final String DEFAULT_IMAGE =
-    // "http://www.supercoloring.com/sites/default/files/styles/coloring_full/public/cif/2015/07/hatsune-miku-coloring-page.png";
+    // "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
     public static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
     /**
@@ -75,6 +78,8 @@ public class ColorsGame implements GameLifeCycle {
      * Distance in pixel of the current cursor or gaze position in x and y for the gaze indicator.
      */
     public static final double GAZE_INDICATOR_DISTANCE = 5;
+
+    public static final double AVG_THRESHOLD = 0.39;
 
     /**
      * The gaze progress indicator to show time before colorization.
@@ -154,7 +159,10 @@ public class ColorsGame implements GameLifeCycle {
     private void buildToolBox(double width, double height) {
 
         this.colorToolBox = new ColorToolBox(this.root, this);
-        TitledPane colorToolBoxPane = new TitledPane("Colors", colorToolBox);
+
+        final Translator translator = GazePlay.getInstance().getTranslator();
+
+        TitledPane colorToolBoxPane = new TitledPane(translator.translate("Colors!"), colorToolBox);
         colorToolBoxPane.setCollapsible(false);
         colorToolBoxPane.setAnimated(false);
 
@@ -185,7 +193,7 @@ public class ColorsGame implements GameLifeCycle {
 
         if (!img.isError()) {
 
-            javaFXEditing(img);
+            javaFXEditing(img, imgURL);
         }
 
         root.getChildren().add(rectangle);
@@ -193,9 +201,9 @@ public class ColorsGame implements GameLifeCycle {
         rectangle.toBack();
     }
 
-    private void javaFXEditing(Image image) {
+    private void javaFXEditing(Image image, final String imageName) {
 
-        this.updateImage(image);
+        this.updateImage(image, imageName);
 
         final Stage stage = GazePlay.getInstance().getPrimaryStage();
 
@@ -237,12 +245,14 @@ public class ColorsGame implements GameLifeCycle {
     }
 
     /**
-     * Change the current image to displat and update everything so it can be colorized.
+     * Change the current image to display and update everything so it can be colorized.
      * 
      * @param image
      *            The new image to colorize.
+     * @param imageName
+     *            The name of the image
      */
-    public void updateImage(final Image image) {
+    public void updateImage(final Image image, final String imageName) {
 
         final PixelReader tmpPixelReader = image.getPixelReader();
 
@@ -257,6 +267,41 @@ public class ColorsGame implements GameLifeCycle {
         writableImg = new WritableImage(tmpPixelReader, (int) image.getWidth(), (int) image.getHeight());
         pixelWriter = writableImg.getPixelWriter();
         pixelReader = writableImg.getPixelReader();
+
+        final Translator translator = GazePlay.getInstance().getTranslator();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText(translator.translate("confirmBWText") + imageName);
+        alert.setTitle(translator.translate("confirmBWTitle"));
+        alert.setHeaderText(translator.translate("confirmBWHeader"));
+
+        ButtonType yesButton = new ButtonType("Yes");
+        ButtonType noButton = new ButtonType("No");
+
+        alert.getButtonTypes().setAll(yesButton, noButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == yesButton) {
+            toBlackAndWhite();
+        }
+    }
+
+    private void toBlackAndWhite() {
+
+        for (int i = 0; i < writableImg.getWidth(); ++i) {
+            for (int j = 0; j < writableImg.getHeight(); ++j) {
+
+                Color pixCol = pixelReader.getColor(i, j);
+                double avg = (pixCol.getRed() + pixCol.getGreen() + pixCol.getBlue()) / 3;
+
+                Color newCol = avg > AVG_THRESHOLD ? Color.WHITE : Color.BLACK;
+                pixelWriter.setColor(i, j, newCol);
+            }
+        }
+
+        updateRectangle();
+
     }
 
     private EventHandler<Event> buildEventHandler() {
