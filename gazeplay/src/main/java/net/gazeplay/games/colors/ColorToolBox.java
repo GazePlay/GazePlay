@@ -92,7 +92,7 @@ public class ColorToolBox extends BorderPane {
 
     @Getter
     private final Pane colorziationPane;
-    
+
     private final Stage customColorDialog;
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
@@ -148,17 +148,17 @@ public class ColorToolBox extends BorderPane {
         }
 
         colorPicker = new ColorPicker(Color.WHITE);
-        
+
         customColorPickerButton = new Button("custom color");
         customBox = new ColorBox((colorPicker.getValue()), root, this, group);
-        
+
         customColorDialog = buildCustomColorDialog();
-        
+
         customColorPickerButton.setOnAction((event) -> {
-            
+
             customColorDialog.show();
         });
-        
+
         colorPicker.setOnAction((event) -> {
             customBox.setColor(colorPicker.getValue());
         });
@@ -325,8 +325,8 @@ public class ColorToolBox extends BorderPane {
     }
 
     private void buildAddCustomCostomColorButton() {
-        
-        //Pane customColorPane = new VBox(customBox, customColorPickerButton);
+
+        // Pane customColorPane = new VBox(customBox, customColorPickerButton);
         Pane customColorPane = new VBox(customBox, colorPicker);
         mainPane.getChildren().add(customColorPane);
     }
@@ -416,17 +416,17 @@ public class ColorToolBox extends BorderPane {
 
         return colorPane;
     }
-    
+
     private Stage buildCustomColorDialog() {
-        
+
         Stage dialog = new Stage();
 
         dialog.initOwner(GazePlay.getInstance().getPrimaryStage());
-        dialog.initModality(Modality.WINDOW_MODAL); 
+        dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initStyle(StageStyle.UTILITY);
-        dialog.setOnCloseRequest(windowEvent -> 
-                GazePlay.getInstance().getPrimaryStage().getScene().getRoot().setEffect(null));
-        
+        dialog.setOnCloseRequest(
+                windowEvent -> GazePlay.getInstance().getPrimaryStage().getScene().getRoot().setEffect(null));
+
         return dialog;
     }
 }

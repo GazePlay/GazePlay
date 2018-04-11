@@ -58,8 +58,9 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The default image to display
      */
-    public static final String DEFAULT_IMAGE = "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
-    // public static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
+    // public static final String DEFAULT_IMAGE =
+    // "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
+    public static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
     /**
      * On a [0, 1] scale, used to determine the threshold in the difference between two colors to consider that they are
@@ -274,7 +275,7 @@ public class ColorsGame implements GameLifeCycle {
         alert.setHeaderText(translator.translate("confirmBWHeader"));
 
         ButtonType yesButton = new ButtonType("Yes");
-        ButtonType noButton  = new ButtonType("No");
+        ButtonType noButton = new ButtonType("No");
 
         alert.getButtonTypes().setAll(yesButton, noButton);
 
