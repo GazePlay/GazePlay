@@ -21,7 +21,6 @@ public class Wall {
     private double positionWall;
 
     // Image rightImage = new Image("data/room/front.jpg", WIDTH, HEIGHT, true, true);
-
     Box box;
     String name;
 
@@ -30,34 +29,38 @@ public class Wall {
         this.yLength = yLength;
         this.name = name;
         switch (moveDirection) {
-        case "X":
-            this.box = new Box(thickness, yLength, xLength);
-            this.positionWall = xLength / 2;
-            // this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, rightImage, rightImage, rightImage,
-            // rightImage));
-            this.box.setMaterial(new PhongMaterial(Color.RED));
-            this.box.setTranslateX(positiveAxisMultiplier * positionWall);
-            break;
-        case "Y":
-            this.box = new Box(xLength, thickness, xLength);
-            this.positionWall = yLength / 2;
-            // this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, rightImage, rightImage, rightImage,
-            // rightImage));
-            this.box.setMaterial(new PhongMaterial(Color.GREEN));
-            this.box.setTranslateY(positiveAxisMultiplier * positionWall);
-            break;
-        case "Z":
-            this.box = new Box(xLength, yLength, thickness);
-            this.positionWall = xLength / 2;
-            if (positiveAxisMultiplier == 1) {
-                Image frontImage = new Image("data/room/front.jpg");
-                this.box.setMaterial(
-                        new PhongMaterial(Color.TRANSPARENT, frontImage, frontImage, frontImage, frontImage));
-            } else {
-                this.box.setMaterial(new PhongMaterial(Color.BLUE));
-            }
-            this.box.setTranslateZ(positiveAxisMultiplier * positionWall);
-            break;
+            case "X":
+                this.box = new Box(thickness, yLength, xLength);
+                this.positionWall = xLength / 2;
+                // this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, rightImage, rightImage, rightImage,
+                // rightImage));
+                if (positiveAxisMultiplier == 1) {
+                    Image rightImage = new Image("data/room/right.jpg");
+                    this.box.setMaterial(
+                            new PhongMaterial(Color.TRANSPARENT, rightImage, rightImage, rightImage, rightImage));
+                } else {
+                    this.box.setMaterial(new PhongMaterial(Color.RED));
+                }
+                this.box.setTranslateX(positiveAxisMultiplier * positionWall);
+                break;
+            case "Y":
+                this.box = new Box(xLength, thickness, xLength);
+                this.positionWall = yLength / 2;
+                this.box.setMaterial(new PhongMaterial(Color.GREEN));
+                this.box.setTranslateY(positiveAxisMultiplier * positionWall);
+                break;
+            case "Z":
+                this.box = new Box(xLength, yLength, thickness);
+                this.positionWall = xLength / 2;
+                if (positiveAxisMultiplier == 1) {
+                    Image frontImage = new Image("data/room/front.jpg");
+                    this.box.setMaterial(
+                            new PhongMaterial(Color.TRANSPARENT, frontImage, frontImage, frontImage, frontImage));
+                } else {
+                    this.box.setMaterial(new PhongMaterial(Color.BLUE));
+                }
+                this.box.setTranslateZ(positiveAxisMultiplier * positionWall);
+                break;
         }
     }
 
