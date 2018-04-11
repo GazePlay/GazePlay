@@ -9,6 +9,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleGroup;
@@ -31,8 +32,10 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.CssUtil;
 
 @Slf4j
 public class ColorToolBox extends BorderPane {
@@ -94,6 +97,7 @@ public class ColorToolBox extends BorderPane {
     private final Pane colorziationPane;
 
     private final Stage customColorDialog;
+    private Pane CustomColorPicker;
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
         super();
@@ -150,19 +154,21 @@ public class ColorToolBox extends BorderPane {
         colorPicker = new ColorPicker(Color.WHITE);
 
         customColorPickerButton = new Button("custom color");
-        customBox = new ColorBox((colorPicker.getValue()), root, this, group);
+        customBox = new ColorBox(Color.WHITE, root, this, group);
 
         customColorDialog = buildCustomColorDialog();
 
         customColorPickerButton.setOnAction((event) -> {
 
             customColorDialog.show();
+            customBox.setColor(CustomColorPicker.getSelectedColor().getColor());
         });
 
         colorPicker.setOnAction((event) -> {
             customBox.setColor(colorPicker.getValue());
         });
         colorPicker.prefWidthProperty().bind(customBox.widthProperty());
+        customColorPickerButton.prefWidthProperty().bind(customBox.widthProperty());
 
         Button previousPallet = new Button("");
         previousPallet.setPrefHeight(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
@@ -326,8 +332,8 @@ public class ColorToolBox extends BorderPane {
 
     private void buildAddCustomCostomColorButton() {
 
-        // Pane customColorPane = new VBox(customBox, customColorPickerButton);
-        Pane customColorPane = new VBox(customBox, colorPicker);
+        Pane customColorPane = new VBox(customBox, customColorPickerButton);
+        // Pane customColorPane = new VBox(customBox, colorPicker);
         mainPane.getChildren().add(customColorPane);
     }
 
@@ -426,6 +432,17 @@ public class ColorToolBox extends BorderPane {
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setOnCloseRequest(
                 windowEvent -> GazePlay.getInstance().getPrimaryStage().getScene().getRoot().setEffect(null));
+        dialog.setTitle("Choose a custom color");
+        dialog.setAlwaysOnTop(true);
+
+        CustomColorPicker = new CustomColorPicker(root, this);
+
+        final Scene scene = new Scene(CustomColorPicker, Color.TRANSPARENT);
+
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        CssUtil.setPreferredStylesheets(config, scene);
+
+        dialog.setScene(scene);
 
         return dialog;
     }

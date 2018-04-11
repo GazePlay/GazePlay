@@ -4,6 +4,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import lombok.Getter;
 
 public class CustomColorPicker extends Pane {
 
@@ -12,6 +13,9 @@ public class CustomColorPicker extends Pane {
     public static final Color[] COLOR_LIST = { Color.ALICEBLUE, Color.BURLYWOOD, Color.DARKCYAN };
 
     public static final int NB_COLOR_PER_ROW = ((int) Math.sqrt(COLOR_LIST.length));
+
+    @Getter
+    private ColorBox selectedColor;
 
     public CustomColorPicker(final Pane root, final ColorToolBox toolBox) {
         super();
@@ -26,10 +30,13 @@ public class CustomColorPicker extends Pane {
                 ColorBox colorBox = new ColorBox(COLOR_LIST[i], root, toolBox, colorGroup);
                 if (i == 0 && j == 0) {
                     colorBox.select();
+                    selectedColor = colorBox;
                 }
 
                 colorGrid.add(colorBox, i, j);
             }
         }
+
+        this.getChildren().add(colorGrid);
     }
 }
