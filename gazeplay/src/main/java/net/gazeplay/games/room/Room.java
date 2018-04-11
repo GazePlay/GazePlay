@@ -1,23 +1,30 @@
 package net.gazeplay.games.room;
 
+import javafx.geometry.Pos;
 import javafx.scene.AmbientLight;
+import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.SubScene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /* Things to implement :
     1. Add a gazeeventlistener
-    2. Draw and add room walls
+    2. Draw and add room image walls
 */
 
+@Slf4j
 public class Room implements GameLifeCycle {
 
     private final GameContext gameContext;
@@ -25,95 +32,228 @@ public class Room implements GameLifeCycle {
 
     private PerspectiveCamera camera;
 
-    private double mousePosX;
-    private double mousePosY;
-    private double mouseOldX;
-    private double mouseOldY;
-    private double mouseDeltaX;
-    private double mouseDeltaY;
-    private final Rotate rotateX = new Rotate(-20, Rotate.X_AXIS);
-    private final Rotate rotateY = new Rotate(-20, Rotate.Y_AXIS);
-    private static final double MOUSE_SPEED = 0.1;
-    private static final double ROTATION_SPEED = 2.0;
+    private javafx.geometry.Dimension2D dimension2D;
+    private final Rotate rotateX;
+    private final Rotate rotateY;
 
-    // The long size of a side of the cube (this is the length and width of each side)
-    private static final double SIZE_LONG = 2400;
-    // The short size of a side of the cube (this is the thickness of each side)
-    private static final double SIZE_SHORT = 0.0001;
-    // The position of the side compared to the origin (length / 2)
-    private static final double POSITION = SIZE_LONG / 2;
+    private static double xLength;
+    private static double yLength;
+
+    // The positions of the sides compared to the origin
+    private double positionCamera;
+
+    Image arrowImNorthWest;
+    Rectangle rectangleArrowNorthWest;
+
+    Image arrowImNorth;
+    Rectangle rectangleArrowNorth;
+
+    Image arrowImNorthEast;
+    Rectangle rectangleArrowNorthEast;
+
+    Image arrowImWest;
+    Rectangle rectangleArrowWest;
+
+    Image arrowImEast;
+    Rectangle rectangleArrowEast;
+
+    Image arrowImSouthWest;
+    Rectangle rectangleArrowSouthWest;
+
+    Image arrowImSouth;
+    Rectangle rectangleArrowSouth;
+
+    Image arrowImSouthEast;
+    Rectangle rectangleArrowSouthEast;
+
+    double imageWidth;
+    double imageHeight;
 
     public Room(GameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
+        dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        imageWidth = dimension2D.getWidth() / 7;
+        imageHeight = dimension2D.getHeight() / 7;
+
+        arrowImNorthWest = new Image("data/room/arrowNorthWest.png", imageWidth, imageHeight, true, true);
+        rectangleArrowNorthWest = new Rectangle(arrowImNorthWest.getWidth(), arrowImNorthWest.getHeight());
+        rectangleArrowNorthWest.setFill(new ImagePattern(arrowImNorthWest));
+
+        arrowImNorth = new Image("data/room/arrowNorth.png", imageWidth, imageHeight, true, true);
+        rectangleArrowNorth = new Rectangle(arrowImNorth.getWidth(), arrowImNorth.getHeight());
+        rectangleArrowNorth.setFill(new ImagePattern(arrowImNorth));
+
+        arrowImNorthEast = new Image("data/room/arrowNorthEast.png", imageWidth, imageHeight, true, true);
+        rectangleArrowNorthEast = new Rectangle(arrowImNorthEast.getWidth(), arrowImNorthEast.getHeight());
+        rectangleArrowNorthEast.setFill(new ImagePattern(arrowImNorthEast));
+
+        arrowImWest = new Image("data/room/arrowWest.png", imageWidth, imageHeight, true, true);
+        rectangleArrowWest = new Rectangle(arrowImWest.getWidth(), arrowImWest.getHeight());
+        rectangleArrowWest.setFill(new ImagePattern(arrowImWest));
+
+        arrowImEast = new Image("data/room/arrowEast.png", imageWidth, imageHeight, true, true);
+        rectangleArrowEast = new Rectangle(arrowImEast.getWidth(), arrowImEast.getHeight());
+        rectangleArrowEast.setFill(new ImagePattern(arrowImEast));
+
+        arrowImSouthWest = new Image("data/room/arrowSouthWest.png", imageWidth, imageHeight, true, true);
+        rectangleArrowSouthWest = new Rectangle(arrowImSouthWest.getWidth(), arrowImSouthWest.getHeight());
+        rectangleArrowSouthWest.setFill(new ImagePattern(arrowImSouthWest));
+
+        arrowImSouth = new Image("data/room/arrowSouth.png", imageWidth, imageHeight, true, true);
+        rectangleArrowSouth = new Rectangle(arrowImSouth.getWidth(), arrowImSouth.getHeight());
+        rectangleArrowSouth.setFill(new ImagePattern(arrowImSouth));
+
+        arrowImSouthEast = new Image("data/room/arrowSouthEast.png", imageWidth, imageHeight, true, true);
+        rectangleArrowSouthEast = new Rectangle(arrowImSouthEast.getWidth(), arrowImSouthEast.getHeight());
+        rectangleArrowSouthEast.setFill(new ImagePattern(arrowImSouthEast));
+
+        rotateX = new Rotate(0, Rotate.X_AXIS);
+        rotateY = new Rotate(0, Rotate.Y_AXIS);
+        xLength = dimension2D.getWidth();
+        yLength = dimension2D.getHeight();
+        positionCamera = -xLength / 2;
     }
 
     @Override
     public void launch() {
-        Box front = new Box(SIZE_LONG, SIZE_SHORT, SIZE_LONG);
-        front.setMaterial(new PhongMaterial(Color.DARKOLIVEGREEN));
-        front.setTranslateY(POSITION);
-        gameContext.getChildren().add(front);
+        Group objects = new Group();
 
-        Box back = new Box(SIZE_LONG, SIZE_SHORT, SIZE_LONG);
-        back.setMaterial(new PhongMaterial(Color.GOLD));
-        back.setTranslateY(-POSITION);
-        gameContext.getChildren().add(back);
+        Wall top = new Wall("Y", -1, "top", xLength, yLength);
+        objects.getChildren().add(top.getItem());
 
-        Box top = new Box(SIZE_LONG, SIZE_LONG, SIZE_SHORT);
-        top.setMaterial(new PhongMaterial(Color.HOTPINK));
-        top.setTranslateZ(POSITION);
-        gameContext.getChildren().add(top);
+        Wall bottom = new Wall("Y", 1, "bottom", xLength, yLength);
+        objects.getChildren().add(bottom.getItem());
 
-        Box bottom = new Box(SIZE_LONG, SIZE_LONG, SIZE_SHORT);
-        bottom.setMaterial(new PhongMaterial(Color.DARKGREEN));
-        bottom.setTranslateZ(-POSITION);
-        gameContext.getChildren().add(bottom);
+        Wall back = new Wall("Z", -1, "back", xLength, yLength);
+        objects.getChildren().add(back.getItem());
 
-        Box left = new Box(SIZE_SHORT, SIZE_LONG, SIZE_LONG);
-        left.setMaterial(new PhongMaterial(Color.CRIMSON));
-        left.setTranslateX(-POSITION);
-        gameContext.getChildren().add(left);
+        Wall front = new Wall("Z", 1, "front", xLength, yLength);
+        objects.getChildren().add(front.getItem());
 
-        Box right = new Box(SIZE_SHORT, SIZE_LONG, SIZE_LONG);
-        right.setMaterial(new PhongMaterial(Color.AQUAMARINE));
-        right.setTranslateX(POSITION);
-        gameContext.getChildren().add(right);
+        Wall left = new Wall("X", -1, "left", xLength, yLength);
+        objects.getChildren().add(left.getItem());
+
+        Wall right = new Wall("X", 1, "right", xLength, yLength);
+        objects.getChildren().add(right.getItem());
+
+        SubScene subScene = new SubScene(objects,
+                dimension2D.getWidth() - arrowImWest.getWidth() - arrowImEast.getWidth(),
+                dimension2D.getHeight() - arrowImNorth.getHeight() - arrowImSouth.getHeight());
 
         camera = new PerspectiveCamera(true);
         camera.setVerticalFieldOfView(false);
 
         camera.setNearClip(0.1);
-        camera.setFarClip(100000.0);
-        camera.getTransforms().addAll(rotateX, rotateY, new Translate(0, 0, 0));
+        camera.setFarClip(10000.0);
+        camera.getTransforms().addAll(rotateX, rotateY, new Translate(0, 0, positionCamera));
 
         PointLight light = new PointLight(Color.GAINSBORO);
-        gameContext.getChildren().add(light);
-        gameContext.getChildren().add(new AmbientLight(Color.WHITE));
-        gameContext.getScene().setCamera(camera);
+        objects.getChildren().add(light);
+        objects.getChildren().add(new AmbientLight(Color.WHITE));
+        subScene.setCamera(camera);
 
-        gameContext.getScene().setOnMousePressed((MouseEvent me) -> {
-            mousePosX = me.getSceneX();
-            mousePosY = me.getSceneY();
-            mouseOldX = me.getSceneX();
-            mouseOldY = me.getSceneY();
+        BorderPane root = new BorderPane(subScene);
+
+        BorderPane topB = new BorderPane();
+        topB.setRight(rectangleArrowNorthEast);
+        topB.setCenter(rectangleArrowNorth);
+        topB.setLeft(rectangleArrowNorthWest);
+        root.setTop(topB);
+
+        BorderPane bottomB = new BorderPane();
+        bottomB.setRight(rectangleArrowSouthEast);
+        bottomB.setCenter(rectangleArrowSouth);
+        bottomB.setLeft(rectangleArrowSouthWest);
+        root.setBottom(bottomB);
+
+        root.setLeft(rectangleArrowWest);
+        root.setRight(rectangleArrowEast);
+        BorderPane.setAlignment(rectangleArrowWest, Pos.CENTER);
+        BorderPane.setAlignment(rectangleArrowEast, Pos.CENTER);
+
+        gameContext.getChildren().add(root);
+
+        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowNorthWest);
+        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowNorth);
+        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowNorthEast);
+        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowWest);
+        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowEast);
+        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouthWest);
+        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouth);
+        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouthEast);
+
+        rectangleArrowNorthWest.setOnMouseMoved((event) -> {
+            rotateX.setAngle(rotateX.getAngle() + 0.25);
+            rotateY.setAngle(rotateY.getAngle() - 0.25);
         });
 
-        gameContext.getScene().setOnMouseDragged((MouseEvent me) -> {
-            mouseOldX = mousePosX;
-            mouseOldY = mousePosY;
-            mousePosX = me.getSceneX();
-            mousePosY = me.getSceneY();
-            mouseDeltaX = (mousePosX - mouseOldX);
-            mouseDeltaY = (mousePosY - mouseOldY);
+        rectangleArrowNorth.setOnMouseMoved((event) -> {
+            rotateX.setAngle(rotateX.getAngle() + 0.5);
+        });
 
-            double modifier = 1.0;
+        rectangleArrowNorthEast.setOnMouseMoved((event) -> {
+            rotateX.setAngle(rotateX.getAngle() + 0.25);
+            rotateY.setAngle(rotateY.getAngle() + 0.25);
+        });
 
-            if (me.isPrimaryButtonDown()) {
-                rotateX.setAngle(rotateX.getAngle() - (mouseDeltaY * MOUSE_SPEED * modifier * ROTATION_SPEED));
-                rotateY.setAngle(rotateY.getAngle() + (mouseDeltaX * MOUSE_SPEED * modifier * ROTATION_SPEED));
-            }
+        rectangleArrowWest.setOnMouseMoved((event) -> {
+            rotateY.setAngle(rotateY.getAngle() - 0.5);
+        });
+
+        rectangleArrowEast.setOnMouseMoved((event) -> {
+            rotateY.setAngle(rotateY.getAngle() + 0.5);
+        });
+
+        rectangleArrowSouthWest.setOnMouseMoved((event) -> {
+            rotateX.setAngle(rotateX.getAngle() - 0.25);
+            rotateY.setAngle(rotateY.getAngle() - 0.25);
+        });
+
+        rectangleArrowSouth.setOnMouseMoved((event) -> {
+            rotateX.setAngle(rotateX.getAngle() - 0.5);
+        });
+
+        rectangleArrowSouthEast.setOnMouseMoved((event) -> {
+            rotateX.setAngle(rotateX.getAngle() - 0.25);
+            rotateY.setAngle(rotateY.getAngle() + 0.25);
+        });
+
+        rectangleArrowNorthWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
+            rotateX.setAngle(rotateX.getAngle() + 0.25);
+            rotateY.setAngle(rotateY.getAngle() - 0.25);
+        });
+
+        rectangleArrowNorth.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
+            rotateX.setAngle(rotateX.getAngle() + 0.5);
+        });
+
+        rectangleArrowNorthEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
+            rotateX.setAngle(rotateX.getAngle() + 0.25);
+            rotateY.setAngle(rotateY.getAngle() + 0.25);
+        });
+
+        rectangleArrowWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
+            rotateY.setAngle(rotateY.getAngle() - 0.5);
+        });
+
+        rectangleArrowEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
+            rotateY.setAngle(rotateY.getAngle() + 0.5);
+        });
+
+        rectangleArrowSouthWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
+            rotateX.setAngle(rotateX.getAngle() - 0.25);
+            rotateY.setAngle(rotateY.getAngle() - 0.25);
+        });
+
+        rectangleArrowSouth.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
+            rotateX.setAngle(rotateX.getAngle() - 0.5);
+        });
+
+        rectangleArrowSouthEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
+            rotateX.setAngle(rotateX.getAngle() - 0.25);
+            rotateY.setAngle(rotateY.getAngle() + 0.25);
         });
     }
 
@@ -121,4 +261,5 @@ public class Room implements GameLifeCycle {
     public void dispose() {
 
     }
+
 }
