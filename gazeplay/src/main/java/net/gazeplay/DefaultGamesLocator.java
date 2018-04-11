@@ -22,7 +22,6 @@ import net.gazeplay.games.memory.Memory;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
 import net.gazeplay.games.openmemory.OpenMemory;
-import net.gazeplay.games.pianosight.Piano;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.shooter.Shooter;
 import net.gazeplay.games.shooter.ShooterGamesStats;
@@ -42,6 +41,7 @@ import java.util.List;
 import java.util.Set;
 import net.gazeplay.games.colors.ColorsGame;
 import net.gazeplay.games.colors.ColorsGamesStats;
+import net.gazeplay.games.pianosight.Piano;
 
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
