@@ -33,21 +33,15 @@ public class Target extends Portrait {
         enterEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                    double x = ((MouseEvent) e).getX();
-                    double y = ((MouseEvent) e).getY();
-                    enter((int) x, (int) y);
-                } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    double x = ((GazeEvent) e).getX();
-                    double y = ((GazeEvent) e).getY();
-                    enter((int) x, (int) y);
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    enter();
                 }
             }
         };
     }
 
-    private void enter(int x, int y) {
-        this.gameInstance.enter(this.num, this, x, y);
+    private void enter() {
+        this.gameInstance.enter(this.num, this);
     }
 
     public void addEvent() {

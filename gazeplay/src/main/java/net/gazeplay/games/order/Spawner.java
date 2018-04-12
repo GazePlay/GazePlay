@@ -47,13 +47,13 @@ public class Spawner {
                 i++;
                 if (i < nbTarget) {
                     timer.play();
+                } else {
+                    for (int j = 0; j < nbTarget; j++) {
+                        tabTarget[j].addEvent();
+                    }
                 }
             }
         });
         timer.play();
-
-        for (int i = 0; i < nbTarget; i++) {
-            tabTarget[i].addEvent();
-        }
     }
 }
