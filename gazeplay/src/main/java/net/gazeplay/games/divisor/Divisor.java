@@ -1,6 +1,9 @@
 package net.gazeplay.games.divisor;
 
+import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.utils.Portrait;
@@ -36,12 +39,17 @@ public class Divisor implements GameLifeCycle {
             images.add(new Image("data/divisor/images/5.png"));
             images.add(new Image("data/divisor/images/6.png"));
             images.add(new Image("data/divisor/images/7.png"));
+            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            imageRectangle.setFill(new ImagePattern(new Image("data/divisor/images/Background.png")));
+            gameContext.getChildren().add(imageRectangle);
+            this.gameContext.resetBordersToFront();
 
             target = new Target(gameContext, gameContext.getRandomPositionGenerator(), stats, images, 0,
-                    System.currentTimeMillis(), this);
+                    System.currentTimeMillis(), this, lapin);
         } else {
             target = new Target(gameContext, gameContext.getRandomPositionGenerator(), stats, Portrait.loadAllImages(),
-                    0, System.currentTimeMillis(), this);
+                    0, System.currentTimeMillis(), this, lapin);
         }
         gameContext.getChildren().add(target);
     }

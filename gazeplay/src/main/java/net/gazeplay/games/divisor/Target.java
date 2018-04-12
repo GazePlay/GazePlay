@@ -45,10 +45,11 @@ class Target extends Portrait {
     private final List<Image> images;
     private final long startTime;
     private final Dimension2D dimension;
+    private final boolean lapin;
     private Image explosion;
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
-            List<Image> images, int level, long start, Divisor gameInstance) {
+            List<Image> images, int level, long start, Divisor gameInstance, boolean lapin) {
         super((int) 180 / (level + 1), randomPositionGenerator, images);
         this.level = level;
         this.difficulty = 3;
@@ -58,10 +59,15 @@ class Target extends Portrait {
         this.stats = stats;
         this.images = images;
         this.startTime = start;
+        this.lapin = lapin;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         try {
-            this.explosion = new Image("data/divisor/images/explosion.png");
+            if (lapin) {
+                this.explosion = new Image("data/divisor/images/coeur.png");
+            } else {
+                this.explosion = new Image("data/divisor/images/explosion.png");
+            }
         } catch (Exception e) {
             log.info("Fichier non trouvé " + e.getMessage());
         }
@@ -170,7 +176,7 @@ class Target extends Portrait {
                 gameContext.getChildren().remove(c);
                 if (level < difficulty) {
                     createChildren(x, y);
-                } else if (gameContext.getChildren().isEmpty()) {
+                } else if (((!lapin)&&(gameContext.getChildren().isEmpty()))||((lapin)&&(gameContext.getChildren().size()<=1))) {
                     long totalTime = (System.currentTimeMillis() - startTime) / 1000;
                     Label l = new Label("Temps : " + Long.toString(totalTime) + "s");
                     l.setTextFill(Color.WHITE);
@@ -191,7 +197,6 @@ class Target extends Portrait {
                 }
             }
         });
-
         ft.play();
     }
 
@@ -214,7 +219,7 @@ class Target extends Portrait {
     private void createChildren(int x, int y) {
         for (int i = 0; i < 2; i++) {
             Target target = new Target(gameContext, randomPosGenerator, stats, images, level + 1, startTime,
-                    gameInstance);
+                    gameInstance, lapin);
 
             if (y + target.getRadius() > (int) dimension.getHeight()) {
                 y = (int) dimension.getHeight() - (int) target.getRadius() * 2;
