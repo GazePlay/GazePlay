@@ -176,7 +176,8 @@ class Target extends Portrait {
                 gameContext.getChildren().remove(c);
                 if (level < difficulty) {
                     createChildren(x, y);
-                } else if (((!lapin)&&(gameContext.getChildren().isEmpty()))||((lapin)&&(gameContext.getChildren().size()<=1))) {
+                } else if (((!lapin) && (gameContext.getChildren().isEmpty()))
+                        || ((lapin) && (gameContext.getChildren().size() <= 1))) {
                     long totalTime = (System.currentTimeMillis() - startTime) / 1000;
                     Label l = new Label("Temps : " + Long.toString(totalTime) + "s");
                     l.setTextFill(Color.WHITE);
