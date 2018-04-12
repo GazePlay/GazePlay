@@ -89,14 +89,14 @@ class Target extends Portrait {
                 @Override
                 public void handle(ActionEvent actionEvent) {
 
-                    addevent();
+                    addEvent();
 
                 }
 
             });
             waitbeforestart.play();
         } else {
-            addevent();
+            addEvent();
         }
 
         if (this.getPosition().getY() + this.getRadius() > (int) dimension.getHeight()) {
@@ -204,7 +204,7 @@ class Target extends Portrait {
         return x;
     }
 
-    public void addevent() {
+    private void addEvent() {
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 

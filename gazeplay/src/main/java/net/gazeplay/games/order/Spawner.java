@@ -7,6 +7,9 @@ package net.gazeplay.games.order;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.util.Duration;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.utils.Portrait;
@@ -28,13 +31,29 @@ public class Spawner {
         this.gameContext = gameContext;
     }
 
-    public void spawn(int nbTarget) {
-        Timeline waitbeforestart = new Timeline();
-        waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(2)));
+    public void spawn(int nbTarget, Order game) {
+        Target[] tabTarget = new Target[nbTarget];
+        Timeline timer = new Timeline();
+        timer.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
+        timer.setOnFinished(new EventHandler<ActionEvent>() {
+            int i = 0;
+
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Target t = new Target(100, randomPosGenerator, stats, Portrait.loadAllImages(), game, gameContext,
+                        i + 1);
+                gameContext.getChildren().add(t);
+                tabTarget[i] = t;
+                i++;
+                if (i < nbTarget) {
+                    timer.play();
+                }
+            }
+        });
+        timer.play();
+
         for (int i = 0; i < nbTarget; i++) {
-            Target t = new Target(100, randomPosGenerator, stats, Portrait.loadAllImages(), i + 1);
-            gameContext.getChildren().add(t);
-            waitbeforestart.play();
+            tabTarget[i].addEvent();
         }
     }
 }
