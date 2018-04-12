@@ -330,6 +330,8 @@ public class Piano extends Parent implements GameLifeCycle {
                     FirstChar = parser.nextChar();
                     if (precChar != '\0') {
                         instru.note_on(getNote(precChar));
+                        stats.incNbGoals();
+                        stats.start();
                         double x;
                         double y;
 
