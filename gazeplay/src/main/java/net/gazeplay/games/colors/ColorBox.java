@@ -25,6 +25,8 @@ public class ColorBox extends StackPane {
 
     public static final double COLOR_BOX_WIDTH_PX = 200;
 
+    public static final double COLOR_BOX_HEIGHT_REDUCTION_COEFF = 1.3;
+
     private final GazeProgressIndicator progressIndicator;
 
     private final ToggleButton button;
@@ -85,7 +87,7 @@ public class ColorBox extends StackPane {
                 + toolBox.getColorziationPane().getHeight();
 
         // + 1 for the curstom color box
-        return freeSpace / (ColorToolBox.NB_COLORS_DISPLAYED + 1);
+        return freeSpace / ((ColorToolBox.NB_COLORS_DISPLAYED + 1) * COLOR_BOX_HEIGHT_REDUCTION_COEFF);
     }
 
     public void select(Rectangle test) {

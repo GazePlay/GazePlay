@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.gazeplay.games.colors;
 
 import java.awt.image.BufferedImage;
@@ -14,6 +9,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleGroup;
@@ -27,14 +23,19 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javax.imageio.ImageIO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.CssUtil;
 
 @Slf4j
 public class ColorToolBox extends BorderPane {
@@ -83,6 +84,7 @@ public class ColorToolBox extends BorderPane {
     private final ColorBox customBox;
 
     private final ColorPicker colorPicker;
+    private final Button customColorPickerButton;
 
     @Getter
     @Setter
@@ -95,6 +97,9 @@ public class ColorToolBox extends BorderPane {
     private final Pane colorziationPane;
 
     private EventHandler disableColorizeButton = null;
+
+    private final Stage customColorDialog;
+    private CustomColorPicker CustomColorPicker;
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
         super();
@@ -150,12 +155,22 @@ public class ColorToolBox extends BorderPane {
 
         colorPicker = new ColorPicker(Color.WHITE);
 
-        customBox = new ColorBox((colorPicker.getValue()), root, this, group);
+        customColorPickerButton = new Button("custom color");
+        customBox = new ColorBox(Color.WHITE, root, this, group);
+
+        customColorDialog = buildCustomColorDialog();
+
+        customColorPickerButton.setOnAction((event) -> {
+
+            customColorDialog.show();
+            customBox.setColor(CustomColorPicker.getSelectedColor().getColor());
+        });
 
         colorPicker.setOnAction((event) -> {
             customBox.setColor(colorPicker.getValue());
         });
         colorPicker.prefWidthProperty().bind(customBox.widthProperty());
+        customColorPickerButton.prefWidthProperty().bind(customBox.widthProperty());
 
         Button previousPallet = new Button("");
         previousPallet.setPrefHeight(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
@@ -203,13 +218,15 @@ public class ColorToolBox extends BorderPane {
         final HBox bottomBox = new HBox(7);
         bottomBox.setPadding(new Insets(0, 5, 2, 5));
 
+        final Translator translator = GazePlay.getInstance().getTranslator();
+
         final FileChooser imageChooser = new FileChooser();
         configureImageFileChooser(imageChooser);
-        imageChooser.setTitle("Choose an image to load");
+        imageChooser.setTitle(translator.translate("imgChooserTitle"));
 
         final Stage stage = GazePlay.getInstance().getPrimaryStage();
 
-        Button imageChooserButton = new Button("Load image");
+        Button imageChooserButton = new Button(translator.translate("LoadImg"));
         imageChooserButton.setOnAction((event) -> {
 
             final File imageFile = imageChooser.showOpenDialog(stage);
@@ -217,14 +234,14 @@ public class ColorToolBox extends BorderPane {
 
                 Image image = new Image(imageFile.toURI().toString());
 
-                this.colorsGame.updateImage(image);
+                this.colorsGame.updateImage(image, imageFile.getName());
             }
         });
 
         final FileChooser imageSaveChooser = new FileChooser();
         configureImageFileSaver(imageSaveChooser);
-        imageSaveChooser.setTitle("Save your image");
-        Button imageSaverButton = new Button("Save image");
+        imageSaveChooser.setTitle(translator.translate("imgSaveChooserTitle"));
+        Button imageSaverButton = new Button(translator.translate("SaveImg"));
         imageSaverButton.setOnAction((event) -> {
 
             File imageFile = imageSaveChooser.showSaveDialog(stage);
@@ -318,7 +335,8 @@ public class ColorToolBox extends BorderPane {
 
     private void buildAddCustomCostomColorButton() {
 
-        Pane customColorPane = new VBox(customBox, colorPicker);
+        Pane customColorPane = new VBox(customBox, customColorPickerButton);
+        // Pane customColorPane = new VBox(customBox, colorPicker);
         mainPane.getChildren().add(customColorPane);
     }
 
@@ -412,5 +430,29 @@ public class ColorToolBox extends BorderPane {
         Pane colorPane = new StackPane(colorizeButtonPane, stopColorizeButtonPane);
 
         return colorPane;
+    }
+
+    private Stage buildCustomColorDialog() {
+
+        Stage dialog = new Stage();
+
+        dialog.initOwner(GazePlay.getInstance().getPrimaryStage());
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initStyle(StageStyle.UTILITY);
+        dialog.setOnCloseRequest(
+                windowEvent -> GazePlay.getInstance().getPrimaryStage().getScene().getRoot().setEffect(null));
+        dialog.setTitle("Choose a custom color");
+        dialog.setAlwaysOnTop(true);
+
+        CustomColorPicker = new CustomColorPicker(root, this);
+
+        final Scene scene = new Scene(CustomColorPicker, Color.TRANSPARENT);
+
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        CssUtil.setPreferredStylesheets(config, scene);
+
+        dialog.setScene(scene);
+
+        return dialog;
     }
 }
