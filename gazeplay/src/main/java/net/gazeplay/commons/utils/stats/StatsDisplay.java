@@ -75,7 +75,10 @@ public class StatsDisplay {
         if (stats instanceof BubblesGamesStats) {
 
             shoots = stats.getSortedLengthBetweenGoals();
-        } else {
+        } else if (stats instanceof ShootGamesStats) {
+
+            shoots = stats.getSortedLengthBetweenGoals();
+        }else {
 
             shoots = stats.getLengthBetweenGoals();
         }
