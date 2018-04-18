@@ -346,7 +346,7 @@ public class Shooter extends Parent implements GameLifeCycle {
     // done
     @Override
     public void dispose() {
-    	this.getChildren().clear(); 	
+        this.getChildren().clear();
     }
 
     private Transition restartTransition(Target t) {

@@ -78,7 +78,7 @@ public class StatsDisplay {
         } else if (stats instanceof ShootGamesStats) {
 
             shoots = stats.getSortedLengthBetweenGoals();
-        }else {
+        } else {
 
             shoots = stats.getLengthBetweenGoals();
         }
