@@ -8,18 +8,22 @@ import java.util.Random;
 
 public class EagerImageLibrary implements ImageLibrary {
 
-	private final List<Image> allImages;
+    private final List<Image> allImages;
 
-	private Random random = new Random();
-	
-	public EagerImageLibrary(File directoryFile) {
-		this.allImages = ImageUtils.loadAllImagesInDirectory(directoryFile);
-	}
+    private final Random random = new Random();
 
-	@Override
-	public Image pickRandomImage() {
-		final int randomIndex = random.nextInt(allImages.size());
-		return allImages.get(randomIndex);
-	}
+    public EagerImageLibrary(File directoryFile) {
+        this(ImageUtils.loadAllImagesInDirectory(directoryFile));
+    }
+
+    public EagerImageLibrary(List<Image> allImages) {
+        this.allImages = allImages;
+    }
+
+    @Override
+    public Image pickRandomImage() {
+        final int randomIndex = random.nextInt(allImages.size());
+        return allImages.get(randomIndex);
+    }
 
 }

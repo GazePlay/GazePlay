@@ -9,6 +9,7 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -41,7 +42,7 @@ public class MagicCards implements GameLifeCycle {
 
     private final Stats stats;
 
-    private final List<Image> images;
+    private final ImageLibrary imageLibrary;
 
     private RoundDetails currentRoundDetails;
 
@@ -52,7 +53,7 @@ public class MagicCards implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        images = ImageUtils.loadAllImagesInDirectory(Utils.getImagesSubDirectory("magiccards"));
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"));
     }
 
     @Override
@@ -129,7 +130,7 @@ public class MagicCards implements GameLifeCycle {
 
                 if (currentCardIndex == winnerCardIndex) {
                     isWinnerCard = true;
-                    image = getRandomImage();
+                    image = imageLibrary.pickRandomImage();
                 } else {
                     isWinnerCard = false;
                     image = new Image("data/common/images/error.png");
@@ -157,11 +158,6 @@ public class MagicCards implements GameLifeCycle {
 
     private static double computeCardWidth(Dimension2D gameDimension2D, int nbColumns) {
         return gameDimension2D.getWidth() / nbColumns;
-    }
-
-    private Image getRandomImage() {
-        int value = (int) Math.floor(Math.random() * images.size());
-        return images.get(value);
     }
 
 }

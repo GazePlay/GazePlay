@@ -14,7 +14,7 @@ import java.util.List;
 public class ImageUtils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
-    
+
     public static ImageLibrary createImageLibrary(File directoryFile) {
         return new EagerImageLibrary(directoryFile);
     }

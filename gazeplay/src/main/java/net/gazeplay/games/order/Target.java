@@ -1,14 +1,13 @@
 package net.gazeplay.games.order;
 
-import java.util.List;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
+import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
@@ -23,8 +22,8 @@ public class Target extends Portrait {
     private final GameContext gameContext;
 
     public Target(int initialRadius, RandomPositionGenerator randomPositionGenerator, Stats stats,
-            List<Image> availableImages, Order gameInstance, GameContext gameContext, int num) {
-        super(initialRadius, randomPositionGenerator, availableImages);
+            ImageLibrary imageLibrary, Order gameInstance, GameContext gameContext, int num) {
+        super(initialRadius, randomPositionGenerator, imageLibrary);
         this.stats = stats;
         this.num = num;
         this.gameInstance = gameInstance;

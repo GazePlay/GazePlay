@@ -9,7 +9,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.util.Duration;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.utils.Portrait;
@@ -40,7 +39,7 @@ public class Spawner {
 
             @Override
             public void handle(ActionEvent actionEvent) {
-                Target t = new Target(100, randomPosGenerator, stats, Portrait.loadAllImages(), game, gameContext,
+                Target t = new Target(100, randomPosGenerator, stats, Portrait.createImageLibrary(), game, gameContext,
                         i + 1);
                 gameContext.getChildren().add(t);
                 tabTarget[i] = t;

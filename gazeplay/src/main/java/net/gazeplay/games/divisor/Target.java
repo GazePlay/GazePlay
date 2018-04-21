@@ -22,9 +22,9 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
+import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -42,22 +42,22 @@ class Target extends Portrait {
     private final EventHandler<Event> enterEvent;
     private final GameContext gameContext;
     private final Divisor gameInstance;
-    private final List<Image> images;
+    private final ImageLibrary imageLibrary;
     private final long startTime;
     private final Dimension2D dimension;
     private final boolean lapin;
     private Image explosion;
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
-            List<Image> images, int level, long start, Divisor gameInstance, boolean lapin) {
-        super((int) 180 / (level + 1), randomPositionGenerator, images);
+            ImageLibrary imageLibrary, int level, long start, Divisor gameInstance, boolean lapin) {
+        super((int) 180 / (level + 1), randomPositionGenerator, imageLibrary);
         this.level = level;
         this.difficulty = 3;
         this.randomPosGenerator = randomPositionGenerator;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.stats = stats;
-        this.images = images;
+        this.imageLibrary = imageLibrary;
         this.startTime = start;
         this.lapin = lapin;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -219,7 +219,7 @@ class Target extends Portrait {
 
     private void createChildren(int x, int y) {
         for (int i = 0; i < 2; i++) {
-            Target target = new Target(gameContext, randomPosGenerator, stats, images, level + 1, startTime,
+            Target target = new Target(gameContext, randomPosGenerator, stats, imageLibrary, level + 1, startTime,
                     gameInstance, lapin);
 
             if (y + target.getRadius() > (int) dimension.getHeight()) {

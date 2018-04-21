@@ -23,7 +23,7 @@ public class Ninja implements GameLifeCycle {
     @Override
     public void launch() {
         Target portrait = new Target(gameContext, gameContext.getRandomPositionGenerator(), stats,
-                Portrait.loadAllImages());
+                Portrait.createImageLibrary());
 
         gameContext.getChildren().add(portrait);
     }
