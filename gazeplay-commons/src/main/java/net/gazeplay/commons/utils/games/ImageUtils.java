@@ -19,6 +19,10 @@ public class ImageUtils {
         return new EagerImageLibrary(directoryFile);
     }
 
+    public static ImageLibrary createImageLibrary(File directoryFile, File defaultDirectoryFile) {
+        return new EagerImageLibrary(directoryFile, new EagerImageLibrary(defaultDirectoryFile));
+    }
+
     public static List<Image> loadAllImagesInDirectory(File directoryFile) {
         log.info("Try to find images in folder : {}", directoryFile);
         if (directoryFile.exists()) {
