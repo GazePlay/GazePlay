@@ -59,7 +59,7 @@ public class ImageUtils {
         return result;
     }
 
-    private static Image loadImage(File file) {
+    public static Image loadImage(File file) {
         return new Image(file.toURI().toString());
     }
 

@@ -45,7 +45,7 @@ public class LazyImageLibrary extends AbstractImageLibrary {
                 @Override
                 public Image call() throws Exception {
                     File file = allFiles.get(index);
-                    return new Image(file.toURI().toString());
+                    return ImageUtils.loadImage(file);
                 }
             });
         } catch (ExecutionException e) {
