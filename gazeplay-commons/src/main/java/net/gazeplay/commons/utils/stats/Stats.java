@@ -11,7 +11,9 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.games.Utils;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,34 +30,17 @@ public class Stats implements GazeMotionListener {
     private final double heatMapPixelSize = computeHeatMapPixelSize();
 
     private final int trail = 10;
-
-    protected String gameName;
-
-    protected int nbGoals;
-
-    protected long length;
-
-    protected long beginTime;
-
-    private long zeroTime;
-
-    @Getter
-    protected ArrayList<Integer> lengthBetweenGoals;
-
     private final EventHandler<MouseEvent> recordMouseMovements;
     private final EventHandler<GazeEvent> recordGazeMovements;
-
-    private double[][] heatMap;
-
     private final Scene gameContextScene;
-
-    public void printLengthBetweenGoalsToString(PrintWriter out) {
-
-        for (Integer I : lengthBetweenGoals) {
-            out.print(I.intValue());
-            out.print(',');
-        }
-    }
+    protected String gameName;
+    protected int nbGoals;
+    protected long length;
+    protected long beginTime;
+    @Getter
+    protected ArrayList<Integer> lengthBetweenGoals;
+    private long zeroTime;
+    private double[][] heatMap;
 
     public Stats(Scene gameContextScene) {
         this(gameContextScene, null);
@@ -83,38 +68,23 @@ public class Stats implements GazeMotionListener {
         heatMap = new double[heatMapWidth][heatMapHeight];
     }
 
-    /**
-     * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px) if maximum memory is more
-     *         than 1Gb, only 200
-     */
-    private double computeHeatMapPixelSize() {
-        long maxMemory = Runtime.getRuntime().maxMemory();
-        double width = Screen.getPrimary().getBounds().getWidth();
-        double result;
-        if (maxMemory < 1024 * 1024 * 1024) {
-            // size is less than 1Gb (2^30)
-            result = width / 200;
-        } else {
-            result = width / 400;
-        }
-        log.info("computeHeatMapPixelSize() : result = {}", result);
-        return result;
+    public void start() {
+        beginTime = System.currentTimeMillis();
     }
 
-    protected void saveRawHeatMap(File file) throws IOException {
-        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
-            for (int i = 0; i < heatMap.length; i++) {
-                for (int j = 0; j < heatMap[0].length - 1; j++) {
-                    out.print((int) heatMap[i][j]);
-                    out.print(", ");
-                }
-                out.print((int) heatMap[i][heatMap[i].length - 1]);
-                out.println("");
-            }
-        }
+    public void stop() {
+        gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
+        gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
     }
 
-    public void savePNGHeatMap(File destination) {
+    @Override
+    public void gazeMoved(javafx.geometry.Point2D position) {
+        final int positionX = (int) position.getX();
+        final int positionY = (int) position.getY();
+        incHeatMap(positionX, positionY);
+    }
+
+    private void savePNGHeatMap(File destination) {
 
         Path HeatMapPath = Paths.get(HeatMapUtils.getHeatMapPath());
         Path dest = Paths.get(destination.getAbsolutePath());
@@ -144,48 +114,9 @@ public class Stats implements GazeMotionListener {
         savePNGHeatMap(heatMapPNGPath);
     }
 
-    @Override
-    public void gazeMoved(javafx.geometry.Point2D position) {
-        final int positionX = (int) position.getX();
-        final int positionY = (int) position.getY();
-        incHeatMap(positionX, positionY);
-    }
-
-    public void incHeatMap(int X, int Y) {
-
-        // in heatChart, x and y are opposed
-        int x = (int) (Y / heatMapPixelSize);
-        int y = (int) (X / heatMapPixelSize);
-
-        for (int i = -trail; i <= trail; i++)
-            for (int j = -trail; j <= trail; j++) {
-
-                if (Math.sqrt(i * i + j * j) < trail)
-                    inc(x + i, y + j);
-            }
-    }
-
-    private void inc(int x, int y) {
-
-        if (x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length)
-            // heatMap[heatMap[0].length - y][heatMap.length - x]++;
-            heatMap[x][y]++;
-    }
-
-    public void start() {
-
-        beginTime = System.currentTimeMillis();
-    }
-
     public int getNbGoals() {
 
         return nbGoals;
-    }
-
-    @Override
-    public String toString() {
-        return "Stats{" + "nbShoots = " + getNbGoals() + ", length = " + getLength() + ", average length = "
-                + getAverageLength() + ", zero time = " + getTotalLength() + '}' + lengthBetweenGoals;
     }
 
     public long getLength() {
@@ -256,11 +187,6 @@ public class Stats implements GazeMotionListener {
         return heatMap.clone();
     }
 
-    public void stop() {
-        gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
-        gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
-    }
-
     public void incNbGoals() {
         long last = System.currentTimeMillis() - beginTime;
         nbGoals++;
@@ -293,8 +219,74 @@ public class Stats implements GazeMotionListener {
         return normalList;
     }
 
-    protected String getTodayFolder() {
+    @Override
+    public String toString() {
+        return "Stats{" + "nbShoots = " + getNbGoals() + ", length = " + getLength() + ", average length = "
+                + getAverageLength() + ", zero time = " + getTotalLength() + '}' + lengthBetweenGoals;
+    }
+
+    String getTodayFolder() {
 
         return Utils.getStatsFolder() + gameName + Utils.FILESEPARATOR + Utils.today() + Utils.FILESEPARATOR;
+    }
+
+    void printLengthBetweenGoalsToString(PrintWriter out) {
+
+        for (Integer I : lengthBetweenGoals) {
+            out.print(I.intValue());
+            out.print(',');
+        }
+    }
+
+    private void saveRawHeatMap(File file) throws IOException {
+        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
+            for (int i = 0; i < heatMap.length; i++) {
+                for (int j = 0; j < heatMap[0].length - 1; j++) {
+                    out.print((int) heatMap[i][j]);
+                    out.print(", ");
+                }
+                out.print((int) heatMap[i][heatMap[i].length - 1]);
+                out.println("");
+            }
+        }
+    }
+
+    private void incHeatMap(int X, int Y) {
+
+        // in heatChart, x and y are opposed
+        int x = (int) (Y / heatMapPixelSize);
+        int y = (int) (X / heatMapPixelSize);
+
+        for (int i = -trail; i <= trail; i++)
+            for (int j = -trail; j <= trail; j++) {
+
+                if (Math.sqrt(i * i + j * j) < trail)
+                    inc(x + i, y + j);
+            }
+    }
+
+    private void inc(int x, int y) {
+
+        if (x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length)
+            // heatMap[heatMap[0].length - y][heatMap.length - x]++;
+            heatMap[x][y]++;
+    }
+
+    /**
+     * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px) if maximum memory is more
+     *         than 1Gb, only 200
+     */
+    private double computeHeatMapPixelSize() {
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        double width = Screen.getPrimary().getBounds().getWidth();
+        double result;
+        if (maxMemory < 1024 * 1024 * 1024) {
+            // size is less than 1Gb (2^30)
+            result = width / 200;
+        } else {
+            result = width / 400;
+        }
+        log.info("computeHeatMapPixelSize() : result = {}", result);
+        return result;
     }
 }
