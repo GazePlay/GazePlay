@@ -1,4 +1,4 @@
-package net.gazeplay.games.whereisit;
+package net.gazeplay.commons.utils.games;
 
 import lombok.extern.slf4j.Slf4j;
 
