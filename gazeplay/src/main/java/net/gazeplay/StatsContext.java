@@ -126,7 +126,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 label = new I18NText(translator, "AverageLength", COLON);
             }
 
-            Text value = new Text(StatsDisplay.convert(stats.getAverageLength()));
+            Text value = new Text(StatsDisplay.convert(stats.computeAverageLength()));
 
             addToGrid(grid, currentFormRow, label, value);
         }
@@ -140,7 +140,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 label = new I18NText(translator, "MedianLength", COLON);
             }
 
-            Text value = new Text(StatsDisplay.convert(stats.getMedianLength()));
+            Text value = new Text(StatsDisplay.convert(stats.computeMedianLength()));
 
             addToGrid(grid, currentFormRow, label, value);
         }
@@ -148,7 +148,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "StandDev", COLON);
 
-            Text value = new Text(StatsDisplay.convert((long) stats.getSD()));
+            Text value = new Text(StatsDisplay.convert((long) stats.computeSD()));
 
             addToGrid(grid, currentFormRow, label, value);
         }

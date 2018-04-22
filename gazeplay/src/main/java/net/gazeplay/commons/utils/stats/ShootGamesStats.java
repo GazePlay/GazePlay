@@ -37,7 +37,7 @@ public class ShootGamesStats extends Stats {
     public void saveStats() throws IOException {
         super.saveStats();
 
-        final File infoStatsFile = Utils.createInfoStatsFile(getTodayFolder());
+        final File infoStatsFile = createInfoStatsFile();
         try (PrintWriter out = new PrintWriter(infoStatsFile, "UTF-8")) {
             out.print("Date");
             out.print(',');
@@ -72,9 +72,9 @@ public class ShootGamesStats extends Stats {
             out.print(',');
             out.print(getLength());
             out.print(',');
-            out.print(getAverageLength());
+            out.print(computeAverageLength());
             out.print(',');
-            out.print(getSD());
+            out.print(computeSD());
             out.print(',');
             out.print(getNbUnCountedShoots());
             out.print(',');

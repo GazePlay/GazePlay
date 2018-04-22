@@ -193,12 +193,6 @@ public class Utils {
 
     }
 
-    public static File createInfoStatsFile(String outputDirectoryPath) {
-        final File outputDirectory = new File(outputDirectoryPath);
-        final String fileName = Utils.now() + "-info-game.csv";
-        return new File(outputDirectory, fileName);
-    }
-
     public static boolean copyFromJar(String filePath, String destinationPath) {
         InputStream sourceFile = null;
         OutputStream destinationFile = null;

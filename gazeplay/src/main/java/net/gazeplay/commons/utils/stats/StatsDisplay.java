@@ -22,7 +22,7 @@ import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -70,7 +70,7 @@ public class StatsDisplay {
         XYChart.Series sdm = new XYChart.Series();
         // populating the series with data
 
-        ArrayList<Integer> shoots = null;
+        List<Integer> shoots = null;
 
         if (stats instanceof BubblesGamesStats) {
 
@@ -83,28 +83,28 @@ public class StatsDisplay {
             shoots = stats.getLengthBetweenGoals();
         }
 
-        double sd = stats.getSD();
+        double sd = stats.computeSD();
 
         int i = 0;
 
-        average.getData().add(new XYChart.Data(0 + "", stats.getAverageLength()));
-        sdp.getData().add(new XYChart.Data(0 + "", stats.getAverageLength() + sd));
-        sdm.getData().add(new XYChart.Data(0 + "", stats.getAverageLength() - sd));
+        average.getData().add(new XYChart.Data(0 + "", stats.computeAverageLength()));
+        sdp.getData().add(new XYChart.Data(0 + "", stats.computeAverageLength() + sd));
+        sdm.getData().add(new XYChart.Data(0 + "", stats.computeAverageLength() - sd));
 
         for (Integer I : shoots) {
 
             i++;
             series.getData().add(new XYChart.Data(i + "", I.intValue()));
-            average.getData().add(new XYChart.Data(i + "", stats.getAverageLength()));
+            average.getData().add(new XYChart.Data(i + "", stats.computeAverageLength()));
 
-            sdp.getData().add(new XYChart.Data(i + "", stats.getAverageLength() + sd));
-            sdm.getData().add(new XYChart.Data(i + "", stats.getAverageLength() - sd));
+            sdp.getData().add(new XYChart.Data(i + "", stats.computeAverageLength() + sd));
+            sdm.getData().add(new XYChart.Data(i + "", stats.computeAverageLength() - sd));
         }
 
         i++;
-        average.getData().add(new XYChart.Data(i + "", stats.getAverageLength()));
-        sdp.getData().add(new XYChart.Data(i + "", stats.getAverageLength() + sd));
-        sdm.getData().add(new XYChart.Data(i + "", stats.getAverageLength() - sd));
+        average.getData().add(new XYChart.Data(i + "", stats.computeAverageLength()));
+        sdp.getData().add(new XYChart.Data(i + "", stats.computeAverageLength() + sd));
+        sdm.getData().add(new XYChart.Data(i + "", stats.computeAverageLength() - sd));
 
         lineChart.setCreateSymbols(false);
 

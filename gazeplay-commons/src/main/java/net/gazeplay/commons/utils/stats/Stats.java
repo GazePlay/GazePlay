@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by schwab on 16/08/2017.
@@ -27,18 +28,21 @@ import java.util.Collections;
 @Slf4j
 public class Stats implements GazeMotionListener {
 
+    private static final int trail = 10;
+
     private final double heatMapPixelSize = computeHeatMapPixelSize();
 
-    private final int trail = 10;
     private final EventHandler<MouseEvent> recordMouseMovements;
     private final EventHandler<GazeEvent> recordGazeMovements;
     private final Scene gameContextScene;
     protected String gameName;
+    @Getter
     protected int nbGoals;
+    @Getter
     protected long length;
     protected long beginTime;
     @Getter
-    protected ArrayList<Integer> lengthBetweenGoals;
+    protected List<Integer> lengthBetweenGoals;
     private long zeroTime;
     private double[][] heatMap;
 
@@ -84,47 +88,18 @@ public class Stats implements GazeMotionListener {
         incHeatMap(positionX, positionY);
     }
 
-    private void savePNGHeatMap(File destination) {
-
-        Path HeatMapPath = Paths.get(HeatMapUtils.getHeatMapPath());
-        Path dest = Paths.get(destination.getAbsolutePath());
-
-        try {
-            Files.copy(HeatMapPath, dest, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            log.error("Exception", e);
-        }
-    }
-
     public void saveStats() throws IOException {
 
-        File saveFile = new File(Utils.getStatsFolder());
-        saveFile.mkdir();
+        File todayDirectory = getGameStatsOfTheDayDirectory();
+        final String heatmapFilePrefix = Utils.now() + "-heatmap";
+        File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
+        File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
 
-        File gameFolder = new File(Utils.getStatsFolder() + gameName);
-        gameFolder.mkdir();
-
-        File savepath = new File(gameFolder.getAbsoluteFile() + Utils.FILESEPARATOR + Utils.today());
-        savepath.mkdir();
-
-        File heatMapCSVPath = new File(savepath.getAbsoluteFile() + Utils.FILESEPARATOR + Utils.now() + "-heatmap.csv");
-        File heatMapPNGPath = new File(savepath.getAbsoluteFile() + Utils.FILESEPARATOR + Utils.now() + "-heatmap.png");
-
-        saveRawHeatMap(heatMapCSVPath);
-        savePNGHeatMap(heatMapPNGPath);
+        saveHeatMapAsCsv(heatMapCsvFile);
+        saveHeatMapAsPng(heatMapPngFile);
     }
 
-    public int getNbGoals() {
-
-        return nbGoals;
-    }
-
-    public long getLength() {
-
-        return length;
-    }
-
-    public long getAverageLength() {
+    public long computeAverageLength() {
 
         if (nbGoals == 0)
             return 0;
@@ -132,7 +107,7 @@ public class Stats implements GazeMotionListener {
             return getLength() / nbGoals;
     }
 
-    public long getMedianLength() {
+    public long computeMedianLength() {
 
         if (nbGoals == 0)
             return 0;
@@ -140,11 +115,10 @@ public class Stats implements GazeMotionListener {
 
             int nbElements = lengthBetweenGoals.size();
 
-            ArrayList<Integer> sortedList = (ArrayList<Integer>) lengthBetweenGoals.clone();
-
+            List<Integer> sortedList = new ArrayList<>(lengthBetweenGoals);
             Collections.sort(sortedList);
 
-            int middle = (int) (nbElements / 2);
+            int middle = nbElements / 2;
 
             if (nbElements % 2 == 0) {// number of elements is even, median is the average of the two central numbers
 
@@ -163,27 +137,24 @@ public class Stats implements GazeMotionListener {
         return System.currentTimeMillis() - zeroTime;
     }
 
-    public double getVariance() {
+    private double computeVariance() {
 
-        double average = getAverageLength();
+        double average = computeAverageLength();
 
         double sum = 0;
 
-        for (Integer I : lengthBetweenGoals) {
-
-            sum += Math.pow((I.intValue() - average), 2);
+        for (Integer value : lengthBetweenGoals) {
+            sum += Math.pow((value - average), 2);
         }
 
         return sum / nbGoals;
     }
 
-    public double getSD() {
-
-        return Math.sqrt(getVariance());
+    public double computeSD() {
+        return Math.sqrt(computeVariance());
     }
 
     public double[][] getHeatMap() {
-
         return heatMap.clone();
     }
 
@@ -194,15 +165,14 @@ public class Stats implements GazeMotionListener {
         lengthBetweenGoals.add((int) last);
     }
 
-    public ArrayList<Integer> getSortedLengthBetweenGoals() {
+    public List<Integer> getSortedLengthBetweenGoals() {
 
         int nbElements = lengthBetweenGoals.size();
 
-        ArrayList<Integer> sortedList = (ArrayList<Integer>) lengthBetweenGoals.clone();
-
+        ArrayList<Integer> sortedList = new ArrayList<>(lengthBetweenGoals);
         Collections.sort(sortedList);
 
-        ArrayList<Integer> normalList = (ArrayList<Integer>) lengthBetweenGoals.clone();
+        ArrayList<Integer> normalList = new ArrayList<>(lengthBetweenGoals);
 
         int j = 0;
 
@@ -222,12 +192,24 @@ public class Stats implements GazeMotionListener {
     @Override
     public String toString() {
         return "Stats{" + "nbShoots = " + getNbGoals() + ", length = " + getLength() + ", average length = "
-                + getAverageLength() + ", zero time = " + getTotalLength() + '}' + lengthBetweenGoals;
+                + computeAverageLength() + ", zero time = " + getTotalLength() + '}' + lengthBetweenGoals;
     }
 
-    String getTodayFolder() {
+    File createInfoStatsFile() {
+        File outputDirectory = getGameStatsOfTheDayDirectory();
+        final String fileName = Utils.now() + "-info-game.csv";
+        return new File(outputDirectory, fileName);
+    }
 
-        return Utils.getStatsFolder() + gameName + Utils.FILESEPARATOR + Utils.today() + Utils.FILESEPARATOR;
+    File getGameStatsOfTheDayDirectory() {
+        File statsDirectory = new File(Utils.getStatsFolder());
+        File gameDirectory = new File(statsDirectory, gameName);
+        File todayDirectory = new File(gameDirectory, Utils.today());
+
+        boolean outputDirectoryCreated = todayDirectory.mkdirs();
+        log.info("outputDirectoryCreated = {}", outputDirectoryCreated);
+
+        return todayDirectory;
     }
 
     void printLengthBetweenGoalsToString(PrintWriter out) {
@@ -238,7 +220,7 @@ public class Stats implements GazeMotionListener {
         }
     }
 
-    private void saveRawHeatMap(File file) throws IOException {
+    private void saveHeatMapAsCsv(File file) throws IOException {
         try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
             for (int i = 0; i < heatMap.length; i++) {
                 for (int j = 0; j < heatMap[0].length - 1; j++) {
@@ -248,6 +230,18 @@ public class Stats implements GazeMotionListener {
                 out.print((int) heatMap[i][heatMap[i].length - 1]);
                 out.println("");
             }
+        }
+    }
+
+    private void saveHeatMapAsPng(File destination) {
+
+        Path HeatMapPath = Paths.get(HeatMapUtils.getHeatMapPath());
+        Path dest = Paths.get(destination.getAbsolutePath());
+
+        try {
+            Files.copy(HeatMapPath, dest, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            log.error("Exception", e);
         }
     }
 
