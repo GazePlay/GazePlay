@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -16,50 +17,51 @@ public class ImageUtils {
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
 
     public static ImageLibrary createImageLibrary(File directoryFile) {
-        return new EagerImageLibrary(directoryFile);
+        return new LazyImageLibrary(directoryFile, new EagerImageLibrary(defaultImages()));
     }
 
     public static ImageLibrary createImageLibrary(File directoryFile, File defaultDirectoryFile) {
-        return new EagerImageLibrary(directoryFile, new EagerImageLibrary(defaultDirectoryFile));
+        return new LazyImageLibrary(directoryFile,
+                new EagerImageLibrary(defaultImages(), new LazyImageLibrary(defaultDirectoryFile)));
     }
 
     public static List<Image> loadAllImagesInDirectory(File directoryFile) {
         log.info("Try to find images in folder : {}", directoryFile);
-        if (directoryFile.exists()) {
-            List<Image> images = getImages(directoryFile);
-
-            if (!images.isEmpty()) {
-                log.debug("I found {} images in folder : {}", images.size(), directoryFile);
-                return images;
-            } else {
-                log.info("No image in folder : {}", directoryFile);
-                return defaultImages();
-            }
-        } else {
+        if (!directoryFile.exists()) {
             log.info("Folder doesn't exist : {}", directoryFile);
             return defaultImages();
         }
-    }
 
-    private static List<Image> getImages(File directoryFile) {
-        List<Image> result = new ArrayList<>();
+        List<Image> images = loadAllImages(directoryFile);
 
-        final String[] filenames = directoryFile.list();
-        if (filenames != null) {
-            for (String currentFilename : filenames) {
-                final String fileUrl = "file:" + directoryFile.getAbsoluteFile() + FILESEPARATOR + currentFilename;
-                boolean added;
-
-                if (isImage(currentFilename)) {
-                    result.add(new Image(fileUrl));
-                    added = true;
-                } else {
-                    added = false;
-                }
-                log.debug("{} : added = {}", fileUrl, added);
-            }
+        if (images.isEmpty()) {
+            log.info("No image in folder : {}", directoryFile);
+            return defaultImages();
         }
 
+        log.debug("I found {} images in folder : {}", images.size(), directoryFile);
+        return images;
+    }
+
+    public static List<Image> loadAllImages(File directoryFile) {
+        List<File> files = listImageFiles(directoryFile);
+
+        return loadAllAsImages(files);
+    }
+
+    public static List<File> listImageFiles(File directoryFile) {
+        File[] files = directoryFile.listFiles(ImageUtils::isImage);
+        if (files == null) {
+            files = new File[0];
+        }
+        return Arrays.asList(files);
+    }
+
+    public static List<Image> loadAllAsImages(List<File> imageFiles) {
+        List<Image> result = new ArrayList<>();
+        for (File currentFile : imageFiles) {
+            result.add(new Image(currentFile.toURI().toString()));
+        }
         return result;
     }
 
@@ -89,7 +91,8 @@ public class ImageUtils {
         }
     }
 
-    private static boolean isImage(String filename) {
+    private static boolean isImage(File file) {
+        String filename = file.getName();
         if (filename.startsWith(".")) {
             // Problems with filenames starting with a dot on Windows
             return false;
