@@ -14,8 +14,6 @@ import java.util.List;
 @Slf4j
 public class ImageUtils {
 
-    public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
-
     public static ImageLibrary createImageLibrary(File directoryFile) {
         return new LazyImageLibrary(directoryFile, new EagerImageLibrary(defaultImages()));
     }
@@ -23,24 +21,6 @@ public class ImageUtils {
     public static ImageLibrary createImageLibrary(File directoryFile, File defaultDirectoryFile) {
         return new LazyImageLibrary(directoryFile,
                 new EagerImageLibrary(defaultImages(), new LazyImageLibrary(defaultDirectoryFile)));
-    }
-
-    public static List<Image> loadAllImagesInDirectory(File directoryFile) {
-        log.info("Try to find images in folder : {}", directoryFile);
-        if (!directoryFile.exists()) {
-            log.info("Folder doesn't exist : {}", directoryFile);
-            return defaultImages();
-        }
-
-        List<Image> images = loadAllImages(directoryFile);
-
-        if (images.isEmpty()) {
-            log.info("No image in folder : {}", directoryFile);
-            return defaultImages();
-        }
-
-        log.debug("I found {} images in folder : {}", images.size(), directoryFile);
-        return images;
     }
 
     public static List<Image> loadAllImages(File directoryFile) {

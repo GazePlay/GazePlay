@@ -12,11 +12,11 @@ public class EagerImageLibrary extends AbstractImageLibrary {
     private final List<Image> allImages;
 
     public EagerImageLibrary(File directoryFile) {
-        this(ImageUtils.loadAllImagesInDirectory(directoryFile), null);
+        this(ImageUtils.loadAllImages(directoryFile), null);
     }
 
     public EagerImageLibrary(File directoryFile, ImageLibrary defaultImageLibrary) {
-        this(ImageUtils.loadAllImagesInDirectory(directoryFile), defaultImageLibrary);
+        this(ImageUtils.loadAllImages(directoryFile), defaultImageLibrary);
     }
 
     public EagerImageLibrary(List<Image> allImages) {
