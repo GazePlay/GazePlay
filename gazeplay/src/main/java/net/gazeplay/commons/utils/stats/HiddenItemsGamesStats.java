@@ -13,7 +13,7 @@ public class HiddenItemsGamesStats extends Stats {
     }
 
     @Override
-    public void saveStats() throws IOException {
+    public SavedStatsInfo saveStats() throws IOException {
         super.saveStats();
 
         final File infoStatsFile = createInfoStatsFile();
@@ -58,6 +58,7 @@ public class HiddenItemsGamesStats extends Stats {
 
             out.flush();
         }
+        return null;
     }
 
 }

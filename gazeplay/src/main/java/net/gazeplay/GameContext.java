@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
@@ -30,6 +31,9 @@ import java.io.IOException;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
+
+    @Setter
+    private static boolean runAsynchronousStatsPersist = false;
 
     public static GameContext newInstance(GazePlay gazePlay) {
 
@@ -175,8 +179,13 @@ public class GameContext extends GraphicalContext<Pane> {
                 log.error("Failed to save stats file", e);
             }
         };
-        Thread asynchronousStatsPersistThread = new Thread(asynchronousStatsPersistTask);
-        asynchronousStatsPersistThread.start();
+
+        if (runAsynchronousStatsPersist) {
+            Thread asynchronousStatsPersistThread = new Thread(asynchronousStatsPersistTask);
+            asynchronousStatsPersistThread.start();
+        } else {
+            asynchronousStatsPersistTask.run();
+        }
 
         StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
 

@@ -4,23 +4,21 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
+import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.games.Utils;
+import org.tc33.jheatchart.HeatChart;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by schwab on 16/08/2017.
@@ -45,6 +43,9 @@ public class Stats implements GazeMotionListener {
     protected List<Integer> lengthBetweenGoals;
     private long zeroTime;
     private double[][] heatMap;
+
+    @Getter
+    private SavedStatsInfo savedStatsInfo;
 
     public Stats(Scene gameContextScene) {
         this(gameContextScene, null);
@@ -88,15 +89,32 @@ public class Stats implements GazeMotionListener {
         incHeatMap(positionX, positionY);
     }
 
-    public void saveStats() throws IOException {
+    @Data
+    public static class SavedStatsInfo extends Observable {
+        private final File heatMapPngFile;
+        private final File heatMapCsvFile;
+
+        public void notifyFilesReady() {
+            this.notifyObservers();
+        }
+
+    }
+
+    public SavedStatsInfo saveStats() throws IOException {
 
         File todayDirectory = getGameStatsOfTheDayDirectory();
         final String heatmapFilePrefix = Utils.now() + "-heatmap";
-        File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
         File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
+        File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
 
-        saveHeatMapAsCsv(heatMapCsvFile);
+        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile);
+        this.savedStatsInfo = savedStatsInfo;
+
         saveHeatMapAsPng(heatMapPngFile);
+        saveHeatMapAsCsv(heatMapCsvFile);
+
+        savedStatsInfo.notifyFilesReady();
+        return savedStatsInfo;
     }
 
     public long computeAverageLength() {
@@ -233,14 +251,23 @@ public class Stats implements GazeMotionListener {
         }
     }
 
-    private void saveHeatMapAsPng(File destination) {
+    private void saveHeatMapAsPng(File outputPngFile) {
 
-        Path HeatMapPath = Paths.get(HeatMapUtils.getHeatMapPath());
-        Path dest = Paths.get(destination.getAbsolutePath());
+        log.info(String.format("Heatmap size: %3d X %3d", heatMap[0].length, heatMap.length));
+
+        // Step 1: Create our heat map chart using our data.
+        HeatChart map = new HeatChart(heatMap);
+
+        map.setHighValueColour(java.awt.Color.RED);
+        map.setLowValueColour(java.awt.Color.lightGray);
+
+        map.setShowXAxisValues(false);
+        map.setShowYAxisValues(false);
+        map.setChartMargin(0);
 
         try {
-            Files.copy(HeatMapPath, dest, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
+            map.saveToFile(outputPngFile);
+        } catch (Exception e) {
             log.error("Exception", e);
         }
     }

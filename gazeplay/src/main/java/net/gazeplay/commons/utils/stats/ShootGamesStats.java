@@ -34,7 +34,7 @@ public class ShootGamesStats extends Stats {
     }
 
     @Override
-    public void saveStats() throws IOException {
+    public SavedStatsInfo saveStats() throws IOException {
         super.saveStats();
 
         final File infoStatsFile = createInfoStatsFile();
@@ -83,6 +83,7 @@ public class ShootGamesStats extends Stats {
 
             out.flush();
         }
+        return null;
     }
 
 }

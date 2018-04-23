@@ -1,5 +1,6 @@
 package net.gazeplay.commons.utils.stats;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -18,7 +19,6 @@ import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
-import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
@@ -131,16 +131,17 @@ public class StatsDisplay {
     }
 
     public static ImageView buildHeatChart(Stats stats, Scene scene) {
-
-        HeatMapUtils.buildHeatMap(stats.getHeatMap());
-
-        Image image = new Image("file:" + HeatMapUtils.getHeatMapPath());
-
-        ImageView heatMap = new ImageView(image);
+        ImageView heatMap = new ImageView();
         heatMap.setPreserveRatio(true);
 
-        EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, scene);
+        Stats.SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+        savedStatsInfo.addObserver((o, arg) -> {
+            Platform.runLater(() -> heatMap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString())));
+        });
 
+        heatMap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
+
+        EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, scene);
         heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMapEvent);
 
         return heatMap;
