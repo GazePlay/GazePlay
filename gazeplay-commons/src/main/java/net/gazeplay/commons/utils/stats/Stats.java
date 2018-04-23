@@ -172,10 +172,6 @@ public class Stats implements GazeMotionListener {
         return Math.sqrt(computeVariance());
     }
 
-    public double[][] getHeatMap() {
-        return heatMap.clone();
-    }
-
     public void incNbGoals() {
         long last = System.currentTimeMillis() - beginTime;
         nbGoals++;
