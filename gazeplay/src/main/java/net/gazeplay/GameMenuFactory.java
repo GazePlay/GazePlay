@@ -289,6 +289,7 @@ public class GameMenuFactory {
                     .playRemoteSound(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
         }
 
+        stats.start();
         currentGame.launch();
     }
 

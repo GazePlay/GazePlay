@@ -66,7 +66,7 @@ public class Target extends Portrait {
 
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
-        stats.start();
+        stats.notifyNewRoundReady();
     }
 
     private void enter() {
@@ -110,7 +110,7 @@ public class Target extends Portrait {
             public void handle(ActionEvent actionEvent) {
 
                 anniOff = true;
-                stats.start();
+                stats.notifyNewRoundReady();
             }
         });
 

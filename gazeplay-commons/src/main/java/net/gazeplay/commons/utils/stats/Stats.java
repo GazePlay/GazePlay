@@ -4,8 +4,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -15,37 +16,33 @@ import org.tc33.jheatchart.HeatChart;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Observable;
 
 /**
  * Created by schwab on 16/08/2017.
  */
 @Slf4j
+@ToString
 public class Stats implements GazeMotionListener {
 
     private static final int trail = 10;
-
     private final double heatMapPixelSize = computeHeatMapPixelSize();
-
     private final EventHandler<MouseEvent> recordMouseMovements;
     private final EventHandler<GazeEvent> recordGazeMovements;
     private final Scene gameContextScene;
+    private final LifeCycle lifeCycle = new LifeCycle();
+    private final RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
     protected String gameName;
     @Getter
     protected int nbGoals;
+    @Setter
+    private long accidentalShotPreventionPeriod = 0;
     @Getter
-    protected long length;
-    protected long beginTime;
-    @Getter
-    protected List<Integer> lengthBetweenGoals;
-    private long zeroTime;
+    private int nbUnCountedShoots;
     private double[][] heatMap;
-
     @Getter
     private SavedStatsInfo savedStatsInfo;
+    private Long currentRoundStartTime;
 
     public Stats(Scene gameContextScene) {
         this(gameContextScene, null);
@@ -55,29 +52,33 @@ public class Stats implements GazeMotionListener {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
 
-        nbGoals = 0;
-        beginTime = 0;
-        length = 0;
-        zeroTime = System.currentTimeMillis();
-        lengthBetweenGoals = new ArrayList<Integer>(1000);
-
         recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
         recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
 
-        gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
-        gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+        heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
+    }
 
+    private static double[][] instanciateHeatMapData(Scene gameContextScene, double heatMapPixelSize) {
         int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
         int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
         log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
-        heatMap = new double[heatMapWidth][heatMapHeight];
+        return new double[heatMapWidth][heatMapHeight];
+    }
+
+    public void notifyNewRoundReady() {
+        currentRoundStartTime = System.currentTimeMillis();
     }
 
     public void start() {
-        beginTime = System.currentTimeMillis();
+        lifeCycle.start();
+        currentRoundStartTime = lifeCycle.getStartTime();
+
+        gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+        gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
     }
 
     public void stop() {
+        lifeCycle.stop();
         gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
         gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
     }
@@ -87,17 +88,6 @@ public class Stats implements GazeMotionListener {
         final int positionX = (int) position.getX();
         final int positionY = (int) position.getY();
         incHeatMap(positionX, positionY);
-    }
-
-    @Data
-    public static class SavedStatsInfo extends Observable {
-        private final File heatMapPngFile;
-        private final File heatMapCsvFile;
-
-        public void notifyFilesReady() {
-            this.notifyObservers();
-        }
-
     }
 
     public SavedStatsInfo saveStats() throws IOException {
@@ -117,96 +107,48 @@ public class Stats implements GazeMotionListener {
         return savedStatsInfo;
     }
 
-    public long computeAverageLength() {
-
-        if (nbGoals == 0)
-            return 0;
-        else
-            return getLength() / nbGoals;
+    public long computeRoundsDurationAverageDuration() {
+        return roundsDurationReport.computeAverageLength();
     }
 
-    public long computeMedianLength() {
-
-        if (nbGoals == 0)
-            return 0;
-        else {
-
-            int nbElements = lengthBetweenGoals.size();
-
-            List<Integer> sortedList = new ArrayList<>(lengthBetweenGoals);
-            Collections.sort(sortedList);
-
-            int middle = nbElements / 2;
-
-            if (nbElements % 2 == 0) {// number of elements is even, median is the average of the two central numbers
-
-                middle -= 1;
-                return (sortedList.get(middle) + sortedList.get(middle + 1)) / 2;
-
-            } else {// number of elements is odd, median is the central number
-
-                return sortedList.get(middle);
-            }
-        }
+    public long computeRoundsDurationMedianDuration() {
+        return roundsDurationReport.computeMedianDuration();
     }
 
-    public long getTotalLength() {
-
-        return System.currentTimeMillis() - zeroTime;
+    public long getRoundsTotalAdditiveDuration() {
+        return roundsDurationReport.getTotalAdditiveDuration();
     }
 
-    private double computeVariance() {
-
-        double average = computeAverageLength();
-
-        double sum = 0;
-
-        for (Integer value : lengthBetweenGoals) {
-            sum += Math.pow((value - average), 2);
-        }
-
-        return sum / nbGoals;
+    public long computeTotalElapsedDuration() {
+        return lifeCycle.computeTotalElapsedDuration();
     }
 
-    public double computeSD() {
-        return Math.sqrt(computeVariance());
+    public double computeRoundsDurationVariance() {
+        return roundsDurationReport.computeVariance();
+    }
+
+    public double computeRoundsDurationStandardDeviation() {
+        return roundsDurationReport.computeSD();
     }
 
     public void incNbGoals() {
-        long last = System.currentTimeMillis() - beginTime;
-        nbGoals++;
-        length += last;
-        lengthBetweenGoals.add((int) last);
-    }
-
-    public List<Integer> getSortedLengthBetweenGoals() {
-
-        int nbElements = lengthBetweenGoals.size();
-
-        ArrayList<Integer> sortedList = new ArrayList<>(lengthBetweenGoals);
-        Collections.sort(sortedList);
-
-        ArrayList<Integer> normalList = new ArrayList<>(lengthBetweenGoals);
-
-        int j = 0;
-
-        for (int i = 0; i < nbElements; i++) {
-
-            if (i % 2 == 0)
-                normalList.set(j, sortedList.get(i));
-            else {
-                normalList.set(nbElements - 1 - j, sortedList.get(i));
-                j++;
-            }
+        final long currentRoundEndTime = System.currentTimeMillis();
+        final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
+        if (currentRoundDuration < accidentalShotPreventionPeriod) {
+            nbUnCountedShoots++;
+        } else {
+            nbGoals++;
+            this.roundsDurationReport.addRoundDuration(currentRoundDuration);
         }
-
-        return normalList;
+        currentRoundStartTime = currentRoundEndTime;
     }
 
-    @Override
-    public String toString() {
-        return "Stats{" + "nbShoots = " + getNbGoals() + ", length = " + getLength() + ", average length = "
-                + computeAverageLength() + ", zero time = " + getTotalLength() + '}' + lengthBetweenGoals;
+    public List<Long> getSortedDurationsBetweenGoals() {
+        return this.roundsDurationReport.getSortedDurationsBetweenGoals();
+    }
+
+    public List<Long> getOriginalDurationsBetweenGoals() {
+        return this.roundsDurationReport.getOriginalDurationsBetweenGoals();
     }
 
     File createInfoStatsFile() {
@@ -227,11 +169,7 @@ public class Stats implements GazeMotionListener {
     }
 
     void printLengthBetweenGoalsToString(PrintWriter out) {
-
-        for (Integer I : lengthBetweenGoals) {
-            out.print(I.intValue());
-            out.print(',');
-        }
+        this.roundsDurationReport.printLengthBetweenGoalsToString(out);
     }
 
     private void saveHeatMapAsCsv(File file) throws IOException {
@@ -306,4 +244,5 @@ public class Stats implements GazeMotionListener {
         log.info("computeHeatMapPixelSize() : result = {}", result);
         return result;
     }
+
 }

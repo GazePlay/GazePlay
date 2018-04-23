@@ -70,41 +70,37 @@ public class StatsDisplay {
         XYChart.Series sdm = new XYChart.Series();
         // populating the series with data
 
-        List<Integer> shoots = null;
-
+        final List<Long> shoots;
         if (stats instanceof BubblesGamesStats) {
-
-            shoots = stats.getSortedLengthBetweenGoals();
+            shoots = stats.getSortedDurationsBetweenGoals();
         } else if (stats instanceof ShootGamesStats) {
-
-            shoots = stats.getSortedLengthBetweenGoals();
+            shoots = stats.getSortedDurationsBetweenGoals();
         } else {
-
-            shoots = stats.getLengthBetweenGoals();
+            shoots = stats.getOriginalDurationsBetweenGoals();
         }
 
-        double sd = stats.computeSD();
+        double sd = stats.computeRoundsDurationStandardDeviation();
 
         int i = 0;
 
-        average.getData().add(new XYChart.Data(0 + "", stats.computeAverageLength()));
-        sdp.getData().add(new XYChart.Data(0 + "", stats.computeAverageLength() + sd));
-        sdm.getData().add(new XYChart.Data(0 + "", stats.computeAverageLength() - sd));
+        average.getData().add(new XYChart.Data(0 + "", stats.computeRoundsDurationAverageDuration()));
+        sdp.getData().add(new XYChart.Data(0 + "", stats.computeRoundsDurationAverageDuration() + sd));
+        sdm.getData().add(new XYChart.Data(0 + "", stats.computeRoundsDurationAverageDuration() - sd));
 
-        for (Integer I : shoots) {
+        for (Long duration : shoots) {
 
             i++;
-            series.getData().add(new XYChart.Data(i + "", I.intValue()));
-            average.getData().add(new XYChart.Data(i + "", stats.computeAverageLength()));
+            series.getData().add(new XYChart.Data(i + "", duration.intValue()));
+            average.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration()));
 
-            sdp.getData().add(new XYChart.Data(i + "", stats.computeAverageLength() + sd));
-            sdm.getData().add(new XYChart.Data(i + "", stats.computeAverageLength() - sd));
+            sdp.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() + sd));
+            sdm.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() - sd));
         }
 
         i++;
-        average.getData().add(new XYChart.Data(i + "", stats.computeAverageLength()));
-        sdp.getData().add(new XYChart.Data(i + "", stats.computeAverageLength() + sd));
-        sdm.getData().add(new XYChart.Data(i + "", stats.computeAverageLength() - sd));
+        average.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration()));
+        sdp.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() + sd));
+        sdm.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() - sd));
 
         lineChart.setCreateSymbols(false);
 
@@ -134,7 +130,7 @@ public class StatsDisplay {
         ImageView heatMap = new ImageView();
         heatMap.setPreserveRatio(true);
 
-        Stats.SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+        SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
         savedStatsInfo.addObserver((o, arg) -> {
             Platform.runLater(() -> heatMap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString())));
         });

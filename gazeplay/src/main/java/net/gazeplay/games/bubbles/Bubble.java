@@ -85,7 +85,7 @@ public class Bubble extends Parent implements GameLifeCycle {
                     // log.info(e.getEventType());
                     enter((Circle) e.getTarget());
                     stats.incNbGoals();
-                    stats.start();
+                    stats.notifyNewRoundReady();
                 }
             }
         };
@@ -100,7 +100,7 @@ public class Bubble extends Parent implements GameLifeCycle {
             newCircle();
         }
 
-        stats.start();
+        stats.notifyNewRoundReady();
 
     }
 

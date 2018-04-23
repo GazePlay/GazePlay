@@ -6,16 +6,9 @@ import net.gazeplay.commons.utils.stats.ShootGamesStats;
 public class ShooterGamesStats extends ShootGamesStats {
 
     public ShooterGamesStats(Scene scene, String gameType) {
-
         super(scene);
         this.gameName = gameType;
+        setAccidentalShotPreventionPeriod(0);
     }
 
-    public void incNbGoals() {
-
-        long last = System.currentTimeMillis() - beginTime;
-        nbGoals++;
-        length += last;
-        lengthBetweenGoals.add((new Long(last)).intValue());
-    }
 }

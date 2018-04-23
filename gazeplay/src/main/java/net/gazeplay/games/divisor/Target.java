@@ -111,7 +111,7 @@ class Target extends Portrait {
 
         move();
 
-        stats.start();
+        stats.notifyNewRoundReady();
     }
 
     private void move() {

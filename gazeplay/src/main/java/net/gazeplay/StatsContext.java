@@ -87,7 +87,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "TotalLength", COLON);
 
-            Text value = new Text(StatsDisplay.convert(stats.getTotalLength()));
+            Text value = new Text(StatsDisplay.convert(stats.computeTotalElapsedDuration()));
 
             addToGrid(grid, currentFormRow, label, value);
         }
@@ -112,7 +112,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "Length", COLON);
 
-            Text value = new Text(StatsDisplay.convert(stats.getLength()));
+            Text value = new Text(StatsDisplay.convert(stats.getRoundsTotalAdditiveDuration()));
 
             addToGrid(grid, currentFormRow, label, value);
         }
@@ -126,7 +126,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 label = new I18NText(translator, "AverageLength", COLON);
             }
 
-            Text value = new Text(StatsDisplay.convert(stats.computeAverageLength()));
+            Text value = new Text(StatsDisplay.convert(stats.computeRoundsDurationAverageDuration()));
 
             addToGrid(grid, currentFormRow, label, value);
         }
@@ -140,7 +140,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 label = new I18NText(translator, "MedianLength", COLON);
             }
 
-            Text value = new Text(StatsDisplay.convert(stats.computeMedianLength()));
+            Text value = new Text(StatsDisplay.convert(stats.computeRoundsDurationMedianDuration()));
 
             addToGrid(grid, currentFormRow, label, value);
         }
@@ -148,7 +148,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "StandDev", COLON);
 
-            Text value = new Text(StatsDisplay.convert((long) stats.computeSD()));
+            Text value = new Text(StatsDisplay.convert((long) stats.computeRoundsDurationStandardDeviation()));
 
             addToGrid(grid, currentFormRow, label, value);
         }

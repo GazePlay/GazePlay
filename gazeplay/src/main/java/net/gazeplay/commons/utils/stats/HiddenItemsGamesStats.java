@@ -8,7 +8,6 @@ import java.io.*;
 public class HiddenItemsGamesStats extends Stats {
 
     public HiddenItemsGamesStats(Scene scene) {
-
         super(scene);
     }
 
@@ -32,7 +31,7 @@ public class HiddenItemsGamesStats extends Stats {
             out.print(',');
             out.print("Standard Déviation");
             out.print(',');
-            for (int i = 0; i < getLengthBetweenGoals().size(); i++) {
+            for (int i = 0; i < getNbGoals(); i++) {
                 out.print("shoot ");
                 out.print(i);
                 out.print(",");
@@ -43,15 +42,15 @@ public class HiddenItemsGamesStats extends Stats {
             out.print(',');
             out.print(Utils.time());
             out.print(',');
-            out.print(getTotalLength());
+            out.print(computeTotalElapsedDuration());
             out.print(',');
             out.print(getNbGoals());
             out.print(',');
-            out.print(getLength());
+            out.print(getRoundsTotalAdditiveDuration());
             out.print(',');
-            out.print(computeAverageLength());
+            out.print(computeRoundsDurationAverageDuration());
             out.print(',');
-            out.print(computeSD());
+            out.print(computeRoundsDurationStandardDeviation());
             out.print(',');
             printLengthBetweenGoalsToString(out);
             out.println();

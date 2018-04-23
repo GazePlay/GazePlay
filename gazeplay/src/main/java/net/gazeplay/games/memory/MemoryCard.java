@@ -128,7 +128,7 @@ public class MemoryCard extends Parent {
 
                     gameInstance.launch();
 
-                    stats.start();
+                    stats.notifyNewRoundReady();
 
                     gameContext.onGameStarted();
                 }

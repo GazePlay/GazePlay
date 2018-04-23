@@ -1,9 +1,7 @@
 package net.gazeplay.games.moles;
 
 import javafx.geometry.Dimension2D;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.AllArgsConstructor;
@@ -13,14 +11,10 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.memory.MemoryCard;
-import net.gazeplay.games.memory.Memory.RoundDetails;
 import javafx.scene.Parent;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -77,7 +71,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
         gameContext.getChildren().addAll(molesList);
 
-        stats.start();
+        stats.notifyNewRoundReady();
     }
 
     @Override
