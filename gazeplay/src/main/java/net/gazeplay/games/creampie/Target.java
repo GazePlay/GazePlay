@@ -4,7 +4,6 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
@@ -13,9 +12,8 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
+import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
-
-import java.util.List;
 
 /**
  * Created by schwab on 26/12/2016.
@@ -34,16 +32,16 @@ public class Target extends Portrait {
 
     private final Stats stats;
 
-    private final List<Image> availableImages;
+    private final ImageLibrary imageLibrary;
 
     public Target(RandomPositionGenerator randomPositionGenerator, Hand hand, Stats stats, GameContext gameContext,
-            List<Image> availableImages) {
+            ImageLibrary imageLibrary) {
 
-        super(radius, randomPositionGenerator, availableImages);
+        super(radius, randomPositionGenerator, imageLibrary);
 
         this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
-        this.availableImages = availableImages;
+        this.imageLibrary = imageLibrary;
         this.stats = stats;
 
         enterEvent = new EventHandler<Event>() {
@@ -98,7 +96,7 @@ public class Target extends Portrait {
         timeline2.getKeyFrames()
                 .add(new KeyFrame(new Duration(1), new KeyValue(centerYProperty(), newPosition.getY())));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),
-                new KeyValue(fillProperty(), new ImagePattern(pickRandomImage(availableImages), 0, 0, 1, 1, true))));
+                new KeyValue(fillProperty(), new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true))));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(rotateProperty(), 0)));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(visibleProperty(), true)));
 
