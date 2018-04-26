@@ -213,9 +213,9 @@ public class GameMenuFactory {
                 } else {
                     if (variants.size() == 1) {
                         GameSpec.GameVariant onlyGameVariant = variants.iterator().next();
-                        chooseGame(gazePlay, gameSpec, onlyGameVariant);
+                        chooseGame(gazePlay, gameSpec, onlyGameVariant, config);
                     } else {
-                        chooseGame(gazePlay, gameSpec, null);
+                        chooseGame(gazePlay, gameSpec, null, config);
                     }
                 }
             }
@@ -239,6 +239,8 @@ public class GameMenuFactory {
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             Button button = new Button(variant.getLabel());
             button.getStyleClass().add("gameChooserButton");
@@ -250,14 +252,13 @@ public class GameMenuFactory {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     dialog.close();
-                    chooseGame(gazePlay, gameSpec, variant);
+                    chooseGame(gazePlay, gameSpec, variant, config);
                 }
             });
         }
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
         CssUtil.setPreferredStylesheets(config, scene);
 
         dialog.setScene(scene);
@@ -266,7 +267,8 @@ public class GameMenuFactory {
         return dialog;
     }
 
-    private void chooseGame(GazePlay gazePlay, GameSpec selectedGameSpec, GameSpec.GameVariant gameVariant) {
+    private void chooseGame(GazePlay gazePlay, GameSpec selectedGameSpec, GameSpec.GameVariant gameVariant,
+            Configuration config) {
         GameContext gameContext = GameContext.newInstance(gazePlay);
 
         // SecondScreen secondScreen = SecondScreen.launch();
@@ -277,7 +279,12 @@ public class GameMenuFactory {
 
         final Stats stats = gameLauncher.createNewStats(gameContext.getScene());
 
-        gameContext.getGazeDeviceManager().addGazeMotionListener(stats);
+        if (config.isHeatMapDisabled()) {
+            log.info("HeatMap is disabled, skipping instanciation of the HeatMap Data model");
+        } else {
+            gameContext.getGazeDeviceManager().addGazeMotionListener(stats);
+        }
+
         // gameContext.getGazeDeviceManager().addGazeMotionListener(secondScreen);
 
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);

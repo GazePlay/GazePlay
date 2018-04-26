@@ -10,13 +10,12 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import lombok.extern.slf4j.Slf4j;
-
-import java.net.URL;
 import lombok.Setter;
-import net.gazeplay.commons.configuration.Configuration;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+
+import java.net.URL;
 
 /**
  * Created by schwab on 30/10/2016.
@@ -59,8 +58,6 @@ public class Bravo extends Rectangle {
     private AudioClip soundClip;
 
     private SequentialTransition fullTransition;
-
-    private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = ConfigurationBuilder.DEFAULT_VALUE_ENABLE_REWARD_SOUND;
 
     @Setter
     private boolean enableRewardSound;

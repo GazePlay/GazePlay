@@ -28,8 +28,9 @@ public class LifeCycle {
 
     private final AtomicBoolean stopped = new AtomicBoolean(false);
 
-    public void start() {
+    public void start(Runnable onBeforeStart) {
         if (started.compareAndSet(false, true)) {
+            onBeforeStart.run();
             startTime = System.currentTimeMillis();
         } else {
             if (stopped.get()) {
@@ -39,10 +40,11 @@ public class LifeCycle {
         }
     }
 
-    public void stop() {
+    public void stop(Runnable onAfterStop) {
         if (stopped.compareAndSet(false, true)) {
             if (started.get()) {
                 stopTime = System.currentTimeMillis();
+                onAfterStop.run();
             } else {
                 throw new LifeCycleControlException("cannot stop when never started");
             }

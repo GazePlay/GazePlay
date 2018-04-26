@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
@@ -27,8 +29,8 @@ public class Stats implements GazeMotionListener {
 
     private static final int trail = 10;
     private final double heatMapPixelSize = computeHeatMapPixelSize();
-    private final EventHandler<MouseEvent> recordMouseMovements;
-    private final EventHandler<GazeEvent> recordGazeMovements;
+    private EventHandler<MouseEvent> recordMouseMovements;
+    private EventHandler<GazeEvent> recordGazeMovements;
     private final Scene gameContextScene;
     private final LifeCycle lifeCycle = new LifeCycle();
     private final RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
@@ -51,11 +53,6 @@ public class Stats implements GazeMotionListener {
     public Stats(Scene gameContextScene, String gameName) {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
-
-        recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
-        recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
-
-        heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
     }
 
     private static double[][] instanciateHeatMapData(Scene gameContextScene, double heatMapPixelSize) {
@@ -70,17 +67,34 @@ public class Stats implements GazeMotionListener {
     }
 
     public void start() {
-        lifeCycle.start();
-        currentRoundStartTime = lifeCycle.getStartTime();
 
-        gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
-        gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+        lifeCycle.start(() -> {
+            if (config.isHeatMapDisabled()) {
+                log.info("HeatMap is disabled, skipping instanciation of the HeatMap Data model");
+            } else {
+                heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
+
+                recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
+                recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
+
+                gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+            }
+        });
+        currentRoundStartTime = lifeCycle.getStartTime();
     }
 
     public void stop() {
-        lifeCycle.stop();
-        gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
-        gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
+        lifeCycle.stop(() -> {
+            if (recordGazeMovements != null) {
+                gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
+            }
+            if (recordMouseMovements != null) {
+                gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
+            }
+        });
     }
 
     @Override
@@ -100,8 +114,10 @@ public class Stats implements GazeMotionListener {
         SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile);
         this.savedStatsInfo = savedStatsInfo;
 
-        saveHeatMapAsPng(heatMapPngFile);
-        saveHeatMapAsCsv(heatMapCsvFile);
+        if (this.heatMap != null) {
+            saveHeatMapAsPng(heatMapPngFile);
+            saveHeatMapAsCsv(heatMapCsvFile);
+        }
 
         savedStatsInfo.notifyFilesReady();
         return savedStatsInfo;
