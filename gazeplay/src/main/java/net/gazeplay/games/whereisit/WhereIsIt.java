@@ -352,11 +352,7 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     /**
-     * Return all files which don't notifyNewRoundReady with a point
-     *
-     * @param folder
-     * @return a tab with all Files in a folder which don't notifyNewRoundReady with a .
-     *
+     * Return all files which don't start with a point
      */
     private File[] getFiles(File folder) {
 
