@@ -188,7 +188,7 @@ public class WhereIsIt implements GameLifeCycle {
                     p.setOpacity(1);
                 }
 
-                stats.start();
+                stats.notifyNewRoundReady();
 
                 gameContext.onGameStarted();
             }
@@ -353,10 +353,6 @@ public class WhereIsIt implements GameLifeCycle {
 
     /**
      * Return all files which don't start with a point
-     *
-     * @param folder
-     * @return a tab with all Files in a folder which don't start with a .
-     *
      */
     private File[] getFiles(File folder) {
 

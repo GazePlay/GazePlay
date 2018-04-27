@@ -127,7 +127,7 @@ public class Blocs implements GameLifeCycle {
 
                 bloc.addEventFilter(GazeEvent.ANY, enterEvent);
 
-                stats.start();
+                stats.notifyNewRoundReady();
             }
     }
 

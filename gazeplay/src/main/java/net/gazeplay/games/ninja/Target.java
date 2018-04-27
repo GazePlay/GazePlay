@@ -69,7 +69,7 @@ public class Target extends Portrait {
 
         move();
 
-        stats.start();
+        stats.notifyNewRoundReady();
     }
 
     private void playHitSound() {
@@ -224,7 +224,7 @@ public class Target extends Portrait {
             @Override
             public void handle(ActionEvent actionEvent) {
                 animationStopped = true;
-                stats.start();
+                stats.notifyNewRoundReady();
                 move();
             }
         });

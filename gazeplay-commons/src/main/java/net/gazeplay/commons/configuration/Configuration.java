@@ -29,6 +29,8 @@ public class Configuration {
 
     private final String menuButtonsOrientation;
 
+    private final boolean heatMapDisabled;
+
     protected Configuration(ConfigurationBuilder builder) {
         this.gazeMode = builder.gazeMode;
         this.eyetracker = builder.eyetracker;
@@ -40,6 +42,7 @@ public class Configuration {
         this.questionLength = builder.questionLength;
         this.enableRewardSound = builder.enableRewardSound;
         this.menuButtonsOrientation = builder.menuButtonsOrientation;
+        this.heatMapDisabled = builder.heatMapDisabled;
     }
 
 }

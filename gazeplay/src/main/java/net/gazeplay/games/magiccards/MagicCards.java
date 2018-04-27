@@ -72,7 +72,7 @@ public class MagicCards implements GameLifeCycle {
 
         cardList.get(winnerCardIndex).toFront();
 
-        stats.start();
+        stats.notifyNewRoundReady();
     }
 
     @Override

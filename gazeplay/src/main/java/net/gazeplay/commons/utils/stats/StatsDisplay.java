@@ -1,5 +1,6 @@
 package net.gazeplay.commons.utils.stats;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -18,11 +19,10 @@ import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
-import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -70,41 +70,37 @@ public class StatsDisplay {
         XYChart.Series sdm = new XYChart.Series();
         // populating the series with data
 
-        ArrayList<Integer> shoots = null;
-
+        final List<Long> shoots;
         if (stats instanceof BubblesGamesStats) {
-
-            shoots = stats.getSortedLengthBetweenGoals();
+            shoots = stats.getSortedDurationsBetweenGoals();
         } else if (stats instanceof ShootGamesStats) {
-
-            shoots = stats.getSortedLengthBetweenGoals();
+            shoots = stats.getSortedDurationsBetweenGoals();
         } else {
-
-            shoots = stats.getLengthBetweenGoals();
+            shoots = stats.getOriginalDurationsBetweenGoals();
         }
 
-        double sd = stats.getSD();
+        double sd = stats.computeRoundsDurationStandardDeviation();
 
         int i = 0;
 
-        average.getData().add(new XYChart.Data(0 + "", stats.getAverageLength()));
-        sdp.getData().add(new XYChart.Data(0 + "", stats.getAverageLength() + sd));
-        sdm.getData().add(new XYChart.Data(0 + "", stats.getAverageLength() - sd));
+        average.getData().add(new XYChart.Data(0 + "", stats.computeRoundsDurationAverageDuration()));
+        sdp.getData().add(new XYChart.Data(0 + "", stats.computeRoundsDurationAverageDuration() + sd));
+        sdm.getData().add(new XYChart.Data(0 + "", stats.computeRoundsDurationAverageDuration() - sd));
 
-        for (Integer I : shoots) {
+        for (Long duration : shoots) {
 
             i++;
-            series.getData().add(new XYChart.Data(i + "", I.intValue()));
-            average.getData().add(new XYChart.Data(i + "", stats.getAverageLength()));
+            series.getData().add(new XYChart.Data(i + "", duration.intValue()));
+            average.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration()));
 
-            sdp.getData().add(new XYChart.Data(i + "", stats.getAverageLength() + sd));
-            sdm.getData().add(new XYChart.Data(i + "", stats.getAverageLength() - sd));
+            sdp.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() + sd));
+            sdm.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() - sd));
         }
 
         i++;
-        average.getData().add(new XYChart.Data(i + "", stats.getAverageLength()));
-        sdp.getData().add(new XYChart.Data(i + "", stats.getAverageLength() + sd));
-        sdm.getData().add(new XYChart.Data(i + "", stats.getAverageLength() - sd));
+        average.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration()));
+        sdp.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() + sd));
+        sdm.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() - sd));
 
         lineChart.setCreateSymbols(false);
 
@@ -131,16 +127,17 @@ public class StatsDisplay {
     }
 
     public static ImageView buildHeatChart(Stats stats, Scene scene) {
-
-        HeatMapUtils.buildHeatMap(stats.getHeatMap());
-
-        Image image = new Image("file:" + HeatMapUtils.getHeatMapPath());
-
-        ImageView heatMap = new ImageView(image);
+        ImageView heatMap = new ImageView();
         heatMap.setPreserveRatio(true);
 
-        EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, scene);
+        SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+        savedStatsInfo.addObserver((o, arg) -> {
+            Platform.runLater(() -> heatMap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString())));
+        });
 
+        heatMap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
+
+        EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, scene);
         heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMapEvent);
 
         return heatMap;

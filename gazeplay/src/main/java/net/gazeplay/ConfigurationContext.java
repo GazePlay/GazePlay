@@ -205,6 +205,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        {
+            I18NText label = new I18NText(translator, "DisableHeatMap", COLON);
+            CheckBox input = buildDisableHeatMapSoundBox(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
         return grid;
     }
 
@@ -507,17 +514,32 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static CheckBox buildEnableRewardSoundBox(Configuration configuration,
             ConfigurationContext configurationContext) {
-        CheckBox enableBox = new CheckBox();
+        CheckBox checkBox = new CheckBox();
 
-        enableBox.setSelected(configuration.isEnableRewardSound());
+        checkBox.setSelected(configuration.isEnableRewardSound());
 
-        enableBox.selectedProperty().addListener((o) -> {
+        checkBox.selectedProperty().addListener((o) -> {
 
-            ConfigurationBuilder.createFromPropertiesResource().withEnableRewardSound(enableBox.isSelected())
+            ConfigurationBuilder.createFromPropertiesResource().withEnableRewardSound(checkBox.isSelected())
                     .saveConfigIgnoringExceptions();
         });
 
-        return enableBox;
+        return checkBox;
+    }
+
+    private static CheckBox buildDisableHeatMapSoundBox(Configuration configuration,
+            ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isHeatMapDisabled());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            ConfigurationBuilder.createFromPropertiesResource().withHeatMapDisabled(checkBox.isSelected())
+                    .saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
     }
 
     private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(Configuration configuration,

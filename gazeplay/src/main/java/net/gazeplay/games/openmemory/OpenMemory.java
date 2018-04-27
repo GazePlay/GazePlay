@@ -95,7 +95,7 @@ public class OpenMemory implements GameLifeCycle {
 
         gameContext.getChildren().addAll(cardList);
 
-        stats.start();
+        stats.notifyNewRoundReady();
     }
 
     @Override

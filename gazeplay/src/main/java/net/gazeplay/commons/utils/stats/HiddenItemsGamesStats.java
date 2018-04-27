@@ -8,15 +8,14 @@ import java.io.*;
 public class HiddenItemsGamesStats extends Stats {
 
     public HiddenItemsGamesStats(Scene scene) {
-
         super(scene);
     }
 
     @Override
-    public void saveStats() throws IOException {
+    public SavedStatsInfo saveStats() throws IOException {
         super.saveStats();
 
-        final File infoStatsFile = Utils.createInfoStatsFile(getTodayFolder());
+        final File infoStatsFile = createInfoStatsFile();
         try (PrintWriter out = new PrintWriter(infoStatsFile, "UTF-8")) {
             out.print("Date");
             out.print(',');
@@ -32,7 +31,7 @@ public class HiddenItemsGamesStats extends Stats {
             out.print(',');
             out.print("Standard Déviation");
             out.print(',');
-            for (int i = 0; i < getLengthBetweenGoals().size(); i++) {
+            for (int i = 0; i < getNbGoals(); i++) {
                 out.print("shoot ");
                 out.print(i);
                 out.print(",");
@@ -43,21 +42,22 @@ public class HiddenItemsGamesStats extends Stats {
             out.print(',');
             out.print(Utils.time());
             out.print(',');
-            out.print(getTotalLength());
+            out.print(computeTotalElapsedDuration());
             out.print(',');
             out.print(getNbGoals());
             out.print(',');
-            out.print(getLength());
+            out.print(getRoundsTotalAdditiveDuration());
             out.print(',');
-            out.print(getAverageLength());
+            out.print(computeRoundsDurationAverageDuration());
             out.print(',');
-            out.print(getSD());
+            out.print(computeRoundsDurationStandardDeviation());
             out.print(',');
             printLengthBetweenGoalsToString(out);
             out.println();
 
             out.flush();
         }
+        return null;
     }
 
 }

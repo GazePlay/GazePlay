@@ -22,6 +22,7 @@ public class ConfigurationBuilder implements Cloneable {
     private static String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
+    private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
 
     private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
@@ -32,7 +33,8 @@ public class ConfigurationBuilder implements Cloneable {
     private static String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     private static String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static int DEFAULT_VALUE_QUESTION_LENGTH = 5000;
-    public static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
+    private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
+    private static boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
 
     private static String getFileDirectoryDefaultValue() {
         return Utils.getGazePlayFolder() + "files" /* + Utils.FILESEPARATOR */;
@@ -84,6 +86,8 @@ public class ConfigurationBuilder implements Cloneable {
     protected boolean enableRewardSound = DEFAULT_VALUE_ENABLE_REWARD_SOUND;
 
     protected String menuButtonsOrientation;
+
+    protected boolean heatMapDisabled = DEFAULT_VALUE_HEATMAP_DISABLED;
 
     public ConfigurationBuilder() {
 
@@ -157,6 +161,12 @@ public class ConfigurationBuilder implements Cloneable {
         return copy;
     }
 
+    public ConfigurationBuilder withHeatMapDisabled(Boolean value) {
+        ConfigurationBuilder copy = copy();
+        copy.heatMapDisabled = value;
+        return copy;
+    }
+
     public void populateFromProperties(Properties prop) {
         String buffer;
 
@@ -220,6 +230,11 @@ public class ConfigurationBuilder implements Cloneable {
             menuButtonsOrientation = buffer;
         }
 
+        buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_DISABLED);
+        if (buffer != null) {
+            heatMapDisabled = Boolean.parseBoolean(buffer);
+        }
+
     }
 
     private Properties toProperties() {
@@ -247,6 +262,7 @@ public class ConfigurationBuilder implements Cloneable {
         properties.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Integer.toString(this.questionLength));
         properties.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND, Boolean.toString(this.enableRewardSound));
         properties.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, this.menuButtonsOrientation);
+        properties.setProperty(PROPERTY_NAME_HEATMAP_DISABLED, Boolean.toString(this.heatMapDisabled));
 
         return properties;
     }
