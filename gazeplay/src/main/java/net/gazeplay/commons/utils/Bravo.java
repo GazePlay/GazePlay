@@ -12,6 +12,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.AsyncUiTaskExecutor;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
@@ -127,10 +128,7 @@ public class Bravo extends Rectangle {
             Platform.runLater(uiRunnable);
         };
 
-        Thread startPlayingThread = new Thread(deferedAnimationRunnable);
-
-        log.debug("Starting new thread ...");
-        startPlayingThread.start();
+        AsyncUiTaskExecutor.getInstance().getExecutorService().submit(deferedAnimationRunnable);
     }
 
     private SequentialTransition createFullTransition() {

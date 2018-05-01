@@ -181,8 +181,7 @@ public class GameContext extends GraphicalContext<Pane> {
         };
 
         if (runAsynchronousStatsPersist) {
-            Thread asynchronousStatsPersistThread = new Thread(asynchronousStatsPersistTask);
-            asynchronousStatsPersistThread.start();
+            AsyncUiTaskExecutor.getInstance().getExecutorService().execute(asynchronousStatsPersistTask);
         } else {
             asynchronousStatsPersistTask.run();
         }
