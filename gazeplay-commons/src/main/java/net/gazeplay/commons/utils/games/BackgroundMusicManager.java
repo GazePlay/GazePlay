@@ -7,6 +7,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.threads.CustomThreadFactory;
+import net.gazeplay.commons.threads.GroupingThreadFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -16,7 +18,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 @Slf4j
 public class BackgroundMusicManager {
@@ -25,6 +27,10 @@ public class BackgroundMusicManager {
     private static final BackgroundMusicManager instance = new BackgroundMusicManager();
 
     private final Map<String, MediaPlayer> mediaPlayersMap = new ConcurrentHashMap<>();
+
+    private final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
+            new LinkedBlockingQueue<>(), new CustomThreadFactory(this.getClass().getSimpleName(),
+                    new GroupingThreadFactory(this.getClass().getSimpleName())));
 
     private DoubleProperty volume = new SimpleDoubleProperty(0.25);
 
@@ -76,50 +82,43 @@ public class BackgroundMusicManager {
 
     public void playRemoteSound(String resourceUrlAsString) {
 
-        Runnable asyncTask = new Runnable() {
-            @Override
-            public void run() {
-                // parse the URL early
-                // in order to fail early if the URL is invalid
-                URL resourceURL = null;
-                try {
-                    resourceURL = new URL(resourceUrlAsString);
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException("Invalid URL provided as sound resource : " + resourceUrlAsString, e);
-                }
-
-                final String resourceUrlExternalForm = resourceURL.toExternalForm();
-                final File mediaFile = downloadAndGetFromCache(resourceURL, resourceUrlExternalForm);
-
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        final String localResourceName = mediaFile.toURI().toString();
-                        log.info("Playing sound {}", localResourceName);
-
-                        MediaPlayer localMediaPlayer = mediaPlayersMap.get(resourceUrlAsString);
-                        if (localMediaPlayer != null) {
-                            localMediaPlayer.play();
-                        } else {
-                            try {
-                                Media media = new Media(localResourceName);
-                                localMediaPlayer = new MediaPlayer(media);
-                                localMediaPlayer.setCycleCount(Integer.MAX_VALUE);
-                                localMediaPlayer.volumeProperty().bind(volume);
-                                //
-                                mediaPlayersMap.put(resourceUrlExternalForm, localMediaPlayer);
-                                localMediaPlayer.play();
-                            } catch (RuntimeException e) {
-                                log.error("Exception while playing media file {}", localResourceName, e);
-                            }
-                        }
-                    }
-                });
+        Runnable asyncTask = () -> {
+            // parse the URL early
+            // in order to fail early if the URL is invalid
+            URL resourceURL;
+            try {
+                resourceURL = new URL(resourceUrlAsString);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException("Invalid URL provided as sound resource : " + resourceUrlAsString, e);
             }
+
+            final String resourceUrlExternalForm = resourceURL.toExternalForm();
+            final File mediaFile = downloadAndGetFromCache(resourceURL, resourceUrlExternalForm);
+
+            Platform.runLater(() -> {
+                final String localResourceName = mediaFile.toURI().toString();
+                log.info("Playing sound {}", localResourceName);
+
+                MediaPlayer localMediaPlayer = mediaPlayersMap.get(resourceUrlAsString);
+                if (localMediaPlayer != null) {
+                    localMediaPlayer.play();
+                } else {
+                    try {
+                        Media media = new Media(localResourceName);
+                        localMediaPlayer = new MediaPlayer(media);
+                        localMediaPlayer.setCycleCount(Integer.MAX_VALUE);
+                        localMediaPlayer.volumeProperty().bind(volume);
+                        //
+                        mediaPlayersMap.put(resourceUrlExternalForm, localMediaPlayer);
+                        localMediaPlayer.play();
+                    } catch (RuntimeException e) {
+                        log.error("Exception while playing media file {}", localResourceName, e);
+                    }
+                }
+            });
         };
 
-        Thread thread = new Thread(asyncTask);
-        thread.start();
+        executorService.execute(asyncTask);
     }
 
     private File downloadAndGetFromCache(URL resourceURL, String resourceUrlExternalForm) {
