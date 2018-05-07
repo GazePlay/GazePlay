@@ -64,16 +64,16 @@ public class GameContext extends GraphicalContext<Pane> {
         autoHiddingControlPanel.getChildren().add(controlPanel);
 
         EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> {
-        	controlPanel.setOpacity(1);
-        	blindFoldPanel.heightProperty().bind(controlPanel.heightProperty());	//reset the size of the control Panel
-        	blindFoldPanel.toBack();
+            controlPanel.setOpacity(1);
+            blindFoldPanel.heightProperty().bind(controlPanel.heightProperty()); // reset the size of the control Panel
+            blindFoldPanel.toBack();
         };
-        EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent ->{
-        	controlPanel.setOpacity(0);
-        	blindFoldPanel.setHeight(blindFoldPanel.getHeight()/3);					//reduce the size of the control Panel
-        	blindFoldPanel.toFront();
+        EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent -> {
+            controlPanel.setOpacity(0);
+            blindFoldPanel.setHeight(blindFoldPanel.getHeight() / 3); // reduce the size of the control Panel
+            blindFoldPanel.toFront();
         };
-    	
+
         autoHiddingControlPanel.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
         autoHiddingControlPanel.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
 
