@@ -11,12 +11,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.threads.GroupingThreadFactory;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.draw.DrawBuilder;
 import net.gazeplay.games.draw.ProgressiveColorPicker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
@@ -41,6 +46,9 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
     private final Stats stats;
 
     private final WebView webview;
+
+    private final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
+            new LinkedBlockingQueue<>(), new GroupingThreadFactory(this.getClass().getSimpleName()));
 
     public VideoPlayerWithLiveFeedbackApp(GameContext gameContext, Stats stats, String youtubeVideoId) {
         super();
@@ -169,9 +177,8 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
                 }
             }
         };
-        Thread canvasSwitchingThread = new Thread(canvasSwitchingTask);
 
-        canvasSwitchingThread.start();
+        executorService.execute(canvasSwitchingTask);
     }
 
     @Override

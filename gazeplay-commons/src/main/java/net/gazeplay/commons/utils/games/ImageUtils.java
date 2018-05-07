@@ -1,94 +1,87 @@
 package net.gazeplay.commons.utils.games;
 
+import com.google.common.collect.Sets;
 import javafx.scene.image.Image;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 public class ImageUtils {
 
-    public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
+    private static final Set<String> supportedFilesExtensions = Collections
+            .unmodifiableSet(Sets.newHashSet("jpg", "jpeg", "png", "gif", "bmp", "wbmp"));
 
-    public static List<Image> loadAllImagesInDirectory(File directoryFile) {
-        log.info("Try to find images in folder : {}", directoryFile);
-        if (directoryFile.exists()) {
-            List<Image> images = getImages(directoryFile);
-
-            if (!images.isEmpty()) {
-                log.debug("I found {} images in folder : {}", images.size(), directoryFile);
-                return images;
-            } else {
-                log.info("No image in folder : {}", directoryFile);
-                return defaultImages();
-            }
-        } else {
-            log.info("Folder doesn't exist : {}", directoryFile);
-            return defaultImages();
-        }
+    public static ImageLibrary createImageLibrary(File directoryFile) {
+        return new LazyImageLibrary(directoryFile, createDefaultImageLibrary(null));
     }
 
-    private static List<Image> getImages(File directoryFile) {
-        List<Image> result = new ArrayList<>();
+    public static ImageLibrary createImageLibrary(File directoryFile, File defaultDirectoryFile) {
+        return new LazyImageLibrary(directoryFile,
+                createDefaultImageLibrary(new LazyImageLibrary(defaultDirectoryFile)));
+    }
 
-        final String[] filenames = directoryFile.list();
-        if (filenames != null) {
-            for (String currentFilename : filenames) {
-                final String fileUrl = "file:" + directoryFile.getAbsoluteFile() + FILESEPARATOR + currentFilename;
-                boolean added;
+    public static ImageLibrary createDefaultImageLibrary(ImageLibrary fallbackImageLibrary) {
+        File defaultImageDirectory = ImageDirectoryLocator
+                .locateImagesDirectoryInUnpackedDistDirectory("data/common/default/images/");
 
-                if (isImage(currentFilename)) {
-                    result.add(new Image(fileUrl));
-                    added = true;
-                } else {
-                    added = false;
-                }
-                log.debug("{} : added = {}", fileUrl, added);
-            }
+        if (defaultImageDirectory == null) {
+            defaultImageDirectory = ImageDirectoryLocator
+                    .locateImagesDirectoryInExplodedClassPath("data/common/default/images/");
         }
 
+        return new LazyImageLibrary(defaultImageDirectory, fallbackImageLibrary);
+    }
+
+    public static List<Image> loadAllImages(File directoryFile) {
+        List<File> files = listImageFiles(directoryFile);
+
+        return loadAllAsImages(files);
+    }
+
+    public static List<File> listImageFiles(File directoryFile) {
+        log.info("Listing images in directory {}", directoryFile.getAbsolutePath());
+        File[] files = directoryFile.listFiles(ImageUtils::isImage);
+        if (files == null) {
+            files = new File[0];
+        }
+        List<File> result = Arrays.asList(files);
+        log.info("Found {} files in directory {}", files.length, directoryFile.getAbsolutePath());
         return result;
     }
 
-    private static List<Image> defaultImages() {
+    public static List<Image> loadAllAsImages(List<File> imageFiles) {
         List<Image> result = new ArrayList<>();
-        result.add(loadImage("data/common/default/images/animal-807308_1920.png"));
-        result.add(loadImage("data/common/default/images/bulldog-1047518_1920.jpg"));
-        result.add(loadImage("data/common/default/images/businessman-607786_1920.png"));
-        result.add(loadImage("data/common/default/images/businessman-607834_1920.png"));
-        result.add(loadImage("data/common/default/images/crocodile-614386_1920.png"));
-        result.add(loadImage("data/common/default/images/goldfish-30837_1280.png"));
-        result.add(loadImage("data/common/default/images/graphic_missbone17.gif"));
-        result.add(loadImage("data/common/default/images/nurse-37322_1280.png"));
-        result.add(loadImage("data/common/default/images/owl-161583_1280.png"));
-        result.add(
-                loadImage("data/common/default/images/pez-payaso-animales-el-mar-pintado-por-teoalmeyra-9844979.jpg"));
+        for (File currentFile : imageFiles) {
+            result.add(loadImage(currentFile));
+        }
         return result;
     }
 
-    private static Image loadImage(String resourceLocation) {
-        try {
-            try (InputStream resourceInputStream = ClassLoader.getSystemResourceAsStream(resourceLocation)) {
-                return new Image(resourceInputStream);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load resource " + resourceLocation + " as an Image", e);
-        }
+    public static Image loadImage(File file) {
+        return new Image(file.toURI().toString());
     }
 
-    private static boolean isImage(String filename) {
+    private static boolean isImage(File file) {
+        if (file.isDirectory()) {
+            return false;
+        }
+        if (!file.isFile()) {
+            return false;
+        }
+        if (file.isHidden()) {
+            return false;
+        }
+
+        final String filename = file.getName();
         if (filename.startsWith(".")) {
             // Problems with filenames starting with a dot on Windows
             return false;
         }
-        String mimetype = new MimetypesFileTypeMap().getContentType(filename);
-        log.debug("{} : mimetype = {}", filename, mimetype);
-        return mimetype.startsWith("image");
+        final String extension = filename.substring(filename.lastIndexOf('.') + 1);
+        final String extensionAsLowercase = extension.toLowerCase(Locale.getDefault());
+        return supportedFilesExtensions.contains(extensionAsLowercase);
     }
 
 }

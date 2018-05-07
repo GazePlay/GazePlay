@@ -7,37 +7,16 @@ import java.io.*;
 
 public class ShootGamesStats extends Stats {
 
-    protected int nbUnCountedShoots;
-
     public ShootGamesStats(Scene scene) {
-
         super(scene);
-
-        nbUnCountedShoots = 0;
-    }
-
-    public void incNbGoals() {
-
-        long last = System.currentTimeMillis() - beginTime;
-        if (last > 100) {
-            nbGoals++;
-            length += last;
-            lengthBetweenGoals.add((new Long(last)).intValue());
-        } else {
-
-            nbUnCountedShoots++;
-        }
-    }
-
-    public int getNbUnCountedShoots() {
-        return nbUnCountedShoots;
+        setAccidentalShotPreventionPeriod(100);
     }
 
     @Override
-    public void saveStats() throws IOException {
+    public SavedStatsInfo saveStats() throws IOException {
         super.saveStats();
 
-        final File infoStatsFile = Utils.createInfoStatsFile(getTodayFolder());
+        final File infoStatsFile = createInfoStatsFile();
         try (PrintWriter out = new PrintWriter(infoStatsFile, "UTF-8")) {
             out.print("Date");
             out.print(',');
@@ -55,10 +34,10 @@ public class ShootGamesStats extends Stats {
             out.print(',');
             out.print("Uncounted Shoots");
             out.print(',');
-            for (int i = 0; i < lengthBetweenGoals.size(); i++) {
+            for (int i = 0; i < getNbGoals(); i++) {
                 out.print("shoot ");
                 out.print(i);
-                out.print(',');
+                out.print(",");
             }
             out.println();
 
@@ -66,15 +45,15 @@ public class ShootGamesStats extends Stats {
             out.print(',');
             out.print(Utils.time());
             out.print(',');
-            out.print(getTotalLength());
+            out.print(computeTotalElapsedDuration());
             out.print(',');
             out.print(getNbGoals());
             out.print(',');
-            out.print(getLength());
+            out.print(getRoundsTotalAdditiveDuration());
             out.print(',');
-            out.print(getAverageLength());
+            out.print(computeRoundsDurationAverageDuration());
             out.print(',');
-            out.print(getSD());
+            out.print(computeRoundsDurationStandardDeviation());
             out.print(',');
             out.print(getNbUnCountedShoots());
             out.print(',');
@@ -83,6 +62,7 @@ public class ShootGamesStats extends Stats {
 
             out.flush();
         }
+        return null;
     }
 
 }

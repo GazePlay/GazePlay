@@ -22,9 +22,9 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
+import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -42,26 +42,32 @@ class Target extends Portrait {
     private final EventHandler<Event> enterEvent;
     private final GameContext gameContext;
     private final Divisor gameInstance;
-    private final List<Image> images;
+    private final ImageLibrary imageLibrary;
     private final long startTime;
     private final Dimension2D dimension;
+    private final boolean lapin;
     private Image explosion;
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
-            List<Image> images, int level, long start, Divisor gameInstance) {
-        super((int) 180 / (level + 1), randomPositionGenerator, images);
+            ImageLibrary imageLibrary, int level, long start, Divisor gameInstance, boolean lapin) {
+        super((int) 180 / (level + 1), randomPositionGenerator, imageLibrary);
         this.level = level;
         this.difficulty = 3;
         this.randomPosGenerator = randomPositionGenerator;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.stats = stats;
-        this.images = images;
+        this.imageLibrary = imageLibrary;
         this.startTime = start;
+        this.lapin = lapin;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         try {
-            this.explosion = new Image("data/divisor/images/explosion.png");
+            if (lapin) {
+                this.explosion = new Image("data/divisor/images/coeur.png");
+            } else {
+                this.explosion = new Image("data/divisor/images/explosion.png");
+            }
         } catch (Exception e) {
             log.info("Fichier non trouvé " + e.getMessage());
         }
@@ -89,14 +95,14 @@ class Target extends Portrait {
                 @Override
                 public void handle(ActionEvent actionEvent) {
 
-                    addevent();
+                    addEvent();
 
                 }
 
             });
             waitbeforestart.play();
         } else {
-            addevent();
+            addEvent();
         }
 
         if (this.getPosition().getY() + this.getRadius() > (int) dimension.getHeight()) {
@@ -105,7 +111,7 @@ class Target extends Portrait {
 
         move();
 
-        stats.start();
+        stats.notifyNewRoundReady();
     }
 
     private void move() {
@@ -170,7 +176,8 @@ class Target extends Portrait {
                 gameContext.getChildren().remove(c);
                 if (level < difficulty) {
                     createChildren(x, y);
-                } else if (gameContext.getChildren().isEmpty()) {
+                } else if (((!lapin) && (gameContext.getChildren().isEmpty()))
+                        || ((lapin) && (gameContext.getChildren().size() <= 1))) {
                     long totalTime = (System.currentTimeMillis() - startTime) / 1000;
                     Label l = new Label("Temps : " + Long.toString(totalTime) + "s");
                     l.setTextFill(Color.WHITE);
@@ -191,7 +198,6 @@ class Target extends Portrait {
                 }
             }
         });
-
         ft.play();
     }
 
@@ -204,7 +210,7 @@ class Target extends Portrait {
         return x;
     }
 
-    public void addevent() {
+    private void addEvent() {
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
@@ -213,8 +219,8 @@ class Target extends Portrait {
 
     private void createChildren(int x, int y) {
         for (int i = 0; i < 2; i++) {
-            Target target = new Target(gameContext, randomPosGenerator, stats, images, level + 1, startTime,
-                    gameInstance);
+            Target target = new Target(gameContext, randomPosGenerator, stats, imageLibrary, level + 1, startTime,
+                    gameInstance, lapin);
 
             if (y + target.getRadius() > (int) dimension.getHeight()) {
                 y = (int) dimension.getHeight() - (int) target.getRadius() * 2;

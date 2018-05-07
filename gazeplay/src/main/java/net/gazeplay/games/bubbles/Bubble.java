@@ -18,13 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by schwab on 28/08/2016.
@@ -48,7 +48,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final boolean image;
 
-    private final List<Image> photos;
+    private final ImageLibrary imageLibrary;
 
     private final List<Circle> fragments;
 
@@ -60,7 +60,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.stats = stats;
         this.image = useBackgroundImage;
 
-        photos = ImageUtils.loadAllImagesInDirectory(Utils.getImagesSubDirectory("portraits"));
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("portraits"));
 
         if (useBackgroundImage) {
 
@@ -85,7 +85,7 @@ public class Bubble extends Parent implements GameLifeCycle {
                     // log.info(e.getEventType());
                     enter((Circle) e.getTarget());
                     stats.incNbGoals();
-                    stats.start();
+                    stats.notifyNewRoundReady();
                 }
             }
         };
@@ -100,7 +100,7 @@ public class Bubble extends Parent implements GameLifeCycle {
             newCircle();
         }
 
-        stats.start();
+        stats.notifyNewRoundReady();
 
     }
 
@@ -124,7 +124,7 @@ public class Bubble extends Parent implements GameLifeCycle {
             if (bubbleType == BubbleType.COLOR) {
                 fragment.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
             } else {
-                fragment.setFill(new ImagePattern(newPhoto(), 0, 0, 1, 1, true));
+                fragment.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
             }
 
             fragments.add(fragment);
@@ -227,7 +227,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         if (type == BubbleType.COLOR)
             C.setFill(new Color(Math.random(), Math.random(), Math.random(), 0.9));
         else
-            C.setFill(new ImagePattern(newPhoto(), 0, 0, 1, 1, true));
+            C.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
 
         return C;
     }
@@ -263,9 +263,4 @@ public class Bubble extends Parent implements GameLifeCycle {
         timeline.play();
     }
 
-    protected Image newPhoto() {
-
-        return photos.get(new Random().nextInt(photos.size()));
-
-    }
 }

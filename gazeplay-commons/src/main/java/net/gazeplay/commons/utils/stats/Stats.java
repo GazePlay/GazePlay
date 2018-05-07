@@ -5,57 +5,46 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.HeatMapUtils;
 import net.gazeplay.commons.utils.games.Utils;
+import org.tc33.jheatchart.HeatChart;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Created by schwab on 16/08/2017.
  */
 @Slf4j
+@ToString
 public class Stats implements GazeMotionListener {
 
+    private static final int trail = 10;
     private final double heatMapPixelSize = computeHeatMapPixelSize();
-
-    private final int trail = 10;
-
-    protected String gameName;
-
-    protected int nbGoals;
-
-    protected long length;
-
-    protected long beginTime;
-
-    private long zeroTime;
-
-    @Getter
-    protected ArrayList<Integer> lengthBetweenGoals;
-
-    private final EventHandler<MouseEvent> recordMouseMovements;
-    private final EventHandler<GazeEvent> recordGazeMovements;
-
-    private double[][] heatMap;
-
+    private EventHandler<MouseEvent> recordMouseMovements;
+    private EventHandler<GazeEvent> recordGazeMovements;
     private final Scene gameContextScene;
-
-    public void printLengthBetweenGoalsToString(PrintWriter out) {
-
-        for (Integer I : lengthBetweenGoals) {
-            out.print(I.intValue());
-            out.print(',');
-        }
-    }
+    private final LifeCycle lifeCycle = new LifeCycle();
+    private final RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
+    protected String gameName;
+    @Getter
+    protected int nbGoals;
+    @Setter
+    private long accidentalShotPreventionPeriod = 0;
+    @Getter
+    private int nbUnCountedShoots;
+    private double[][] heatMap;
+    @Getter
+    private SavedStatsInfo savedStatsInfo;
+    private Long currentRoundStartTime;
 
     public Stats(Scene gameContextScene) {
         this(gameContextScene, null);
@@ -64,44 +53,142 @@ public class Stats implements GazeMotionListener {
     public Stats(Scene gameContextScene, String gameName) {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
+    }
 
-        nbGoals = 0;
-        beginTime = 0;
-        length = 0;
-        zeroTime = System.currentTimeMillis();
-        lengthBetweenGoals = new ArrayList<Integer>(1000);
-
-        recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
-        recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
-
-        gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
-        gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
-
+    private static double[][] instanciateHeatMapData(Scene gameContextScene, double heatMapPixelSize) {
         int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
         int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
         log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
-        heatMap = new double[heatMapWidth][heatMapHeight];
+        return new double[heatMapWidth][heatMapHeight];
     }
 
-    /**
-     * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px) if maximum memory is more
-     *         than 1Gb, only 200
-     */
-    private double computeHeatMapPixelSize() {
-        long maxMemory = Runtime.getRuntime().maxMemory();
-        double width = Screen.getPrimary().getBounds().getWidth();
-        double result;
-        if (maxMemory < 1024 * 1024 * 1024) {
-            // size is less than 1Gb (2^30)
-            result = width / 200;
-        } else {
-            result = width / 400;
+    public void notifyNewRoundReady() {
+        currentRoundStartTime = System.currentTimeMillis();
+    }
+
+    public void start() {
+
+        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+        lifeCycle.start(() -> {
+            if (config.isHeatMapDisabled()) {
+                log.info("HeatMap is disabled, skipping instanciation of the HeatMap Data model");
+            } else {
+                heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
+
+                recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
+                recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
+
+                gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+            }
+        });
+        currentRoundStartTime = lifeCycle.getStartTime();
+    }
+
+    public void stop() {
+        lifeCycle.stop(() -> {
+            if (recordGazeMovements != null) {
+                gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
+            }
+            if (recordMouseMovements != null) {
+                gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
+            }
+        });
+    }
+
+    @Override
+    public void gazeMoved(javafx.geometry.Point2D position) {
+        final int positionX = (int) position.getX();
+        final int positionY = (int) position.getY();
+        incHeatMap(positionX, positionY);
+    }
+
+    public SavedStatsInfo saveStats() throws IOException {
+
+        File todayDirectory = getGameStatsOfTheDayDirectory();
+        final String heatmapFilePrefix = Utils.now() + "-heatmap";
+        File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
+        File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
+
+        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile);
+        this.savedStatsInfo = savedStatsInfo;
+
+        if (this.heatMap != null) {
+            saveHeatMapAsPng(heatMapPngFile);
+            saveHeatMapAsCsv(heatMapCsvFile);
         }
-        log.info("computeHeatMapPixelSize() : result = {}", result);
-        return result;
+
+        savedStatsInfo.notifyFilesReady();
+        return savedStatsInfo;
     }
 
-    protected void saveRawHeatMap(File file) throws IOException {
+    public long computeRoundsDurationAverageDuration() {
+        return roundsDurationReport.computeAverageLength();
+    }
+
+    public long computeRoundsDurationMedianDuration() {
+        return roundsDurationReport.computeMedianDuration();
+    }
+
+    public long getRoundsTotalAdditiveDuration() {
+        return roundsDurationReport.getTotalAdditiveDuration();
+    }
+
+    public long computeTotalElapsedDuration() {
+        return lifeCycle.computeTotalElapsedDuration();
+    }
+
+    public double computeRoundsDurationVariance() {
+        return roundsDurationReport.computeVariance();
+    }
+
+    public double computeRoundsDurationStandardDeviation() {
+        return roundsDurationReport.computeSD();
+    }
+
+    public void incNbGoals() {
+        final long currentRoundEndTime = System.currentTimeMillis();
+        final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
+        if (currentRoundDuration < accidentalShotPreventionPeriod) {
+            nbUnCountedShoots++;
+        } else {
+            nbGoals++;
+            this.roundsDurationReport.addRoundDuration(currentRoundDuration);
+        }
+        currentRoundStartTime = currentRoundEndTime;
+    }
+
+    public List<Long> getSortedDurationsBetweenGoals() {
+        return this.roundsDurationReport.getSortedDurationsBetweenGoals();
+    }
+
+    public List<Long> getOriginalDurationsBetweenGoals() {
+        return this.roundsDurationReport.getOriginalDurationsBetweenGoals();
+    }
+
+    File createInfoStatsFile() {
+        File outputDirectory = getGameStatsOfTheDayDirectory();
+        final String fileName = Utils.now() + "-info-game.csv";
+        return new File(outputDirectory, fileName);
+    }
+
+    File getGameStatsOfTheDayDirectory() {
+        File statsDirectory = new File(Utils.getStatsFolder());
+        File gameDirectory = new File(statsDirectory, gameName);
+        File todayDirectory = new File(gameDirectory, Utils.today());
+
+        boolean outputDirectoryCreated = todayDirectory.mkdirs();
+        log.info("outputDirectoryCreated = {}", outputDirectoryCreated);
+
+        return todayDirectory;
+    }
+
+    void printLengthBetweenGoalsToString(PrintWriter out) {
+        this.roundsDurationReport.printLengthBetweenGoalsToString(out);
+    }
+
+    private void saveHeatMapAsCsv(File file) throws IOException {
         try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
             for (int i = 0; i < heatMap.length; i++) {
                 for (int j = 0; j < heatMap[0].length - 1; j++) {
@@ -114,44 +201,28 @@ public class Stats implements GazeMotionListener {
         }
     }
 
-    public void savePNGHeatMap(File destination) {
+    private void saveHeatMapAsPng(File outputPngFile) {
 
-        Path HeatMapPath = Paths.get(HeatMapUtils.getHeatMapPath());
-        Path dest = Paths.get(destination.getAbsolutePath());
+        log.info(String.format("Heatmap size: %3d X %3d", heatMap[0].length, heatMap.length));
+
+        // Step 1: Create our heat map chart using our data.
+        HeatChart map = new HeatChart(heatMap);
+
+        map.setHighValueColour(java.awt.Color.RED);
+        map.setLowValueColour(java.awt.Color.lightGray);
+
+        map.setShowXAxisValues(false);
+        map.setShowYAxisValues(false);
+        map.setChartMargin(0);
 
         try {
-            Files.copy(HeatMapPath, dest, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
+            map.saveToFile(outputPngFile);
+        } catch (Exception e) {
             log.error("Exception", e);
         }
     }
 
-    public void saveStats() throws IOException {
-
-        File saveFile = new File(Utils.getStatsFolder());
-        saveFile.mkdir();
-
-        File gameFolder = new File(Utils.getStatsFolder() + gameName);
-        gameFolder.mkdir();
-
-        File savepath = new File(gameFolder.getAbsoluteFile() + Utils.FILESEPARATOR + Utils.today());
-        savepath.mkdir();
-
-        File heatMapCSVPath = new File(savepath.getAbsoluteFile() + Utils.FILESEPARATOR + Utils.now() + "-heatmap.csv");
-        File heatMapPNGPath = new File(savepath.getAbsoluteFile() + Utils.FILESEPARATOR + Utils.now() + "-heatmap.png");
-
-        saveRawHeatMap(heatMapCSVPath);
-        savePNGHeatMap(heatMapPNGPath);
-    }
-
-    @Override
-    public void gazeMoved(javafx.geometry.Point2D position) {
-        final int positionX = (int) position.getX();
-        final int positionY = (int) position.getY();
-        incHeatMap(positionX, positionY);
-    }
-
-    public void incHeatMap(int X, int Y) {
+    private void incHeatMap(int X, int Y) {
 
         // in heatChart, x and y are opposed
         int x = (int) (Y / heatMapPixelSize);
@@ -172,129 +243,22 @@ public class Stats implements GazeMotionListener {
             heatMap[x][y]++;
     }
 
-    public void start() {
-
-        beginTime = System.currentTimeMillis();
-    }
-
-    public int getNbGoals() {
-
-        return nbGoals;
-    }
-
-    @Override
-    public String toString() {
-        return "Stats{" + "nbShoots = " + getNbGoals() + ", length = " + getLength() + ", average length = "
-                + getAverageLength() + ", zero time = " + getTotalLength() + '}' + lengthBetweenGoals;
-    }
-
-    public long getLength() {
-
-        return length;
-    }
-
-    public long getAverageLength() {
-
-        if (nbGoals == 0)
-            return 0;
-        else
-            return getLength() / nbGoals;
-    }
-
-    public long getMedianLength() {
-
-        if (nbGoals == 0)
-            return 0;
-        else {
-
-            int nbElements = lengthBetweenGoals.size();
-
-            ArrayList<Integer> sortedList = (ArrayList<Integer>) lengthBetweenGoals.clone();
-
-            Collections.sort(sortedList);
-
-            int middle = (int) (nbElements / 2);
-
-            if (nbElements % 2 == 0) {// number of elements is even, median is the average of the two central numbers
-
-                middle -= 1;
-                return (sortedList.get(middle) + sortedList.get(middle + 1)) / 2;
-
-            } else {// number of elements is odd, median is the central number
-
-                return sortedList.get(middle);
-            }
+    /**
+     * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px) if maximum memory is more
+     *         than 1Gb, only 200
+     */
+    private double computeHeatMapPixelSize() {
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        double width = Screen.getPrimary().getBounds().getWidth();
+        double result;
+        if (maxMemory < 1024 * 1024 * 1024) {
+            // size is less than 1Gb (2^30)
+            result = width / 200;
+        } else {
+            result = width / 400;
         }
+        log.info("computeHeatMapPixelSize() : result = {}", result);
+        return result;
     }
 
-    public long getTotalLength() {
-
-        return System.currentTimeMillis() - zeroTime;
-    }
-
-    public double getVariance() {
-
-        double average = getAverageLength();
-
-        double sum = 0;
-
-        for (Integer I : lengthBetweenGoals) {
-
-            sum += Math.pow((I.intValue() - average), 2);
-        }
-
-        return sum / nbGoals;
-    }
-
-    public double getSD() {
-
-        return Math.sqrt(getVariance());
-    }
-
-    public double[][] getHeatMap() {
-
-        return heatMap.clone();
-    }
-
-    public void stop() {
-        gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
-        gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
-    }
-
-    public void incNbGoals() {
-        long last = System.currentTimeMillis() - beginTime;
-        nbGoals++;
-        length += last;
-        lengthBetweenGoals.add((int) last);
-    }
-
-    public ArrayList<Integer> getSortedLengthBetweenGoals() {
-
-        int nbElements = lengthBetweenGoals.size();
-
-        ArrayList<Integer> sortedList = (ArrayList<Integer>) lengthBetweenGoals.clone();
-
-        Collections.sort(sortedList);
-
-        ArrayList<Integer> normalList = (ArrayList<Integer>) lengthBetweenGoals.clone();
-
-        int j = 0;
-
-        for (int i = 0; i < nbElements; i++) {
-
-            if (i % 2 == 0)
-                normalList.set(j, sortedList.get(i));
-            else {
-                normalList.set(nbElements - 1 - j, sortedList.get(i));
-                j++;
-            }
-        }
-
-        return normalList;
-    }
-
-    protected String getTodayFolder() {
-
-        return Utils.getStatsFolder() + gameName + Utils.FILESEPARATOR + Utils.today() + Utils.FILESEPARATOR;
-    }
 }

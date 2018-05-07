@@ -150,7 +150,7 @@ public class Card extends Parent {
 
                         gameInstance.launch();
 
-                        stats.start();
+                        stats.notifyNewRoundReady();
 
                         gameContext.onGameStarted();
                     }

@@ -25,8 +25,6 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.shooter.Point;
-import net.gazeplay.games.shooter.Target;
 
 @Slf4j
 public class Shooter extends Parent implements GameLifeCycle {
@@ -142,7 +140,7 @@ public class Shooter extends Parent implements GameLifeCycle {
                         ((Target) e.getTarget()).done = true;
                         enter((Target) e.getTarget());
                         stats.incNbGoals();
-                        stats.start();
+                        stats.notifyNewRoundReady();
                     }
                 }
             }
@@ -339,14 +337,14 @@ public class Shooter extends Parent implements GameLifeCycle {
         });
         waitbeforestart.play();
 
-        stats.start();
+        stats.notifyNewRoundReady();
 
     }
 
     // done
     @Override
     public void dispose() {
-
+        this.getChildren().clear();
     }
 
     private Transition restartTransition(Target t) {

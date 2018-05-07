@@ -4,7 +4,6 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
@@ -14,6 +13,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
+import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -39,7 +39,7 @@ public class Target extends Portrait {
 
     private final List<Portrait> miniBallsPortraits;
 
-    private final List<Image> availableImages;
+    private final ImageLibrary imageLibrary;
 
     private final EventHandler<Event> enterEvent;
 
@@ -50,14 +50,14 @@ public class Target extends Portrait {
     private TranslateTransition currentTranslation;
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
-            List<Image> availableImages) {
-        super(radius, randomPositionGenerator, availableImages);
+            ImageLibrary imageLibrary) {
+        super(radius, randomPositionGenerator, imageLibrary);
 
         this.randomPositionGenerator = randomPositionGenerator;
         this.stats = stats;
-        this.availableImages = availableImages;
+        this.imageLibrary = imageLibrary;
 
-        this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, availableImages, nbBall);
+        this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, imageLibrary, nbBall);
         gameContext.getChildren().addAll(miniBallsPortraits);
 
         enterEvent = buildEvent();
@@ -69,7 +69,7 @@ public class Target extends Portrait {
 
         move();
 
-        stats.start();
+        stats.notifyNewRoundReady();
     }
 
     private void playHitSound() {
@@ -77,10 +77,10 @@ public class Target extends Portrait {
     }
 
     private List<Portrait> generateMiniBallsPortraits(RandomPositionGenerator randomPositionGenerator,
-            List<Image> availableImages, int count) {
+            ImageLibrary imageLibrary, int count) {
         List<Portrait> result = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            Portrait miniPortrait = new Portrait(ballRadius, randomPositionGenerator, availableImages);
+            Portrait miniPortrait = new Portrait(ballRadius, randomPositionGenerator, imageLibrary);
             miniPortrait.setOpacity(1);
             miniPortrait.setVisible(false);
             result.add(miniPortrait);
@@ -212,7 +212,7 @@ public class Target extends Portrait {
                 .add(new KeyFrame(new Duration(1000), new KeyValue(centerYProperty(), newPosition.getY())));
 
         selfTimeLine.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                new KeyValue(fillProperty(), new ImagePattern(pickRandomImage(availableImages), 0, 0, 1, 1, true))));
+                new KeyValue(fillProperty(), new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true))));
 
         Transition transition4 = createTransition4();
 
@@ -224,7 +224,7 @@ public class Target extends Portrait {
             @Override
             public void handle(ActionEvent actionEvent) {
                 animationStopped = true;
-                stats.start();
+                stats.notifyNewRoundReady();
                 move();
             }
         });

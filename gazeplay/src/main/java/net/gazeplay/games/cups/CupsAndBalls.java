@@ -4,9 +4,6 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
@@ -45,7 +42,7 @@ public class CupsAndBalls implements GameLifeCycle {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
-        this.stats.start();
+        this.stats.notifyNewRoundReady();
         this.nbCups = nbCups;
         this.cups = new Cup[nbCups];
         this.nbColumns = nbCups;
