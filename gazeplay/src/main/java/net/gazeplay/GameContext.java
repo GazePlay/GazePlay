@@ -65,12 +65,12 @@ public class GameContext extends GraphicalContext<Pane> {
 
         EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> {
             controlPanel.setOpacity(1);
-            blindFoldPanel.heightProperty().bind(controlPanel.heightProperty()); // reset the size of the control Panel
+            blindFoldPanel.heightProperty().bind(controlPanel.heightProperty());
             blindFoldPanel.toBack();
         };
         EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent -> {
             controlPanel.setOpacity(0);
-            blindFoldPanel.setHeight(blindFoldPanel.getHeight() / 3); // reduce the size of the control Panel
+            blindFoldPanel.setHeight(blindFoldPanel.getHeight() / 3);
             blindFoldPanel.toFront();
         };
 
