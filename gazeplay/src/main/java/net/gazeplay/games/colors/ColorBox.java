@@ -9,9 +9,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
@@ -24,17 +26,21 @@ public class ColorBox extends StackPane {
     private final ColorToolBox toolBox;
 
     public static final double COLOR_BOX_WIDTH_PX = 200;
+    public static final double COLOR_CIRCLE_RADIUS = 2;
 
     public static final double COLOR_BOX_HEIGHT_REDUCTION_COEFF = 1.3;
 
     private final GazeProgressIndicator progressIndicator;
 
     private final ToggleButton button;
+
     private final Rectangle graphic;
+    // private final Circle graphic;
 
     public ColorBox(final Color color, final Pane root, final ColorToolBox toolBox, final ToggleGroup group) {
         super();
 
+        final GameContext gameContext = toolBox.getColorsGame().getGameContext();
         this.toolBox = toolBox;
 
         Configuration config = toolBox.getColorsGame().getConfig();
@@ -47,7 +53,10 @@ public class ColorBox extends StackPane {
         button.setToggleGroup(group);
 
         graphic = new Rectangle(COLOR_BOX_WIDTH_PX, computeHeight(), color);
+        // graphic = new Circle(COLOR_CIRCLE_RADIUS);
         button.setGraphic(graphic);
+
+        gameContext.getGazeDeviceManager().addEventFilter(graphic);
 
         this.color = color;
 
@@ -56,6 +65,7 @@ public class ColorBox extends StackPane {
             double newHeight = this.computeHeight();
             // log.info("new Height = {}", newHeight);
             graphic.setHeight(newHeight);
+            // graphic.setRadius(newHeight);
         });
 
         toolBox.getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(this);
@@ -66,7 +76,7 @@ public class ColorBox extends StackPane {
         this.addEventHandler(GazeEvent.ANY, eventHandler);
 
         this.getChildren().add(button);
-        this.getChildren().add(progressIndicator);
+        // this.getChildren().add(progressIndicator);
     }
 
     /**
@@ -75,6 +85,22 @@ public class ColorBox extends StackPane {
      * @return The computed height that every color box should have
      */
     private double computeHeight() {
+
+        javafx.geometry.Dimension2D dimension2D = toolBox.getColorsGame().getGameContext()
+                .getGamePanelDimensionProvider().getDimension2D();
+
+        double totalHeight = dimension2D.getHeight() * ColorToolBox.HEIGHT_POURCENT;
+
+        // Compute free space taking into account every elements in the tool box
+        double freeSpace = totalHeight - (ColorToolBox.MAIN_INSETS.getTop() + ColorToolBox.MAIN_INSETS.getBottom()
+                + ColorToolBox.SPACING_PX + toolBox.getImageManager().getHeight())
+                + toolBox.getColorziationPane().getHeight();
+
+        // + 1 for the curstom color box
+        return freeSpace / ((ColorToolBox.NB_COLORS_DISPLAYED + 1) * COLOR_BOX_HEIGHT_REDUCTION_COEFF);
+    }
+
+    private double computeRadius() {
 
         javafx.geometry.Dimension2D dimension2D = toolBox.getColorsGame().getGameContext()
                 .getGamePanelDimensionProvider().getDimension2D();

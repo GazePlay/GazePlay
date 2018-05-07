@@ -544,12 +544,12 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/color.jpeg"),
 
                         new GameSpec.GameLauncher() {
-                            
+
                             private ColorsGamesStats gameStat;
 
                             @Override
                             public Stats createNewStats(Scene scene) {
-                                
+
                                 gameStat = new ColorsGamesStats(scene);
                                 return gameStat;
                             }

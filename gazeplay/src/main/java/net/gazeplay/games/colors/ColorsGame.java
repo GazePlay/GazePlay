@@ -59,8 +59,9 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The default image to display
      */
-    //public static final String DEFAULT_IMAGE = "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
-     public static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
+    // public static final String DEFAULT_IMAGE =
+    // "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
+    public static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
     /**
      * On a [0, 1] scale, used to determine the threshold in the difference between two colors to consider that they are
@@ -79,6 +80,9 @@ public class ColorsGame implements GameLifeCycle {
     public static final double GAZE_INDICATOR_DISTANCE = 5;
 
     public static final double AVG_THRESHOLD = 0.39;
+
+    // Offset the tool box on the y axis
+    public static final double COLOR_TOOL_BOX_OFFSET = 0.8;
 
     /**
      * The gaze progress indicator to show time before colorization.
@@ -121,14 +125,14 @@ public class ColorsGame implements GameLifeCycle {
      * The colorization event handler
      */
     private EventHandler<Event> colorizationEventHandler;
-    
+
     private final ColorsGamesStats stats;
 
     public ColorsGame(GameContext gameContext, final ColorsGamesStats stats) {
 
         this.gameContext = gameContext;
         this.stats = stats;
-        
+
         root = gameContext.getRoot();
     }
 
@@ -171,7 +175,7 @@ public class ColorsGame implements GameLifeCycle {
         this.root.getChildren().add(colorToolBoxPane);
 
         double x = 0;
-        double y = height * 0.8;
+        double y = height * COLOR_TOOL_BOX_OFFSET;
         colorToolBox.relocate(x, y);
     }
 
@@ -485,7 +489,7 @@ public class ColorsGame implements GameLifeCycle {
 
         rectangle.setFill(new ImagePattern(writableImg));
         rectangle.toBack();
-        
+
         stats.incNbGoals();
     }
 

@@ -62,24 +62,4 @@ public class GazeProgressIndicator extends ProgressIndicator implements IGazePro
         this.setOpacity(0);
         this.setProgress(0);
     }
-
-    public EventHandler buildEventHandler() {
-
-        EventHandler event = (EventHandler) (Event event1) -> {
-
-            if (event1.getEventType() == MouseEvent.MOUSE_ENTERED || event1.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                log.info("Entered");
-                this.start();
-
-            } else if (event1.getEventType() == MouseEvent.MOUSE_EXITED
-                    || event1.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                log.info("Exited");
-                this.stop();
-            }
-        };
-
-        return event;
-    }
 }

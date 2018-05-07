@@ -409,15 +409,43 @@ public class ColorToolBox extends BorderPane {
         stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
         colorizeButtonIndicator.setOnFinish(enableColorizeButton);
 
-        EventHandler stopColorizeIndicatorEvent = stopColorizeButtonIndicator.buildEventHandler();
+        /*
+         * EventHandler stopColorizeIndicatorEvent = stopColorizeButtonIndicator.buildEventHandler();
+         * 
+         * EventHandler enableColorizeIndicatorEvent = colorizeButtonIndicator.buildEventHandler();
+         */
 
-        EventHandler enableColorizeIndicatorEvent = colorizeButtonIndicator.buildEventHandler();
+        EventHandler stopHandler = (EventHandler) (Event t) -> {
+            if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-        stopColorizeButtonPane.addEventFilter(MouseEvent.ANY, stopColorizeIndicatorEvent);
-        stopColorizeButtonPane.addEventFilter(GazeEvent.ANY, stopColorizeIndicatorEvent);
+                log.info("Entered");
+                stopColorizeButtonIndicator.start();
 
-        colorizeButtonPane.addEventFilter(MouseEvent.ANY, enableColorizeIndicatorEvent);
-        colorizeButtonPane.addEventFilter(GazeEvent.ANY, enableColorizeIndicatorEvent);
+            } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                log.info("Exited");
+                stopColorizeButtonIndicator.stop();
+            }
+        };
+
+        EventHandler enableHandler = (EventHandler) (Event t) -> {
+            if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                log.info("Entered");
+                colorizeButtonIndicator.start();
+
+            } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                log.info("Exited");
+                colorizeButtonIndicator.stop();
+            }
+        };
+
+        stopColorizeButtonPane.addEventFilter(MouseEvent.ANY, stopHandler);
+        stopColorizeButtonPane.addEventFilter(GazeEvent.ANY, stopHandler);
+
+        colorizeButtonPane.addEventFilter(MouseEvent.ANY, enableHandler);
+        colorizeButtonPane.addEventFilter(GazeEvent.ANY, enableHandler);
 
         getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(stopColorizeButtonPane);
         getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(colorizeButtonPane);

@@ -8,6 +8,7 @@ import net.gazeplay.commons.utils.stats.SelectionGamesStats;
 
 /**
  * Stats for the color game.
+ * 
  * @author Thomas Medard
  */
 @Slf4j
@@ -17,12 +18,12 @@ public class ColorsGamesStats extends SelectionGamesStats {
         super(gameContextScene);
         this.gameName = "Colors";
     }
-    
-     @Override
+
+    @Override
     public SavedStatsInfo saveStats() throws IOException {
-        
+
         SavedStatsInfo statsInfo = super.saveStats();
-        
+
         log.info("Stats saved");
         return statsInfo;
     }
