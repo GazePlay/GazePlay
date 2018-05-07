@@ -140,7 +140,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
             bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
-            bt.setLayoutX(i *(1.5* buttonSize) +0.5*buttonSize );
+            bt.setLayoutX(i * (1.5 * buttonSize) + 0.5 * buttonSize);
             bt.setText("screen" + i);
             int index = i;
             EventHandler<Event> buttonHandler = new EventHandler<Event>() {
@@ -163,7 +163,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         + "-fx-max-height: " + buttonSize + "px;");
                 if (i != 5) {
                     bt.setText("color" + i);
-                    bt.setLayoutX(i *(1.5* buttonSize) +0.5*buttonSize );
+                    bt.setLayoutX(i * (1.5 * buttonSize) + 0.5 * buttonSize);
                     int index = i;
                     Color[] cols = new Color[5];
                     cols[0] = Color.ALICEBLUE;
@@ -182,7 +182,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 } else {
                     bt.setText("return");
                     bt.setLayoutX(dimension2D.getWidth() - buttonSize);
-                    bt.setLayoutY(dimension2D.getHeight() - (1.2*buttonSize));
+                    bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
                     EventHandler<Event> buttonHandler = new EventHandler<Event>() {
                         @Override
                         public void handle(Event e) {
