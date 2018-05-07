@@ -59,8 +59,8 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The default image to display
      */
-    public static final String DEFAULT_IMAGE = "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
-    // public static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
+    //public static final String DEFAULT_IMAGE = "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
+     public static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
     /**
      * On a [0, 1] scale, used to determine the threshold in the difference between two colors to consider that they are
@@ -121,11 +121,14 @@ public class ColorsGame implements GameLifeCycle {
      * The colorization event handler
      */
     private EventHandler<Event> colorizationEventHandler;
+    
+    private final ColorsGamesStats stats;
 
-    public ColorsGame(GameContext gameContext) {
+    public ColorsGame(GameContext gameContext, final ColorsGamesStats stats) {
 
         this.gameContext = gameContext;
-
+        this.stats = stats;
+        
         root = gameContext.getRoot();
     }
 
@@ -278,15 +281,13 @@ public class ColorsGame implements GameLifeCycle {
         alert.initOwner(GazePlay.getInstance().getPrimaryStage());
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         stage.setAlwaysOnTop(true);
-        stage.toFront();
-
-        log.info("alert modality : {}", alert.getModality());
 
         ButtonType yesButton = new ButtonType("Yes");
         ButtonType noButton = new ButtonType("No");
 
         alert.getButtonTypes().setAll(yesButton, noButton);
 
+        stage.toFront();
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.get() == yesButton) {
@@ -484,6 +485,8 @@ public class ColorsGame implements GameLifeCycle {
 
         rectangle.setFill(new ImagePattern(writableImg));
         rectangle.toBack();
+        
+        stats.incNbGoals();
     }
 
     private void javaFXFloodFill(final PixelWriter pixelWriter, final PixelReader pixelReader, Color newColor, int x,
