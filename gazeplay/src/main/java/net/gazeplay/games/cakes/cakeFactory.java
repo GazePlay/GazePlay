@@ -89,12 +89,12 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
 
-        EventHandler<Event> handEvent = new EventHandler<Event>() {
+        /*EventHandler<Event> handEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
 
             }
-        };
+        };*/
 
         enterEvent = new EventHandler<Event>() {
             @Override
