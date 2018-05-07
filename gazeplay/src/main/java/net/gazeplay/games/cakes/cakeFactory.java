@@ -79,7 +79,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         centerX = 8.7 * dimension2D.getWidth() / 29.7;
         centerY = 10 * dimension2D.getHeight() / 21;
         sp = new StackPane();
-        c = new Circle(dimension2D.getHeight() / 4);
+        c = new Circle(dimension2D.getHeight() / 6);
         c.setCenterY(dimension2D.getHeight() / 2);
         c.setCenterX(dimension2D.getWidth() / 2);
         createStack(sp);
@@ -133,14 +133,14 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         p[4].getChildren().add(f4);
         p[5].getChildren().add(f5);
 
-        double buttonSize = dimension2D.getWidth() / 7;
+        double buttonSize = dimension2D.getWidth() / 8;
 
         for (int i = 0; i < 5; i++) { // HomePage of the game
             Button bt = new Button();
             bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
-            bt.setLayoutX(i * buttonSize);
+            bt.setLayoutX(i *(1.5* buttonSize) +0.5*buttonSize );
             bt.setText("screen" + i);
             int index = i;
             EventHandler<Event> buttonHandler = new EventHandler<Event>() {
@@ -163,7 +163,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         + "-fx-max-height: " + buttonSize + "px;");
                 if (i != 5) {
                     bt.setText("color" + i);
-                    bt.setLayoutX(i * buttonSize);
+                    bt.setLayoutX(i *(1.5* buttonSize) +0.5*buttonSize );
                     int index = i;
                     Color[] cols = new Color[5];
                     cols[0] = Color.ALICEBLUE;
@@ -182,7 +182,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 } else {
                     bt.setText("return");
                     bt.setLayoutX(dimension2D.getWidth() - buttonSize);
-                    bt.setLayoutY(dimension2D.getHeight() - buttonSize);
+                    bt.setLayoutY(dimension2D.getHeight() - (1.2*buttonSize));
                     EventHandler<Event> buttonHandler = new EventHandler<Event>() {
                         @Override
                         public void handle(Event e) {
