@@ -30,16 +30,15 @@ public class MolesChar extends Parent {
     private final GameContext gameContext;
 
     private final Moles gameInstance;
-    
+
     private final double distTranslation;
 
-    private boolean touched ;
+    private boolean touched;
 
     private boolean canTouched;
-    
+
     public boolean canGoOut;
 
-    
     /**
      * true if the mole is out
      */
@@ -49,38 +48,38 @@ public class MolesChar extends Parent {
 
     private Timeline timeMinToWhackTheMole;
 
-    private final double timeMinToWhackMole  = 200;  // TODO How much time ?
+    private final double timeMinToWhackMole = 200; // TODO How much time ?
 
     private Timeline timeMoleOut;
 
-    private final int timeMoleStayOut = 2500; // TODO :  How much time ?
+    private final int timeMoleStayOut = 2500; // TODO : How much time ?
 
     private final double posX;
     private final double posY;
-    
+
     final Stats stats;
 
     final EventHandler<Event> enterEvent;
 
-    public MolesChar(double positionX, double positionY, double width, double height, double distTrans, GameContext gameContext,
-            Stats stats, Moles gameInstance) {
+    public MolesChar(double positionX, double positionY, double width, double height, double distTrans,
+            GameContext gameContext, Stats stats, Moles gameInstance) {
 
         this.gameContext = gameContext;
 
         this.stats = stats;
 
         this.out = false;
-        
+
         this.distTranslation = distTrans;
 
-        this.posX = positionX ;
+        this.posX = positionX;
 
         this.posY = positionY + this.distTranslation;
-        
-        touched =false;
+
+        touched = false;
         canTouched = false;
         canGoOut = true;
-        
+
         this.gameInstance = gameInstance;
 
         this.progressIndicator = createProgressIndicator(width, height);
@@ -110,10 +109,11 @@ public class MolesChar extends Parent {
             public void handle(Event e) {
 
                 if (!canTouched || !out || touched) // If the mole is not out or already touched: nothing append
-                   return;
+                    return;
 
                 /* If the mole is out and touched */
-                if (canTouched && (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
+                if (canTouched && (e.getEventType() == MouseEvent.MOUSE_ENTERED
+                        || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
 
                     progressIndicator.setOpacity(0);
                     progressIndicator.setProgress(0);
@@ -128,12 +128,12 @@ public class MolesChar extends Parent {
                         /* If the user watch the mole enough time (timeMinToWhackMole) */
                         @Override
                         public void handle(ActionEvent actionEvent) {
-                        	if(!touched && out) {
-                        		canTouched = false;
-	                            gameInstance.OneMoleWacked();
-	                            touched = true;
-	                            goIn();
-                        	}
+                            if (!touched && out) {
+                                canTouched = false;
+                                gameInstance.OneMoleWacked();
+                                touched = true;
+                                goIn();
+                            }
 
                         }
                     });
@@ -155,12 +155,11 @@ public class MolesChar extends Parent {
     /* This mole must go out */
     public void getOut() {
 
-    	this.canGoOut = false;
+        this.canGoOut = false;
 
-    	gameInstance.nbMolesOut++;
+        gameInstance.nbMolesOut++;
 
-
-       TranslateTransition translation = new TranslateTransition(new Duration(1500), this);
+        TranslateTransition translation = new TranslateTransition(new Duration(1500), this);
         translation.setByX(0);
         translation.setByY(-this.distTranslation);
         translation.play();
@@ -170,11 +169,11 @@ public class MolesChar extends Parent {
             public void handle(ActionEvent actionEvent) {
                 canTouched = true;
                 out = true;
-                
+
                 timeMoleOut = new Timeline(); // New time this mole go out
-                
+
                 Random r = new Random();
-                
+
                 int time = r.nextInt(timeMoleStayOut) + 2000;
 
                 timeMoleOut.getKeyFrames()
@@ -187,23 +186,21 @@ public class MolesChar extends Parent {
                     /* If the Mole is stay out without being touching */
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                    	if(!touched && out) {
-                    		goIn(); // Go back in the hole
-                    	}
+                        if (!touched && out) {
+                            goIn(); // Go back in the hole
+                        }
                     }
                 });
 
-                
             }
         });
     }
 
-
     private void goIn() {
-    	canTouched = false;
+        canTouched = false;
         double timeGoIn = 1500;
-        if(touched) {
-        	timeGoIn = 500;
+        if (touched) {
+            timeGoIn = 500;
         }
         touched = false;
         TranslateTransition translation = new TranslateTransition(new Duration(timeGoIn), this);
@@ -213,15 +210,12 @@ public class MolesChar extends Parent {
         translation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-        		gameInstance.nbMolesOut--;
+                gameInstance.nbMolesOut--;
                 out = false;
                 canGoOut = true;
             }
         });
-        
-
 
     }
-
 
 }
