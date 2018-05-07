@@ -394,7 +394,7 @@ public class ColorToolBox extends BorderPane {
             stopColorizeButtonPane.setVisible(true);
             stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
             colorizeButtonIndicator.setOnFinish(null);
-            log.info("Colorizing disabled");
+            //log.info("Colorizing disabled");
         };
 
         disableColorizeButton = (EventHandler) (Event event1) -> {
@@ -403,7 +403,7 @@ public class ColorToolBox extends BorderPane {
             colorizeButtonPane.setVisible(true);
             stopColorizeButtonIndicator.setOnFinish(null);
             colorizeButtonIndicator.setOnFinish(enableColorizeButton);
-            log.info("Colorizing enabled");
+           // log.info("Colorizing enabled");
         };
 
         stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
