@@ -9,12 +9,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Screen;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.GazePlay;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 @Slf4j
@@ -30,7 +30,7 @@ public class ColorBox extends StackPane {
 
     public static final double COLOR_BOX_HEIGHT_REDUCTION_COEFF = 1.3;
 
-    private final GazeProgressIndicator progressIndicator;
+    private final AbstractGazeIndicator progressIndicator;
 
     private final ToggleButton button;
 
@@ -43,11 +43,19 @@ public class ColorBox extends StackPane {
         final GameContext gameContext = toolBox.getColorsGame().getGameContext();
         this.toolBox = toolBox;
 
-        Configuration config = toolBox.getColorsGame().getConfig();
+        /*Configuration config = toolBox.getColorsGame().getConfig();
         this.progressIndicator = new GazeProgressIndicator(this.getWidth(), this.getHeight(),
-                config.getFixationlength());
+                config.getFixationlength());*/
 
-        progressIndicator.getStyleClass().add("withoutTextProgress");
+        progressIndicator = toolBox.getProgressIndicator();
+        //progressIndicator.getStyleClass().add("withoutTextProgress");
+        
+        
+        /*progressIndicator.setOnFinish((ActionEvent event1) -> {
+
+                  ColorBox selectedColorBox = toolBox.getSelectedColorBox();
+                  action(selectedColorBox);
+         });*/
 
         button = new ToggleButton();
         button.setToggleGroup(group);
@@ -68,15 +76,15 @@ public class ColorBox extends StackPane {
             // graphic.setRadius(newHeight);
         });
 
-        toolBox.getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(this);
-
         ColorEventHandler eventHandler = new ColorEventHandler(this);
 
         this.addEventHandler(MouseEvent.ANY, eventHandler);
         this.addEventHandler(GazeEvent.ANY, eventHandler);
 
         this.getChildren().add(button);
-        // this.getChildren().add(progressIndicator);
+        //this.getChildren().add(progressIndicator);
+        
+        toolBox.getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(this);
     }
 
     /**
@@ -124,17 +132,28 @@ public class ColorBox extends StackPane {
     public void select() {
 
         this.button.setSelected(true);
+        this.getStyleClass().add("selectedColorBox");
     }
 
     public void unselect() {
 
         progressIndicator.stop();
         this.button.setSelected(false);
+        this.getStyleClass().remove("selectedColorBox");
     }
 
     public void setColor(final Color color) {
         this.color = color;
         this.graphic.setFill(color);
+    }
+    
+    private void action(ColorBox selectedColorBox) {
+
+            selectedColorBox.unselect();
+
+            this.select();
+
+            toolBox.setSelectedColorBox(this);
     }
 
     private class ColorEventHandler implements EventHandler<Event> {
@@ -148,6 +167,25 @@ public class ColorBox extends StackPane {
 
         @Override
         public void handle(Event event) {
+            
+            GazePlay gazePlay = GazePlay.getInstance();
+
+            double gameWidth = gazePlay.getPrimaryStage().getWidth();
+            double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
+
+            double eventX = 0;
+            double eventY = 0;
+
+            if(event.getEventType() == GazeEvent.ANY) {
+                GazeEvent gazeEvent = (GazeEvent) event;
+                eventX = gazeEvent.getX();
+                eventY = gazeEvent.getY();
+             }
+            else if(event.getEventType() == MouseEvent.ANY) {
+                MouseEvent mouseEvent = (MouseEvent) event;
+                eventX = mouseEvent.getX();
+                eventY = mouseEvent.getY();
+            }
 
             ColorBox selectedColorBox = toolBox.getSelectedColorBox();
 
@@ -162,26 +200,21 @@ public class ColorBox extends StackPane {
             } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED
                     || event.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                colorBox.progressIndicator.setOnFinish((ActionEvent event1) -> {
+                  progressIndicator.setOnFinish((ActionEvent event1) -> {
 
-                    action(selectedColorBox);
-                });
+                          action(selectedColorBox);
+                  });
 
                 colorBox.progressIndicator.start();
+                
+                log.info("entered {}", colorBox.toString());
+                
             } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
                     || event.getEventType() == GazeEvent.GAZE_EXITED) {
 
                 colorBox.progressIndicator.stop();
+                log.info("exited : {}", colorBox.toString());
             }
-        }
-
-        private void action(ColorBox selectedColorBox) {
-
-            selectedColorBox.unselect();
-
-            colorBox.select();
-
-            toolBox.setSelectedColorBox(colorBox);
         }
     }
 }

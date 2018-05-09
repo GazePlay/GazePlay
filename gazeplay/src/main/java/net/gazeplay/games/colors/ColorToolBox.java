@@ -38,7 +38,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
 
 @Slf4j
-public class ColorToolBox extends BorderPane {
+public class ColorToolBox extends StackPane {
 
     /**
      * Pourcents use to compute height and width.
@@ -65,6 +65,8 @@ public class ColorToolBox extends BorderPane {
     public static final String STOP_COLORIZE_BUTTON_IMAGE_PATH = "data/common/images/error.png";
 
     private final VBox mainPane;
+    
+    private final AbstractGazeIndicator progressIndicator;
 
     /**
      * All the color boxes
@@ -103,15 +105,19 @@ public class ColorToolBox extends BorderPane {
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
         super();
+        
+        progressIndicator = new GazeFollowerIndicator(root);
 
         this.selectedColorBox = null;
         this.colorsGame = colorsGame;
         this.root = root;
-
-        // this.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+        
+        // the main pane for the tool box
+        BorderPane thisRoot = new BorderPane();
+        this.getChildren().add(thisRoot);
 
         mainPane = new VBox();
-        this.setCenter(mainPane);
+        thisRoot.setCenter(mainPane);
         mainPane.setSpacing(SPACING_PX);
         mainPane.setPadding(MAIN_INSETS);
 
@@ -207,8 +213,8 @@ public class ColorToolBox extends BorderPane {
          * this.setRight(nextPallet); this.setLeft(previousPallet);
          */
 
-        this.setBottom(imageManager);
-        this.setTop(colorziationPane);
+        thisRoot.setBottom(imageManager);
+        thisRoot.setTop(colorziationPane);
 
         this.getStyleClass().add("bg-colored");
     }
@@ -375,20 +381,19 @@ public class ColorToolBox extends BorderPane {
         }
 
         Configuration config = this.getColorsGame().getConfig();
-        GazeProgressIndicator stopColorizeButtonIndicator = new GazeProgressIndicator(stopColorize.getWidth(),
-                stopColorize.getHeight(), config.getFixationlength());
+        AbstractGazeIndicator stopColorizeButtonIndicator = new GazeFollowerIndicator(root);
 
-        GazeProgressIndicator colorizeButtonIndicator = new GazeProgressIndicator(colorize.getWidth(),
-                colorize.getHeight(), config.getFixationlength());
+        AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(root);
 
         colorizeButtonIndicator.getStyleClass().add("withoutTextProgress");
         stopColorizeButtonIndicator.getStyleClass().add("withoutTextProgress");
 
-        Pane colorizeButtonPane = new StackPane(colorize, colorizeButtonIndicator);
-        Pane stopColorizeButtonPane = new StackPane(stopColorize, stopColorizeButtonIndicator);
+        Pane colorizeButtonPane = new StackPane(colorize);
+        Pane stopColorizeButtonPane = new StackPane(stopColorize);
 
         EventHandler enableColorizeButton = (EventHandler) (Event event1) -> {
 
+            colorizeButtonIndicator.toFront();
             colorsGame.setEnableColorization(false);
             colorizeButtonPane.setVisible(false);
             stopColorizeButtonPane.setVisible(true);
@@ -398,6 +403,8 @@ public class ColorToolBox extends BorderPane {
         };
 
         disableColorizeButton = (EventHandler) (Event event1) -> {
+            
+            stopColorizeButtonIndicator.toFront();
             colorsGame.setEnableColorization(true);
             stopColorizeButtonPane.setVisible(false);
             colorizeButtonPane.setVisible(true);
@@ -451,7 +458,10 @@ public class ColorToolBox extends BorderPane {
         getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(colorizeButtonPane);
 
         stopColorizeButtonPane.setVisible(false);
-
+        
+        root.getChildren().add(stopColorizeButtonIndicator);
+        root.getChildren().add(colorizeButtonIndicator);
+        
         colorizeButtonIndicator.toFront();
         stopColorizeButtonIndicator.toFront();
 
@@ -482,5 +492,9 @@ public class ColorToolBox extends BorderPane {
         dialog.setScene(scene);
 
         return dialog;
+    }
+
+    public AbstractGazeIndicator getProgressIndicator() {
+        return progressIndicator;
     }
 }

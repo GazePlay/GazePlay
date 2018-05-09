@@ -82,7 +82,10 @@ public class ColorsGame implements GameLifeCycle {
     public static final double AVG_THRESHOLD = 0.39;
 
     // Offset the tool box on the y axis
-    public static final double COLOR_TOOL_BOX_OFFSET = 0.8;
+    public static final double COLOR_TOOL_BOX_OFFSET = 0;
+    
+    public static final double GAZE_PROGRESS_INDICATOR_WIDTH = 15;
+    public static final double GAZE_PROGRESS_INDICATOR_HEIGHT = GAZE_PROGRESS_INDICATOR_WIDTH;
 
     /**
      * The gaze progress indicator to show time before colorization.
@@ -139,9 +142,8 @@ public class ColorsGame implements GameLifeCycle {
     @Override
     public void launch() {
 
-        config = ConfigurationBuilder.createFromPropertiesResource().build();
-
-        this.gazeProgressIndicator = new GazeProgressIndicator(15, 15, config.getFixationlength());
+        this.gazeProgressIndicator = new GazeProgressIndicator(GAZE_PROGRESS_INDICATOR_WIDTH, 
+                GAZE_PROGRESS_INDICATOR_HEIGHT);
 
         gazeProgressIndicator.toFront();
         this.root.getChildren().add(gazeProgressIndicator);
@@ -177,6 +179,26 @@ public class ColorsGame implements GameLifeCycle {
         double x = 0;
         double y = height * COLOR_TOOL_BOX_OFFSET;
         colorToolBox.relocate(x, y);
+        
+        // Add it here so it appears on top of the tool box
+        final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
+        root.getChildren().add(progressIndicator);
+        /*root.addEventFilter(MouseEvent.ANY, (event) -> {
+            
+            moveGazeIndicator(progressIndicator, event.getX() + 2, event.getY() + 2);
+        });
+        root.addEventFilter(GazeEvent.ANY, (event) -> {
+            
+            moveGazeIndicator(progressIndicator, event.getX() + 2, event.getY() + 2);
+        });*/
+        progressIndicator.toFront();
+    }
+    
+    private void moveGazeIndicator(AbstractGazeIndicator progressIndicator, double x, double y) {
+            progressIndicator.setTranslateX(x);
+            progressIndicator.setTranslateY(y);
+            /*log.info("progress size : width = {}, height = {}", progressIndicator.getWidth(), progressIndicator.getHeight());
+            log.info("translated to : x = {}, y = {}", x, y);*/
     }
 
     private void buildDraw(String imgURL, double width, double height) {
@@ -597,7 +619,6 @@ public class ColorsGame implements GameLifeCycle {
 
     /**
      * Detect if a color is close enough to another one to be considered the same.
-     * 
      * @param color1
      *            The first color to compare
      * @param color2
@@ -605,27 +626,13 @@ public class ColorsGame implements GameLifeCycle {
      * @return true if considered same, false otherwise.
      */
     private static boolean isEqualColors(final Color color1, final Color color2) {
-
-        boolean redEq = false;
-        boolean greEq = false;
-        boolean bluEq = false;
-
-        if (color1.getRed() <= color2.getRed() + COLOR_EQUALITY_THRESHOLD
-                && color1.getRed() >= color2.getRed() - COLOR_EQUALITY_THRESHOLD) {
-            redEq = true;
-        }
-
-        if (color1.getGreen() <= color2.getGreen() + COLOR_EQUALITY_THRESHOLD
-                && color1.getGreen() >= color2.getGreen() - COLOR_EQUALITY_THRESHOLD) {
-            greEq = true;
-        }
-
-        if (color1.getBlue() <= color2.getBlue() + COLOR_EQUALITY_THRESHOLD
-                && color1.getBlue() >= color2.getBlue() - COLOR_EQUALITY_THRESHOLD) {
-            bluEq = true;
-        }
-
-        return redEq && greEq && bluEq;
+        
+        // Scalar distance calculation
+        double dist = Math.sqrt(Math.pow(color1.getRed() - color2.getRed(), 2) +
+                Math.pow(color1.getGreen() - color2.getGreen(), 2) + 
+                Math.pow(color1.getBlue() - color2.getBlue(), 2));
+        
+        return dist <= COLOR_EQUALITY_THRESHOLD;
     }
 
     public void setEnableColorization(boolean enable) {
