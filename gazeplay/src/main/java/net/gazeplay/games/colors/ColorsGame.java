@@ -84,7 +84,7 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The gaze progress indicator to show time before colorization.
      */
-    private GazeProgressIndicator gazeProgressIndicator;
+    private AbstractGazeIndicator gazeProgressIndicator;
 
     /**
      * The configuration
@@ -116,6 +116,7 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * Should we enableColorization.
      */
+    @Getter
     private boolean enableColorization = true;
 
     /**
@@ -123,9 +124,12 @@ public class ColorsGame implements GameLifeCycle {
      */
     private EventHandler<Event> colorizationEventHandler;
 
-    public ColorsGame(GameContext gameContext) {
+    private final ColorsGamesStats stats;
+
+    public ColorsGame(GameContext gameContext, final ColorsGamesStats stats) {
 
         this.gameContext = gameContext;
+        this.stats = stats;
 
         root = gameContext.getRoot();
     }
@@ -133,11 +137,8 @@ public class ColorsGame implements GameLifeCycle {
     @Override
     public void launch() {
 
-        config = ConfigurationBuilder.createFromPropertiesResource().build();
+        this.gazeProgressIndicator = new GazeFollowerIndicator(root);
 
-        this.gazeProgressIndicator = new GazeProgressIndicator(15, 15, config.getFixationlength());
-
-        gazeProgressIndicator.toFront();
         this.root.getChildren().add(gazeProgressIndicator);
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -169,8 +170,30 @@ public class ColorsGame implements GameLifeCycle {
         this.root.getChildren().add(colorToolBoxPane);
 
         double x = 0;
-        double y = height * 0.8;
+        double y = 0;
         colorToolBox.relocate(x, y);
+
+        // Add it here so it appears on top of the tool box
+        final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
+        root.getChildren().add(progressIndicator);
+        /*
+         * root.addEventFilter(MouseEvent.ANY, (event) -> {
+         * 
+         * moveGazeIndicator(progressIndicator, event.getX() + 2, event.getY() + 2); });
+         * root.addEventFilter(GazeEvent.ANY, (event) -> {
+         * 
+         * moveGazeIndicator(progressIndicator, event.getX() + 2, event.getY() + 2); });
+         */
+        progressIndicator.toFront();
+    }
+
+    private void moveGazeIndicator(AbstractGazeIndicator progressIndicator, double x, double y) {
+        progressIndicator.setTranslateX(x);
+        progressIndicator.setTranslateY(y);
+        /*
+         * log.info("progress size : width = {}, height = {}", progressIndicator.getWidth(),
+         * progressIndicator.getHeight()); log.info("translated to : x = {}, y = {}", x, y);
+         */
     }
 
     private void buildDraw(String imgURL, double width, double height) {
@@ -275,11 +298,17 @@ public class ColorsGame implements GameLifeCycle {
         alert.setTitle(translator.translate("confirmBWTitle"));
         alert.setHeaderText(translator.translate("confirmBWHeader"));
 
+        // Make sure the alert is on top
+        alert.initOwner(GazePlay.getInstance().getPrimaryStage());
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.setAlwaysOnTop(true);
+
         ButtonType yesButton = new ButtonType("Yes");
         ButtonType noButton = new ButtonType("No");
 
         alert.getButtonTypes().setAll(yesButton, noButton);
 
+        stage.toFront();
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.get() == yesButton) {
@@ -342,8 +371,6 @@ public class ColorsGame implements GameLifeCycle {
                     currentX = gazeXOrigin;
                     currentY = gazeYOrigin;
 
-                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
-
                     gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
 
                         colorize(currentX, currentY);
@@ -355,8 +382,6 @@ public class ColorsGame implements GameLifeCycle {
                     GazeEvent gazeEvent = (GazeEvent) event;
                     currentX = gazeEvent.getX() - (ColorBox.COLOR_BOX_WIDTH_PX + widthDiff);
                     currentY = gazeEvent.getY();
-
-                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
 
                     // If gaze still around first point
                     if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
@@ -391,8 +416,6 @@ public class ColorsGame implements GameLifeCycle {
                     currentX = gazeXOrigin;
                     currentY = gazeYOrigin;
 
-                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
-
                     gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
 
                         colorize(currentX, currentY);
@@ -404,8 +427,6 @@ public class ColorsGame implements GameLifeCycle {
                     MouseEvent mouseEvent = (MouseEvent) event;
                     currentX = mouseEvent.getX();
                     currentY = mouseEvent.getY();
-
-                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
 
                     // If mouse still around first point
                     if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
@@ -437,21 +458,6 @@ public class ColorsGame implements GameLifeCycle {
         };
     }
 
-    private void moveGazeIndicator(final double x, final double y) {
-
-        if (x < 0 || y < 0 || x > rectangle.getWidth() || y > rectangle.getHeight()) {
-            return;
-        }
-
-        // We need to take into account that the 0 from event is top left corner of rectangle
-        // but not actually the top left corner of screen.
-        double newX = x + colorToolBox.getWidth();
-
-        gazeProgressIndicator.setTranslateX(newX);
-        gazeProgressIndicator.setTranslateY(y);
-
-    }
-
     /**
      * Fill a zone with the current selected color.
      * 
@@ -477,6 +483,8 @@ public class ColorsGame implements GameLifeCycle {
 
         rectangle.setFill(new ImagePattern(writableImg));
         rectangle.toBack();
+
+        stats.incNbGoals();
     }
 
     private void javaFXFloodFill(final PixelWriter pixelWriter, final PixelReader pixelReader, Color newColor, int x,
@@ -592,26 +600,12 @@ public class ColorsGame implements GameLifeCycle {
      */
     private static boolean isEqualColors(final Color color1, final Color color2) {
 
-        boolean redEq = false;
-        boolean greEq = false;
-        boolean bluEq = false;
+        // Scalar distance calculation
+        double dist = Math.sqrt(
+                Math.pow(color1.getRed() - color2.getRed(), 2) + Math.pow(color1.getGreen() - color2.getGreen(), 2)
+                        + Math.pow(color1.getBlue() - color2.getBlue(), 2));
 
-        if (color1.getRed() <= color2.getRed() + COLOR_EQUALITY_THRESHOLD
-                && color1.getRed() >= color2.getRed() - COLOR_EQUALITY_THRESHOLD) {
-            redEq = true;
-        }
-
-        if (color1.getGreen() <= color2.getGreen() + COLOR_EQUALITY_THRESHOLD
-                && color1.getGreen() >= color2.getGreen() - COLOR_EQUALITY_THRESHOLD) {
-            greEq = true;
-        }
-
-        if (color1.getBlue() <= color2.getBlue() + COLOR_EQUALITY_THRESHOLD
-                && color1.getBlue() >= color2.getBlue() - COLOR_EQUALITY_THRESHOLD) {
-            bluEq = true;
-        }
-
-        return redEq && greEq && bluEq;
+        return dist <= COLOR_EQUALITY_THRESHOLD;
     }
 
     public void setEnableColorization(boolean enable) {

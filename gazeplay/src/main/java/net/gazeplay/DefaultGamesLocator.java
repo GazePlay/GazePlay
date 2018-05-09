@@ -547,15 +547,19 @@ public class DefaultGamesLocator implements GamesLocator {
 
                         new GameSpec.GameLauncher() {
 
+                            private ColorsGamesStats gameStat;
+
                             @Override
                             public Stats createNewStats(Scene scene) {
-                                return new ColorsGamesStats(scene);
+
+                                gameStat = new ColorsGamesStats(scene);
+                                return gameStat;
                             }
 
                             @Override
                             public GameLifeCycle createNewGame(GameContext gameContext,
                                     GameSpec.GameVariant gameVariant, Stats stats) {
-                                return new ColorsGame(gameContext);
+                                return new ColorsGame(gameContext, gameStat);
                             }
                         }));
         result.add(new GameSpec(new GameSummary("Cakes", DEFAULT_SEARCHING_GAME_THUMBNAIL),

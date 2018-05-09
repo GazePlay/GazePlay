@@ -38,7 +38,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
 
 @Slf4j
-public class ColorToolBox extends BorderPane {
+public class ColorToolBox extends StackPane {
 
     /**
      * Pourcents use to compute height and width.
@@ -65,6 +65,8 @@ public class ColorToolBox extends BorderPane {
     public static final String STOP_COLORIZE_BUTTON_IMAGE_PATH = "data/common/images/error.png";
 
     private final VBox mainPane;
+
+    private final AbstractGazeIndicator progressIndicator;
 
     /**
      * All the color boxes
@@ -104,14 +106,18 @@ public class ColorToolBox extends BorderPane {
     public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
         super();
 
+        progressIndicator = new GazeFollowerIndicator(root);
+
         this.selectedColorBox = null;
         this.colorsGame = colorsGame;
         this.root = root;
 
-        // this.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+        // the main pane for the tool box
+        BorderPane thisRoot = new BorderPane();
+        this.getChildren().add(thisRoot);
 
         mainPane = new VBox();
-        this.setCenter(mainPane);
+        thisRoot.setCenter(mainPane);
         mainPane.setSpacing(SPACING_PX);
         mainPane.setPadding(MAIN_INSETS);
 
@@ -163,7 +169,12 @@ public class ColorToolBox extends BorderPane {
         customColorPickerButton.setOnAction((event) -> {
 
             customColorDialog.show();
-            customBox.setColor(CustomColorPicker.getSelectedColor().getColor());
+            colorsGame.setEnableColorization(false);
+        });
+
+        customColorDialog.setOnCloseRequest((event) -> {
+
+            colorsGame.setEnableColorization(true);
         });
 
         colorPicker.setOnAction((event) -> {
@@ -207,8 +218,8 @@ public class ColorToolBox extends BorderPane {
          * this.setRight(nextPallet); this.setLeft(previousPallet);
          */
 
-        this.setBottom(imageManager);
-        this.setTop(colorziationPane);
+        thisRoot.setBottom(imageManager);
+        thisRoot.setTop(colorziationPane);
 
         this.getStyleClass().add("bg-colored");
     }
@@ -375,54 +386,86 @@ public class ColorToolBox extends BorderPane {
         }
 
         Configuration config = this.getColorsGame().getConfig();
-        GazeProgressIndicator stopColorizeButtonIndicator = new GazeProgressIndicator(stopColorize.getWidth(),
-                stopColorize.getHeight(), config.getFixationlength());
+        AbstractGazeIndicator stopColorizeButtonIndicator = new GazeFollowerIndicator(root);
 
-        GazeProgressIndicator colorizeButtonIndicator = new GazeProgressIndicator(colorize.getWidth(),
-                colorize.getHeight(), config.getFixationlength());
+        AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(root);
 
         colorizeButtonIndicator.getStyleClass().add("withoutTextProgress");
         stopColorizeButtonIndicator.getStyleClass().add("withoutTextProgress");
 
-        Pane colorizeButtonPane = new StackPane(colorize, colorizeButtonIndicator);
-        Pane stopColorizeButtonPane = new StackPane(stopColorize, stopColorizeButtonIndicator);
+        Pane colorizeButtonPane = new StackPane(colorize);
+        Pane stopColorizeButtonPane = new StackPane(stopColorize);
 
         EventHandler enableColorizeButton = (EventHandler) (Event event1) -> {
 
+            colorizeButtonIndicator.toFront();
             colorsGame.setEnableColorization(false);
             colorizeButtonPane.setVisible(false);
             stopColorizeButtonPane.setVisible(true);
             stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
             colorizeButtonIndicator.setOnFinish(null);
-            log.info("Colorizing disabled");
+            // log.info("Colorizing disabled");
         };
 
         disableColorizeButton = (EventHandler) (Event event1) -> {
+
+            stopColorizeButtonIndicator.toFront();
             colorsGame.setEnableColorization(true);
             stopColorizeButtonPane.setVisible(false);
             colorizeButtonPane.setVisible(true);
             stopColorizeButtonIndicator.setOnFinish(null);
             colorizeButtonIndicator.setOnFinish(enableColorizeButton);
-            log.info("Colorizing enabled");
+            // log.info("Colorizing enabled");
         };
 
         stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
         colorizeButtonIndicator.setOnFinish(enableColorizeButton);
 
-        EventHandler stopColorizeIndicatorEvent = stopColorizeButtonIndicator.buildEventHandler();
+        /*
+         * EventHandler stopColorizeIndicatorEvent = stopColorizeButtonIndicator.buildEventHandler();
+         * 
+         * EventHandler enableColorizeIndicatorEvent = colorizeButtonIndicator.buildEventHandler();
+         */
 
-        EventHandler enableColorizeIndicatorEvent = colorizeButtonIndicator.buildEventHandler();
+        EventHandler stopHandler = (EventHandler) (Event t) -> {
+            if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-        stopColorizeButtonPane.addEventFilter(MouseEvent.ANY, stopColorizeIndicatorEvent);
-        stopColorizeButtonPane.addEventFilter(GazeEvent.ANY, stopColorizeIndicatorEvent);
+                // log.info("Entered");
+                stopColorizeButtonIndicator.start();
 
-        colorizeButtonPane.addEventFilter(MouseEvent.ANY, enableColorizeIndicatorEvent);
-        colorizeButtonPane.addEventFilter(GazeEvent.ANY, enableColorizeIndicatorEvent);
+            } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                // log.info("Exited");
+                stopColorizeButtonIndicator.stop();
+            }
+        };
+
+        EventHandler enableHandler = (EventHandler) (Event t) -> {
+            if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                // log.info("Entered");
+                colorizeButtonIndicator.start();
+
+            } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                // log.info("Exited");
+                colorizeButtonIndicator.stop();
+            }
+        };
+
+        stopColorizeButtonPane.addEventFilter(MouseEvent.ANY, stopHandler);
+        stopColorizeButtonPane.addEventFilter(GazeEvent.ANY, stopHandler);
+
+        colorizeButtonPane.addEventFilter(MouseEvent.ANY, enableHandler);
+        colorizeButtonPane.addEventFilter(GazeEvent.ANY, enableHandler);
 
         getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(stopColorizeButtonPane);
         getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(colorizeButtonPane);
 
         stopColorizeButtonPane.setVisible(false);
+
+        root.getChildren().add(stopColorizeButtonIndicator);
+        root.getChildren().add(colorizeButtonIndicator);
 
         colorizeButtonIndicator.toFront();
         stopColorizeButtonIndicator.toFront();
@@ -444,7 +487,7 @@ public class ColorToolBox extends BorderPane {
         dialog.setTitle("Choose a custom color");
         dialog.setAlwaysOnTop(true);
 
-        CustomColorPicker = new CustomColorPicker(root, this);
+        CustomColorPicker = new CustomColorPicker(root, this, customBox);
 
         final Scene scene = new Scene(CustomColorPicker, Color.TRANSPARENT);
 
@@ -454,5 +497,9 @@ public class ColorToolBox extends BorderPane {
         dialog.setScene(scene);
 
         return dialog;
+    }
+
+    public AbstractGazeIndicator getProgressIndicator() {
+        return progressIndicator;
     }
 }

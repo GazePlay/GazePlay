@@ -1,22 +1,30 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.gazeplay.games.colors;
 
+import java.io.IOException;
 import javafx.scene.Scene;
+import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.SelectionGamesStats;
 
 /**
- *
- * @author medard
+ * Stats for the color game.
+ * 
+ * @author Thomas Medard
  */
+@Slf4j
 public class ColorsGamesStats extends SelectionGamesStats {
 
-    // TODO
     public ColorsGamesStats(Scene gameContextScene) {
         super(gameContextScene);
+        this.gameName = "Colors";
     }
 
+    @Override
+    public SavedStatsInfo saveStats() throws IOException {
+
+        SavedStatsInfo statsInfo = super.saveStats();
+
+        log.info("Stats saved");
+        return statsInfo;
+    }
 }
