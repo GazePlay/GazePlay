@@ -138,7 +138,7 @@ public class ColorsGame implements GameLifeCycle {
     public void launch() {
 
         this.gazeProgressIndicator = new GazeFollowerIndicator(root);
-        
+
         this.root.getChildren().add(gazeProgressIndicator);
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -172,26 +172,28 @@ public class ColorsGame implements GameLifeCycle {
         double x = 0;
         double y = 0;
         colorToolBox.relocate(x, y);
-        
+
         // Add it here so it appears on top of the tool box
         final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
         root.getChildren().add(progressIndicator);
-        /*root.addEventFilter(MouseEvent.ANY, (event) -> {
-            
-            moveGazeIndicator(progressIndicator, event.getX() + 2, event.getY() + 2);
-        });
-        root.addEventFilter(GazeEvent.ANY, (event) -> {
-            
-            moveGazeIndicator(progressIndicator, event.getX() + 2, event.getY() + 2);
-        });*/
+        /*
+         * root.addEventFilter(MouseEvent.ANY, (event) -> {
+         * 
+         * moveGazeIndicator(progressIndicator, event.getX() + 2, event.getY() + 2); });
+         * root.addEventFilter(GazeEvent.ANY, (event) -> {
+         * 
+         * moveGazeIndicator(progressIndicator, event.getX() + 2, event.getY() + 2); });
+         */
         progressIndicator.toFront();
     }
-    
+
     private void moveGazeIndicator(AbstractGazeIndicator progressIndicator, double x, double y) {
-            progressIndicator.setTranslateX(x);
-            progressIndicator.setTranslateY(y);
-            /*log.info("progress size : width = {}, height = {}", progressIndicator.getWidth(), progressIndicator.getHeight());
-            log.info("translated to : x = {}, y = {}", x, y);*/
+        progressIndicator.setTranslateX(x);
+        progressIndicator.setTranslateY(y);
+        /*
+         * log.info("progress size : width = {}, height = {}", progressIndicator.getWidth(),
+         * progressIndicator.getHeight()); log.info("translated to : x = {}, y = {}", x, y);
+         */
     }
 
     private void buildDraw(String imgURL, double width, double height) {
@@ -589,6 +591,7 @@ public class ColorsGame implements GameLifeCycle {
 
     /**
      * Detect if a color is close enough to another one to be considered the same.
+     * 
      * @param color1
      *            The first color to compare
      * @param color2
@@ -596,12 +599,12 @@ public class ColorsGame implements GameLifeCycle {
      * @return true if considered same, false otherwise.
      */
     private static boolean isEqualColors(final Color color1, final Color color2) {
-        
+
         // Scalar distance calculation
-        double dist = Math.sqrt(Math.pow(color1.getRed() - color2.getRed(), 2) +
-                Math.pow(color1.getGreen() - color2.getGreen(), 2) + 
-                Math.pow(color1.getBlue() - color2.getBlue(), 2));
-        
+        double dist = Math.sqrt(
+                Math.pow(color1.getRed() - color2.getRed(), 2) + Math.pow(color1.getGreen() - color2.getGreen(), 2)
+                        + Math.pow(color1.getBlue() - color2.getBlue(), 2));
+
         return dist <= COLOR_EQUALITY_THRESHOLD;
     }
 

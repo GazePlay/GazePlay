@@ -11,13 +11,13 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
 public class AbstractGazeIndicator extends ProgressIndicator implements IGazeProgressIndicator {
-    
+
     private double duration;
 
     private Timeline animation;
 
     private EventHandler<ActionEvent> finishHandler;
-    
+
     public AbstractGazeIndicator() {
         super(0);
 
@@ -27,7 +27,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
         this.duration = config.getFixationlength();
         this.animation = new Timeline();
     }
-    
+
     @Override
     public void setOnFinish(EventHandler<ActionEvent> handler) {
         this.finishHandler = handler;
