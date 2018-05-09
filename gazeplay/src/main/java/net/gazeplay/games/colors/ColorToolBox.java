@@ -65,7 +65,7 @@ public class ColorToolBox extends StackPane {
     public static final String STOP_COLORIZE_BUTTON_IMAGE_PATH = "data/common/images/error.png";
 
     private final VBox mainPane;
-    
+
     private final AbstractGazeIndicator progressIndicator;
 
     /**
@@ -105,13 +105,13 @@ public class ColorToolBox extends StackPane {
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
         super();
-        
+
         progressIndicator = new GazeFollowerIndicator(root);
 
         this.selectedColorBox = null;
         this.colorsGame = colorsGame;
         this.root = root;
-        
+
         // the main pane for the tool box
         BorderPane thisRoot = new BorderPane();
         this.getChildren().add(thisRoot);
@@ -171,7 +171,7 @@ public class ColorToolBox extends StackPane {
             customColorDialog.show();
             colorsGame.setEnableColorization(false);
         });
-        
+
         customColorDialog.setOnCloseRequest((event) -> {
 
             colorsGame.setEnableColorization(true);
@@ -408,7 +408,7 @@ public class ColorToolBox extends StackPane {
         };
 
         disableColorizeButton = (EventHandler) (Event event1) -> {
-            
+
             stopColorizeButtonIndicator.toFront();
             colorsGame.setEnableColorization(true);
             stopColorizeButtonPane.setVisible(false);
@@ -430,12 +430,12 @@ public class ColorToolBox extends StackPane {
         EventHandler stopHandler = (EventHandler) (Event t) -> {
             if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                //log.info("Entered");
+                // log.info("Entered");
                 stopColorizeButtonIndicator.start();
 
             } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                //log.info("Exited");
+                // log.info("Exited");
                 stopColorizeButtonIndicator.stop();
             }
         };
@@ -443,12 +443,12 @@ public class ColorToolBox extends StackPane {
         EventHandler enableHandler = (EventHandler) (Event t) -> {
             if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                //log.info("Entered");
+                // log.info("Entered");
                 colorizeButtonIndicator.start();
 
             } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                //log.info("Exited");
+                // log.info("Exited");
                 colorizeButtonIndicator.stop();
             }
         };
@@ -463,10 +463,10 @@ public class ColorToolBox extends StackPane {
         getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(colorizeButtonPane);
 
         stopColorizeButtonPane.setVisible(false);
-        
+
         root.getChildren().add(stopColorizeButtonIndicator);
         root.getChildren().add(colorizeButtonIndicator);
-        
+
         colorizeButtonIndicator.toFront();
         stopColorizeButtonIndicator.toFront();
 

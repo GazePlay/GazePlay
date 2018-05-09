@@ -43,19 +43,19 @@ public class ColorBox extends StackPane {
         final GameContext gameContext = toolBox.getColorsGame().getGameContext();
         this.toolBox = toolBox;
 
-        /*Configuration config = toolBox.getColorsGame().getConfig();
-        this.progressIndicator = new GazeProgressIndicator(this.getWidth(), this.getHeight(),
-                config.getFixationlength());*/
+        /*
+         * Configuration config = toolBox.getColorsGame().getConfig(); this.progressIndicator = new
+         * GazeProgressIndicator(this.getWidth(), this.getHeight(), config.getFixationlength());
+         */
 
         progressIndicator = toolBox.getProgressIndicator();
-        //progressIndicator.getStyleClass().add("withoutTextProgress");
-        
-        
-        /*progressIndicator.setOnFinish((ActionEvent event1) -> {
+        // progressIndicator.getStyleClass().add("withoutTextProgress");
 
-                  ColorBox selectedColorBox = toolBox.getSelectedColorBox();
-                  action(selectedColorBox);
-         });*/
+        /*
+         * progressIndicator.setOnFinish((ActionEvent event1) -> {
+         * 
+         * ColorBox selectedColorBox = toolBox.getSelectedColorBox(); action(selectedColorBox); });
+         */
 
         button = new ToggleButton();
         button.setToggleGroup(group);
@@ -82,8 +82,8 @@ public class ColorBox extends StackPane {
         this.addEventHandler(GazeEvent.ANY, eventHandler);
 
         this.getChildren().add(button);
-        //this.getChildren().add(progressIndicator);
-        
+        // this.getChildren().add(progressIndicator);
+
         toolBox.getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(this);
     }
 
@@ -141,14 +141,14 @@ public class ColorBox extends StackPane {
         this.color = color;
         this.graphic.setFill(color);
     }
-    
+
     protected void action() {
 
-            toolBox.getSelectedColorBox().unselect();
+        toolBox.getSelectedColorBox().unselect();
 
-            this.select();
+        this.select();
 
-            toolBox.setSelectedColorBox(this);
+        toolBox.setSelectedColorBox(this);
     }
 
     private class ColorEventHandler implements EventHandler<Event> {
@@ -162,7 +162,7 @@ public class ColorBox extends StackPane {
 
         @Override
         public void handle(Event event) {
-            
+
             GazePlay gazePlay = GazePlay.getInstance();
 
             double gameWidth = gazePlay.getPrimaryStage().getWidth();
@@ -171,12 +171,11 @@ public class ColorBox extends StackPane {
             double eventX = 0;
             double eventY = 0;
 
-            if(event.getEventType() == GazeEvent.ANY) {
+            if (event.getEventType() == GazeEvent.ANY) {
                 GazeEvent gazeEvent = (GazeEvent) event;
                 eventX = gazeEvent.getX();
                 eventY = gazeEvent.getY();
-             }
-            else if(event.getEventType() == MouseEvent.ANY) {
+            } else if (event.getEventType() == MouseEvent.ANY) {
                 MouseEvent mouseEvent = (MouseEvent) event;
                 eventX = mouseEvent.getX();
                 eventY = mouseEvent.getY();
@@ -195,20 +194,20 @@ public class ColorBox extends StackPane {
             } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED
                     || event.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                  progressIndicator.setOnFinish((ActionEvent event1) -> {
+                progressIndicator.setOnFinish((ActionEvent event1) -> {
 
-                          action();
-                  });
+                    action();
+                });
 
                 colorBox.progressIndicator.start();
-                
-                //log.info("entered {}", colorBox.toString());
-                
+
+                // log.info("entered {}", colorBox.toString());
+
             } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
                     || event.getEventType() == GazeEvent.GAZE_EXITED) {
 
                 colorBox.progressIndicator.stop();
-                //log.info("exited : {}", colorBox.toString());
+                // log.info("exited : {}", colorBox.toString());
             }
         }
     }

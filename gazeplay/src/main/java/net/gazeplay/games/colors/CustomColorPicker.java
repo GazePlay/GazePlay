@@ -16,7 +16,7 @@ public class CustomColorPicker extends Pane {
 
     @Getter
     private ColorBox selectedColor;
-    
+
     private final ColorBox representingBox;
 
     public CustomColorPicker(final Pane root, final ColorToolBox toolBox, final ColorBox representingBox) {
