@@ -2,8 +2,6 @@ package net.gazeplay.games.moles;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -30,7 +28,7 @@ import javafx.scene.control.ProgressIndicator;
 @Slf4j
 public class Moles extends Parent implements GameLifeCycle {
 
-    public final int nbHoles = 9;
+    public final int nbHoles = 10;
 
     public final int timeGame = 60000; // Game duration = 1 minute
 
@@ -65,9 +63,14 @@ public class Moles extends Parent implements GameLifeCycle {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
 
-        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        imageRectangle.setFill(new ImagePattern(new Image("data/wackmole/images/terrainTaupes.jpg")));
-        gameContext.getChildren().add(imageRectangle);
+        Rectangle imageFond = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        imageFond.setFill(new ImagePattern(new Image("data/wackmole/images/terrainTaupes.jpg")));
+        gameContext.getChildren().add(imageFond);
+
+        // Rectangle imageFondTrans = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        // imageFondTrans.setFill(new ImagePattern(new Image("data/wackmole/images/fondAvecTrans.g")));
+        // gameContext.getChildren().add(imageFondTrans);
+
         gameContext.getChildren().add(this);
 
     }
@@ -75,16 +78,17 @@ public class Moles extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
 
-        /* Affichage du score */
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        /* Score display */
         lab = new Label();
         String s = "Score:" + nbMolesWacked;
         lab.setText(s);
         lab.setTextFill(Color.WHITE);
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        lab.setFont(Font.font(dimension2D.getHeight() / 10));
+        lab.setFont(Font.font(dimension2D.getHeight() / 14));
         lab.setLineSpacing(10);
         lab.setLayoutX(0.4 * dimension2D.getWidth());
-        lab.setLayoutY(0.1 * dimension2D.getHeight());
+        lab.setLayoutY(0.08 * dimension2D.getHeight());
         this.getChildren().add(lab);
 
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
@@ -96,6 +100,8 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.getChildren().addAll(molesList);
 
         stats.notifyNewRoundReady();
+
+        this.gameContext.resetBordersToFront();
 
         play(dimension2D);
 
@@ -115,14 +121,15 @@ public class Moles extends Parent implements GameLifeCycle {
         TimerTask tache = new TimerTask() {
             public void run() {
 
-                if (nbMolesOut < 2) {
-                    chooseMoleToOut();
-                } else if ((r.nextInt() % 7 == 0) && (nbMolesOut <= 4)) {
-                    chooseMoleToOut();
+                if (nbMolesOut < 3) {
+                    chooseMoleToOut(r);
+                } else if ((r.nextInt() % 8 == 0) && (nbMolesOut <= 4)) {
+                    chooseMoleToOut(r);
                 } else if ((r.nextInt() % 16 == 0) && (nbMolesOut <= 6)) {
-                    chooseMoleToOut();
+                    chooseMoleToOut(r);
+                } else if ((r.nextInt() % 24 == 0) && (nbMolesOut <= 8)) {
+                    chooseMoleToOut(r);
                 }
-
             }
         };
         minuteur.schedule(tache, 0, 500);
@@ -149,17 +156,43 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     /* Select a mole not out for the moment and call "getOut()" */
-    public void chooseMoleToOut() {
+    public void chooseMoleToOut(Random r) {
         if (this.currentRoundDetails == null) {
             return;
         }
-        Random r = new Random();
         int indice;
         do {
             indice = r.nextInt(nbHoles);
         } while (!currentRoundDetails.molesList.get(indice).canGoOut);
         MolesChar m = currentRoundDetails.molesList.get(indice);
         m.getOut();
+    }
+
+    private double[][] CreationTableauPlacement(double width, double height, double distTrans) {
+        double tabPlacement[][] = new double[10][2];
+
+        tabPlacement[0][0] = 0.05 * width;
+        tabPlacement[0][1] = 0.190 * height + distTrans;
+        tabPlacement[1][0] = 0.382 * width;
+        tabPlacement[1][1] = 0.185 * height + distTrans;
+        tabPlacement[2][0] = 0.75 * width;
+        tabPlacement[2][1] = 0.097 * height + distTrans;
+        tabPlacement[3][0] = 0.22 * width;
+        tabPlacement[3][1] = 0.345 * height + distTrans;
+        tabPlacement[4][0] = 0.62 * width;
+        tabPlacement[4][1] = 0.29 * height + distTrans;
+        tabPlacement[5][0] = 0.468 * width;
+        tabPlacement[5][1] = 0.465 * height + distTrans;
+        tabPlacement[6][0] = 0.837 * width;
+        tabPlacement[6][1] = 0.42 * height + distTrans;
+        tabPlacement[7][0] = 0.059 * width;
+        tabPlacement[7][1] = 0.531 * height + distTrans;
+        tabPlacement[8][0] = 0.28 * width;
+        tabPlacement[8][1] = 0.63 * height + distTrans;
+        tabPlacement[9][0] = 0.67 * width;
+        tabPlacement[9][1] = 0.59 * height + distTrans;
+
+        return tabPlacement;
     }
 
     private List<MolesChar> initMoles(Configuration config) {
@@ -173,28 +206,15 @@ public class Moles extends Parent implements GameLifeCycle {
         double width = gameDimension2D.getWidth();
         double distTrans = computeDistTransMole(gameDimension2D);
 
+        double place[][] = CreationTableauPlacement(width, height, distTrans);
+
         /* Creation and placement of moles in the field */
-        result.add(new MolesChar(0.0865 * width, 0.325 * height, moleWidth, moleHeight, distTrans, gameContext, stats,
-                this));
-        result.add(new MolesChar(0.39 * width, 0.383 * height, moleWidth, moleHeight, distTrans, gameContext, stats,
-                this));
-        result.add(new MolesChar(0.733 * width, 0.308 * height, moleWidth, moleHeight, distTrans, gameContext, stats,
-                this));
-        result.add(
-                new MolesChar(0.2 * width, 0.551 * height, moleWidth, moleHeight, distTrans, gameContext, stats, this));
-        result.add(new MolesChar(0.573 * width, 0.545 * height, moleWidth, moleHeight, distTrans, gameContext, stats,
-                this));
-        result.add(new MolesChar(0.855 * width, 0.535 * height, moleWidth, moleHeight, distTrans, gameContext, stats,
-                this));
-        result.add(new MolesChar(0.0577 * width, 0.749 * height, moleWidth, moleHeight, distTrans, gameContext, stats,
-                this));
-        result.add(new MolesChar(0.405 * width, 0.755 * height, moleWidth, moleHeight, distTrans, gameContext, stats,
-                this));
-        result.add(new MolesChar(0.717 * width, 0.745 * height, moleWidth, moleHeight, distTrans, gameContext, stats,
-                this));
+        for (int i = 0; i < place.length; i++) {
+            result.add(new MolesChar(place[i][0], place[i][1], moleWidth, moleHeight, distTrans, gameContext, stats,
+                    this));
+        }
 
         return result;
-
     }
 
     private static double computeDistTransMole(Dimension2D gameDimension2D) {
