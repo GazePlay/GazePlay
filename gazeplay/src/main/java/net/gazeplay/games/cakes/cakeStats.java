@@ -8,7 +8,7 @@ public class cakeStats extends Stats {
 
     public cakeStats(Scene scene) {
         super(scene);
-        // TODO Auto-generated constructor stub
+        this.gameName = "Cakes";
     }
 
 }
