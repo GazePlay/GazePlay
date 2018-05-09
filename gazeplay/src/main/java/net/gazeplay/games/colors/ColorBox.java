@@ -124,11 +124,6 @@ public class ColorBox extends StackPane {
         return freeSpace / ((ColorToolBox.NB_COLORS_DISPLAYED + 1) * COLOR_BOX_HEIGHT_REDUCTION_COEFF);
     }
 
-    public void select(Rectangle test) {
-
-        test.setFill(color);
-    }
-
     public void select() {
 
         this.button.setSelected(true);
@@ -147,9 +142,9 @@ public class ColorBox extends StackPane {
         this.graphic.setFill(color);
     }
     
-    private void action(ColorBox selectedColorBox) {
+    protected void action() {
 
-            selectedColorBox.unselect();
+            toolBox.getSelectedColorBox().unselect();
 
             this.select();
 
@@ -196,24 +191,24 @@ public class ColorBox extends StackPane {
 
             if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                action(selectedColorBox);
+                action();
             } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED
                     || event.getEventType() == GazeEvent.GAZE_ENTERED) {
 
                   progressIndicator.setOnFinish((ActionEvent event1) -> {
 
-                          action(selectedColorBox);
+                          action();
                   });
 
                 colorBox.progressIndicator.start();
                 
-                log.info("entered {}", colorBox.toString());
+                //log.info("entered {}", colorBox.toString());
                 
             } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
                     || event.getEventType() == GazeEvent.GAZE_EXITED) {
 
                 colorBox.progressIndicator.stop();
-                log.info("exited : {}", colorBox.toString());
+                //log.info("exited : {}", colorBox.toString());
             }
         }
     }

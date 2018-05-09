@@ -9,7 +9,7 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
     public static final double GAZE_PROGRESS_INDICATOR_WIDTH = 15;
     public static final double GAZE_PROGRESS_INDICATOR_HEIGHT = GAZE_PROGRESS_INDICATOR_WIDTH;
     public static final double GAZE_PROGRESS_INDICATOR_OFFSET = 2;
-    
+
     public GazeFollowerIndicator(final Node root) {
         
         super();
@@ -19,18 +19,16 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
         
         root.addEventFilter(MouseEvent.ANY, (event) -> {
             
+            this.toFront();
             moveGazeIndicator(event.getX() + GAZE_PROGRESS_INDICATOR_OFFSET, 
                     event.getY() + GAZE_PROGRESS_INDICATOR_OFFSET);
         });
         root.addEventFilter(GazeEvent.ANY, (event) -> {
             
+            this.toFront();
             moveGazeIndicator(event.getX() + GAZE_PROGRESS_INDICATOR_OFFSET, 
                     event.getY() + GAZE_PROGRESS_INDICATOR_OFFSET);
         });
-    }
-
-    GazeFollowerIndicator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void moveGazeIndicator(double x, double y) {

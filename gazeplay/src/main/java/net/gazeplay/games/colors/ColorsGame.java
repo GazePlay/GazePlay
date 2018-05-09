@@ -81,16 +81,10 @@ public class ColorsGame implements GameLifeCycle {
 
     public static final double AVG_THRESHOLD = 0.39;
 
-    // Offset the tool box on the y axis
-    public static final double COLOR_TOOL_BOX_OFFSET = 0;
-    
-    public static final double GAZE_PROGRESS_INDICATOR_WIDTH = 15;
-    public static final double GAZE_PROGRESS_INDICATOR_HEIGHT = GAZE_PROGRESS_INDICATOR_WIDTH;
-
     /**
      * The gaze progress indicator to show time before colorization.
      */
-    private GazeProgressIndicator gazeProgressIndicator;
+    private AbstractGazeIndicator gazeProgressIndicator;
 
     /**
      * The configuration
@@ -122,6 +116,7 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * Should we enableColorization.
      */
+    @Getter
     private boolean enableColorization = true;
 
     /**
@@ -142,10 +137,8 @@ public class ColorsGame implements GameLifeCycle {
     @Override
     public void launch() {
 
-        this.gazeProgressIndicator = new GazeProgressIndicator(GAZE_PROGRESS_INDICATOR_WIDTH, 
-                GAZE_PROGRESS_INDICATOR_HEIGHT);
-
-        gazeProgressIndicator.toFront();
+        this.gazeProgressIndicator = new GazeFollowerIndicator(root);
+        
         this.root.getChildren().add(gazeProgressIndicator);
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -177,7 +170,7 @@ public class ColorsGame implements GameLifeCycle {
         this.root.getChildren().add(colorToolBoxPane);
 
         double x = 0;
-        double y = height * COLOR_TOOL_BOX_OFFSET;
+        double y = 0;
         colorToolBox.relocate(x, y);
         
         // Add it here so it appears on top of the tool box
@@ -376,8 +369,6 @@ public class ColorsGame implements GameLifeCycle {
                     currentX = gazeXOrigin;
                     currentY = gazeYOrigin;
 
-                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
-
                     gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
 
                         colorize(currentX, currentY);
@@ -389,8 +380,6 @@ public class ColorsGame implements GameLifeCycle {
                     GazeEvent gazeEvent = (GazeEvent) event;
                     currentX = gazeEvent.getX() - (ColorBox.COLOR_BOX_WIDTH_PX + widthDiff);
                     currentY = gazeEvent.getY();
-
-                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
 
                     // If gaze still around first point
                     if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
@@ -425,8 +414,6 @@ public class ColorsGame implements GameLifeCycle {
                     currentX = gazeXOrigin;
                     currentY = gazeYOrigin;
 
-                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
-
                     gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
 
                         colorize(currentX, currentY);
@@ -438,8 +425,6 @@ public class ColorsGame implements GameLifeCycle {
                     MouseEvent mouseEvent = (MouseEvent) event;
                     currentX = mouseEvent.getX();
                     currentY = mouseEvent.getY();
-
-                    moveGazeIndicator(currentX + GAZE_INDICATOR_DISTANCE, currentY + GAZE_INDICATOR_DISTANCE);
 
                     // If mouse still around first point
                     if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
@@ -469,21 +454,6 @@ public class ColorsGame implements GameLifeCycle {
             }
 
         };
-    }
-
-    private void moveGazeIndicator(final double x, final double y) {
-
-        if (x < 0 || y < 0 || x > rectangle.getWidth() || y > rectangle.getHeight()) {
-            return;
-        }
-
-        // We need to take into account that the 0 from event is top left corner of rectangle
-        // but not actually the top left corner of screen.
-        double newX = x + colorToolBox.getWidth();
-
-        gazeProgressIndicator.setTranslateX(newX);
-        gazeProgressIndicator.setTranslateY(y);
-
     }
 
     /**

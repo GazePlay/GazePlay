@@ -169,7 +169,12 @@ public class ColorToolBox extends StackPane {
         customColorPickerButton.setOnAction((event) -> {
 
             customColorDialog.show();
-            customBox.setColor(CustomColorPicker.getSelectedColor().getColor());
+            colorsGame.setEnableColorization(false);
+        });
+        
+        customColorDialog.setOnCloseRequest((event) -> {
+
+            colorsGame.setEnableColorization(true);
         });
 
         colorPicker.setOnAction((event) -> {
@@ -425,12 +430,12 @@ public class ColorToolBox extends StackPane {
         EventHandler stopHandler = (EventHandler) (Event t) -> {
             if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                log.info("Entered");
+                //log.info("Entered");
                 stopColorizeButtonIndicator.start();
 
             } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                log.info("Exited");
+                //log.info("Exited");
                 stopColorizeButtonIndicator.stop();
             }
         };
@@ -438,12 +443,12 @@ public class ColorToolBox extends StackPane {
         EventHandler enableHandler = (EventHandler) (Event t) -> {
             if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                log.info("Entered");
+                //log.info("Entered");
                 colorizeButtonIndicator.start();
 
             } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                log.info("Exited");
+                //log.info("Exited");
                 colorizeButtonIndicator.stop();
             }
         };
@@ -482,7 +487,7 @@ public class ColorToolBox extends StackPane {
         dialog.setTitle("Choose a custom color");
         dialog.setAlwaysOnTop(true);
 
-        CustomColorPicker = new CustomColorPicker(root, this);
+        CustomColorPicker = new CustomColorPicker(root, this, customBox);
 
         final Scene scene = new Scene(CustomColorPicker, Color.TRANSPARENT);
 
