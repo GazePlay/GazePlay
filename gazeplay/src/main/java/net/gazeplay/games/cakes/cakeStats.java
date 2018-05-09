@@ -2,12 +2,13 @@ package net.gazeplay.games.cakes;
 
 import javafx.scene.Scene;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
+import net.gazeplay.commons.utils.stats.Stats;
 
-public class cakeStats extends ShootGamesStats {
+public class cakeStats extends Stats {
 
     public cakeStats(Scene scene) {
         super(scene);
-        // TODO Auto-generated constructor stub
+        this.gameName = "Cakes";
     }
 
 }
