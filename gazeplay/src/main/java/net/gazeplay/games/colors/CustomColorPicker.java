@@ -17,17 +17,20 @@ public class CustomColorPicker extends Pane {
     @Getter
     private ColorBox selectedColor;
 
-    public CustomColorPicker(final Pane root, final ColorToolBox toolBox) {
+    private final ColorBox representingBox;
+
+    public CustomColorPicker(final Pane root, final ColorToolBox toolBox, final ColorBox representingBox) {
         super();
 
         this.colorGrid = new GridPane();
+        this.representingBox = representingBox;
 
         ToggleGroup colorGroup = new ToggleGroup();
 
         for (int i = 0; i < COLOR_LIST.length; ++i) {
 
             for (int j = 0; j < NB_COLOR_PER_ROW; ++j) {
-                ColorBox colorBox = new ColorBox(COLOR_LIST[i], root, toolBox, colorGroup);
+                ColorBox colorBox = new CustomColorBox(COLOR_LIST[i], root, toolBox, colorGroup, representingBox);
                 if (i == 0 && j == 0) {
                     colorBox.select();
                     selectedColor = colorBox;

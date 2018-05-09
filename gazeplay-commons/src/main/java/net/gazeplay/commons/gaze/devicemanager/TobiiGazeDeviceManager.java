@@ -49,7 +49,10 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
                                 // sleep is mandatory to avoid too much calls to gazePosition()
                                 Thread.sleep(10);
                             } catch (Throwable e) {
-                                log.error("Exception on Gaze position update", e);
+                                log.error("Exception on Gaze position update : {}", e);
+                                for (StackTraceElement s : e.getStackTrace()) {
+                                    System.err.println(s.toString());
+                                }
                             }
                         }
                         return null;
