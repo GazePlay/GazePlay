@@ -26,25 +26,18 @@ import net.gazeplay.commons.utils.stats.Stats;
 @Slf4j
 public class cakeFactory extends Parent implements GameLifeCycle {
 
+    private final GameContext gameContext;
+    private final Stats stats;
+    private double buttonSize;
     private double centerX;
     private double centerY;
 
-    private final GameContext gameContext;
-
-    private StackPane sp;
-
-    private StackPane[] cake;
-    private final double buttonSize;
     private int currentCake;
     private boolean nappage;
+
+    private StackPane[] cake;
     private Button bnap;
 
-    private final Stats stats;
-    private Circle c;
-
-    private final EventHandler<Event> enterEvent;
-
-    // done
     public cakeFactory(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -53,47 +46,52 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;
         buttonSize = dimension2D.getWidth() / 8;
-        sp = new StackPane();
         cake = new StackPane[3];
         currentCake = 0;
         nappage = false;
+    }
 
-        enterEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    stats.incNbGoals();
-                    stats.notifyNewRoundReady();
+    public EventHandler<Event> createButtonHandler(Pane[] p, int i) {
+        EventHandler<Event> buttonHandler;
+        if (i != 4) {
+            buttonHandler = new EventHandler<Event>() {
+                @Override
+                public void handle(Event e) {
+                    p[i + 1].toFront();
+                    for (int c = 0; c <= currentCake; c++) {
+                        cake[c].toFront();
+                    }
                 }
-            }
-        };
+            };
+        } else {
+            buttonHandler = new EventHandler<Event>() {
+                @Override
+                public void handle(Event e) {
+                    if (currentCake < 2) {
+                        currentCake++;
+                        createCake(currentCake);
+                    }
+                    if (currentCake >= 2) {
+                        ((Button) e.getSource()).setDisable(true);
+                    }
+                }
+            };
+        }
 
+        return buttonHandler;
     }
 
     public void createStack(StackPane sp) {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Rectangle f0 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        Rectangle f1 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        Rectangle f2 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        Rectangle f3 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        Rectangle f4 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        Rectangle f5 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        Color[] col = { Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL,
+                Color.LIGHTSTEELBLUE };
         Pane[] p = new Pane[6];
         for (int i = 0; i < 6; i++) {
             p[i] = new Pane();
+            Rectangle r = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            r.setFill(col[i]);
+            p[i].getChildren().add(r);
         }
-        f0.setFill(Color.LIGHTPINK);
-        f1.setFill(Color.LIGHTYELLOW);
-        f2.setFill(Color.LIGHTGREEN);
-        f3.setFill(Color.LIGHTBLUE);
-        f4.setFill(Color.LIGHTCORAL);
-        f5.setFill(Color.LIGHTSTEELBLUE);
-        p[0].getChildren().add(f0);
-        p[1].getChildren().add(f1);
-        p[2].getChildren().add(f2);
-        p[3].getChildren().add(f3);
-        p[4].getChildren().add(f4);
-        p[5].getChildren().add(f5);
 
         for (int i = 0; i < 5; i++) { // HomePage of the game
             Button bt = new Button();
@@ -102,36 +100,12 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     + "-fx-max-height: " + buttonSize + "px;");
             bt.setLayoutX(i * (1.5 * buttonSize) + 0.5 * buttonSize);
             bt.setText("screen" + i);
-            int index = i;
-            EventHandler<Event> buttonHandler;
-            if (i != 4) {
-                buttonHandler = new EventHandler<Event>() {
-                    @Override
-                    public void handle(Event e) {
-                        p[index + 1].toFront();
-                        for (int c = 0; c <= currentCake; c++) {
-                            cake[c].toFront();
-                        }
-                    }
-                };
-            } else {
-                buttonHandler = new EventHandler<Event>() {
-                    @Override
-                    public void handle(Event e) {
-                        if (currentCake < 2) {
-                            currentCake++;
-                            createCake(currentCake);
-                        }
-                        if (currentCake >= 2) {
-                            ((Button) e.getSource()).setDisable(true);
-                        }
-                    }
-                };
-            }
+            EventHandler<Event> buttonHandler = createButtonHandler(p, i);
+
             bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
-            if ((i == 2) && (!nappage)) {
+            if (i == 2) {
                 bnap = bt;
-                bnap.setDisable(true);
+                bnap.setDisable(!nappage);
             }
             p[0].getChildren().add(bt);
         }
@@ -278,7 +252,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     // done
     @Override
     public void launch() {
-
+        StackPane sp = new StackPane();
         createStack(sp);
         gameContext.getChildren().add(sp);
         createCake(0);
