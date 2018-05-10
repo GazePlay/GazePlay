@@ -10,6 +10,8 @@ import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
 import net.gazeplay.games.bubbles.BubbleType;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
+import net.gazeplay.games.cakes.cakeFactory;
+import net.gazeplay.games.cakes.cakeStats;
 import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
 import net.gazeplay.games.cups.CupsAndBalls;
@@ -545,17 +547,36 @@ public class DefaultGamesLocator implements GamesLocator {
 
                         new GameSpec.GameLauncher() {
 
+                            private ColorsGamesStats gameStat;
+
                             @Override
                             public Stats createNewStats(Scene scene) {
-                                return new ColorsGamesStats(scene);
+
+                                gameStat = new ColorsGamesStats(scene);
+                                return gameStat;
                             }
 
                             @Override
                             public GameLifeCycle createNewGame(GameContext gameContext,
                                     GameSpec.GameVariant gameVariant, Stats stats) {
-                                return new ColorsGame(gameContext);
+                                return new ColorsGame(gameContext, gameStat);
                             }
                         }));
+        result.add(new GameSpec(new GameSummary("Cakes", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+
+                new GameSpec.GameLauncher() {
+
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new cakeStats(scene);
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new cakeFactory(gameContext, stats);
+                    }
+                }));
 
         log.info("Games found : {}", result.size());
 
