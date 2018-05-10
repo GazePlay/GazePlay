@@ -33,8 +33,7 @@ public class Wall {
                         new PhongMaterial(Color.TRANSPARENT, rightImage, rightImage, rightImage, rightImage));
             } else {
                 Image leftImage = new Image("data/room/left.jpg");
-                this.box.setMaterial(
-                        new PhongMaterial(Color.TRANSPARENT, leftImage, leftImage, leftImage, leftImage));
+                this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, leftImage, leftImage, leftImage, leftImage));
             }
             this.box.setTranslateX(positiveAxisMultiplier * positionWall);
             break;
@@ -42,8 +41,8 @@ public class Wall {
             this.box = new Box(xLength, thickness, xLength);
             this.positionWall = yLength / 2;
             Image top_bottomImage = new Image("data/room/top_bottom.jpg");
-            this.box.setMaterial(
-                        new PhongMaterial(Color.TRANSPARENT, top_bottomImage, top_bottomImage, top_bottomImage, top_bottomImage));
+            this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, top_bottomImage, top_bottomImage, top_bottomImage,
+                    top_bottomImage));
             this.box.setTranslateY(positiveAxisMultiplier * positionWall);
             break;
         case "Z":
@@ -55,8 +54,7 @@ public class Wall {
                         new PhongMaterial(Color.TRANSPARENT, frontImage, frontImage, frontImage, frontImage));
             } else {
                 Image backImage = new Image("data/room/back.jpg");
-                this.box.setMaterial(
-                        new PhongMaterial(Color.TRANSPARENT, backImage, backImage, backImage, backImage));
+                this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, backImage, backImage, backImage, backImage));
             }
             this.box.setTranslateZ(positiveAxisMultiplier * positionWall);
             break;

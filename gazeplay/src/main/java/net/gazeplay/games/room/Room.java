@@ -148,72 +148,67 @@ public class Room implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowWest);
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowEast);
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouth);
-        
-        int[] positivemultiplier = new int[]{1};
+
+        int[] positivemultiplier = new int[] { 1 };
 
         rectangleArrowNorth.setOnMouseMoved((event) -> {
-            if (rotateY.getAngle() == 0){
-                if (rotateX.getAngle() < 22.5){
+            if (rotateY.getAngle() == 0) {
+                if (rotateX.getAngle() < 22.5) {
                     rotateX.setAngle(rotateX.getAngle() + positivemultiplier[0] * 0.25);
                 }
-            }
-            else if (rotateX.getAngle() < 31){
+            } else if (rotateX.getAngle() < 31) {
                 rotateX.setAngle(rotateX.getAngle() + positivemultiplier[0] * 0.25);
             }
             // check for y
         });
         rectangleArrowNorth.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            if (rotateY.getAngle() == 0){
-                if (rotateX.getAngle() < 22.5){
+            if (rotateY.getAngle() == 0) {
+                if (rotateX.getAngle() < 22.5) {
                     rotateX.setAngle(rotateX.getAngle() + positivemultiplier[0] * 0.25);
                 }
-            }
-            else if (rotateX.getAngle() < 31){
+            } else if (rotateX.getAngle() < 31) {
                 rotateX.setAngle(rotateX.getAngle() + positivemultiplier[0] * 0.25);
             }
         });
-       
+
         rectangleArrowSouth.setOnMouseMoved((event) -> {
-            if (rotateY.getAngle() == 0){
-                if (rotateX.getAngle() > -22.5){
+            if (rotateY.getAngle() == 0) {
+                if (rotateX.getAngle() > -22.5) {
                     rotateX.setAngle(rotateX.getAngle() - positivemultiplier[0] * 0.25);
                 }
-            }
-            else if (rotateX.getAngle() > -31){
+            } else if (rotateX.getAngle() > -31) {
                 rotateX.setAngle(rotateX.getAngle() - positivemultiplier[0] * 0.25);
-                if (rotateY.getAngle() > 0){
+                if (rotateY.getAngle() > 0) {
                     rotateY.setAngle(rotateY.getAngle() - 0.1);
-                }else if (rotateY.getAngle() < 0){
+                } else if (rotateY.getAngle() < 0) {
                     rotateY.setAngle(rotateY.getAngle() + 0.1);
                 }
             }
         });
         rectangleArrowSouth.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            if (rotateY.getAngle() == 0){
-                if (rotateX.getAngle() > -22.5){
+            if (rotateY.getAngle() == 0) {
+                if (rotateX.getAngle() > -22.5) {
                     rotateX.setAngle(rotateX.getAngle() - positivemultiplier[0] * 0.25);
                 }
-            }
-            else if (rotateX.getAngle() > -31){
+            } else if (rotateX.getAngle() > -31) {
                 rotateX.setAngle(rotateX.getAngle() - positivemultiplier[0] * 0.25);
-                if (rotateY.getAngle() > 0){
+                if (rotateY.getAngle() > 0) {
                     rotateY.setAngle(rotateY.getAngle() - 0.1);
-                }else if (rotateY.getAngle() < 0){
+                } else if (rotateY.getAngle() < 0) {
                     rotateY.setAngle(rotateY.getAngle() + 0.1);
                 }
             }
         });
-        
-        
+
         rectangleArrowWest.setOnMouseMoved((event) -> {
-            System.out.println("w : "+rotateY.getAngle());
+            System.out.println("w : " + rotateY.getAngle());
             rotateY.setAngle(rotateY.getAngle() - 0.25);
-            if (rotateX.getAngle() > 0){
+            if (rotateX.getAngle() > 0) {
                 rotateX.setAngle(rotateX.getAngle() - 0.1);
-            } else if (rotateX.getAngle() < 0){
+            } else if (rotateX.getAngle() < 0) {
                 rotateX.setAngle(rotateX.getAngle() + 0.1);
             }
-            if (rotateY.getAngle() < -90 && positivemultiplier[0] == 1){
+            if (rotateY.getAngle() < -90 && positivemultiplier[0] == 1) {
                 positivemultiplier[0] = -1;
             } else if (rotateY.getAngle() < -270 && positivemultiplier[0] == -1) {
                 positivemultiplier[0] = 1;
@@ -225,20 +220,20 @@ public class Room implements GameLifeCycle {
         });
         rectangleArrowWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
             rotateY.setAngle(rotateY.getAngle() - 0.25);
-            if (rotateX.getAngle() != 0){
-                
+            if (rotateX.getAngle() != 0) {
+
             }
         });
 
         rectangleArrowEast.setOnMouseMoved((event) -> {
-            System.out.println("ex : "+rotateX.getAngle()+" ey : " + rotateY.getAngle());
+            System.out.println("ex : " + rotateX.getAngle() + " ey : " + rotateY.getAngle());
             rotateY.setAngle(rotateY.getAngle() + 0.25);
-            if (rotateX.getAngle() > 0){
+            if (rotateX.getAngle() > 0) {
                 rotateX.setAngle(rotateX.getAngle() - 0.1);
-            }else if (rotateX.getAngle() < 0){
+            } else if (rotateX.getAngle() < 0) {
                 rotateX.setAngle(rotateX.getAngle() + 0.1);
             }
-            if (rotateY.getAngle() > 90 && positivemultiplier[0] == 1){
+            if (rotateY.getAngle() > 90 && positivemultiplier[0] == 1) {
                 positivemultiplier[0] = -1;
             } else if (rotateY.getAngle() > 270 && positivemultiplier[0] == -1) {
                 positivemultiplier[0] = 1;
@@ -250,7 +245,7 @@ public class Room implements GameLifeCycle {
         });
         rectangleArrowEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
             rotateY.setAngle(rotateY.getAngle() + 0.25);
-            if (rotateX.getAngle() != 0){
+            if (rotateX.getAngle() != 0) {
                 rotateX.setAngle(rotateX.getAngle() - 0.25);
             }
         });
