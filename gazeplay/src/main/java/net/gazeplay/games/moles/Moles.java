@@ -16,7 +16,6 @@ import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.stats.Stats;
 import javafx.scene.Parent;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -78,9 +77,9 @@ public class Moles extends Parent implements GameLifeCycle {
 
         List<MolesChar> molesList = initMoles(config);
         currentRoundDetails = new RoundDetails(molesList);
-        this.getChildren().addAll(molesList);        
-        gameContext.getChildren().add(this); 
-        
+        this.getChildren().addAll(molesList);
+        gameContext.getChildren().add(this);
+
         Rectangle imageFondTrans = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageFondTrans.setFill(new ImagePattern(new Image("data/wackmole/images/terrainTaupesTransparence.png")));
         gameContext.getChildren().add(imageFondTrans);
@@ -95,8 +94,8 @@ public class Moles extends Parent implements GameLifeCycle {
         lab.setLayoutX(0.4 * dimension2D.getWidth());
         lab.setLayoutY(0.08 * dimension2D.getHeight());
         gameContext.getChildren().add(lab);
-        
-        stats.notifyNewRoundReady();      
+
+        stats.notifyNewRoundReady();
         this.gameContext.resetBordersToFront();
 
         play(dimension2D);
