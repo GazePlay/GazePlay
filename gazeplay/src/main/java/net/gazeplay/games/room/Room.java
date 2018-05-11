@@ -89,8 +89,8 @@ public class Room implements GameLifeCycle {
         rotateY.setAxis(Rotate.Y_AXIS);
         rotateZ = new Rotate();
         rotateZ.setAxis(Rotate.Z_AXIS);
-        xLength = 1600;//dimension2D.getWidth();
-        yLength = 600;//dimension2D.getHeight();
+        xLength = 1600;// dimension2D.getWidth();
+        yLength = 600;// dimension2D.getHeight();
         positionCamera = -xLength / 4;
     }
 
@@ -177,7 +177,7 @@ public class Room implements GameLifeCycle {
         });
 
         rectangleArrowWest.setOnMouseMoved((event) -> {
-            rotateY.setAngle(rotateY.getAngle()%360 - 0.25);
+            rotateY.setAngle(rotateY.getAngle() % 360 - 0.25);
             if (rotateX.getAngle() > 0) {
                 rotateX.setAngle(rotateX.getAngle() - 0.25);
             } else if (rotateX.getAngle() < 0) {
@@ -185,7 +185,7 @@ public class Room implements GameLifeCycle {
             }
         });
         rectangleArrowWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateY.setAngle(rotateY.getAngle()%360 - 0.25);
+            rotateY.setAngle(rotateY.getAngle() % 360 - 0.25);
             if (rotateX.getAngle() > 0) {
                 rotateX.setAngle(rotateX.getAngle() - 0.25);
             } else if (rotateX.getAngle() < 0) {
@@ -194,7 +194,7 @@ public class Room implements GameLifeCycle {
         });
 
         rectangleArrowEast.setOnMouseMoved((event) -> {
-            rotateY.setAngle(rotateY.getAngle()%360 + 0.25);
+            rotateY.setAngle(rotateY.getAngle() % 360 + 0.25);
             if (rotateX.getAngle() > 0) {
                 rotateX.setAngle(rotateX.getAngle() - 0.25);
             } else if (rotateX.getAngle() < 0) {
@@ -202,7 +202,7 @@ public class Room implements GameLifeCycle {
             }
         });
         rectangleArrowEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateY.setAngle(rotateY.getAngle()%360 + 0.25);
+            rotateY.setAngle(rotateY.getAngle() % 360 + 0.25);
             if (rotateX.getAngle() > 0) {
                 rotateX.setAngle(rotateX.getAngle() - 0.25);
             } else if (rotateX.getAngle() < 0) {
