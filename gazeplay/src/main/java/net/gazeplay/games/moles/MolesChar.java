@@ -2,7 +2,6 @@ package net.gazeplay.games.moles;
 
 import java.util.Random;
 
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -48,11 +47,11 @@ public class MolesChar extends Parent {
 
     private Timeline timeMinToWhackTheMole;
 
-    private final double timeMinToWhackMole = 200; // TODO How much time ?
+    private final double timeMinToWhackMole = 400;
 
     private Timeline timeMoleOut;
 
-    private final int timeMoleStayOut = 2500; // TODO : How much time ?
+    private final int timeMoleStayOut = 2500;
 
     private final double posX;
     private final double posY;
@@ -74,7 +73,7 @@ public class MolesChar extends Parent {
 
         this.posX = positionX;
 
-        this.posY = positionY + this.distTranslation;
+        this.posY = positionY;
 
         touched = false;
         canTouched = false;
@@ -89,7 +88,8 @@ public class MolesChar extends Parent {
 
         this.mole = new Rectangle(this.posX, this.posY, width, height);
         this.mole.setFill(new ImagePattern(new Image("data/wackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
-        this.getChildren().add(mole); // The mole is visible
+        this.getChildren().add(mole);
+        this.mole.opacityProperty().set(0.8);
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
@@ -112,7 +112,8 @@ public class MolesChar extends Parent {
                     return;
 
                 /* If the mole is out and touched */
-                if (canTouched && (e.getEventType() == MouseEvent.MOUSE_ENTERED
+                if (canTouched && (e.getEventType() == MouseEvent.MOUSE_MOVED
+                        || e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_ENTERED
                         || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
 
                     progressIndicator.setOpacity(0);
@@ -128,7 +129,7 @@ public class MolesChar extends Parent {
                         /* If the user watch the mole enough time (timeMinToWhackMole) */
                         @Override
                         public void handle(ActionEvent actionEvent) {
-                            if (!touched && out) {
+                            if (canTouched && !touched && out) {
                                 canTouched = false;
                                 gameInstance.OneMoleWacked();
                                 touched = true;
@@ -167,7 +168,10 @@ public class MolesChar extends Parent {
         translation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+
                 canTouched = true;
+                mole.opacityProperty().set(3);
+                ;
                 out = true;
 
                 timeMoleOut = new Timeline(); // New time this mole go out
@@ -198,6 +202,8 @@ public class MolesChar extends Parent {
 
     private void goIn() {
         canTouched = false;
+        this.mole.opacityProperty().set(0.8);
+        ;
         double timeGoIn = 1500;
         if (touched) {
             timeGoIn = 500;
@@ -215,7 +221,6 @@ public class MolesChar extends Parent {
                 canGoOut = true;
             }
         });
-
     }
 
 }

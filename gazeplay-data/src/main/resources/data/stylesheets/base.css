@@ -125,3 +125,7 @@
 .withoutTextProgress .percentage{
     -fx-fill: null;
 }
+
+.selectedColorBox {
+    -fx-background-color : white;
+}
