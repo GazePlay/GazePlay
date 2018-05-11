@@ -36,6 +36,7 @@ public class Room implements GameLifeCycle {
     private javafx.geometry.Dimension2D dimension2D;
     private final Rotate rotateX;
     private final Rotate rotateY;
+    private final Rotate rotateZ;
 
     private static double xLength;
     private static double yLength;
@@ -82,11 +83,15 @@ public class Room implements GameLifeCycle {
         rectangleArrowSouth = new Rectangle(arrowImSouth.getWidth(), arrowImSouth.getHeight());
         rectangleArrowSouth.setFill(new ImagePattern(arrowImSouth));
 
-        rotateX = new Rotate(0, Rotate.X_AXIS);
-        rotateY = new Rotate(0, Rotate.Y_AXIS);
-        xLength = dimension2D.getWidth();
-        yLength = dimension2D.getHeight();
-        positionCamera = -xLength / 2;
+        rotateX = new Rotate();
+        rotateX.setAxis(Rotate.X_AXIS);
+        rotateY = new Rotate();
+        rotateY.setAxis(Rotate.Y_AXIS);
+        rotateZ = new Rotate();
+        rotateZ.setAxis(Rotate.Z_AXIS);
+        xLength = 1600;//dimension2D.getWidth();
+        yLength = 600;//dimension2D.getHeight();
+        positionCamera = -xLength / 4;
     }
 
     @Override
@@ -119,8 +124,8 @@ public class Room implements GameLifeCycle {
         camera.setVerticalFieldOfView(false);
 
         camera.setNearClip(0.1);
-        camera.setFarClip(10000.0);
-        camera.getTransforms().addAll(rotateX, rotateY, new Translate(0, 0, positionCamera));
+        camera.setFarClip(2000.0);
+        camera.getTransforms().addAll(rotateY, rotateX, new Translate(0, 0, positionCamera));
 
         PointLight light = new PointLight(Color.GAINSBORO);
         objects.getChildren().add(light);
@@ -149,104 +154,59 @@ public class Room implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowEast);
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouth);
 
-        int[] positivemultiplier = new int[] { 1 };
-
         rectangleArrowNorth.setOnMouseMoved((event) -> {
-            if (rotateY.getAngle() == 0) {
-                if (rotateX.getAngle() < 22.5) {
-                    rotateX.setAngle(rotateX.getAngle() + positivemultiplier[0] * 0.25);
-                }
-            } else if (rotateX.getAngle() < 31) {
-                rotateX.setAngle(rotateX.getAngle() + positivemultiplier[0] * 0.25);
+            if (rotateX.getAngle() < 22.5) {
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
             }
-            // check for y
         });
         rectangleArrowNorth.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            if (rotateY.getAngle() == 0) {
-                if (rotateX.getAngle() < 22.5) {
-                    rotateX.setAngle(rotateX.getAngle() + positivemultiplier[0] * 0.25);
-                }
-            } else if (rotateX.getAngle() < 31) {
-                rotateX.setAngle(rotateX.getAngle() + positivemultiplier[0] * 0.25);
+            if (rotateX.getAngle() < 22.5) {
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
             }
         });
 
         rectangleArrowSouth.setOnMouseMoved((event) -> {
-            if (rotateY.getAngle() == 0) {
-                if (rotateX.getAngle() > -22.5) {
-                    rotateX.setAngle(rotateX.getAngle() - positivemultiplier[0] * 0.25);
-                }
-            } else if (rotateX.getAngle() > -31) {
-                rotateX.setAngle(rotateX.getAngle() - positivemultiplier[0] * 0.25);
-                if (rotateY.getAngle() > 0) {
-                    rotateY.setAngle(rotateY.getAngle() - 0.1);
-                } else if (rotateY.getAngle() < 0) {
-                    rotateY.setAngle(rotateY.getAngle() + 0.1);
-                }
+            if (rotateX.getAngle() > -22.5) {
+                rotateX.setAngle(rotateX.getAngle() - 0.25);
             }
         });
         rectangleArrowSouth.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            if (rotateY.getAngle() == 0) {
-                if (rotateX.getAngle() > -22.5) {
-                    rotateX.setAngle(rotateX.getAngle() - positivemultiplier[0] * 0.25);
-                }
-            } else if (rotateX.getAngle() > -31) {
-                rotateX.setAngle(rotateX.getAngle() - positivemultiplier[0] * 0.25);
-                if (rotateY.getAngle() > 0) {
-                    rotateY.setAngle(rotateY.getAngle() - 0.1);
-                } else if (rotateY.getAngle() < 0) {
-                    rotateY.setAngle(rotateY.getAngle() + 0.1);
-                }
+            if (rotateX.getAngle() > -22.5) {
+                rotateX.setAngle(rotateX.getAngle() - 0.25);
             }
         });
 
         rectangleArrowWest.setOnMouseMoved((event) -> {
-            System.out.println("w : " + rotateY.getAngle());
-            rotateY.setAngle(rotateY.getAngle() - 0.25);
+            rotateY.setAngle(rotateY.getAngle()%360 - 0.25);
             if (rotateX.getAngle() > 0) {
-                rotateX.setAngle(rotateX.getAngle() - 0.1);
+                rotateX.setAngle(rotateX.getAngle() - 0.25);
             } else if (rotateX.getAngle() < 0) {
-                rotateX.setAngle(rotateX.getAngle() + 0.1);
-            }
-            if (rotateY.getAngle() < -90 && positivemultiplier[0] == 1) {
-                positivemultiplier[0] = -1;
-            } else if (rotateY.getAngle() < -270 && positivemultiplier[0] == -1) {
-                positivemultiplier[0] = 1;
-            } else if (rotateY.getAngle() > 90 && positivemultiplier[0] == -1) {
-                positivemultiplier[0] = 1;
-            } else if (rotateY.getAngle() > 270 && positivemultiplier[0] == 1) {
-                positivemultiplier[0] = -1;
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
             }
         });
         rectangleArrowWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateY.setAngle(rotateY.getAngle() - 0.25);
-            if (rotateX.getAngle() != 0) {
-
+            rotateY.setAngle(rotateY.getAngle()%360 - 0.25);
+            if (rotateX.getAngle() > 0) {
+                rotateX.setAngle(rotateX.getAngle() - 0.25);
+            } else if (rotateX.getAngle() < 0) {
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
             }
         });
 
         rectangleArrowEast.setOnMouseMoved((event) -> {
-            System.out.println("ex : " + rotateX.getAngle() + " ey : " + rotateY.getAngle());
-            rotateY.setAngle(rotateY.getAngle() + 0.25);
+            rotateY.setAngle(rotateY.getAngle()%360 + 0.25);
             if (rotateX.getAngle() > 0) {
-                rotateX.setAngle(rotateX.getAngle() - 0.1);
+                rotateX.setAngle(rotateX.getAngle() - 0.25);
             } else if (rotateX.getAngle() < 0) {
-                rotateX.setAngle(rotateX.getAngle() + 0.1);
-            }
-            if (rotateY.getAngle() > 90 && positivemultiplier[0] == 1) {
-                positivemultiplier[0] = -1;
-            } else if (rotateY.getAngle() > 270 && positivemultiplier[0] == -1) {
-                positivemultiplier[0] = 1;
-            } else if (rotateY.getAngle() < -90 && positivemultiplier[0] == -1) {
-                positivemultiplier[0] = 1;
-            } else if (rotateY.getAngle() < -270 && positivemultiplier[0] == 1) {
-                positivemultiplier[0] = -1;
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
             }
         });
         rectangleArrowEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateY.setAngle(rotateY.getAngle() + 0.25);
-            if (rotateX.getAngle() != 0) {
+            rotateY.setAngle(rotateY.getAngle()%360 + 0.25);
+            if (rotateX.getAngle() > 0) {
                 rotateX.setAngle(rotateX.getAngle() - 0.25);
+            } else if (rotateX.getAngle() < 0) {
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
             }
         });
     }
