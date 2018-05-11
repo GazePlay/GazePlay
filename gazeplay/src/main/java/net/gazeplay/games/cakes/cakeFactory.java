@@ -1,5 +1,7 @@
 package net.gazeplay.games.cakes;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -15,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
@@ -134,6 +137,107 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         nappage = true;
     }
 
+    public void execAnim(int i, int j) {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        double cakeheight = (((ImageView) cake[currentCake].getChildren().get(0)).getImage().getHeight()
+                * ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth())
+                / ((ImageView) cake[currentCake].getChildren().get(0)).getImage().getWidth();
+        double cakewidth = ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth();
+
+        double Ypos = cake[currentCake]
+                .localToParent(((ImageView) cake[currentCake].getChildren().get(0)).localToParent(0, 0)).getY();
+        double Yppos = Ypos + 7 * cakeheight / 8;
+        Ypos = Ypos + 1.9 * cakeheight / 8;
+
+        if (j == 1) {
+            ImageView aerograph = new ImageView(new Image("data/cake/aero.png"));
+            ImageView aerograph2 = new ImageView(new Image("data/cake/aero.png"));
+            aerograph.setFitWidth(dimension2D.getWidth() / 2.5);
+            aerograph2.setFitWidth(dimension2D.getWidth() / 2.5);
+            aerograph2.setScaleX(-1);
+            aerograph.setPreserveRatio(true);
+            aerograph2.setPreserveRatio(true);
+            double height = ((aerograph.getImage().getHeight()) * (dimension2D.getWidth() / 2.5))
+                    / aerograph.getImage().getWidth();
+            double offset = aerograph.getFitWidth();
+            aerograph.setLayoutX(-offset);
+            aerograph2.setLayoutX(dimension2D.getWidth());
+            aerograph.setLayoutY(dimension2D.getHeight() / (3 * (currentCake + 1)));
+            aerograph2.setLayoutY(dimension2D.getHeight() / (3 * (currentCake + 1)));
+            gameContext.getChildren().addAll(aerograph, aerograph2);
+
+            Polygon spray = new Polygon();
+            spray.getPoints().addAll(new Double[] { offset, 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
+                    dimension2D.getWidth() / 2 + cakewidth / 4, Ypos, dimension2D.getWidth() / 2 + cakewidth / 3, Yppos,
+                    dimension2D.getWidth() / 2 - cakewidth / 3, Yppos });
+
+            Polygon spray2 = new Polygon();
+            spray2.getPoints().addAll(new Double[] { dimension2D.getWidth() - offset,
+                    9 * height / 11 + aerograph.localToParent(0, 0).getY(), dimension2D.getWidth() / 2 - cakewidth / 4,
+                    Ypos, dimension2D.getWidth() / 2 - cakewidth / 3, Yppos, dimension2D.getWidth() / 2 + cakewidth / 3,
+                    Yppos });
+
+            spray.setOpacity(0);
+            spray2.setOpacity(0);
+            gameContext.getChildren().addAll(spray, spray2);
+            TranslateTransition tt = new TranslateTransition(Duration.millis(500), aerograph);
+            tt.setToX(offset);
+            TranslateTransition tt2 = new TranslateTransition(Duration.millis(500), aerograph2);
+            tt2.setToX(-offset);
+
+            Color[] c = { Color.rgb(232, 193, 136), Color.rgb(255, 114, 113), Color.rgb(113, 171, 255),
+                    Color.rgb(128, 70, 50) };
+
+            spray.setFill(c[i]);
+            spray2.setFill(c[i]);
+
+            ParallelTransition pt = new ParallelTransition();
+            pt.getChildren().addAll(tt, tt2);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(700), spray);
+            ft.setToValue(0.5);
+            FadeTransition ft2 = new FadeTransition(Duration.millis(700), spray2);
+            ft2.setToValue(0.5);
+            ImageView temp2 = (ImageView) cake[currentCake].getChildren().get(j - 1);
+            ImageView temp = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
+            temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
+            temp.setPreserveRatio(true);
+            cake[currentCake].getChildren().set(j - 1, temp);
+            cake[currentCake].getChildren().add(j, temp2);
+            FadeTransition ft3 = new FadeTransition(Duration.millis(700), temp2);
+            ft3.setToValue(0);
+
+            ParallelTransition pt2 = new ParallelTransition();
+            pt2.getChildren().addAll(ft, ft2, ft3);
+
+            SequentialTransition sq = new SequentialTransition();
+            sq.getChildren().addAll(pt, pt2);
+            sq.play();
+
+            sq.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+
+                    TranslateTransition tt = new TranslateTransition(Duration.millis(500), aerograph);
+                    tt.setToX(0);
+                    TranslateTransition tt2 = new TranslateTransition(Duration.millis(500), aerograph2);
+                    tt2.setToX(0);
+                    ParallelTransition pt = new ParallelTransition();
+                    pt.getChildren().addAll(tt, tt2);
+                    pt.play();
+                    cake[currentCake].getChildren().remove(temp2);
+                    gameContext.getChildren().removeAll(spray, spray2);
+
+                }
+            });
+        } else {
+            ImageView temp = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
+            temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
+            temp.setPreserveRatio(true);
+            cake[currentCake].getChildren().set(j - 1, temp);
+        }
+    }
+
     public void otherPages(int j, int k, Pane[] p) {
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -155,11 +259,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                             nappageOn();
                             bnap.setDisable(false);
                         }
-
-                        ImageView temp = new ImageView(new Image("data/cake/" + jndex + "" + (index + 1) + ".png"));
-                        temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
-                        temp.setPreserveRatio(true);
-                        cake[currentCake].getChildren().set(jndex, temp);
+                        execAnim(index, j);
                     }
                 };
                 bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
