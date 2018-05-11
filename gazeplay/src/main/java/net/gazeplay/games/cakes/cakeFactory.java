@@ -1,5 +1,7 @@
 package net.gazeplay.games.cakes;
 
+import java.util.List;
+
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -36,7 +38,11 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     private double centerY;
 
     private int currentCake;
+    private int maxCake;
     private boolean nappage;
+
+    int[][] layers = new int[3][4];
+    int[][] model = new int[3][4];
 
     private StackPane[] cake;
     private Button bnap;
@@ -51,6 +57,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         buttonSize = dimension2D.getWidth() / 8;
         cake = new StackPane[3];
         currentCake = 0;
+        maxCake = 0;
         nappage = false;
     }
 
@@ -61,7 +68,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 @Override
                 public void handle(Event e) {
                     p[i + 1].toFront();
-                    for (int c = 0; c <= currentCake; c++) {
+                    for (int c = 0; c <= maxCake; c++) {
                         cake[c].toFront();
                     }
                 }
@@ -70,11 +77,12 @@ public class cakeFactory extends Parent implements GameLifeCycle {
             buttonHandler = new EventHandler<Event>() {
                 @Override
                 public void handle(Event e) {
-                    if (currentCake < 2) {
-                        currentCake++;
-                        createCake(currentCake);
+                    if (maxCake < 2) {
+                        maxCake++;
+                        currentCake = maxCake;
+                        createCake(maxCake);
                     }
-                    if (currentCake >= 2) {
+                    if (maxCake >= 2) {
                         ((Button) e.getSource()).setDisable(true);
                     }
                 }
@@ -113,6 +121,8 @@ public class cakeFactory extends Parent implements GameLifeCycle {
             p[0].getChildren().add(bt);
         }
 
+        p[0].getChildren().addAll(createButton(1), createButton(-1));
+
         for (int j = 1; j < 6; j++) {
             int k = 6;
             if (j == 1) {
@@ -131,6 +141,33 @@ public class cakeFactory extends Parent implements GameLifeCycle {
             sp.getChildren().add(p[i]);
         }
 
+    }
+
+    public Button createButton(int i) {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        String s = "up";
+        if (i == 1) {
+            s = "down";
+        }
+        Button plus = new Button();
+        plus.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
+                + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
+                + "-fx-max-height: " + buttonSize + "px;");
+        plus.setLayoutX(0.5 * buttonSize);
+        plus.setLayoutY((1 + (i + 1) / 2) * dimension2D.getHeight() / 3);
+        plus.setText(s);
+        EventHandler<Event> buttonPlus = new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+                if ((currentCake - i >= 0) && (currentCake - i <= maxCake)) {
+                    currentCake = currentCake - i;
+                }
+                /* TODO desactiver les decorations si on est sur une couche du bas */
+            }
+        };
+        plus.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonPlus);
+
+        return plus;
     }
 
     public void nappageOn() {
@@ -272,7 +309,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     @Override
                     public void handle(Event e) {
                         p[0].toFront();
-                        for (int c = 0; c <= currentCake; c++) {
+                        for (int c = 0; c <= maxCake; c++) {
                             cake[c].toFront();
                         }
                     }
@@ -349,13 +386,54 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         });
     }
 
-    // done
+    public void generateRandomCake() {
+        for (int i = 0; i < 3; i++) {
+            model[i][0] = 1 + (int) (Math.random() * 4);
+            model[i][1] = 1 + (int) (Math.random() * 5);
+            model[i][2] = 1 + (int) (Math.random() * 3);
+        }
+        model[2][3] = 1 + (int) (Math.random() * 2);
+
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        Pane grab = new Pane();
+        double originX = 0;
+        double originY = 0;
+        for (int i = 0; i < 3; i++) {
+            int k = 3;
+            if (i == 2) {
+                k = 4;
+            }
+            ;
+            double cakeheight = 0;
+            for (int j = 0; j < k; j++) {
+                ImageView cakemodel = new ImageView(new Image("data/cake/" + j + "" + model[i][j] + ".png"));
+                cakemodel.setFitWidth(dimension2D.getWidth() / (2 * (4 + i)));
+                cakemodel.setPreserveRatio(true);
+                cakeheight = ((cakemodel.getImage().getHeight()) * (dimension2D.getWidth() / (2 * (4 + i))))
+                        / cakemodel.getImage().getWidth();
+                if ((i != 0) && (j == 0)) {
+                    originY = originY - cakeheight / 2;
+                }
+                grab.getChildren().add(cakemodel);
+                cakemodel.setLayoutX(originX - cakemodel.getFitWidth() / 2);
+                cakemodel.setLayoutY(originY);
+            }
+        }
+
+        grab.setLayoutX(3 * dimension2D.getWidth() / 4);
+        grab.setLayoutY(dimension2D.getHeight() / 2);
+        gameContext.getChildren().add(grab);
+    }
+
     @Override
     public void launch() {
+
         StackPane sp = new StackPane();
         createStack(sp);
         gameContext.getChildren().add(sp);
         createCake(0);
+
+        generateRandomCake();
         gameContext.getChildren().add(this);
 
         stats.notifyNewRoundReady();
