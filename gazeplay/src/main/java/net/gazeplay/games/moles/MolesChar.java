@@ -26,6 +26,9 @@ public class MolesChar extends Parent {
 
     private Rectangle mole;
 
+    private Rectangle moleMoved;
+
+    
     private final GameContext gameContext;
 
     private final Moles gameInstance;
@@ -58,7 +61,7 @@ public class MolesChar extends Parent {
 
     final Stats stats;
 
-    final EventHandler<Event> enterEvent;
+    public final EventHandler<Event> enterEvent;
 
     public MolesChar(double positionX, double positionY, double width, double height, double distTrans,
             GameContext gameContext, Stats stats, Moles gameInstance) {
@@ -82,17 +85,24 @@ public class MolesChar extends Parent {
         this.gameInstance = gameInstance;
 
         this.progressIndicator = createProgressIndicator(width, height);
-        // this.getChildren().add(this.progressIndicator);
 
         this.enterEvent = buildEvent();
 
+        this.moleMoved = new Rectangle(this.posX , this.posY - distTrans, width, height);
+        this.moleMoved.setFill(new ImagePattern(new Image("data/wackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
+        this.moleMoved.opacityProperty().set(1);
+        this.moleMoved.addEventHandler(MouseEvent.ANY, enterEvent);
+        this.moleMoved.addEventHandler(GazeEvent.ANY, enterEvent);
+
+
+        
         this.mole = new Rectangle(this.posX, this.posY, width, height);
         this.mole.setFill(new ImagePattern(new Image("data/wackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
         this.getChildren().add(mole);
-        this.mole.opacityProperty().set(0.8);
+        this.mole.opacityProperty().set(0);
 
-        this.addEventFilter(MouseEvent.ANY, enterEvent);
-        this.addEventFilter(GazeEvent.ANY, enterEvent);
+        //this.addEventFilter(MouseEvent.ANY, enterEvent);
+        //this.addEventFilter(GazeEvent.ANY, enterEvent);
     }
 
     private ProgressIndicator createProgressIndicator(double width, double height) {
@@ -103,7 +113,7 @@ public class MolesChar extends Parent {
         return indicator;
     }
 
-    private EventHandler<Event> buildEvent() {
+    public EventHandler<Event> buildEvent() {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -158,20 +168,29 @@ public class MolesChar extends Parent {
 
         this.canGoOut = false;
 
+        
+        if(this.getScaleX() == this.posX) {
+        	System.out.println("Il y a eu un bug ");
+        }
+
         gameInstance.nbMolesOut++;
 
         TranslateTransition translation = new TranslateTransition(new Duration(1500), this);
         translation.setByX(0);
         translation.setByY(-this.distTranslation);
         translation.play();
+        this.mole.opacityProperty().set(1);
+
 
         translation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
 
                 canTouched = true;
-                mole.opacityProperty().set(3);
-                ;
+                gameInstance.gameContext.getChildren().add(moleMoved);
+
+                mole.opacityProperty().set(0);
+                
                 out = true;
 
                 timeMoleOut = new Timeline(); // New time this mole go out
@@ -191,6 +210,7 @@ public class MolesChar extends Parent {
                     @Override
                     public void handle(ActionEvent actionEvent) {
                         if (!touched && out) {
+
                             goIn(); // Go back in the hole
                         }
                     }
@@ -202,8 +222,10 @@ public class MolesChar extends Parent {
 
     private void goIn() {
         canTouched = false;
-        this.mole.opacityProperty().set(0.8);
-        ;
+        
+        this.mole.opacityProperty().set(1);
+        gameInstance.gameContext.getChildren().remove(moleMoved);
+        
         double timeGoIn = 1500;
         if (touched) {
             timeGoIn = 500;
@@ -218,6 +240,7 @@ public class MolesChar extends Parent {
             public void handle(ActionEvent actionEvent) {
                 gameInstance.nbMolesOut--;
                 out = false;
+                mole.opacityProperty().set(0);
                 canGoOut = true;
             }
         });
