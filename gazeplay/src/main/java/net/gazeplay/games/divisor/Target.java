@@ -111,7 +111,7 @@ class Target extends Portrait {
 
         move();
 
-        stats.notifyNewRoundReady();
+        this.stats.notifyNewRoundReady();
     }
 
     private void move() {
@@ -186,7 +186,7 @@ class Target extends Portrait {
                     l.setLayoutX(15);
                     l.setLayoutY(14);
                     gameContext.getChildren().add(l);
-                    gameContext.playWinTransition(50, new EventHandler<ActionEvent>() {
+                    gameContext.playWinTransition(30, new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent actionEvent) {

@@ -27,6 +27,7 @@ public class Order implements GameLifeCycle {
     private final Spawner sp;
     // private final ProgressIndicator progressIndicator;
     private int currentNum;
+    private final int nbTarget;
 
     public Order(GameContext gameContext, Stats stats) {
         super();
@@ -34,18 +35,21 @@ public class Order implements GameLifeCycle {
         this.stats = stats;
         this.sp = new Spawner(gameContext.getRandomPositionGenerator(), stats, gameContext);
         this.currentNum = 0;
-        /*
-         * this.progressIndicator = createProgressIndicator(width, height);
-         * this.gameContext.getChildren().add(this.progressIndicator);
-         */
+        this.nbTarget = 5;
+
+        // this.progressIndicator = createProgressIndicator(100.0, 100.0);
+        // this.gameContext.getChildren().add(this.progressIndicator);
+
     }
 
     @Override
     public void launch() {
-        sp.spawn(5, this);
+        sp.spawn(nbTarget, this);
+        this.stats.notifyNewRoundReady();
     }
 
     public void enter(int num, Target t) {
+        Order gameInstance = this;
         /*
          * progressIndicator.setOpacity(1); progressIndicator.setProgress(0);
          * 
@@ -66,8 +70,20 @@ public class Order implements GameLifeCycle {
          */
 
         if (this.currentNum == num - 1) {
+            stats.incNbGoals();
             this.gameContext.getChildren().remove(t);
             this.currentNum++;
+        }
+
+        if (this.currentNum == nbTarget) {
+            gameContext.playWinTransition(30, new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    gameInstance.dispose();
+                    gameContext.clear();
+                    gameInstance.launch();
+                }
+            });
         }
     }
 
