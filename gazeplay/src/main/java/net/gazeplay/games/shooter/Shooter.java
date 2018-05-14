@@ -544,8 +544,11 @@ public class Shooter extends Parent implements GameLifeCycle {
         pt.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                getChildren().remove((getChildren().indexOf(sp)));
-                newCircle();
+                int index = (getChildren().indexOf(sp));
+                if (index != -1) {
+                    getChildren().remove(index);
+                    newCircle();
+                }
             }
         });
 
