@@ -18,6 +18,8 @@ public class CustomColorPicker extends Pane {
     private ColorBox selectedColor;
 
     private final ColorBox representingBox;
+    
+    private final AbstractGazeIndicator progressIndicator;
 
     public CustomColorPicker(final Pane root, final ColorToolBox toolBox, final ColorBox representingBox) {
         super();
@@ -26,11 +28,14 @@ public class CustomColorPicker extends Pane {
         this.representingBox = representingBox;
 
         ToggleGroup colorGroup = new ToggleGroup();
+        
+        progressIndicator = new GazeFollowerIndicator(this);
 
         for (int i = 0; i < COLOR_LIST.length; ++i) {
 
             for (int j = 0; j < NB_COLOR_PER_ROW; ++j) {
                 ColorBox colorBox = new CustomColorBox(COLOR_LIST[i], root, toolBox, colorGroup, representingBox);
+                colorBox.setProgressIndicator(progressIndicator);
                 if (i == 0 && j == 0) {
                     colorBox.select();
                     selectedColor = colorBox;
@@ -41,5 +46,6 @@ public class CustomColorPicker extends Pane {
         }
 
         this.getChildren().add(colorGrid);
+        this.getChildren().add(progressIndicator);
     }
 }
