@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -165,12 +166,17 @@ public class ColorToolBox extends StackPane {
         customBox = new ColorBox(Color.WHITE, root, this, group);
 
         customColorDialog = buildCustomColorDialog();
-
-        customColorPickerButton.setOnAction((event) -> {
-
+        
+        final EventHandler<ActionEvent> customColorButtonHandler = (ActionEvent event) -> {
             customColorDialog.show();
             colorsGame.setEnableColorization(false);
-        });
+        };
+        
+        final AbstractGazeIndicator customColorButtonIndic = new GazeFollowerIndicator(root);
+        customColorButtonIndic.setOnFinish(customColorButtonHandler);
+        customColorButtonIndic.addNodeToListen(customColorPickerButton);
+
+        customColorPickerButton.setOnAction(customColorButtonHandler);
 
         customColorDialog.setOnCloseRequest((event) -> {
 
@@ -220,6 +226,7 @@ public class ColorToolBox extends StackPane {
 
         thisRoot.setBottom(imageManager);
         thisRoot.setTop(colorziationPane);
+        this.getChildren().add(customColorButtonIndic);
 
         this.getStyleClass().add("bg-colored");
     }

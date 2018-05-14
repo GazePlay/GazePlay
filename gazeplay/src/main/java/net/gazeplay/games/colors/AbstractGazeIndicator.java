@@ -30,7 +30,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
     private Timeline animation;
 
     private EventHandler<ActionEvent> finishHandler;
-    final EventHandler<ActionEvent> onFinishHandler;
+    private final OnFinishIndicatorEvent onFinishHandler;
     
     private final Map<Node, EventHandler> nodedToListenTo;
     
@@ -76,34 +76,51 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
     @Override
     public void stop() {
 
+        if(onFinishHandler.getTimer() != null) {
+            onFinishHandler.getTimer().cancel();
+        }
+
         animation.stop();
         this.setVisible(false);
         this.setProgress(0);
         isStarted = false;
     }
     
-    private EventHandler<ActionEvent> buildOnFinishEventHandler() {
+    private OnFinishIndicatorEvent buildOnFinishEventHandler() {
         
-        final AbstractGazeIndicator thisIndicator = this;
-        
-        return (ActionEvent event) -> {
-            
-            isStarted = false;
-            
-            log.info("on finish event");
-            if (finishHandler != null) {
-                finishHandler.handle(event);
-            }
-            
-            final Timer timer = new Timer("Finished display timer");
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    thisIndicator.stop();
-                }
-            }, TIME_DISPLAYED_AFTER_FINISHED_MS);
+        return new OnFinishIndicatorEvent(this);
+    }
+    
+    private class OnFinishIndicatorEvent implements EventHandler<ActionEvent> {
 
-        };
+        @Getter
+        private Timer timer;
+        private final TimerTask timerTask;
+        private final AbstractGazeIndicator thisIndicator;
+        
+        
+        public OnFinishIndicatorEvent(final AbstractGazeIndicator thisIndicator) {
+            
+            this.thisIndicator = thisIndicator;
+            timerTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        thisIndicator.stop();
+                    }
+            };
+        }
+        
+        @Override
+        public void handle(ActionEvent event) {
+            isStarted = false;
+                if (finishHandler != null) {
+                    finishHandler.handle(event);
+                }
+                
+                timer = new Timer("Finished display timer");
+                timer.schedule(timerTask, TIME_DISPLAYED_AFTER_FINISHED_MS);
+        }
+    
     }
     
     protected EventHandler buildEventHandler(final Node node) {
@@ -112,27 +129,9 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
         
         return (EventHandler) (Event event) -> {
             
-            double eventX = 0;
-            double eventY = 0;
-            
-            if(event.getEventType() == MouseEvent.ANY) {
-                
-                MouseEvent mouseEvent = (MouseEvent) event;   
-                eventX = mouseEvent.getX();
-                eventY = mouseEvent.getY();
-            }
-            else if(event.getEventType() == GazeEvent.ANY) {
-                
-                GazeEvent gazeEvent = (GazeEvent) event;
-                eventX = gazeEvent.getX();
-                eventY = gazeEvent.getY();
-            }
-            else {
-                throw new UnsupportedOperationException("Unsupported event type");
-            }
-            
             if(event.getEventType() == MouseEvent.MOUSE_ENTERED || 
                     event.getEventType() == GazeEvent.GAZE_ENTERED) {
+                log.info("entered");
                 thisIndicator.start();
             }
             else if(event.getEventType() == MouseEvent.MOUSE_EXITED || 
