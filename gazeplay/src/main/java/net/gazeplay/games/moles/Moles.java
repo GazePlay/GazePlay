@@ -1,11 +1,18 @@
 package net.gazeplay.games.moles;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -63,10 +70,6 @@ public class Moles extends Parent implements GameLifeCycle {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
 
-        Rectangle imageFond = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        imageFond.setFill(new ImagePattern(new Image("data/wackmole/images/terrainTaupes.jpg")));
-        gameContext.getChildren().add(imageFond);
-
     }
 
     @Override
@@ -74,6 +77,10 @@ public class Moles extends Parent implements GameLifeCycle {
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        
+        Rectangle imageFond = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        imageFond.setFill(new ImagePattern(new Image("data/wackmole/images/terrainTaupes.jpg")));
+        gameContext.getChildren().add(imageFond);
 
         List<MolesChar> molesList = initMoles(config);
         currentRoundDetails = new RoundDetails(molesList);
@@ -84,6 +91,8 @@ public class Moles extends Parent implements GameLifeCycle {
         imageFondTrans.setFill(new ImagePattern(new Image("data/wackmole/images/terrainTaupesTransparence.png")));
         gameContext.getChildren().add(imageFondTrans);
 
+        this.nbMolesWacked = 0;
+        
         /* Score display */
         lab = new Label();
         String s = "Score:" + nbMolesWacked;
@@ -105,12 +114,11 @@ public class Moles extends Parent implements GameLifeCycle {
     /* Moles get out randomly */
     private void play(Dimension2D gameDim2D) {
 
-        progressIndicator = createProgressIndicator(gameDim2D);
-        this.getChildren().add(this.progressIndicator);
-
         nbMolesOut = 0;
-        nbMolesWacked = 0;
         Random r = new Random();
+        
+        long tmax = System.currentTimeMillis() + 6000;
+
 
         Timer minuteur = new Timer();
         TimerTask tache = new TimerTask() {
@@ -118,25 +126,38 @@ public class Moles extends Parent implements GameLifeCycle {
 
                 if (nbMolesOut < 3) {
                     chooseMoleToOut(r);
-                } else if ((r.nextInt() % 8 == 0) && (nbMolesOut <= 4)) {
+                } else if ((r.nextInt() % 5 == 0) && (nbMolesOut <= 4)) {
                     chooseMoleToOut(r);
-                } else if ((r.nextInt() % 16 == 0) && (nbMolesOut <= 6)) {
+                } else if ((r.nextInt() % 10 == 0) && (nbMolesOut <= 6)) {
                     chooseMoleToOut(r);
-                } else if ((r.nextInt() % 24 == 0) && (nbMolesOut <= 8)) {
+                } else if ((r.nextInt() % 20 == 0) && (nbMolesOut <= 8)) {
                     chooseMoleToOut(r);
                 }
+                
+                /*if(System.currentTimeMillis() > tmax) {
+                	minuteur.ha
+                	ScoreTransition(gameDim2D);
+                }*/
             }
         };
+        
         minuteur.schedule(tache, 0, 500);
+        
+    	
+
+        
     }
 
     private ProgressIndicator createProgressIndicator(javafx.geometry.Dimension2D gameDim2D) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(gameDim2D.getWidth() - gameDim2D.getWidth() * 0.1);
-        indicator.setTranslateY(gameDim2D.getHeight() * 0.1);
-        indicator.setMinWidth(computeMoleWidth(gameDim2D) * 0.9);
-        indicator.setMinHeight(computeMoleWidth(gameDim2D) * 0.9);
+        ProgressIndicator indicator = new ProgressIndicator(1);
+        indicator.setTranslateX(gameDim2D.getWidth() - gameDim2D.getWidth() * 0.07);
+        indicator.setTranslateY(gameDim2D.getHeight() * 0.035);
+        indicator.setMinWidth(computeMoleWidth(gameDim2D) * 0.45);
+        indicator.setMinHeight(computeMoleWidth(gameDim2D) * 0.45);
         indicator.setOpacity(1);
+        indicator.setProgress(0);
+        indicator.setStyle(" -fx-progress-color: rgba(139,69,19 ,1);");
+        
         return indicator;
     }
 
@@ -145,6 +166,7 @@ public class Moles extends Parent implements GameLifeCycle {
         if (currentRoundDetails != null) {
             if (currentRoundDetails.molesList != null) {
                 gameContext.getChildren().removeAll(currentRoundDetails.molesList);
+                currentRoundDetails.molesList.removeAll(currentRoundDetails.molesList);
             }
             currentRoundDetails = null;
         }
@@ -229,5 +251,40 @@ public class Moles extends Parent implements GameLifeCycle {
         String s = "Score:" + nbMolesWacked;
         lab.setText(s);
     }
+    
+    /*private void ScoreTransition(Dimension2D dimension2D) {
+    	
+        Label l = new Label();
+        String s = "Score:" + nbMolesWacked;
+        l.setText(s);
+        l.setTextFill(Color.RED);
+        l.setFont(Font.font(dimension2D.getHeight() / 10));
+        l.setLineSpacing(10);
+        l.setLayoutX(0.5 * dimension2D.getWidth());
+        l.setLayoutY(0.1 * dimension2D.getHeight());
+        gameContext.getChildren().add(l);
+    	
+        TranslateTransition translation = new TranslateTransition(new Duration(6000), l);
+        translation.setByX(0);
+        translation.setByY(- dimension2D.getHeight() * 0.9);
+        translation.play();
+       
+        
+
+        translation.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                dispose();
+
+                gameContext.clear();
+
+                launch();
+                
+                //stats.notifyNewRoundReady();
+
+                //gameContext.onGameStarted();
+            }
+        });
+    }*/
 
 }
