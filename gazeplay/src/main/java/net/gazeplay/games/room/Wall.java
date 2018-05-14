@@ -9,11 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Wall {
 
-    // The size of the X of the cube(this is the length on the X axis)
-    private double xLength;
-    // The size of the Y of the cube(this is the length on the Y axis)
-    private double yLength;
-
     // The short size of a side of the cube (this is the thickness of each side)
     private static final double thickness = 0.1;
 
@@ -21,13 +16,10 @@ public class Wall {
     private double positionWall;
 
     // Image rightImage = new Image("data/room/front.jpg", WIDTH, HEIGHT, true, true);
-
     Box box;
     String name;
 
     public Wall(String moveDirection, int positiveAxisMultiplier, String name, double xLength, double yLength) {
-        this.xLength = xLength;
-        this.yLength = yLength;
         this.name = name;
         switch (moveDirection) {
         case "X":
@@ -35,15 +27,22 @@ public class Wall {
             this.positionWall = xLength / 2;
             // this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, rightImage, rightImage, rightImage,
             // rightImage));
-            this.box.setMaterial(new PhongMaterial(Color.RED));
+            if (positiveAxisMultiplier == 1) {
+                Image rightImage = new Image("data/room/right.jpg");
+                this.box.setMaterial(
+                        new PhongMaterial(Color.TRANSPARENT, rightImage, rightImage, rightImage, rightImage));
+            } else {
+                Image leftImage = new Image("data/room/left.jpg");
+                this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, leftImage, leftImage, leftImage, leftImage));
+            }
             this.box.setTranslateX(positiveAxisMultiplier * positionWall);
             break;
         case "Y":
             this.box = new Box(xLength, thickness, xLength);
             this.positionWall = yLength / 2;
-            // this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, rightImage, rightImage, rightImage,
-            // rightImage));
-            this.box.setMaterial(new PhongMaterial(Color.GREEN));
+            Image top_bottomImage = new Image("data/room/top_bottom.jpg");
+            this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, top_bottomImage, top_bottomImage, top_bottomImage,
+                    top_bottomImage));
             this.box.setTranslateY(positiveAxisMultiplier * positionWall);
             break;
         case "Z":
@@ -54,7 +53,8 @@ public class Wall {
                 this.box.setMaterial(
                         new PhongMaterial(Color.TRANSPARENT, frontImage, frontImage, frontImage, frontImage));
             } else {
-                this.box.setMaterial(new PhongMaterial(Color.BLUE));
+                Image backImage = new Image("data/room/back.jpg");
+                this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, backImage, backImage, backImage, backImage));
             }
             this.box.setTranslateZ(positiveAxisMultiplier * positionWall);
             break;

@@ -18,6 +18,7 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
+import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 /* Things to implement :
     1. Add a gazeeventlistener
@@ -35,6 +36,7 @@ public class Room implements GameLifeCycle {
     private javafx.geometry.Dimension2D dimension2D;
     private final Rotate rotateX;
     private final Rotate rotateY;
+    private final Rotate rotateZ;
 
     private static double xLength;
     private static double yLength;
@@ -42,14 +44,8 @@ public class Room implements GameLifeCycle {
     // The positions of the sides compared to the origin
     private double positionCamera;
 
-    Image arrowImNorthWest;
-    Rectangle rectangleArrowNorthWest;
-
     Image arrowImNorth;
     Rectangle rectangleArrowNorth;
-
-    Image arrowImNorthEast;
-    Rectangle rectangleArrowNorthEast;
 
     Image arrowImWest;
     Rectangle rectangleArrowWest;
@@ -57,14 +53,8 @@ public class Room implements GameLifeCycle {
     Image arrowImEast;
     Rectangle rectangleArrowEast;
 
-    Image arrowImSouthWest;
-    Rectangle rectangleArrowSouthWest;
-
     Image arrowImSouth;
     Rectangle rectangleArrowSouth;
-
-    Image arrowImSouthEast;
-    Rectangle rectangleArrowSouthEast;
 
     double imageWidth;
     double imageHeight;
@@ -77,17 +67,9 @@ public class Room implements GameLifeCycle {
         imageWidth = dimension2D.getWidth() / 7;
         imageHeight = dimension2D.getHeight() / 7;
 
-        arrowImNorthWest = new Image("data/room/arrowNorthWest.png", imageWidth, imageHeight, true, true);
-        rectangleArrowNorthWest = new Rectangle(arrowImNorthWest.getWidth(), arrowImNorthWest.getHeight());
-        rectangleArrowNorthWest.setFill(new ImagePattern(arrowImNorthWest));
-
         arrowImNorth = new Image("data/room/arrowNorth.png", imageWidth, imageHeight, true, true);
         rectangleArrowNorth = new Rectangle(arrowImNorth.getWidth(), arrowImNorth.getHeight());
         rectangleArrowNorth.setFill(new ImagePattern(arrowImNorth));
-
-        arrowImNorthEast = new Image("data/room/arrowNorthEast.png", imageWidth, imageHeight, true, true);
-        rectangleArrowNorthEast = new Rectangle(arrowImNorthEast.getWidth(), arrowImNorthEast.getHeight());
-        rectangleArrowNorthEast.setFill(new ImagePattern(arrowImNorthEast));
 
         arrowImWest = new Image("data/room/arrowWest.png", imageWidth, imageHeight, true, true);
         rectangleArrowWest = new Rectangle(arrowImWest.getWidth(), arrowImWest.getHeight());
@@ -97,23 +79,19 @@ public class Room implements GameLifeCycle {
         rectangleArrowEast = new Rectangle(arrowImEast.getWidth(), arrowImEast.getHeight());
         rectangleArrowEast.setFill(new ImagePattern(arrowImEast));
 
-        arrowImSouthWest = new Image("data/room/arrowSouthWest.png", imageWidth, imageHeight, true, true);
-        rectangleArrowSouthWest = new Rectangle(arrowImSouthWest.getWidth(), arrowImSouthWest.getHeight());
-        rectangleArrowSouthWest.setFill(new ImagePattern(arrowImSouthWest));
-
         arrowImSouth = new Image("data/room/arrowSouth.png", imageWidth, imageHeight, true, true);
         rectangleArrowSouth = new Rectangle(arrowImSouth.getWidth(), arrowImSouth.getHeight());
         rectangleArrowSouth.setFill(new ImagePattern(arrowImSouth));
 
-        arrowImSouthEast = new Image("data/room/arrowSouthEast.png", imageWidth, imageHeight, true, true);
-        rectangleArrowSouthEast = new Rectangle(arrowImSouthEast.getWidth(), arrowImSouthEast.getHeight());
-        rectangleArrowSouthEast.setFill(new ImagePattern(arrowImSouthEast));
-
-        rotateX = new Rotate(0, Rotate.X_AXIS);
-        rotateY = new Rotate(0, Rotate.Y_AXIS);
-        xLength = dimension2D.getWidth();
-        yLength = dimension2D.getHeight();
-        positionCamera = -xLength / 2;
+        rotateX = new Rotate();
+        rotateX.setAxis(Rotate.X_AXIS);
+        rotateY = new Rotate();
+        rotateY.setAxis(Rotate.Y_AXIS);
+        rotateZ = new Rotate();
+        rotateZ.setAxis(Rotate.Z_AXIS);
+        xLength = 1600;// dimension2D.getWidth();
+        yLength = 600;// dimension2D.getHeight();
+        positionCamera = -xLength / 4;
     }
 
     @Override
@@ -146,8 +124,8 @@ public class Room implements GameLifeCycle {
         camera.setVerticalFieldOfView(false);
 
         camera.setNearClip(0.1);
-        camera.setFarClip(10000.0);
-        camera.getTransforms().addAll(rotateX, rotateY, new Translate(0, 0, positionCamera));
+        camera.setFarClip(2000.0);
+        camera.getTransforms().addAll(rotateY, rotateX, new Translate(0, 0, positionCamera));
 
         PointLight light = new PointLight(Color.GAINSBORO);
         objects.getChildren().add(light);
@@ -157,15 +135,11 @@ public class Room implements GameLifeCycle {
         BorderPane root = new BorderPane(subScene);
 
         BorderPane topB = new BorderPane();
-        topB.setRight(rectangleArrowNorthEast);
         topB.setCenter(rectangleArrowNorth);
-        topB.setLeft(rectangleArrowNorthWest);
         root.setTop(topB);
 
         BorderPane bottomB = new BorderPane();
-        bottomB.setRight(rectangleArrowSouthEast);
         bottomB.setCenter(rectangleArrowSouth);
-        bottomB.setLeft(rectangleArrowSouthWest);
         root.setBottom(bottomB);
 
         root.setLeft(rectangleArrowWest);
@@ -175,85 +149,65 @@ public class Room implements GameLifeCycle {
 
         gameContext.getChildren().add(root);
 
-        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowNorthWest);
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowNorth);
-        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowNorthEast);
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowWest);
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowEast);
-        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouthWest);
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouth);
-        gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouthEast);
-
-        rectangleArrowNorthWest.setOnMouseMoved((event) -> {
-            rotateX.setAngle(rotateX.getAngle() + 0.25);
-            rotateY.setAngle(rotateY.getAngle() - 0.25);
-        });
 
         rectangleArrowNorth.setOnMouseMoved((event) -> {
-            rotateX.setAngle(rotateX.getAngle() + 0.5);
+            if (rotateX.getAngle() < 22.5) {
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
+            }
         });
-
-        rectangleArrowNorthEast.setOnMouseMoved((event) -> {
-            rotateX.setAngle(rotateX.getAngle() + 0.25);
-            rotateY.setAngle(rotateY.getAngle() + 0.25);
-        });
-
-        rectangleArrowWest.setOnMouseMoved((event) -> {
-            rotateY.setAngle(rotateY.getAngle() - 0.5);
-        });
-
-        rectangleArrowEast.setOnMouseMoved((event) -> {
-            rotateY.setAngle(rotateY.getAngle() + 0.5);
-        });
-
-        rectangleArrowSouthWest.setOnMouseMoved((event) -> {
-            rotateX.setAngle(rotateX.getAngle() - 0.25);
-            rotateY.setAngle(rotateY.getAngle() - 0.25);
+        rectangleArrowNorth.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
+            if (rotateX.getAngle() < 22.5) {
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
+            }
         });
 
         rectangleArrowSouth.setOnMouseMoved((event) -> {
-            rotateX.setAngle(rotateX.getAngle() - 0.5);
+            if (rotateX.getAngle() > -22.5) {
+                rotateX.setAngle(rotateX.getAngle() - 0.25);
+            }
         });
-
-        rectangleArrowSouthEast.setOnMouseMoved((event) -> {
-            rotateX.setAngle(rotateX.getAngle() - 0.25);
-            rotateY.setAngle(rotateY.getAngle() + 0.25);
-        });
-
-        rectangleArrowNorthWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateX.setAngle(rotateX.getAngle() + 0.25);
-            rotateY.setAngle(rotateY.getAngle() - 0.25);
-        });
-
-        rectangleArrowNorth.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateX.setAngle(rotateX.getAngle() + 0.5);
-        });
-
-        rectangleArrowNorthEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateX.setAngle(rotateX.getAngle() + 0.25);
-            rotateY.setAngle(rotateY.getAngle() + 0.25);
-        });
-
-        rectangleArrowWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateY.setAngle(rotateY.getAngle() - 0.5);
-        });
-
-        rectangleArrowEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateY.setAngle(rotateY.getAngle() + 0.5);
-        });
-
-        rectangleArrowSouthWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateX.setAngle(rotateX.getAngle() - 0.25);
-            rotateY.setAngle(rotateY.getAngle() - 0.25);
-        });
-
         rectangleArrowSouth.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateX.setAngle(rotateX.getAngle() - 0.5);
+            if (rotateX.getAngle() > -22.5) {
+                rotateX.setAngle(rotateX.getAngle() - 0.25);
+            }
         });
 
-        rectangleArrowSouthEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateX.setAngle(rotateX.getAngle() - 0.25);
-            rotateY.setAngle(rotateY.getAngle() + 0.25);
+        rectangleArrowWest.setOnMouseMoved((event) -> {
+            rotateY.setAngle(rotateY.getAngle() % 360 - 0.25);
+            if (rotateX.getAngle() > 0) {
+                rotateX.setAngle(rotateX.getAngle() - 0.25);
+            } else if (rotateX.getAngle() < 0) {
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
+            }
+        });
+        rectangleArrowWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
+            rotateY.setAngle(rotateY.getAngle() % 360 - 0.25);
+            if (rotateX.getAngle() > 0) {
+                rotateX.setAngle(rotateX.getAngle() - 0.25);
+            } else if (rotateX.getAngle() < 0) {
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
+            }
+        });
+
+        rectangleArrowEast.setOnMouseMoved((event) -> {
+            rotateY.setAngle(rotateY.getAngle() % 360 + 0.25);
+            if (rotateX.getAngle() > 0) {
+                rotateX.setAngle(rotateX.getAngle() - 0.25);
+            } else if (rotateX.getAngle() < 0) {
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
+            }
+        });
+        rectangleArrowEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
+            rotateY.setAngle(rotateY.getAngle() % 360 + 0.25);
+            if (rotateX.getAngle() > 0) {
+                rotateX.setAngle(rotateX.getAngle() - 0.25);
+            } else if (rotateX.getAngle() < 0) {
+                rotateX.setAngle(rotateX.getAngle() + 0.25);
+            }
         });
     }
 

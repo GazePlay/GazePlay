@@ -1,5 +1,9 @@
 package net.gazeplay.games.cakes;
 
+import java.util.List;
+
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -15,6 +19,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
@@ -26,25 +31,22 @@ import net.gazeplay.commons.utils.stats.Stats;
 @Slf4j
 public class cakeFactory extends Parent implements GameLifeCycle {
 
+    private final GameContext gameContext;
+    private final Stats stats;
+    private double buttonSize;
     private double centerX;
     private double centerY;
 
-    private final GameContext gameContext;
+    private int currentCake;
+    private int maxCake;
+    private boolean nappage;
 
-    private StackPane sp;
+    int[][] layers = new int[3][4];
+    int[][] model = new int[3][4];
 
     private StackPane[] cake;
-    private final double buttonSize;
-    private int currentCake;
-    private boolean nappage;
     private Button bnap;
 
-    private final Stats stats;
-    private Circle c;
-
-    private final EventHandler<Event> enterEvent;
-
-    // done
     public cakeFactory(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -53,47 +55,54 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;
         buttonSize = dimension2D.getWidth() / 8;
-        sp = new StackPane();
         cake = new StackPane[3];
         currentCake = 0;
+        maxCake = 0;
         nappage = false;
+    }
 
-        enterEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    stats.incNbGoals();
-                    stats.notifyNewRoundReady();
+    public EventHandler<Event> createButtonHandler(Pane[] p, int i) {
+        EventHandler<Event> buttonHandler;
+        if (i != 4) {
+            buttonHandler = new EventHandler<Event>() {
+                @Override
+                public void handle(Event e) {
+                    p[i + 1].toFront();
+                    for (int c = 0; c <= maxCake; c++) {
+                        cake[c].toFront();
+                    }
                 }
-            }
-        };
+            };
+        } else {
+            buttonHandler = new EventHandler<Event>() {
+                @Override
+                public void handle(Event e) {
+                    if (maxCake < 2) {
+                        maxCake++;
+                        currentCake = maxCake;
+                        createCake(maxCake);
+                    }
+                    if (maxCake >= 2) {
+                        ((Button) e.getSource()).setDisable(true);
+                    }
+                }
+            };
+        }
 
+        return buttonHandler;
     }
 
     public void createStack(StackPane sp) {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Rectangle f0 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        Rectangle f1 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        Rectangle f2 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        Rectangle f3 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        Rectangle f4 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        Rectangle f5 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        Color[] col = { Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL,
+                Color.LIGHTSTEELBLUE };
         Pane[] p = new Pane[6];
         for (int i = 0; i < 6; i++) {
             p[i] = new Pane();
+            Rectangle r = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            r.setFill(col[i]);
+            p[i].getChildren().add(r);
         }
-        f0.setFill(Color.LIGHTPINK);
-        f1.setFill(Color.LIGHTYELLOW);
-        f2.setFill(Color.LIGHTGREEN);
-        f3.setFill(Color.LIGHTBLUE);
-        f4.setFill(Color.LIGHTCORAL);
-        f5.setFill(Color.LIGHTSTEELBLUE);
-        p[0].getChildren().add(f0);
-        p[1].getChildren().add(f1);
-        p[2].getChildren().add(f2);
-        p[3].getChildren().add(f3);
-        p[4].getChildren().add(f4);
-        p[5].getChildren().add(f5);
 
         for (int i = 0; i < 5; i++) { // HomePage of the game
             Button bt = new Button();
@@ -102,39 +111,17 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     + "-fx-max-height: " + buttonSize + "px;");
             bt.setLayoutX(i * (1.5 * buttonSize) + 0.5 * buttonSize);
             bt.setText("screen" + i);
-            int index = i;
-            EventHandler<Event> buttonHandler;
-            if (i != 4) {
-                buttonHandler = new EventHandler<Event>() {
-                    @Override
-                    public void handle(Event e) {
-                        p[index + 1].toFront();
-                        for (int c = 0; c <= currentCake; c++) {
-                            cake[c].toFront();
-                        }
-                    }
-                };
-            } else {
-                buttonHandler = new EventHandler<Event>() {
-                    @Override
-                    public void handle(Event e) {
-                        if (currentCake < 2) {
-                            currentCake++;
-                            createCake(currentCake);
-                        }
-                        if (currentCake >= 2) {
-                            ((Button) e.getSource()).setDisable(true);
-                        }
-                    }
-                };
-            }
+            EventHandler<Event> buttonHandler = createButtonHandler(p, i);
+
             bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
-            if ((i == 2) && (!nappage)) {
+            if (i == 2) {
                 bnap = bt;
-                bnap.setDisable(true);
+                bnap.setDisable(!nappage);
             }
             p[0].getChildren().add(bt);
         }
+
+        p[0].getChildren().addAll(createButton(1), createButton(-1));
 
         for (int j = 1; j < 6; j++) {
             int k = 6;
@@ -156,8 +143,136 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
     }
 
+    public Button createButton(int i) {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        String s = "up";
+        if (i == 1) {
+            s = "down";
+        }
+        Button plus = new Button();
+        plus.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
+                + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
+                + "-fx-max-height: " + buttonSize + "px;");
+        plus.setLayoutX(0.5 * buttonSize);
+        plus.setLayoutY((1 + (i + 1) / 2) * dimension2D.getHeight() / 3);
+        plus.setText(s);
+        EventHandler<Event> buttonPlus = new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+                if ((currentCake - i >= 0) && (currentCake - i <= maxCake)) {
+                    currentCake = currentCake - i;
+                }
+                /* TODO desactiver les decorations si on est sur une couche du bas */
+            }
+        };
+        plus.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonPlus);
+
+        return plus;
+    }
+
     public void nappageOn() {
         nappage = true;
+    }
+
+    public void execAnim(int i, int j) {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        double cakeheight = (((ImageView) cake[currentCake].getChildren().get(0)).getImage().getHeight()
+                * ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth())
+                / ((ImageView) cake[currentCake].getChildren().get(0)).getImage().getWidth();
+        double cakewidth = ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth();
+
+        double Ypos = cake[currentCake]
+                .localToParent(((ImageView) cake[currentCake].getChildren().get(0)).localToParent(0, 0)).getY();
+        double Yppos = Ypos + 7 * cakeheight / 8;
+        Ypos = Ypos + 1.9 * cakeheight / 8;
+
+        if (j == 1) {
+            ImageView aerograph = new ImageView(new Image("data/cake/aero.png"));
+            ImageView aerograph2 = new ImageView(new Image("data/cake/aero.png"));
+            aerograph.setFitWidth(dimension2D.getWidth() / 2.5);
+            aerograph2.setFitWidth(dimension2D.getWidth() / 2.5);
+            aerograph2.setScaleX(-1);
+            aerograph.setPreserveRatio(true);
+            aerograph2.setPreserveRatio(true);
+            double height = ((aerograph.getImage().getHeight()) * (dimension2D.getWidth() / 2.5))
+                    / aerograph.getImage().getWidth();
+            double offset = aerograph.getFitWidth();
+            aerograph.setLayoutX(-offset);
+            aerograph2.setLayoutX(dimension2D.getWidth());
+            aerograph.setLayoutY(dimension2D.getHeight() / (3 * (currentCake + 1)));
+            aerograph2.setLayoutY(dimension2D.getHeight() / (3 * (currentCake + 1)));
+            gameContext.getChildren().addAll(aerograph, aerograph2);
+
+            Polygon spray = new Polygon();
+            spray.getPoints().addAll(new Double[] { offset, 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
+                    dimension2D.getWidth() / 2 + cakewidth / 4, Ypos, dimension2D.getWidth() / 2 + cakewidth / 3, Yppos,
+                    dimension2D.getWidth() / 2 - cakewidth / 3, Yppos });
+
+            Polygon spray2 = new Polygon();
+            spray2.getPoints().addAll(new Double[] { dimension2D.getWidth() - offset,
+                    9 * height / 11 + aerograph.localToParent(0, 0).getY(), dimension2D.getWidth() / 2 - cakewidth / 4,
+                    Ypos, dimension2D.getWidth() / 2 - cakewidth / 3, Yppos, dimension2D.getWidth() / 2 + cakewidth / 3,
+                    Yppos });
+
+            spray.setOpacity(0);
+            spray2.setOpacity(0);
+            gameContext.getChildren().addAll(spray, spray2);
+            TranslateTransition tt = new TranslateTransition(Duration.millis(500), aerograph);
+            tt.setToX(offset);
+            TranslateTransition tt2 = new TranslateTransition(Duration.millis(500), aerograph2);
+            tt2.setToX(-offset);
+
+            Color[] c = { Color.rgb(232, 193, 136), Color.rgb(255, 114, 113), Color.rgb(113, 171, 255),
+                    Color.rgb(128, 70, 50) };
+
+            spray.setFill(c[i]);
+            spray2.setFill(c[i]);
+
+            ParallelTransition pt = new ParallelTransition();
+            pt.getChildren().addAll(tt, tt2);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(700), spray);
+            ft.setToValue(0.5);
+            FadeTransition ft2 = new FadeTransition(Duration.millis(700), spray2);
+            ft2.setToValue(0.5);
+            ImageView temp2 = (ImageView) cake[currentCake].getChildren().get(j - 1);
+            ImageView temp = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
+            temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
+            temp.setPreserveRatio(true);
+            cake[currentCake].getChildren().set(j - 1, temp);
+            cake[currentCake].getChildren().add(j, temp2);
+            FadeTransition ft3 = new FadeTransition(Duration.millis(700), temp2);
+            ft3.setToValue(0);
+
+            ParallelTransition pt2 = new ParallelTransition();
+            pt2.getChildren().addAll(ft, ft2, ft3);
+
+            SequentialTransition sq = new SequentialTransition();
+            sq.getChildren().addAll(pt, pt2);
+            sq.play();
+
+            sq.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+
+                    TranslateTransition tt = new TranslateTransition(Duration.millis(500), aerograph);
+                    tt.setToX(0);
+                    TranslateTransition tt2 = new TranslateTransition(Duration.millis(500), aerograph2);
+                    tt2.setToX(0);
+                    ParallelTransition pt = new ParallelTransition();
+                    pt.getChildren().addAll(tt, tt2);
+                    pt.play();
+                    cake[currentCake].getChildren().remove(temp2);
+                    gameContext.getChildren().removeAll(spray, spray2);
+
+                }
+            });
+        } else {
+            ImageView temp = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
+            temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
+            temp.setPreserveRatio(true);
+            cake[currentCake].getChildren().set(j - 1, temp);
+        }
     }
 
     public void otherPages(int j, int k, Pane[] p) {
@@ -181,11 +296,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                             nappageOn();
                             bnap.setDisable(false);
                         }
-
-                        ImageView temp = new ImageView(new Image("data/cake/" + jndex + "" + (index + 1) + ".png"));
-                        temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
-                        temp.setPreserveRatio(true);
-                        cake[currentCake].getChildren().set(jndex, temp);
+                        execAnim(index, j);
                     }
                 };
                 bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
@@ -198,7 +309,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     @Override
                     public void handle(Event e) {
                         p[0].toFront();
-                        for (int c = 0; c <= currentCake; c++) {
+                        for (int c = 0; c <= maxCake; c++) {
                             cake[c].toFront();
                         }
                     }
@@ -275,13 +386,54 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         });
     }
 
-    // done
+    public void generateRandomCake() {
+        for (int i = 0; i < 3; i++) {
+            model[i][0] = 1 + (int) (Math.random() * 4);
+            model[i][1] = 1 + (int) (Math.random() * 5);
+            model[i][2] = 1 + (int) (Math.random() * 3);
+        }
+        model[2][3] = 1 + (int) (Math.random() * 2);
+
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        Pane grab = new Pane();
+        double originX = 0;
+        double originY = 0;
+        for (int i = 0; i < 3; i++) {
+            int k = 3;
+            if (i == 2) {
+                k = 4;
+            }
+            ;
+            double cakeheight = 0;
+            for (int j = 0; j < k; j++) {
+                ImageView cakemodel = new ImageView(new Image("data/cake/" + j + "" + model[i][j] + ".png"));
+                cakemodel.setFitWidth(dimension2D.getWidth() / (2 * (4 + i)));
+                cakemodel.setPreserveRatio(true);
+                cakeheight = ((cakemodel.getImage().getHeight()) * (dimension2D.getWidth() / (2 * (4 + i))))
+                        / cakemodel.getImage().getWidth();
+                if ((i != 0) && (j == 0)) {
+                    originY = originY - cakeheight / 2;
+                }
+                grab.getChildren().add(cakemodel);
+                cakemodel.setLayoutX(originX - cakemodel.getFitWidth() / 2);
+                cakemodel.setLayoutY(originY);
+            }
+        }
+
+        grab.setLayoutX(3 * dimension2D.getWidth() / 4);
+        grab.setLayoutY(dimension2D.getHeight() / 2);
+        gameContext.getChildren().add(grab);
+    }
+
     @Override
     public void launch() {
 
+        StackPane sp = new StackPane();
         createStack(sp);
         gameContext.getChildren().add(sp);
         createCake(0);
+
+        generateRandomCake();
         gameContext.getChildren().add(this);
 
         stats.notifyNewRoundReady();

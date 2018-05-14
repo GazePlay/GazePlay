@@ -40,7 +40,7 @@ public class Moles extends Parent implements GameLifeCycle {
         public final List<MolesChar> molesList;
     }
 
-    private final GameContext gameContext;
+    final GameContext gameContext;
 
     private final Stats stats;
 
@@ -67,18 +67,22 @@ public class Moles extends Parent implements GameLifeCycle {
         imageFond.setFill(new ImagePattern(new Image("data/wackmole/images/terrainTaupes.jpg")));
         gameContext.getChildren().add(imageFond);
 
-        // Rectangle imageFondTrans = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        // imageFondTrans.setFill(new ImagePattern(new Image("data/wackmole/images/fondAvecTrans.g")));
-        // gameContext.getChildren().add(imageFondTrans);
-
-        gameContext.getChildren().add(this);
-
     }
 
     @Override
     public void launch() {
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+
+        List<MolesChar> molesList = initMoles(config);
+        currentRoundDetails = new RoundDetails(molesList);
+        this.getChildren().addAll(molesList);
+        gameContext.getChildren().add(this);
+
+        Rectangle imageFondTrans = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        imageFondTrans.setFill(new ImagePattern(new Image("data/wackmole/images/terrainTaupesTransparence.png")));
+        gameContext.getChildren().add(imageFondTrans);
 
         /* Score display */
         lab = new Label();
@@ -89,18 +93,9 @@ public class Moles extends Parent implements GameLifeCycle {
         lab.setLineSpacing(10);
         lab.setLayoutX(0.4 * dimension2D.getWidth());
         lab.setLayoutY(0.08 * dimension2D.getHeight());
-        this.getChildren().add(lab);
-
-        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-
-        List<MolesChar> molesList = initMoles(config);
-
-        currentRoundDetails = new RoundDetails(molesList);
-
-        gameContext.getChildren().addAll(molesList);
+        gameContext.getChildren().add(lab);
 
         stats.notifyNewRoundReady();
-
         this.gameContext.resetBordersToFront();
 
         play(dimension2D);
