@@ -77,7 +77,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-        
+
         Rectangle imageFond = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageFond.setFill(new ImagePattern(new Image("data/wackmole/images/terrainTaupes.jpg")));
         gameContext.getChildren().add(imageFond);
@@ -92,7 +92,7 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(imageFondTrans);
 
         this.nbMolesWacked = 0;
-        
+
         /* Score display */
         lab = new Label();
         String s = "Score:" + nbMolesWacked;
@@ -116,9 +116,8 @@ public class Moles extends Parent implements GameLifeCycle {
 
         nbMolesOut = 0;
         Random r = new Random();
-        
-        long tmax = System.currentTimeMillis() + 6000;
 
+        long tmax = System.currentTimeMillis() + 6000;
 
         Timer minuteur = new Timer();
         TimerTask tache = new TimerTask() {
@@ -133,19 +132,15 @@ public class Moles extends Parent implements GameLifeCycle {
                 } else if ((r.nextInt() % 20 == 0) && (nbMolesOut <= 8)) {
                     chooseMoleToOut(r);
                 }
-                
-                /*if(System.currentTimeMillis() > tmax) {
-                	minuteur.ha
-                	ScoreTransition(gameDim2D);
-                }*/
+
+                /*
+                 * if(System.currentTimeMillis() > tmax) { minuteur.ha ScoreTransition(gameDim2D); }
+                 */
             }
         };
-        
-        minuteur.schedule(tache, 0, 500);
-        
-    	
 
-        
+        minuteur.schedule(tache, 0, 500);
+
     }
 
     private ProgressIndicator createProgressIndicator(javafx.geometry.Dimension2D gameDim2D) {
@@ -157,7 +152,7 @@ public class Moles extends Parent implements GameLifeCycle {
         indicator.setOpacity(1);
         indicator.setProgress(0);
         indicator.setStyle(" -fx-progress-color: rgba(139,69,19 ,1);");
-        
+
         return indicator;
     }
 
@@ -251,40 +246,30 @@ public class Moles extends Parent implements GameLifeCycle {
         String s = "Score:" + nbMolesWacked;
         lab.setText(s);
     }
-    
-    /*private void ScoreTransition(Dimension2D dimension2D) {
-    	
-        Label l = new Label();
-        String s = "Score:" + nbMolesWacked;
-        l.setText(s);
-        l.setTextFill(Color.RED);
-        l.setFont(Font.font(dimension2D.getHeight() / 10));
-        l.setLineSpacing(10);
-        l.setLayoutX(0.5 * dimension2D.getWidth());
-        l.setLayoutY(0.1 * dimension2D.getHeight());
-        gameContext.getChildren().add(l);
-    	
-        TranslateTransition translation = new TranslateTransition(new Duration(6000), l);
-        translation.setByX(0);
-        translation.setByY(- dimension2D.getHeight() * 0.9);
-        translation.play();
-       
-        
 
-        translation.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                dispose();
-
-                gameContext.clear();
-
-                launch();
-                
-                //stats.notifyNewRoundReady();
-
-                //gameContext.onGameStarted();
-            }
-        });
-    }*/
+    /*
+     * private void ScoreTransition(Dimension2D dimension2D) {
+     * 
+     * Label l = new Label(); String s = "Score:" + nbMolesWacked; l.setText(s); l.setTextFill(Color.RED);
+     * l.setFont(Font.font(dimension2D.getHeight() / 10)); l.setLineSpacing(10); l.setLayoutX(0.5 *
+     * dimension2D.getWidth()); l.setLayoutY(0.1 * dimension2D.getHeight()); gameContext.getChildren().add(l);
+     * 
+     * TranslateTransition translation = new TranslateTransition(new Duration(6000), l); translation.setByX(0);
+     * translation.setByY(- dimension2D.getHeight() * 0.9); translation.play();
+     * 
+     * 
+     * 
+     * translation.setOnFinished(new EventHandler<ActionEvent>() {
+     * 
+     * @Override public void handle(ActionEvent actionEvent) { dispose();
+     * 
+     * gameContext.clear();
+     * 
+     * launch();
+     * 
+     * //stats.notifyNewRoundReady();
+     * 
+     * //gameContext.onGameStarted(); } }); }
+     */
 
 }
