@@ -477,17 +477,19 @@ public class ColorToolBox extends StackPane {
 
     private Stage buildCustomColorDialog() {
 
-        Stage dialog = new Stage();
+        final Stage dialog = new Stage();
+        
+        final Translator translator = GazePlay.getInstance().getTranslator();
 
         dialog.initOwner(GazePlay.getInstance().getPrimaryStage());
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setOnCloseRequest(
                 windowEvent -> GazePlay.getInstance().getPrimaryStage().getScene().getRoot().setEffect(null));
-        dialog.setTitle("Choose a custom color");
+        dialog.setTitle(translator.translate("customColorDialogTitle"));
         dialog.setAlwaysOnTop(true);
 
-        CustomColorPicker = new CustomColorPicker(root, this, customBox);
+        CustomColorPicker = new CustomColorPicker(root, this, customBox, dialog);
 
         final Scene scene = new Scene(CustomColorPicker, Color.TRANSPARENT);
 
