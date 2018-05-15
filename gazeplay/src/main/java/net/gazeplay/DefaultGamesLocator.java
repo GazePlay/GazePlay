@@ -102,18 +102,20 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Room", DEFAULT_SEARCHING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+        result.add(new GameSpec(new GameSummary("Room", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/room.jpg"),
+                new GameSpec.GameLauncher() {
 
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new RoomStats(scene);
-            }
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new RoomStats(scene);
+                    }
 
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
-                return new Room(gameContext, stats);
-            }
-        }));
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new Room(gameContext, stats);
+                    }
+                }));
 
         result.add(new GameSpec(
                 new GameSummary("MagicCards", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/magic-card-1.jpg"),
