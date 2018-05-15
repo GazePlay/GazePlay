@@ -50,14 +50,7 @@ public class Piano extends Parent implements GameLifeCycle {
     private double centerX;
     private double centerY;
 
-    private Tile A;
-    private Tile B;
-    private Tile C;
-    private Tile D;
-    private Tile E;
-    private Tile F;
-    private Tile G;
-    private char FirstChar;
+    private int FirstNote;
 
     private Circle circ;
     private List<Tile> TilesTab;
@@ -70,11 +63,13 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private final Instru instru;
 
-    private Parser parser;
+    private midiReader midiReader;
 
     private int nbFragments = 5;
 
     private final List<ImageView> fragments;
+
+    private int prevKey = -1;
 
     // done
     public Piano(GameContext gameContext, Stats stats) {
@@ -83,32 +78,11 @@ public class Piano extends Parent implements GameLifeCycle {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2.2;
-
-        A = new Tile();
-        B = new Tile();
-        C = new Tile();
-        D = new Tile();
-        E = new Tile();
-        F = new Tile();
-        G = new Tile();
-
         this.fragments = buildFragments();
-
         this.getChildren().addAll(fragments);
-
-        // subC = new Circle(centerX, centerY, dimension2D.getHeight() / 4);
-
         TilesTab = new ArrayList<Tile>();
-
         instru = new Instru();
-
-        /*
-         * Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-         * imageRectangle.setFill(new ImagePattern(new Image("data/pianosight/images/Background.jpg")));
-         * gameContext.getChildren().add(imageRectangle);
-         */
         gameContext.getChildren().add(this);
-
         Jukebox = new Jukebox(gameContext);
 
     }
@@ -181,7 +155,6 @@ public class Piano extends Parent implements GameLifeCycle {
 
     public void loadMusic(boolean b) throws IOException {
         InputStream inputStream;
-        Reader fileReader;
         if (b) {
             fileName = Jukebox.getS();
             if (fileName == null) {
@@ -189,19 +162,23 @@ public class Piano extends Parent implements GameLifeCycle {
             } else {
 
                 File f = new File(fileName);
-                fileReader = new InputStreamReader(new FileInputStream(f), "UTF-8");
+                inputStream = new FileInputStream(f);
             }
         } else {
-            fileName = "AuClairDeLaLune.txt";
+
+            fileName = "RIVER.mid";
             inputStream = Utils.getInputStream("data/pianosight/songs/" + fileName);
-            fileReader = new InputStreamReader(inputStream, "UTF-8");
         }
-        parser = new Parser();
-        parser.bufRead = new BufferedReader(fileReader);
-        parser.myLine = null;
-        parser.myLine = parser.bufRead.readLine();
-        FirstChar = parser.nextChar();
-        TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+        log.info("you loaded the song : " + fileName);
+        midiReader = new midiReader(inputStream);
+        FirstNote = midiReader.nextNote();
+        for (int i = 0; i < TilesTab.size(); i++) {
+            TilesTab.get(i).setFill(TilesTab.get(i).color1);
+        }
+
+        if (FirstNote != -1) {
+            TilesTab.get(FirstNote).setFill(Color.YELLOW);
+        }
     }
 
     @Override
@@ -247,46 +224,6 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
-    public int getNote(char c) {
-        int note;
-        if (c == 'G') {
-            note = 55;
-        } else if (c == 'A') {
-            note = 57;
-        } else if (c == 'B') {
-            note = 59;
-        } else if (c == 'C') {
-            note = 60;
-        } else if (c == 'D') {
-            note = 62;
-        } else if (c == 'E') {
-            note = 64;
-        } else {
-            note = 65;
-        }
-        return note;
-    }
-
-    public int getNoteIndex(char c) {
-        int note;
-        if (c == 'G') {
-            note = 6;
-        } else if (c == 'A') {
-            note = 1;
-        } else if (c == 'B') {
-            note = 2;
-        } else if (c == 'C') {
-            note = 3;
-        } else if (c == 'D') {
-            note = 4;
-        } else if (c == 'E') {
-            note = 5;
-        } else {
-            note = 6;
-        }
-        return note;
-    }
-
     public void CreateArc(int index, double angle, Color color1, Color color2, double l, double origin) {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double size = dimension2D.getHeight() / l;
@@ -294,6 +231,8 @@ public class Piano extends Parent implements GameLifeCycle {
         Tile a3 = new Tile(centerX, centerY, size, size, (int) theta, angle);
         a3.setType(ArcType.ROUND);
         a3.setStroke(Color.BLACK);
+        a3.color1 = color1;
+        a3.color2 = color2;
         a3.setFill(color1);
         a3.setStrokeWidth(10);
         a3.setVisible(true);
@@ -302,16 +241,19 @@ public class Piano extends Parent implements GameLifeCycle {
             @Override
             public void handle(Event e) {
 
-                /*
-                 * if (circ.isHover()&&((Tile)e.getTarget()).isHover()) { log.info("pas dedans"); }else
-                 * if(circ.isHover()) { ((Tile)e.getTarget()).fireEvent(e); log.info("dans le cercle"); }else
-                 */
-                if (((Tile) e.getTarget()).note == getNoteIndex(FirstChar)) {
+                if (((Tile) e.getTarget()).note == FirstNote) {
 
-                    char precChar = FirstChar;
-                    FirstChar = parser.nextChar();
-                    if (precChar != '\0') {
-                        instru.note_on(getNote(precChar));
+                    int precNote = FirstNote;
+                    int precKey = midiReader.key;
+
+                    FirstNote = midiReader.nextNote();
+
+                    if (precNote != -1) {
+                        instru.note_on(precKey);
+                        /*
+                         * if(prevKey!=-1) { instru.note_off(prevKey); }
+                         */
+                        prevKey = precKey;
                         stats.incNbGoals();
                         stats.notifyNewRoundReady();
                         double x;
@@ -334,24 +276,24 @@ public class Piano extends Parent implements GameLifeCycle {
                             y = centerY + size * Math.sin(Math.toRadians(-theta));
                         }
                         explose(x, y);
-                        if (FirstChar != '\0') {
-                            if (TilesTab.get(getNoteIndex(FirstChar)).getFill() == Color.YELLOW) {
+                        if (FirstNote != -1) {
+                            if (TilesTab.get(FirstNote).getFill() == Color.YELLOW) {
 
-                                TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.ORANGE);
-                            } else if (TilesTab.get(getNoteIndex(FirstChar)).getFill() == Color.ORANGE) {
+                                TilesTab.get(FirstNote).setFill(Color.ORANGE);
+                            } else if (TilesTab.get(FirstNote).getFill() == Color.ORANGE) {
 
-                                TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+                                TilesTab.get(FirstNote).setFill(Color.YELLOW);
                             } else {
 
-                                TilesTab.get(getNoteIndex(precChar)).setFill(color1);
-                                TilesTab.get(getNoteIndex(FirstChar)).setFill(Color.YELLOW);
+                                TilesTab.get(precNote).setFill(color1);
+                                TilesTab.get(FirstNote).setFill(Color.YELLOW);
                             }
 
                         } else {
-                            TilesTab.get(getNoteIndex(precChar)).setFill(color2);
+                            TilesTab.get(precNote).setFill(color2);
                         }
                     } else {
-                        TilesTab.get(getNoteIndex(precChar)).setFill(color2);
+                        TilesTab.get(precNote).setFill(color2);
                     }
                 } else {
 
