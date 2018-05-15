@@ -6,7 +6,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.Background;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -14,14 +15,25 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import static net.gazeplay.games.colors.ColorToolBox.COLORIZE_BUTTONS_SIZE_PX;
+import static net.gazeplay.games.colors.ColorToolBox.COLORS_IMAGES_PATH;
 
+@Slf4j
 public class CustomColorPicker extends Pane {
 
     final GridPane colorGrid;
 
-    public static final Color[] COLOR_LIST = { Color.ALICEBLUE, Color.BURLYWOOD, Color.DARKCYAN };
+    public static final Color[] COLOR_LIST = { Color.BURLYWOOD, Color.DARKCYAN,
+        Color.BLUEVIOLET, Color.BROWN, Color.CADETBLUE, Color.DARKGRAY, 
+        Color.DARKORANGE, Color.GOLD, Color.LIMEGREEN, Color.ROYALBLUE, 
+        Color.SIENNA, Color.YELLOWGREEN };
 
-    public static final int NB_COLOR_PER_ROW = ((int) Math.sqrt(COLOR_LIST.length));
+    public static final int NB_COLOR_PER_ROW = 5/*((int) Math.sqrt(COLOR_LIST.length))*/;
+    
+    //Credits
+    //<div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+    public static final String CLOSE_CURSTOM_PANEL_IMAGE_PATH = COLORS_IMAGES_PATH + "error.png";
 
     @Getter
     private ColorBox selectedColor;
@@ -32,8 +44,11 @@ public class CustomColorPicker extends Pane {
     
     private final Stage dialog;
 
-    public CustomColorPicker(final Pane root, final ColorToolBox toolBox, final ColorBox representingBox, final Stage dialog) {
+    public CustomColorPicker(final Pane root, final ColorToolBox toolBox, final ColorBox representingBox, final Stage stage) {
         super();
+        
+        this.representingBox = representingBox;
+        this.dialog = stage;
         
         this.getStyleClass().add("bg-colored");
 
@@ -44,24 +59,21 @@ public class CustomColorPicker extends Pane {
         this.getChildren().add(mainNode);
         
         this.colorGrid = new GridPane();
-        this.representingBox = representingBox;
-        this.dialog = dialog;
+        colorGrid.setVgap(5);
+        colorGrid.setHgap(5);
+        
 
         ToggleGroup colorGroup = new ToggleGroup();
         
         progressIndicator = new GazeFollowerIndicator(this);
 
-        for (int i = 0; i < COLOR_LIST.length; ++i) {
+        for (int i = 0; i < COLOR_LIST.length / NB_COLOR_PER_ROW; ++i) {
 
             for (int j = 0; j < NB_COLOR_PER_ROW; ++j) {
-                ColorBox colorBox = new CustomColorBox(COLOR_LIST[i], root, toolBox, colorGroup, representingBox);
+                ColorBox colorBox = new CustomColorBox(COLOR_LIST[i * NB_COLOR_PER_ROW + j], root, toolBox, colorGroup, representingBox);
                 colorBox.setProgressIndicator(progressIndicator);
-                if (i == 0 && j == 0) {
-                    colorBox.select();
-                    selectedColor = colorBox;
-                }
 
-                colorGrid.add(colorBox, i, j);
+                colorGrid.add(colorBox, j, i);
             }
         }
 
@@ -69,11 +81,25 @@ public class CustomColorPicker extends Pane {
         
         // Send a close request on the dialog window
         EventHandler<ActionEvent> closeEvent = (ActionEvent event) -> {
-            dialog.fireEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSE_REQUEST));
+            stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
         };
         
         // Close button
-        final Button closeButton = new Button("X");
+        Image buttonImg = null;
+        try {
+            buttonImg = new Image(CLOSE_CURSTOM_PANEL_IMAGE_PATH, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX, false,
+                    true);
+        } catch (IllegalArgumentException e) {
+            log.warn(e.toString() + " : " + CLOSE_CURSTOM_PANEL_IMAGE_PATH);
+        }
+        
+        final Button closeButton;
+        if (buttonImg != null) {
+            closeButton = new Button("", new ImageView(buttonImg));
+            closeButton.setPrefHeight(buttonImg.getHeight());
+        } else {
+            closeButton = new Button("X");
+        }
         closeButton.setOnAction(closeEvent);
         mainNode.getChildren().add(closeButton);
         

@@ -62,6 +62,10 @@ public class ColorToolBox extends StackPane {
 
     public static final String COLORS_IMAGES_PATH = "data/colors/images/";
 
+    // Credits
+    //<div>Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+    public static final String CUSTOM_BUTTON_IMAGE_PATH = COLORS_IMAGES_PATH + "add-button-inside-black-circle.png";
+    
     public static final String COLORIZE_BUTTON_IMAGE_NAME = COLORS_IMAGES_PATH + "palette.png";
     public static final String STOP_COLORIZE_BUTTON_IMAGE_PATH = "data/common/images/error.png";
 
@@ -162,13 +166,27 @@ public class ColorToolBox extends StackPane {
 
         colorPicker = new ColorPicker(Color.WHITE);
 
-        customColorPickerButton = new Button("custom color");
+        Image buttonImg = null;
+        try {
+            buttonImg = new Image(CUSTOM_BUTTON_IMAGE_PATH, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX, false,
+                    true);
+        } catch (IllegalArgumentException e) {
+            log.warn(e.toString() + " : " + CUSTOM_BUTTON_IMAGE_PATH);
+        }
+        
+        if (buttonImg != null) {
+            customColorPickerButton = new Button("", new ImageView(buttonImg));
+            customColorPickerButton.setPrefHeight(buttonImg.getHeight());
+        } else {
+            customColorPickerButton = new Button("Custom colors");
+        }
         customBox = new ColorBox(Color.WHITE, root, this, group);
 
         customColorDialog = buildCustomColorDialog();
         
         final EventHandler<ActionEvent> customColorButtonHandler = (ActionEvent event) -> {
             customColorDialog.show();
+            customColorDialog.sizeToScene();
             colorsGame.setEnableColorization(false);
         };
         
@@ -179,7 +197,9 @@ public class ColorToolBox extends StackPane {
         customColorPickerButton.setOnAction(customColorButtonHandler);
 
         customColorDialog.setOnCloseRequest((event) -> {
-
+            
+            log.info("custom indic min width = {}, min height = {}", customColorButtonIndic.getMinWidth(), customColorButtonIndic.getMinHeight());
+            log.info("custom indic width = {}, height = {}", customColorButtonIndic.getWidth(), customColorButtonIndic.getHeight());
             colorsGame.setEnableColorization(true);
         });
 
@@ -226,7 +246,7 @@ public class ColorToolBox extends StackPane {
 
         thisRoot.setBottom(imageManager);
         thisRoot.setTop(colorziationPane);
-        this.getChildren().add(customColorButtonIndic);
+        root.getChildren().add(customColorButtonIndic);
 
         this.getStyleClass().add("bg-colored");
     }
