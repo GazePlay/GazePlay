@@ -477,7 +477,8 @@ public class ColorsGame implements GameLifeCycle {
 
         // Don't fill the zone if the pixel selected is already of the same color.
         // Also don't fill black zones
-        if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor()) && !isEqualColors(color, Color.BLACK)) {
+        if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor())
+                && !isEqualColors(color, Color.BLACK)) {
             javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(), pixelX, pixelY,
                     (int) writableImg.getWidth(), (int) writableImg.getHeight());
         }

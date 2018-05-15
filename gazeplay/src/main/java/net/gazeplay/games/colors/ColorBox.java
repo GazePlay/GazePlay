@@ -150,23 +150,18 @@ public class ColorBox extends StackPane {
         @Override
         public void handle(Event event) {
 
-            /*GazePlay gazePlay = GazePlay.getInstance();
-
-            double gameWidth = gazePlay.getPrimaryStage().getWidth();
-            double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
-
-            double eventX = 0;
-            double eventY = 0;
-
-            if (event.getEventType() == GazeEvent.ANY) {
-                GazeEvent gazeEvent = (GazeEvent) event;
-                eventX = gazeEvent.getX();
-                eventY = gazeEvent.getY();
-            } else if (event.getEventType() == MouseEvent.ANY) {
-                MouseEvent mouseEvent = (MouseEvent) event;
-                eventX = mouseEvent.getX();
-                eventY = mouseEvent.getY();
-            }*/
+            /*
+             * GazePlay gazePlay = GazePlay.getInstance();
+             * 
+             * double gameWidth = gazePlay.getPrimaryStage().getWidth(); double screenWidth =
+             * Screen.getPrimary().getVisualBounds().getWidth();
+             * 
+             * double eventX = 0; double eventY = 0;
+             * 
+             * if (event.getEventType() == GazeEvent.ANY) { GazeEvent gazeEvent = (GazeEvent) event; eventX =
+             * gazeEvent.getX(); eventY = gazeEvent.getY(); } else if (event.getEventType() == MouseEvent.ANY) {
+             * MouseEvent mouseEvent = (MouseEvent) event; eventX = mouseEvent.getX(); eventY = mouseEvent.getY(); }
+             */
 
             ColorBox selectedColorBox = toolBox.getSelectedColorBox();
 

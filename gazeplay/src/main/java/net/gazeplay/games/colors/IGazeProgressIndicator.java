@@ -11,8 +11,8 @@ public interface IGazeProgressIndicator {
     public void start();
 
     public void stop();
-    
+
     public boolean addNodeToListen(final Node node);
-    
+
     public boolean removeNodeToListen(final Node node);
 }
