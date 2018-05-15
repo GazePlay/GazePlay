@@ -112,14 +112,14 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     + "-fx-max-height: " + buttonSize + "px;");
             bt.setLayoutX((i + 1) * dimension2D.getWidth() / 6 - buttonSize / 2);
             EventHandler<Event> buttonHandler = createButtonHandler(p, i);
-            if (i!=5) {
-            	ImageView iv = new ImageView(new Image("data/cake/menu" + i + ".png"));
+            if (i != 5) {
+                ImageView iv = new ImageView(new Image("data/cake/menu" + i + ".png"));
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
                 bt.setGraphic(iv);
-            	
-            }else{
-            	ImageView iv = new ImageView(new Image("data/cake/validate.png"));
+
+            } else {
+                ImageView iv = new ImageView(new Image("data/cake/validate.png"));
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
                 bt.setGraphic(iv);
