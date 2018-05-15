@@ -105,13 +105,14 @@ class Target extends Portrait {
             addEvent();
         }
 
-        if (this.getPosition().getY() + this.getRadius() > (int) dimension.getHeight()) {
-            this.setPosition(new Position(this.getPosition().getX(), this.getPosition().getY() - this.getRadius() * 2));
+        double centerY = this.getCenterY();
+        if (centerY + this.getRadius() > (int) dimension.getHeight()) {
+            this.setCenterY(centerY - this.getRadius() * 2);
         }
 
         move();
 
-        stats.notifyNewRoundReady();
+        this.stats.notifyNewRoundReady();
     }
 
     private void move() {
@@ -126,14 +127,17 @@ class Target extends Portrait {
 
             @Override
             public void handle(ActionEvent t) {
-                Position newPos = new Position(bubble.getPosition().getX() + dx, bubble.getPosition().getY() + dy);
-                bubble.setPosition(newPos);
+                double newCenterX = bubble.getCenterX() + dx;
+                double newCenterY = bubble.getCenterY() + dy;
 
-                if (newPos.getX() <= (bubble.getRadius()) || newPos.getX() >= (width - bubble.getRadius())) {
+                bubble.setCenterX(newCenterX);
+                bubble.setCenterY(newCenterY);
+
+                if (newCenterX <= (bubble.getRadius()) || newCenterX >= (width - bubble.getRadius())) {
                     dx = -dx;
                 }
 
-                if (newPos.getY() <= (bubble.getRadius()) || newPos.getY() >= (height - bubble.getRadius())) {
+                if (newCenterY <= (bubble.getRadius()) || newCenterY >= (height - bubble.getRadius())) {
                     dy = -dy;
                 }
             }
@@ -186,7 +190,7 @@ class Target extends Portrait {
                     l.setLayoutX(15);
                     l.setLayoutY(14);
                     gameContext.getChildren().add(l);
-                    gameContext.playWinTransition(50, new EventHandler<ActionEvent>() {
+                    gameContext.playWinTransition(30, new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent actionEvent) {
