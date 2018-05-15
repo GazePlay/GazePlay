@@ -28,7 +28,6 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 
@@ -476,7 +475,10 @@ public class ColorsGame implements GameLifeCycle {
         // log.info("R = {}, G = {}, B = {}, A = {}", color.getRed(), color.getGreen(), color.getBlue(),
         // color.getOpacity());
 
-        if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor())) {
+        // Don't fill the zone if the pixel selected is already of the same color.
+        // Also don't fill black zones
+        if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor())
+                && !isEqualColors(color, Color.BLACK)) {
             javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(), pixelX, pixelY,
                     (int) writableImg.getWidth(), (int) writableImg.getHeight());
         }

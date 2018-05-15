@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -60,6 +61,13 @@ public class ColorToolBox extends StackPane {
     public static final double COLORIZE_BUTTONS_SIZE_PX = 64;
 
     public static final String COLORS_IMAGES_PATH = "data/colors/images/";
+
+    // Credits
+    // <div>Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a
+    // href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
+    // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
+    // BY</a></div>
+    public static final String CUSTOM_BUTTON_IMAGE_PATH = COLORS_IMAGES_PATH + "add-button-inside-black-circle.png";
 
     public static final String COLORIZE_BUTTON_IMAGE_NAME = COLORS_IMAGES_PATH + "palette.png";
     public static final String STOP_COLORIZE_BUTTON_IMAGE_PATH = "data/common/images/error.png";
@@ -161,19 +169,42 @@ public class ColorToolBox extends StackPane {
 
         colorPicker = new ColorPicker(Color.WHITE);
 
-        customColorPickerButton = new Button("custom color");
+        Image buttonImg = null;
+        try {
+            buttonImg = new Image(CUSTOM_BUTTON_IMAGE_PATH, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX, false,
+                    true);
+        } catch (IllegalArgumentException e) {
+            log.warn(e.toString() + " : " + CUSTOM_BUTTON_IMAGE_PATH);
+        }
+
+        if (buttonImg != null) {
+            customColorPickerButton = new Button("", new ImageView(buttonImg));
+            customColorPickerButton.setPrefHeight(buttonImg.getHeight());
+        } else {
+            customColorPickerButton = new Button("Custom colors");
+        }
         customBox = new ColorBox(Color.WHITE, root, this, group);
 
         customColorDialog = buildCustomColorDialog();
 
-        customColorPickerButton.setOnAction((event) -> {
-
+        final EventHandler<ActionEvent> customColorButtonHandler = (ActionEvent event) -> {
             customColorDialog.show();
+            customColorDialog.sizeToScene();
             colorsGame.setEnableColorization(false);
-        });
+        };
+
+        final AbstractGazeIndicator customColorButtonIndic = new GazeFollowerIndicator(root);
+        customColorButtonIndic.setOnFinish(customColorButtonHandler);
+        customColorButtonIndic.addNodeToListen(customColorPickerButton);
+
+        customColorPickerButton.setOnAction(customColorButtonHandler);
 
         customColorDialog.setOnCloseRequest((event) -> {
 
+            log.info("custom indic min width = {}, min height = {}", customColorButtonIndic.getMinWidth(),
+                    customColorButtonIndic.getMinHeight());
+            log.info("custom indic width = {}, height = {}", customColorButtonIndic.getWidth(),
+                    customColorButtonIndic.getHeight());
             colorsGame.setEnableColorization(true);
         });
 
@@ -220,6 +251,7 @@ public class ColorToolBox extends StackPane {
 
         thisRoot.setBottom(imageManager);
         thisRoot.setTop(colorziationPane);
+        root.getChildren().add(customColorButtonIndic);
 
         this.getStyleClass().add("bg-colored");
     }
@@ -477,17 +509,19 @@ public class ColorToolBox extends StackPane {
 
     private Stage buildCustomColorDialog() {
 
-        Stage dialog = new Stage();
+        final Stage dialog = new Stage();
+
+        final Translator translator = GazePlay.getInstance().getTranslator();
 
         dialog.initOwner(GazePlay.getInstance().getPrimaryStage());
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setOnCloseRequest(
                 windowEvent -> GazePlay.getInstance().getPrimaryStage().getScene().getRoot().setEffect(null));
-        dialog.setTitle("Choose a custom color");
+        dialog.setTitle(translator.translate("customColorDialogTitle"));
         dialog.setAlwaysOnTop(true);
 
-        CustomColorPicker = new CustomColorPicker(root, this, customBox);
+        CustomColorPicker = new CustomColorPicker(root, this, customBox, dialog);
 
         final Scene scene = new Scene(CustomColorPicker, Color.TRANSPARENT);
 

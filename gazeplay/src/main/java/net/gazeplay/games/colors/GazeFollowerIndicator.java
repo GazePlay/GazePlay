@@ -2,8 +2,10 @@ package net.gazeplay.games.colors;
 
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
+@Slf4j
 public class GazeFollowerIndicator extends AbstractGazeIndicator {
 
     public static final double GAZE_PROGRESS_INDICATOR_WIDTH = 15;
