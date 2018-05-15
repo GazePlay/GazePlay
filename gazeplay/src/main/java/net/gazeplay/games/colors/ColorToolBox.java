@@ -111,6 +111,8 @@ public class ColorToolBox extends StackPane {
     private final Stage customColorDialog;
     private CustomColorPicker CustomColorPicker;
 
+    private boolean previousEnableColor;
+
     public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
         super();
 
@@ -182,6 +184,8 @@ public class ColorToolBox extends StackPane {
             customColorPickerButton.setPrefHeight(buttonImg.getHeight());
         } else {
             customColorPickerButton = new Button("Custom colors");
+            customColorPickerButton.setPrefHeight(COLORIZE_BUTTONS_SIZE_PX);
+            customColorPickerButton.setPrefWidth(COLORIZE_BUTTONS_SIZE_PX);
         }
         customBox = new ColorBox(Color.WHITE, root, this, group);
 
@@ -190,22 +194,29 @@ public class ColorToolBox extends StackPane {
         final EventHandler<ActionEvent> customColorButtonHandler = (ActionEvent event) -> {
             customColorDialog.show();
             customColorDialog.sizeToScene();
-            colorsGame.setEnableColorization(false);
+
+            previousEnableColor = colorsGame.isEnableColorization();
+            if (previousEnableColor) {
+                colorsGame.setEnableColorization(false);
+            }
         };
 
         final AbstractGazeIndicator customColorButtonIndic = new GazeFollowerIndicator(root);
         customColorButtonIndic.setOnFinish(customColorButtonHandler);
-        customColorButtonIndic.addNodeToListen(customColorPickerButton);
+        customColorButtonIndic.addNodeToListen(customColorPickerButton,
+                colorsGame.getGameContext().getGazeDeviceManager());
 
         customColorPickerButton.setOnAction(customColorButtonHandler);
 
         customColorDialog.setOnCloseRequest((event) -> {
 
-            log.info("custom indic min width = {}, min height = {}", customColorButtonIndic.getMinWidth(),
-                    customColorButtonIndic.getMinHeight());
-            log.info("custom indic width = {}, height = {}", customColorButtonIndic.getWidth(),
-                    customColorButtonIndic.getHeight());
-            colorsGame.setEnableColorization(true);
+            /*
+             * log.info("custom indic min width = {}, min height = {}", customColorButtonIndic.getMinWidth(),
+             * customColorButtonIndic.getMinHeight()); log.info("custom indic width = {}, height = {}",
+             * customColorButtonIndic.getWidth(), customColorButtonIndic.getHeight());
+             */
+            colorsGame.setEnableColorization(previousEnableColor);
+
         });
 
         colorPicker.setOnAction((event) -> {
@@ -418,89 +429,37 @@ public class ColorToolBox extends StackPane {
         }
 
         Configuration config = this.getColorsGame().getConfig();
-        AbstractGazeIndicator stopColorizeButtonIndicator = new GazeFollowerIndicator(root);
 
         AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(root);
-
-        colorizeButtonIndicator.getStyleClass().add("withoutTextProgress");
-        stopColorizeButtonIndicator.getStyleClass().add("withoutTextProgress");
 
         Pane colorizeButtonPane = new StackPane(colorize);
         Pane stopColorizeButtonPane = new StackPane(stopColorize);
 
         EventHandler enableColorizeButton = (EventHandler) (Event event1) -> {
 
-            colorizeButtonIndicator.toFront();
             colorsGame.setEnableColorization(false);
             colorizeButtonPane.setVisible(false);
             stopColorizeButtonPane.setVisible(true);
-            stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
-            colorizeButtonIndicator.setOnFinish(null);
-            // log.info("Colorizing disabled");
+            colorizeButtonIndicator.setOnFinish(disableColorizeButton);
         };
 
         disableColorizeButton = (EventHandler) (Event event1) -> {
 
-            stopColorizeButtonIndicator.toFront();
             colorsGame.setEnableColorization(true);
             stopColorizeButtonPane.setVisible(false);
             colorizeButtonPane.setVisible(true);
-            stopColorizeButtonIndicator.setOnFinish(null);
             colorizeButtonIndicator.setOnFinish(enableColorizeButton);
-            // log.info("Colorizing enabled");
         };
 
-        stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
         colorizeButtonIndicator.setOnFinish(enableColorizeButton);
 
-        /*
-         * EventHandler stopColorizeIndicatorEvent = stopColorizeButtonIndicator.buildEventHandler();
-         * 
-         * EventHandler enableColorizeIndicatorEvent = colorizeButtonIndicator.buildEventHandler();
-         */
-
-        EventHandler stopHandler = (EventHandler) (Event t) -> {
-            if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                // log.info("Entered");
-                stopColorizeButtonIndicator.start();
-
-            } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                // log.info("Exited");
-                stopColorizeButtonIndicator.stop();
-            }
-        };
-
-        EventHandler enableHandler = (EventHandler) (Event t) -> {
-            if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                // log.info("Entered");
-                colorizeButtonIndicator.start();
-
-            } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                // log.info("Exited");
-                colorizeButtonIndicator.stop();
-            }
-        };
-
-        stopColorizeButtonPane.addEventFilter(MouseEvent.ANY, stopHandler);
-        stopColorizeButtonPane.addEventFilter(GazeEvent.ANY, stopHandler);
-
-        colorizeButtonPane.addEventFilter(MouseEvent.ANY, enableHandler);
-        colorizeButtonPane.addEventFilter(GazeEvent.ANY, enableHandler);
-
-        getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(stopColorizeButtonPane);
-        getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(colorizeButtonPane);
+        colorizeButtonIndicator.addNodeToListen(stopColorizeButtonPane,
+                getColorsGame().getGameContext().getGazeDeviceManager());
+        colorizeButtonIndicator.addNodeToListen(colorizeButtonPane,
+                getColorsGame().getGameContext().getGazeDeviceManager());
 
         stopColorizeButtonPane.setVisible(false);
-
-        root.getChildren().add(stopColorizeButtonIndicator);
         root.getChildren().add(colorizeButtonIndicator);
-
-        colorizeButtonIndicator.toFront();
-        stopColorizeButtonIndicator.toFront();
 
         Pane colorPane = new StackPane(colorizeButtonPane, stopColorizeButtonPane);
 

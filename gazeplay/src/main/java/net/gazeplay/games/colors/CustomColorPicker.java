@@ -82,7 +82,7 @@ public class CustomColorPicker extends Pane {
 
         mainNode.getChildren().add(colorGrid);
 
-        // Send a close request on the dialog window
+        // Send a close request on the window
         EventHandler<ActionEvent> closeEvent = (ActionEvent event) -> {
             stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
         };
@@ -102,13 +102,16 @@ public class CustomColorPicker extends Pane {
             closeButton.setPrefHeight(buttonImg.getHeight());
         } else {
             closeButton = new Button("X");
+            closeButton.setPrefHeight(COLORIZE_BUTTONS_SIZE_PX);
+            closeButton.setPrefWidth(COLORIZE_BUTTONS_SIZE_PX);
         }
         closeButton.setOnAction(closeEvent);
         mainNode.getChildren().add(closeButton);
 
         AbstractGazeIndicator closeProgressIndic = new GazeFollowerIndicator(this);
         closeProgressIndic.setOnFinish(closeEvent);
-        closeProgressIndic.addNodeToListen(closeButton);
+        closeProgressIndic.addNodeToListen(closeButton,
+                toolBox.getColorsGame().getGameContext().getGazeDeviceManager());
 
         this.getChildren().add(progressIndicator);
         this.getChildren().add(closeProgressIndic);

@@ -1,5 +1,6 @@
 package net.gazeplay.games.colors;
 
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -28,17 +29,16 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
         root.addEventFilter(GazeEvent.ANY, (event) -> {
 
             this.toFront();
+
             moveGazeIndicator(event.getX() + GAZE_PROGRESS_INDICATOR_OFFSET,
                     event.getY() + GAZE_PROGRESS_INDICATOR_OFFSET);
         });
     }
 
     private void moveGazeIndicator(double x, double y) {
+
         this.setTranslateX(x);
         this.setTranslateY(y);
-        /*
-         * log.info("progress size : width = {}, height = {}", progressIndicator.getWidth(),
-         * progressIndicator.getHeight()); log.info("translated to : x = {}, y = {}", x, y);
-         */
+
     }
 }
