@@ -39,8 +39,7 @@ public class Spawner {
 
             @Override
             public void handle(ActionEvent actionEvent) {
-                Target t = new Target(100, randomPosGenerator, stats, Portrait.createImageLibrary(), game, gameContext,
-                        i + 1);
+                Target t = new Target(randomPosGenerator, stats, game, gameContext, i + 1);
                 gameContext.getChildren().add(t);
                 tabTarget[i] = t;
                 i++;

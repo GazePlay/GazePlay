@@ -529,7 +529,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
         result.add(new GameSpec(
-                new GameSummary("WackAMole", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/wackAMole.png"),
+                new GameSummary("Whac-a-mole", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/whackAMole.png"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
