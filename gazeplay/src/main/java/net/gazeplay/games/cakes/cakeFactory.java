@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -21,6 +22,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
@@ -45,9 +48,12 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     int[][] model = new int[3][4];
 
     private StackPane[] cake;
-    private Button bnap;
+    private Pane randomCake;
+    private Button[] buttons;
 
-    public cakeFactory(GameContext gameContext, Stats stats) {
+    private int mode;
+
+    public cakeFactory(GameContext gameContext, Stats stats, int mode) {
         this.gameContext = gameContext;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
@@ -59,7 +65,47 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         currentCake = 0;
         maxCake = 0;
         nappage = false;
+        this.mode = mode;
+        buttons = new Button[6];
 
+    }
+
+    public void disableButtons() {
+        buttons[4].setDisable(false);
+        boolean win = true;
+        boolean currentOk = true;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (layers[i][j] == model[i][j]) {
+                    win = win && true;
+                    if (i == currentCake) {
+                        currentOk = currentOk && true;
+                    }
+                } else {
+                    win = win && false;
+                    if (i == currentCake) {
+                        currentOk = currentOk && false;
+                    }
+                }
+            }
+        }
+        if (layers[2][3] == model[2][3]) {
+            win = win && true;
+            if (2 == currentCake) {
+                currentOk = currentOk && true;
+            }
+        } else {
+            win = win && false;
+            if (2 == currentCake) {
+                currentOk = currentOk && false;
+            }
+        }
+        buttons[4].setDisable(!currentOk);
+
+        log.info("the currentCake has the value" + currentOk);
+        if (win && (mode != 0)) {
+            winFunction();
+        }
     }
 
     public EventHandler<Event> createButtonHandler(Pane[] p, int i) {
@@ -78,6 +124,9 @@ public class cakeFactory extends Parent implements GameLifeCycle {
             buttonHandler = new EventHandler<Event>() {
                 @Override
                 public void handle(Event e) {
+                    if (mode != 0) {
+                        disableButtons();
+                    }
                     if (maxCake < 2) {
                         maxCake++;
                         currentCake = maxCake;
@@ -91,6 +140,69 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         }
 
         return buttonHandler;
+    }
+
+    public void winFunction() {
+        if (mode != 0) {
+            FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
+            ft.setToValue(1);
+            ft.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+
+                    boolean win = true;
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 3; j++) {
+                            if (layers[i][j] == model[i][j]) {
+                                stats.incNbGoals();
+                                stats.notifyNewRoundReady();
+                            }
+                        }
+                    }
+                    if (layers[2][3] == model[2][3]) {
+                        stats.incNbGoals();
+                        stats.notifyNewRoundReady();
+                    }
+                    gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+
+                        @Override
+                        public void handle(ActionEvent actionEvent) {
+
+                            dispose();
+
+                            gameContext.clear();
+
+                            launch();
+
+                            stats.notifyNewRoundReady();
+
+                            gameContext.onGameStarted();
+                        }
+                    });
+                }
+            });
+
+            ft.play();
+        } else {
+            stats.incNbGoals();
+            stats.notifyNewRoundReady();
+            gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent actionEvent) {
+
+                    dispose();
+
+                    gameContext.clear();
+
+                    launch();
+
+                    stats.notifyNewRoundReady();
+
+                    gameContext.onGameStarted();
+                }
+            });
+        }
     }
 
     public void createStack(StackPane sp) {
@@ -117,6 +229,14 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
                 bt.setGraphic(iv);
+                bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+
+                buttons[i] = bt;
+                if (i == 2) {
+                    buttons[i].setDisable(!nappage);
+                }
+
+                p[0].getChildren().add(bt);
 
             } else {
                 ImageView iv = new ImageView(new Image("data/cake/validate.png"));
@@ -128,48 +248,14 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 buttonHandler = new EventHandler<Event>() {
                     @Override
                     public void handle(Event e) {
-                        boolean win = true;
-                        for (int i = 0; i < 3; i++) {
-                            for (int j = 0; j < 3; j++) {
-                                /* win = win && */if (layers[i][j] == model[i][j]) {
-                                    stats.incNbGoals();
-                                    stats.notifyNewRoundReady();
-                                }
-                            }
-                        }
-                        /* win = win && */if (layers[2][3] == model[2][3]) {
-                            stats.incNbGoals();
-                            stats.notifyNewRoundReady();
-                        }
-                        // if (win) {
-                        gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
-
-                            @Override
-                            public void handle(ActionEvent actionEvent) {
-
-                                dispose();
-
-                                gameContext.clear();
-
-                                launch();
-
-                                stats.notifyNewRoundReady();
-
-                                gameContext.onGameStarted();
-                            }
-                        });
-                        // }
+                        winFunction();
                     }
                 };
+                bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                buttons[i] = bt;
+                p[0].getChildren().add(bt);
             }
 
-            bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
-            if (i == 2) {
-                bnap = bt;
-                bnap.setDisable(!nappage);
-            }
-
-            p[0].getChildren().add(bt);
         }
 
         // p[0].getChildren().addAll(createButton(1), createButton(-1));
@@ -350,9 +436,12 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     public void handle(Event e) {
                         if (jndex == 1) {
                             nappageOn();
-                            bnap.setDisable(false);
+                            buttons[2].setDisable(false);
                         }
                         execAnim(index, j);
+                        if (mode != 0) {
+                            disableButtons();
+                        }
                     }
                 };
                 bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
@@ -371,6 +460,9 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         for (int c = 0; c <= maxCake; c++) {
                             cake[c].toFront();
                         }
+                        if (mode != 0) {
+                            disableButtons();
+                        }
                     }
                 };
                 bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
@@ -385,7 +477,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         nappage = false;
         if (i != 0) {
             cake[i - 1].getChildren().set(3, new ImageView());
-            bnap.setDisable(true);
+            buttons[2].setDisable(true);
         }
 
         Pane grab = new Pane();
@@ -454,16 +546,17 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         model[2][3] = 1 + (int) (Math.random() * 2);
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Pane grab = new Pane();
+        randomCake = new Pane();
         double originX = 0;
         double originY = 0;
+        double cakeheight = 0;
         for (int i = 0; i < 3; i++) {
             int k = 3;
             if (i == 2) {
                 k = 4;
             }
             ;
-            double cakeheight = 0;
+            cakeheight = 0;
             for (int j = 0; j < k; j++) {
                 ImageView cakemodel = new ImageView(new Image("data/cake/" + j + "" + model[i][j] + ".png"));
                 cakemodel.setFitWidth(dimension2D.getWidth() / (2 * (4 + i)));
@@ -473,15 +566,22 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 if ((i != 0) && (j == 0)) {
                     originY = originY - cakeheight / 2;
                 }
-                grab.getChildren().add(cakemodel);
+                randomCake.getChildren().add(cakemodel);
                 cakemodel.setLayoutX(originX - cakemodel.getFitWidth() / 2);
                 cakemodel.setLayoutY(originY);
             }
         }
 
-        grab.setLayoutX(3 * dimension2D.getWidth() / 4);
-        grab.setLayoutY(dimension2D.getHeight() / 2);
-        gameContext.getChildren().add(grab);
+        randomCake.setLayoutX(3 * dimension2D.getWidth() / 4);
+        randomCake.setLayoutY(dimension2D.getHeight() / 2);
+        gameContext.getChildren().add(randomCake);
+        if (mode == 2) {
+            log.info("cake is vanishing");
+            FadeTransition ft = new FadeTransition(Duration.millis(10000), randomCake);
+            ft.setDelay(Duration.millis(10000));
+            ft.setToValue(0);
+            ft.play();
+        }
     }
 
     @Override
@@ -493,13 +593,20 @@ public class cakeFactory extends Parent implements GameLifeCycle {
             }
         }
 
+        for (int c = 0; c < 3; c++) {
+            cake[c] = new StackPane();
+        }
+
         StackPane sp = new StackPane();
         createStack(sp);
         sp.setLayoutY(0);
         gameContext.getChildren().add(sp);
         createCake(0);
 
-        generateRandomCake();
+        if (mode != 0) {
+            generateRandomCake();
+            disableButtons();
+        }
         gameContext.getChildren().add(this);
 
         stats.notifyNewRoundReady();
