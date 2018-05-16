@@ -82,9 +82,9 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         currentOk = currentOk && true;
                     }
                 } else {
-                    win = win && false;
+                    win = false;
                     if (i == currentCake) {
-                        currentOk = currentOk && false;
+                        currentOk = false;
                     }
                 }
             }
@@ -95,9 +95,9 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 currentOk = currentOk && true;
             }
         } else {
-            win = win && false;
+            win = false;
             if (2 == currentCake) {
-                currentOk = currentOk && false;
+                currentOk = false;
             }
         }
         buttons[4].setDisable(!currentOk);
