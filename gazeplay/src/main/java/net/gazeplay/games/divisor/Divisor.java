@@ -58,9 +58,14 @@ public class Divisor implements GameLifeCycle {
         gameContext.getChildren().add(target);
     }
 
+    public void restart() {
+        this.dispose();
+        this.launch();
+    }
+
     @Override
     public void dispose() {
-        this.gameContext.getChildren().removeAll();
+        this.gameContext.clear();
     }
 
 }

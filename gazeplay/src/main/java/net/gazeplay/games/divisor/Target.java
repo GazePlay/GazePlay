@@ -116,8 +116,6 @@ class Target extends Portrait {
     }
 
     private void move() {
-        Target bubble = this;
-
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(20), new EventHandler<ActionEvent>() {
             int dx = randomDirection();
             int dy = randomDirection();
@@ -127,17 +125,17 @@ class Target extends Portrait {
 
             @Override
             public void handle(ActionEvent t) {
-                double newCenterX = bubble.getCenterX() + dx;
-                double newCenterY = bubble.getCenterY() + dy;
+                double newCenterX = Target.this.getCenterX() + dx;
+                double newCenterY = Target.this.getCenterY() + dy;
 
-                bubble.setCenterX(newCenterX);
-                bubble.setCenterY(newCenterY);
+                Target.this.setCenterX(newCenterX);
+                Target.this.setCenterY(newCenterY);
 
-                if (newCenterX <= (bubble.getRadius()) || newCenterX >= (width - bubble.getRadius())) {
+                if (newCenterX <= (Target.this.getRadius()) || newCenterX >= (width - Target.this.getRadius())) {
                     dx = -dx;
                 }
 
-                if (newCenterY <= (bubble.getRadius()) || newCenterY >= (height - bubble.getRadius())) {
+                if (newCenterY <= (Target.this.getRadius()) || newCenterY >= (height - Target.this.getRadius())) {
                     dy = -dy;
                 }
             }
@@ -194,9 +192,7 @@ class Target extends Portrait {
 
                         @Override
                         public void handle(ActionEvent actionEvent) {
-                            gameInstance.dispose();
-                            gameContext.clear();
-                            gameInstance.launch();
+                            gameInstance.restart();
                         }
                     });
                 }
