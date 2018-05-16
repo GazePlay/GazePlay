@@ -11,8 +11,8 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -49,7 +49,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
     private StackPane[] cake;
     private Pane randomCake;
-    private Button[] buttons;
+    private progessButton[] buttons;
 
     private int mode;
 
@@ -66,11 +66,11 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         maxCake = 0;
         nappage = false;
         this.mode = mode;
-        buttons = new Button[6];
+        buttons = new progessButton[6];
 
     }
 
-    public void disableButtons() {
+    public void disableprogessButtons() {
         buttons[4].setDisable(false);
         boolean win = true;
         boolean currentOk = true;
@@ -108,7 +108,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         }
     }
 
-    public EventHandler<Event> createButtonHandler(Pane[] p, int i) {
+    public EventHandler<Event> createprogessButtonHandler(Pane[] p, int i) {
         EventHandler<Event> buttonHandler;
         if (i != 4) {
             buttonHandler = new EventHandler<Event>() {
@@ -125,7 +125,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 @Override
                 public void handle(Event e) {
                     if (mode != 0) {
-                        disableButtons();
+                        disableprogessButtons();
                     }
                     if (maxCake < 2) {
                         maxCake++;
@@ -133,7 +133,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         createCake(maxCake);
                     }
                     if (maxCake >= 2) {
-                        ((Button) e.getSource()).setDisable(true);
+                        ((progessButton) e.getSource()).setDisable(true);
                     }
                 }
             };
@@ -218,12 +218,12 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         }
 
         for (int i = 0; i < 6; i++) { // HomePage of the game
-            Button bt = new Button();
+            progessButton bt = new progessButton();
             bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
             bt.setLayoutX((i + 1) * dimension2D.getWidth() / 6 - buttonSize / 2);
-            EventHandler<Event> buttonHandler = createButtonHandler(p, i);
+            EventHandler<Event> buttonHandler = createprogessButtonHandler(p, i);
             if (i != 5) {
                 ImageView iv = new ImageView(new Image("data/cake/menu" + i + ".png"));
                 iv.setFitWidth(2 * buttonSize / 3);
@@ -255,10 +255,11 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 buttons[i] = bt;
                 p[0].getChildren().add(bt);
             }
+            p[0].getChildren().add(bt.assignIndicator(new ProgressIndicator(0), buttonSize));
 
         }
 
-        // p[0].getChildren().addAll(createButton(1), createButton(-1));
+        // p[0].getChildren().addAll(createprogessButton(1), createprogessButton(-1));
 
         for (int j = 1; j < 5; j++) {
             int k = 6;
@@ -280,13 +281,13 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
     }
 
-    public Button createButton(int i) {
+    public progessButton createprogessButton(int i) {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         String s = "up";
         if (i == 1) {
             s = "down";
         }
-        Button plus = new Button();
+        progessButton plus = new progessButton();
         plus.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                 + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                 + "-fx-max-height: " + buttonSize + "px;");
@@ -419,7 +420,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         // Other pages
         for (int i = 0; i < k; i++) { // HomePage of the game
-            Button bt = new Button();
+            progessButton bt = new progessButton();
             bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
@@ -440,7 +441,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         }
                         execAnim(index, j);
                         if (mode != 0) {
-                            disableButtons();
+                            disableprogessButtons();
                         }
                     }
                 };
@@ -461,13 +462,15 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                             cake[c].toFront();
                         }
                         if (mode != 0) {
-                            disableButtons();
+                            disableprogessButtons();
                         }
                     }
                 };
                 bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 p[j].getChildren().add(bt);
             }
+
+            p[j].getChildren().add(bt.assignIndicator(new ProgressIndicator(0), buttonSize));
         }
     }
 
@@ -605,7 +608,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
         if (mode != 0) {
             generateRandomCake();
-            disableButtons();
+            disableprogessButtons();
         }
         gameContext.getChildren().add(this);
 
