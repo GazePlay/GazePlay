@@ -108,7 +108,7 @@ public class Room implements GameLifeCycle {
 
         SubScene subScene = new SubScene(objects,
                 dimension2D.getWidth() - arrowImWest.getWidth() - arrowImEast.getWidth(),
-                dimension2D.getHeight() - arrowImNorth.getHeight() - arrowImSouth.getHeight()*3/2);
+                dimension2D.getHeight() - arrowImNorth.getHeight() - arrowImSouth.getHeight() * 3 / 2);
 
         camera = new PerspectiveCamera(true);
         camera.setVerticalFieldOfView(false);

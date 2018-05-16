@@ -106,11 +106,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
 
             Text value = new Text(String.valueOf(stats.getNbGoals()));
-            
-            if(!(stats instanceof ExplorationGamesStats)){
+
+            if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value);
             }
-            
+
         }
 
         {
@@ -118,7 +118,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             Text value = new Text(StatsDisplay.convert(stats.getRoundsTotalAdditiveDuration()));
 
-            if(!(stats instanceof ExplorationGamesStats)){
+            if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value);
             }
         }
@@ -134,7 +134,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             Text value = new Text(StatsDisplay.convert(stats.computeRoundsDurationAverageDuration()));
 
-            if (!(stats instanceof ExplorationGamesStats)){
+            if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value);
             }
         }
@@ -149,7 +149,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
 
             Text value = new Text(StatsDisplay.convert(stats.computeRoundsDurationMedianDuration()));
-            if (!(stats instanceof ExplorationGamesStats)){
+            if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value);
             }
         }
@@ -158,7 +158,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             I18NText label = new I18NText(translator, "StandDev", COLON);
 
             Text value = new Text(StatsDisplay.convert((long) stats.computeRoundsDurationStandardDeviation()));
-            if (!(stats instanceof ExplorationGamesStats)){
+            if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value);
             }
         }
@@ -170,7 +170,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 final I18NText label = new I18NText(translator, "label", COLON);
 
                 final Text value = new Text(String.valueOf(((ShootGamesStats) stats).getNbUnCountedShoots()));
-                if (!(stats instanceof ExplorationGamesStats)){
+                if (!(stats instanceof ExplorationGamesStats)) {
                     addToGrid(grid, currentFormRow, label, value);
                 }
             }

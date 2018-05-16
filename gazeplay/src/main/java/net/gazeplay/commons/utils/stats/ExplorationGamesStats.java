@@ -6,12 +6,12 @@ import java.io.PrintWriter;
 import javafx.scene.Scene;
 import net.gazeplay.commons.utils.games.Utils;
 
-public class ExplorationGamesStats extends Stats{
-    
-    public ExplorationGamesStats(Scene scene){
+public class ExplorationGamesStats extends Stats {
+
+    public ExplorationGamesStats(Scene scene) {
         super(scene);
     }
-    
+
     @Override
     public SavedStatsInfo saveStats() throws IOException {
         super.saveStats();
