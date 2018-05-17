@@ -102,6 +102,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final Pane bottomPane;
 
+    @Getter
     private final HBox menuHBox;
 
     @Getter

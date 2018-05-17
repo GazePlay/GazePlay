@@ -107,9 +107,8 @@ public class Room implements GameLifeCycle {
         objects.getChildren().add(right.getItem());
 
         SubScene subScene = new SubScene(objects,
-                dimension2D.getWidth() - arrowImWest.getWidth() - arrowImEast.getWidth(),
-                dimension2D.getHeight() - arrowImNorth.getHeight() - arrowImSouth.getHeight()
-                        - gameContext.getGamePanelDimensionProvider().getDimension2D().getHeight());
+                dimension2D.getWidth() - arrowImWest.getWidth() - arrowImEast.getWidth(), dimension2D.getHeight() * 0.92
+                        - arrowImNorth.getHeight() - arrowImSouth.getHeight() - gameContext.getMenuHBox().getHeight());
 
         camera = new PerspectiveCamera(true);
         camera.setVerticalFieldOfView(false);
