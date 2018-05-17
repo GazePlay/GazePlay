@@ -32,6 +32,7 @@ public class Target extends Parent {
     private final Rectangle rectangle;
     private final RandomPositionGenerator randomPos;
     private final ProgressIndicator progressIndicator;
+    private final Position pos;
     private Timeline timelineProgressBar;
 
     public Target(RandomPositionGenerator randomPositionGenerator, Stats stats, Order gameInstance,
@@ -42,8 +43,8 @@ public class Target extends Parent {
         this.gameContext = gameContext;
         this.randomPos = randomPositionGenerator;
 
-        Position p = randomPos.newRandomPosition(100);
-        this.rectangle = new Rectangle(p.getX(), p.getY(), 150, 150);
+        pos = randomPos.newRandomPosition(100);
+        this.rectangle = new Rectangle(pos.getX(), pos.getY(), 150, 150);
         this.rectangle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
         this.getChildren().add(rectangle);
 
@@ -67,20 +68,19 @@ public class Target extends Parent {
     }
 
     private void enter() {
-        Target t = this;
         progressIndicator.setOpacity(1);
         progressIndicator.setProgress(0);
         timelineProgressBar = new Timeline();
         timelineProgressBar.getKeyFrames()
                 .add(new KeyFrame(new Duration(1000), new KeyValue(progressIndicator.progressProperty(), 1)));
-        timelineProgressBar.play();
         timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                t.gameInstance.enter(t.num, t);
                 progressIndicator.setOpacity(0);
+                Target.this.gameInstance.enter(Target.this);
             }
         });
+        timelineProgressBar.play();
     }
 
     private ProgressIndicator createProgressIndicator(double diameter) {
@@ -98,5 +98,13 @@ public class Target extends Parent {
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
         gameContext.getGazeDeviceManager().addEventFilter(this);
+    }
+
+    public Position getPos() {
+        return this.pos;
+    }
+
+    public int getNum() {
+        return this.num;
     }
 }
