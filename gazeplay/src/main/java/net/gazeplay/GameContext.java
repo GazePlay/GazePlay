@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -55,32 +56,23 @@ public class GameContext extends GraphicalContext<Pane> {
         controlPanel.maxWidthProperty().bind(root.widthProperty());
         controlPanel.toFront();
 
-        Rectangle blindFoldPanel = new Rectangle(0, 0, 0, 0);
-        blindFoldPanel.widthProperty().bind(controlPanel.widthProperty());
-        blindFoldPanel.heightProperty().bind(controlPanel.heightProperty());
-
-        StackPane autoHiddingControlPanel = new StackPane();
-        autoHiddingControlPanel.getChildren().add(blindFoldPanel);
-        autoHiddingControlPanel.getChildren().add(controlPanel);
-
         EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> {
             controlPanel.setOpacity(1);
-            // blindFoldPanel.heightProperty().bind(controlPanel.heightProperty());
-            blindFoldPanel.toBack();
+            // root.setBottom(autoHiddingControlPanel);
         };
         EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent -> {
             controlPanel.setOpacity(0);
-            // blindFoldPanel.setHeight(blindFoldPanel.getHeight() / 3);
-            blindFoldPanel.toFront();
+            // root.setBottom(null);
         };
 
-        autoHiddingControlPanel.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
-        autoHiddingControlPanel.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
+        controlPanel.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
+        controlPanel.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
 
         mouseEnterControlPanelEventHandler.handle(null);
-
-        root.setBottom(autoHiddingControlPanel);
+        BorderPane root2 = new BorderPane();
+        root2.setBottom(controlPanel);
         root.setCenter(gamingRoot);
+        root.getChildren().add(root2);
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot, scene);
 
@@ -88,8 +80,8 @@ public class GameContext extends GraphicalContext<Pane> {
 
         GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
-        return new GameContext(gazePlay, gamingRoot, scene, bravo, autoHiddingControlPanel, controlPanel,
-                gamePanelDimensionProvider, randomPositionGenerator, root, gazeDeviceManager);
+        return new GameContext(gazePlay, gamingRoot, scene, bravo, root2, controlPanel, gamePanelDimensionProvider,
+                randomPositionGenerator, root, gazeDeviceManager);
     }
 
     public static HBox createControlPanel() {
@@ -143,8 +135,8 @@ public class GameContext extends GraphicalContext<Pane> {
     }
 
     public void resetBordersToFront() {
-        rootBorderPane.setBottom(null);
-        rootBorderPane.setBottom(bottomPane);
+        // rootBorderPane.setBottom(null);
+        // rootBorderPane.setBottom(bottomPane);
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
@@ -155,6 +147,10 @@ public class GameContext extends GraphicalContext<Pane> {
 
         HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
         menuHBox.getChildren().add(homeButton);
+
+        Dimension2D dimension2D = getGamePanelDimensionProvider().getDimension2D();
+        bottomPane.setLayoutY(dimension2D.getHeight() * 0.92 - menuHBox.getHeight());
+        bottomPane.setMinWidth(dimension2D.getWidth());
     }
 
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,

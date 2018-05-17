@@ -13,7 +13,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -36,14 +35,8 @@ public class MolesChar extends Parent {
     private final double distTranslation;
 
     private boolean touched;
-
     private boolean canTouched;
-
     public boolean canGoOut;
-
-    /**
-     * true if the mole is out
-     */
     public boolean out;
 
     private ProgressIndicator progressIndicator;
@@ -89,13 +82,13 @@ public class MolesChar extends Parent {
         this.enterEvent = buildEvent();
 
         this.moleMoved = new Rectangle(this.posX, this.posY - distTrans, width, height);
-        this.moleMoved.setFill(new ImagePattern(new Image("data/wackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
+        this.moleMoved.setFill(new ImagePattern(new Image("data/whackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
         this.moleMoved.opacityProperty().set(1);
         this.moleMoved.addEventHandler(MouseEvent.ANY, enterEvent);
         this.moleMoved.addEventHandler(GazeEvent.ANY, enterEvent);
 
         this.mole = new Rectangle(this.posX, this.posY, width, height);
-        this.mole.setFill(new ImagePattern(new Image("data/wackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
+        this.mole.setFill(new ImagePattern(new Image("data/whackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
         this.getChildren().add(mole);
         this.mole.opacityProperty().set(0);
 
@@ -125,10 +118,11 @@ public class MolesChar extends Parent {
 
                     canTouched = false;
                     if (!touched && out) {
-                        gameInstance.OneMoleWacked();
+                        gameInstance.OneMoleWhacked();
                         touched = true;
                         goIn();
                     }
+
                     /*
                      * progressIndicator.setOpacity(0); progressIndicator.setProgress(0); timeMinToWhackTheMole = new
                      * Timeline(); timeMinToWhackTheMole.getKeyFrames().add(new KeyFrame(new
@@ -203,7 +197,7 @@ public class MolesChar extends Parent {
         });
     }
 
-    private void goIn() {
+    public void goIn() {
         canTouched = false;
         out = false;
 

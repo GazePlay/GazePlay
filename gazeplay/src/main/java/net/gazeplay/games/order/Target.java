@@ -1,17 +1,22 @@
 package net.gazeplay.games.order;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
-import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
@@ -26,6 +31,9 @@ public class Target extends Parent {
     private final GameContext gameContext;
     private final Rectangle rectangle;
     private final RandomPositionGenerator randomPos;
+    private final ProgressIndicator progressIndicator;
+    private final Position pos;
+    private Timeline timelineProgressBar;
 
     public Target(RandomPositionGenerator randomPositionGenerator, Stats stats, Order gameInstance,
             GameContext gameContext, int num) {
@@ -34,25 +42,55 @@ public class Target extends Parent {
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
         this.randomPos = randomPositionGenerator;
-        Position p = randomPos.newRandomPosition(100);
-        this.rectangle = new Rectangle(p.getX(), p.getY(), 200, 200);
-        this.rectangle
-                .setFill(new ImagePattern(new Image("data/order/images/target-placeholder.png"), 0, 0, 1, 1, true));
 
+        pos = randomPos.newRandomPosition(100);
+        this.rectangle = new Rectangle(pos.getX(), pos.getY(), 150, 150);
+        this.rectangle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
         this.getChildren().add(rectangle);
+
+        this.progressIndicator = createProgressIndicator(100);
+        this.getChildren().add(this.progressIndicator);
 
         enterEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
                     enter();
+                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                    if (timelineProgressBar != null)
+                        timelineProgressBar.stop();
+
+                    progressIndicator.setOpacity(0);
+                    progressIndicator.setProgress(0);
                 }
             }
         };
     }
 
     private void enter() {
-        this.gameInstance.enter(this.num, this);
+        progressIndicator.setOpacity(1);
+        progressIndicator.setProgress(0);
+        timelineProgressBar = new Timeline();
+        timelineProgressBar.getKeyFrames()
+                .add(new KeyFrame(new Duration(1000), new KeyValue(progressIndicator.progressProperty(), 1)));
+        timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                progressIndicator.setOpacity(0);
+                Target.this.gameInstance.enter(Target.this);
+            }
+        });
+        timelineProgressBar.play();
+    }
+
+    private ProgressIndicator createProgressIndicator(double diameter) {
+        ProgressIndicator indicator = new ProgressIndicator(0);
+        indicator.setTranslateX(rectangle.getX() + 25);
+        indicator.setTranslateY(rectangle.getY() + 25);
+        indicator.setMinWidth(diameter * 0.9);
+        indicator.setMinHeight(diameter * 0.9);
+        indicator.setOpacity(0);
+        return indicator;
     }
 
     public void addEvent() {
@@ -60,5 +98,13 @@ public class Target extends Parent {
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
         gameContext.getGazeDeviceManager().addEventFilter(this);
+    }
+
+    public Position getPos() {
+        return this.pos;
+    }
+
+    public int getNum() {
+        return this.num;
     }
 }

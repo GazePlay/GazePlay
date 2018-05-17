@@ -102,18 +102,20 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Room", DEFAULT_SEARCHING_GAME_THUMBNAIL), new GameSpec.GameLauncher() {
+        result.add(new GameSpec(new GameSummary("Room", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/room.jpg"),
+                new GameSpec.GameLauncher() {
 
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new RoomStats(scene);
-            }
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new RoomStats(scene);
+                    }
 
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
-                return new Room(gameContext, stats);
-            }
-        }));
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new Room(gameContext, stats);
+                    }
+                }));
 
         result.add(new GameSpec(
                 new GameSummary("MagicCards", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/magic-card-1.jpg"),
@@ -527,7 +529,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
         result.add(new GameSpec(
-                new GameSummary("WackAMole", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/wackAMole.png"),
+                new GameSummary("Whac-a-mole", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/whackAMole.png"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -562,19 +564,31 @@ public class DefaultGamesLocator implements GamesLocator {
                                 return new ColorsGame(gameContext, gameStat);
                             }
                         }));
-        result.add(new GameSpec(new GameSummary("Cakes", DEFAULT_SEARCHING_GAME_THUMBNAIL),
 
-                new GameSpec.GameLauncher() {
+        result.add(new GameSpec(new GameSummary("Cakes", DEFAULT_MEMORIZATION_GAME_THUMBNAIL),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
 
+                                new GameSpec.IntGameVariant(0, "free"),
+
+                                new GameSpec.IntGameVariant(1, "normal"),
+
+                                new GameSpec.IntGameVariant(2, "extreme")
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new cakeStats(scene);
                     }
 
                     @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
                             Stats stats) {
-                        return new cakeFactory(gameContext, stats);
+                        return new cakeFactory(gameContext, stats, gameVariant.getNumber());
                     }
                 }));
 

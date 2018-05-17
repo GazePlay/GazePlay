@@ -8,6 +8,7 @@ import javafx.scene.PointLight;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -18,31 +19,22 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
-import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
-
-/* Things to implement :
-    1. Add a gazeeventlistener
-    2. Draw and add room image walls
-*/
 
 @Slf4j
 public class Room implements GameLifeCycle {
-
     private final GameContext gameContext;
     private final Stats stats;
 
     private PerspectiveCamera camera;
 
-    private javafx.geometry.Dimension2D dimension2D;
+    private final javafx.geometry.Dimension2D dimension2D;
     private final Rotate rotateX;
     private final Rotate rotateY;
-    private final Rotate rotateZ;
 
     private static double xLength;
     private static double yLength;
 
-    // The positions of the sides compared to the origin
-    private double positionCamera;
+    private final double positionCamera;
 
     Image arrowImNorth;
     Rectangle rectangleArrowNorth;
@@ -87,11 +79,9 @@ public class Room implements GameLifeCycle {
         rotateX.setAxis(Rotate.X_AXIS);
         rotateY = new Rotate();
         rotateY.setAxis(Rotate.Y_AXIS);
-        rotateZ = new Rotate();
-        rotateZ.setAxis(Rotate.Z_AXIS);
         xLength = 1600;// dimension2D.getWidth();
-        yLength = 600;// dimension2D.getHeight();
-        positionCamera = -xLength / 4;
+        yLength = 500;// dimension2D.getHeight();
+        positionCamera = -xLength / 2;
     }
 
     @Override
@@ -134,12 +124,14 @@ public class Room implements GameLifeCycle {
 
         BorderPane root = new BorderPane(subScene);
 
-        BorderPane topB = new BorderPane();
-        topB.setCenter(rectangleArrowNorth);
+        HBox topB = new HBox();
+        topB.getChildren().add(rectangleArrowNorth);
+        topB.setAlignment(Pos.CENTER);
         root.setTop(topB);
 
-        BorderPane bottomB = new BorderPane();
-        bottomB.setCenter(rectangleArrowSouth);
+        HBox bottomB = new HBox();
+        bottomB.getChildren().add(rectangleArrowSouth);
+        bottomB.setAlignment(Pos.CENTER);
         root.setBottom(bottomB);
 
         root.setLeft(rectangleArrowWest);
@@ -155,59 +147,39 @@ public class Room implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(rectangleArrowSouth);
 
         rectangleArrowNorth.setOnMouseMoved((event) -> {
-            if (rotateX.getAngle() < 22.5) {
+            if (rotateX.getAngle() < 15) {
                 rotateX.setAngle(rotateX.getAngle() + 0.25);
             }
         });
         rectangleArrowNorth.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            if (rotateX.getAngle() < 22.5) {
-                rotateX.setAngle(rotateX.getAngle() + 0.25);
+            if (rotateX.getAngle() < 15) {
+                rotateX.setAngle(rotateX.getAngle() + 0.1);
             }
         });
 
         rectangleArrowSouth.setOnMouseMoved((event) -> {
-            if (rotateX.getAngle() > -22.5) {
+            if (rotateX.getAngle() > -15) {
                 rotateX.setAngle(rotateX.getAngle() - 0.25);
             }
         });
         rectangleArrowSouth.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            if (rotateX.getAngle() > -22.5) {
-                rotateX.setAngle(rotateX.getAngle() - 0.25);
+            if (rotateX.getAngle() > -15) {
+                rotateX.setAngle(rotateX.getAngle() - 0.1);
             }
         });
 
         rectangleArrowWest.setOnMouseMoved((event) -> {
             rotateY.setAngle(rotateY.getAngle() % 360 - 0.25);
-            if (rotateX.getAngle() > 0) {
-                rotateX.setAngle(rotateX.getAngle() - 0.25);
-            } else if (rotateX.getAngle() < 0) {
-                rotateX.setAngle(rotateX.getAngle() + 0.25);
-            }
         });
         rectangleArrowWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateY.setAngle(rotateY.getAngle() % 360 - 0.25);
-            if (rotateX.getAngle() > 0) {
-                rotateX.setAngle(rotateX.getAngle() - 0.25);
-            } else if (rotateX.getAngle() < 0) {
-                rotateX.setAngle(rotateX.getAngle() + 0.25);
-            }
+            rotateY.setAngle(rotateY.getAngle() % 360 - 0.1);
         });
 
         rectangleArrowEast.setOnMouseMoved((event) -> {
             rotateY.setAngle(rotateY.getAngle() % 360 + 0.25);
-            if (rotateX.getAngle() > 0) {
-                rotateX.setAngle(rotateX.getAngle() - 0.25);
-            } else if (rotateX.getAngle() < 0) {
-                rotateX.setAngle(rotateX.getAngle() + 0.25);
-            }
         });
         rectangleArrowEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateY.setAngle(rotateY.getAngle() % 360 + 0.25);
-            if (rotateX.getAngle() > 0) {
-                rotateX.setAngle(rotateX.getAngle() - 0.25);
-            } else if (rotateX.getAngle() < 0) {
-                rotateX.setAngle(rotateX.getAngle() + 0.25);
-            }
+            rotateY.setAngle(rotateY.getAngle() % 360 + 0.1);
         });
     }
 
@@ -215,5 +187,4 @@ public class Room implements GameLifeCycle {
     public void dispose() {
 
     }
-
 }
