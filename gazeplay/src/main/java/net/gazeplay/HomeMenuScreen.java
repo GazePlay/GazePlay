@@ -24,6 +24,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
+import net.gazeplay.commons.utils.ProgressCustomButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -169,8 +170,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     private Rectangle createExitButton() {
-        CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
+        ProgressCustomButton exitButton = new ProgressCustomButton("data/common/images/power-off.png");
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
+        exitButton.assignIndicator(exitButton.getWidth(), (EventHandler<Event>) e -> System.exit(0));
         return exitButton;
     }
 
