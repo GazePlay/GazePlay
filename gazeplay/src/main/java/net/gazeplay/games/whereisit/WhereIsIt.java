@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZED;
 
@@ -202,17 +203,20 @@ public class WhereIsIt implements GameLifeCycle {
         try {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             URL soundResourceUrl = classLoader.getResource(currentRoundDetails.questionSoundPath);
-            AudioClip soundClip = null;
-
             log.info("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
+
+            AudioClip soundClip = null;
 
             if (soundResourceUrl == null)
                 soundClip = new AudioClip("file:" + currentRoundDetails.questionSoundPath);
             else
                 soundClip = new AudioClip(soundResourceUrl.toExternalForm());
+
+            final Configuration configuration = ConfigurationBuilder.createFromPropertiesResource().build();
+            soundClip.setVolume(configuration.getSoundLevel());
             soundClip.play();
         } catch (Exception e) {
-            log.info("Can't play sound: no associated sound");
+            log.info("Can't play sound: no associated sound : " + e.toString());
         }
     }
 

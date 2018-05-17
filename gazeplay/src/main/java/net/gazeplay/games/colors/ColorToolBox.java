@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,7 +16,6 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -33,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
 
@@ -59,7 +58,15 @@ public class ColorToolBox extends StackPane {
 
     public static final double COLORIZE_BUTTONS_SIZE_PX = 64;
 
-    public static final String COLORS_IMAGES_PATH = "data/colors/images/";
+    public static final String COLORS_IMAGES_PATH = "data" + File.pathSeparator + "colors" + File.pathSeparator
+            + "images" + File.pathSeparator;
+
+    // Credits
+    // <div>Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a
+    // href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
+    // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
+    // BY</a></div>
+    public static final String CUSTOM_BUTTON_IMAGE_PATH = COLORS_IMAGES_PATH + "add-button-inside-black-circle.png";
 
     public static final String COLORIZE_BUTTON_IMAGE_NAME = COLORS_IMAGES_PATH + "palette.png";
     public static final String STOP_COLORIZE_BUTTON_IMAGE_PATH = "data/common/images/error.png";
@@ -102,6 +109,8 @@ public class ColorToolBox extends StackPane {
 
     private final Stage customColorDialog;
     private CustomColorPicker CustomColorPicker;
+
+    private boolean previousEnableColor;
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame) {
         super();
@@ -161,20 +170,52 @@ public class ColorToolBox extends StackPane {
 
         colorPicker = new ColorPicker(Color.WHITE);
 
-        customColorPickerButton = new Button("custom color");
+        Image buttonImg = null;
+        try {
+            buttonImg = new Image(CUSTOM_BUTTON_IMAGE_PATH, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX, false,
+                    true);
+        } catch (IllegalArgumentException e) {
+            log.warn(e.toString() + " : " + CUSTOM_BUTTON_IMAGE_PATH);
+        }
+
+        if (buttonImg != null) {
+            customColorPickerButton = new Button("", new ImageView(buttonImg));
+            customColorPickerButton.setPrefHeight(buttonImg.getHeight());
+        } else {
+            customColorPickerButton = new Button("Custom colors");
+            customColorPickerButton.setPrefHeight(COLORIZE_BUTTONS_SIZE_PX);
+            customColorPickerButton.setPrefWidth(COLORIZE_BUTTONS_SIZE_PX);
+        }
         customBox = new ColorBox(Color.WHITE, root, this, group);
 
         customColorDialog = buildCustomColorDialog();
 
-        customColorPickerButton.setOnAction((event) -> {
-
+        final EventHandler<ActionEvent> customColorButtonHandler = (ActionEvent event) -> {
             customColorDialog.show();
-            colorsGame.setEnableColorization(false);
-        });
+            customColorDialog.sizeToScene();
+
+            previousEnableColor = colorsGame.isEnableColorization();
+            if (previousEnableColor) {
+                colorsGame.setEnableColorization(false);
+            }
+        };
+
+        final AbstractGazeIndicator customColorButtonIndic = new GazeFollowerIndicator(root);
+        customColorButtonIndic.setOnFinish(customColorButtonHandler);
+        customColorButtonIndic.addNodeToListen(customColorPickerButton,
+                colorsGame.getGameContext().getGazeDeviceManager());
+
+        customColorPickerButton.setOnAction(customColorButtonHandler);
 
         customColorDialog.setOnCloseRequest((event) -> {
 
-            colorsGame.setEnableColorization(true);
+            /*
+             * log.info("custom indic min width = {}, min height = {}", customColorButtonIndic.getMinWidth(),
+             * customColorButtonIndic.getMinHeight()); log.info("custom indic width = {}, height = {}",
+             * customColorButtonIndic.getWidth(), customColorButtonIndic.getHeight());
+             */
+            colorsGame.setEnableColorization(previousEnableColor);
+
         });
 
         colorPicker.setOnAction((event) -> {
@@ -220,6 +261,7 @@ public class ColorToolBox extends StackPane {
 
         thisRoot.setBottom(imageManager);
         thisRoot.setTop(colorziationPane);
+        root.getChildren().add(customColorButtonIndic);
 
         this.getStyleClass().add("bg-colored");
     }
@@ -386,89 +428,37 @@ public class ColorToolBox extends StackPane {
         }
 
         Configuration config = this.getColorsGame().getConfig();
-        AbstractGazeIndicator stopColorizeButtonIndicator = new GazeFollowerIndicator(root);
 
         AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(root);
-
-        colorizeButtonIndicator.getStyleClass().add("withoutTextProgress");
-        stopColorizeButtonIndicator.getStyleClass().add("withoutTextProgress");
 
         Pane colorizeButtonPane = new StackPane(colorize);
         Pane stopColorizeButtonPane = new StackPane(stopColorize);
 
         EventHandler enableColorizeButton = (EventHandler) (Event event1) -> {
 
-            colorizeButtonIndicator.toFront();
             colorsGame.setEnableColorization(false);
             colorizeButtonPane.setVisible(false);
             stopColorizeButtonPane.setVisible(true);
-            stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
-            colorizeButtonIndicator.setOnFinish(null);
-            // log.info("Colorizing disabled");
+            colorizeButtonIndicator.setOnFinish(disableColorizeButton);
         };
 
         disableColorizeButton = (EventHandler) (Event event1) -> {
 
-            stopColorizeButtonIndicator.toFront();
             colorsGame.setEnableColorization(true);
             stopColorizeButtonPane.setVisible(false);
             colorizeButtonPane.setVisible(true);
-            stopColorizeButtonIndicator.setOnFinish(null);
             colorizeButtonIndicator.setOnFinish(enableColorizeButton);
-            // log.info("Colorizing enabled");
         };
 
-        stopColorizeButtonIndicator.setOnFinish(disableColorizeButton);
         colorizeButtonIndicator.setOnFinish(enableColorizeButton);
 
-        /*
-         * EventHandler stopColorizeIndicatorEvent = stopColorizeButtonIndicator.buildEventHandler();
-         * 
-         * EventHandler enableColorizeIndicatorEvent = colorizeButtonIndicator.buildEventHandler();
-         */
-
-        EventHandler stopHandler = (EventHandler) (Event t) -> {
-            if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                // log.info("Entered");
-                stopColorizeButtonIndicator.start();
-
-            } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                // log.info("Exited");
-                stopColorizeButtonIndicator.stop();
-            }
-        };
-
-        EventHandler enableHandler = (EventHandler) (Event t) -> {
-            if (t.getEventType() == MouseEvent.MOUSE_ENTERED || t.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                // log.info("Entered");
-                colorizeButtonIndicator.start();
-
-            } else if (t.getEventType() == MouseEvent.MOUSE_EXITED || t.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                // log.info("Exited");
-                colorizeButtonIndicator.stop();
-            }
-        };
-
-        stopColorizeButtonPane.addEventFilter(MouseEvent.ANY, stopHandler);
-        stopColorizeButtonPane.addEventFilter(GazeEvent.ANY, stopHandler);
-
-        colorizeButtonPane.addEventFilter(MouseEvent.ANY, enableHandler);
-        colorizeButtonPane.addEventFilter(GazeEvent.ANY, enableHandler);
-
-        getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(stopColorizeButtonPane);
-        getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(colorizeButtonPane);
+        colorizeButtonIndicator.addNodeToListen(stopColorizeButtonPane,
+                getColorsGame().getGameContext().getGazeDeviceManager());
+        colorizeButtonIndicator.addNodeToListen(colorizeButtonPane,
+                getColorsGame().getGameContext().getGazeDeviceManager());
 
         stopColorizeButtonPane.setVisible(false);
-
-        root.getChildren().add(stopColorizeButtonIndicator);
         root.getChildren().add(colorizeButtonIndicator);
-
-        colorizeButtonIndicator.toFront();
-        stopColorizeButtonIndicator.toFront();
 
         Pane colorPane = new StackPane(colorizeButtonPane, stopColorizeButtonPane);
 
@@ -477,17 +467,19 @@ public class ColorToolBox extends StackPane {
 
     private Stage buildCustomColorDialog() {
 
-        Stage dialog = new Stage();
+        final Stage dialog = new Stage();
+
+        final Translator translator = GazePlay.getInstance().getTranslator();
 
         dialog.initOwner(GazePlay.getInstance().getPrimaryStage());
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setOnCloseRequest(
                 windowEvent -> GazePlay.getInstance().getPrimaryStage().getScene().getRoot().setEffect(null));
-        dialog.setTitle("Choose a custom color");
+        dialog.setTitle(translator.translate("customColorDialogTitle"));
         dialog.setAlwaysOnTop(true);
 
-        CustomColorPicker = new CustomColorPicker(root, this, customBox);
+        CustomColorPicker = new CustomColorPicker(root, this, customBox, dialog);
 
         final Scene scene = new Scene(CustomColorPicker, Color.TRANSPARENT);
 

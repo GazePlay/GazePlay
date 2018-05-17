@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TitledPane;
@@ -28,7 +29,6 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 
@@ -176,24 +176,7 @@ public class ColorsGame implements GameLifeCycle {
         // Add it here so it appears on top of the tool box
         final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
         root.getChildren().add(progressIndicator);
-        /*
-         * root.addEventFilter(MouseEvent.ANY, (event) -> {
-         * 
-         * moveGazeIndicator(progressIndicator, event.getX() + 2, event.getY() + 2); });
-         * root.addEventFilter(GazeEvent.ANY, (event) -> {
-         * 
-         * moveGazeIndicator(progressIndicator, event.getX() + 2, event.getY() + 2); });
-         */
         progressIndicator.toFront();
-    }
-
-    private void moveGazeIndicator(AbstractGazeIndicator progressIndicator, double x, double y) {
-        progressIndicator.setTranslateX(x);
-        progressIndicator.setTranslateY(y);
-        /*
-         * log.info("progress size : width = {}, height = {}", progressIndicator.getWidth(),
-         * progressIndicator.getHeight()); log.info("translated to : x = {}, y = {}", x, y);
-         */
     }
 
     private void buildDraw(String imgURL, double width, double height) {
@@ -230,7 +213,7 @@ public class ColorsGame implements GameLifeCycle {
 
         final Stage stage = GazePlay.getInstance().getPrimaryStage();
 
-        // Resizing not really working
+        // Resizing is working but not immediatly
         root.widthProperty().addListener((observable) -> {
 
             updateRectangle();
@@ -366,10 +349,19 @@ public class ColorsGame implements GameLifeCycle {
 
                     // log.info("Gaze event : {}", gazeEvent);
 
-                    gazeXOrigin = gazeEvent.getX() - (ColorBox.COLOR_BOX_WIDTH_PX + widthDiff);
-                    gazeYOrigin = gazeEvent.getY();
-                    currentX = gazeXOrigin;
-                    currentY = gazeYOrigin;
+                    currentX = gazeEvent.getX();
+                    currentY = gazeEvent.getY();
+
+                    Point2D eventCoord = new Point2D(currentX, currentY);
+                    Point2D localCoord = root.screenToLocal(eventCoord);
+
+                    if (localCoord != null) {
+                        currentX = localCoord.getX();
+                        currentY = localCoord.getY();
+                    }
+
+                    gazeXOrigin = currentX;
+                    gazeYOrigin = currentY;
 
                     gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
 
@@ -380,8 +372,17 @@ public class ColorsGame implements GameLifeCycle {
                 } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
 
                     GazeEvent gazeEvent = (GazeEvent) event;
-                    currentX = gazeEvent.getX() - (ColorBox.COLOR_BOX_WIDTH_PX + widthDiff);
+
+                    currentX = gazeEvent.getX();
                     currentY = gazeEvent.getY();
+
+                    Point2D eventCoord = new Point2D(currentX, currentY);
+                    Point2D localCoord = root.screenToLocal(eventCoord);
+
+                    if (localCoord != null) {
+                        currentX = localCoord.getX();
+                        currentY = localCoord.getY();
+                    }
 
                     // If gaze still around first point
                     if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
@@ -476,7 +477,10 @@ public class ColorsGame implements GameLifeCycle {
         // log.info("R = {}, G = {}, B = {}, A = {}", color.getRed(), color.getGreen(), color.getBlue(),
         // color.getOpacity());
 
-        if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor())) {
+        // Don't fill the zone if the pixel selected is already of the same color.
+        // Also don't fill black zones
+        if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor())
+                && !isEqualColors(color, Color.BLACK)) {
             javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(), pixelX, pixelY,
                     (int) writableImg.getWidth(), (int) writableImg.getHeight());
         }
