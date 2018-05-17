@@ -16,7 +16,6 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -34,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
 
@@ -60,7 +58,8 @@ public class ColorToolBox extends StackPane {
 
     public static final double COLORIZE_BUTTONS_SIZE_PX = 64;
 
-    public static final String COLORS_IMAGES_PATH = "data/colors/images/";
+    public static final String COLORS_IMAGES_PATH = "data" + File.pathSeparator + "colors" + File.pathSeparator
+            + "images" + File.pathSeparator;
 
     // Credits
     // <div>Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a
