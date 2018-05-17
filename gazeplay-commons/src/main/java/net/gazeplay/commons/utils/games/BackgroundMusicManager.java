@@ -19,6 +19,8 @@ import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.*;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
 @Slf4j
 public class BackgroundMusicManager {
@@ -32,7 +34,19 @@ public class BackgroundMusicManager {
             new LinkedBlockingQueue<>(), new CustomThreadFactory(this.getClass().getSimpleName(),
                     new GroupingThreadFactory(this.getClass().getSimpleName())));
 
-    private DoubleProperty volume = new SimpleDoubleProperty(0.25);
+    private final DoubleProperty volume = new SimpleDoubleProperty(0.25);
+
+    private final ConfigurationBuilder configBuilder;
+
+    public BackgroundMusicManager() {
+        configBuilder = ConfigurationBuilder.createFromPropertiesResource();
+        final Configuration configuration = configBuilder.build();
+        volume.set(configuration.getSoundLevel());
+
+        volume.addListener((observable) -> {
+            configBuilder.withSoundLevel(volume.getValue()).saveConfigIgnoringExceptions();
+        });
+    }
 
     public DoubleProperty volumeProperty() {
         return volume;

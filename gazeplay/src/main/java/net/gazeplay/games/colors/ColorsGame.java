@@ -355,7 +355,7 @@ public class ColorsGame implements GameLifeCycle {
                     Point2D eventCoord = new Point2D(currentX, currentY);
                     Point2D localCoord = root.screenToLocal(eventCoord);
 
-                    if(localCoord != null) {
+                    if (localCoord != null) {
                         currentX = localCoord.getX();
                         currentY = localCoord.getY();
                     }
@@ -372,14 +372,14 @@ public class ColorsGame implements GameLifeCycle {
                 } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
 
                     GazeEvent gazeEvent = (GazeEvent) event;
-                    
+
                     currentX = gazeEvent.getX();
                     currentY = gazeEvent.getY();
 
                     Point2D eventCoord = new Point2D(currentX, currentY);
                     Point2D localCoord = root.screenToLocal(eventCoord);
 
-                    if(localCoord != null) {
+                    if (localCoord != null) {
                         currentX = localCoord.getX();
                         currentY = localCoord.getY();
                     }

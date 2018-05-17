@@ -12,29 +12,31 @@ import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 @Slf4j
 public class ConfigurationBuilder implements Cloneable {
 
-    private static String PROPERTY_NAME_GAZEMODE = "GAZEMODE";
-    private static String PROPERTY_NAME_EYETRACKER = "EYETRACKER";
-    private static String PROPERTY_NAME_LANGUAGE = "LANGUAGE";
-    private static String PROPERTY_NAME_FILEDIR = "FILEDIR";
-    private static String PROPERTY_NAME_FIXATIONLENGTH = "FIXATIONLENGTH";
-    private static String PROPERTY_NAME_CSSFILE = "CSSFILE";
-    private static String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
-    private static String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
+    private static final String PROPERTY_NAME_GAZEMODE = "GAZEMODE";
+    private static final String PROPERTY_NAME_EYETRACKER = "EYETRACKER";
+    private static final String PROPERTY_NAME_LANGUAGE = "LANGUAGE";
+    private static final String PROPERTY_NAME_FILEDIR = "FILEDIR";
+    private static final String PROPERTY_NAME_FIXATIONLENGTH = "FIXATIONLENGTH";
+    private static final String PROPERTY_NAME_CSSFILE = "CSSFILE";
+    private static final String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
+    private static final String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
+    private static final String PROPERY_NAME_SOUND_LEVEL = "SOUND_LEVEL";
 
-    private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
+    private static final String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
-    private static boolean DEFAULT_VALUE_GAZEMODE = true;
-    private static String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
-    private static String DEFAULT_VALUE_LANGUAGE = "fra";
-    private static int DEFAULT_VALUE_FIXATION_LENGTH = 500;
-    private static String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
-    private static String DEFAULT_VALUE_WHEREISIT_DIR = "";
-    private static int DEFAULT_VALUE_QUESTION_LENGTH = 5000;
+    private static final boolean DEFAULT_VALUE_GAZEMODE = true;
+    private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
+    private static final String DEFAULT_VALUE_LANGUAGE = "fra";
+    private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
+    private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
+    private static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
+    private static final int DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
-    private static boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
+    private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
+    private static final double DEFAULT_VALUE_SOUND_LEVEL = 0.25;
 
     private static String getFileDirectoryDefaultValue() {
         return Utils.getGazePlayFolder() + "files" /* + Utils.FILESEPARATOR */;
@@ -88,6 +90,8 @@ public class ConfigurationBuilder implements Cloneable {
     protected String menuButtonsOrientation;
 
     protected boolean heatMapDisabled = DEFAULT_VALUE_HEATMAP_DISABLED;
+
+    protected double soundLevel = DEFAULT_VALUE_SOUND_LEVEL;
 
     public ConfigurationBuilder() {
 
@@ -167,6 +171,12 @@ public class ConfigurationBuilder implements Cloneable {
         return copy;
     }
 
+    public ConfigurationBuilder withSoundLevel(double value) {
+        ConfigurationBuilder copy = copy();
+        copy.soundLevel = value;
+        return copy;
+    }
+
     public void populateFromProperties(Properties prop) {
         String buffer;
 
@@ -235,6 +245,11 @@ public class ConfigurationBuilder implements Cloneable {
             heatMapDisabled = Boolean.parseBoolean(buffer);
         }
 
+        buffer = prop.getProperty(PROPERY_NAME_SOUND_LEVEL);
+        if (buffer != null) {
+            soundLevel = Double.parseDouble(buffer);
+        }
+
     }
 
     private Properties toProperties() {
@@ -263,6 +278,7 @@ public class ConfigurationBuilder implements Cloneable {
         properties.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND, Boolean.toString(this.enableRewardSound));
         properties.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, this.menuButtonsOrientation);
         properties.setProperty(PROPERTY_NAME_HEATMAP_DISABLED, Boolean.toString(this.heatMapDisabled));
+        properties.setProperty(PROPERY_NAME_SOUND_LEVEL, Double.toString(this.soundLevel));
 
         return properties;
     }

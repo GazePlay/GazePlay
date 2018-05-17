@@ -30,20 +30,19 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
         root.addEventFilter(GazeEvent.ANY, (event) -> {
 
             this.toFront();
-            
+
             double x = event.getX();
             double y = event.getY();
-            
+
             Point2D eventCoord = new Point2D(x, y);
             Point2D localCoord = root.screenToLocal(eventCoord);
-            
-            if(localCoord != null) {
+
+            if (localCoord != null) {
                 x = localCoord.getX();
                 y = localCoord.getY();
             }
-            
-            moveGazeIndicator(x + GAZE_PROGRESS_INDICATOR_OFFSET,
-                    y + GAZE_PROGRESS_INDICATOR_OFFSET);
+
+            moveGazeIndicator(x + GAZE_PROGRESS_INDICATOR_OFFSET, y + GAZE_PROGRESS_INDICATOR_OFFSET);
         });
     }
 
