@@ -26,7 +26,7 @@ public class I18NButton extends ProgressButton implements Translator.LanguageCha
     @Override
     public void languageChanged() {
         if (textKeys != null) {
-            setText(translator.translate(textKeys));
+            this.button.setText(translator.translate(textKeys));
         }
     }
 

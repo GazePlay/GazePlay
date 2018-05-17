@@ -148,8 +148,8 @@ public class GameMenuFactory {
         case HORIZONTAL:
             gameDescriptionPane.setPadding(new Insets(0, 10, 0, 10));
 
-            gameCard.setRight(gameDescriptionPane);
-            gameCard.setLeft(thumbnailImageViewContainer);
+            gameCard.button.setRight(gameDescriptionPane);
+            gameCard.button.setLeft(thumbnailImageViewContainer);
 
             // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
             StackPane.setAlignment(gameTitleText, Pos.TOP_RIGHT);
@@ -174,8 +174,8 @@ public class GameMenuFactory {
         case VERTICAL:
             gameDescriptionPane.setPadding(new Insets(10, 0, 10, 0));
 
-            gameCard.setBottom(gameDescriptionPane);
-            gameCard.setTop(thumbnailImageViewContainer);
+            gameCard.button.setBottom(gameDescriptionPane);
+            gameCard.button.setTop(thumbnailImageViewContainer);
 
             // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
             StackPane.setAlignment(gameTitleText, Pos.TOP_CENTER);
@@ -224,7 +224,7 @@ public class GameMenuFactory {
             }
         };
         gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventhandler);
-        gameCard.assignIndicator(gameCard.getWidth(), eventhandler);
+        gameCard.assignIndicator(eventhandler);
 
         return gameCard;
     }
@@ -263,7 +263,7 @@ public class GameMenuFactory {
 
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
 
-            button.assignIndicator(button.getWidth(), event);
+            button.assignIndicator(event);
         }
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);

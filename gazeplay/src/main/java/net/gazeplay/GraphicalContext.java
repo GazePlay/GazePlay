@@ -29,6 +29,7 @@ import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.utils.CssUtil;
+import net.gazeplay.commons.utils.ProgressButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Data
@@ -70,7 +71,7 @@ public abstract class GraphicalContext<T> {
         log.info("Nodes not removed: {}", getChildren().size());
     }
 
-    public Button createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
+    public I18NButton createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
 
         EventHandler<Event> eventHandler = new EventHandler<javafx.event.Event>() {
             @Override
@@ -92,7 +93,7 @@ public abstract class GraphicalContext<T> {
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
-        button.assignIndicator(button.getWidth(), eventHandler);
+        button.assignIndicator(eventHandler);
 
         return button;
     }
@@ -117,8 +118,8 @@ public abstract class GraphicalContext<T> {
                 imageView.setFitHeight(newValue.doubleValue() / 2d);
             }
         });
-        button.setGraphic(imageView);
-        button.setTooltip(new I18NTooltip(gazePlay.getTranslator(), label));
+        button.button.setGraphic(imageView);
+        button.button.setTooltip(new I18NTooltip(gazePlay.getTranslator(), label));
     }
 
     public TitledPane createSoundControlPane() {
