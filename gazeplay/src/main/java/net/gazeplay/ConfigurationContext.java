@@ -40,6 +40,7 @@ import net.gazeplay.commons.utils.multilinguism.Languages;
 import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import javafx.scene.control.ScrollPane;
 
 @Slf4j
 public class ConfigurationContext extends GraphicalContext<BorderPane> {
@@ -49,6 +50,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private static double prefWidth = 200;
 
     private static double prefHeight = 25;
+
+    private static Translator translator;
 
     public static ConfigurationContext newInstance(GazePlay gazePlay) {
         BorderPane root = new BorderPane();
@@ -61,6 +64,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private ConfigurationContext(GazePlay gazePlay, BorderPane root, Scene scene) {
         super(gazePlay, root, scene);
+
+        translator = gazePlay.getTranslator();
 
         HomeButton homeButton = createHomeButtonInConfigurationManagementScreen(gazePlay);
 
@@ -79,8 +84,18 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         root.setBottom(bottomControlPane);
 
+        I18NText configTitleText = new I18NText(translator, "ConfigTitle");
+        // configTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20)); should be managed with css
+        configTitleText.setId("title");
+        configTitleText.setTextAlignment(TextAlignment.CENTER);
+
+        root.setTop(configTitleText);
+
         GridPane gridPane = buildConfigGridPane(this, gazePlay);
-        root.setCenter(gridPane);
+
+        ScrollPane settingsPanelScroller = new ScrollPane(gridPane);
+
+        root.setCenter(settingsPanelScroller);
 
         root.setStyle(
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
@@ -124,14 +139,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         grid.setHgap(50);
         grid.setVgap(50);
         // grid.setPadding(new Insets(50, 50, 50, 50));
-
-        final Translator translator = gazePlay.getTranslator();
-
-        I18NText configTitleText = new I18NText(translator, "ConfigTitle");
-        // configTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20)); should be managed with css
-        configTitleText.setId("title");
-        configTitleText.setTextAlignment(TextAlignment.CENTER);
-        grid.add(configTitleText, 0, 0, 2, 1);
 
         AtomicInteger currentFormRow = new AtomicInteger(1);
 
