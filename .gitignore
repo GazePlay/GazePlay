@@ -7,6 +7,6 @@ target
 .project
 .classpath
 .settings
-*.log.*
+gazeplay/*.log.*
 cache
 
