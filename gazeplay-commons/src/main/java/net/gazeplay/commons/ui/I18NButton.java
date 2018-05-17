@@ -1,7 +1,6 @@
 package net.gazeplay.commons.ui;
 
-import javafx.scene.control.Button;
-import net.gazeplay.commons.utils.ProgressButton;
+import net.gazeplay.commons.ui.ProgressButton;
 
 public class I18NButton extends ProgressButton implements Translator.LanguageChangeListener {
 
