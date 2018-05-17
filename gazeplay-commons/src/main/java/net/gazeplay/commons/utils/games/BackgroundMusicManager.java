@@ -13,10 +13,8 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,8 +22,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
@@ -39,8 +35,11 @@ public class BackgroundMusicManager {
 
     private final Map<String, MediaPlayer> mediaPlayersMap = new ConcurrentHashMap<>();
 
+    @Getter
     private final List<MediaPlayer> playlist = new ArrayList<MediaPlayer>();
     private MediaPlayer currentMusic;
+    @Getter
+    private int currentMusicIndex = 0;
 
     private final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
             new LinkedBlockingQueue<>(), new CustomThreadFactory(this.getClass().getSimpleName(),
@@ -67,12 +66,11 @@ public class BackgroundMusicManager {
 
         final File folder = new File(folderPath);
         if (!folder.exists()) {
-            //throw new RuntimeException("invalid path for audio folder : " + folderPath);
+            // throw new RuntimeException("invalid path for audio folder : " + folderPath);
             log.warn("invalid path for audio folder : " + folderPath);
             return;
-        }
-        else if(!folder.isDirectory()) {
-            //throw new RuntimeException("path for audio folder is not a directory : " + folderPath);
+        } else if (!folder.isDirectory()) {
+            // throw new RuntimeException("path for audio folder is not a directory : " + folderPath);
             log.warn("path for audio folder is not a directory : " + folderPath);
             return;
         }
@@ -87,7 +85,7 @@ public class BackgroundMusicManager {
             return false;
         })) {
 
-            //file = file.replaceAll(" ", "%20");
+            // file = file.replaceAll(" ", "%20");
             String filePath = folder.getPath() + File.separator + file;
             File currentFile = new File(filePath);
             playlist.add(createMediaPlayer(currentFile.toURI().toString()));
@@ -100,16 +98,33 @@ public class BackgroundMusicManager {
             return;
         }
 
-        final MediaPlayer nextMusic = playlist.remove(0);
+        if (currentMusic != null) {
+            currentMusic.stop();
+        }
+
+        final MediaPlayer nextMusic = playlist.get(currentMusicIndex++);
 
         Runnable task = buildMusicTask(nextMusic);
         executorService.execute(task);
 
         this.currentMusic = nextMusic;
     }
-    
+
     public boolean isPaused() {
-        return currentMusic.getStatus() == MediaPlayer.Status.PAUSED;
+        if (currentMusic == null) {
+            return false;
+        } else {
+            return currentMusic.getStatus() == MediaPlayer.Status.PAUSED;
+        }
+    }
+
+    public void changeMusic(int newMusicIndex) {
+
+        if (newMusicIndex < 0 || newMusicIndex >= playlist.size()) {
+            return;
+        }
+        currentMusicIndex = newMusicIndex;
+        playPlayList();
     }
 
     private Runnable buildMusicTask(final MediaPlayer music) {
@@ -130,10 +145,18 @@ public class BackgroundMusicManager {
     }
 
     public void emptyPlaylist() {
-        if(currentMusic != null) {
+        if (currentMusic != null) {
             currentMusic.stop();
         }
         playlist.clear();
+    }
+
+    public void pause() {
+        this.currentMusic.pause();
+    }
+
+    public void play() {
+        this.currentMusic.play();
     }
 
     public DoubleProperty volumeProperty() {
@@ -150,12 +173,10 @@ public class BackgroundMusicManager {
         this.volume.setValue(value);
     }
 
-    public void pause(String resourceUrlAsString) {
-        MediaPlayer localMediaPlayer = mediaPlayersMap.get(resourceUrlAsString);
-        if (localMediaPlayer != null) {
-            localMediaPlayer.pause();
-        }
-    }
+    /*
+     * public void pause(String resourceUrlAsString) { MediaPlayer localMediaPlayer =
+     * mediaPlayersMap.get(resourceUrlAsString); if (localMediaPlayer != null) { localMediaPlayer.pause(); } }
+     */
 
     public void pauseAll() {
         for (Map.Entry<String, MediaPlayer> entry : mediaPlayersMap.entrySet()) {
@@ -263,7 +284,7 @@ public class BackgroundMusicManager {
         player.setOnError(() -> {
             log.error("error on audio media loading : " + player.getError());
         });
-        
+
         player.volumeProperty().bind(volume);
 
         return player;

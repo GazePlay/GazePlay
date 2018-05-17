@@ -33,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
 

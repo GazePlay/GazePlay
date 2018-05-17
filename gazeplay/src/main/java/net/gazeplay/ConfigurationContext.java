@@ -212,7 +212,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
-        
+
         {
             I18NText label = new I18NText(translator, "MusicFolder", COLON);
             Button input = buildMusicInput(config, configurationContext);
@@ -574,9 +574,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return choiceBox;
     }
-    
+
     private static Button buildMusicInput(Configuration config, ConfigurationContext configurationContext) {
-        
+
         final String whereIsItDir = config.getMusicFolder();
         Button buttonLoad = new Button(whereIsItDir);
 
@@ -598,7 +598,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
                 ConfigurationBuilder.createFromPropertiesResource().withMusicFolder(newPropertyValue)
                         .saveConfigIgnoringExceptions();
-                
+
                 BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance().getInstance();
                 musicManager.emptyPlaylist();
                 musicManager.getAudioFromFolder(newPropertyValue);
