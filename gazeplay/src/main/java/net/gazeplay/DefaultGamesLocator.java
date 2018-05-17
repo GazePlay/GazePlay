@@ -89,16 +89,29 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(new GameSummary("Order", DEFAULT_MEMORIZATION_GAME_THUMBNAIL),
-                new GameSpec.GameLauncher() {
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.IntGameVariant(3, "3 targets"),
+
+                                new GameSpec.IntGameVariant(5, "5 targets"),
+
+                                new GameSpec.IntGameVariant(7, "7 targets")
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new OrderStats(scene);
                     }
 
                     @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
                             Stats stats) {
-                        return new Order(gameContext, stats);
+                        return new Order(gameContext, gameVariant.getNumber(), stats);
                     }
                 }));
 
