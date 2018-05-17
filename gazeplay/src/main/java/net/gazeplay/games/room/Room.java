@@ -56,8 +56,8 @@ public class Room implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        imageWidth = dimension2D.getWidth() / 8;
-        imageHeight = dimension2D.getHeight() / 8;
+        imageWidth = dimension2D.getWidth() / 9;
+        imageHeight = dimension2D.getHeight() / 9;
 
         arrowImNorth = new Image("data/room/arrowNorth.png", imageWidth, imageHeight, true, true);
         rectangleArrowNorth = new Rectangle(arrowImNorth.getWidth(), arrowImNorth.getHeight());
@@ -108,7 +108,7 @@ public class Room implements GameLifeCycle {
 
         SubScene subScene = new SubScene(objects,
                 dimension2D.getWidth() - arrowImWest.getWidth() - arrowImEast.getWidth(),
-                dimension2D.getHeight() - arrowImNorth.getHeight() - arrowImSouth.getHeight() * 3 / 2);
+                dimension2D.getHeight() - arrowImNorth.getHeight() - arrowImSouth.getHeight() * 5 / 2);
 
         camera = new PerspectiveCamera(true);
         camera.setVerticalFieldOfView(false);
