@@ -1,5 +1,6 @@
 package net.gazeplay;
 
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,6 +23,8 @@ import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
+import net.gazeplay.commons.utils.ProgressButton;
+import net.gazeplay.commons.utils.ProgressPane;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -50,7 +53,7 @@ public class GameMenuFactory {
                     .setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
-        BorderPane gameCard = new BorderPane();
+        ProgressPane gameCard = new ProgressPane();
         switch (orientation) {
         case HORIZONTAL:
             gameCard.getStyleClass().add("gameChooserButton");
@@ -145,8 +148,8 @@ public class GameMenuFactory {
         case HORIZONTAL:
             gameDescriptionPane.setPadding(new Insets(0, 10, 0, 10));
 
-            gameCard.setRight(gameDescriptionPane);
-            gameCard.setLeft(thumbnailImageViewContainer);
+            gameCard.button.setRight(gameDescriptionPane);
+            gameCard.button.setLeft(thumbnailImageViewContainer);
 
             // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
             StackPane.setAlignment(gameTitleText, Pos.TOP_RIGHT);
@@ -171,8 +174,8 @@ public class GameMenuFactory {
         case VERTICAL:
             gameDescriptionPane.setPadding(new Insets(10, 0, 10, 0));
 
-            gameCard.setBottom(gameDescriptionPane);
-            gameCard.setTop(thumbnailImageViewContainer);
+            gameCard.button.setBottom(gameDescriptionPane);
+            gameCard.button.setTop(thumbnailImageViewContainer);
 
             // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
             StackPane.setAlignment(gameTitleText, Pos.TOP_CENTER);
@@ -192,9 +195,9 @@ public class GameMenuFactory {
             break;
         }
 
-        gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventhandler = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent mouseEvent) {
+            public void handle(Event mouseEvent) {
                 Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
                 if (variants.size() > 1) {
@@ -219,7 +222,9 @@ public class GameMenuFactory {
                     }
                 }
             }
-        });
+        };
+        gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventhandler);
+        gameCard.assignIndicator(eventhandler);
 
         return gameCard;
     }
@@ -242,19 +247,23 @@ public class GameMenuFactory {
         final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
-            Button button = new Button(variant.getLabel());
+            ProgressButton button = new ProgressButton(variant.getLabel());
             button.getStyleClass().add("gameChooserButton");
             button.getStyleClass().add("gameVariation");
             button.getStyleClass().add("button");
             choicePane.getChildren().add(button);
 
-            button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            EventHandler<Event> event = new EventHandler<Event>() {
                 @Override
-                public void handle(MouseEvent mouseEvent) {
+                public void handle(Event mouseEvent) {
                     dialog.close();
                     chooseGame(gazePlay, gameSpec, variant, config);
                 }
-            });
+            };
+
+            button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
+
+            button.assignIndicator(event);
         }
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);

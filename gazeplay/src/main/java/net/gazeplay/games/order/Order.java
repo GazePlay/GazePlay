@@ -5,7 +5,9 @@
 */
 package net.gazeplay.games.order;
 
+import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -25,31 +27,25 @@ import net.gazeplay.commons.utils.stats.Stats;
 public class Order implements GameLifeCycle {
     private final GameContext gameContext;
     private final Stats stats;
-    private final Spawner sp;
     private int currentNum;
     private final int nbTarget;
 
-    public Order(GameContext gameContext, Stats stats) {
+    public Order(GameContext gameContext, int nbTarget, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
-        this.sp = new Spawner(gameContext.getRandomPositionGenerator(), stats, gameContext);
         this.currentNum = 0;
-        this.nbTarget = 3;
+        this.nbTarget = nbTarget;
     }
 
     @Override
     public void launch() {
-        sp.spawn(nbTarget, this);
+        spawn();
         this.stats.notifyNewRoundReady();
     }
 
     public void enter(Target t) {
-        if (this.currentNum == t.getNum() - 1) {
-            success(t);
-        } else {
-            fail(t);
-        }
+        handleAnswer(t, this.currentNum == t.getNum() - 1);
 
         if (this.currentNum == nbTarget) {
             gameContext.playWinTransition(20, new EventHandler<ActionEvent>() {
@@ -61,46 +57,56 @@ public class Order implements GameLifeCycle {
         }
     }
 
-    private void success(Target t) {
+    private void handleAnswer(Target t, boolean correct) {
         stats.incNbGoals();
 
         Rectangle r = new Rectangle(t.getPos().getX(), t.getPos().getY(), 150, 150);
-        r.setFill(new ImagePattern(new Image("data/order/images/success.png"), 0, 0, 1, 1, true));
+        if (correct == true) {
+            r.setFill(new ImagePattern(new Image("data/order/images/success.png"), 0, 0, 1, 1, true));
+        } else {
+            r.setFill(new ImagePattern(new Image("data/order/images/fail.png"), 0, 0, 1, 1, true));
+        }
         this.gameContext.getChildren().add(r);
 
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
         pause.setOnFinished(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent actionEvent) {
                 Order.this.gameContext.getChildren().remove(r);
+                if (correct == false) {
+                    Order.this.restart();
+                }
             }
         });
 
         this.gameContext.getChildren().remove(t);
-        pause.play();
         this.currentNum++;
+        pause.play();
     }
 
-    private void fail(Target t) {
-        stats.incNbGoals();
-
-        Rectangle r = new Rectangle(t.getPos().getX(), t.getPos().getY(), 150, 150);
-        r.setFill(new ImagePattern(new Image("data/order/images/fail.png"), 0, 0, 1, 1, true));
-        this.gameContext.getChildren().add(r);
-
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        pause.setOnFinished(new EventHandler<ActionEvent>() {
+    public void spawn() {
+        Target[] tabTarget = new Target[nbTarget];
+        Timeline timer = new Timeline();
+        timer.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
+        timer.setOnFinished(new EventHandler<ActionEvent>() {
+            int i = 0;
 
             @Override
             public void handle(ActionEvent actionEvent) {
-                Order.this.gameContext.getChildren().remove(r);
-                Order.this.restart();
+                Target t = new Target(Order.this, gameContext, i + 1);
+                gameContext.getChildren().add(t);
+                tabTarget[i] = t;
+                i++;
+                if (i < nbTarget) {
+                    timer.play();
+                } else {
+                    for (int j = 0; j < nbTarget; j++) {
+                        tabTarget[j].addEvent();
+                    }
+                }
             }
         });
-
-        this.gameContext.getChildren().remove(t);
-        pause.play();
+        timer.play();
     }
 
     private void restart() {

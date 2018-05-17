@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
 import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.ProgressHomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
 import java.util.List;
@@ -28,25 +29,26 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class StatsDisplay {
 
-    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
+    public static ProgressHomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
 
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
             @Override
             public void handle(javafx.event.Event e) {
 
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                // if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    statsContext.getScene().setCursor(Cursor.WAIT); // Change cursor to wait style
+                statsContext.getScene().setCursor(Cursor.WAIT); // Change cursor to wait style
 
-                    gazePlay.onReturnToMenu();
+                gazePlay.onReturnToMenu();
 
-                    statsContext.getScene().setCursor(Cursor.DEFAULT); // Change cursor to default style
-                }
+                statsContext.getScene().setCursor(Cursor.DEFAULT); // Change cursor to default style
+                // }
             }
         };
 
-        HomeButton homeButton = new HomeButton();
+        ProgressHomeButton homeButton = new ProgressHomeButton();
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+        homeButton.assignIndicator(homeEvent);
 
         return homeButton;
     }

@@ -20,10 +20,12 @@ import javafx.stage.Stage;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
+import net.gazeplay.commons.utils.ProgressCustomButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -57,7 +59,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         super(gazePlay, root, scene);
         this.games = games;
 
-        Rectangle exitButton = createExitButton();
+        Node[] exitButton = createExitButton();
 
         ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
         ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(configurationContext);
@@ -68,7 +70,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         leftControlPane.getChildren().add(configurationButton);
         leftControlPane.getChildren().add(createSoundControlPane());
 
-        Button toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
+        I18NButton toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
 
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
@@ -88,7 +90,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
-        topRightPane.getChildren().add(exitButton);
+        topRightPane.getChildren().addAll(exitButton);
 
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config);
 
@@ -168,10 +170,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return choicePanelScroller;
     }
 
-    private Rectangle createExitButton() {
-        CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
+    private Node[] createExitButton() {
+        ProgressCustomButton exitButton = new ProgressCustomButton("data/common/images/power-off.png");
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
-        return exitButton;
+        Node[] ln = { exitButton, exitButton.assignIndicator((EventHandler<Event>) e -> System.exit(0)) };
+
+        return ln;
     }
 
     private Node createLogo() {

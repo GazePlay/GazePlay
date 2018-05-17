@@ -20,6 +20,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.ProgressHomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
@@ -28,6 +29,7 @@ import net.gazeplay.commons.utils.stats.StatsDisplay;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import net.gazeplay.commons.utils.stats.ExplorationGamesStats;
 
 @Slf4j
 @Data
@@ -106,7 +108,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             Text value = new Text(String.valueOf(stats.getNbGoals()));
 
-            addToGrid(grid, currentFormRow, label, value);
+            if (!(stats instanceof ExplorationGamesStats)) {
+                addToGrid(grid, currentFormRow, label, value);
+            }
+
         }
 
         {
@@ -114,7 +119,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             Text value = new Text(StatsDisplay.convert(stats.getRoundsTotalAdditiveDuration()));
 
-            addToGrid(grid, currentFormRow, label, value);
+            if (!(stats instanceof ExplorationGamesStats)) {
+                addToGrid(grid, currentFormRow, label, value);
+            }
         }
 
         {
@@ -128,7 +135,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             Text value = new Text(StatsDisplay.convert(stats.computeRoundsDurationAverageDuration()));
 
-            addToGrid(grid, currentFormRow, label, value);
+            if (!(stats instanceof ExplorationGamesStats)) {
+                addToGrid(grid, currentFormRow, label, value);
+            }
         }
 
         {
@@ -141,16 +150,18 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
 
             Text value = new Text(StatsDisplay.convert(stats.computeRoundsDurationMedianDuration()));
-
-            addToGrid(grid, currentFormRow, label, value);
+            if (!(stats instanceof ExplorationGamesStats)) {
+                addToGrid(grid, currentFormRow, label, value);
+            }
         }
 
         {
             I18NText label = new I18NText(translator, "StandDev", COLON);
 
             Text value = new Text(StatsDisplay.convert((long) stats.computeRoundsDurationStandardDeviation()));
-
-            addToGrid(grid, currentFormRow, label, value);
+            if (!(stats instanceof ExplorationGamesStats)) {
+                addToGrid(grid, currentFormRow, label, value);
+            }
         }
 
         {
@@ -160,8 +171,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 final I18NText label = new I18NText(translator, "label", COLON);
 
                 final Text value = new Text(String.valueOf(((ShootGamesStats) stats).getNbUnCountedShoots()));
-
-                addToGrid(grid, currentFormRow, label, value);
+                if (!(stats instanceof ExplorationGamesStats)) {
+                    addToGrid(grid, currentFormRow, label, value);
+                }
             }
         }
 
@@ -181,7 +193,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             centerPane.getChildren().add(heatMap);
         }
 
-        HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
+        ProgressHomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);

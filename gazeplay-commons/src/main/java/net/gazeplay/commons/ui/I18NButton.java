@@ -1,8 +1,8 @@
 package net.gazeplay.commons.ui;
 
-import javafx.scene.control.Button;
+import net.gazeplay.commons.ui.ProgressButton;
 
-public class I18NButton extends Button implements Translator.LanguageChangeListener {
+public class I18NButton extends ProgressButton implements Translator.LanguageChangeListener {
 
     private String[] textKeys;
 
@@ -26,7 +26,7 @@ public class I18NButton extends Button implements Translator.LanguageChangeListe
     @Override
     public void languageChanged() {
         if (textKeys != null) {
-            setText(translator.translate(textKeys));
+            this.button.setText(translator.translate(textKeys));
         }
     }
 
