@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
 import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.ProgressHomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
 import java.util.List;
@@ -34,19 +35,20 @@ public class StatsDisplay {
             @Override
             public void handle(javafx.event.Event e) {
 
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                // if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    statsContext.getScene().setCursor(Cursor.WAIT); // Change cursor to wait style
+                statsContext.getScene().setCursor(Cursor.WAIT); // Change cursor to wait style
 
-                    gazePlay.onReturnToMenu();
+                gazePlay.onReturnToMenu();
 
-                    statsContext.getScene().setCursor(Cursor.DEFAULT); // Change cursor to default style
-                }
+                statsContext.getScene().setCursor(Cursor.DEFAULT); // Change cursor to default style
+                // }
             }
         };
 
-        HomeButton homeButton = new HomeButton();
+        ProgressHomeButton homeButton = new ProgressHomeButton();
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+        homeButton.assignIndicator(homeButton.getWidth(), homeEvent);
 
         return homeButton;
     }

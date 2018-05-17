@@ -1,4 +1,4 @@
-package net.gazeplay.games.cakes;
+package net.gazeplay.commons.utils;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -14,21 +14,31 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
-public class progessButton extends Button {
+public class ProgressHomeButton extends HomeButton {
 
     ProgressIndicator indicator;
     Timeline timelineProgressBar;
 
-    public ProgressIndicator assignIndicator(ProgressIndicator pi, double buttonSize) {
+    public ProgressHomeButton() {
+        super();
+    }
+
+    public ProgressIndicator assignIndicator(double buttonSize, EventHandler<Event> enterEvent) {
         indicator = new ProgressIndicator(0);
         indicator.setTranslateX(this.getLayoutX() + (buttonSize / 2) * 0.1);
         indicator.setTranslateY(this.getLayoutY() + buttonSize * 0.1);
         indicator.setMinWidth(buttonSize * 0.9);
         indicator.setMinHeight(buttonSize * 0.9);
         indicator.setMouseTransparent(true);
+
         indicator.setOpacity(0);
         EventHandler<Event> enterbuttonHandler = new EventHandler<Event>() {
             @Override
@@ -39,11 +49,18 @@ public class progessButton extends Button {
                 timelineProgressBar.getKeyFrames()
                         .add(new KeyFrame(new Duration(500), new KeyValue(indicator.progressProperty(), 1)));
 
+                timelineProgressBar.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        enterEvent.handle(null);
+                    }
+                });
                 timelineProgressBar.play();
 
             }
         };
-        this.addEventHandler(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
+        // this.addEventHandler(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
+        this.addEventHandler(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
 
         EventHandler<Event> exitbuttonHandler = new EventHandler<Event>() {
             @Override
@@ -54,7 +71,8 @@ public class progessButton extends Button {
 
             }
         };
-        this.addEventHandler(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
+        // this.addEventHandler(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
+        this.addEventHandler(GazeEvent.GAZE_EXITED, exitbuttonHandler);
         return indicator;
     }
 

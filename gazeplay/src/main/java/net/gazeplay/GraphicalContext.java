@@ -92,11 +92,14 @@ public abstract class GraphicalContext<T> {
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
+        button.assignIndicator(button.getWidth(), eventHandler);
+
         return button;
     }
 
     private void configureFullScreenToggleButton(Boolean isFullScreen, I18NButton button) {
         final Image buttonGraphics;
+
         final String label;
         if (isFullScreen) {
             buttonGraphics = new Image("data/common/images/fullscreen-exit.png");

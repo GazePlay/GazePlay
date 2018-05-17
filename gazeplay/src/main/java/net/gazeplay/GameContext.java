@@ -163,8 +163,9 @@ public class GameContext extends GraphicalContext<Pane> {
             scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 
-        HomeButton homeButton = new HomeButton();
+        ProgressHomeButton homeButton = new ProgressHomeButton();
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+        homeButton.assignIndicator(homeButton.getWidth(), homeEvent);
         return homeButton;
     }
 
