@@ -7,5 +7,6 @@ target
 .project
 .classpath
 .settings
+*.log.*
 cache
 
