@@ -24,26 +24,21 @@ import net.gazeplay.commons.utils.stats.Stats;
  * @author vincent
  */
 public class Target extends Parent {
-    private final Stats stats;
     private final int num;
     private final EventHandler enterEvent;
     private final Order gameInstance;
     private final GameContext gameContext;
     private final Rectangle rectangle;
-    private final RandomPositionGenerator randomPos;
     private final ProgressIndicator progressIndicator;
     private final Position pos;
     private Timeline timelineProgressBar;
 
-    public Target(RandomPositionGenerator randomPositionGenerator, Stats stats, Order gameInstance,
-            GameContext gameContext, int num) {
-        this.stats = stats;
+    public Target(Order gameInstance, GameContext gameContext, int num) {
         this.num = num;
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
-        this.randomPos = randomPositionGenerator;
+        this.pos = this.gameContext.getRandomPositionGenerator().newRandomPosition(100);
 
-        pos = randomPos.newRandomPosition(100);
         this.rectangle = new Rectangle(pos.getX(), pos.getY(), 150, 150);
         this.rectangle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
         this.getChildren().add(rectangle);

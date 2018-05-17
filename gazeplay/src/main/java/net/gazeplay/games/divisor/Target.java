@@ -144,16 +144,11 @@ class Target extends Portrait {
         timeline.play();
     }
 
-    private void enter(int x, int y) {
+    public void enter(int x, int y) {
+        stats.incNbGoals();
         if (currentTranslation != null) {
             currentTranslation.stop();
         }
-
-        explose(x, y);
-    }
-
-    public void explose(int x, int y) {
-        stats.incNbGoals();
 
         this.removeEventFilter(MouseEvent.ANY, enterEvent);
         this.removeEventFilter(GazeEvent.ANY, enterEvent);
@@ -201,6 +196,21 @@ class Target extends Portrait {
         ft.play();
     }
 
+    private void createChildren(int x, int y) {
+        for (int i = 0; i < 2; i++) {
+            Target target = new Target(gameContext, randomPosGenerator, stats, imageLibrary, level + 1, startTime,
+                    gameInstance, lapin);
+
+            if (y + target.getRadius() > (int) dimension.getHeight()) {
+                y = (int) dimension.getHeight() - (int) target.getRadius() * 2;
+            }
+
+            target.setPosition(new Position(x, y));
+            gameContext.getChildren().add(target);
+
+        }
+    }
+
     private int randomDirection() {
         Random r = new Random();
         int x = r.nextInt(3) + 4;
@@ -215,20 +225,5 @@ class Target extends Portrait {
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
         gameContext.getGazeDeviceManager().addEventFilter(this);
-    }
-
-    private void createChildren(int x, int y) {
-        for (int i = 0; i < 2; i++) {
-            Target target = new Target(gameContext, randomPosGenerator, stats, imageLibrary, level + 1, startTime,
-                    gameInstance, lapin);
-
-            if (y + target.getRadius() > (int) dimension.getHeight()) {
-                y = (int) dimension.getHeight() - (int) target.getRadius() * 2;
-            }
-
-            target.setPosition(new Position(x, y));
-            gameContext.getChildren().add(target);
-
-        }
     }
 }
