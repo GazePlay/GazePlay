@@ -43,6 +43,7 @@ public class BackgroundMusicManager {
         final Configuration configuration = configBuilder.build();
         volume.set(configuration.getSoundLevel());
 
+        // Maybe it is better to save the sound only when game exit and not each time the sound is changed
         volume.addListener((observable) -> {
             configBuilder.withSoundLevel(volume.getValue()).saveConfigIgnoringExceptions();
         });
