@@ -204,14 +204,14 @@ public class WhereIsIt implements GameLifeCycle {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             URL soundResourceUrl = classLoader.getResource(currentRoundDetails.questionSoundPath);
             log.info("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
-            
+
             AudioClip soundClip = null;
 
             if (soundResourceUrl == null)
                 soundClip = new AudioClip("file:" + currentRoundDetails.questionSoundPath);
             else
                 soundClip = new AudioClip(soundResourceUrl.toExternalForm());
-            
+
             final Configuration configuration = ConfigurationBuilder.createFromPropertiesResource().build();
             soundClip.setVolume(configuration.getSoundLevel());
             soundClip.play();

@@ -13,22 +13,34 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
 @Slf4j
 public class BackgroundMusicManager {
 
+    public static final List<String> SUPPORTED_FILE_EXTENSIONS = Arrays.asList(".mp3", ".m4a");
+
     @Getter
     private static final BackgroundMusicManager instance = new BackgroundMusicManager();
 
     private final Map<String, MediaPlayer> mediaPlayersMap = new ConcurrentHashMap<>();
+
+    private final List<MediaPlayer> playlist = new ArrayList<MediaPlayer>();
+    private MediaPlayer currentMusic;
 
     private final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
             new LinkedBlockingQueue<>(), new CustomThreadFactory(this.getClass().getSimpleName(),
@@ -47,6 +59,81 @@ public class BackgroundMusicManager {
         volume.addListener((observable) -> {
             configBuilder.withSoundLevel(volume.getValue()).saveConfigIgnoringExceptions();
         });
+
+        getAudioFromFolder(configuration.getMusicFolder());
+    }
+
+    public void getAudioFromFolder(String folderPath) {
+
+        final File folder = new File(folderPath);
+        if (!folder.exists()) {
+            //throw new RuntimeException("invalid path for audio folder : " + folderPath);
+            log.warn("invalid path for audio folder : " + folderPath);
+            return;
+        }
+        else if(!folder.isDirectory()) {
+            //throw new RuntimeException("path for audio folder is not a directory : " + folderPath);
+            log.warn("path for audio folder is not a directory : " + folderPath);
+            return;
+        }
+
+        for (String file : folder.list((File dir, String name) -> {
+            for (String ext : SUPPORTED_FILE_EXTENSIONS) {
+                if (name.endsWith(ext)) {
+                    return true;
+                }
+            }
+
+            return false;
+        })) {
+
+            //file = file.replaceAll(" ", "%20");
+            String filePath = folder.getPath() + File.separator + file;
+            File currentFile = new File(filePath);
+            playlist.add(createMediaPlayer(currentFile.toURI().toString()));
+        }
+    }
+
+    public void playPlayList() {
+
+        if (playlist.isEmpty()) {
+            return;
+        }
+
+        final MediaPlayer nextMusic = playlist.remove(0);
+
+        Runnable task = buildMusicTask(nextMusic);
+        executorService.execute(task);
+
+        this.currentMusic = nextMusic;
+    }
+    
+    public boolean isPaused() {
+        return currentMusic.getStatus() == MediaPlayer.Status.PAUSED;
+    }
+
+    private Runnable buildMusicTask(final MediaPlayer music) {
+
+        Runnable asyncTask = () -> {
+
+            music.play();
+            music.setOnEndOfMedia(() -> {
+                if (playlist.isEmpty()) {
+                    final Configuration configuration = configBuilder.build();
+                    getAudioFromFolder(configuration.getMusicFolder());
+                }
+                playPlayList();
+            });
+        };
+
+        return asyncTask;
+    }
+
+    public void emptyPlaylist() {
+        if(currentMusic != null) {
+            currentMusic.stop();
+        }
+        playlist.clear();
     }
 
     public DoubleProperty volumeProperty() {
@@ -82,7 +169,7 @@ public class BackgroundMusicManager {
     public void stop(String resourceUrlAsString) {
         MediaPlayer localMediaPlayer = mediaPlayersMap.get(resourceUrlAsString);
         if (localMediaPlayer != null) {
-            localMediaPlayer.pause();
+            localMediaPlayer.stop();
         }
     }
 
@@ -170,4 +257,15 @@ public class BackgroundMusicManager {
         return outputFile;
     }
 
+    private MediaPlayer createMediaPlayer(String source) {
+        final Media media = new Media(source);
+        final MediaPlayer player = new MediaPlayer(media);
+        player.setOnError(() -> {
+            log.error("error on audio media loading : " + player.getError());
+        });
+        
+        player.volumeProperty().bind(volume);
+
+        return player;
+    }
 }

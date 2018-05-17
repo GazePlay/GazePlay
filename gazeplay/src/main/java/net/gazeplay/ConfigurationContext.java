@@ -40,6 +40,7 @@ import net.gazeplay.commons.utils.multilinguism.Languages;
 import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Slf4j
 public class ConfigurationContext extends GraphicalContext<BorderPane> {
@@ -208,6 +209,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "DisableHeatMap", COLON);
             CheckBox input = buildDisableHeatMapSoundBox(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        
+        {
+            I18NText label = new I18NText(translator, "MusicFolder", COLON);
+            Button input = buildMusicInput(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -565,6 +573,39 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         });
 
         return choiceBox;
+    }
+    
+    private static Button buildMusicInput(Configuration config, ConfigurationContext configurationContext) {
+        
+        final String whereIsItDir = config.getMusicFolder();
+        Button buttonLoad = new Button(whereIsItDir);
+
+        buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                DirectoryChooser directoryChooser = new DirectoryChooser();
+                File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
+                if (file == null) {
+                    return;
+                }
+                buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
+
+                String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
+
+                if (Utils.isWindows()) {
+                    newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
+                }
+
+                ConfigurationBuilder.createFromPropertiesResource().withMusicFolder(newPropertyValue)
+                        .saveConfigIgnoringExceptions();
+                
+                BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance().getInstance();
+                musicManager.emptyPlaylist();
+                musicManager.getAudioFromFolder(newPropertyValue);
+            }
+        });
+
+        return buttonLoad;
     }
 
     private static GameButtonOrientation findSelectedGameButtonOrientation(Configuration configuration) {
