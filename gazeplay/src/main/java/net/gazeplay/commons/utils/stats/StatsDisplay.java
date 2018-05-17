@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class StatsDisplay {
 
-    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
+    public static ProgressHomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
 
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
             @Override
@@ -48,7 +48,7 @@ public class StatsDisplay {
 
         ProgressHomeButton homeButton = new ProgressHomeButton();
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-        homeButton.assignIndicator(homeButton.getWidth(), homeEvent);
+        homeButton.assignIndicator(homeEvent);
 
         return homeButton;
     }

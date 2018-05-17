@@ -220,7 +220,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
         for (int i = 0; i < 6; i++) { // HomePage of the game
             ProgressButton bt = new ProgressButton();
-            bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
+            bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
             bt.setLayoutX((i + 1) * dimension2D.getWidth() / 6 - buttonSize / 2);
@@ -229,21 +229,21 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 ImageView iv = new ImageView(new Image("data/cake/menu" + i + ".png"));
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
-                bt.setGraphic(iv);
+                bt.button.setGraphic(iv);
                 bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
 
                 buttons[i] = bt;
                 if (i == 2) {
                     buttons[i].setDisable(!nappage);
                 }
-
+                bt.assignIndicator(buttonHandler);
                 p[0].getChildren().add(bt);
 
             } else {
                 ImageView iv = new ImageView(new Image("data/cake/validate.png"));
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
-                bt.setGraphic(iv);
+                bt.button.setGraphic(iv);
                 bt.setLayoutX(dimension2D.getWidth() - buttonSize);
                 bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
                 buttonHandler = new EventHandler<Event>() {
@@ -254,9 +254,9 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 };
                 bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 buttons[i] = bt;
+                bt.assignIndicator(buttonHandler);
                 p[0].getChildren().add(bt);
             }
-            p[0].getChildren().add(bt.assignIndicator(buttonSize, buttonHandler));
 
         }
 
@@ -294,7 +294,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 + "-fx-max-height: " + buttonSize + "px;");
         plus.setLayoutX(0.5 * buttonSize);
         plus.setLayoutY((1 + (i + 1) / 2) * dimension2D.getHeight() / 3);
-        plus.setText(s);
+        plus.button.setText(s);
         EventHandler<Event> buttonPlus = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -423,7 +423,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         EventHandler<Event> buttonHandler;
         for (int i = 0; i < k; i++) { // HomePage of the game
             ProgressButton bt = new ProgressButton();
-            bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
+            bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
             if (i < k - 1) {
@@ -433,7 +433,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 ImageView iv = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
-                bt.setGraphic(iv);
+                bt.button.setGraphic(iv);
                 buttonHandler = new EventHandler<Event>() {
                     @Override
                     public void handle(Event e) {
@@ -448,12 +448,14 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     }
                 };
                 bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+
+                bt.assignIndicator(buttonHandler);
                 p[j].getChildren().add(bt);
             } else {
                 ImageView iv = new ImageView(new Image("data/cake/return.png"));
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
-                bt.setGraphic(iv);
+                bt.button.setGraphic(iv);
                 bt.setLayoutX(dimension2D.getWidth() - buttonSize);
                 bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
                 buttonHandler = new EventHandler<Event>() {
@@ -469,10 +471,11 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     }
                 };
                 bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+
+                bt.assignIndicator(buttonHandler);
                 p[j].getChildren().add(bt);
             }
 
-            p[j].getChildren().add(bt.assignIndicator(buttonSize, buttonHandler));
         }
     }
 

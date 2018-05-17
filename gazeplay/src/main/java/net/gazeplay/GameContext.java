@@ -24,6 +24,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
+import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -143,10 +144,10 @@ public class GameContext extends GraphicalContext<Pane> {
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
         menuHBox.getChildren().add(createSoundControlPane());
 
-        Button toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
+        I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
-        HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
+        ProgressHomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
         menuHBox.getChildren().add(homeButton);
 
         Dimension2D dimension2D = getGamePanelDimensionProvider().getDimension2D();
@@ -154,7 +155,7 @@ public class GameContext extends GraphicalContext<Pane> {
         bottomPane.setMinWidth(dimension2D.getWidth());
     }
 
-    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
+    public ProgressHomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
             @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> homeEvent = e -> {
@@ -166,7 +167,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
         ProgressHomeButton homeButton = new ProgressHomeButton();
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-        homeButton.assignIndicator(homeButton.getWidth(), homeEvent);
+        homeButton.assignIndicator(homeEvent);
         return homeButton;
     }
 
