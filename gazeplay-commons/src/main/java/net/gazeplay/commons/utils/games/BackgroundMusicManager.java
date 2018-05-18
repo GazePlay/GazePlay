@@ -74,7 +74,7 @@ public class BackgroundMusicManager {
 
         // TODO : remove this line so it is not the constructor's responsibility to
         // add music
-        getAudioFromFolder(configuration.getMusicFolder());
+        // getAudioFromFolder(configuration.getMusicFolder());
     }
 
     public void getAudioFromFolder(String folderPath) {
@@ -95,7 +95,12 @@ public class BackgroundMusicManager {
             emptyPlaylist();
         }
 
-        for (String file : folder.list((File dir, String name) -> {
+        addFolderRecursively(folder);
+    }
+
+    private void addFolderRecursively(final File folder) {
+
+        for (File file : folder.listFiles((File dir, String name) -> {
             for (String ext : SUPPORTED_FILE_EXTENSIONS) {
                 if (name.endsWith(ext)) {
                     return true;
@@ -105,10 +110,14 @@ public class BackgroundMusicManager {
             return false;
         })) {
 
-            // file = file.replaceAll(" ", "%20");
-            String filePath = folder.getPath() + File.separator + file;
-            File currentFile = new File(filePath);
-            playlist.add(createMediaPlayer(currentFile.toURI().toString()));
+            playlist.add(createMediaPlayer(file.toURI().toString()));
+        }
+
+        for (File file : folder.listFiles()) {
+
+            if (file.isDirectory()) {
+                addFolderRecursively(file);
+            }
         }
     }
 
@@ -161,6 +170,7 @@ public class BackgroundMusicManager {
     public void emptyPlaylist() {
         if (currentMusic != null) {
             currentMusic.stop();
+            currentMusic = null;
         }
         playlist.clear();
     }

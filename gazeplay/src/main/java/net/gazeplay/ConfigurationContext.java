@@ -584,8 +584,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static Button buildMusicInput(Configuration config, ConfigurationContext configurationContext) {
 
-        final String whereIsItDir = config.getMusicFolder();
-        Button buttonLoad = new Button(whereIsItDir);
+        final String musicFolder = config.getMusicFolder();
+        Button buttonLoad = new Button(musicFolder);
 
         buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
             @Override

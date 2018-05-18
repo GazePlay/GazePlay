@@ -215,7 +215,7 @@ public abstract class GraphicalContext<T> {
         });
 
         if (backgroundMusicManager.isPlaying()) {
-            pauseTrack.setVisible(false);
+            pauseTrack.setVisible(true);
         } else {
             playTrack.setVisible(false);
         }
