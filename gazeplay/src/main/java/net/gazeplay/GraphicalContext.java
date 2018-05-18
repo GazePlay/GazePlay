@@ -32,7 +32,6 @@ import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.utils.CssUtil;
-import net.gazeplay.commons.utils.ProgressButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Data
@@ -46,8 +45,6 @@ public abstract class GraphicalContext<T> {
 
     @Getter
     protected final Scene scene;
-
-    private Button playTrack;
 
     public static final String RESOURCES_PATH = "data" + File.separator + "common";
     public static final String IMAGES_PATH = RESOURCES_PATH + File.separator + "images";
@@ -201,8 +198,6 @@ public abstract class GraphicalContext<T> {
         }
         pauseTrack.setOnAction((event) -> {
             backgroundMusicManager.pause();
-            playTrack.setVisible(true);
-            pauseTrack.setVisible(false);
         });
 
         buttonImg = null;
@@ -212,6 +207,7 @@ public abstract class GraphicalContext<T> {
             log.warn(e.toString() + " : " + PLAY_ICON);
         }
 
+        Button playTrack;
         if (buttonImg == null) {
             playTrack = new Button("|>");
         } else {
@@ -219,11 +215,9 @@ public abstract class GraphicalContext<T> {
         }
         playTrack.setOnAction((event) -> {
             backgroundMusicManager.play();
-            playTrack.setVisible(false);
-            pauseTrack.setVisible(true);
         });
 
-        if (backgroundMusicManager.isPaused()) {
+        if (backgroundMusicManager.isPlaying()) {
             pauseTrack.setVisible(false);
         } else {
             playTrack.setVisible(false);
@@ -237,6 +231,17 @@ public abstract class GraphicalContext<T> {
         } catch (IllegalArgumentException e) {
             log.warn(e.toString() + " : " + NEXT_ICON);
         }
+        
+        backgroundMusicManager.getIsPlayingProperty().addListener((observable) -> {
+            if(backgroundMusicManager.isPlaying()) {
+                playTrack.setVisible(false);
+                pauseTrack.setVisible(true);
+            }
+            else {
+                playTrack.setVisible(true);
+                pauseTrack.setVisible(false);
+            }
+        });
 
         Button nextTrack;
         if (buttonImg == null) {

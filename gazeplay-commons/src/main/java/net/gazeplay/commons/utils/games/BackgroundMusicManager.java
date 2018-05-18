@@ -22,6 +22,10 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationBuilder;
 
@@ -33,7 +37,7 @@ public class BackgroundMusicManager {
     @Getter
     private static final BackgroundMusicManager instance = new BackgroundMusicManager();
 
-    private final Map<String, MediaPlayer> mediaPlayersMap = new ConcurrentHashMap<>();
+    //private final Map<String, MediaPlayer> mediaPlayersMap = new ConcurrentHashMap<>();
 
     @Getter
     private final List<MediaPlayer> playlist = new ArrayList<MediaPlayer>();
@@ -48,6 +52,8 @@ public class BackgroundMusicManager {
     private final DoubleProperty volume = new SimpleDoubleProperty(0.25);
 
     private final ConfigurationBuilder configBuilder;
+    
+    private final BooleanProperty isPlayingPoperty = new SimpleBooleanProperty(this, "isPlaying", false);
 
     public BackgroundMusicManager() {
         configBuilder = ConfigurationBuilder.createFromPropertiesResource();
@@ -57,6 +63,18 @@ public class BackgroundMusicManager {
         // Maybe it is better to save the sound only when game exit and not each time the sound is changed
         volume.addListener((observable) -> {
             configBuilder.withSoundLevel(volume.getValue()).saveConfigIgnoringExceptions();
+        });
+        
+        isPlayingPoperty.addListener((observable) -> {
+            
+            if(currentMusic != null) {
+                if(isPlaying()) {
+                    this.currentMusic.play();
+                } else {
+                    this.currentMusic.pause();
+                }
+            }
+
         });
 
         getAudioFromFolder(configuration.getMusicFolder());
@@ -110,12 +128,13 @@ public class BackgroundMusicManager {
         this.currentMusic = nextMusic;
     }
 
-    public boolean isPaused() {
-        if (currentMusic == null) {
-            return false;
-        } else {
-            return currentMusic.getStatus() == MediaPlayer.Status.PAUSED;
-        }
+    public boolean isPlaying() {
+
+        return this.isPlayingPoperty.getValue();
+    }
+    
+    public BooleanProperty getIsPlayingProperty() {
+        return isPlayingPoperty;
     }
 
     public void changeMusic(int newMusicIndex) {
@@ -152,11 +171,11 @@ public class BackgroundMusicManager {
     }
 
     public void pause() {
-        this.currentMusic.pause();
+        this.isPlayingPoperty.setValue(false);
     }
 
     public void play() {
-        this.currentMusic.play();
+        this.isPlayingPoperty.setValue(true);
     }
 
     public DoubleProperty volumeProperty() {
@@ -178,7 +197,7 @@ public class BackgroundMusicManager {
      * mediaPlayersMap.get(resourceUrlAsString); if (localMediaPlayer != null) { localMediaPlayer.pause(); } }
      */
 
-    public void pauseAll() {
+    /*public void pauseAll() {
         for (Map.Entry<String, MediaPlayer> entry : mediaPlayersMap.entrySet()) {
             MediaPlayer localMediaPlayer = entry.getValue();
             if (localMediaPlayer != null) {
@@ -201,44 +220,44 @@ public class BackgroundMusicManager {
                 localMediaPlayer.stop();
             }
         }
-    }
+    }*/
 
     public void playRemoteSound(String resourceUrlAsString) {
-
+        
         Runnable asyncTask = () -> {
-            // parse the URL early
-            // in order to fail early if the URL is invalid
-            URL resourceURL;
-            try {
-                resourceURL = new URL(resourceUrlAsString);
-            } catch (MalformedURLException e) {
-                throw new RuntimeException("Invalid URL provided as sound resource : " + resourceUrlAsString, e);
-            }
+            
+            MediaPlayer localMediaPlayer = getMediaPlayerFromSource(resourceUrlAsString);
+            // If there is already the music in playlist, just play it
+            if(localMediaPlayer == null) {
+            
+                // parse the URL early
+                // in order to fail early if the URL is invalid
+                URL resourceURL;
+                try {
+                    resourceURL = new URL(resourceUrlAsString);
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException("Invalid URL provided as sound resource : " + resourceUrlAsString, e);
+                }
 
-            final String resourceUrlExternalForm = resourceURL.toExternalForm();
-            final File mediaFile = downloadAndGetFromCache(resourceURL, resourceUrlExternalForm);
+                final String resourceUrlExternalForm = resourceURL.toExternalForm();
+                final File mediaFile = downloadAndGetFromCache(resourceURL, resourceUrlExternalForm);
 
-            Platform.runLater(() -> {
                 final String localResourceName = mediaFile.toURI().toString();
                 log.info("Playing sound {}", localResourceName);
 
-                MediaPlayer localMediaPlayer = mediaPlayersMap.get(resourceUrlAsString);
-                if (localMediaPlayer != null) {
-                    localMediaPlayer.play();
-                } else {
-                    try {
-                        Media media = new Media(localResourceName);
-                        localMediaPlayer = new MediaPlayer(media);
-                        localMediaPlayer.setCycleCount(Integer.MAX_VALUE);
-                        localMediaPlayer.volumeProperty().bind(volume);
-                        //
-                        mediaPlayersMap.put(resourceUrlExternalForm, localMediaPlayer);
-                        localMediaPlayer.play();
-                    } catch (RuntimeException e) {
-                        log.error("Exception while playing media file {}", localResourceName, e);
-                    }
+                try {
+                   localMediaPlayer = createMediaPlayer(resourceUrlAsString);
+                } catch (RuntimeException e) {
+                    log.error("Exception while playing media file {} ", localResourceName, e);
                 }
-            });
+                    
+            }
+            
+            if(localMediaPlayer != null) {
+                playlist.add(localMediaPlayer);
+                changeMusic(playlist.size() - 1);
+                play();
+            }
         };
 
         executorService.execute(asyncTask);
@@ -288,5 +307,21 @@ public class BackgroundMusicManager {
         player.volumeProperty().bind(volume);
 
         return player;
+    }
+    
+    /**
+     * Look through playlist and search for a corresponding mediaplayer
+     * @param source The source to look for.
+     * @return The media player found or null.
+     */
+    public MediaPlayer getMediaPlayerFromSource(final String source) {
+        
+        for(MediaPlayer mediaPlayer : playlist) {
+            final Media media = mediaPlayer.getMedia();
+            if(media.getSource().equals(source)) {
+                return mediaPlayer;
+            }
+        }
+        return null;
     }
 }
