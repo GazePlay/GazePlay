@@ -47,7 +47,7 @@ public class BackgroundMusicManager {
     private final DoubleProperty volume = new SimpleDoubleProperty(0.25);
 
     private final ConfigurationBuilder configBuilder;
-    
+
     private final BooleanProperty isPlayingPoperty = new SimpleBooleanProperty(this, "isPlaying", false);
 
     public BackgroundMusicManager() {
@@ -59,11 +59,11 @@ public class BackgroundMusicManager {
         volume.addListener((observable) -> {
             configBuilder.withSoundLevel(volume.getValue()).saveConfigIgnoringExceptions();
         });
-        
+
         isPlayingPoperty.addListener((observable) -> {
-            
-            if(currentMusic != null) {
-                if(isPlaying()) {
+
+            if (currentMusic != null) {
+                if (isPlaying()) {
                     this.currentMusic.play();
                 } else {
                     this.currentMusic.pause();
@@ -79,6 +79,7 @@ public class BackgroundMusicManager {
 
     public void getAudioFromFolder(String folderPath) {
 
+        log.info("audio folder : {}", folderPath);
         final File folder = new File(folderPath);
         if (!folder.exists()) {
             // throw new RuntimeException("invalid path for audio folder : " + folderPath);
@@ -89,8 +90,8 @@ public class BackgroundMusicManager {
             log.warn("path for audio folder is not a directory : " + folderPath);
             return;
         }
-        
-        if(!playlist.isEmpty()) {
+
+        if (!playlist.isEmpty()) {
             emptyPlaylist();
         }
 
@@ -127,7 +128,7 @@ public class BackgroundMusicManager {
         final MediaPlayer nextMusic = playlist.get(currentMusicIndex);
 
         this.currentMusic = nextMusic;
-        
+
         play();
     }
 
@@ -135,15 +136,17 @@ public class BackgroundMusicManager {
 
         return this.isPlayingPoperty.getValue();
     }
-    
+
     public BooleanProperty getIsPlayingProperty() {
         return isPlayingPoperty;
     }
 
     /**
-     * Change the current selected music. If invalid index then nothing will be done.
-     * If everything is correct, then it will play the newly selected music.
-     * @param newMusicIndex The new index to use.
+     * Change the current selected music. If invalid index then nothing will be done. If everything is correct, then it
+     * will play the newly selected music.
+     * 
+     * @param newMusicIndex
+     *            The new index to use.
      */
     public void changeMusic(int newMusicIndex) {
 
@@ -151,7 +154,7 @@ public class BackgroundMusicManager {
             return;
         }
         currentMusicIndex = newMusicIndex;
-        //log.info("current index : {}", currentMusicIndex);
+        // log.info("current index : {}", currentMusicIndex);
         playPlayList();
     }
 
@@ -170,29 +173,28 @@ public class BackgroundMusicManager {
      * If the music was paused, then play when it where in its timeline.
      */
     public void play() {
-        
+
         if (currentMusic != null) {
             this.isPlayingPoperty.setValue(true);
         }
     }
-    
+
     public void stop() {
         if (currentMusic != null) {
-            if(isPlaying()) {
+            if (isPlaying()) {
                 pause();
             }
             currentMusic.stop();
         }
     }
-    
+
     public void next() {
         currentMusicIndex = (currentMusicIndex + 1) % playlist.size();
         changeMusic(currentMusicIndex);
     }
-    
+
     public void previous() {
-        currentMusicIndex = (currentMusicIndex + playlist.size() - 1)
-                    % playlist.size();
+        currentMusicIndex = (currentMusicIndex + playlist.size() - 1) % playlist.size();
         changeMusic(currentMusicIndex);
     }
 
@@ -211,13 +213,13 @@ public class BackgroundMusicManager {
     }
 
     public void playRemoteSound(String resourceUrlAsString) {
-        
+
         Runnable asyncTask = () -> {
-            
+
             MediaPlayer localMediaPlayer = getMediaPlayerFromSource(resourceUrlAsString);
             // If there is already the music in playlist, just play it
-            if(localMediaPlayer == null) {
-            
+            if (localMediaPlayer == null) {
+
                 // parse the URL early
                 // in order to fail early if the URL is invalid
                 URL resourceURL;
@@ -234,14 +236,14 @@ public class BackgroundMusicManager {
                 log.info("Playing sound {}", localResourceName);
 
                 try {
-                   localMediaPlayer = createMediaPlayer(resourceUrlAsString);
+                    localMediaPlayer = createMediaPlayer(resourceUrlAsString);
                 } catch (RuntimeException e) {
                     log.error("Exception while playing media file {} ", localResourceName, e);
                 }
-                    
+
             }
-            
-            if(localMediaPlayer != null) {
+
+            if (localMediaPlayer != null) {
                 playlist.add(localMediaPlayer);
                 changeMusic(playlist.size() - 1);
             }
@@ -285,7 +287,7 @@ public class BackgroundMusicManager {
     }
 
     private MediaPlayer createMediaPlayer(String source) {
-        
+
         try {
             final Media media = new Media(source);
             final MediaPlayer player = new MediaPlayer(media);
@@ -303,17 +305,19 @@ public class BackgroundMusicManager {
         }
         return null;
     }
-    
+
     /**
      * Look through playlist and search for a corresponding mediaplayer
-     * @param source The source to look for.
+     * 
+     * @param source
+     *            The source to look for.
      * @return The media player found or null.
      */
     private MediaPlayer getMediaPlayerFromSource(final String source) {
-        
-        for(MediaPlayer mediaPlayer : playlist) {
+
+        for (MediaPlayer mediaPlayer : playlist) {
             final Media media = mediaPlayer.getMedia();
-            if(media.getSource().equals(source)) {
+            if (media.getSource().equals(source)) {
                 return mediaPlayer;
             }
         }

@@ -72,7 +72,7 @@ public abstract class GraphicalContext<T> {
     // BY</a></div>
     public static final String PLAY_ICON = IMAGES_PATH + File.separator + "play-button.png";
 
-    public static final int ICON_SIZE = 64;
+    public static final int ICON_SIZE = 32;
 
     public void setUpOnStage(Stage stage) {
         stage.setTitle("GazePlay");
@@ -176,7 +176,7 @@ public abstract class GraphicalContext<T> {
             previousTrack = new Button("", new ImageView(buttonImg));
         }
         previousTrack.setOnAction((event) -> {
-          
+
             backgroundMusicManager.previous();
         });
 
@@ -228,13 +228,12 @@ public abstract class GraphicalContext<T> {
         } catch (IllegalArgumentException e) {
             log.warn(e.toString() + " : " + NEXT_ICON);
         }
-        
+
         backgroundMusicManager.getIsPlayingProperty().addListener((observable) -> {
-            if(backgroundMusicManager.isPlaying()) {
+            if (backgroundMusicManager.isPlaying()) {
                 playTrack.setVisible(false);
                 pauseTrack.setVisible(true);
-            }
-            else {
+            } else {
                 playTrack.setVisible(true);
                 pauseTrack.setVisible(false);
             }
@@ -247,7 +246,7 @@ public abstract class GraphicalContext<T> {
             nextTrack = new Button("", new ImageView(buttonImg));
         }
         nextTrack.setOnAction((event) -> {
-           
+
             backgroundMusicManager.next();
         });
 
