@@ -18,6 +18,8 @@ import net.gazeplay.games.cups.CupsAndBalls;
 import net.gazeplay.games.cups.utils.CupsAndBallsStats;
 import net.gazeplay.games.draw.DrawApplication;
 import net.gazeplay.games.drawonvideo.VideoPlayerWithLiveFeedbackApp;
+import net.gazeplay.games.labyrinth.Labyrinth;
+import net.gazeplay.games.labyrinth.LabyrinthStats;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.memory.Memory;
@@ -603,6 +605,20 @@ public class DefaultGamesLocator implements GamesLocator {
                             Stats stats) {
                         return new cakeFactory(gameContext, stats, gameVariant.getNumber());
                     }
+                }));
+        result.add(new GameSpec(new GameSummary("Labyrinth", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new LabyrinthStats(scene);
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new Labyrinth(gameContext, stats);
+                    }
+
                 }));
 
         log.info("Games found : {}", result.size());
