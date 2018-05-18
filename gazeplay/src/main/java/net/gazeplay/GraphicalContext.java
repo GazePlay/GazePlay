@@ -91,7 +91,7 @@ public abstract class GraphicalContext<T> {
             }
         });
 
-        button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+        button.button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
         button.assignIndicator(eventHandler);
 
