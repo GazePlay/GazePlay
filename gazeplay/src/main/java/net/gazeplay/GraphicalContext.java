@@ -176,11 +176,8 @@ public abstract class GraphicalContext<T> {
             previousTrack = new Button("", new ImageView(buttonImg));
         }
         previousTrack.setOnAction((event) -> {
-            int currentMusicIndex = backgroundMusicManager.getCurrentMusicIndex();
-            currentMusicIndex = (currentMusicIndex + backgroundMusicManager.getPlaylist().size() - 1)
-                    % backgroundMusicManager.getPlaylist().size();
-            log.info("current index : {}", currentMusicIndex);
-            backgroundMusicManager.changeMusic(currentMusicIndex);
+          
+            backgroundMusicManager.previous();
         });
 
         buttonImg = null;
@@ -250,10 +247,8 @@ public abstract class GraphicalContext<T> {
             nextTrack = new Button("", new ImageView(buttonImg));
         }
         nextTrack.setOnAction((event) -> {
-            int currentMusicIndex = backgroundMusicManager.getCurrentMusicIndex();
-            currentMusicIndex = (currentMusicIndex + 1) % backgroundMusicManager.getPlaylist().size();
-            log.info("current index : {}", currentMusicIndex);
-            backgroundMusicManager.changeMusic(currentMusicIndex);
+           
+            backgroundMusicManager.next();
         });
 
         HBox musicControl = new HBox(5, previousTrack, stackPane, nextTrack);
