@@ -133,9 +133,13 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         currentCake = maxCake;
                         createCake(maxCake);
                     }
+                    if (mode != 0) {
+                        disableprogessButtons();
+                    }
                     if (maxCake >= 2) {
                         ((ProgressButton) e.getSource()).setDisable(true);
                     }
+
                 }
             };
         }
@@ -230,7 +234,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
                 bt.button.setGraphic(iv);
-                bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
 
                 buttons[i] = bt;
                 if (i == 2) {
@@ -252,7 +256,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         winFunction();
                     }
                 };
-                bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 buttons[i] = bt;
                 bt.assignIndicator(buttonHandler);
                 p[0].getChildren().add(bt);
@@ -447,7 +451,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         }
                     }
                 };
-                bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
 
                 bt.assignIndicator(buttonHandler);
                 p[j].getChildren().add(bt);
@@ -470,7 +474,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         }
                     }
                 };
-                bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
 
                 bt.assignIndicator(buttonHandler);
                 p[j].getChildren().add(bt);

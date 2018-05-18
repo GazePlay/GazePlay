@@ -52,29 +52,26 @@ public class ProgressButton extends StackPane {
         indicator = new ProgressIndicator(0);
         button.heightProperty().addListener((obs, oldVal, newVal) -> {
             indicator.setMinHeight(newVal.doubleValue() * 0.9);
+            indicator.setTranslateY(indicator.getLayoutX() - (buttonHeight / 0.1) + (newVal.doubleValue() * 0.1) / 2);
             buttonHeight = newVal.doubleValue();
-            // indicator.setTranslateY(indicator.getTranslateY()-(oldVal.doubleValue()/0.1) +
-            // (newVal.doubleValue())*0.1);
-            log.info("button size modified: " + newVal.doubleValue());
+            // log.info("button size modified: " + newVal.doubleValue());
             indicator.toFront();
         });
         button.widthProperty().addListener((obs, oldVal, newVal) -> {
             indicator.setMinWidth(newVal.doubleValue() * 0.9);
             buttonWidth = newVal.doubleValue();
-            // indicator.setTranslateX(indicator.getTranslateX()-(oldVal.doubleValue()/0.1)*2 +
-            // (newVal.doubleValue()/2)*0.1);
             indicator.toFront();
-            log.info("button size modified: " + newVal.doubleValue());
+            // log.info("button size modified: " + newVal.doubleValue());
         });
         button.layoutXProperty().addListener((obs, oldVal, newVal) -> {
-            indicator.setTranslateX(newVal.doubleValue() + (buttonWidth / 2) * 0.1);
+            indicator.setTranslateX(newVal.doubleValue());
             indicator.toFront();
-            log.info("position changed: " + newVal.doubleValue());
+            // log.info("position changed: " + newVal.doubleValue());
         });
         button.layoutYProperty().addListener((obs, oldVal, newVal) -> {
             indicator.setTranslateY(newVal.doubleValue() + buttonHeight * 0.1);
             indicator.toFront();
-            log.info("position changed: " + newVal.doubleValue());
+            // log.info("position changed: " + newVal.doubleValue());
         });
     }
 

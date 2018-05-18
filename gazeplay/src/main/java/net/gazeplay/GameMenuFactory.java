@@ -241,6 +241,8 @@ public class GameMenuFactory {
         choicePane.setAlignment(Pos.CENTER);
 
         ScrollPane choicePanelScroller = new ScrollPane(choicePane);
+        choicePanelScroller.setMinHeight(primaryStage.getHeight() / 3);
+        choicePanelScroller.setMinWidth(primaryStage.getWidth() / 3);
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
@@ -248,9 +250,11 @@ public class GameMenuFactory {
 
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             ProgressButton button = new ProgressButton(variant.getLabel());
-            button.getStyleClass().add("gameChooserButton");
-            button.getStyleClass().add("gameVariation");
-            button.getStyleClass().add("button");
+            button.button.getStyleClass().add("gameChooserButton");
+            button.button.getStyleClass().add("gameVariation");
+            button.button.getStyleClass().add("button");
+            button.button.setMinHeight(primaryStage.getHeight() / 10);
+            button.button.setMinWidth(primaryStage.getWidth() / 10);
             choicePane.getChildren().add(button);
 
             EventHandler<Event> event = new EventHandler<Event>() {
@@ -261,7 +265,7 @@ public class GameMenuFactory {
                 }
             };
 
-            button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
+            button.button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
 
             button.assignIndicator(event);
         }
