@@ -355,7 +355,7 @@ public class ColorsGame implements GameLifeCycle {
                     Point2D eventCoord = new Point2D(currentX, currentY);
                     Point2D localCoord = root.screenToLocal(eventCoord);
 
-                    if(localCoord != null) {
+                    if (localCoord != null) {
                         currentX = localCoord.getX();
                         currentY = localCoord.getY();
                     }
@@ -372,14 +372,14 @@ public class ColorsGame implements GameLifeCycle {
                 } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
 
                     GazeEvent gazeEvent = (GazeEvent) event;
-                    
+
                     currentX = gazeEvent.getX();
                     currentY = gazeEvent.getY();
 
                     Point2D eventCoord = new Point2D(currentX, currentY);
                     Point2D localCoord = root.screenToLocal(eventCoord);
 
-                    if(localCoord != null) {
+                    if (localCoord != null) {
                         currentX = localCoord.getX();
                         currentY = localCoord.getY();
                     }
@@ -477,8 +477,9 @@ public class ColorsGame implements GameLifeCycle {
         // log.info("R = {}, G = {}, B = {}, A = {}", color.getRed(), color.getGreen(), color.getBlue(),
         // color.getOpacity());
 
-        // Don't fill the zone if the pixel selected is already of the same color.
-        // Also don't fill black zones
+        /*
+         * Don't fill the zone if the pixel selected is already of the same color. Also don't fill black zones
+         */
         if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor())
                 && !isEqualColors(color, Color.BLACK)) {
             javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(), pixelX, pixelY,
