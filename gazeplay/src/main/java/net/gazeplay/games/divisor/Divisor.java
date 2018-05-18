@@ -12,6 +12,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.gazeplay.commons.utils.games.Utils;
 
 /**
  * Created by givaudan on 15/02/2018.
@@ -31,17 +32,21 @@ public class Divisor implements GameLifeCycle {
     @Override
     public void launch() {
         Target target;
+
         if (lapin) {
             List<Image> images = new ArrayList<>();
-            images.add(new Image("data/divisor/images/1.png"));
-            images.add(new Image("data/divisor/images/2.png"));
-            images.add(new Image("data/divisor/images/3.png"));
-            images.add(new Image("data/divisor/images/4.png"));
-            images.add(new Image("data/divisor/images/5.png"));
-            images.add(new Image("data/divisor/images/6.png"));
-            images.add(new Image("data/divisor/images/7.png"));
+            images.add(new Image("data/divisor/images/rabbit/1.png"));
+            images.add(new Image("data/divisor/images/rabbit/2.png"));
+            images.add(new Image("data/divisor/images/rabbit/3.png"));
+            images.add(new Image("data/divisor/images/rabbit/4.png"));
+            images.add(new Image("data/divisor/images/rabbit/5.png"));
+            images.add(new Image("data/divisor/images/rabbit/6.png"));
+            images.add(new Image("data/divisor/images/rabbit/7.png"));
 
             EagerImageLibrary imageLibrary = new EagerImageLibrary(images);
+
+            // EagerImageLibrary imageLibrary = new EagerImageLibrary(
+            // Utils.getImagesSubDirectory("data/divisor/images/rabbit"));
 
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -49,11 +54,24 @@ public class Divisor implements GameLifeCycle {
             gameContext.getChildren().add(imageRectangle);
             this.gameContext.resetBordersToFront();
 
-            target = new Target(gameContext, gameContext.getRandomPositionGenerator(), stats, imageLibrary, 0,
-                    System.currentTimeMillis(), this, lapin);
+            target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this, lapin);
         } else {
-            target = new Target(gameContext, gameContext.getRandomPositionGenerator(), stats,
-                    Portrait.createImageLibrary(), 0, System.currentTimeMillis(), this, lapin);
+            List<Image> images = new ArrayList<>();
+            images.add(new Image("data/divisor/images/basic/1.png"));
+            images.add(new Image("data/divisor/images/basic/2.gif"));
+            images.add(new Image("data/divisor/images/basic/3.jpg"));
+            images.add(new Image("data/divisor/images/basic/4.png"));
+            images.add(new Image("data/divisor/images/basic/5.jpg"));
+            images.add(new Image("data/divisor/images/basic/6.png"));
+            images.add(new Image("data/divisor/images/basic/7.png"));
+            images.add(new Image("data/divisor/images/basic/8.png"));
+            images.add(new Image("data/divisor/images/basic/9.png"));
+            images.add(new Image("data/divisor/images/basic/10.png"));
+
+            EagerImageLibrary imageLibrary = new EagerImageLibrary(images);
+            // EagerImageLibrary imageLibrary = new EagerImageLibrary(
+            // Utils.getImagesSubDirectory("data/divisor/images/basic"));
+            target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this, lapin);
         }
         gameContext.getChildren().add(target);
     }

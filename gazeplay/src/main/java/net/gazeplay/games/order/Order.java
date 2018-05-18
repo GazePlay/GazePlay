@@ -6,7 +6,6 @@
 package net.gazeplay.games.order;
 
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -68,7 +67,8 @@ public class Order implements GameLifeCycle {
         }
         this.gameContext.getChildren().add(r);
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        Timeline pause = new Timeline();
+        pause.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
         pause.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {

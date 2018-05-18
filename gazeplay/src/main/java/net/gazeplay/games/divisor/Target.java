@@ -1,6 +1,5 @@
 package net.gazeplay.games.divisor;
 
-import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -19,48 +18,53 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
-import net.gazeplay.commons.utils.RandomPositionGenerator;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Random;
+import javafx.scene.Parent;
+import javafx.scene.shape.Rectangle;
 
 /**
  *
  * @author vincent
  */
 @Slf4j
-class Target extends Portrait {
-
+class Target extends Parent {
     private TranslateTransition currentTranslation;
-    private final RandomPositionGenerator randomPosGenerator;
     private final Stats stats;
     private final int difficulty;
     private final int level;
+    private Position pos;
+    private double radius;
     private final EventHandler<Event> enterEvent;
     private final GameContext gameContext;
     private final Divisor gameInstance;
-    private final ImageLibrary imageLibrary;
     private final long startTime;
     private final Dimension2D dimension;
     private final boolean lapin;
+    private ImageLibrary imgLib;
     private Image explosion;
+    private Rectangle rectangle;
 
-    public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
-            ImageLibrary imageLibrary, int level, long start, Divisor gameInstance, boolean lapin) {
-        super((int) 180 / (level + 1), randomPositionGenerator, imageLibrary);
+    public Target(GameContext gameContext, Stats stats, ImageLibrary imgLib, int level, long start,
+            Divisor gameInstance, boolean lapin) {
         this.level = level;
         this.difficulty = 3;
-        this.randomPosGenerator = randomPositionGenerator;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.stats = stats;
-        this.imageLibrary = imageLibrary;
         this.startTime = start;
         this.lapin = lapin;
+        this.imgLib = imgLib;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.pos = this.gameContext.getRandomPositionGenerator().newRandomPosition(100);
+        this.radius = 200 / (level + 1);
+
+        this.rectangle = new Rectangle(pos.getX(), pos.getY(), 150, 150);
+        this.rectangle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
+        this.getChildren().add(rectangle);
 
         try {
             if (lapin) {
@@ -75,15 +79,7 @@ class Target extends Portrait {
         enterEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                    double x = ((MouseEvent) e).getX();
-                    double y = ((MouseEvent) e).getY();
-                    enter((int) x, (int) y);
-                } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    double x = ((GazeEvent) e).getX();
-                    double y = ((GazeEvent) e).getY();
-                    enter((int) x, (int) y);
-                }
+                enter();
             }
         };
 
@@ -94,20 +90,12 @@ class Target extends Portrait {
             waitbeforestart.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
-
                     addEvent();
-
                 }
-
             });
             waitbeforestart.play();
         } else {
             addEvent();
-        }
-
-        double centerY = this.getCenterY();
-        if (centerY + this.getRadius() > (int) dimension.getHeight()) {
-            this.setCenterY(centerY - this.getRadius() * 2);
         }
 
         move();
@@ -125,17 +113,19 @@ class Target extends Portrait {
 
             @Override
             public void handle(ActionEvent t) {
-                double newCenterX = Target.this.getCenterX() + dx;
-                double newCenterY = Target.this.getCenterY() + dy;
+                double newCenterX = Target.this.pos.getX() + dx;
+                double newCenterY = Target.this.pos.getY() + dy;
 
-                Target.this.setCenterX(newCenterX);
-                Target.this.setCenterY(newCenterY);
+                Position newPos = new Position(newCenterX, newCenterY);
+                Target.this.pos = newPos;
+                Target.this.rectangle.setX(newCenterX);
+                Target.this.rectangle.setY(newCenterY);
 
-                if (newCenterX <= (Target.this.getRadius()) || newCenterX >= (width - Target.this.getRadius())) {
+                if (newCenterX <= (Target.this.radius) || newCenterX >= (width - Target.this.radius)) {
                     dx = -dx;
                 }
 
-                if (newCenterY <= (Target.this.getRadius()) || newCenterY >= (height - Target.this.getRadius())) {
+                if (newCenterY <= (Target.this.radius) || newCenterY >= (height - Target.this.radius)) {
                     dy = -dy;
                 }
             }
@@ -144,7 +134,7 @@ class Target extends Portrait {
         timeline.play();
     }
 
-    public void enter(int x, int y) {
+    public void enter() {
         stats.incNbGoals();
         if (currentTranslation != null) {
             currentTranslation.stop();
@@ -153,6 +143,19 @@ class Target extends Portrait {
         this.removeEventFilter(MouseEvent.ANY, enterEvent);
         this.removeEventFilter(GazeEvent.ANY, enterEvent);
 
+        double x = this.pos.getX();
+        double y = this.pos.getY();
+
+        explodeAnimation(x, y);
+
+        gameContext.getChildren().remove(this);
+
+        if (level < difficulty) {
+            createChildren(x, y);
+        }
+    }
+
+    private void explodeAnimation(double x, double y) {
         Circle c = new Circle();
         c.setCenterX(x);
         c.setCenterY(y);
@@ -160,20 +163,12 @@ class Target extends Portrait {
         c.setFill(new ImagePattern(explosion, 0, 0, 1, 1, true));
         this.gameContext.getChildren().add(c);
 
-        FadeTransition ft = new FadeTransition(Duration.millis(300), this);
-        ft.setFromValue(1);
-        ft.setToValue(0);
-
-        gameContext.getChildren().remove(this);
-
-        ft.setOnFinished(new EventHandler<ActionEvent>() {
-
+        Timeline timer = new Timeline(new KeyFrame(Duration.millis(300)));
+        timer.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 gameContext.getChildren().remove(c);
-                if (level < difficulty) {
-                    createChildren(x, y);
-                } else if (((!lapin) && (gameContext.getChildren().isEmpty()))
+                if (((!lapin) && (gameContext.getChildren().isEmpty()))
                         || ((lapin) && (gameContext.getChildren().size() <= 1))) {
                     long totalTime = (System.currentTimeMillis() - startTime) / 1000;
                     Label l = new Label("Temps : " + Long.toString(totalTime) + "s");
@@ -193,19 +188,18 @@ class Target extends Portrait {
                 }
             }
         });
-        ft.play();
+        timer.play();
     }
 
-    private void createChildren(int x, int y) {
+    private void createChildren(double x, double y) {
         for (int i = 0; i < 2; i++) {
-            Target target = new Target(gameContext, randomPosGenerator, stats, imageLibrary, level + 1, startTime,
-                    gameInstance, lapin);
+            Target target = new Target(gameContext, stats, this.imgLib, level + 1, startTime, gameInstance, lapin);
 
-            if (y + target.getRadius() > (int) dimension.getHeight()) {
-                y = (int) dimension.getHeight() - (int) target.getRadius() * 2;
+            if (y + target.radius > (int) dimension.getHeight()) {
+                y = (int) dimension.getHeight() - (int) target.radius * 2;
             }
 
-            target.setPosition(new Position(x, y));
+            target.setPos(new Position(x, y));
             gameContext.getChildren().add(target);
 
         }
@@ -225,5 +219,9 @@ class Target extends Portrait {
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
         gameContext.getGazeDeviceManager().addEventFilter(this);
+    }
+
+    private void setPos(Position pos) {
+        this.pos = pos;
     }
 }
