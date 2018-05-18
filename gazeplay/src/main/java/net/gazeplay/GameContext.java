@@ -28,6 +28,7 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.cakes.cakeStats;
 
 import java.io.IOException;
 
@@ -153,6 +154,31 @@ public class GameContext extends GraphicalContext<Pane> {
         Dimension2D dimension2D = getGamePanelDimensionProvider().getDimension2D();
         bottomPane.setLayoutY(dimension2D.getHeight() * 0.92 - menuHBox.getHeight());
         bottomPane.setMinWidth(dimension2D.getWidth());
+
+        gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> {
+            bottomPane.setMinWidth(newVal.doubleValue());
+        });
+        gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
+            if (gazePlay.isFullScreen()) {
+                bottomPane.setLayoutY(newVal.doubleValue() - menuHBox.getHeight());
+            } else {
+                bottomPane.setLayoutY(newVal.doubleValue() - 50 - menuHBox.getHeight());
+            }
+        });
+
+        /*
+         * double initialLayoutX = this.getRoot().getLayoutX(); double initialLayoutY = this.getRoot().getLayoutY();
+         * 
+         * gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> { double ratio =
+         * newVal.doubleValue()/dimension2D.getHeight(); this.getRoot().setScaleY(ratio);
+         * this.getRoot().setLayoutY(initialLayoutY*ratio); });
+         * 
+         * gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> { double ratio =
+         * newVal.doubleValue()/dimension2D.getWidth(); this.getRoot().setScaleX(ratio);
+         * this.getRoot().setLayoutX(-this.getRoot().localToScene(0, 0).getX());
+         * 
+         * });
+         */
     }
 
     public ProgressHomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
@@ -166,7 +192,7 @@ public class GameContext extends GraphicalContext<Pane> {
         };
 
         ProgressHomeButton homeButton = new ProgressHomeButton();
-        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+        homeButton.button.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
         homeButton.assignIndicator(homeEvent);
         return homeButton;
     }
