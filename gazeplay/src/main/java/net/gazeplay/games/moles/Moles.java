@@ -219,6 +219,8 @@ public class Moles extends Parent implements GameLifeCycle {
     public void OneMoleWhacked() {
         nbMolesWhacked++;
         String s = "Score:" + nbMolesWhacked;
+        stats.incNbGoals();
+        stats.notifyNewRoundReady();
         lab.setText(s);
     }
 
