@@ -139,12 +139,11 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     if (maxCake >= 2) {
                         ((ProgressButton) e.getSource()).setDisable(true);
                     }
-                    
-                    
+
                 }
             };
         }
-        
+
         return buttonHandler;
     }
 
