@@ -8,5 +8,7 @@ public class MoleStats extends ShootGamesStats {
     public MoleStats(Scene scene) {
         super(scene);
         this.gameName = "mole";
+        setAccidentalShotPreventionPeriod(0);
+
     }
 }

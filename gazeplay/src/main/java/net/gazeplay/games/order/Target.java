@@ -28,7 +28,6 @@ public class Target extends Parent {
     private final EventHandler enterEvent;
     private final Order gameInstance;
     private final GameContext gameContext;
-    private final Rectangle rectangle;
     private final ProgressIndicator progressIndicator;
     private final Position pos;
     private Timeline timelineProgressBar;
@@ -39,8 +38,8 @@ public class Target extends Parent {
         this.gameContext = gameContext;
         this.pos = this.gameContext.getRandomPositionGenerator().newRandomPosition(100);
 
-        this.rectangle = new Rectangle(pos.getX(), pos.getY(), 150, 150);
-        this.rectangle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
+        Rectangle rectangle = new Rectangle(pos.getX(), pos.getY(), 150, 150);
+        rectangle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
         this.getChildren().add(rectangle);
 
         this.progressIndicator = createProgressIndicator(100);
@@ -80,8 +79,8 @@ public class Target extends Parent {
 
     private ProgressIndicator createProgressIndicator(double diameter) {
         ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(rectangle.getX() + 25);
-        indicator.setTranslateY(rectangle.getY() + 25);
+        indicator.setTranslateX(this.pos.getX() + 25);
+        indicator.setTranslateY(this.pos.getY() + 25);
         indicator.setMinWidth(diameter * 0.9);
         indicator.setMinHeight(diameter * 0.9);
         indicator.setOpacity(0);
