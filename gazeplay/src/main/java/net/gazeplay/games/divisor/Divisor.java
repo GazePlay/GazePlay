@@ -6,13 +6,11 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.games.EagerImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.gazeplay.commons.utils.games.Utils;
 
 /**
  * Created by givaudan on 15/02/2018.
@@ -54,7 +52,8 @@ public class Divisor implements GameLifeCycle {
             gameContext.getChildren().add(imageRectangle);
             this.gameContext.resetBordersToFront();
 
-            target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this, lapin);
+            target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
+                    this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         } else {
             List<Image> images = new ArrayList<>();
             images.add(new Image("data/divisor/images/basic/1.png"));
@@ -71,7 +70,8 @@ public class Divisor implements GameLifeCycle {
             EagerImageLibrary imageLibrary = new EagerImageLibrary(images);
             // EagerImageLibrary imageLibrary = new EagerImageLibrary(
             // Utils.getImagesSubDirectory("data/divisor/images/basic"));
-            target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this, lapin);
+            target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
+                    this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         }
         gameContext.getChildren().add(target);
     }

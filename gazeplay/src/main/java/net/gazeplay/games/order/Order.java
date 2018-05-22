@@ -11,7 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
@@ -59,20 +59,20 @@ public class Order implements GameLifeCycle {
     private void handleAnswer(Target t, boolean correct) {
         stats.incNbGoals();
 
-        Rectangle r = new Rectangle(t.getPos().getX(), t.getPos().getY(), 150, 150);
+        Circle c = new Circle(t.getPos().getX(), t.getPos().getY(), t.getRadius());
         if (correct == true) {
-            r.setFill(new ImagePattern(new Image("data/order/images/success.png"), 0, 0, 1, 1, true));
+            c.setFill(new ImagePattern(new Image("data/order/images/success.png"), 0, 0, 1, 1, true));
         } else {
-            r.setFill(new ImagePattern(new Image("data/order/images/fail.png"), 0, 0, 1, 1, true));
+            c.setFill(new ImagePattern(new Image("data/order/images/fail.png"), 0, 0, 1, 1, true));
         }
-        this.gameContext.getChildren().add(r);
+        this.gameContext.getChildren().add(c);
 
         Timeline pause = new Timeline();
         pause.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
         pause.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Order.this.gameContext.getChildren().remove(r);
+                Order.this.gameContext.getChildren().remove(c);
                 if (correct == false) {
                     Order.this.restart();
                 }

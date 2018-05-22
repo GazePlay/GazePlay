@@ -24,7 +24,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Random;
 import javafx.scene.Parent;
-import javafx.scene.shape.Rectangle;
 
 /**
  *
@@ -46,10 +45,10 @@ class Target extends Parent {
     private final boolean lapin;
     private ImageLibrary imgLib;
     private Image explosion;
-    private Rectangle rectangle;
+    private Circle cercle;
 
     public Target(GameContext gameContext, Stats stats, ImageLibrary imgLib, int level, long start,
-            Divisor gameInstance, boolean lapin) {
+            Divisor gameInstance, Position pos, boolean lapin) {
         this.level = level;
         this.difficulty = 3;
         this.gameContext = gameContext;
@@ -58,13 +57,13 @@ class Target extends Parent {
         this.startTime = start;
         this.lapin = lapin;
         this.imgLib = imgLib;
+        this.pos = pos;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.pos = this.gameContext.getRandomPositionGenerator().newRandomPosition(100);
         this.radius = 200 / (level + 1);
 
-        this.rectangle = new Rectangle(pos.getX(), pos.getY(), 150, 150);
-        this.rectangle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
-        this.getChildren().add(rectangle);
+        this.cercle = new Circle(pos.getX(), pos.getY(), this.radius);
+        this.cercle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
+        this.getChildren().add(cercle);
 
         try {
             if (lapin) {
@@ -118,8 +117,9 @@ class Target extends Parent {
 
                 Position newPos = new Position(newCenterX, newCenterY);
                 Target.this.pos = newPos;
-                Target.this.rectangle.setX(newCenterX);
-                Target.this.rectangle.setY(newCenterY);
+
+                Target.this.cercle.setCenterX(newCenterX);
+                Target.this.cercle.setCenterY(newCenterY);
 
                 if (newCenterX <= (Target.this.radius) || newCenterX >= (width - Target.this.radius)) {
                     dx = -dx;
@@ -156,10 +156,7 @@ class Target extends Parent {
     }
 
     private void explodeAnimation(double x, double y) {
-        Circle c = new Circle();
-        c.setCenterX(x);
-        c.setCenterY(y);
-        c.setRadius((int) 180 / (level + 1));
+        Circle c = new Circle(x, y, this.radius);
         c.setFill(new ImagePattern(explosion, 0, 0, 1, 1, true));
         this.gameContext.getChildren().add(c);
 
@@ -193,15 +190,14 @@ class Target extends Parent {
 
     private void createChildren(double x, double y) {
         for (int i = 0; i < 2; i++) {
-            Target target = new Target(gameContext, stats, this.imgLib, level + 1, startTime, gameInstance, lapin);
+            Target target = new Target(gameContext, stats, this.imgLib, level + 1, startTime, gameInstance,
+                    new Position(x, y), lapin);
 
             if (y + target.radius > (int) dimension.getHeight()) {
                 y = (int) dimension.getHeight() - (int) target.radius * 2;
             }
 
-            target.setPos(new Position(x, y));
             gameContext.getChildren().add(target);
-
         }
     }
 
