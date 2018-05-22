@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.ProgressButton;
+import net.gazeplay.commons.ui.ProgressButton;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j

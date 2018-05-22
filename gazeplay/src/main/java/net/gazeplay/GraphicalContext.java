@@ -28,8 +28,8 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.I18NTooltip;
+import net.gazeplay.commons.ui.ProgressButton;
 import net.gazeplay.commons.utils.CssUtil;
-import net.gazeplay.commons.utils.ProgressButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Data
