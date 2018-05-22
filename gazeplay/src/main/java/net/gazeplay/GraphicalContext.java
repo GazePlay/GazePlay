@@ -304,7 +304,7 @@ public abstract class GraphicalContext<T> {
 
         pane.setContent(grid);
 
-        if (firstMusicSetUp) {
+        if (GraphicalContext.firstMusicSetUp) {
 
             if (backgroundMusicManager.getPlaylist().isEmpty()) {
                 final Configuration configuration = ConfigurationBuilder.createFromPropertiesResource().build();
@@ -313,13 +313,23 @@ public abstract class GraphicalContext<T> {
 
             backgroundMusicManager.changeMusic(0);
             backgroundMusicManager.playPlayList();
-            firstMusicSetUp = false;
+            GraphicalContext.setFirstMusicSetip(false);
 
             // We need to manually set the music title for the first set up
             setMusicTitle(musicName);
         }
 
         return pane;
+    }
+
+    /**
+     * This method only exists because of mavent findbug plugin. Since this class is a singleton, this works.
+     * 
+     * @param value
+     *            The new value to set.
+     */
+    private static void setFirstMusicSetip(boolean value) {
+        GraphicalContext.firstMusicSetUp = value;
     }
 
     private void setMusicTitle(final Label musicLabel) {
