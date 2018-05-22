@@ -1,5 +1,8 @@
 package net.gazeplay;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.RotateTransition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -11,11 +14,14 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -34,6 +40,8 @@ import java.io.IOException;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
+
+    public static boolean menuOpen = false;
 
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
@@ -58,21 +66,58 @@ public class GameContext extends GraphicalContext<Pane> {
         controlPanel.maxWidthProperty().bind(root.widthProperty());
         controlPanel.toFront();
 
+        double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
+
+        // Button bt = new Button();
+        ImageView bt = new ImageView(new Image("data/common/images/configuration-button-alt4.png"));
+        bt.setFitWidth(buttonSize);
+        bt.setFitHeight(buttonSize);
+        /*
+         * bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; " +
+         * "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; " + "-fx-max-height: " +
+         * buttonSize + "px;");
+         */
+
+        gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
+            bt.setLayoutY(0);
+            bt.toFront();
+        });
+        gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> {
+            bt.setLayoutX(-buttonSize / 2);
+            bt.toFront();
+        });
+
         EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> {
-            controlPanel.setOpacity(1);
-            // root.setBottom(autoHiddingControlPanel);
-        };
-        EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent -> {
-            controlPanel.setOpacity(0);
-            // root.setBottom(null);
+            double from = 0;
+            double to = 1;
+            double angle = 360;
+            if (menuOpen) {
+                from = 1;
+                to = 0;
+                angle = -1 * angle;
+            }
+            RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
+            rt.setByAngle(angle);
+            FadeTransition ft = new FadeTransition(Duration.millis(500), controlPanel);
+            ft.setFromValue(from);
+            ft.setToValue(to);
+            ParallelTransition pt = new ParallelTransition();
+            pt.getChildren().addAll(rt, ft);
+            controlPanel.setDisable(menuOpen);
+            menuOpen = !menuOpen;
+            pt.play();
         };
 
-        controlPanel.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
-        controlPanel.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
+        controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 4);
+        controlPanel.setOpacity(0);
+        controlPanel.setDisable(true);
+        menuOpen = false;
 
-        mouseEnterControlPanelEventHandler.handle(null);
-        BorderPane root2 = new BorderPane();
-        root2.setBottom(controlPanel);
+        bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEnterControlPanelEventHandler);
+
+        Pane root2 = new Pane();
+        root2.getChildren().add(bt);
+        root2.getChildren().add(controlPanel);
         root.setCenter(gamingRoot);
         root.getChildren().add(root2);
 
@@ -166,19 +211,6 @@ public class GameContext extends GraphicalContext<Pane> {
             }
         });
 
-        /*
-         * double initialLayoutX = this.getRoot().getLayoutX(); double initialLayoutY = this.getRoot().getLayoutY();
-         * 
-         * gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> { double ratio =
-         * newVal.doubleValue()/dimension2D.getHeight(); this.getRoot().setScaleY(ratio);
-         * this.getRoot().setLayoutY(initialLayoutY*ratio); });
-         * 
-         * gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> { double ratio =
-         * newVal.doubleValue()/dimension2D.getWidth(); this.getRoot().setScaleX(ratio);
-         * this.getRoot().setLayoutX(-this.getRoot().localToScene(0, 0).getX());
-         * 
-         * });
-         */
     }
 
     public ProgressHomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
