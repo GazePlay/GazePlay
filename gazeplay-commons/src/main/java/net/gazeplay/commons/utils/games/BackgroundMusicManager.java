@@ -29,13 +29,15 @@ import net.gazeplay.commons.configuration.ConfigurationBuilder;
 @Slf4j
 public class BackgroundMusicManager {
 
-    public static final List<String> SUPPORTED_FILE_EXTENSIONS = Arrays.asList(".mp3", ".m4a");
+    public static final List<String> SUPPORTED_FILE_EXTENSIONS = Arrays.asList(".aif", 
+            ".aiff", ".fxm", ".flv", ".m3u8", ".mp3", ".mp4", ".m4v", ".m4a", ".mp4", ".wav");
 
     @Getter
     private static final BackgroundMusicManager instance = new BackgroundMusicManager();
 
     @Getter
     private final List<MediaPlayer> playlist = new ArrayList<MediaPlayer>();
+    @Getter
     private MediaPlayer currentMusic;
     @Getter
     private int currentMusicIndex = 0;
