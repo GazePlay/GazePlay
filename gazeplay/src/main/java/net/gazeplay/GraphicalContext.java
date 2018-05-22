@@ -6,9 +6,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
@@ -17,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -71,6 +74,12 @@ public abstract class GraphicalContext<T> {
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
     public static final String PLAY_ICON = IMAGES_PATH + File.separator + "play-button.png";
+
+    // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
+    // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
+    // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
+    // BY</a></div>
+    public static final String SPEAKER_ICON = IMAGES_PATH + File.separator + "speaker.png";
 
     public static final int ICON_SIZE = 32;
 
@@ -157,12 +166,43 @@ public abstract class GraphicalContext<T> {
         pane.setCollapsible(false);
 
         GridPane grid = new GridPane();
-        grid.add(new I18NLabel(getGazePlay().getTranslator(), "Volume"), 0, 0);
-        grid.add(createMediaVolumeSlider(gazePlay), 0, 1);
+        grid.setHgap(5);
+        grid.setVgap(2);
+
+        Image buttonImg = null;
+        try {
+            buttonImg = new Image(SPEAKER_ICON, ICON_SIZE, ICON_SIZE, false, true);
+        } catch (IllegalArgumentException e) {
+            log.warn(e.toString() + " : " + PREVIOUS_ICON);
+        }
+
+        Label volumeLabel;
+        if (buttonImg == null) {
+            volumeLabel = new I18NLabel(getGazePlay().getTranslator(), "Volume");
+        } else {
+            volumeLabel = new Label(null, new ImageView(buttonImg));
+        }
+
+        grid.add(volumeLabel, 0, 1);
+        Slider volumeSlider = createMediaVolumeSlider(gazePlay);
+        grid.add(volumeSlider, 1, 1, 2, 1);
 
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
-        Image buttonImg = null;
+        final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
+
+        final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
+        musicName.setLabelFor(volumeSlider);
+        grid.add(musicName, 0, 0, 2, 1);
+
+        musicName.setMaxWidth(ICON_SIZE * 3 + 3 * grid.getHgap());
+        backgroundMusicManager.getMusicIndexProperty().addListener((observable) -> {
+
+            String musicTitle = backgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
+            musicName.setText(musicTitle);
+        });
+
+        buttonImg = null;
         try {
             buttonImg = new Image(PREVIOUS_ICON, ICON_SIZE, ICON_SIZE, false, true);
         } catch (IllegalArgumentException e) {
@@ -250,9 +290,14 @@ public abstract class GraphicalContext<T> {
             backgroundMusicManager.next();
         });
 
-        HBox musicControl = new HBox(5, previousTrack, stackPane, nextTrack);
-
-        grid.add(musicControl, 0, 2);
+        /*
+         * HBox musicControl = new HBox(5, previousTrack, stackPane, nextTrack);
+         * 
+         * grid.add(musicControl, 0, 2);
+         */
+        grid.add(previousTrack, 0, 2);
+        grid.add(stackPane, 1, 2);
+        grid.add(nextTrack, 2, 2);
 
         pane.setContent(grid);
 
@@ -266,8 +311,8 @@ public abstract class GraphicalContext<T> {
         slider.setShowTickMarks(true);
         slider.setMajorTickUnit(0.25);
         slider.setSnapToTicks(true);
-        slider.setValue(BackgroundMusicManager.getInstance().volumeProperty().getValue());
-        BackgroundMusicManager.getInstance().volumeProperty().bindBidirectional(slider.valueProperty());
+        slider.setValue(BackgroundMusicManager.getInstance().getVolume().getValue());
+        BackgroundMusicManager.getInstance().getVolume().bindBidirectional(slider.valueProperty());
         return slider;
     }
 

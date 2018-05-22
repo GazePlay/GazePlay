@@ -112,7 +112,7 @@ public class Bravo extends Rectangle {
 
             if (this.enableRewardSound) {
                 log.debug("Playing sound animation ...");
-                soundClip.play(BackgroundMusicManager.getInstance().volumeProperty().getValue());
+                soundClip.play();
             }
 
             log.debug("Finished JavaFX task");
