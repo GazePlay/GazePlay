@@ -168,7 +168,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             if (stats instanceof ShootGamesStats && !(stats instanceof BubblesGamesStats)
                     && ((ShootGamesStats) stats).getNbUnCountedShoots() != 0) {
 
-                final I18NText label = new I18NText(translator, "label", COLON);
+                final I18NText label = new I18NText(translator, "UncountedShot", COLON);
 
                 final Text value = new Text(String.valueOf(((ShootGamesStats) stats).getNbUnCountedShoots()));
                 if (!(stats instanceof ExplorationGamesStats)) {
