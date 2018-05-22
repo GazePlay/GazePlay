@@ -41,6 +41,7 @@ import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Slf4j
@@ -48,9 +49,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static final String COLON = "Colon";
 
-    private static double prefWidth = 200;
+    private static final double PREF_WIDTH = 200;
 
-    private static double prefHeight = 25;
+    private static final double PREF_HEIGHT = 25;
 
     private static Translator translator;
 
@@ -262,8 +263,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         choiceBox.getSelectionModel().select(0);
-        choiceBox.setPrefWidth(prefWidth);
-        choiceBox.setPrefHeight(prefHeight);
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
 
         choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -296,8 +297,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         choiceBox.getSelectionModel().select(0);
-        choiceBox.setPrefWidth(prefWidth);
-        choiceBox.setPrefHeight(prefHeight);
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
 
         choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -344,8 +345,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         themesBox.getSelectionModel().select(selected);
 
-        themesBox.setPrefWidth(prefWidth);
-        themesBox.setPrefHeight(prefHeight);
+        themesBox.setPrefWidth(PREF_WIDTH);
+        themesBox.setPrefHeight(PREF_HEIGHT);
 
         themesBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BuiltInUiTheme>() {
             @Override
@@ -475,8 +476,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.getItems().addAll(Languages.values());
         choiceBox.getSelectionModel().select(currentLanguage);
 
-        choiceBox.setPrefWidth(prefWidth);
-        choiceBox.setPrefHeight(prefHeight);
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
 
         choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Languages>() {
             @Override
@@ -502,8 +503,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         EyeTracker selectedEyeTracker = findSelectedEyeTracker(configuration);
         choiceBox.getSelectionModel().select(selectedEyeTracker);
 
-        choiceBox.setPrefWidth(prefWidth);
-        choiceBox.setPrefHeight(prefHeight);
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
 
         choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<EyeTracker>() {
             @Override
@@ -566,8 +567,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
         choiceBox.getSelectionModel().select(selectedValue);
 
-        choiceBox.setPrefWidth(prefWidth);
-        choiceBox.setPrefHeight(prefHeight);
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
 
         choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<GameButtonOrientation>() {
             @Override

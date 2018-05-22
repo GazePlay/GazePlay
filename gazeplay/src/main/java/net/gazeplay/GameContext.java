@@ -143,7 +143,7 @@ public class GameContext extends GraphicalContext<Pane> {
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        menuHBox.getChildren().add(createSoundControlPane());
+        menuHBox.getChildren().add(createMusicControlPane());
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);

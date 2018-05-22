@@ -152,13 +152,13 @@ public abstract class GraphicalContext<T> {
         button.button.setTooltip(new I18NTooltip(gazePlay.getTranslator(), label));
     }
 
-    public TitledPane createSoundControlPane() {
+    public TitledPane createMusicControlPane() {
         I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Music");
         pane.setCollapsible(false);
 
         GridPane grid = new GridPane();
         grid.add(new I18NLabel(getGazePlay().getTranslator(), "Volume"), 0, 0);
-        grid.add(createMediaVolumeSlider(gazePlay), 0, 1);
+        grid.add(createMusicVolumeSlider(gazePlay), 0, 1);
 
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
@@ -259,7 +259,7 @@ public abstract class GraphicalContext<T> {
         return pane;
     }
 
-    public Slider createMediaVolumeSlider(@NonNull GazePlay gazePlay) {
+    public Slider createMusicVolumeSlider(@NonNull GazePlay gazePlay) {
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
@@ -270,8 +270,32 @@ public abstract class GraphicalContext<T> {
         BackgroundMusicManager.getInstance().volumeProperty().bindBidirectional(slider.valueProperty());
         return slider;
     }
+    
+    private Slider createEffectsVolumeSlider(@NonNull GazePlay gazePlay) {
+        
+        final ConfigurationBuilder configBuilder = ConfigurationBuilder.createFromPropertiesResource();
+        final Configuration config = configBuilder.build();
+        Slider slider = new Slider();
+        slider.setMin(0);
+        slider.setMax(1);
+        slider.setShowTickMarks(true);
+        slider.setMajorTickUnit(0.25);
+        slider.setSnapToTicks(true);
+        slider.setValue(config.getEffectsVolume());
+        slider.valueProperty().addListener((observable) -> {
+            configBuilder.withEffectsVolume(slider.getValue()).saveConfigIgnoringExceptions();
+        });
+        return slider;
+    }
 
     public void onGameStarted() {
+    }
+    
+    public TitledPane createEffectsVolumePane() {
+        I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Music");
+        pane.setCollapsible(false);
+        
+        return pane;
     }
 
 }

@@ -17,6 +17,7 @@ import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 import java.net.URL;
+import net.gazeplay.commons.configuration.Configuration;
 
 /**
  * Created by schwab on 30/10/2016.
@@ -79,6 +80,8 @@ public class Bravo extends Rectangle {
         soundResourceUrl = classLoader.getResource(soundResourceLocation);
 
         soundClip = new AudioClip(soundResourceUrl.toExternalForm());
+        final Configuration configuration = ConfigurationBuilder.createFromPropertiesResource().build();
+        soundClip.setVolume(configuration.getEffectsVolume());
 
         fullTransition = createFullTransition();
 

@@ -68,7 +68,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         leftControlPane.setAlignment(Pos.CENTER);
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.getChildren().add(configurationButton);
-        leftControlPane.getChildren().add(createSoundControlPane());
+        leftControlPane.getChildren().add(createMusicControlPane());
 
         I18NButton toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
 

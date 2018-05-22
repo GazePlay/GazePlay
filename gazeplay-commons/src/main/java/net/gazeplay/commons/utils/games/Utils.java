@@ -74,7 +74,8 @@ public class Utils {
         try {
             Media media = new Media(path);
             MediaPlayer mp = new MediaPlayer(media);
-            mp.setVolume(BackgroundMusicManager.getInstance().volumeProperty().getValue());
+            final Configuration configuration = ConfigurationBuilder.createFromPropertiesResource().build();
+            mp.setVolume(configuration.getMusicVolume());
             mp.play();
         } catch (Exception e) {
             log.error("Exception", e);
