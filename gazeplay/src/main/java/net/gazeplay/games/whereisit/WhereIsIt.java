@@ -206,12 +206,15 @@ public class WhereIsIt implements GameLifeCycle {
             log.info("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
 
             AudioClip soundClip = null;
+            
+            final Configuration configuration = ConfigurationBuilder.createFromPropertiesResource().build();
 
             if (soundResourceUrl == null)
                 soundClip = new AudioClip("file:" + currentRoundDetails.questionSoundPath);
             else
                 soundClip = new AudioClip(soundResourceUrl.toExternalForm());
 
+            soundClip.setVolume(configuration.getEffectsVolume());
             soundClip.play();
         } catch (Exception e) {
             log.info("Can't play sound: no associated sound : " + e.toString());

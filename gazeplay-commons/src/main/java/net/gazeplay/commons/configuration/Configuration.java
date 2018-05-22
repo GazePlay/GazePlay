@@ -31,9 +31,11 @@ public class Configuration {
 
     private final boolean heatMapDisabled;
 
-    private final double soundLevel;
+    private final double musicVolume;
 
     private final String musicFolder;
+    
+    private final Double effectsVolume;
 
     protected Configuration(ConfigurationBuilder builder) {
         this.gazeMode = builder.gazeMode;
@@ -47,8 +49,9 @@ public class Configuration {
         this.enableRewardSound = builder.enableRewardSound;
         this.menuButtonsOrientation = builder.menuButtonsOrientation;
         this.heatMapDisabled = builder.heatMapDisabled;
-        this.soundLevel = builder.soundLevel;
+        this.musicVolume = builder.musicVolume;
         this.musicFolder = builder.musicFolder;
+        this.effectsVolume = builder.effectsVolume;
     }
 
 }

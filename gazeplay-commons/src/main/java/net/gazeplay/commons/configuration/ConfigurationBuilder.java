@@ -23,8 +23,9 @@ public class ConfigurationBuilder implements Cloneable {
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
-    private static final String PROPERTY_NAME_SOUND_LEVEL = "SOUND_LEVEL";
+    private static final String PROPERTY_NAME_MUSIC_VOLUME = "MUSIC_VOLUME";
     private static final String PROPERTY_NAME_MUSIC_FOLDER = "MUSIC_FOLDER";
+    private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
 
     private static final String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
@@ -37,9 +38,10 @@ public class ConfigurationBuilder implements Cloneable {
     private static final int DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
-    private static final double DEFAULT_VALUE_SOUND_LEVEL = 0.25;
+    private static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     private static final String DEFAULT_VALUE_MUSIC_FOLDER = "data" + File.separator + "home" + File.separator
             + "sounds";
+    private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
 
     private static String getFileDirectoryDefaultValue() {
         return Utils.getGazePlayFolder() + "files" /* + Utils.FILESEPARATOR */;
@@ -94,9 +96,11 @@ public class ConfigurationBuilder implements Cloneable {
 
     protected boolean heatMapDisabled = DEFAULT_VALUE_HEATMAP_DISABLED;
 
-    protected double soundLevel = DEFAULT_VALUE_SOUND_LEVEL;
+    protected double musicVolume = DEFAULT_VALUE_MUSIC_VOLUME;
 
     protected String musicFolder = DEFAULT_VALUE_MUSIC_FOLDER;
+    
+    protected Double effectsVolume = DEFAULT_VALUE_EFFECTS_VOLUME;
 
     public ConfigurationBuilder() {
 
@@ -178,13 +182,19 @@ public class ConfigurationBuilder implements Cloneable {
 
     public ConfigurationBuilder withSoundLevel(double value) {
         ConfigurationBuilder copy = copy();
-        copy.soundLevel = value;
+        copy.musicVolume = value;
         return copy;
     }
 
     public ConfigurationBuilder withMusicFolder(String value) {
         ConfigurationBuilder copy = copy();
         copy.musicFolder = value;
+        return copy;
+    }
+    
+    public ConfigurationBuilder withEffectsVolume(double value) {
+        ConfigurationBuilder copy = copy();
+        copy.effectsVolume = value;
         return copy;
     }
 
@@ -256,14 +266,23 @@ public class ConfigurationBuilder implements Cloneable {
             heatMapDisabled = Boolean.parseBoolean(buffer);
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_SOUND_LEVEL);
+        buffer = prop.getProperty(PROPERTY_NAME_MUSIC_VOLUME);
         if (buffer != null) {
-            soundLevel = Double.parseDouble(buffer);
+            musicVolume = Double.parseDouble(buffer);
         }
 
         buffer = prop.getProperty(PROPERTY_NAME_MUSIC_FOLDER);
         if (buffer != null) {
             musicFolder = buffer;
+        }
+        
+        buffer = prop.getProperty(PROPERTY_NAME_EFFECTS_VOLUME);
+        if (buffer != null) {
+            try {
+            effectsVolume = Double.parseDouble(buffer);
+            } catch (NumberFormatException e) {
+                log.warn("Malformed property");
+            }
         }
 
     }
@@ -294,8 +313,9 @@ public class ConfigurationBuilder implements Cloneable {
         properties.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND, Boolean.toString(this.enableRewardSound));
         properties.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, this.menuButtonsOrientation);
         properties.setProperty(PROPERTY_NAME_HEATMAP_DISABLED, Boolean.toString(this.heatMapDisabled));
-        properties.setProperty(PROPERTY_NAME_SOUND_LEVEL, Double.toString(this.soundLevel));
+        properties.setProperty(PROPERTY_NAME_MUSIC_VOLUME, Double.toString(this.musicVolume));
         properties.setProperty(PROPERTY_NAME_MUSIC_FOLDER, this.musicFolder);
+        properties.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, Double.toString(effectsVolume));
 
         return properties;
     }
