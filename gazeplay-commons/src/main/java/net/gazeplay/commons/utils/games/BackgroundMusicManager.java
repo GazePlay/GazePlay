@@ -26,6 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableMap;
@@ -88,13 +90,14 @@ public class BackgroundMusicManager {
 
         // If music is playing and index is changed, then change the music playing
         musicIndexProperty.addListener((observable) -> {
-
+            int newMusicIndex = musicIndexProperty.getValue();
+            if (newMusicIndex < 0 || newMusicIndex >= playlist.size()) {
+                musicIndexProperty.setValue(0);
+                throw new IndexOutOfBoundsException("Invalid music index set. 0 will be set instead");
+            }
             changeCurrentMusic();
         });
 
-        // TODO : remove this line so it is not the constructor's responsibility to
-        // add music
-        getAudioFromFolder(configuration.getMusicFolder());
     }
 
     public void getAudioFromFolder(String folderPath) {

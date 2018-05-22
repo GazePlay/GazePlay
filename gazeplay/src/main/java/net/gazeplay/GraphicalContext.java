@@ -6,7 +6,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,7 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -82,6 +80,12 @@ public abstract class GraphicalContext<T> {
     public static final String SPEAKER_ICON = IMAGES_PATH + File.separator + "speaker.png";
 
     public static final int ICON_SIZE = 32;
+    
+    /**
+     * Field used to know if the background music controler has already been 
+     * built once. This is used to get audio and play it at the beginning.
+     */
+    public static boolean firstMusicSetUp = true;
 
     public void setUpOnStage(Stage stage) {
         stage.setTitle("GazePlay");
@@ -198,8 +202,7 @@ public abstract class GraphicalContext<T> {
         musicName.setMaxWidth(ICON_SIZE * 3 + 3 * grid.getHgap());
         backgroundMusicManager.getMusicIndexProperty().addListener((observable) -> {
 
-            String musicTitle = backgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
-            musicName.setText(musicTitle);
+            setMusicTitle(musicName);
         });
 
         buttonImg = null;
@@ -300,8 +303,29 @@ public abstract class GraphicalContext<T> {
         grid.add(nextTrack, 2, 2);
 
         pane.setContent(grid);
+        
+        if(firstMusicSetUp) {
+            
+            if(backgroundMusicManager.getPlaylist().isEmpty()) {
+                final Configuration configuration = ConfigurationBuilder.createFromPropertiesResource().build();
+                backgroundMusicManager.getAudioFromFolder(configuration.getMusicFolder());
+            }
+            
+            backgroundMusicManager.changeMusic(0);
+            backgroundMusicManager.playPlayList();
+            firstMusicSetUp = false;
+            
+            // We need to manually set the music title for the first set up
+            setMusicTitle(musicName);
+        }
 
         return pane;
+    }
+    
+    private void setMusicTitle(final Label musicLabel) {
+        final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+        String musicTitle = backgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
+        musicLabel.setText(musicTitle);
     }
 
     public Slider createMediaVolumeSlider(@NonNull GazePlay gazePlay) {
