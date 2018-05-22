@@ -31,6 +31,10 @@ public class Configuration {
 
     private final boolean heatMapDisabled;
 
+    private final double soundLevel;
+
+    private final String musicFolder;
+
     protected Configuration(ConfigurationBuilder builder) {
         this.gazeMode = builder.gazeMode;
         this.eyetracker = builder.eyetracker;
@@ -43,6 +47,8 @@ public class Configuration {
         this.enableRewardSound = builder.enableRewardSound;
         this.menuButtonsOrientation = builder.menuButtonsOrientation;
         this.heatMapDisabled = builder.heatMapDisabled;
+        this.soundLevel = builder.soundLevel;
+        this.musicFolder = builder.musicFolder;
     }
 
 }
