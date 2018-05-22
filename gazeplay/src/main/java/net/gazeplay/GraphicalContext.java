@@ -80,10 +80,10 @@ public abstract class GraphicalContext<T> {
     public static final String SPEAKER_ICON = IMAGES_PATH + File.separator + "speaker.png";
 
     public static final int ICON_SIZE = 32;
-    
+
     /**
-     * Field used to know if the background music controler has already been 
-     * built once. This is used to get audio and play it at the beginning.
+     * Field used to know if the background music controler has already been built once. This is used to get audio and
+     * play it at the beginning.
      */
     public static boolean firstMusicSetUp = true;
 
@@ -303,25 +303,25 @@ public abstract class GraphicalContext<T> {
         grid.add(nextTrack, 2, 2);
 
         pane.setContent(grid);
-        
-        if(firstMusicSetUp) {
-            
-            if(backgroundMusicManager.getPlaylist().isEmpty()) {
+
+        if (firstMusicSetUp) {
+
+            if (backgroundMusicManager.getPlaylist().isEmpty()) {
                 final Configuration configuration = ConfigurationBuilder.createFromPropertiesResource().build();
                 backgroundMusicManager.getAudioFromFolder(configuration.getMusicFolder());
             }
-            
+
             backgroundMusicManager.changeMusic(0);
             backgroundMusicManager.playPlayList();
             firstMusicSetUp = false;
-            
+
             // We need to manually set the music title for the first set up
             setMusicTitle(musicName);
         }
 
         return pane;
     }
-    
+
     private void setMusicTitle(final Label musicLabel) {
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
         String musicTitle = backgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
