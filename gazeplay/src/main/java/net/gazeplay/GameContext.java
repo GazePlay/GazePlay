@@ -19,7 +19,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -34,7 +33,6 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.cakes.cakeStats;
 
 import java.io.IOException;
 
@@ -108,7 +106,7 @@ public class GameContext extends GraphicalContext<Pane> {
             pt.play();
         };
 
-        controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 3.5);
+        controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 2.5);
         controlPanel.setOpacity(0);
         controlPanel.setDisable(true);
         menuOpen = false;
@@ -191,7 +189,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     @Override
     public void setUpOnStage(Stage stage) {
-        BackgroundMusicManager.getInstance().pause();
+        // BackgroundMusicManager.getInstance().pause();
         super.setUpOnStage(stage);
     }
 
@@ -201,7 +199,8 @@ public class GameContext extends GraphicalContext<Pane> {
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        menuHBox.getChildren().add(createSoundControlPane());
+        menuHBox.getChildren().add(createMusicControlPane());
+        menuHBox.getChildren().add(createEffectsVolumePane());
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
@@ -232,7 +231,7 @@ public class GameContext extends GraphicalContext<Pane> {
         EventHandler<Event> homeEvent = e -> {
             scene.setCursor(Cursor.WAIT); // Change cursor to wait style
             homeButtonClicked(stats, gazePlay, currentGame);
-            BackgroundMusicManager.getInstance().pause();
+            // BackgroundMusicManager.getInstance().pause();
             scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 

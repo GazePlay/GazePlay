@@ -17,6 +17,8 @@ import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 import java.net.URL;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.utils.games.Utils;
 
 /**
  * Created by schwab on 30/10/2016.
@@ -78,8 +80,6 @@ public class Bravo extends Rectangle {
 
         soundResourceUrl = classLoader.getResource(soundResourceLocation);
 
-        soundClip = new AudioClip(soundResourceUrl.toExternalForm());
-
         fullTransition = createFullTransition();
 
         this.enableRewardSound = enableRewardSound;
@@ -112,7 +112,7 @@ public class Bravo extends Rectangle {
 
             if (this.enableRewardSound) {
                 log.debug("Playing sound animation ...");
-                soundClip.play();
+                Utils.playSound(soundResourceUrl.toExternalForm());
             }
 
             log.debug("Finished JavaFX task");

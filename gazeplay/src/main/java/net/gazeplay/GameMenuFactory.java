@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
@@ -305,8 +304,11 @@ public class GameMenuFactory {
         gameContext.createControlPanel(gazePlay, stats, currentGame);
 
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
-            BackgroundMusicManager.getInstance()
-                    .playRemoteSound(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
+
+            final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+            if (musicManager.getPlaylist().isEmpty()) {
+                musicManager.playRemoteSound(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
+            }
         }
 
         stats.start();
