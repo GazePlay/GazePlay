@@ -108,7 +108,7 @@ public class GameContext extends GraphicalContext<Pane> {
             pt.play();
         };
 
-        controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 4);
+        controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 3.5);
         controlPanel.setOpacity(0);
         controlPanel.setDisable(true);
         menuOpen = false;
@@ -174,25 +174,19 @@ public class GameContext extends GraphicalContext<Pane> {
         this.randomPositionGenerator = randomPositionGenerator;
         this.rootBorderPane = rootBorderPane;
         this.gazeDeviceManager = gazeDeviceManager;
-        
-        double initW = gazePlay.getPrimaryStage().getWidth();
-        double initH = gazePlay.getPrimaryStage().getHeight();
-        gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> {
-            if (root instanceof Pane) {
-            	log.info(""+newVal.doubleValue()+"-"+initW+"/2= "+ (newVal.doubleValue()-initW)/2);
-            	((Pane)root).setLayoutX((newVal.doubleValue()-initW)/2);
-            	((Pane)root).setScaleX(newVal.doubleValue()/initW);
-            }
-        });
-        
-        gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
-            if (root instanceof Pane) {
-            	log.info(""+newVal.doubleValue()+"-"+initH+"/2= "+ (newVal.doubleValue()-initH)/2);
-            	((Pane)root).setLayoutY((newVal.doubleValue()-initH)/2);
-            	((Pane)root).setScaleY(newVal.doubleValue()/initH);
-            }
-        });
-        
+
+        /*
+         * double initW = gazePlay.getPrimaryStage().getWidth(); double initH = gazePlay.getPrimaryStage().getHeight();
+         * gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> { if (root instanceof Pane) {
+         * log.info(""+newVal.doubleValue()+"-"+initW+"/2= "+ (newVal.doubleValue()-initW)/2);
+         * ((Pane)root).setLayoutX((newVal.doubleValue()-initW)/2); ((Pane)root).setScaleX(newVal.doubleValue()/initW);
+         * } });
+         * 
+         * gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> { if (root instanceof Pane)
+         * { log.info(""+newVal.doubleValue()+"-"+initH+"/2= "+ (newVal.doubleValue()-initH)/2);
+         * ((Pane)root).setLayoutY((newVal.doubleValue()-initH)/2); ((Pane)root).setScaleY(newVal.doubleValue()/initH);
+         * } });
+         */
     }
 
     @Override
@@ -224,7 +218,7 @@ public class GameContext extends GraphicalContext<Pane> {
         });
         gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
             if (gazePlay.isFullScreen()) {
-                bottomPane.setLayoutY(newVal.doubleValue() -2*8 - menuHBox.getHeight());
+                bottomPane.setLayoutY(newVal.doubleValue() - 2 * 8 - menuHBox.getHeight());
             } else {
                 bottomPane.setLayoutY(newVal.doubleValue() - 50 - menuHBox.getHeight());
             }
