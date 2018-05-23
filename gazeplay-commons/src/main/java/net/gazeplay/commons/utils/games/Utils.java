@@ -75,6 +75,7 @@ public class Utils {
             MediaPlayer mp = new MediaPlayer(media);
             final Configuration configuration = Configuration.getInstance();
             mp.setVolume(configuration.getEffectsVolume());
+            mp.volumeProperty().bind(configuration.getEffectsVolumeProperty());
             mp.play();
         } catch (Exception e) {
             log.error("Exception", e);

@@ -51,9 +51,6 @@ public class BackgroundMusicManager {
             new LinkedBlockingQueue<>(), new CustomThreadFactory(this.getClass().getSimpleName(),
                     new GroupingThreadFactory(this.getClass().getSimpleName())));
 
-    @Getter
-    private final DoubleProperty volume = new SimpleDoubleProperty(0.25);
-
     private final Configuration config;
 
     @Getter
@@ -63,13 +60,6 @@ public class BackgroundMusicManager {
 
     public BackgroundMusicManager() {
         config = Configuration.getInstance();
-        volume.set(config.getMusicVolume());
-
-        // Maybe it is better to save the sound only when game exit and not each time the sound is changed
-        volume.addListener((observable) -> {
-            config.getMusicVolumeProperty().setValue(volume.getValue());
-            config.saveConfigIgnoringExceptions();
-        });
 
         isPlayingPoperty.addListener((observable) -> {
 
@@ -235,7 +225,7 @@ public class BackgroundMusicManager {
         if (value > 1) {
             throw new IllegalArgumentException("volume must be between 0 and 1");
         }
-        this.volume.setValue(value);
+        config.getMusicVolumeProperty().setValue(value);
     }
 
     public void playRemoteSound(String resourceUrlAsString) {
@@ -320,7 +310,7 @@ public class BackgroundMusicManager {
             player.setOnError(() -> {
                 log.error("error on audio media loading : " + player.getError());
             });
-            player.volumeProperty().bind(volume);
+            player.volumeProperty().bind(config.getMusicVolumeProperty());
             player.setOnEndOfMedia(() -> {
                 next();
             });

@@ -153,6 +153,29 @@ public class Configuration implements Cloneable {
 
     private Configuration() {
 
+        // Listeners
+        musicVolumeProperty.addListener((observable) -> {
+            double musicVolume = getMusicVolume();
+            if (musicVolume > 1) {
+                log.warn("Invalid msuic volume value set : {}. 1 set instead", musicVolume);
+                musicVolumeProperty.setValue(1);
+            } else if (musicVolume < 0) {
+                log.warn("Invalid msuic volume value set : {}. 0 set instead", musicVolume);
+                musicVolumeProperty.setValue(0);
+            }
+        });
+
+        effectsVolumeProperty.addListener((observable) -> {
+            double musicVolume = getMusicVolume();
+            if (musicVolume > 1) {
+                log.warn("Invalid effects volume value set : {}. 1 set instead", musicVolume);
+                effectsVolumeProperty.setValue(1);
+            } else if (musicVolume < 0) {
+                log.warn("Invalid effects volume value set : {}. 0 set instead", musicVolume);
+                effectsVolumeProperty.setValue(0);
+            }
+        });
+
     }
 
     public void populateFromProperties(Properties prop) {
