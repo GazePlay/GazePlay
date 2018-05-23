@@ -74,7 +74,8 @@ public class Utils {
         try {
             Media media = new Media(path);
             MediaPlayer mp = new MediaPlayer(media);
-            final Configuration configuration = ConfigurationBuilder.createFromPropertiesResource().build();
+            final ConfigurationBuilder configBuilder = ConfigurationBuilder.createFromPropertiesResource();
+            final Configuration configuration = configBuilder.build();
             mp.setVolume(configuration.getEffectsVolume());
             mp.play();
         } catch (Exception e) {
