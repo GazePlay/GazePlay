@@ -15,7 +15,9 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -165,7 +167,7 @@ public abstract class GraphicalContext<T> {
         button.button.setTooltip(new I18NTooltip(gazePlay.getTranslator(), label));
     }
 
-    public TitledPane createSoundControlPane() {
+    public TitledPane createMusicControlPane() {
         I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Music");
         pane.setCollapsible(false);
 
@@ -190,7 +192,6 @@ public abstract class GraphicalContext<T> {
         grid.add(volumeLabel, 0, 1);
         Slider volumeSlider = createMediaVolumeSlider(gazePlay);
         grid.add(volumeSlider, 1, 1, 2, 1);
-
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
         final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
@@ -258,9 +259,11 @@ public abstract class GraphicalContext<T> {
         });
 
         if (backgroundMusicManager.isPlaying()) {
+            playTrack.setVisible(false);
             pauseTrack.setVisible(true);
         } else {
-            playTrack.setVisible(false);
+            playTrack.setVisible(true);
+            pauseTrack.setVisible(false);
         }
 
         final StackPane stackPane = new StackPane(pauseTrack, playTrack);
@@ -272,7 +275,8 @@ public abstract class GraphicalContext<T> {
             log.warn(e.toString() + " : " + NEXT_ICON);
         }
 
-        backgroundMusicManager.getIsPlayingProperty().addListener((observable) -> {
+        backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
+
             if (backgroundMusicManager.isPlaying()) {
                 playTrack.setVisible(false);
                 pauseTrack.setVisible(true);
@@ -293,11 +297,6 @@ public abstract class GraphicalContext<T> {
             backgroundMusicManager.next();
         });
 
-        /*
-         * HBox musicControl = new HBox(5, previousTrack, stackPane, nextTrack);
-         * 
-         * grid.add(musicControl, 0, 2);
-         */
         grid.add(previousTrack, 0, 2);
         grid.add(stackPane, 1, 2);
         grid.add(nextTrack, 2, 2);
@@ -350,7 +349,55 @@ public abstract class GraphicalContext<T> {
         return slider;
     }
 
+    private Slider createEffectsVolumeSlider(@NonNull GazePlay gazePlay) {
+
+        final ConfigurationBuilder configBuilder = ConfigurationBuilder.createFromPropertiesResource();
+        final Configuration config = configBuilder.build();
+        Slider slider = new Slider();
+        slider.setMin(0);
+        slider.setMax(1);
+        slider.setShowTickMarks(true);
+        slider.setMajorTickUnit(0.25);
+        slider.setSnapToTicks(true);
+        slider.setValue(config.getEffectsVolume());
+        slider.valueProperty().addListener((observable) -> {
+            configBuilder.withEffectsVolume(slider.getValue()).saveConfigIgnoringExceptions();
+        });
+        return slider;
+    }
+
     public void onGameStarted() {
+    }
+
+    public TitledPane createEffectsVolumePane() {
+        I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "EffectsVolume");
+        pane.setCollapsible(false);
+
+        final BorderPane mainPane = new BorderPane();
+        pane.setContent(mainPane);
+
+        final HBox center = new HBox();
+        mainPane.setCenter(center);
+        center.setSpacing(5);
+        Image buttonImg = null;
+        try {
+            buttonImg = new Image(SPEAKER_ICON, ICON_SIZE, ICON_SIZE, false, true);
+        } catch (IllegalArgumentException e) {
+            log.warn(e.toString() + " : " + PREVIOUS_ICON);
+        }
+
+        Label volumeLabel;
+        if (buttonImg == null) {
+            volumeLabel = new I18NLabel(getGazePlay().getTranslator(), "Volume");
+        } else {
+            volumeLabel = new Label(null, new ImageView(buttonImg));
+        }
+        center.getChildren().add(volumeLabel);
+
+        final Slider effectsVolumeSlider = createEffectsVolumeSlider(gazePlay);
+        center.getChildren().add(effectsVolumeSlider);
+
+        return pane;
     }
 
 }

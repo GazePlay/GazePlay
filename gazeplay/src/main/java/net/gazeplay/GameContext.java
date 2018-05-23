@@ -10,11 +10,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.NonNull;
@@ -28,7 +26,6 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.cakes.cakeStats;
 
 import java.io.IOException;
 
@@ -133,7 +130,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     @Override
     public void setUpOnStage(Stage stage) {
-        BackgroundMusicManager.getInstance().pause();
+        // BackgroundMusicManager.getInstance().pause();
         super.setUpOnStage(stage);
     }
 
@@ -143,7 +140,8 @@ public class GameContext extends GraphicalContext<Pane> {
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        menuHBox.getChildren().add(createSoundControlPane());
+        menuHBox.getChildren().add(createMusicControlPane());
+        menuHBox.getChildren().add(createEffectsVolumePane());
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
@@ -187,7 +185,7 @@ public class GameContext extends GraphicalContext<Pane> {
         EventHandler<Event> homeEvent = e -> {
             scene.setCursor(Cursor.WAIT); // Change cursor to wait style
             homeButtonClicked(stats, gazePlay, currentGame);
-            BackgroundMusicManager.getInstance().pause();
+            // BackgroundMusicManager.getInstance().pause();
             scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 
