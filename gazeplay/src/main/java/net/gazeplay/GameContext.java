@@ -130,7 +130,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     @Override
     public void setUpOnStage(Stage stage) {
-        //BackgroundMusicManager.getInstance().pause();
+        // BackgroundMusicManager.getInstance().pause();
         super.setUpOnStage(stage);
     }
 
@@ -185,7 +185,7 @@ public class GameContext extends GraphicalContext<Pane> {
         EventHandler<Event> homeEvent = e -> {
             scene.setCursor(Cursor.WAIT); // Change cursor to wait style
             homeButtonClicked(stats, gazePlay, currentGame);
-            //BackgroundMusicManager.getInstance().pause();
+            // BackgroundMusicManager.getInstance().pause();
             scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 

@@ -276,7 +276,7 @@ public abstract class GraphicalContext<T> {
         }
 
         backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
-            
+
             if (backgroundMusicManager.isPlaying()) {
                 playTrack.setVisible(false);
                 pauseTrack.setVisible(true);
@@ -348,9 +348,9 @@ public abstract class GraphicalContext<T> {
         BackgroundMusicManager.getInstance().getVolume().bindBidirectional(slider.valueProperty());
         return slider;
     }
-    
+
     private Slider createEffectsVolumeSlider(@NonNull GazePlay gazePlay) {
-        
+
         final ConfigurationBuilder configBuilder = ConfigurationBuilder.createFromPropertiesResource();
         final Configuration config = configBuilder.build();
         Slider slider = new Slider();
@@ -368,14 +368,14 @@ public abstract class GraphicalContext<T> {
 
     public void onGameStarted() {
     }
-    
+
     public TitledPane createEffectsVolumePane() {
         I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "EffectsVolume");
         pane.setCollapsible(false);
-        
+
         final BorderPane mainPane = new BorderPane();
         pane.setContent(mainPane);
-        
+
         final HBox center = new HBox();
         mainPane.setCenter(center);
         center.setSpacing(5);
@@ -393,10 +393,10 @@ public abstract class GraphicalContext<T> {
             volumeLabel = new Label(null, new ImageView(buttonImg));
         }
         center.getChildren().add(volumeLabel);
-        
+
         final Slider effectsVolumeSlider = createEffectsVolumeSlider(gazePlay);
         center.getChildren().add(effectsVolumeSlider);
-        
+
         return pane;
     }
 

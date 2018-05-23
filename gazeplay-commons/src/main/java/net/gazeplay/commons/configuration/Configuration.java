@@ -34,7 +34,7 @@ public class Configuration {
     private final double musicVolume;
 
     private final String musicFolder;
-    
+
     private final Double effectsVolume;
 
     protected Configuration(ConfigurationBuilder builder) {

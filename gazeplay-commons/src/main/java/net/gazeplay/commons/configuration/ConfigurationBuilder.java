@@ -99,7 +99,7 @@ public class ConfigurationBuilder implements Cloneable {
     protected double musicVolume = DEFAULT_VALUE_MUSIC_VOLUME;
 
     protected String musicFolder = DEFAULT_VALUE_MUSIC_FOLDER;
-    
+
     protected Double effectsVolume = DEFAULT_VALUE_EFFECTS_VOLUME;
 
     public ConfigurationBuilder() {
@@ -191,7 +191,7 @@ public class ConfigurationBuilder implements Cloneable {
         copy.musicFolder = value;
         return copy;
     }
-    
+
     public ConfigurationBuilder withEffectsVolume(double value) {
         ConfigurationBuilder copy = copy();
         copy.effectsVolume = value;
@@ -275,11 +275,11 @@ public class ConfigurationBuilder implements Cloneable {
         if (buffer != null) {
             musicFolder = buffer;
         }
-        
+
         buffer = prop.getProperty(PROPERTY_NAME_EFFECTS_VOLUME);
         if (buffer != null) {
             try {
-            effectsVolume = Double.parseDouble(buffer);
+                effectsVolume = Double.parseDouble(buffer);
             } catch (NumberFormatException e) {
                 log.warn("Malformed property");
             }
