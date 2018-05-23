@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.EyeTracker;
-import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.Properties;
 import javafx.beans.property.BooleanProperty;
@@ -22,6 +21,7 @@ import javafx.beans.property.StringProperty;
 import lombok.Getter;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
+import net.gazeplay.commons.utils.games.Utils;
 
 @Slf4j
 public class Configuration implements Cloneable {
@@ -51,7 +51,7 @@ public class Configuration implements Cloneable {
     private static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static final int DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
-    private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "";
+    private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
     private static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     private static final String DEFAULT_VALUE_MUSIC_FOLDER = "data" + File.separator + "home" + File.separator
