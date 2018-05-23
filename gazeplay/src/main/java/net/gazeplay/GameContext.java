@@ -174,6 +174,25 @@ public class GameContext extends GraphicalContext<Pane> {
         this.randomPositionGenerator = randomPositionGenerator;
         this.rootBorderPane = rootBorderPane;
         this.gazeDeviceManager = gazeDeviceManager;
+        
+        double initW = gazePlay.getPrimaryStage().getWidth();
+        double initH = gazePlay.getPrimaryStage().getHeight();
+        gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> {
+            if (root instanceof Pane) {
+            	log.info(""+newVal.doubleValue()+"-"+initW+"/2= "+ (newVal.doubleValue()-initW)/2);
+            	((Pane)root).setLayoutX((newVal.doubleValue()-initW)/2);
+            	((Pane)root).setScaleX(newVal.doubleValue()/initW);
+            }
+        });
+        
+        gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
+            if (root instanceof Pane) {
+            	log.info(""+newVal.doubleValue()+"-"+initH+"/2= "+ (newVal.doubleValue()-initH)/2);
+            	((Pane)root).setLayoutY((newVal.doubleValue()-initH)/2);
+            	((Pane)root).setScaleY(newVal.doubleValue()/initH);
+            }
+        });
+        
     }
 
     @Override
@@ -197,7 +216,7 @@ public class GameContext extends GraphicalContext<Pane> {
         menuHBox.getChildren().add(homeButton);
 
         Dimension2D dimension2D = getGamePanelDimensionProvider().getDimension2D();
-        bottomPane.setLayoutY(dimension2D.getHeight() * 0.92 - menuHBox.getHeight());
+        bottomPane.setLayoutY(dimension2D.getHeight() * 0.90 - menuHBox.getHeight());
         bottomPane.setMinWidth(dimension2D.getWidth());
 
         gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -205,7 +224,7 @@ public class GameContext extends GraphicalContext<Pane> {
         });
         gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
             if (gazePlay.isFullScreen()) {
-                bottomPane.setLayoutY(newVal.doubleValue() - menuHBox.getHeight());
+                bottomPane.setLayoutY(newVal.doubleValue() -2*8 - menuHBox.getHeight());
             } else {
                 bottomPane.setLayoutY(newVal.doubleValue() - 50 - menuHBox.getHeight());
             }
@@ -258,6 +277,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
         getChildren().add(bravo);
+        bravo.toFront();
         bravo.playWinTransition(scene, delay, onFinishedEventHandler);
     }
 
