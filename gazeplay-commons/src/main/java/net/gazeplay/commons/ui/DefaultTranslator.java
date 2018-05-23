@@ -1,7 +1,6 @@
 package net.gazeplay.commons.ui;
 
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public class DefaultTranslator implements Translator {
 
     @Override
     public void notifyLanguageChanged() {
-        config = ConfigurationBuilder.createFromPropertiesResource().build();
+        config = Configuration.getInstance();
         this.notifyAllListeners();
     }
 

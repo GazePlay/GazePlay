@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
@@ -68,7 +67,7 @@ public class Stats implements GazeMotionListener {
 
     public void start() {
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
 
         lifeCycle.start(() -> {
             if (config.isHeatMapDisabled()) {

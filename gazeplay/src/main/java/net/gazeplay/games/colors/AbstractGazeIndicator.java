@@ -12,7 +12,6 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
@@ -21,7 +20,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
@@ -49,8 +47,8 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
 
         this.setVisible(false);
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-        this.duration = config.getFixationlength();
+        final Configuration config = Configuration.getInstance();
+        this.duration = config.getFixationLength();
         this.animation = new Timeline();
         this.nodedToListenTo = new HashMap<Node, EventHandler>();
 

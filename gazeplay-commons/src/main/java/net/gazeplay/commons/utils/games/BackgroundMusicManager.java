@@ -29,7 +29,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableMap;
 import javafx.scene.media.MediaException;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import org.apache.commons.io.FilenameUtils;
 
 @Slf4j
@@ -55,7 +54,7 @@ public class BackgroundMusicManager {
     @Getter
     private final DoubleProperty volume = new SimpleDoubleProperty(0.25);
 
-    private final ConfigurationBuilder configBuilder;
+    private final Configuration config;
 
     @Getter
     private final BooleanProperty isPlayingPoperty = new SimpleBooleanProperty(this, "isPlaying", false);
@@ -63,13 +62,13 @@ public class BackgroundMusicManager {
     private final IntegerProperty musicIndexProperty = new SimpleIntegerProperty(this, "musicIndex", 0);
 
     public BackgroundMusicManager() {
-        configBuilder = ConfigurationBuilder.createFromPropertiesResource();
-        final Configuration configuration = configBuilder.build();
-        volume.set(configuration.getMusicVolume());
+        config = Configuration.getInstance();
+        volume.set(config.getMusicVolume());
 
         // Maybe it is better to save the sound only when game exit and not each time the sound is changed
         volume.addListener((observable) -> {
-            configBuilder.withSoundLevel(volume.getValue()).saveConfigIgnoringExceptions();
+            config.getMusicVolumeProperty().setValue(volume.getValue());
+            config.saveConfigIgnoringExceptions();
         });
 
         isPlayingPoperty.addListener((observable) -> {
