@@ -14,6 +14,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -292,8 +293,14 @@ public abstract class GraphicalContext<T> {
     }
     
     public TitledPane createEffectsVolumePane() {
-        I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Music");
+        I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Effects Volume");
         pane.setCollapsible(false);
+        
+        final BorderPane mainPane = new BorderPane();
+        
+        final Slider effectsVolumeSlider = createEffectsVolumeSlider(gazePlay);
+        
+        final HBox center = new HBox();
         
         return pane;
     }
