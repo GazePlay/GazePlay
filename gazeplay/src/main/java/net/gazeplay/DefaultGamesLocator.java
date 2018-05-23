@@ -529,20 +529,21 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL),
-                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+        result.add(
+                new GameSpec(new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/piano.jpeg"),
+                        new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
 
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "Piano");
-                    }
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new Stats(scene, "Piano");
+                            }
 
-                    @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext,
-                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new Piano(gameContext, stats);
-                    }
-                }));
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                                return new Piano(gameContext, stats);
+                            }
+                        }));
         result.add(new GameSpec(
                 new GameSummary("Whac-a-mole", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/whackAMole.png"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
@@ -580,7 +581,8 @@ public class DefaultGamesLocator implements GamesLocator {
                             }
                         }));
 
-        result.add(new GameSpec(new GameSummary("Cakes", DEFAULT_MEMORIZATION_GAME_THUMBNAIL),
+        result.add(new GameSpec(
+                new GameSummary("Cakes", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/cakes.jpeg"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
