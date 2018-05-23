@@ -22,12 +22,8 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableMap;
@@ -79,7 +75,7 @@ public class BackgroundMusicManager {
         isPlayingPoperty.addListener((observable) -> {
 
             if (currentMusic != null) {
-                if (isPlaying()) {
+                if (isPlayingPoperty.getValue()) {
                     this.currentMusic.play();
                 } else {
                     this.currentMusic.pause();
@@ -167,10 +163,6 @@ public class BackgroundMusicManager {
     public boolean isPlaying() {
 
         return this.isPlayingPoperty.getValue();
-    }
-
-    public BooleanProperty getIsPlayingProperty() {
-        return isPlayingPoperty;
     }
 
     /**
@@ -370,7 +362,6 @@ public class BackgroundMusicManager {
         try {
             title = (String) metaData.get("title");
         } catch (Throwable e) {
-            title = "unknown";
         }
 
         if (title == null) {

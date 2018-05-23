@@ -259,9 +259,11 @@ public abstract class GraphicalContext<T> {
         });
 
         if (backgroundMusicManager.isPlaying()) {
+            playTrack.setVisible(false);
             pauseTrack.setVisible(true);
         } else {
-            playTrack.setVisible(false);
+            playTrack.setVisible(true);
+            pauseTrack.setVisible(false);
         }
 
         final StackPane stackPane = new StackPane(pauseTrack, playTrack);
@@ -273,7 +275,8 @@ public abstract class GraphicalContext<T> {
             log.warn(e.toString() + " : " + NEXT_ICON);
         }
 
-        backgroundMusicManager.getIsPlayingProperty().addListener((observable) -> {
+        backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
+            
             if (backgroundMusicManager.isPlaying()) {
                 playTrack.setVisible(false);
                 pauseTrack.setVisible(true);
@@ -294,11 +297,6 @@ public abstract class GraphicalContext<T> {
             backgroundMusicManager.next();
         });
 
-        /*
-         * HBox musicControl = new HBox(5, previousTrack, stackPane, nextTrack);
-         * 
-         * grid.add(musicControl, 0, 2);
-         */
         grid.add(previousTrack, 0, 2);
         grid.add(stackPane, 1, 2);
         grid.add(nextTrack, 2, 2);
