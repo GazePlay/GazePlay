@@ -18,7 +18,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
@@ -33,7 +32,7 @@ import java.util.Collection;
 @Slf4j
 public class GameMenuFactory {
 
-    private boolean useDebuggingBackgrounds = false;
+    private final boolean useDebuggingBackgrounds = false;
 
     public Pane createGameButton(GazePlay gazePlay, Scene scene, Configuration config, Multilinguism multilinguism,
             Translator translator, GameSpec gameSpec, GameButtonOrientation orientation) {
@@ -245,7 +244,7 @@ public class GameMenuFactory {
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
 
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             ProgressButton button = new ProgressButton(variant.getLabel());

@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -69,7 +68,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
 
         Rectangle recJeu = new Rectangle(entiereRecX, entiereRecY, entiereRecWidth, entiereRecHeigth);
         recJeu.setFill(colorBackground);

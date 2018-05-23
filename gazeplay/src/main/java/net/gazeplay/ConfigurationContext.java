@@ -27,7 +27,7 @@ import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.I18NText;
@@ -134,7 +134,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static GridPane buildConfigGridPane(ConfigurationContext configurationContext, GazePlay gazePlay) {
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -255,7 +255,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         int i = 300;
 
-        choiceBox.getItems().add((double) configuration.getFixationlength() / 1000);
+        choiceBox.getItems().add((double) configuration.getFixationLength() / 1000);
         while (i <= 30000) {
 
             choiceBox.getItems().add(((double) i) / 1000);
@@ -273,8 +273,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 final int newPropertyValue = (int) (1000
                         * (double) choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
 
-                ConfigurationBuilder.createFromPropertiesResource().withFixationLength(newPropertyValue)
-                        .saveConfigIgnoringExceptions();
+                configuration.getFixationlengthProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
 
             }
         });
@@ -307,8 +307,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 final int newPropertyValue = (int) (1000
                         * (double) choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
 
-                ConfigurationBuilder.createFromPropertiesResource().withQuestionLength(newPropertyValue)
-                        .saveConfigIgnoringExceptions();
+                configuration.getQuestionLengthProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
 
             }
         });
@@ -323,7 +323,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             ConfigurationContext configurationContext) {
         ChoiceBox<BuiltInUiTheme> themesBox = new ChoiceBox<>();
 
-        final String cssfile = configuration.getCssfile();
+        final String cssfile = configuration.getCssFile();
 
         themesBox.getItems().addAll(BuiltInUiTheme.values());
 
@@ -354,8 +354,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     BuiltInUiTheme newValue) {
                 String newPropertyValue = newValue.getPreferredConfigPropertyValue();
 
-                ConfigurationBuilder.createFromPropertiesResource().withCssFile(newPropertyValue)
-                        .saveConfigIgnoringExceptions();
+                configuration.getCssfileProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
 
                 Scene scene = configurationContext.getScene();
 
@@ -376,7 +376,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private static Button buildStyleFileChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
 
-        Button buttonLoad = new Button(configuration.getCssfile());
+        Button buttonLoad = new Button(configuration.getCssFile());
 
         buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -391,8 +391,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
                 }
 
-                ConfigurationBuilder.createFromPropertiesResource().withCssFile(newPropertyValue)
-                        .saveConfigIgnoringExceptions();
+                configuration.getCssfileProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
 
                 scene.getStylesheets().remove(0);
                 scene.getStylesheets().add("file://" + newPropertyValue);
@@ -407,7 +407,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private static Button buildDirectoryChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
 
-        final String filedir = configuration.getFiledir();
+        final String filedir = configuration.getFileDir();
 
         Button buttonLoad = new Button(filedir);
 
@@ -427,8 +427,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
                 }
 
-                ConfigurationBuilder.createFromPropertiesResource().withFileDir(newPropertyValue)
-                        .saveConfigIgnoringExceptions();
+                configuration.getFiledirProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
             }
         });
 
@@ -457,8 +457,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
                 }
 
-                ConfigurationBuilder.createFromPropertiesResource().withWhereIsItDir(newPropertyValue)
-                        .saveConfigIgnoringExceptions();
+                configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
             }
         });
 
@@ -484,8 +484,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             public void changed(ObservableValue<? extends Languages> observable, Languages oldValue,
                     Languages newValue) {
 
-                ConfigurationBuilder.createFromPropertiesResource().withLanguage(newValue.name())
-                        .saveConfigIgnoringExceptions();
+                configuration.getLanguageProperty().setValue(newValue.name());
+                configuration.saveConfigIgnoringExceptions();
 
                 configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
             }
@@ -511,8 +511,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             public void changed(ObservableValue<? extends EyeTracker> observable, EyeTracker oldValue,
                     EyeTracker newValue) {
                 final String newPropertyValue = newValue.name();
-                ConfigurationBuilder.createFromPropertiesResource().withEyeTracker(newPropertyValue)
-                        .saveConfigIgnoringExceptions();
+                configuration.getEyetrackerProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
             }
         });
 
@@ -521,7 +521,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static EyeTracker findSelectedEyeTracker(Configuration configuration) {
         for (EyeTracker currentEyeTracker : EyeTracker.values()) {
-            if (currentEyeTracker.name().equals(configuration.getEyetracker())) {
+            if (currentEyeTracker.name().equals(configuration.getEyeTracker())) {
                 return currentEyeTracker;
             }
         }
@@ -536,8 +536,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         checkBox.selectedProperty().addListener((o) -> {
 
-            ConfigurationBuilder.createFromPropertiesResource().withEnableRewardSound(checkBox.isSelected())
-                    .saveConfigIgnoringExceptions();
+            configuration.getEnableRewardSoundProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
         });
 
         return checkBox;
@@ -551,8 +551,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         checkBox.selectedProperty().addListener((o) -> {
 
-            ConfigurationBuilder.createFromPropertiesResource().withHeatMapDisabled(checkBox.isSelected())
-                    .saveConfigIgnoringExceptions();
+            configuration.getHeatMapDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
         });
 
         return checkBox;
@@ -575,8 +575,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             public void changed(ObservableValue<? extends GameButtonOrientation> observable,
                     GameButtonOrientation oldValue, GameButtonOrientation newValue) {
                 final String newPropertyValue = newValue.name();
-                ConfigurationBuilder.createFromPropertiesResource().withMenuButtonsOrientation(newPropertyValue)
-                        .saveConfigIgnoringExceptions();
+                configuration.getMenuButtonsOrientationProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
             }
         });
 
@@ -604,10 +604,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
                 }
 
-                ConfigurationBuilder.createFromPropertiesResource().withMusicFolder(newPropertyValue)
-                        .saveConfigIgnoringExceptions();
+                Configuration configuration = Configuration.getInstance();
+                configuration.getMusicFolderProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
 
-                BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance().getInstance();
+                BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
                 musicManager.emptyPlaylist();
                 musicManager.getAudioFromFolder(newPropertyValue);
             }

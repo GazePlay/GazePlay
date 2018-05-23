@@ -29,7 +29,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.I18NTitledPane;
@@ -100,7 +99,7 @@ public abstract class GraphicalContext<T> {
 
         stage.setOnCloseRequest((WindowEvent we) -> stage.close());
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
 
         stage.show();
@@ -306,7 +305,7 @@ public abstract class GraphicalContext<T> {
         if (GraphicalContext.firstMusicSetUp) {
 
             if (backgroundMusicManager.getPlaylist().isEmpty()) {
-                final Configuration configuration = ConfigurationBuilder.createFromPropertiesResource().build();
+                final Configuration configuration = Configuration.getInstance();
                 backgroundMusicManager.getAudioFromFolder(configuration.getMusicFolder());
             }
 
@@ -351,8 +350,7 @@ public abstract class GraphicalContext<T> {
 
     private Slider createEffectsVolumeSlider(@NonNull GazePlay gazePlay) {
 
-        final ConfigurationBuilder configBuilder = ConfigurationBuilder.createFromPropertiesResource();
-        final Configuration config = configBuilder.build();
+        final Configuration config = Configuration.getInstance();
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
@@ -361,7 +359,8 @@ public abstract class GraphicalContext<T> {
         slider.setSnapToTicks(true);
         slider.setValue(config.getEffectsVolume());
         slider.valueProperty().addListener((observable) -> {
-            configBuilder.withEffectsVolume(slider.getValue()).saveConfigIgnoringExceptions();
+            config.getEffectsVolumeProperty().setValue(slider.getValue());
+            config.saveConfigIgnoringExceptions();
         });
         return slider;
     }

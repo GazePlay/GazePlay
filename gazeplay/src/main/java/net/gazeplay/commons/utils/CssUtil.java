@@ -21,7 +21,7 @@ public class CssUtil {
     public static void setPreferredStylesheets(Configuration config, Scene scene) {
         ObservableList<String> stylesheets = scene.getStylesheets();
 
-        String cssfile = config.getCssfile();
+        String cssfile = config.getCssFile();
 
         Optional<BuiltInUiTheme> configuredBuiltInUiTheme = BuiltInUiTheme.findFromConfigPropertyValue(cssfile);
 

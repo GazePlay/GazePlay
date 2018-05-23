@@ -3,9 +3,7 @@ package net.gazeplay.commons.gaze.devicemanager;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.EyeTracker;
-import net.gazeplay.commons.utils.stats.Stats;
 
 /**
  * Created by schwab on 16/08/2016.
@@ -20,9 +18,9 @@ public class GazeDeviceManagerFactory {
     }
 
     public GazeDeviceManager createNewGazeListener() {
-        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
 
-        final String eyetrackerConfigValue = config.getEyetracker();
+        final String eyetrackerConfigValue = config.getEyeTracker();
         final EyeTracker eyeTracker = EyeTracker.valueOf(eyetrackerConfigValue);
         log.info("Eye-tracker = " + eyeTracker);
 
