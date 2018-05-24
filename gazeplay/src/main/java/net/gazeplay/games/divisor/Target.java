@@ -9,7 +9,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -39,15 +38,15 @@ class Target extends Parent {
     private final int difficulty;
     private final int level;
     private Position pos;
-    private double radius;
+    private final double radius;
     private final EventHandler<Event> enterEvent;
     private final GameContext gameContext;
     private final Divisor gameInstance;
     private final long startTime;
     private final Dimension2D dimension;
     private final boolean lapin;
-    private ImageLibrary imgLib;
-    private Circle cercle;
+    private final ImageLibrary imgLib;
+    private final Circle cercle;
 
     public Target(GameContext gameContext, Stats stats, ImageLibrary imgLib, int level, long start,
             Divisor gameInstance, Position pos, boolean lapin) {
