@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -82,7 +81,7 @@ public class OpenMemory implements GameLifeCycle {
 
     @Override
     public void launch() {
-        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        Configuration config = Configuration.getInstance();
         final int cardsCount = nbColumns * nbLines;
 
         images = selectionAleaImages();
@@ -143,7 +142,7 @@ public class OpenMemory implements GameLifeCycle {
         HashMap<Integer, Integer> indUsed = new HashMap<Integer, Integer>();
         indUsed.clear();
 
-        final int fixationlength = config.getFixationlength();
+        final int fixationlength = config.getFixationLength();
 
         for (int currentLineIndex = 0; currentLineIndex < nbLines; currentLineIndex++) {
             for (int currentColumnIndex = 0; currentColumnIndex < nbColumns; currentColumnIndex++) {

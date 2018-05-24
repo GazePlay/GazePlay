@@ -29,7 +29,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableMap;
 import javafx.scene.media.MediaException;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import org.apache.commons.io.FilenameUtils;
 
 @Slf4j
@@ -52,10 +51,7 @@ public class BackgroundMusicManager {
             new LinkedBlockingQueue<>(), new CustomThreadFactory(this.getClass().getSimpleName(),
                     new GroupingThreadFactory(this.getClass().getSimpleName())));
 
-    @Getter
-    private final DoubleProperty volume = new SimpleDoubleProperty(0.25);
-
-    private final ConfigurationBuilder configBuilder;
+    private final Configuration config;
 
     @Getter
     private final BooleanProperty isPlayingPoperty = new SimpleBooleanProperty(this, "isPlaying", false);
@@ -63,14 +59,7 @@ public class BackgroundMusicManager {
     private final IntegerProperty musicIndexProperty = new SimpleIntegerProperty(this, "musicIndex", 0);
 
     public BackgroundMusicManager() {
-        configBuilder = ConfigurationBuilder.createFromPropertiesResource();
-        final Configuration configuration = configBuilder.build();
-        volume.set(configuration.getMusicVolume());
-
-        // Maybe it is better to save the sound only when game exit and not each time the sound is changed
-        volume.addListener((observable) -> {
-            configBuilder.withSoundLevel(volume.getValue()).saveConfigIgnoringExceptions();
-        });
+        config = Configuration.getInstance();
 
         isPlayingPoperty.addListener((observable) -> {
 
@@ -236,7 +225,7 @@ public class BackgroundMusicManager {
         if (value > 1) {
             throw new IllegalArgumentException("volume must be between 0 and 1");
         }
-        this.volume.setValue(value);
+        config.getMusicVolumeProperty().setValue(value);
     }
 
     public void playRemoteSound(String resourceUrlAsString) {
@@ -321,7 +310,7 @@ public class BackgroundMusicManager {
             player.setOnError(() -> {
                 log.error("error on audio media loading : " + player.getError());
             });
-            player.volumeProperty().bind(volume);
+            player.volumeProperty().bind(config.getMusicVolumeProperty());
             player.setOnEndOfMedia(() -> {
                 next();
             });

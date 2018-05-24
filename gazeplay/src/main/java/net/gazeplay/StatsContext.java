@@ -14,12 +14,10 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CssUtil;
-import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.ProgressHomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
@@ -72,7 +70,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         super(gazePlay, root, scene);
         this.stats = stats;
 
-        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        Configuration config = Configuration.getInstance();
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 

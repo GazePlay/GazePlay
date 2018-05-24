@@ -7,7 +7,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -74,9 +73,9 @@ public class Utils {
         try {
             Media media = new Media(path);
             MediaPlayer mp = new MediaPlayer(media);
-            final ConfigurationBuilder configBuilder = ConfigurationBuilder.createFromPropertiesResource();
-            final Configuration configuration = configBuilder.build();
+            final Configuration configuration = Configuration.getInstance();
             mp.setVolume(configuration.getEffectsVolume());
+            mp.volumeProperty().bind(configuration.getEffectsVolumeProperty());
             mp.play();
         } catch (Exception e) {
             log.error("Exception", e);
@@ -114,8 +113,8 @@ public class Utils {
 
     private static String getFilesFolder() {
 
-        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
-        String filesFolder = config.getFiledir();
+        Configuration config = Configuration.getInstance();
+        String filesFolder = config.getFileDir();
 
         log.info("filesFolder : " + filesFolder);
         return filesFolder;

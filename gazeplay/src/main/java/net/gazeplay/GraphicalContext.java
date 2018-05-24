@@ -1,5 +1,6 @@
 package net.gazeplay;
 
+import ch.qos.logback.core.net.ssl.ConfigurableSSLServerSocketFactory;
 import java.io.File;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,12 +30,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.I18NTooltip;
-import net.gazeplay.commons.ui.ProgressButton;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
@@ -101,7 +100,7 @@ public abstract class GraphicalContext<T> {
 
         stage.setOnCloseRequest((WindowEvent we) -> stage.close());
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
 
         stage.show();
@@ -307,7 +306,7 @@ public abstract class GraphicalContext<T> {
         if (GraphicalContext.firstMusicSetUp) {
 
             if (backgroundMusicManager.getPlaylist().isEmpty()) {
-                final Configuration configuration = ConfigurationBuilder.createFromPropertiesResource().build();
+                final Configuration configuration = Configuration.getInstance();
                 backgroundMusicManager.getAudioFromFolder(configuration.getMusicFolder());
             }
 
@@ -339,21 +338,25 @@ public abstract class GraphicalContext<T> {
     }
 
     public Slider createMediaVolumeSlider(@NonNull GazePlay gazePlay) {
+
+        final Configuration config = Configuration.getInstance();
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
         slider.setShowTickMarks(true);
         slider.setMajorTickUnit(0.25);
         slider.setSnapToTicks(true);
-        slider.setValue(BackgroundMusicManager.getInstance().getVolume().getValue());
-        BackgroundMusicManager.getInstance().getVolume().bindBidirectional(slider.valueProperty());
+        slider.setValue(config.getMusicVolume());
+        config.getMusicVolumeProperty().bindBidirectional(slider.valueProperty());
+        slider.valueProperty().addListener((observable) -> {
+            config.saveConfigIgnoringExceptions();
+        });
         return slider;
     }
 
     private Slider createEffectsVolumeSlider(@NonNull GazePlay gazePlay) {
 
-        final ConfigurationBuilder configBuilder = ConfigurationBuilder.createFromPropertiesResource();
-        final Configuration config = configBuilder.build();
+        final Configuration config = Configuration.getInstance();
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
@@ -361,8 +364,9 @@ public abstract class GraphicalContext<T> {
         slider.setMajorTickUnit(0.25);
         slider.setSnapToTicks(true);
         slider.setValue(config.getEffectsVolume());
+        config.getEffectsVolumeProperty().bindBidirectional(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> {
-            configBuilder.withEffectsVolume(slider.getValue()).saveConfigIgnoringExceptions();
+            config.saveConfigIgnoringExceptions();
         });
         return slider;
     }

@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
@@ -50,7 +49,7 @@ public class GazePlay extends Application {
 
         primaryStage.setMaximized(false);
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
         final Multilinguism multilinguism = Multilinguism.getSingleton();
 
         translator = new DefaultTranslator(config, multilinguism);
