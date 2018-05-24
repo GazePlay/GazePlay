@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
+import javafx.scene.text.Text;
 
 /**
  * Created by schwab on 23/12/2016.
@@ -237,5 +238,18 @@ public class Utils {
             String element = (String) E.nextElement();
             log.info(String.format("%s: %s", element, System.getProperty(element)));
         }
+    }
+
+    public static double getTextWidth(final String textToMeasure) {
+
+        final Text text = new Text(textToMeasure);
+
+        // java 7 =>
+        // text.snapshot(null, null);
+        // java 8 =>
+        text.applyCss();
+
+        final double width = text.getLayoutBounds().getWidth();
+        return width;
     }
 }

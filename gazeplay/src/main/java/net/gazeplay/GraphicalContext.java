@@ -35,6 +35,7 @@ import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.utils.CssUtil;
+import net.gazeplay.commons.utils.MarqueeText;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Data
@@ -196,7 +197,8 @@ public abstract class GraphicalContext<T> {
 
         final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
 
-        final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
+        // final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
+        final MarqueeText musicName = new MarqueeText(8, backgroundMusicManager.getMusicTitle(currentMusic), 5);
         musicName.setLabelFor(volumeSlider);
         grid.add(musicName, 0, 0, 2, 1);
 
