@@ -609,16 +609,35 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
         result.add(new GameSpec(new GameSummary("Labyrinth", DEFAULT_SEARCHING_GAME_THUMBNAIL),
-                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.IntGameVariant(0, "Version 0"),
+
+                                new GameSpec.IntGameVariant(1, "Version 1"),
+
+                                new GameSpec.IntGameVariant(2, "Version 2"),
+
+                                new GameSpec.IntGameVariant(3, "Version 3"),
+
+                                new GameSpec.IntGameVariant(4, "Version 4")
+
+                ));
+                    }
+                },
+
+                new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new LabyrinthStats(scene);
                     }
 
                     @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext,
-                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new Labyrinth(gameContext, stats);
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
+                        return new Labyrinth(gameContext, stats, gameVariant.getNumber());
                     }
 
                 }));

@@ -46,11 +46,12 @@ public class Cheese extends Parent {
         cheeseNumRow = y;
         cheeseNumCol = x;
 
-        double coordX = gameInstance.positionX(x);
-        double coordY = gameInstance.positionY(y);
+        double coordX = gameInstance.positionX(x) - gameInstance.adjustmentCaseWidth;
+        double coordY = gameInstance.positionY(y) + gameInstance.adjustmentCaseHeight;
 
         cheese.setX(coordX);
         cheese.setY(coordY);
+        cheese.setMouseTransparent(true);
 
     }
 

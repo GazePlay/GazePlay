@@ -10,7 +10,7 @@ import net.gazeplay.games.labyrinth.Labyrinth;
 
 public abstract class Mouse extends Parent {
 
-    private final GameContext gameContext;
+    protected final GameContext gameContext;
 
     protected final Labyrinth gameInstance;
 
@@ -29,13 +29,11 @@ public abstract class Mouse extends Parent {
         this.stats = stats;
 
         this.mouse = new Rectangle(positionX, positionY, width, height);
-        this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 0, 0, 1, 1, true));
+        this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 5, 5, 1, 1, true));
         this.getChildren().add(mouse);
 
-        this.indiceX = 0; // largeur
-        this.indiceY = 0; // hauteur
-
-        // Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.indiceX = 0;
+        this.indiceY = 0;
 
     }
 
