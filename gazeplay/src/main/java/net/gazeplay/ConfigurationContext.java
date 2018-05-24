@@ -439,25 +439,27 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final String whereIsItDir = configuration.getWhereIsItDir();
         Button buttonLoad = new Button(whereIsItDir);
 
-        buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                DirectoryChooser directoryChooser = new DirectoryChooser();
-                File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
-                if (file == null) {
-                    return;
-                }
-                buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
-
-                String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
-
-                if (Utils.isWindows()) {
-                    newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-                }
-
-                configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
-                configuration.saveConfigIgnoringExceptions();
+        buttonLoad.setOnAction((ActionEvent arg0) -> {
+            
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            final File currentMusicFolder = new File(configuration.getMusicFolder());
+            if(currentMusicFolder.isDirectory()) {
+                directoryChooser.setInitialDirectory(currentMusicFolder);
             }
+            File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
+            if (file == null) {
+                return;
+            }
+            buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
+            
+            String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
+            
+            if (Utils.isWindows()) {
+                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
+            }
+            
+            configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
         });
 
         return buttonLoad;
@@ -586,31 +588,34 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final String musicFolder = config.getMusicFolder();
         Button buttonLoad = new Button(musicFolder);
 
-        buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                DirectoryChooser directoryChooser = new DirectoryChooser();
-                File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
-                if (file == null) {
-                    return;
-                }
-                buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
-
-                String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
-
-                if (Utils.isWindows()) {
-                    newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-                }
-
-                Configuration configuration = Configuration.getInstance();
-                configuration.getMusicFolderProperty().setValue(newPropertyValue);
-                configuration.saveConfigIgnoringExceptions();
-
-                BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
-                musicManager.emptyPlaylist();
-                musicManager.getAudioFromFolder(newPropertyValue);
-                musicManager.play();
+        buttonLoad.setOnAction((ActionEvent arg0) -> {
+            final Configuration configuration = Configuration.getInstance();
+            
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            
+            final File currentMusicFolder = new File(configuration.getMusicFolder());
+            if(currentMusicFolder.isDirectory()) {
+                directoryChooser.setInitialDirectory(currentMusicFolder);
             }
+            File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
+            if (file == null) {
+                return;
+            }
+            buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
+            
+            String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
+            
+            if (Utils.isWindows()) {
+                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
+            }
+            
+            configuration.getMusicFolderProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
+            
+            BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+            musicManager.emptyPlaylist();
+            musicManager.getAudioFromFolder(newPropertyValue);
+            musicManager.play();
         });
 
         return buttonLoad;
