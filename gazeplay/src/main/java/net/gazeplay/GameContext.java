@@ -186,7 +186,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     @Override
     public void setUpOnStage(Stage stage) {
-        // BackgroundMusicManager.getInstance().pause();
+
         super.setUpOnStage(stage);
     }
 

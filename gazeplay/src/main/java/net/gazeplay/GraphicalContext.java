@@ -207,12 +207,18 @@ public abstract class GraphicalContext<T> {
 
         final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
         
-        musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
+        musicName = new Label(BackgroundMusicManager.getMusicTitle(currentMusic));
         musicName.setLabelFor(volumeSlider);
         grid.add(musicName, 0, 0, 2, 1);
 
         musicName.setMaxWidth(ICON_SIZE * 3 + 3 * grid.getHgap());
         backgroundMusicManager.getMusicIndexProperty().addListener((observable) -> {
+            setMusicTitle(musicName);
+        });
+        // This listener is a bit overkill but we need because in some cases, 
+        // the controle panel won't be set up before the index changed but after
+        // the music start playing.
+        backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
             setMusicTitle(musicName);
         });
 
@@ -341,12 +347,14 @@ public abstract class GraphicalContext<T> {
         GraphicalContext.firstMusicSetUp = value;
     }
 
-    protected void setMusicTitle(final Label musicLabel) {
+    private void setMusicTitle(final Label musicLabel) {
         if(musicLabel == null) {
             return;
         }
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
         String musicTitle = backgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
+        log.info("current music {}", backgroundMusicManager.getCurrentMusic());
+        log.info("music title {}", musicTitle);
         musicLabel.setText(musicTitle);
     }
 
@@ -418,7 +426,7 @@ public abstract class GraphicalContext<T> {
         return pane;
     }
     
-    private void updateMusicControler() {
+    public void updateMusicControler() {
         
         setMusicTitle(musicName);
         

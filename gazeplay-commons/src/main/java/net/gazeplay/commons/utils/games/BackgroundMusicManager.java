@@ -392,7 +392,7 @@ public class BackgroundMusicManager {
         return null;
     }
 
-    public String getMusicTitle(final MediaPlayer music) {
+    public static String getMusicTitle(final MediaPlayer music) {
 
         if (music == null) {
             return "None";
@@ -411,7 +411,7 @@ public class BackgroundMusicManager {
         return title;
     }
     
-    public String getMusicTitle(final String musicPath) {
+    public static String getMusicTitle(final String musicPath) {
         
         String title = "unknown";
         try {
