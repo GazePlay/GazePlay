@@ -106,6 +106,7 @@ public class GameContext extends GraphicalContext<Pane> {
             pt.play();
         };
 
+        log.info("the value of the control bar is : =" + controlPanel.getPrefWidth());
         controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 2.5);
         controlPanel.setOpacity(0);
         controlPanel.setDisable(true);
