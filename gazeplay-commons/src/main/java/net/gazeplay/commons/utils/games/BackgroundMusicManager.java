@@ -105,6 +105,10 @@ public class BackgroundMusicManager {
         if(currentMusic == null) {
             changeCurrentMusic();
         }
+        
+        if(folderPath.equals(Configuration.DEFAULT_VALUE_MUSIC_FOLDER)){
+            isCustomMusicSet.setValue(true);
+        }
     }
 
     private void addFolderRecursively(final File folder) {

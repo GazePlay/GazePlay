@@ -40,6 +40,7 @@ import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.scene.control.ScrollPane;
+import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Slf4j
@@ -161,7 +162,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "FileDir", COLON);
 
-            Button input = buildDirectoryChooser(config, configurationContext);
+            Node input = buildDirectoryChooser(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -185,7 +186,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "WhereIsItDirectory", COLON);
 
-            Button input = buildWhereIsItDirectoryChooser(config, configurationContext);
+            Node input = buildWhereIsItDirectoryChooser(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -221,7 +222,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         {
             I18NText label = new I18NText(translator, "MusicFolder", COLON);
-            Button input = buildMusicInput(config, configurationContext);
+            final Node input = buildMusicInput(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -229,7 +230,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return grid;
     }
 
-    private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, Control input) {
+    private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
 
         final int COLUMN_INDEX_LABEL = 0;
         final int COLUMN_INDEX_INPUT = 1;
@@ -402,22 +403,28 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return buttonLoad;
     }
 
-    private static Button buildDirectoryChooser(Configuration configuration,
+    private static Node buildDirectoryChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
+        
+        final HBox pane = new HBox(5);
 
         final String filedir = configuration.getFileDir();
 
         Button buttonLoad = new Button(filedir);
+        buttonLoad.textProperty().bind(configuration.getFiledirProperty());
 
         buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
+                final File currentFolder = new File(configuration.getFileDir());
+                if(currentFolder.isDirectory()) {
+                    directoryChooser.setInitialDirectory(currentFolder);
+                }
                 File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
                 if (file == null) {
                     return;
                 }
-                buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
 
                 String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
 
@@ -429,28 +436,39 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 configuration.saveConfigIgnoringExceptions();
             }
         });
+        
+        pane.getChildren().add(buttonLoad);
+        
+        final Button resetButton = new Button(translator.translate("reset"));
+        resetButton.setOnAction((event) -> {
+            configuration.getFiledirProperty().setValue(Configuration.DEFAULT_VALUE_FILE_DIR);
+        });
+        
+        pane.getChildren().add(resetButton);
 
-        return buttonLoad;
+        return pane;
     }
 
-    private static Button buildWhereIsItDirectoryChooser(Configuration configuration,
+    private static Node buildWhereIsItDirectoryChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
 
+        final HBox pane = new HBox(5);
+        
         final String whereIsItDir = configuration.getWhereIsItDir();
         Button buttonLoad = new Button(whereIsItDir);
+        buttonLoad.textProperty().bind(configuration.getWhereIsItDirProperty());
 
         buttonLoad.setOnAction((ActionEvent arg0) -> {
             
             DirectoryChooser directoryChooser = new DirectoryChooser();
-            final File currentMusicFolder = new File(configuration.getMusicFolder());
-            if(currentMusicFolder.isDirectory()) {
-                directoryChooser.setInitialDirectory(currentMusicFolder);
+            final File currentFolder = new File(configuration.getWhereIsItDir());
+            if(currentFolder.isDirectory()) {
+                directoryChooser.setInitialDirectory(currentFolder);
             }
             File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
             if (file == null) {
                 return;
             }
-            buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
             
             String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
             
@@ -461,8 +479,17 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
             configuration.saveConfigIgnoringExceptions();
         });
+        
+        pane.getChildren().add(buttonLoad);
+        
+        final Button resetButton = new Button(translator.translate("reset"));
+        resetButton.setOnAction((event) -> {
+            configuration.getWhereIsItDirProperty().setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR);
+        });
+        
+        pane.getChildren().add(resetButton);
 
-        return buttonLoad;
+        return pane;
     }
 
     private static ChoiceBox<Languages> buildLanguageChooser(Configuration configuration,
@@ -583,10 +610,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
-    private static Button buildMusicInput(Configuration config, ConfigurationContext configurationContext) {
+    private static Node buildMusicInput(Configuration config, ConfigurationContext configurationContext) {
 
+        final HBox pane = new HBox(5);
         final String musicFolder = config.getMusicFolder();
         Button buttonLoad = new Button(musicFolder);
+        
+        buttonLoad.textProperty().bind(config.getMusicFolderProperty());
 
         buttonLoad.setOnAction((ActionEvent arg0) -> {
             final Configuration configuration = Configuration.getInstance();
@@ -601,7 +631,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (file == null) {
                 return;
             }
-            buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
+            //buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
             
             String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
             
@@ -609,16 +639,33 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
             
-            configuration.getMusicFolderProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-            
-            BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
-            musicManager.emptyPlaylist();
-            musicManager.getAudioFromFolder(newPropertyValue);
-            musicManager.play();
+            changeMusicFolder(newPropertyValue);
         });
+        
+        pane.getChildren().add(buttonLoad);
+        
+        final Button resetButton = new Button(translator.translate("reset"));
+        resetButton.setOnAction((event) -> {
+            changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER);
+        });
+        
+        pane.getChildren().add(resetButton);
+        
+        return pane;
+    }
+    
+    private static void changeMusicFolder(final String newMusicFolder) {
+        
+        final Configuration configuration = Configuration.getInstance();
+        
+        configuration.getMusicFolderProperty().setValue(newMusicFolder);
+        configuration.saveConfigIgnoringExceptions();
 
-        return buttonLoad;
+        BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+
+        musicManager.emptyPlaylist();
+        musicManager.getAudioFromFolder(newMusicFolder);
+        musicManager.play();
     }
 
     private static GameButtonOrientation findSelectedGameButtonOrientation(Configuration configuration) {
