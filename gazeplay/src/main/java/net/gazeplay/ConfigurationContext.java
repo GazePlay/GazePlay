@@ -27,7 +27,6 @@ import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.I18NText;
@@ -41,7 +40,6 @@ import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Slf4j
@@ -611,6 +609,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
                 musicManager.emptyPlaylist();
                 musicManager.getAudioFromFolder(newPropertyValue);
+                musicManager.play();
             }
         });
 

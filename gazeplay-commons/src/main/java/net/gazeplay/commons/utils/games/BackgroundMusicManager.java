@@ -1,7 +1,5 @@
 package net.gazeplay.commons.utils.games;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.Getter;
@@ -34,7 +32,8 @@ import org.apache.commons.io.FilenameUtils;
 @Slf4j
 public class BackgroundMusicManager {
 
-    public static final List<String> SUPPORTED_FILE_EXTENSIONS = Arrays.asList(".aif", ".aiff", ".fxm", ".flv", ".m3u8",
+    public static final List<String> SUPPORTED_FILE_EXTENSIONS = 
+            Arrays.asList(".aif", ".aiff", ".fxm", ".flv", ".m3u8",
             ".mp3", ".mp4", ".m4v", ".m4a", ".mp4", ".wav");
 
     @Getter
@@ -44,8 +43,6 @@ public class BackgroundMusicManager {
     private final List<MediaPlayer> playlist = new ArrayList<MediaPlayer>();
     @Getter
     private MediaPlayer currentMusic;
-    // @Getter
-    // private int currentMusicIndex = 0;
 
     private final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
             new LinkedBlockingQueue<>(), new CustomThreadFactory(this.getClass().getSimpleName(),
@@ -57,6 +54,9 @@ public class BackgroundMusicManager {
     private final BooleanProperty isPlayingPoperty = new SimpleBooleanProperty(this, "isPlaying", false);
     @Getter
     private final IntegerProperty musicIndexProperty = new SimpleIntegerProperty(this, "musicIndex", 0);
+
+    @Getter
+    private final BooleanProperty isCustomMusicSet = new SimpleBooleanProperty(this, "isCustomMusicSet", false);
 
     public BackgroundMusicManager() {
         config = Configuration.getInstance();
@@ -78,7 +78,7 @@ public class BackgroundMusicManager {
             int newMusicIndex = musicIndexProperty.getValue();
             if (newMusicIndex < 0 || newMusicIndex >= playlist.size()) {
                 musicIndexProperty.setValue(0);
-                throw new IndexOutOfBoundsException("Invalid music index set. 0 will be set instead");
+                log.warn("Invalid music index set. 0 will be set instead");
             }
             changeCurrentMusic();
         });
@@ -100,6 +100,11 @@ public class BackgroundMusicManager {
         }
 
         addFolderRecursively(folder);
+        
+        // If no current music, update it
+        if(currentMusic == null) {
+            changeCurrentMusic();
+        }
     }
 
     private void addFolderRecursively(final File folder) {
@@ -125,16 +130,6 @@ public class BackgroundMusicManager {
         }
     }
 
-    /**
-     * Stop current music playing (if any) then start the current selected music.
-     */
-    public void playPlayList() {
-
-        changeCurrentMusic();
-
-        play();
-    }
-
     private void changeCurrentMusic() {
         if (playlist.isEmpty()) {
             return;
@@ -147,6 +142,8 @@ public class BackgroundMusicManager {
         final MediaPlayer nextMusic = playlist.get(musicIndexProperty.getValue());
 
         this.currentMusic = nextMusic;
+        
+        log.info("Changing current music : {}", getMusicTitle(nextMusic));
     }
 
     public boolean isPlaying() {
@@ -168,15 +165,16 @@ public class BackgroundMusicManager {
         }
         musicIndexProperty.setValue(newMusicIndex);
         // log.info("current index : {}", currentMusicIndex);
-        playPlayList();
+        play();
     }
 
     public void emptyPlaylist() {
         if (currentMusic != null) {
-            currentMusic.stop();
+            stop();
             currentMusic = null;
         }
         playlist.clear();
+        musicIndexProperty.setValue(0);
     }
 
     public void pause() {
@@ -343,7 +341,7 @@ public class BackgroundMusicManager {
     public String getMusicTitle(final MediaPlayer music) {
 
         if (music == null) {
-            return "none";
+            return "None";
         }
 
         ObservableMap<String, Object> metaData = music.getMedia().getMetadata();
@@ -354,13 +352,21 @@ public class BackgroundMusicManager {
         }
 
         if (title == null) {
-            try {
-                String decodedUri = URLDecoder.decode(music.getMedia().getSource(), "UTF-8");
-                title = FilenameUtils.getBaseName(decodedUri);
-            } catch (UnsupportedEncodingException ex) {
-                title = music.getMedia().getSource();
-            }
+            title = getMusicTitle(music.getMedia().getSource());
         }
+        return title;
+    }
+    
+    public String getMusicTitle(final String musicPath) {
+        
+        String title = "unknown";
+        try {
+            String decodedUri = URLDecoder.decode(musicPath, "UTF-8");
+            title = FilenameUtils.getBaseName(decodedUri);
+        } catch (UnsupportedEncodingException ex) {
+            log.warn("Wrong format to get music title: {}", musicPath, ex);
+        }
+        
         return title;
     }
 }

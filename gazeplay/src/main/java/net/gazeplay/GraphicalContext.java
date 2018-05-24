@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import ch.qos.logback.core.net.ssl.ConfigurableSSLServerSocketFactory;
 import java.io.File;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -88,7 +87,17 @@ public abstract class GraphicalContext<T> {
      * play it at the beginning.
      */
     public static boolean firstMusicSetUp = true;
-
+    
+    /**
+     * Fields with listeners from music controler. When need those because when
+     * the volume controle is not on stage (i.e. when configuration is shown), it
+     * doesn't receive any event from listener (no idea why). Then when it come back on stage,
+     * it needs to be updated.
+     */
+    protected Label musicName;
+    protected Button pauseTrack;
+    protected Button playTrack;
+    
     public void setUpOnStage(Stage stage) {
         stage.setTitle("GazePlay");
 
@@ -195,14 +204,13 @@ public abstract class GraphicalContext<T> {
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
         final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
-
-        final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
+        
+        musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
         musicName.setLabelFor(volumeSlider);
         grid.add(musicName, 0, 0, 2, 1);
 
         musicName.setMaxWidth(ICON_SIZE * 3 + 3 * grid.getHgap());
         backgroundMusicManager.getMusicIndexProperty().addListener((observable) -> {
-
             setMusicTitle(musicName);
         });
 
@@ -231,7 +239,6 @@ public abstract class GraphicalContext<T> {
             log.warn(e.toString() + " : " + PAUSE_ICON);
         }
 
-        Button pauseTrack;
         if (buttonImg == null) {
             pauseTrack = new Button("||");
         } else {
@@ -248,7 +255,6 @@ public abstract class GraphicalContext<T> {
             log.warn(e.toString() + " : " + PLAY_ICON);
         }
 
-        Button playTrack;
         if (buttonImg == null) {
             playTrack = new Button("|>");
         } else {
@@ -311,13 +317,15 @@ public abstract class GraphicalContext<T> {
             }
 
             backgroundMusicManager.changeMusic(0);
-            backgroundMusicManager.playPlayList();
+            backgroundMusicManager.play();
             GraphicalContext.setFirstMusicSetip(false);
 
             // We need to manually set the music title for the first set up
             setMusicTitle(musicName);
         }
 
+        log.info("Music panel created");
+        
         return pane;
     }
 
@@ -331,7 +339,10 @@ public abstract class GraphicalContext<T> {
         GraphicalContext.firstMusicSetUp = value;
     }
 
-    private void setMusicTitle(final Label musicLabel) {
+    protected void setMusicTitle(final Label musicLabel) {
+        if(musicLabel == null) {
+            return;
+        }
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
         String musicTitle = backgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
         musicLabel.setText(musicTitle);
@@ -404,5 +415,4 @@ public abstract class GraphicalContext<T> {
 
         return pane;
     }
-
 }

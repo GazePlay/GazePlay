@@ -71,10 +71,8 @@ public class Configuration implements Cloneable {
     }
 
     private static Configuration createFromPropertiesResource() {
-        log.info("DEBUG: CONFIG BEGIN");
         Properties properties;
         try {
-            log.info("Loading properties : config path : {}", CONFIGPATH);
             properties = loadProperties(CONFIGPATH);
         } catch (FileNotFoundException e) {
             log.warn("Config file not found : {}", CONFIGPATH);
@@ -88,7 +86,6 @@ public class Configuration implements Cloneable {
             log.info("Properties loaded : {}", properties);
             config.populateFromProperties(properties);
         }
-        log.info("DEBUG: CONFIG END", properties);
         return config;
     }
 
