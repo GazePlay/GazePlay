@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import ch.qos.logback.core.net.ssl.ConfigurableSSLServerSocketFactory;
 import java.io.File;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -89,6 +88,15 @@ public abstract class GraphicalContext<T> {
      */
     public static boolean firstMusicSetUp = true;
 
+    /**
+     * Fields with listeners from music controler. When need those because when the volume controle is not on stage
+     * (i.e. when configuration is shown), it doesn't receive any event from listener (no idea why). Then when it comes
+     * back on stage, it needs to be updated.
+     */
+    private Label musicName;
+    private Button pauseTrack;
+    private Button playTrack;
+
     public void setUpOnStage(Stage stage) {
         stage.setTitle("GazePlay");
 
@@ -102,6 +110,8 @@ public abstract class GraphicalContext<T> {
 
         final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
+
+        updateMusicControler();
 
         stage.show();
         log.info("Finished setup stage with the game scene");
@@ -196,13 +206,18 @@ public abstract class GraphicalContext<T> {
 
         final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
 
-        final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
+        musicName = new Label(BackgroundMusicManager.getMusicTitle(currentMusic));
         musicName.setLabelFor(volumeSlider);
         grid.add(musicName, 0, 0, 2, 1);
 
         musicName.setMaxWidth(ICON_SIZE * 3 + 3 * grid.getHgap());
         backgroundMusicManager.getMusicIndexProperty().addListener((observable) -> {
-
+            setMusicTitle(musicName);
+        });
+        // This listener is a bit overkill but we need because in some cases,
+        // the controle panel won't be set up before the index changed but after
+        // the music start playing.
+        backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
             setMusicTitle(musicName);
         });
 
@@ -231,7 +246,6 @@ public abstract class GraphicalContext<T> {
             log.warn(e.toString() + " : " + PAUSE_ICON);
         }
 
-        Button pauseTrack;
         if (buttonImg == null) {
             pauseTrack = new Button("||");
         } else {
@@ -248,7 +262,6 @@ public abstract class GraphicalContext<T> {
             log.warn(e.toString() + " : " + PLAY_ICON);
         }
 
-        Button playTrack;
         if (buttonImg == null) {
             playTrack = new Button("|>");
         } else {
@@ -311,12 +324,14 @@ public abstract class GraphicalContext<T> {
             }
 
             backgroundMusicManager.changeMusic(0);
-            backgroundMusicManager.playPlayList();
+            backgroundMusicManager.play();
             GraphicalContext.setFirstMusicSetip(false);
 
             // We need to manually set the music title for the first set up
             setMusicTitle(musicName);
         }
+
+        log.info("Music panel created");
 
         return pane;
     }
@@ -332,8 +347,13 @@ public abstract class GraphicalContext<T> {
     }
 
     private void setMusicTitle(final Label musicLabel) {
+        if (musicLabel == null) {
+            return;
+        }
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
         String musicTitle = backgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
+        log.info("current music {}", backgroundMusicManager.getCurrentMusic());
+        log.info("music title {}", musicTitle);
         musicLabel.setText(musicTitle);
     }
 
@@ -405,4 +425,20 @@ public abstract class GraphicalContext<T> {
         return pane;
     }
 
+    public void updateMusicControler() {
+
+        setMusicTitle(musicName);
+
+        if (playTrack != null && pauseTrack != null) {
+            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+            log.info("updating : isPlaying : {}", backgroundMusicManager.isPlaying());
+            if (backgroundMusicManager.isPlaying()) {
+                playTrack.setVisible(false);
+                pauseTrack.setVisible(true);
+            } else {
+                playTrack.setVisible(true);
+                pauseTrack.setVisible(false);
+            }
+        }
+    }
 }
