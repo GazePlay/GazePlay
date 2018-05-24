@@ -87,17 +87,16 @@ public abstract class GraphicalContext<T> {
      * play it at the beginning.
      */
     public static boolean firstMusicSetUp = true;
-    
+
     /**
-     * Fields with listeners from music controler. When need those because when
-     * the volume controle is not on stage (i.e. when configuration is shown), it
-     * doesn't receive any event from listener (no idea why). Then when it comes back on stage,
-     * it needs to be updated.
+     * Fields with listeners from music controler. When need those because when the volume controle is not on stage
+     * (i.e. when configuration is shown), it doesn't receive any event from listener (no idea why). Then when it comes
+     * back on stage, it needs to be updated.
      */
     private Label musicName;
     private Button pauseTrack;
     private Button playTrack;
-    
+
     public void setUpOnStage(Stage stage) {
         stage.setTitle("GazePlay");
 
@@ -113,7 +112,7 @@ public abstract class GraphicalContext<T> {
         CssUtil.setPreferredStylesheets(config, scene);
 
         updateMusicControler();
-        
+
         stage.show();
         log.info("Finished setup stage with the game scene");
     }
@@ -206,7 +205,7 @@ public abstract class GraphicalContext<T> {
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
         final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
-        
+
         musicName = new Label(BackgroundMusicManager.getMusicTitle(currentMusic));
         musicName.setLabelFor(volumeSlider);
         grid.add(musicName, 0, 0, 2, 1);
@@ -215,7 +214,7 @@ public abstract class GraphicalContext<T> {
         backgroundMusicManager.getMusicIndexProperty().addListener((observable) -> {
             setMusicTitle(musicName);
         });
-        // This listener is a bit overkill but we need because in some cases, 
+        // This listener is a bit overkill but we need because in some cases,
         // the controle panel won't be set up before the index changed but after
         // the music start playing.
         backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
@@ -333,7 +332,7 @@ public abstract class GraphicalContext<T> {
         }
 
         log.info("Music panel created");
-        
+
         return pane;
     }
 
@@ -348,7 +347,7 @@ public abstract class GraphicalContext<T> {
     }
 
     private void setMusicTitle(final Label musicLabel) {
-        if(musicLabel == null) {
+        if (musicLabel == null) {
             return;
         }
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
@@ -425,12 +424,12 @@ public abstract class GraphicalContext<T> {
 
         return pane;
     }
-    
+
     public void updateMusicControler() {
-        
+
         setMusicTitle(musicName);
-        
-        if(playTrack != null && pauseTrack != null) {
+
+        if (playTrack != null && pauseTrack != null) {
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
             log.info("updating : isPlaying : {}", backgroundMusicManager.isPlaying());
             if (backgroundMusicManager.isPlaying()) {

@@ -32,8 +32,7 @@ import org.apache.commons.io.FilenameUtils;
 @Slf4j
 public class BackgroundMusicManager {
 
-    public static final List<String> SUPPORTED_FILE_EXTENSIONS = 
-            Arrays.asList(".aif", ".aiff", ".fxm", ".flv", ".m3u8",
+    public static final List<String> SUPPORTED_FILE_EXTENSIONS = Arrays.asList(".aif", ".aiff", ".fxm", ".flv", ".m3u8",
             ".mp3", ".mp4", ".m4v", ".m4a", ".mp4", ".wav");
 
     @Getter
@@ -100,13 +99,13 @@ public class BackgroundMusicManager {
         }
 
         addFolderRecursively(folder);
-        
+
         // If no current music, update it
-        if(currentMusic == null) {
+        if (currentMusic == null) {
             changeCurrentMusic();
         }
-        
-        if(folderPath.equals(Configuration.DEFAULT_VALUE_MUSIC_FOLDER)){
+
+        if (folderPath.equals(Configuration.DEFAULT_VALUE_MUSIC_FOLDER)) {
             isCustomMusicSet.setValue(true);
         }
     }
@@ -146,7 +145,7 @@ public class BackgroundMusicManager {
         final MediaPlayer nextMusic = playlist.get(musicIndexProperty.getValue());
 
         this.currentMusic = nextMusic;
-        
+
         log.info("Changing current music : {}", getMusicTitle(nextMusic));
     }
 
@@ -186,8 +185,7 @@ public class BackgroundMusicManager {
     }
 
     /**
-     * Play the current selected music in the playlist. If it was paused then it
-     * will start from when it was.
+     * Play the current selected music in the playlist. If it was paused then it will start from when it was.
      */
     public void play() {
 
@@ -271,10 +269,12 @@ public class BackgroundMusicManager {
 
         executorService.execute(asyncTask);
     }
-    
+
     /**
      * Play a music without adding it to the playlist.
-     * @param resourceUrlAsString The resource to the music
+     * 
+     * @param resourceUrlAsString
+     *            The resource to the music
      */
     public void playMusicAlone(String resourceUrlAsString) {
         Runnable asyncTask = () -> {
@@ -307,8 +307,8 @@ public class BackgroundMusicManager {
             }
 
             if (localMediaPlayer != null) {
-                
-                if(isPlaying()) {
+
+                if (isPlaying()) {
                     pause();
                 }
                 currentMusic = localMediaPlayer;
@@ -410,9 +410,9 @@ public class BackgroundMusicManager {
         }
         return title;
     }
-    
+
     public static String getMusicTitle(final String musicPath) {
-        
+
         String title = "unknown";
         try {
             String decodedUri = URLDecoder.decode(musicPath, "UTF-8");
@@ -420,7 +420,7 @@ public class BackgroundMusicManager {
         } catch (UnsupportedEncodingException ex) {
             log.warn("Wrong format to get music title: {}", musicPath, ex);
         }
-        
+
         return title;
     }
 }

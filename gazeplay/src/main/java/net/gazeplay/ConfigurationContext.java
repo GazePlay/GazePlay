@@ -403,9 +403,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return buttonLoad;
     }
 
-    private static Node buildDirectoryChooser(Configuration configuration,
-            ConfigurationContext configurationContext) {
-        
+    private static Node buildDirectoryChooser(Configuration configuration, ConfigurationContext configurationContext) {
+
         final HBox pane = new HBox(5);
 
         final String filedir = configuration.getFileDir();
@@ -418,7 +417,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             public void handle(ActionEvent arg0) {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 final File currentFolder = new File(configuration.getFileDir());
-                if(currentFolder.isDirectory()) {
+                if (currentFolder.isDirectory()) {
                     directoryChooser.setInitialDirectory(currentFolder);
                 }
                 File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
@@ -436,14 +435,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 configuration.saveConfigIgnoringExceptions();
             }
         });
-        
+
         pane.getChildren().add(buttonLoad);
-        
+
         final Button resetButton = new Button(translator.translate("reset"));
         resetButton.setOnAction((event) -> {
             configuration.getFiledirProperty().setValue(Configuration.DEFAULT_VALUE_FILE_DIR);
         });
-        
+
         pane.getChildren().add(resetButton);
 
         return pane;
@@ -453,40 +452,40 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             ConfigurationContext configurationContext) {
 
         final HBox pane = new HBox(5);
-        
+
         final String whereIsItDir = configuration.getWhereIsItDir();
         Button buttonLoad = new Button(whereIsItDir);
         buttonLoad.textProperty().bind(configuration.getWhereIsItDirProperty());
 
         buttonLoad.setOnAction((ActionEvent arg0) -> {
-            
+
             DirectoryChooser directoryChooser = new DirectoryChooser();
             final File currentFolder = new File(configuration.getWhereIsItDir());
-            if(currentFolder.isDirectory()) {
+            if (currentFolder.isDirectory()) {
                 directoryChooser.setInitialDirectory(currentFolder);
             }
             File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
             if (file == null) {
                 return;
             }
-            
+
             String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
-            
+
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
-            
+
             configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
             configuration.saveConfigIgnoringExceptions();
         });
-        
+
         pane.getChildren().add(buttonLoad);
-        
+
         final Button resetButton = new Button(translator.translate("reset"));
         resetButton.setOnAction((event) -> {
             configuration.getWhereIsItDirProperty().setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR);
         });
-        
+
         pane.getChildren().add(resetButton);
 
         return pane;
@@ -615,49 +614,49 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final HBox pane = new HBox(5);
         final String musicFolder = config.getMusicFolder();
         Button buttonLoad = new Button(musicFolder);
-        
+
         buttonLoad.textProperty().bind(config.getMusicFolderProperty());
 
         buttonLoad.setOnAction((ActionEvent arg0) -> {
             final Configuration configuration = Configuration.getInstance();
-            
+
             DirectoryChooser directoryChooser = new DirectoryChooser();
-            
+
             final File currentMusicFolder = new File(configuration.getMusicFolder());
-            if(currentMusicFolder.isDirectory()) {
+            if (currentMusicFolder.isDirectory()) {
                 directoryChooser.setInitialDirectory(currentMusicFolder);
             }
             File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
             if (file == null) {
                 return;
             }
-            //buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
-            
+            // buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
+
             String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
-            
+
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
-            
+
             changeMusicFolder(newPropertyValue);
         });
-        
+
         pane.getChildren().add(buttonLoad);
-        
+
         final Button resetButton = new Button(translator.translate("reset"));
         resetButton.setOnAction((event) -> {
             changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER);
         });
-        
+
         pane.getChildren().add(resetButton);
-        
+
         return pane;
     }
-    
+
     private static void changeMusicFolder(final String newMusicFolder) {
-        
+
         final Configuration configuration = Configuration.getInstance();
-        
+
         configuration.getMusicFolderProperty().setValue(newMusicFolder);
         configuration.saveConfigIgnoringExceptions();
 
