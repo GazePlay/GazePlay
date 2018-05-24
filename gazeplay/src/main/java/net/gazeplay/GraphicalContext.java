@@ -91,12 +91,12 @@ public abstract class GraphicalContext<T> {
     /**
      * Fields with listeners from music controler. When need those because when
      * the volume controle is not on stage (i.e. when configuration is shown), it
-     * doesn't receive any event from listener (no idea why). Then when it come back on stage,
+     * doesn't receive any event from listener (no idea why). Then when it comes back on stage,
      * it needs to be updated.
      */
-    protected Label musicName;
-    protected Button pauseTrack;
-    protected Button playTrack;
+    private Label musicName;
+    private Button pauseTrack;
+    private Button playTrack;
     
     public void setUpOnStage(Stage stage) {
         stage.setTitle("GazePlay");
@@ -112,6 +112,8 @@ public abstract class GraphicalContext<T> {
         final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
 
+        updateMusicControler();
+        
         stage.show();
         log.info("Finished setup stage with the game scene");
     }
@@ -414,5 +416,22 @@ public abstract class GraphicalContext<T> {
         center.getChildren().add(effectsVolumeSlider);
 
         return pane;
+    }
+    
+    private void updateMusicControler() {
+        
+        setMusicTitle(musicName);
+        
+        if(playTrack != null && pauseTrack != null) {
+            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+            log.info("updating : isPlaying : {}", backgroundMusicManager.isPlaying());
+            if (backgroundMusicManager.isPlaying()) {
+                playTrack.setVisible(false);
+                pauseTrack.setVisible(true);
+            } else {
+                playTrack.setVisible(true);
+                pauseTrack.setVisible(false);
+            }
+        }
     }
 }

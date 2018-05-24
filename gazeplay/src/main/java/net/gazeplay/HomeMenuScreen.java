@@ -127,7 +127,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     @Override
     public void setUpOnStage(Stage stage) {
         super.setUpOnStage(stage);
-        updateMusicControler();
     }
 
     private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config) {
@@ -178,22 +177,5 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         logo.setFill(new ImagePattern(new Image("data/common/images/gazeplay.jpg"), 0, 0, 1, 1, true));
 
         return logo;
-    }
-
-    private void updateMusicControler() {
-        
-        setMusicTitle(musicName);
-        
-        if(playTrack != null && pauseTrack != null) {
-            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-            log.info("updating : isPlaying : {}", backgroundMusicManager.isPlaying());
-            if (backgroundMusicManager.isPlaying()) {
-                playTrack.setVisible(false);
-                pauseTrack.setVisible(true);
-            } else {
-                playTrack.setVisible(true);
-                pauseTrack.setVisible(false);
-            }
-        }
     }
 }

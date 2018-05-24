@@ -160,7 +160,7 @@ public class BackgroundMusicManager {
      * will play the newly selected music.
      * 
      * @param newMusicIndex
-     *            The new index to use.
+     *            The new index to use. Must be >= 0 and < playlist.size() otherwise nothing will be done.
      */
     public void changeMusic(int newMusicIndex) {
 
@@ -186,7 +186,8 @@ public class BackgroundMusicManager {
     }
 
     /**
-     * If the music was paused, then play when it where in its timeline.
+     * Play the current selected music in the playlist. If it was paused then it
+     * will start from when it was.
      */
     public void play() {
 
@@ -263,7 +264,56 @@ public class BackgroundMusicManager {
 
             if (localMediaPlayer != null) {
                 playlist.add(localMediaPlayer);
-                changeMusic(playlist.size() - 1);
+                changeMusic(playlist.indexOf(localMediaPlayer));
+                play();
+            }
+        };
+
+        executorService.execute(asyncTask);
+    }
+    
+    /**
+     * Play a music without adding it to the playlist.
+     * @param resourceUrlAsString The resource to the music
+     */
+    public void playMusicAlone(String resourceUrlAsString) {
+        Runnable asyncTask = () -> {
+
+            MediaPlayer localMediaPlayer = getMediaPlayerFromSource(resourceUrlAsString);
+            // If there is already the music in playlist, just play it
+            if (localMediaPlayer == null) {
+
+                // parse the URL early
+                // in order to fail early if the URL is invalid
+                URL resourceURL;
+                try {
+                    resourceURL = new URL(resourceUrlAsString);
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException("Invalid URL provided as sound resource : " + resourceUrlAsString, e);
+                }
+
+                final String resourceUrlExternalForm = resourceURL.toExternalForm();
+                final File mediaFile = downloadAndGetFromCache(resourceURL, resourceUrlExternalForm);
+
+                final String localResourceName = mediaFile.toURI().toString();
+                log.info("Playing sound {}", localResourceName);
+
+                try {
+                    localMediaPlayer = createMediaPlayer(resourceUrlAsString);
+                } catch (RuntimeException e) {
+                    log.error("Exception while playing media file {} ", localResourceName, e);
+                }
+
+            }
+
+            if (localMediaPlayer != null) {
+                
+                if(isPlaying()) {
+                    pause();
+                }
+                currentMusic = localMediaPlayer;
+                play();
+                musicIndexProperty.setValue(0);
             }
         };
 
