@@ -1,5 +1,6 @@
 package net.gazeplay.games.divisor;
 
+import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -23,6 +24,8 @@ import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Random;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyValue;
 import javafx.scene.Parent;
 
 /**
@@ -44,7 +47,6 @@ class Target extends Parent {
     private final Dimension2D dimension;
     private final boolean lapin;
     private ImageLibrary imgLib;
-    private Image explosion;
     private Circle cercle;
 
     public Target(GameContext gameContext, Stats stats, ImageLibrary imgLib, int level, long start,
@@ -64,16 +66,6 @@ class Target extends Parent {
         this.cercle = new Circle(pos.getX(), pos.getY(), this.radius);
         this.cercle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
         this.getChildren().add(cercle);
-
-        try {
-            if (lapin) {
-                this.explosion = new Image("data/divisor/images/coeur.png");
-            } else {
-                this.explosion = new Image("data/divisor/images/explosion.png");
-            }
-        } catch (Exception e) {
-            log.info("Fichier non trouvé " + e.getMessage());
-        }
 
         enterEvent = new EventHandler<Event>() {
             @Override
@@ -156,15 +148,29 @@ class Target extends Parent {
     }
 
     private void explodeAnimation(double x, double y) {
-        Circle c = new Circle(x, y, this.radius);
-        c.setFill(new ImagePattern(explosion, 0, 0, 1, 1, true));
-        this.gameContext.getChildren().add(c);
+        double particleRadius = 2;
+        ArrayList<Circle> particles = new ArrayList<>();
+        Timeline timelineParticle = new Timeline();
+        for (int i = 0; i < 30; i++) {
+            Circle particle = new Circle(x, y, particleRadius);
+            particle.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+            particles.add(particle);
+            this.gameContext.getChildren().add(particle);
+            Position particleDestination = randomPosWithRange(this.pos, this.radius * 1.5, particleRadius);
+            timelineParticle.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1000), new KeyValue(particles.get(i).centerXProperty(),
+                            particleDestination.getX(), Interpolator.EASE_OUT)));
+            timelineParticle.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1000), new KeyValue(particles.get(i).centerYProperty(),
+                            particleDestination.getY(), Interpolator.EASE_OUT)));
+            timelineParticle.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1000), new KeyValue(particles.get(i).opacityProperty(), 0.0)));
+        }
 
-        Timeline timer = new Timeline(new KeyFrame(Duration.millis(300)));
-        timer.setOnFinished(new EventHandler<ActionEvent>() {
+        timelineParticle.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                gameContext.getChildren().remove(c);
+                Target.this.gameContext.getChildren().removeAll(particles);
                 if (((!lapin) && (gameContext.getChildren().isEmpty()))
                         || ((lapin) && (gameContext.getChildren().size() <= 1))) {
                     long totalTime = (System.currentTimeMillis() - startTime) / 1000;
@@ -185,7 +191,7 @@ class Target extends Parent {
                 }
             }
         });
-        timer.play();
+        timelineParticle.play();
     }
 
     private void createChildren(double x, double y) {
@@ -208,6 +214,27 @@ class Target extends Parent {
             x = -x;
         }
         return x;
+    }
+
+    private Position randomPosWithRange(Position start, double range, double radius) {
+        Random random = new Random();
+
+        double minX = (start.getX() - range);
+        double minY = (start.getY() - range);
+        double maxX = (start.getX() + range);
+        double maxY = (start.getY() + range);
+
+        double positionX = random.nextInt((int) (maxX - minX)) + minX;
+        double positionY = random.nextInt((int) (maxY - minY)) + minY;
+
+        if (positionX > this.dimension.getWidth()) {
+            positionX = this.dimension.getWidth() - radius;
+        }
+        if (positionY > this.dimension.getHeight()) {
+            positionY = this.dimension.getHeight() - radius;
+        }
+
+        return new Position((int) positionX, (int) positionY);
     }
 
     private void addEvent() {
