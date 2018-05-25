@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import ch.qos.logback.core.net.ssl.ConfigurableSSLServerSocketFactory;
 import java.io.File;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

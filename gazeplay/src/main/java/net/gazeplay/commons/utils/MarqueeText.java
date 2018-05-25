@@ -11,24 +11,17 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.utils.games.Utils;
 
 /**
  * This object is supposed to have an object which will have a text whil will scroll
@@ -38,7 +31,6 @@ import net.gazeplay.commons.utils.games.Utils;
  */
 @Slf4j
 public class MarqueeText extends Region {
-
 
     private final TranslateTransition transition;
 
@@ -73,7 +65,7 @@ public class MarqueeText extends Region {
             rerunAnimation();
         });
         
-        this.getTextProperty().addListener((observable) -> {
+        this.textProperty.addListener((observable) -> {
             this.text.setText(this.getTextProperty().getValue());
             log.info("new text : {}", this.text);
             rerunAnimation();
@@ -113,8 +105,8 @@ public class MarqueeText extends Region {
 
     private void recalculateTransition() {
         
-        this.text.setX(this.getTranslateX());
-        this.text.setY(this.getTranslateY() + 15);
+        this.text.setTranslateX(this.getTranslateX());
+        this.text.setTranslateY(this.getTranslateY() + 15);
         final double textWidth = getTextWidth(text.getText());
         
         int lastIndex = text.getText().length();
