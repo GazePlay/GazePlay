@@ -27,6 +27,11 @@ public class ImageUtils {
                 .locateImagesDirectoryInUnpackedDistDirectory("data/common/default/images/");
 
         if (defaultImageDirectory == null) {
+            defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(
+                    "gazeplay-data/src/main/resources/data/common/default/images/");
+        }
+
+        if (defaultImageDirectory == null) {
             defaultImageDirectory = ImageDirectoryLocator
                     .locateImagesDirectoryInExplodedClassPath("data/common/default/images/");
         }
