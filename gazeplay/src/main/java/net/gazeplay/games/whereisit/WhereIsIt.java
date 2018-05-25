@@ -15,7 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -28,7 +27,6 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.games.ImageDirectoryLocator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -39,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
-import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.games.Utils;
 
 import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZED;
 
@@ -103,7 +101,7 @@ public class WhereIsIt implements GameLifeCycle {
         final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
 
         currentRoundDetails = pickAndBuildRandomPictures(config, numberOfImagesToDisplayPerRound, random,
                 winnerImageIndexAmongDisplayedImages);
@@ -170,8 +168,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         TranslateTransition fullAnimation = new TranslateTransition(
-                Duration.millis(ConfigurationBuilder.createFromPropertiesResource().build().getQuestionLength()),
-                questionText);
+                Duration.millis(Configuration.getInstance().getQuestionLength()), questionText);
 
         fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
@@ -205,14 +202,7 @@ public class WhereIsIt implements GameLifeCycle {
             URL soundResourceUrl = classLoader.getResource(currentRoundDetails.questionSoundPath);
             log.info("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
 
-            AudioClip soundClip = null;
-
-            if (soundResourceUrl == null)
-                soundClip = new AudioClip("file:" + currentRoundDetails.questionSoundPath);
-            else
-                soundClip = new AudioClip(soundResourceUrl.toExternalForm());
-
-            soundClip.play();
+            Utils.playSound(soundResourceUrl.toExternalForm());
         } catch (Exception e) {
             log.info("Can't play sound: no associated sound : " + e.toString());
         }
@@ -425,7 +415,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         if (this.gameType == CUSTOMIZED) {
 
-            final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+            final Configuration config = Configuration.getInstance();
 
             try {
 
@@ -480,7 +470,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         if (this.gameType == CUSTOMIZED) {
 
-            final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+            final Configuration config = Configuration.getInstance();
 
             File F = new File(config.getWhereIsItDir() + "questions.csv");
 
@@ -511,7 +501,7 @@ public class WhereIsIt implements GameLifeCycle {
             return null;
         }
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
 
         File F = new File(config.getWhereIsItDir() + "questions.csv");
 
@@ -577,9 +567,9 @@ public class WhereIsIt implements GameLifeCycle {
 
             log.info("imagePath = {}", imagePath);
 
-            final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+            final Configuration config = Configuration.getInstance();
 
-            this.minTime = config.getFixationlength();
+            this.minTime = config.getFixationLength();
             this.initialPositionX = posX;
             this.initialPositionY = posY;
             this.initialWidth = width;

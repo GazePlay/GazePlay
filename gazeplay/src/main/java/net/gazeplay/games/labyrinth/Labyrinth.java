@@ -2,13 +2,12 @@ package net.gazeplay.games.labyrinth;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
-import javafx.scene.paint.Color;
+
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -16,43 +15,95 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     GameContext gameContext;
     private final Stats stats;
+    public final double fixationlength;
 
-    private Rectangle[][] walls;
+    protected GameBox[][] walls;
+    private int[][] wallsPlacement;
 
-    private final int nbCasesLignes = 10;
-    private final int nbCasesColonne = 15;
+    protected final int nbCasesLignes = 10;
+    protected final int nbCasesColonne = 15;
 
-    private final Color colorWall = Color.MAROON;
-    private final Color colorBackground = Color.BEIGE;
+    protected final double entiereRecX;
+    protected final double entiereRecY;
+    protected final double entiereRecWidth;
+    protected final double entiereRecHeight;
 
-    public Labyrinth(GameContext gameContext, Stats stats) {
+    final double caseHeight;
+    final double caseWidth;
+    final double adjustmentCaseWidth;
+    final double adjustmentCaseHeight;
+
+    protected Cheese cheese;
+    private Mouse mouse;
+
+    private int version;
+
+    public Labyrinth(GameContext gameContext, Stats stats, int version) {
         super();
 
         this.gameContext = gameContext;
         this.stats = stats;
+        this.version = version;
+        Configuration config = Configuration.getInstance();
+        fixationlength = config.getFixationLength();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
+
+        entiereRecX = dimension2D.getWidth() * 0.2;
+        entiereRecY = dimension2D.getHeight() * 0.05;
+        // entiereRecX = dimension2D.getWidth() * 0.25;
+        // entiereRecY = dimension2D.getHeight() * 0.1;
+        entiereRecWidth = dimension2D.getWidth() * 0.6;
+        entiereRecHeight = dimension2D.getHeight() * 0.9;
+
+        caseWidth = entiereRecWidth / nbCasesColonne;
+        caseHeight = entiereRecHeight / nbCasesLignes;
+        adjustmentCaseWidth = caseWidth / 4;
+        adjustmentCaseHeight = caseHeight / 4;
 
     }
 
     @Override
     public void launch() {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
 
-        double x = dimension2D.getWidth() * 0.2;
-        double y = dimension2D.getHeight() * 0.05;
-        double width = dimension2D.getWidth() * 0.6;
-        double height = dimension2D.getHeight() * 0.9;
-        Rectangle recJeu = new Rectangle(x, y, width, height);
-        recJeu.setFill(colorBackground);
-
+        Rectangle recJeu = new Rectangle(entiereRecX, entiereRecY, entiereRecWidth, entiereRecHeight);
         gameContext.getChildren().add(recJeu);
 
-        this.walls = creationLabyrinth(recJeu, dimension2D);
+        this.wallsPlacement = constructionWallMatrix();
+        creationLabyrinth(recJeu, dimension2D);
 
-        fillWalls();
+        // Creation of cheese
+        cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 15, dimension2D.getHeight() / 15, this);
+
+        // Creation of the mouse
+        switch (version) {
+        case 0:
+            mouse = new MouseV0(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+            break;
+        case 1:
+            mouse = new MouseArrowsV1(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+            break;
+        case 2:
+            mouse = new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+            break;
+        case 3:
+            mouse = new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+            break;
+        case 4:
+            mouse = new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+            break;
+        default:
+            mouse = new MouseV0(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+            break;
+        }
+
+        gameContext.getChildren().add(mouse);
+
+        // launch of cheese
+        cheese.beginCheese();
+        gameContext.getChildren().add(cheese);
 
     }
 
@@ -62,85 +113,54 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     }
 
-    private Rectangle[][] creationLabyrinth(Rectangle recTotal, Dimension2D dim2D) {
+    protected double positionX(int j) {
+        double x = entiereRecX + j * caseWidth; // - adjustmentCaseWidth;
+        return x;
+    }
 
-        // Rectangle[numero de ligne][numero de colonne]
-        Rectangle[][] rec = new Rectangle[nbCasesLignes][nbCasesColonne];
+    protected double positionY(int i) {
+        double y = entiereRecY + i * caseHeight;// + adjustmentCaseHeight;
+        return y;
+    }
 
-        double heigth = recTotal.getHeight() / nbCasesLignes;
-        double width = recTotal.getWidth() / nbCasesColonne;
-
-        for (int i = 0; i < nbCasesLignes; i++) { // Pour chaque ligne
-
-            for (int j = 0; j < nbCasesColonne; j++) { // Pour chaque colonne
-                Rectangle r = new Rectangle();
-                r.setHeight(heigth);
-                r.setWidth(width);
-                r.setY(recTotal.getY() + i * heigth);
-                r.setX(recTotal.getX() + j * width);
-                rec[i][j] = r;
+    private void creationLabyrinth(Rectangle recTotal, Dimension2D dim2D) {
+        walls = new GameBox[nbCasesLignes][nbCasesColonne];
+        for (int i = 0; i < nbCasesLignes; i++) { // i = rows number = Coord Y
+            for (int j = 0; j < nbCasesColonne; j++) { // j = columns number = Coord X
+                GameBox g = new GameBox(caseHeight, caseWidth, entiereRecX + j * caseWidth,
+                        entiereRecY + i * caseHeight, wallsPlacement[i][j], j, i);
+                walls[i][j] = g;
+                gameContext.getChildren().add(this.walls[i][j]);
             }
         }
-
-        return rec;
     }
 
     // 1 if there is a wall, 0 otherwise
     private int[][] constructionWallMatrix() {
         int[][] tab = { { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+                { 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1 }, { 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1 },
+                { 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1 }, { 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1 },
+                { 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0 }, { 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0 }, { 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0 } };
         return tab;
 
     }
 
-    private void fillWalls() {
-
-        for (int i = 0; i < 5; i++) {
-            walls[i][1].setFill(colorWall);
-            walls[4][1 + i].setFill(colorWall);
-            walls[4 + i][3].setFill(colorWall);
-            walls[1 + i][5].setFill(colorWall);
-            walls[1 + i][9].setFill(colorWall);
-        }
-
-        for (int i = 0; i < 3; i++) {
-            walls[8][1 + i].setFill(colorWall);
-            walls[9][6 + i].setFill(colorWall);
-            walls[7 + i][8].setFill(colorWall);
-            walls[3][9 + i].setFill(colorWall);
-            walls[1 + i][11].setFill(colorWall);
-            walls[7][11 + i].setFill(colorWall);
-            walls[5 + i][13].setFill(colorWall);
-            walls[1 + i][14].setFill(colorWall);
-        }
-        walls[6][0].setFill(colorWall);
-        walls[1][4].setFill(colorWall);
-        walls[2][6].setFill(colorWall);
-        walls[6][5].setFill(colorWall);
-        walls[6][6].setFill(colorWall);
-        walls[2][8].setFill(colorWall);
-        walls[5][8].setFill(colorWall);
-        walls[2][13].setFill(colorWall);
-        walls[4][14].setFill(colorWall);
-
-        for (int i = 0; i < nbCasesLignes; i++) {
-            for (int j = 0; j < nbCasesColonne; j++) {
-                if (!isAWall(i, j)) {
-                    walls[i][j].setFill(colorBackground);
-                }
-                gameContext.getChildren().add(this.walls[i][j]);
-            }
-        }
-
+    public boolean isFreeForMouse(int i, int j) {
+        return (!walls[i][j].isAWall());
     }
 
-    // Return true is the case Walls[i][j] is not a wall, false if it's a wall
-    public boolean isAWall(int i, int j) {
-        return (walls[i][j].getFill() == colorWall);
+    public boolean isFreeForCheese(int i, int j) {
+        return (!walls[i][j].isAWall() && !mouse.isTheMouse(i, j));
+    }
+
+    public void testIfCheese(int i, int j) {
+        if (cheese.isTheCheese(i, j)) {
+            stats.incNbGoals();
+            stats.notifyNewRoundReady();
+            cheese.moveCheese();
+        }
     }
 
 }

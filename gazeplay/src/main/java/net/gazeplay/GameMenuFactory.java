@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
@@ -19,11 +18,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.ui.I18NText;
+import net.gazeplay.commons.ui.ProgressButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
-import net.gazeplay.commons.utils.ProgressButton;
 import net.gazeplay.commons.utils.ProgressPane;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -34,7 +32,7 @@ import java.util.Collection;
 @Slf4j
 public class GameMenuFactory {
 
-    private boolean useDebuggingBackgrounds = false;
+    private final boolean useDebuggingBackgrounds = false;
 
     public Pane createGameButton(GazePlay gazePlay, Scene scene, Configuration config, Multilinguism multilinguism,
             Translator translator, GameSpec gameSpec, GameButtonOrientation orientation) {
@@ -246,7 +244,7 @@ public class GameMenuFactory {
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
 
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             ProgressButton button = new ProgressButton(variant.getLabel());
@@ -305,8 +303,12 @@ public class GameMenuFactory {
         gameContext.createControlPanel(gazePlay, stats, currentGame);
 
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
-            BackgroundMusicManager.getInstance()
-                    .playRemoteSound(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
+
+            final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+            if (!musicManager.getIsCustomMusicSet().getValue() || musicManager.getPlaylist().isEmpty()) {
+                musicManager.playMusicAlone(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
+                gameContext.updateMusicControler();
+            }
         }
 
         stats.start();

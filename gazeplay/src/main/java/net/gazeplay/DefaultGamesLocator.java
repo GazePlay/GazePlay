@@ -529,20 +529,21 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL),
-                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+        result.add(
+                new GameSpec(new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/piano.jpeg"),
+                        new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
 
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "Piano");
-                    }
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new Stats(scene, "Piano");
+                            }
 
-                    @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext,
-                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new Piano(gameContext, stats);
-                    }
-                }));
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                                return new Piano(gameContext, stats);
+                            }
+                        }));
         result.add(new GameSpec(
                 new GameSummary("Whac-a-mole", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/whackAMole.png"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
@@ -580,7 +581,8 @@ public class DefaultGamesLocator implements GamesLocator {
                             }
                         }));
 
-        result.add(new GameSpec(new GameSummary("Cakes", DEFAULT_MEMORIZATION_GAME_THUMBNAIL),
+        result.add(new GameSpec(
+                new GameSummary("Cakes", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/cakes.jpeg"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -607,16 +609,35 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
         result.add(new GameSpec(new GameSummary("Labyrinth", DEFAULT_SEARCHING_GAME_THUMBNAIL),
-                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.IntGameVariant(0, "Version 0"),
+
+                                new GameSpec.IntGameVariant(1, "Version 1"),
+
+                                new GameSpec.IntGameVariant(2, "Version 2"),
+
+                                new GameSpec.IntGameVariant(3, "Version 3"),
+
+                                new GameSpec.IntGameVariant(4, "Version 4")
+
+                ));
+                    }
+                },
+
+                new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new LabyrinthStats(scene);
                     }
 
                     @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext,
-                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new Labyrinth(gameContext, stats);
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
+                        return new Labyrinth(gameContext, stats, gameVariant.getNumber());
                     }
 
                 }));

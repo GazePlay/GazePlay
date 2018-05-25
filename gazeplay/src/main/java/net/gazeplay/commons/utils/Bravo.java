@@ -13,10 +13,10 @@ import javafx.util.Duration;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.AsyncUiTaskExecutor;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
-import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 import java.net.URL;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.utils.games.Utils;
 
 /**
  * Created by schwab on 30/10/2016.
@@ -66,7 +66,7 @@ public class Bravo extends Rectangle {
     public Bravo() {
 
         this(defaultPictureResourceLocation, defaultSoundResourceLocation,
-                ConfigurationBuilder.createFromPropertiesResource().build().isEnableRewardSound());
+                Configuration.getInstance().isEnableRewardSound());
     }
 
     public Bravo(String pictureResourceLocation, String soundResourceLocation, boolean enableRewardSound) {
@@ -77,8 +77,6 @@ public class Bravo extends Rectangle {
         ClassLoader classLoader = this.getClass().getClassLoader();
 
         soundResourceUrl = classLoader.getResource(soundResourceLocation);
-
-        soundClip = new AudioClip(soundResourceUrl.toExternalForm());
 
         fullTransition = createFullTransition();
 
@@ -112,7 +110,7 @@ public class Bravo extends Rectangle {
 
             if (this.enableRewardSound) {
                 log.debug("Playing sound animation ...");
-                soundClip.play(BackgroundMusicManager.getInstance().volumeProperty().getValue());
+                Utils.playSound(soundResourceUrl.toExternalForm());
             }
 
             log.debug("Finished JavaFX task");

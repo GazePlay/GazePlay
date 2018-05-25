@@ -1,5 +1,8 @@
 package net.gazeplay;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.RotateTransition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -10,30 +13,30 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationBuilder;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.*;
-import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.cakes.cakeStats;
 
 import java.io.IOException;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
+
+    public static boolean menuOpen = false;
 
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
@@ -45,7 +48,7 @@ public class GameContext extends GraphicalContext<Pane> {
         Scene scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
                 Color.BLACK);
 
-        final Configuration config = ConfigurationBuilder.createFromPropertiesResource().build();
+        final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
 
         Bravo bravo = new Bravo();
@@ -58,21 +61,58 @@ public class GameContext extends GraphicalContext<Pane> {
         controlPanel.maxWidthProperty().bind(root.widthProperty());
         controlPanel.toFront();
 
+        double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
+
+        // Button bt = new Button();
+        ImageView bt = new ImageView(new Image("data/common/images/configuration-button-alt4.png"));
+        bt.setFitWidth(buttonSize);
+        bt.setFitHeight(buttonSize);
+        /*
+         * bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; " +
+         * "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; " + "-fx-max-height: " +
+         * buttonSize + "px;");
+         */
+
+        gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
+            bt.setLayoutY(0);
+            bt.toFront();
+        });
+        gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> {
+            bt.setLayoutX(-buttonSize / 2);
+            bt.toFront();
+        });
+
         EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> {
-            controlPanel.setOpacity(1);
-            // root.setBottom(autoHiddingControlPanel);
-        };
-        EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent -> {
-            controlPanel.setOpacity(0);
-            // root.setBottom(null);
+            double from = 0;
+            double to = 1;
+            double angle = 360;
+            if (menuOpen) {
+                from = 1;
+                to = 0;
+                angle = -1 * angle;
+            }
+            RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
+            rt.setByAngle(angle);
+            FadeTransition ft = new FadeTransition(Duration.millis(500), controlPanel);
+            ft.setFromValue(from);
+            ft.setToValue(to);
+            ParallelTransition pt = new ParallelTransition();
+            pt.getChildren().addAll(rt, ft);
+            controlPanel.setDisable(menuOpen);
+            menuOpen = !menuOpen;
+            pt.play();
         };
 
-        controlPanel.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
-        controlPanel.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
+        controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 2.5);
+        controlPanel.setOpacity(0);
+        controlPanel.setDisable(true);
+        menuOpen = false;
 
-        mouseEnterControlPanelEventHandler.handle(null);
-        BorderPane root2 = new BorderPane();
-        root2.setBottom(controlPanel);
+        bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEnterControlPanelEventHandler);
+
+        Pane root2 = new Pane();
+        root2.getChildren().add(bt);
+        root2.getChildren().add(controlPanel);
         root.setCenter(gamingRoot);
         root.getChildren().add(root2);
 
@@ -129,11 +169,24 @@ public class GameContext extends GraphicalContext<Pane> {
         this.randomPositionGenerator = randomPositionGenerator;
         this.rootBorderPane = rootBorderPane;
         this.gazeDeviceManager = gazeDeviceManager;
+
+        /*
+         * double initW = gazePlay.getPrimaryStage().getWidth(); double initH = gazePlay.getPrimaryStage().getHeight();
+         * gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> { if (root instanceof Pane) {
+         * log.info(""+newVal.doubleValue()+"-"+initW+"/2= "+ (newVal.doubleValue()-initW)/2);
+         * ((Pane)root).setLayoutX((newVal.doubleValue()-initW)/2); ((Pane)root).setScaleX(newVal.doubleValue()/initW);
+         * } });
+         * 
+         * gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> { if (root instanceof Pane)
+         * { log.info(""+newVal.doubleValue()+"-"+initH+"/2= "+ (newVal.doubleValue()-initH)/2);
+         * ((Pane)root).setLayoutY((newVal.doubleValue()-initH)/2); ((Pane)root).setScaleY(newVal.doubleValue()/initH);
+         * } });
+         */
     }
 
     @Override
     public void setUpOnStage(Stage stage) {
-        BackgroundMusicManager.getInstance().pause();
+
         super.setUpOnStage(stage);
     }
 
@@ -143,7 +196,8 @@ public class GameContext extends GraphicalContext<Pane> {
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        menuHBox.getChildren().add(createSoundControlPane());
+        menuHBox.getChildren().add(createMusicControlPane());
+        menuHBox.getChildren().add(createEffectsVolumePane());
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
@@ -152,7 +206,7 @@ public class GameContext extends GraphicalContext<Pane> {
         menuHBox.getChildren().add(homeButton);
 
         Dimension2D dimension2D = getGamePanelDimensionProvider().getDimension2D();
-        bottomPane.setLayoutY(dimension2D.getHeight() * 0.92 - menuHBox.getHeight());
+        bottomPane.setLayoutY(dimension2D.getHeight() * 0.90 - menuHBox.getHeight());
         bottomPane.setMinWidth(dimension2D.getWidth());
 
         gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -160,25 +214,12 @@ public class GameContext extends GraphicalContext<Pane> {
         });
         gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
             if (gazePlay.isFullScreen()) {
-                bottomPane.setLayoutY(newVal.doubleValue() - menuHBox.getHeight());
+                bottomPane.setLayoutY(newVal.doubleValue() - 2 * 8 - menuHBox.getHeight());
             } else {
                 bottomPane.setLayoutY(newVal.doubleValue() - 50 - menuHBox.getHeight());
             }
         });
 
-        /*
-         * double initialLayoutX = this.getRoot().getLayoutX(); double initialLayoutY = this.getRoot().getLayoutY();
-         * 
-         * gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> { double ratio =
-         * newVal.doubleValue()/dimension2D.getHeight(); this.getRoot().setScaleY(ratio);
-         * this.getRoot().setLayoutY(initialLayoutY*ratio); });
-         * 
-         * gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> { double ratio =
-         * newVal.doubleValue()/dimension2D.getWidth(); this.getRoot().setScaleX(ratio);
-         * this.getRoot().setLayoutX(-this.getRoot().localToScene(0, 0).getX());
-         * 
-         * });
-         */
     }
 
     public ProgressHomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
@@ -187,7 +228,7 @@ public class GameContext extends GraphicalContext<Pane> {
         EventHandler<Event> homeEvent = e -> {
             scene.setCursor(Cursor.WAIT); // Change cursor to wait style
             homeButtonClicked(stats, gazePlay, currentGame);
-            BackgroundMusicManager.getInstance().pause();
+            // BackgroundMusicManager.getInstance().pause();
             scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 
@@ -226,6 +267,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
         getChildren().add(bravo);
+        bravo.toFront();
         bravo.playWinTransition(scene, delay, onFinishedEventHandler);
     }
 

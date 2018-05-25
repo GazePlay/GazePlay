@@ -7,7 +7,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -24,13 +23,12 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
-import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.ProgressCustomButton;
-import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.util.List;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Data
 @Slf4j
@@ -68,7 +66,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         leftControlPane.setAlignment(Pos.CENTER);
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.getChildren().add(configurationButton);
-        leftControlPane.getChildren().add(createSoundControlPane());
+        leftControlPane.getChildren().add(createMusicControlPane());
+        leftControlPane.getChildren().add(createEffectsVolumePane());
 
         I18NButton toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
 
@@ -128,21 +127,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     @Override
     public void setUpOnStage(Stage stage) {
         super.setUpOnStage(stage);
-        playBackgroundMusic();
-    }
-
-    public void playBackgroundMusic() {
-        /*
-         * String resourceLocation1; resourceLocation1 =
-         * "https://opengameart.org/sites/default/files/010614songidea%28copycat%29_0.mp3";
-         * BackgroundMusicManager.getInstance().playRemoteSound(resourceLocation1);
-         */
-        final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
-        musicManager.playPlayList();
-
-        // String resourceLocation2;
-        // resourceLocation2 = "https://opengameart.org/sites/default/files/021914bgm2%28happytune%29_0.mp3";
-        // BackgroundMusicManager.getInstance().playRemoteSound(resourceLocation2);
     }
 
     private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config) {
@@ -194,5 +178,4 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         return logo;
     }
-
 }

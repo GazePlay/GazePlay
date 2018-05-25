@@ -11,6 +11,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import net.gazeplay.GameContext;
@@ -30,6 +31,7 @@ public class Target extends Parent {
     private final GameContext gameContext;
     private final ProgressIndicator progressIndicator;
     private final Position pos;
+    private final double radius;
     private Timeline timelineProgressBar;
 
     public Target(Order gameInstance, GameContext gameContext, int num) {
@@ -37,10 +39,11 @@ public class Target extends Parent {
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
         this.pos = this.gameContext.getRandomPositionGenerator().newRandomPosition(100);
+        this.radius = 75;
 
-        Rectangle rectangle = new Rectangle(pos.getX(), pos.getY(), 150, 150);
-        rectangle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
-        this.getChildren().add(rectangle);
+        Circle cercle = new Circle(pos.getX(), pos.getY(), this.radius);
+        cercle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
+        this.getChildren().add(cercle);
 
         this.progressIndicator = createProgressIndicator(100);
         this.getChildren().add(this.progressIndicator);
@@ -79,8 +82,8 @@ public class Target extends Parent {
 
     private ProgressIndicator createProgressIndicator(double diameter) {
         ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(this.pos.getX() + 25);
-        indicator.setTranslateY(this.pos.getY() + 25);
+        indicator.setTranslateX(this.pos.getX() - (diameter / 2));
+        indicator.setTranslateY(this.pos.getY() - (diameter / 2));
         indicator.setMinWidth(diameter * 0.9);
         indicator.setMinHeight(diameter * 0.9);
         indicator.setOpacity(0);
@@ -100,5 +103,9 @@ public class Target extends Parent {
 
     public int getNum() {
         return this.num;
+    }
+
+    public double getRadius() {
+        return this.radius;
     }
 }

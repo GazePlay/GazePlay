@@ -21,8 +21,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
@@ -277,6 +279,9 @@ public class ColorsGame implements GameLifeCycle {
         final Translator translator = GazePlay.getInstance().getTranslator();
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initOwner(GazePlay.getInstance().getPrimaryStage());
+        alert.initModality(Modality.WINDOW_MODAL);
+        alert.initStyle(StageStyle.UTILITY);
         alert.setContentText(translator.translate("confirmBWText") + imageName);
         alert.setTitle(translator.translate("confirmBWTitle"));
         alert.setHeaderText(translator.translate("confirmBWHeader"));

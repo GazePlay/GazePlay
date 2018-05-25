@@ -27,6 +27,11 @@ public class ImageUtils {
                 .locateImagesDirectoryInUnpackedDistDirectory("data/common/default/images/");
 
         if (defaultImageDirectory == null) {
+            defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(
+                    "gazeplay-data/src/main/resources/data/common/default/images/");
+        }
+
+        if (defaultImageDirectory == null) {
             defaultImageDirectory = ImageDirectoryLocator
                     .locateImagesDirectoryInExplodedClassPath("data/common/default/images/");
         }
@@ -34,6 +39,7 @@ public class ImageUtils {
         return new LazyImageLibrary(defaultImageDirectory, fallbackImageLibrary);
     }
 
+    @Deprecated
     public static List<Image> loadAllImages(File directoryFile) {
         List<File> files = listImageFiles(directoryFile);
 
