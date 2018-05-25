@@ -64,7 +64,6 @@ public class MouseV0 extends Mouse {
                     timelineProgressBar.play();
 
                     timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
-                        // If the user watch the mole enough time (timeMinToWhackMole)
                         @Override
                         public void handle(ActionEvent actionEvent) {
                             gb.indicator.setOpacity(0);
