@@ -1,7 +1,5 @@
 package net.gazeplay.commons.utils.games;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.Getter;
@@ -44,8 +42,6 @@ public class BackgroundMusicManager {
     private final List<MediaPlayer> playlist = new ArrayList<MediaPlayer>();
     @Getter
     private MediaPlayer currentMusic;
-    // @Getter
-    // private int currentMusicIndex = 0;
 
     private final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
             new LinkedBlockingQueue<>(), new CustomThreadFactory(this.getClass().getSimpleName(),
@@ -57,6 +53,9 @@ public class BackgroundMusicManager {
     private final BooleanProperty isPlayingPoperty = new SimpleBooleanProperty(this, "isPlaying", false);
     @Getter
     private final IntegerProperty musicIndexProperty = new SimpleIntegerProperty(this, "musicIndex", 0);
+
+    @Getter
+    private final BooleanProperty isCustomMusicSet = new SimpleBooleanProperty(this, "isCustomMusicSet", false);
 
     public BackgroundMusicManager() {
         config = Configuration.getInstance();
@@ -78,7 +77,7 @@ public class BackgroundMusicManager {
             int newMusicIndex = musicIndexProperty.getValue();
             if (newMusicIndex < 0 || newMusicIndex >= playlist.size()) {
                 musicIndexProperty.setValue(0);
-                throw new IndexOutOfBoundsException("Invalid music index set. 0 will be set instead");
+                log.warn("Invalid music index set. 0 will be set instead");
             }
             changeCurrentMusic();
         });
@@ -100,6 +99,15 @@ public class BackgroundMusicManager {
         }
 
         addFolderRecursively(folder);
+
+        // If no current music, update it
+        if (currentMusic == null) {
+            changeCurrentMusic();
+        }
+
+        if (folderPath.equals(Configuration.DEFAULT_VALUE_MUSIC_FOLDER)) {
+            isCustomMusicSet.setValue(true);
+        }
     }
 
     private void addFolderRecursively(final File folder) {
@@ -125,16 +133,6 @@ public class BackgroundMusicManager {
         }
     }
 
-    /**
-     * Stop current music playing (if any) then start the current selected music.
-     */
-    public void playPlayList() {
-
-        changeCurrentMusic();
-
-        play();
-    }
-
     private void changeCurrentMusic() {
         if (playlist.isEmpty()) {
             return;
@@ -147,6 +145,8 @@ public class BackgroundMusicManager {
         final MediaPlayer nextMusic = playlist.get(musicIndexProperty.getValue());
 
         this.currentMusic = nextMusic;
+
+        log.info("Changing current music : {}", getMusicTitle(nextMusic));
     }
 
     public boolean isPlaying() {
@@ -159,7 +159,7 @@ public class BackgroundMusicManager {
      * will play the newly selected music.
      * 
      * @param newMusicIndex
-     *            The new index to use.
+     *            The new index to use. Must be >= 0 and < playlist.size() otherwise nothing will be done.
      */
     public void changeMusic(int newMusicIndex) {
 
@@ -168,15 +168,16 @@ public class BackgroundMusicManager {
         }
         musicIndexProperty.setValue(newMusicIndex);
         // log.info("current index : {}", currentMusicIndex);
-        playPlayList();
+        play();
     }
 
     public void emptyPlaylist() {
         if (currentMusic != null) {
-            currentMusic.stop();
+            stop();
             currentMusic = null;
         }
         playlist.clear();
+        musicIndexProperty.setValue(0);
     }
 
     public void pause() {
@@ -184,7 +185,7 @@ public class BackgroundMusicManager {
     }
 
     /**
-     * If the music was paused, then play when it where in its timeline.
+     * Play the current selected music in the playlist. If it was paused then it will start from when it was.
      */
     public void play() {
 
@@ -261,7 +262,58 @@ public class BackgroundMusicManager {
 
             if (localMediaPlayer != null) {
                 playlist.add(localMediaPlayer);
-                changeMusic(playlist.size() - 1);
+                changeMusic(playlist.indexOf(localMediaPlayer));
+                play();
+            }
+        };
+
+        executorService.execute(asyncTask);
+    }
+
+    /**
+     * Play a music without adding it to the playlist.
+     * 
+     * @param resourceUrlAsString
+     *            The resource to the music
+     */
+    public void playMusicAlone(String resourceUrlAsString) {
+        Runnable asyncTask = () -> {
+
+            MediaPlayer localMediaPlayer = getMediaPlayerFromSource(resourceUrlAsString);
+            // If there is already the music in playlist, just play it
+            if (localMediaPlayer == null) {
+
+                // parse the URL early
+                // in order to fail early if the URL is invalid
+                URL resourceURL;
+                try {
+                    resourceURL = new URL(resourceUrlAsString);
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException("Invalid URL provided as sound resource : " + resourceUrlAsString, e);
+                }
+
+                final String resourceUrlExternalForm = resourceURL.toExternalForm();
+                final File mediaFile = downloadAndGetFromCache(resourceURL, resourceUrlExternalForm);
+
+                final String localResourceName = mediaFile.toURI().toString();
+                log.info("Playing sound {}", localResourceName);
+
+                try {
+                    localMediaPlayer = createMediaPlayer(resourceUrlAsString);
+                } catch (RuntimeException e) {
+                    log.error("Exception while playing media file {} ", localResourceName, e);
+                }
+
+            }
+
+            if (localMediaPlayer != null) {
+
+                if (isPlaying()) {
+                    pause();
+                }
+                currentMusic = localMediaPlayer;
+                play();
+                musicIndexProperty.setValue(0);
             }
         };
 
@@ -340,10 +392,10 @@ public class BackgroundMusicManager {
         return null;
     }
 
-    public String getMusicTitle(final MediaPlayer music) {
+    public static String getMusicTitle(final MediaPlayer music) {
 
         if (music == null) {
-            return "none";
+            return "None";
         }
 
         ObservableMap<String, Object> metaData = music.getMedia().getMetadata();
@@ -354,13 +406,21 @@ public class BackgroundMusicManager {
         }
 
         if (title == null) {
-            try {
-                String decodedUri = URLDecoder.decode(music.getMedia().getSource(), "UTF-8");
-                title = FilenameUtils.getBaseName(decodedUri);
-            } catch (UnsupportedEncodingException ex) {
-                title = music.getMedia().getSource();
-            }
+            title = getMusicTitle(music.getMedia().getSource());
         }
+        return title;
+    }
+
+    public static String getMusicTitle(final String musicPath) {
+
+        String title = "unknown";
+        try {
+            String decodedUri = URLDecoder.decode(musicPath, "UTF-8");
+            title = FilenameUtils.getBaseName(decodedUri);
+        } catch (UnsupportedEncodingException ex) {
+            log.warn("Wrong format to get music title: {}", musicPath, ex);
+        }
+
         return title;
     }
 }

@@ -41,11 +41,6 @@ public class Target extends Parent {
         this.pos = this.gameContext.getRandomPositionGenerator().newRandomPosition(100);
         this.radius = 75;
 
-        /*
-         * Rectangle rectangle = new Rectangle(pos.getX(), pos.getY(), 150, 150); rectangle.setFill(new ImagePattern(new
-         * Image("data/order/images/target.png"), 0, 0, 1, 1, true)); this.getChildren().add(rectangle);
-         */
-
         Circle cercle = new Circle(pos.getX(), pos.getY(), this.radius);
         cercle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
         this.getChildren().add(cercle);

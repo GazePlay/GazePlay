@@ -48,15 +48,16 @@ public class Configuration implements Cloneable {
     private static final String DEFAULT_VALUE_LANGUAGE = "fra";
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
-    private static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
+    public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static final int DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
     private static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
-    private static final String DEFAULT_VALUE_MUSIC_FOLDER = "data" + File.separator + "home" + File.separator
+    public static final String DEFAULT_VALUE_MUSIC_FOLDER = "data" + File.separator + "home" + File.separator
             + "sounds";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
+    public static final String DEFAULT_VALUE_FILE_DIR = getFileDirectoryDefaultValue();
 
     private static String getFileDirectoryDefaultValue() {
         return Utils.getGazePlayFolder() + "files" /* + Utils.FILESEPARATOR */;
@@ -71,10 +72,8 @@ public class Configuration implements Cloneable {
     }
 
     private static Configuration createFromPropertiesResource() {
-        log.info("DEBUG: CONFIG BEGIN");
         Properties properties;
         try {
-            log.info("Loading properties : config path : {}", CONFIGPATH);
             properties = loadProperties(CONFIGPATH);
         } catch (FileNotFoundException e) {
             log.warn("Config file not found : {}", CONFIGPATH);
@@ -88,7 +87,6 @@ public class Configuration implements Cloneable {
             log.info("Properties loaded : {}", properties);
             config.populateFromProperties(properties);
         }
-        log.info("DEBUG: CONFIG END", properties);
         return config;
     }
 
@@ -109,7 +107,7 @@ public class Configuration implements Cloneable {
 
     @Getter
     protected final StringProperty filedirProperty = new SimpleStringProperty(this, PROPERTY_NAME_FILEDIR,
-            getFileDirectoryDefaultValue());
+            DEFAULT_VALUE_FILE_DIR);
 
     @Getter
     protected final IntegerProperty fixationlengthProperty = new SimpleIntegerProperty(this,

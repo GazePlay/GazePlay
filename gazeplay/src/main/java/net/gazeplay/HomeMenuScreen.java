@@ -28,6 +28,7 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.util.List;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Data
 @Slf4j
@@ -177,5 +178,4 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         return logo;
     }
-
 }

@@ -10,21 +10,26 @@ import java.net.URL;
 public class ImageDirectoryLocator {
 
     public static File locateImagesDirectoryInUnpackedDistDirectory(String parentImagesPackageResourceLocation) {
+        log.info("locateImagesDirectoryInUnpackedDistDirectory : parentImagesPackageResourceLocation = {}",
+                parentImagesPackageResourceLocation);
         final File workingDirectory = new File(".");
-        log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
+        log.info("locateImagesDirectoryInUnpackedDistDirectory : workingDirectory = {}",
+                workingDirectory.getAbsolutePath());
         final String workingDirectoryName;
         try {
             workingDirectoryName = workingDirectory.getCanonicalFile().getName();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        log.info("workingDirectoryName = {}", workingDirectoryName);
+        log.info("locateImagesDirectoryInUnpackedDistDirectory : workingDirectoryName = {}", workingDirectoryName);
 
-        log.info("parentImagesPackageResourceLocation = {}", parentImagesPackageResourceLocation);
+        log.info("locateImagesDirectoryInUnpackedDistDirectory : parentImagesPackageResourceLocation = {}",
+                parentImagesPackageResourceLocation);
 
         {
             final File imagesDirectory = new File(workingDirectory, parentImagesPackageResourceLocation);
-            log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
+            log.info("locateImagesDirectoryInUnpackedDistDirectory : imagesDirectory = {}",
+                    imagesDirectory.getAbsolutePath());
             boolean checked = checkImageDirectory(imagesDirectory);
             if (checked) {
                 return imagesDirectory;
@@ -33,7 +38,8 @@ public class ImageDirectoryLocator {
 
         if (workingDirectoryName.equals("bin")) {
             final File imagesDirectory = new File(workingDirectory, "../" + parentImagesPackageResourceLocation);
-            log.info("imagesDirectory = {}", imagesDirectory.getAbsolutePath());
+            log.info("locateImagesDirectoryInUnpackedDistDirectory : imagesDirectory = {}",
+                    imagesDirectory.getAbsolutePath());
             boolean checked = checkImageDirectory(imagesDirectory);
             if (checked) {
                 return imagesDirectory;
