@@ -5,13 +5,15 @@ import javafx.animation.TranslateTransition;
 import javafx.animation.TranslateTransitionBuilder;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -19,14 +21,18 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.games.Utils;
 
 @Slf4j
-public class MarqueeText extends Label {
+public class MarqueeText extends StackPane {
 
     @Getter
     private final IntegerProperty nbCharDisplayed = new SimpleIntegerProperty(this, "nbCharDisplayed", 8);
 
     private final TranslateTransition transition;
 
-    private final Text text;
+    private final Label text;
+    
+    @Getter
+    private final StringProperty textProperty = new SimpleStringProperty(this, "textProperty", "");
+    
 
     @Getter
     private final ReadOnlyDoubleProperty duration = new ReadOnlyDoubleWrapper(this, "duration", 0);
@@ -35,11 +41,12 @@ public class MarqueeText extends Label {
     private final DoubleProperty desiredDuration = new SimpleDoubleProperty(this, "desieredDuration", 0);
 
     public MarqueeText(final int nbCharDisplayed, final String text, final double duration) {
-        super(text);
+        super();
         this.nbCharDisplayed.setValue(nbCharDisplayed);
         this.desiredDuration.setValue(duration);
 
-        this.text = new Text(text);
+        this.text = new Label(text);
+        this.getChildren().add(this.text);
 
         transition = TranslateTransitionBuilder.create().duration(new Duration(duration)).node(this.text)
                 .interpolator(Interpolator.LINEAR).cycleCount(1).build();
@@ -48,8 +55,17 @@ public class MarqueeText extends Label {
             rerunAnimation();
         });
 
-        this.textProperty().addListener((observable) -> {
-            this.text.setText(this.getText());
+        /*this.textProperty().addListener((observable) -> {
+            if(!getText().equals("")) {
+                this.text.setText(this.getText());
+                this.setText("");
+                log.info("new text : {}", this.text);
+                rerunAnimation();
+            }
+        });*/
+        
+        this.getTextProperty().addListener((observable) -> {
+            this.text.setText(this.getTextProperty().getValue());
             log.info("new text : {}", this.text);
             rerunAnimation();
         });
@@ -86,12 +102,12 @@ public class MarqueeText extends Label {
 
         final double textWidth = Utils.getTextWidth(text.getText());
 
-        final String testText = new String(new char[this.nbCharDisplayed.getValue()]).replace('\0', ' ');
+        final String testText = new String(new char[this.nbCharDisplayed.getValue()]).replace('\0', '-');
         final double maxTextWidth = Utils.getTextWidth(testText);
 
         // TODO : rework transition
-        transition.setToX(textWidth);
-        transition.setFromX(0);
+        /*transition.setToX(this.getTranslateX() + textWidth);
+        transition.setFromX(this.getTranslateX());*/
 
         log.info("text width : {}, max textWidth {}", textWidth, maxTextWidth);
         if (textWidth <= maxTextWidth) {
@@ -100,6 +116,9 @@ public class MarqueeText extends Label {
             transition.setDuration(new Duration(desiredDuration.getValue()));
         }
 
-        this.setMaxWidth(textWidth);
+        this.text.setPrefWidth(maxTextWidth);
+        this.text.setMaxWidth(maxTextWidth);
+        
+        log.info("width : {}", this.getWidth());
     }
 }

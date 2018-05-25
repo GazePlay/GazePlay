@@ -199,7 +199,7 @@ public abstract class GraphicalContext<T> {
 
         // final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
         final MarqueeText musicName = new MarqueeText(8, backgroundMusicManager.getMusicTitle(currentMusic), 5);
-        musicName.setLabelFor(volumeSlider);
+        //musicName.setLabelFor(volumeSlider);
         grid.add(musicName, 0, 0, 2, 1);
 
         musicName.setMaxWidth(ICON_SIZE * 3 + 3 * grid.getHgap());
@@ -333,10 +333,10 @@ public abstract class GraphicalContext<T> {
         GraphicalContext.firstMusicSetUp = value;
     }
 
-    private void setMusicTitle(final Label musicLabel) {
+    private void setMusicTitle(final MarqueeText musicLabel) {
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
         String musicTitle = backgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
-        musicLabel.setText(musicTitle);
+        musicLabel.getTextProperty().setValue(musicTitle);
     }
 
     public Slider createMediaVolumeSlider(@NonNull GazePlay gazePlay) {
