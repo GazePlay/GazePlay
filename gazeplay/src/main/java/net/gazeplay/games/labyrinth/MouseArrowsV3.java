@@ -18,17 +18,23 @@ public class MouseArrowsV3 extends MouseArrows {
     }
 
     @Override
+    protected void recomputeArrowsPositions() {
+        return;
+    }
+
+    @Override
     protected void placementFleche() {
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         double delta = dimension2D.getHeight() / 20;
+
         double x = gameInstance.entiereRecX + gameInstance.entiereRecWidth / 2;
         double y = gameInstance.entiereRecY - delta;
 
-        this.buttonUp = new Rectangle(x, y, buttonDimWidth, buttonDimHeight);
+        this.buttonUp = new Rectangle(x, y - delta, buttonDimWidth, buttonDimHeight);
         this.buttonUp.setFill(new ImagePattern(new Image("data/labyrinth/images/upArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorUp = createProgressIndicator(x, y, buttonDimWidth, buttonDimHeight);
+        this.indicatorUp = createProgressIndicator(x, y - delta, buttonDimWidth, buttonDimHeight);
         this.buttonUp.addEventHandler(MouseEvent.ANY, buttonUpEvent);
         this.buttonUp.addEventHandler(GazeEvent.ANY, buttonUpEvent);
 
@@ -41,25 +47,21 @@ public class MouseArrowsV3 extends MouseArrows {
 
         y = gameInstance.entiereRecY + gameInstance.entiereRecHeight / 2;
         x = gameInstance.entiereRecX - delta;
-        this.buttonLeft = new Rectangle(x, y, buttonDimHeight, buttonDimWidth);
+        this.buttonLeft = new Rectangle(x - delta, y, buttonDimHeight, buttonDimWidth);
         this.buttonLeft.setFill(new ImagePattern(new Image("data/labyrinth/images/leftArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorLeft = createProgressIndicator(x, y, buttonDimHeight, buttonDimWidth);
+        this.indicatorLeft = createProgressIndicator(x - delta, y, buttonDimWidth, buttonDimHeight);
         this.buttonLeft.addEventHandler(MouseEvent.ANY, buttonLeftEvent);
         this.buttonLeft.addEventHandler(GazeEvent.ANY, buttonLeftEvent);
 
         x = gameInstance.entiereRecX + gameInstance.entiereRecWidth + delta;
         this.buttonRight = new Rectangle(x, y, buttonDimHeight, buttonDimWidth);
         this.buttonRight.setFill(new ImagePattern(new Image("data/labyrinth/images/rightArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorRight = createProgressIndicator(x, y, buttonDimHeight, buttonDimWidth);
+        this.indicatorRight = createProgressIndicator(x - delta, y, buttonDimWidth, buttonDimHeight);
         this.buttonRight.addEventHandler(MouseEvent.ANY, buttonRightEvent);
         this.buttonRight.addEventHandler(GazeEvent.ANY, buttonRightEvent);
 
         this.getChildren().addAll(buttonUp, buttonDown, buttonLeft, buttonRight);
         this.getChildren().addAll(indicatorUp, indicatorDown, indicatorLeft, indicatorRight);
-    }
-
-    @Override
-    protected void recomputeArrowsPositions() {
     }
 
 }

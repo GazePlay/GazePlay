@@ -14,8 +14,8 @@ public class GameBox extends Parent {
 
     protected ProgressIndicator indicator;
 
-    protected double x;
-    protected double y;
+    private double x;
+    private double y;
     protected int numCol; // j
     protected int numRow; // i
 
@@ -25,16 +25,16 @@ public class GameBox extends Parent {
 
     public GameBox(double height, double width, double coordX, double coordY, int wall, int nc, int nr) {
 
-        x = coordX;
-        y = coordY;
-        numCol = nc;
-        numRow = nr;
+        this.x = coordX;
+        this.y = coordY;
+        this.numCol = nc;
+        this.numRow = nr;
 
-        r = new Rectangle();
-        r.setHeight(height);
-        r.setWidth(width);
-        r.setY(coordY);
-        r.setX(coordX);
+        this.r = new Rectangle();
+        this.r.setHeight(height);
+        this.r.setWidth(width);
+        this.r.setY(coordY);
+        this.r.setX(coordX);
 
         indicator = createProgressIndicator(width, height);
 
@@ -60,12 +60,11 @@ public class GameBox extends Parent {
 
     private ProgressIndicator createProgressIndicator(double width, double height) {
         ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(x + width * 0.05);
-        indicator.setTranslateY(y + height * 0.2);
+        indicator.setTranslateX(this.x + width * 0.05);
+        indicator.setTranslateY(this.y + height * 0.2);
         indicator.setMinWidth(width * 0.9);
         indicator.setMinHeight(width * 0.9);
         indicator.setOpacity(0);
-        indicator.setStyle("-fx-fill:null");
         return indicator;
     }
 
