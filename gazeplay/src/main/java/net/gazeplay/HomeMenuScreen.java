@@ -1,5 +1,7 @@
 package net.gazeplay;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -17,13 +19,17 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
-import net.gazeplay.commons.utils.ProgressCustomButton;
+import net.gazeplay.commons.utils.CustomButton;
+import net.gazeplay.commons.utils.ProgressPane;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
@@ -51,13 +57,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private GameLifeCycle currentGame;
 
+    @Getter
+    private GazeDeviceManager gazeDeviceManager;
+
+    private FlowPane choicePanel;
+
     private final GameMenuFactory gameMenuFactory = new GameMenuFactory();
 
     public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, Scene scene, BorderPane root, Configuration config) {
         super(gazePlay, root, scene);
         this.games = games;
+        this.gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
-        Node[] exitButton = createExitButton();
+        CustomButton exitButton = createExitButton();
 
         ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
         ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(configurationContext);
@@ -127,13 +139,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     @Override
     public void setUpOnStage(Stage stage) {
         super.setUpOnStage(stage);
+        for (Node gameCards : choicePanel.getChildren()) {
+            if (gameCards instanceof ProgressPane) {
+                ((ProgressPane) gameCards).enable(true);
+                gazeDeviceManager.addEventFilter((ProgressPane) gameCards);
+            }
+        }
     }
 
     private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config) {
 
         final int flowpaneGap = 20;
 
-        final FlowPane choicePanel = new FlowPane();
+        choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
         choicePanel.setHgap(flowpaneGap);
         choicePanel.setVgap(flowpaneGap);
@@ -148,22 +166,23 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Translator translator = getGazePlay().getTranslator();
 
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
+        BooleanProperty gameSelected = new SimpleBooleanProperty();
+        gameSelected.setValue(false);
 
         for (GameSpec gameSpec : games) {
-            final Pane gameCard = gameMenuFactory.createGameButton(getGazePlay(), getScene(), config, multilinguism,
-                    translator, gameSpec, gameButtonOrientation);
+            final ProgressPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), getScene(), config,
+                    multilinguism, translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
             choicePanel.getChildren().add(gameCard);
+
         }
 
         return choicePanelScroller;
     }
 
-    private Node[] createExitButton() {
-        ProgressCustomButton exitButton = new ProgressCustomButton("data/common/images/power-off.png");
+    private CustomButton createExitButton() {
+        CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
-        Node[] ln = { exitButton, exitButton.assignIndicator((EventHandler<Event>) e -> System.exit(0)) };
-
-        return ln;
+        return exitButton;
     }
 
     private Node createLogo() {

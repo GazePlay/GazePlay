@@ -31,12 +31,32 @@ public class ProgressPane extends StackPane {
     Timeline timelineProgressBar;
     double buttonWidth;
     double buttonHeight;
+    EventHandler<Event> enterbuttonHandler;
+    EventHandler<Event> exitbuttonHandler;
 
     public ProgressPane() {
         super();
         button = new BorderPane();
         init();
         this.getChildren().addAll(button, indicator);
+    }
+
+    public void enable(boolean b) {
+        if (b) {
+            enable();
+        } else {
+            disable();
+        }
+    }
+
+    public void disable() {
+        this.removeEventHandler(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+        this.removeEventHandler(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
+    }
+
+    public void enable() {
+        this.addEventHandler(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+        this.addEventHandler(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
     }
 
     public void init() {
@@ -75,7 +95,7 @@ public class ProgressPane extends StackPane {
         indicator.setMouseTransparent(true);
 
         indicator.setOpacity(0);
-        EventHandler<Event> enterbuttonHandler = new EventHandler<Event>() {
+        enterbuttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
                 indicator.toFront();
@@ -89,6 +109,7 @@ public class ProgressPane extends StackPane {
                     @Override
                     public void handle(ActionEvent actionEvent) {
                         enterEvent.handle(null);
+                        exitbuttonHandler.handle(null);
 
                     }
                 });
@@ -99,7 +120,7 @@ public class ProgressPane extends StackPane {
         // this.addEventHandler(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
         this.addEventHandler(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
 
-        EventHandler<Event> exitbuttonHandler = new EventHandler<Event>() {
+        exitbuttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
                 timelineProgressBar.stop();
@@ -110,6 +131,7 @@ public class ProgressPane extends StackPane {
         };
         // this.addEventHandler(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
         this.addEventHandler(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+
         return indicator;
     }
 

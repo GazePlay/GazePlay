@@ -1,10 +1,12 @@
 package net.gazeplay;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
@@ -18,8 +20,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.I18NText;
-import net.gazeplay.commons.ui.ProgressButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.ProgressPane;
@@ -34,8 +36,12 @@ public class GameMenuFactory {
 
     private final boolean useDebuggingBackgrounds = false;
 
-    public Pane createGameButton(GazePlay gazePlay, Scene scene, Configuration config, Multilinguism multilinguism,
-            Translator translator, GameSpec gameSpec, GameButtonOrientation orientation) {
+    public GazeDeviceManager gazeDeviceManager;
+
+    public ProgressPane createGameButton(GazePlay gazePlay, Scene scene, Configuration config,
+            Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
+            GazeDeviceManager gazeDeviceManager, BooleanProperty gameSelected) {
+        this.gazeDeviceManager = gazeDeviceManager;
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
@@ -196,6 +202,7 @@ public class GameMenuFactory {
         EventHandler<Event> eventhandler = new EventHandler<Event>() {
             @Override
             public void handle(Event mouseEvent) {
+                gameSelected.setValue(true);
                 Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
                 if (variants.size() > 1) {
@@ -221,8 +228,13 @@ public class GameMenuFactory {
                 }
             }
         };
+        this.gazeDeviceManager.addEventFilter(gameCard);
         gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventhandler);
         gameCard.assignIndicator(eventhandler);
+
+        gameSelected.addListener((obs, oldVal, newVal) -> {
+            gameCard.enable(newVal);
+        });
 
         return gameCard;
     }
@@ -247,12 +259,12 @@ public class GameMenuFactory {
         final Configuration config = Configuration.getInstance();
 
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
-            ProgressButton button = new ProgressButton(variant.getLabel());
-            button.button.getStyleClass().add("gameChooserButton");
-            button.button.getStyleClass().add("gameVariation");
-            button.button.getStyleClass().add("button");
-            button.button.setMinHeight(primaryStage.getHeight() / 10);
-            button.button.setMinWidth(primaryStage.getWidth() / 10);
+            Button button = new Button(variant.getLabel());
+            button.getStyleClass().add("gameChooserButton");
+            button.getStyleClass().add("gameVariation");
+            button.getStyleClass().add("button");
+            button.setMinHeight(primaryStage.getHeight() / 10);
+            button.setMinWidth(primaryStage.getWidth() / 10);
             choicePane.getChildren().add(button);
 
             EventHandler<Event> event = new EventHandler<Event>() {
@@ -263,9 +275,7 @@ public class GameMenuFactory {
                 }
             };
 
-            button.button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
-
-            button.assignIndicator(event);
+            button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
         }
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
@@ -283,6 +293,9 @@ public class GameMenuFactory {
         GameContext gameContext = GameContext.newInstance(gazePlay);
 
         // SecondScreen secondScreen = SecondScreen.launch();
+
+        this.gazeDeviceManager.clear();
+        // this.gazeDeviceManager.destroy();
 
         gazePlay.onGameLaunch(gameContext);
 

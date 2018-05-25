@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.ProgressHomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
 import java.util.List;
@@ -29,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class StatsDisplay {
 
-    public static ProgressHomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
+    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
 
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
             @Override
@@ -46,9 +45,8 @@ public class StatsDisplay {
             }
         };
 
-        ProgressHomeButton homeButton = new ProgressHomeButton();
+        HomeButton homeButton = new HomeButton();
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-        homeButton.assignIndicator(homeEvent);
 
         return homeButton;
     }

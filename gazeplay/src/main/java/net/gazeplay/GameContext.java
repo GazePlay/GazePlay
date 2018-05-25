@@ -99,6 +99,7 @@ public class GameContext extends GraphicalContext<Pane> {
             ParallelTransition pt = new ParallelTransition();
             pt.getChildren().addAll(rt, ft);
             controlPanel.setDisable(menuOpen);
+            controlPanel.setMouseTransparent(menuOpen);
             menuOpen = !menuOpen;
             pt.play();
         };
@@ -203,7 +204,7 @@ public class GameContext extends GraphicalContext<Pane> {
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
-        ProgressHomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
+        HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
         menuHBox.getChildren().add(homeButton);
 
         Dimension2D dimension2D = getGamePanelDimensionProvider().getDimension2D();
@@ -223,7 +224,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     }
 
-    public ProgressHomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
+    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
             @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> homeEvent = e -> {
@@ -233,9 +234,8 @@ public class GameContext extends GraphicalContext<Pane> {
             scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 
-        ProgressHomeButton homeButton = new ProgressHomeButton();
-        homeButton.button.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-        homeButton.assignIndicator(homeEvent);
+        HomeButton homeButton = new HomeButton();
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
         return homeButton;
     }
 

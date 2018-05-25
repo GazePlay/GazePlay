@@ -18,7 +18,7 @@ import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CssUtil;
-import net.gazeplay.commons.utils.ProgressHomeButton;
+import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
 import net.gazeplay.commons.utils.stats.ShootGamesStats;
@@ -191,7 +191,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             centerPane.getChildren().add(heatMap);
         }
 
-        ProgressHomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
+        HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
