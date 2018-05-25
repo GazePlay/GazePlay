@@ -198,9 +198,9 @@ public abstract class GraphicalContext<T> {
         final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
 
         // final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
-        final MarqueeText musicName = new MarqueeText(8, backgroundMusicManager.getMusicTitle(currentMusic), 5);
+        final MarqueeText musicName = new MarqueeText(backgroundMusicManager.getMusicTitle(currentMusic));
         //musicName.setLabelFor(volumeSlider);
-        grid.add(musicName, 0, 0, 2, 1);
+        grid.add(musicName, 0, 0, 3, 1);
 
         musicName.setMaxWidth(ICON_SIZE * 3 + 3 * grid.getHgap());
         backgroundMusicManager.getMusicIndexProperty().addListener((observable) -> {
