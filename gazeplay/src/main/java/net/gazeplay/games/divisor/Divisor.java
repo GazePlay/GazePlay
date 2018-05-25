@@ -7,9 +7,10 @@ import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.commons.utils.games.EagerImageLibrary;
-import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.commons.utils.games.LazyImageLibrary;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.stats.Stats;
 
 /**
  * Created by givaudan on 15/02/2018.
@@ -32,8 +33,7 @@ public class Divisor implements GameLifeCycle {
         Target target;
 
         if (lapin) {
-            EagerImageLibrary imageLibrary = new EagerImageLibrary(
-                    Utils.getImagesSubDirectory("../divisor/images/rabbit"));
+            ImageLibrary imageLibrary = new LazyImageLibrary(Utils.getImagesSubDirectory("../divisor/images/rabbit"));
 
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -48,8 +48,7 @@ public class Divisor implements GameLifeCycle {
             target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
                     this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         } else {
-            EagerImageLibrary imageLibrary = new EagerImageLibrary(
-                    Utils.getImagesSubDirectory("../divisor/images/basic"));
+            ImageLibrary imageLibrary = new LazyImageLibrary(Utils.getImagesSubDirectory("../divisor/images/basic"));
             target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
                     this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         }

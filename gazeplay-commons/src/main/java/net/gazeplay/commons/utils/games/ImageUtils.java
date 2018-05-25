@@ -34,6 +34,7 @@ public class ImageUtils {
         return new LazyImageLibrary(defaultImageDirectory, fallbackImageLibrary);
     }
 
+    @Deprecated
     public static List<Image> loadAllImages(File directoryFile) {
         List<File> files = listImageFiles(directoryFile);
 
