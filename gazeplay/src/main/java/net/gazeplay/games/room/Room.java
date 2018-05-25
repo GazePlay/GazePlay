@@ -56,8 +56,8 @@ public class Room implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        imageWidth = dimension2D.getWidth() / 9;
-        imageHeight = dimension2D.getHeight() / 9;
+        imageWidth = dimension2D.getWidth() / 12;
+        imageHeight = dimension2D.getHeight() / 12;
 
         arrowImNorth = new Image("data/room/arrowNorth.png", imageWidth, imageHeight, true, true);
         rectangleArrowNorth = new Rectangle(arrowImNorth.getWidth(), arrowImNorth.getHeight());
