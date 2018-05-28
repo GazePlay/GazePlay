@@ -16,6 +16,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
+import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 
 /**
  * Created by schwab on 23/12/2016.
