@@ -1,10 +1,13 @@
 package net.gazeplay;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
@@ -18,8 +21,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.I18NText;
-import net.gazeplay.commons.ui.ProgressButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.ProgressPane;
@@ -28,14 +31,34 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 @Slf4j
 public class GameMenuFactory {
 
     private final boolean useDebuggingBackgrounds = false;
 
-    public Pane createGameButton(GazePlay gazePlay, Scene scene, Configuration config, Multilinguism multilinguism,
-            Translator translator, GameSpec gameSpec, GameButtonOrientation orientation) {
+    public GazeDeviceManager gazeDeviceManager;
+
+    private List<ProgressPane> pausedEvents = new LinkedList<ProgressPane>();
+
+    public void pause() {
+        for (ProgressPane child : pausedEvents) {
+            gazeDeviceManager.removeEventFilter((ProgressPane) child);
+        }
+    }
+
+    public void play() {
+        for (ProgressPane child : pausedEvents) {
+            gazeDeviceManager.addEventFilter(child);
+        }
+    }
+
+    public ProgressPane createGameButton(GazePlay gazePlay, Scene scene, Configuration config,
+            Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
+            GazeDeviceManager gazeDeviceManager, BooleanProperty gameSelected) {
+        this.gazeDeviceManager = gazeDeviceManager;
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
@@ -196,6 +219,9 @@ public class GameMenuFactory {
         EventHandler<Event> eventhandler = new EventHandler<Event>() {
             @Override
             public void handle(Event mouseEvent) {
+                if (gazePlay.getGazeMenuActivated().getValue()) {
+                    pause();
+                }
                 Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
                 if (variants.size() > 1) {
@@ -221,9 +247,11 @@ public class GameMenuFactory {
                 }
             }
         };
+
         gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventhandler);
         gameCard.assignIndicator(eventhandler);
 
+        pausedEvents.add(gameCard);
         return gameCard;
     }
 
@@ -233,7 +261,12 @@ public class GameMenuFactory {
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(primaryStage);
         dialog.initStyle(StageStyle.UTILITY);
-        dialog.setOnCloseRequest(windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
+        dialog.setOnCloseRequest(windowEvent -> {
+            if (gazePlay.getGazeMenuActivated().getValue()) {
+                play();
+            }
+            primaryStage.getScene().getRoot().setEffect(null);
+        });
 
         FlowPane choicePane = new FlowPane();
         choicePane.setAlignment(Pos.CENTER);
@@ -247,12 +280,12 @@ public class GameMenuFactory {
         final Configuration config = Configuration.getInstance();
 
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
-            ProgressButton button = new ProgressButton(variant.getLabel());
-            button.button.getStyleClass().add("gameChooserButton");
-            button.button.getStyleClass().add("gameVariation");
-            button.button.getStyleClass().add("button");
-            button.button.setMinHeight(primaryStage.getHeight() / 10);
-            button.button.setMinWidth(primaryStage.getWidth() / 10);
+            Button button = new Button(variant.getLabel());
+            button.getStyleClass().add("gameChooserButton");
+            button.getStyleClass().add("gameVariation");
+            button.getStyleClass().add("button");
+            button.setMinHeight(primaryStage.getHeight() / 10);
+            button.setMinWidth(primaryStage.getWidth() / 10);
             choicePane.getChildren().add(button);
 
             EventHandler<Event> event = new EventHandler<Event>() {
@@ -263,9 +296,7 @@ public class GameMenuFactory {
                 }
             };
 
-            button.button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
-
-            button.assignIndicator(event);
+            button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
         }
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
@@ -283,6 +314,11 @@ public class GameMenuFactory {
         GameContext gameContext = GameContext.newInstance(gazePlay);
 
         // SecondScreen secondScreen = SecondScreen.launch();
+        if (gazePlay.getGazeMenuActivated().getValue()) {
+            play();
+        }
+        // this.gazeDeviceManager.clear();
+        // this.gazeDeviceManager.destroy();
 
         gazePlay.onGameLaunch(gameContext);
 

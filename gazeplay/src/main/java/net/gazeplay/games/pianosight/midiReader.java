@@ -61,7 +61,6 @@ public class midiReader {
                         key = sm.getData1();
                         note = key % 12;
                         String noteName = NOTE_NAMES[note];
-                        log.info("you play the key " + key + "corresponding to the " + noteName + "note");
                         return note;
                     } else {
                         return nextNote();
