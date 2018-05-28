@@ -128,7 +128,7 @@ public class ColorsGame implements GameLifeCycle {
     private EventHandler<Event> colorizationEventHandler;
 
     private final ColorsGamesStats stats;
-    
+
     private final TitledPane toolBoxPane;
 
     public ColorsGame(GameContext gameContext, final ColorsGamesStats stats) {
@@ -137,7 +137,7 @@ public class ColorsGame implements GameLifeCycle {
         this.stats = stats;
 
         root = gameContext.getRoot();
-        
+
         final Translator translator = GazePlay.getInstance().getTranslator();
         toolBoxPane = new TitledPane(translator.translate("Colors!"), colorToolBox);
     }
@@ -169,7 +169,7 @@ public class ColorsGame implements GameLifeCycle {
 
         this.colorToolBox = new ColorToolBox(this.root, this);
         toolBoxPane.setContent(colorToolBox);
-        
+
         toolBoxPane.setCollapsible(false);
         toolBoxPane.setAnimated(false);
 
@@ -179,7 +179,7 @@ public class ColorsGame implements GameLifeCycle {
         final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
         root.getChildren().add(progressIndicator);
         progressIndicator.toFront();
-        
+
         updateToolBox();
     }
 
@@ -249,21 +249,21 @@ public class ColorsGame implements GameLifeCycle {
         double width = dimension2D.getWidth() - colorToolBox.getWidth();
         double height = dimension2D.getHeight();
 
-        //rectangle.setTranslateX(colorToolBox.getWidth());
+        // rectangle.setTranslateX(colorToolBox.getWidth());
 
         rectangle.setWidth(width);
         rectangle.setHeight(height);
 
         rectangle.setFill(new ImagePattern(writableImg));
     }
-    
+
     private void updateToolBox() {
-        
+
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         double width = dimension2D.getWidth();
         double height = dimension2D.getHeight();
-        
+
         double ToolBoxWidth = toolBoxPane.getWidth();
         double x = width - ToolBoxWidth;
         log.info("translated tool box to : {}, x toolBoxWidth : {}", x, ToolBoxWidth);
