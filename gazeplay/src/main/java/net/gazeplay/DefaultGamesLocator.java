@@ -561,7 +561,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(
-                new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/color.jpeg"),
+                new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/color.jpeg", null, "ColorDesc"),
 
                         new GameSpec.GameLauncher() {
 
