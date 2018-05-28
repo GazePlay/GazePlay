@@ -40,7 +40,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
-    
+
     private static final double BUTTON_MIN_HEIGHT = 64;
 
     public static GameContext newInstance(GazePlay gazePlay) {
@@ -48,15 +48,14 @@ public class GameContext extends GraphicalContext<Pane> {
         Pane root = new Pane();
 
         final Stage primaryStage = gazePlay.getPrimaryStage();
-        
-        final Scene scene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight(),
-                Color.BLACK);
+
+        final Scene scene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight(), Color.BLACK);
 
         root.prefWidthProperty().bind(primaryStage.widthProperty());
         root.prefHeightProperty().bind(primaryStage.heightProperty());
         root.minWidthProperty().bind(primaryStage.widthProperty());
         root.minHeightProperty().bind(primaryStage.heightProperty());
-        
+
         final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
 
@@ -80,7 +79,7 @@ public class GameContext extends GraphicalContext<Pane> {
         ImageView buttonImg = new ImageView(new Image("data/common/images/configuration-button-alt4.png"));
         buttonImg.setFitWidth(buttonSize);
         buttonImg.setFitHeight(buttonSize);
-        
+
         final Button bt = new Button();
         bt.setMinHeight(BUTTON_MIN_HEIGHT);
         bt.setGraphic(buttonImg);
@@ -94,7 +93,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
         final HBox root2 = new HBox(5);
         root2.setAlignment(Pos.CENTER_LEFT);
-        //Pane root2 = new Pane();
+        // Pane root2 = new Pane();
         gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
             updateConfigButton(bt, buttonImg);
             updateConfigPane(root2);
@@ -140,7 +139,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
         bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEnterControlPanelEventHandler);
         bt.getStyleClass().add("button");
-        
+
         root2.getChildren().add(bt);
         root2.getChildren().add(controlPanel);
         root.getChildren().add(gamingRoot);
@@ -155,34 +154,34 @@ public class GameContext extends GraphicalContext<Pane> {
         return new GameContext(gazePlay, gamingRoot, scene, bravo, controlPanel, gamePanelDimensionProvider,
                 randomPositionGenerator, gazeDeviceManager, root2);
     }
-    
+
     private static void updateConfigButton(Button button, ImageView btnImg) {
-        
+
         final GazePlay gazePlay = GazePlay.getInstance();
         double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
-        
-        if(buttonSize < BUTTON_MIN_HEIGHT) {
+
+        if (buttonSize < BUTTON_MIN_HEIGHT) {
             buttonSize = BUTTON_MIN_HEIGHT;
         }
-        
+
         btnImg.setFitWidth(buttonSize);
         btnImg.setFitHeight(buttonSize);
-        
+
         button.setPrefHeight(buttonSize);
         button.setPrefWidth(buttonSize);
     }
-    
+
     private static void updateConfigPane(final Pane configPane) {
-        
+
         final GazePlay gazePlay = GazePlay.getInstance();
-        
+
         double mainHeight = gazePlay.getPrimaryStage().getHeight();
-        
+
         final double newY = mainHeight - configPane.getHeight() - 30;
         log.info("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
         configPane.setTranslateY(newY);
     }
-    
+
     private static double getButtonSize() {
         final GazePlay gazePlay = GazePlay.getInstance();
         double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
@@ -216,7 +215,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     @Getter
     private final GazeDeviceManager gazeDeviceManager;
-    
+
     private final Pane configPane;
 
     private GameContext(GazePlay gazePlay, Pane gamingRoot, Scene scene, Bravo bravo, HBox menuHBox,
@@ -248,7 +247,7 @@ public class GameContext extends GraphicalContext<Pane> {
     public void setUpOnStage(Stage stage) {
 
         super.setUpOnStage(stage);
-        
+
         log.info("SETTING UP");
         updateConfigPane(configPane);
     }
