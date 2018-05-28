@@ -20,6 +20,7 @@ public class MouseArrowsV1 extends MouseArrows {
 
     @Override
     protected void recomputeArrowsPositions() {
+        return;
     }
 
     protected void placementFleche() {
@@ -44,14 +45,16 @@ public class MouseArrowsV1 extends MouseArrows {
         x = x - 0.4 * buttonDimWidth;
         this.buttonLeft = new Rectangle(x, y, buttonDimHeight, buttonDimWidth);
         this.buttonLeft.setFill(new ImagePattern(new Image("data/labyrinth/images/leftArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorLeft = createProgressIndicator(x, y, buttonDimHeight, buttonDimWidth);
+        this.indicatorLeft = createProgressIndicator(x - buttonDimHeight / 2, y + buttonDimWidth / 4, buttonDimWidth,
+                buttonDimHeight);
         this.buttonLeft.addEventHandler(MouseEvent.ANY, buttonLeftEvent);
         this.buttonLeft.addEventHandler(GazeEvent.ANY, buttonLeftEvent);
 
         x = x + 1.1 * buttonDimWidth;
         this.buttonRight = new Rectangle(x, y, buttonDimHeight, buttonDimWidth);
         this.buttonRight.setFill(new ImagePattern(new Image("data/labyrinth/images/rightArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorRight = createProgressIndicator(x, y, buttonDimHeight, buttonDimWidth);
+        this.indicatorRight = createProgressIndicator(x - buttonDimHeight / 2, y + buttonDimWidth / 4, buttonDimWidth,
+                buttonDimHeight);
         this.buttonRight.addEventHandler(MouseEvent.ANY, buttonRightEvent);
         this.buttonRight.addEventHandler(GazeEvent.ANY, buttonRightEvent);
 

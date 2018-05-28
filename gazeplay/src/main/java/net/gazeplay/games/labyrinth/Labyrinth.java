@@ -36,7 +36,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     protected Cheese cheese;
     private Mouse mouse;
 
-    private int version;
+    protected int version;
 
     public Labyrinth(GameContext gameContext, Stats stats, int version) {
         super();
@@ -50,10 +50,10 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
 
-        entiereRecX = dimension2D.getWidth() * 0.2;
-        entiereRecY = dimension2D.getHeight() * 0.05;
-        // entiereRecX = dimension2D.getWidth() * 0.25;
-        // entiereRecY = dimension2D.getHeight() * 0.1;
+        // entiereRecX = dimension2D.getWidth() * 0.2;
+        // entiereRecY = dimension2D.getHeight() * 0.05;
+        entiereRecX = dimension2D.getWidth() * 0.25;
+        entiereRecY = dimension2D.getHeight() * 0.1;
         entiereRecWidth = dimension2D.getWidth() * 0.6;
         entiereRecHeight = dimension2D.getHeight() * 0.9;
 
@@ -92,7 +92,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
             mouse = new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
             break;
         case 4:
-            mouse = new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+            mouse = new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
             break;
         default:
             mouse = new MouseV0(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
