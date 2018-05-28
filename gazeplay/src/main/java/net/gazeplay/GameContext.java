@@ -7,7 +7,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -32,6 +31,7 @@ import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.IOException;
+import javafx.scene.control.Button;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
@@ -41,12 +41,20 @@ public class GameContext extends GraphicalContext<Pane> {
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
 
+    private static final double BUTTON_MIN_HEIGHT = 64;
+
     public static GameContext newInstance(GazePlay gazePlay) {
 
-        BorderPane root = new BorderPane();
+        Pane root = new Pane();
 
-        Scene scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
-                Color.BLACK);
+        final Stage primaryStage = gazePlay.getPrimaryStage();
+
+        final Scene scene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight(), Color.BLACK);
+
+        root.prefWidthProperty().bind(primaryStage.widthProperty());
+        root.prefHeightProperty().bind(primaryStage.heightProperty());
+        root.minWidthProperty().bind(primaryStage.widthProperty());
+        root.minHeightProperty().bind(primaryStage.heightProperty());
 
         final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
@@ -55,32 +63,49 @@ public class GameContext extends GraphicalContext<Pane> {
 
         Pane gamingRoot = new Pane();
         gamingRoot.setStyle("-fx-background-color: black;");
+        gamingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
+        gamingRoot.prefHeightProperty().bind(primaryStage.heightProperty());
+        gamingRoot.minWidthProperty().bind(primaryStage.widthProperty());
+        gamingRoot.minHeightProperty().bind(primaryStage.heightProperty());
 
         HBox controlPanel = createControlPanel();
         // Adapt the size and position of buttons to screen width
         controlPanel.maxWidthProperty().bind(root.widthProperty());
         controlPanel.toFront();
 
-        double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
+        double buttonSize = getButtonSize();
 
         // Button bt = new Button();
-        ImageView bt = new ImageView(new Image("data/common/images/configuration-button-alt4.png"));
-        bt.setFitWidth(buttonSize);
-        bt.setFitHeight(buttonSize);
+        ImageView buttonImg = new ImageView(new Image("data/common/images/configuration-button-alt4.png"));
+        buttonImg.setFitWidth(buttonSize);
+        buttonImg.setFitHeight(buttonSize);
+
+        final Button bt = new Button();
+        bt.setMinHeight(BUTTON_MIN_HEIGHT);
+        bt.setGraphic(buttonImg);
+        bt.setStyle("-fx-background-color: transparent;");
+        updateConfigButton(bt, buttonImg);
         /*
          * bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; " +
          * "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; " + "-fx-max-height: " +
          * buttonSize + "px;");
          */
 
+        final HBox root2 = new HBox(5);
+        root2.setAlignment(Pos.CENTER_LEFT);
+        // Pane root2 = new Pane();
         gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
-            bt.setLayoutY(0);
-            bt.toFront();
+            updateConfigButton(bt, buttonImg);
+            updateConfigPane(root2);
         });
         gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> {
-            bt.setLayoutX(-buttonSize / 2);
-            bt.toFront();
+            updateConfigButton(bt, buttonImg);
+            updateConfigPane(root2);
         });
+        controlPanel.widthProperty().addListener((observable) -> {
+            updateConfigPane(root2);
+        });
+        updateConfigPane(root2);
 
         EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> {
             double from = 0;
@@ -113,11 +138,11 @@ public class GameContext extends GraphicalContext<Pane> {
         menuOpen = false;
 
         bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEnterControlPanelEventHandler);
+        bt.getStyleClass().add("button");
 
-        Pane root2 = new Pane();
         root2.getChildren().add(bt);
         root2.getChildren().add(controlPanel);
-        root.setCenter(gamingRoot);
+        root.getChildren().add(gamingRoot);
         root.getChildren().add(root2);
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot, scene);
@@ -126,13 +151,46 @@ public class GameContext extends GraphicalContext<Pane> {
 
         GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
-        return new GameContext(gazePlay, gamingRoot, scene, bravo, root2, controlPanel, gamePanelDimensionProvider,
-                randomPositionGenerator, root, gazeDeviceManager);
+        return new GameContext(gazePlay, gamingRoot, scene, bravo, controlPanel, gamePanelDimensionProvider,
+                randomPositionGenerator, gazeDeviceManager, root2);
+    }
+
+    private static void updateConfigButton(Button button, ImageView btnImg) {
+
+        final GazePlay gazePlay = GazePlay.getInstance();
+        double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
+
+        if (buttonSize < BUTTON_MIN_HEIGHT) {
+            buttonSize = BUTTON_MIN_HEIGHT;
+        }
+
+        btnImg.setFitWidth(buttonSize);
+        btnImg.setFitHeight(buttonSize);
+
+        button.setPrefHeight(buttonSize);
+        button.setPrefWidth(buttonSize);
+    }
+
+    private static void updateConfigPane(final Pane configPane) {
+
+        final GazePlay gazePlay = GazePlay.getInstance();
+
+        double mainHeight = gazePlay.getPrimaryStage().getHeight();
+
+        final double newY = mainHeight - configPane.getHeight() - 30;
+        log.info("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
+        configPane.setTranslateY(newY);
+    }
+
+    private static double getButtonSize() {
+        final GazePlay gazePlay = GazePlay.getInstance();
+        double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
+        return buttonSize;
     }
 
     public static HBox createControlPanel() {
         HBox hbox = new HBox();
-        hbox.setAlignment(Pos.CENTER_RIGHT);
+        hbox.setAlignment(Pos.CENTER_LEFT);
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(hbox);
 
         hbox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -146,8 +204,6 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final Bravo bravo;
 
-    private final Pane bottomPane;
-
     @Getter
     private final HBox menuHBox;
 
@@ -157,22 +213,21 @@ public class GameContext extends GraphicalContext<Pane> {
     @Getter
     private final GamePanelDimensionProvider gamePanelDimensionProvider;
 
-    private final BorderPane rootBorderPane;
-
     @Getter
     private final GazeDeviceManager gazeDeviceManager;
 
-    private GameContext(GazePlay gazePlay, Pane gamingRoot, Scene scene, Bravo bravo, Pane bottomPane, HBox menuHBox,
+    private final Pane configPane;
+
+    private GameContext(GazePlay gazePlay, Pane gamingRoot, Scene scene, Bravo bravo, HBox menuHBox,
             GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
-            BorderPane rootBorderPane, GazeDeviceManager gazeDeviceManager) {
+            GazeDeviceManager gazeDeviceManager, final Pane configPane) {
         super(gazePlay, gamingRoot, scene);
         this.bravo = bravo;
-        this.bottomPane = bottomPane;
         this.menuHBox = menuHBox;
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
         this.randomPositionGenerator = randomPositionGenerator;
-        this.rootBorderPane = rootBorderPane;
         this.gazeDeviceManager = gazeDeviceManager;
+        this.configPane = configPane;
 
         /*
          * double initW = gazePlay.getPrimaryStage().getWidth(); double initH = gazePlay.getPrimaryStage().getHeight();
@@ -192,6 +247,9 @@ public class GameContext extends GraphicalContext<Pane> {
     public void setUpOnStage(Stage stage) {
 
         super.setUpOnStage(stage);
+
+        log.info("SETTING UP");
+        updateConfigPane(configPane);
     }
 
     public void resetBordersToFront() {
@@ -208,22 +266,6 @@ public class GameContext extends GraphicalContext<Pane> {
 
         HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
         menuHBox.getChildren().add(homeButton);
-
-        Dimension2D dimension2D = getGamePanelDimensionProvider().getDimension2D();
-        bottomPane.setLayoutY(dimension2D.getHeight() * 0.90 - menuHBox.getHeight());
-        bottomPane.setMinWidth(dimension2D.getWidth());
-
-        gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> {
-            bottomPane.setMinWidth(newVal.doubleValue());
-        });
-        gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
-            if (gazePlay.isFullScreen()) {
-                bottomPane.setLayoutY(newVal.doubleValue() - 2 * 8 - menuHBox.getHeight());
-            } else {
-                bottomPane.setLayoutY(newVal.doubleValue() - 50 - menuHBox.getHeight());
-            }
-        });
-
     }
 
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
