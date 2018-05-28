@@ -114,14 +114,14 @@ public class ColorBox extends StackPane {
     public void select() {
 
         this.button.setSelected(true);
-        this.getStyleClass().add("selectedColorBox");
+        this.button.getStyleClass().add("selectedColorBox");
     }
 
     public void unselect() {
 
         progressIndicator.stop();
         this.button.setSelected(false);
-        this.getStyleClass().remove("selectedColorBox");
+        this.button.getStyleClass().remove("selectedColorBox");
     }
 
     public void setColor(final Color color) {
