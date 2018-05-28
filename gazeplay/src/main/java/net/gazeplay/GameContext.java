@@ -100,13 +100,14 @@ public class GameContext extends GraphicalContext<Pane> {
             pt.getChildren().addAll(rt, ft);
             controlPanel.setDisable(menuOpen);
             controlPanel.setMouseTransparent(menuOpen);
+            controlPanel.setVisible(true);
             menuOpen = !menuOpen;
             pt.play();
         };
 
         log.info("the value of the control bar is : =" + controlPanel.getPrefWidth());
         controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 2.5);
-        controlPanel.setOpacity(0);
+        controlPanel.setVisible(false);
         controlPanel.setDisable(true);
         controlPanel.setMouseTransparent(true);
         menuOpen = false;

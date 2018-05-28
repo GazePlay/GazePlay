@@ -166,9 +166,16 @@ public class BackgroundMusicManager {
         if (newMusicIndex < 0 || newMusicIndex >= playlist.size()) {
             return;
         }
+
+        boolean isPlaying = isPlaying();
+
         musicIndexProperty.setValue(newMusicIndex);
         // log.info("current index : {}", currentMusicIndex);
-        play();
+
+        if (isPlaying) {
+
+            play();
+        }
     }
 
     public void emptyPlaylist() {

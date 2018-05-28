@@ -34,6 +34,7 @@ import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.utils.CssUtil;
+import net.gazeplay.commons.utils.MarqueeText;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Data
@@ -82,6 +83,8 @@ public abstract class GraphicalContext<T> {
 
     public static final int ICON_SIZE = 32;
 
+    public static final double MUSIC_GRID_MAX_WIDTH = 200;
+
     /**
      * Field used to know if the background music controler has already been built once. This is used to get audio and
      * play it at the beginning.
@@ -93,7 +96,7 @@ public abstract class GraphicalContext<T> {
      * (i.e. when configuration is shown), it doesn't receive any event from listener (no idea why). Then when it comes
      * back on stage, it needs to be updated.
      */
-    private Label musicName;
+    private MarqueeText musicName;
     private Button pauseTrack;
     private Button playTrack;
 
@@ -204,18 +207,20 @@ public abstract class GraphicalContext<T> {
 
         final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
 
-        musicName = new Label(BackgroundMusicManager.getMusicTitle(currentMusic));
-        musicName.setLabelFor(volumeSlider);
-        grid.add(musicName, 0, 0, 2, 1);
+        // final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
+        musicName = new MarqueeText(BackgroundMusicManager.getMusicTitle(currentMusic));
+        grid.add(musicName, 0, 0, 3, 1);
+        grid.setMaxWidth(MUSIC_GRID_MAX_WIDTH);
 
-        musicName.setMaxWidth(ICON_SIZE * 3 + 3 * grid.getHgap());
         backgroundMusicManager.getMusicIndexProperty().addListener((observable) -> {
+
             setMusicTitle(musicName);
         });
         // This listener is a bit overkill but we need because in some cases,
         // the controle panel won't be set up before the index changed but after
         // the music start playing.
         backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
+
             setMusicTitle(musicName);
         });
 
@@ -344,15 +349,12 @@ public abstract class GraphicalContext<T> {
         GraphicalContext.firstMusicSetUp = value;
     }
 
-    private void setMusicTitle(final Label musicLabel) {
-        if (musicLabel == null) {
-            return;
+    private void setMusicTitle(final MarqueeText musicLabel) {
+        if (musicLabel != null) {
+            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+            String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
+            musicLabel.getTextProperty().setValue(musicTitle);
         }
-        final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-        String musicTitle = backgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
-        log.info("current music {}", backgroundMusicManager.getCurrentMusic());
-        log.info("music title {}", musicTitle);
-        musicLabel.setText(musicTitle);
     }
 
     public Slider createMediaVolumeSlider(@NonNull GazePlay gazePlay) {
@@ -361,9 +363,9 @@ public abstract class GraphicalContext<T> {
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
-        slider.setShowTickMarks(true);
+        slider.setShowTickMarks(false);
         slider.setMajorTickUnit(0.25);
-        slider.setSnapToTicks(true);
+        slider.setSnapToTicks(false);
         slider.setValue(config.getMusicVolume());
         config.getMusicVolumeProperty().bindBidirectional(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> {
@@ -378,9 +380,9 @@ public abstract class GraphicalContext<T> {
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
-        slider.setShowTickMarks(true);
+        slider.setShowTickMarks(false);
         slider.setMajorTickUnit(0.25);
-        slider.setSnapToTicks(true);
+        slider.setSnapToTicks(false);
         slider.setValue(config.getEffectsVolume());
         config.getEffectsVolumeProperty().bindBidirectional(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> {
