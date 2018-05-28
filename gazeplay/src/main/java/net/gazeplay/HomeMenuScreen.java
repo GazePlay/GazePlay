@@ -20,6 +20,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
@@ -33,6 +34,7 @@ import net.gazeplay.commons.utils.ProgressPane;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
+import java.util.LinkedList;
 import java.util.List;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
@@ -57,6 +59,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private GameLifeCycle currentGame;
 
+    @Setter
     @Getter
     private GazeDeviceManager gazeDeviceManager;
 
@@ -136,21 +139,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    @Override
-    public void setUpOnStage(Stage stage) {
-        super.setUpOnStage(stage);
-        for (Node gameCards : choicePanel.getChildren()) {
-            if (gameCards instanceof ProgressPane) {
-                ((ProgressPane) gameCards).enable(true);
-                gazeDeviceManager.addEventFilter((ProgressPane) gameCards);
-            }
-        }
-    }
-
     private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config) {
 
         final int flowpaneGap = 20;
-
         choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
         choicePanel.setHgap(flowpaneGap);
@@ -173,10 +164,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             final ProgressPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), getScene(), config,
                     multilinguism, translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
             choicePanel.getChildren().add(gameCard);
+            if (getGazePlay().getGazeMenuActivated().getValue()) {
+                enableCard();
+            }
 
         }
 
         return choicePanelScroller;
+    }
+
+    public void enableCard() {
+        for (Node child : choicePanel.getChildren()) {
+            gazeDeviceManager.addEventFilter((ProgressPane) child);
+        }
     }
 
     private CustomButton createExitButton() {

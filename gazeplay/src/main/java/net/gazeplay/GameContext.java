@@ -108,6 +108,7 @@ public class GameContext extends GraphicalContext<Pane> {
         controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 2.5);
         controlPanel.setOpacity(0);
         controlPanel.setDisable(true);
+        controlPanel.setMouseTransparent(true);
         menuOpen = false;
 
         bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEnterControlPanelEventHandler);

@@ -50,13 +50,13 @@ public class ProgressPane extends StackPane {
     }
 
     public void disable() {
-        this.removeEventHandler(GazeEvent.GAZE_EXITED, exitbuttonHandler);
-        this.removeEventHandler(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
+        this.removeEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+        this.removeEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
     }
 
     public void enable() {
-        this.addEventHandler(GazeEvent.GAZE_EXITED, exitbuttonHandler);
-        this.addEventHandler(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
+        this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+        this.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
     }
 
     public void init() {
@@ -117,8 +117,8 @@ public class ProgressPane extends StackPane {
 
             }
         };
-        // this.addEventHandler(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
-        this.addEventHandler(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
+        // this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
+        this.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
 
         exitbuttonHandler = new EventHandler<Event>() {
             @Override
@@ -129,8 +129,8 @@ public class ProgressPane extends StackPane {
 
             }
         };
-        // this.addEventHandler(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
-        this.addEventHandler(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+        // this.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
+        this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
 
         return indicator;
     }
