@@ -5,29 +5,19 @@ import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.animation.TranslateTransitionBuilder;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This object is supposed to have an object which will have a text whil will scroll
- * horizontally to give a marquee effect. I didn't manage to get something 
- * satisfying in general (espacially with text position and text disparition).
- * However this is suffecient for the volume control panel.
+ * This object is supposed to have a text whil will scroll
+ * horizontally to give a marquee effect if the text is larger than its width.
  */
 @Slf4j
 public class MarqueeText extends Region {
@@ -35,15 +25,12 @@ public class MarqueeText extends Region {
     private final TranslateTransition transition;
 
     private final Text text;
-    
-    @Getter
-    private final IntegerProperty nbCharDisplayed = new SimpleIntegerProperty(this, "nbCharDisplayed", 8);
-    
-    @Getter
-    private final StringProperty textProperty = new SimpleStringProperty(this, "textProperty", "");
 
     @Getter
     private final DoubleProperty speed = new SimpleDoubleProperty(this, "speed", 0);
+    
+    @Getter
+    private final StringProperty textProperty = new SimpleStringProperty(this, "text", "");
     
     private final static double DEFAULT_SPEED = 40;
     
@@ -51,7 +38,6 @@ public class MarqueeText extends Region {
 
     public MarqueeText(final String text, final int nbCharDisplayed, final double speed) {
         super();
-        this.nbCharDisplayed.setValue(nbCharDisplayed);
         this.speed.setValue(speed);
 
         this.text = new Text(text);
@@ -65,22 +51,19 @@ public class MarqueeText extends Region {
             rerunAnimation();
         });
         
-        this.textProperty.addListener((observable) -> {
+        this.getTextProperty().addListener((observable) -> {
             this.text.setText(this.getTextProperty().getValue());
             log.info("new text : {}", this.text);
             rerunAnimation();
         });
-
-        this.nbCharDisplayed.addListener((observable) -> {
+        
+        this.widthProperty().addListener((observable) -> {
             rerunAnimation();
         });
 
         this.speed.addListener((observable) -> {
             rerunAnimation();
         });
-
-        this.setBorder(new Border(new BorderStroke(Color.BLACK, 
-            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         
         rerunAnimation();
     }
@@ -97,7 +80,7 @@ public class MarqueeText extends Region {
         transition.stop();
         recalculateTransition();
 
-        log.info("duration : {}", transition.getDuration().toMillis());
+        //log.info("duration : {}", transition.getDuration().toMillis());
         if (transition.getDuration().toMillis() > 0) {
             transition.playFromStart();
         }
@@ -108,41 +91,29 @@ public class MarqueeText extends Region {
         this.text.setTranslateX(this.getTranslateX());
         this.text.setTranslateY(this.getTranslateY() + 15);
         final double textWidth = getTextWidth(text.getText());
-        
-        int lastIndex = text.getText().length();
-        if(lastIndex > nbCharDisplayed.getValue()) {
-            lastIndex = nbCharDisplayed.getValue();
-        }
-        final double maxTextWidth = getTextWidth(text.getText().substring(0, lastIndex));
 
-        double diff = textWidth - maxTextWidth;
-        log.info("textWidth {}, maxTextWidth {}, diff {}", textWidth, maxTextWidth, diff);
+        double diff = textWidth - this.getWidth();
+        //log.info("textWidth {}, diff {}", textWidth, diff);
         if (diff < 0) {
             transition.setDuration(new Duration(0));
         } else {
             transition.setToX(this.getBoundsInLocal().getMinX() - diff);
             transition.setFromX(this.getBoundsInLocal().getMinX());
-            transition.setDuration(new Duration(computeDuration() * 1000));
+            transition.setDuration(new Duration(computeDuration()));
         }
-        
-        this.setPrefWidth(maxTextWidth);
-        this.setMaxWidth(maxTextWidth);
-        log.info("this width {}", this.getWidth());
     }
     
     private double computeDuration() {
         
         final double textWidth = getTextWidth(text.getText());
-        log.info ("textWidth : {} / speed : {}", textWidth, speed.getValue());
-        return textWidth / speed.getValue();
+        final double duration = textWidth / speed.getValue() * 1000;
+        //log.info ("textWidth : {} / speed : {} = duration {}", textWidth, speed.getValue(), duration);
+        return duration;
     }
     
     private double getTextWidth(final String textToMeasure) {
 
         final Text testText = new Text(textToMeasure);
-        // java 7 =>
-        // text.snapshot(null, null);
-        // java 8 =>
         
         testText.setFont(this.text.getFont());
         testText.applyCss();

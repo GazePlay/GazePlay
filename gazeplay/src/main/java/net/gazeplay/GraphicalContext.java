@@ -82,6 +82,8 @@ public abstract class GraphicalContext<T> {
     public static final String SPEAKER_ICON = IMAGES_PATH + File.separator + "speaker.png";
 
     public static final int ICON_SIZE = 32;
+    
+    public static final double MUSIC_GRID_MAX_WIDTH = 200;
 
     /**
      * Field used to know if the background music controler has already been built once. This is used to get audio and
@@ -200,10 +202,9 @@ public abstract class GraphicalContext<T> {
         final MarqueeText musicName = new MarqueeText(backgroundMusicManager.getMusicTitle(currentMusic));
         //musicName.setLabelFor(volumeSlider);
         grid.add(musicName, 0, 0, 3, 1);
+        grid.setMaxWidth(MUSIC_GRID_MAX_WIDTH);
 
-        musicName.setMaxWidth(ICON_SIZE * 3 + 3 * grid.getHgap());
         backgroundMusicManager.getMusicIndexProperty().addListener((observable) -> {
-
             setMusicTitle(musicName);
         });
 
