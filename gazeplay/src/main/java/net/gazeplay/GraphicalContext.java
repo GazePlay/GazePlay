@@ -352,9 +352,11 @@ public abstract class GraphicalContext<T> {
     }
 
     private void setMusicTitle(final MarqueeText musicLabel) {
-        final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-        String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
-        musicLabel.getTextProperty().setValue(musicTitle);
+        if (musicLabel != null) {
+            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+            String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
+            musicLabel.getTextProperty().setValue(musicTitle);
+        }
     }
 
     public Slider createMediaVolumeSlider(@NonNull GazePlay gazePlay) {
