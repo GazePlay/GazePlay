@@ -109,6 +109,7 @@ public class GameContext extends GraphicalContext<Pane> {
         menuOpen = false;
 
         bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEnterControlPanelEventHandler);
+        bt.getStyleClass().add("button");
 
         Pane root2 = new Pane();
         root2.getChildren().add(bt);
