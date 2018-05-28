@@ -16,8 +16,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This object is supposed to have a text whil will scroll
- * horizontally to give a marquee effect if the text is larger than its width.
+ * This object is supposed to have a text whil will scroll horizontally to give a marquee effect if the text is larger
+ * than its width.
  */
 @Slf4j
 public class MarqueeText extends Region {
@@ -28,12 +28,12 @@ public class MarqueeText extends Region {
 
     @Getter
     private final DoubleProperty speed = new SimpleDoubleProperty(this, "speed", 0);
-    
+
     @Getter
     private final StringProperty textProperty = new SimpleStringProperty(this, "text", "");
-    
+
     private final static double DEFAULT_SPEED = 40;
-    
+
     private final static int DEFAULT_NB_CHAR_DISPLAYED = 25;
 
     public MarqueeText(final String text, final int nbCharDisplayed, final double speed) {
@@ -50,13 +50,13 @@ public class MarqueeText extends Region {
         transition.setOnFinished((ActionEvent actionEvent) -> {
             rerunAnimation();
         });
-        
+
         this.getTextProperty().addListener((observable) -> {
             this.text.setText(this.getTextProperty().getValue());
             log.info("new text : {}", this.text);
             rerunAnimation();
         });
-        
+
         this.widthProperty().addListener((observable) -> {
             rerunAnimation();
         });
@@ -64,14 +64,14 @@ public class MarqueeText extends Region {
         this.speed.addListener((observable) -> {
             rerunAnimation();
         });
-        
+
         rerunAnimation();
     }
-    
+
     public MarqueeText(final String text, final int nbCharDisplayed) {
         this(text, nbCharDisplayed, DEFAULT_SPEED);
     }
-    
+
     public MarqueeText(final String text) {
         this(text, DEFAULT_NB_CHAR_DISPLAYED, DEFAULT_SPEED);
     }
@@ -80,20 +80,20 @@ public class MarqueeText extends Region {
         transition.stop();
         recalculateTransition();
 
-        //log.info("duration : {}", transition.getDuration().toMillis());
+        // log.info("duration : {}", transition.getDuration().toMillis());
         if (transition.getDuration().toMillis() > 0) {
             transition.playFromStart();
         }
     }
 
     private void recalculateTransition() {
-        
+
         this.text.setTranslateX(this.getTranslateX());
         this.text.setTranslateY(this.getTranslateY() + 15);
         final double textWidth = getTextWidth(text.getText());
 
         double diff = textWidth - this.getWidth();
-        //log.info("textWidth {}, diff {}", textWidth, diff);
+        // log.info("textWidth {}, diff {}", textWidth, diff);
         if (diff < 0) {
             transition.setDuration(new Duration(0));
         } else {
@@ -102,19 +102,19 @@ public class MarqueeText extends Region {
             transition.setDuration(new Duration(computeDuration()));
         }
     }
-    
+
     private double computeDuration() {
-        
+
         final double textWidth = getTextWidth(text.getText());
         final double duration = textWidth / speed.getValue() * 1000;
-        //log.info ("textWidth : {} / speed : {} = duration {}", textWidth, speed.getValue(), duration);
+        // log.info ("textWidth : {} / speed : {} = duration {}", textWidth, speed.getValue(), duration);
         return duration;
     }
-    
+
     private double getTextWidth(final String textToMeasure) {
 
         final Text testText = new Text(textToMeasure);
-        
+
         testText.setFont(this.text.getFont());
         testText.applyCss();
         double width = testText.getBoundsInLocal().getWidth();

@@ -10,7 +10,7 @@ import net.gazeplay.games.labyrinth.Labyrinth;
 
 public abstract class Mouse extends Parent {
 
-    private final GameContext gameContext;
+    protected final GameContext gameContext;
 
     protected final Labyrinth gameInstance;
 
@@ -21,6 +21,8 @@ public abstract class Mouse extends Parent {
     protected int indiceX; // j
     protected int indiceY; // i
 
+    protected String orientation;
+
     public Mouse(double positionX, double positionY, double width, double height, GameContext gameContext, Stats stats,
             Labyrinth gameInstance) {
 
@@ -29,13 +31,13 @@ public abstract class Mouse extends Parent {
         this.stats = stats;
 
         this.mouse = new Rectangle(positionX, positionY, width, height);
-        this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 0, 0, 1, 1, true));
+        this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 5, 5, 1, 1, true));
         this.getChildren().add(mouse);
 
-        this.indiceX = 0; // largeur
-        this.indiceY = 0; // hauteur
+        this.indiceX = 0;
+        this.indiceY = 0;
 
-        // Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.orientation = "front";
 
     }
 
@@ -43,20 +45,53 @@ public abstract class Mouse extends Parent {
         return (i == indiceY && j == indiceX);
     }
 
+    public void putInBold() {
+        if (orientation.equals("back")) {
+            this.mouse
+                    .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBackBold.png"), 5, 5, 1, 1, true));
+        } else if (orientation.equals("front")) {
+            this.mouse
+                    .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFrontBold.png"), 5, 5, 1, 1, true));
+        } else if (orientation.equals("left")) {
+            this.mouse
+                    .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseLeftBold.png"), 5, 5, 1, 1, true));
+        } else if (orientation.equals("right")) {
+            this.mouse
+                    .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseRightBold.png"), 5, 5, 1, 1, true));
+        }
+    }
+
+    public void putInLight() {
+        if (orientation.equals("back")) {
+            this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBack.png"), 5, 5, 1, 1, true));
+        } else if (orientation.equals("front")) {
+            this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 5, 5, 1, 1, true));
+        } else if (orientation.equals("left")) {
+            this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseLeft.png"), 5, 5, 1, 1, true));
+        } else if (orientation.equals("right")) {
+            this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseRight.png"), 5, 5, 1, 1, true));
+        }
+    }
+
     public void reOrientateMouse(int oldColumn, int oldRow, int newColumn, int newRow) {
+        putInBold();
         if (oldColumn != newColumn) {
             if (oldColumn < newColumn) { // Move to the right
+                this.orientation = "right";
                 this.mouse
                         .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseRight.png"), 5, 5, 1, 1, true));
             } else { // Move to the Left
+                this.orientation = "left";
                 this.mouse
                         .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseLeft.png"), 5, 5, 1, 1, true));
             }
         } else {
             if (oldRow < newRow) { // Move to the bottom
+                this.orientation = "front";
                 this.mouse
                         .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 5, 5, 1, 1, true));
             } else { // Move to the up
+                this.orientation = "back";
                 this.mouse
                         .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBack.png"), 5, 5, 1, 1, true));
             }

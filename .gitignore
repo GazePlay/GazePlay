@@ -9,4 +9,5 @@ target
 .settings
 gazeplay/*.log.*
 cache
+gazeplay/nbactions.xml
 

@@ -82,7 +82,7 @@ public abstract class GraphicalContext<T> {
     public static final String SPEAKER_ICON = IMAGES_PATH + File.separator + "speaker.png";
 
     public static final int ICON_SIZE = 32;
-    
+
     public static final double MUSIC_GRID_MAX_WIDTH = 200;
 
     /**
@@ -90,6 +90,15 @@ public abstract class GraphicalContext<T> {
      * play it at the beginning.
      */
     public static boolean firstMusicSetUp = true;
+
+    /**
+     * Fields with listeners from music controler. When need those because when the volume controle is not on stage
+     * (i.e. when configuration is shown), it doesn't receive any event from listener (no idea why). Then when it comes
+     * back on stage, it needs to be updated.
+     */
+    private MarqueeText musicName;
+    private Button pauseTrack;
+    private Button playTrack;
 
     public void setUpOnStage(Stage stage) {
         stage.setTitle("GazePlay");
@@ -104,6 +113,8 @@ public abstract class GraphicalContext<T> {
 
         final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
+
+        updateMusicControler();
 
         stage.show();
         log.info("Finished setup stage with the game scene");
@@ -199,12 +210,19 @@ public abstract class GraphicalContext<T> {
         final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
 
         // final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
-        final MarqueeText musicName = new MarqueeText(backgroundMusicManager.getMusicTitle(currentMusic));
-        //musicName.setLabelFor(volumeSlider);
+        musicName = new MarqueeText(BackgroundMusicManager.getMusicTitle(currentMusic));
         grid.add(musicName, 0, 0, 3, 1);
         grid.setMaxWidth(MUSIC_GRID_MAX_WIDTH);
 
         backgroundMusicManager.getMusicIndexProperty().addListener((observable) -> {
+
+            setMusicTitle(musicName);
+        });
+        // This listener is a bit overkill but we need because in some cases,
+        // the controle panel won't be set up before the index changed but after
+        // the music start playing.
+        backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
+
             setMusicTitle(musicName);
         });
 
@@ -233,7 +251,6 @@ public abstract class GraphicalContext<T> {
             log.warn(e.toString() + " : " + PAUSE_ICON);
         }
 
-        Button pauseTrack;
         if (buttonImg == null) {
             pauseTrack = new Button("||");
         } else {
@@ -250,7 +267,6 @@ public abstract class GraphicalContext<T> {
             log.warn(e.toString() + " : " + PLAY_ICON);
         }
 
-        Button playTrack;
         if (buttonImg == null) {
             playTrack = new Button("|>");
         } else {
@@ -313,12 +329,14 @@ public abstract class GraphicalContext<T> {
             }
 
             backgroundMusicManager.changeMusic(0);
-            backgroundMusicManager.playPlayList();
+            backgroundMusicManager.play();
             GraphicalContext.setFirstMusicSetip(false);
 
             // We need to manually set the music title for the first set up
             setMusicTitle(musicName);
         }
+
+        log.info("Music panel created");
 
         return pane;
     }
@@ -335,7 +353,7 @@ public abstract class GraphicalContext<T> {
 
     private void setMusicTitle(final MarqueeText musicLabel) {
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-        String musicTitle = backgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
+        String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
         musicLabel.getTextProperty().setValue(musicTitle);
     }
 
@@ -345,9 +363,9 @@ public abstract class GraphicalContext<T> {
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
-        slider.setShowTickMarks(true);
+        slider.setShowTickMarks(false);
         slider.setMajorTickUnit(0.25);
-        slider.setSnapToTicks(true);
+        slider.setSnapToTicks(false);
         slider.setValue(config.getMusicVolume());
         config.getMusicVolumeProperty().bindBidirectional(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> {
@@ -362,9 +380,9 @@ public abstract class GraphicalContext<T> {
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
-        slider.setShowTickMarks(true);
+        slider.setShowTickMarks(false);
         slider.setMajorTickUnit(0.25);
-        slider.setSnapToTicks(true);
+        slider.setSnapToTicks(false);
         slider.setValue(config.getEffectsVolume());
         config.getEffectsVolumeProperty().bindBidirectional(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> {
@@ -407,4 +425,20 @@ public abstract class GraphicalContext<T> {
         return pane;
     }
 
+    public void updateMusicControler() {
+
+        setMusicTitle(musicName);
+
+        if (playTrack != null && pauseTrack != null) {
+            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+            log.info("updating : isPlaying : {}", backgroundMusicManager.isPlaying());
+            if (backgroundMusicManager.isPlaying()) {
+                playTrack.setVisible(false);
+                pauseTrack.setVisible(true);
+            } else {
+                playTrack.setVisible(true);
+                pauseTrack.setVisible(false);
+            }
+        }
+    }
 }
