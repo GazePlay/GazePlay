@@ -236,10 +236,10 @@ public class Stats implements GazeMotionListener {
     }
 
     private void inc(int x, int y) {
-
-        if (x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length)
+        if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             // heatMap[heatMap[0].length - y][heatMap.length - x]++;
             heatMap[x][y]++;
+        }
     }
 
     /**

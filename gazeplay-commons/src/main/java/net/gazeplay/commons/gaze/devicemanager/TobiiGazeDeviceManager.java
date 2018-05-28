@@ -70,7 +70,7 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
         Service<Void> calculateService = this.calculateService;
         if (calculateService != null) {
             calculateService.cancel();
-            calculateService.reset();
+            // calculateService.reset();
         }
     }
 

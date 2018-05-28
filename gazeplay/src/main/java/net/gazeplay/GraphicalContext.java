@@ -149,9 +149,7 @@ public abstract class GraphicalContext<T> {
             }
         });
 
-        button.button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
-        button.assignIndicator(eventHandler);
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
         return button;
     }
@@ -176,8 +174,8 @@ public abstract class GraphicalContext<T> {
                 imageView.setFitHeight(newValue.doubleValue() / 2d);
             }
         });
-        button.button.setGraphic(imageView);
-        button.button.setTooltip(new I18NTooltip(gazePlay.getTranslator(), label));
+        button.setGraphic(imageView);
+        button.setTooltip(new I18NTooltip(gazePlay.getTranslator(), label));
     }
 
     public TitledPane createMusicControlPane() {

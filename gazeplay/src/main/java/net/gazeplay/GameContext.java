@@ -125,14 +125,17 @@ public class GameContext extends GraphicalContext<Pane> {
             ParallelTransition pt = new ParallelTransition();
             pt.getChildren().addAll(rt, ft);
             controlPanel.setDisable(menuOpen);
+            controlPanel.setMouseTransparent(menuOpen);
             controlPanel.setVisible(true);
             menuOpen = !menuOpen;
             pt.play();
         };
 
+        log.info("the value of the control bar is : =" + controlPanel.getPrefWidth());
         controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 2.5);
         controlPanel.setVisible(false);
         controlPanel.setDisable(true);
+        controlPanel.setMouseTransparent(true);
         menuOpen = false;
 
         bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEnterControlPanelEventHandler);
@@ -262,11 +265,11 @@ public class GameContext extends GraphicalContext<Pane> {
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
-        ProgressHomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
+        HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
         menuHBox.getChildren().add(homeButton);
     }
 
-    public ProgressHomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
+    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
             @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> homeEvent = e -> {
@@ -276,9 +279,8 @@ public class GameContext extends GraphicalContext<Pane> {
             scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 
-        ProgressHomeButton homeButton = new ProgressHomeButton();
-        homeButton.button.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-        homeButton.assignIndicator(homeEvent);
+        HomeButton homeButton = new HomeButton();
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
         return homeButton;
     }
 

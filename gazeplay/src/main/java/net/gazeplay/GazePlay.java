@@ -2,7 +2,9 @@ package net.gazeplay;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -36,9 +38,15 @@ public class GazePlay extends Application {
         instance = this;
     }
 
+    @Getter
+    private BooleanProperty gazeMenuActivated;
+
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
+
+        gazeMenuActivated = new SimpleBooleanProperty();
+        gazeMenuActivated.setValue(false);
 
         Screen screen = Screen.getPrimary();
 
