@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TitledPane;
@@ -127,6 +128,8 @@ public class ColorsGame implements GameLifeCycle {
     private EventHandler<Event> colorizationEventHandler;
 
     private final ColorsGamesStats stats;
+    
+    private final TitledPane toolBoxPane;
 
     public ColorsGame(GameContext gameContext, final ColorsGamesStats stats) {
 
@@ -134,6 +137,9 @@ public class ColorsGame implements GameLifeCycle {
         this.stats = stats;
 
         root = gameContext.getRoot();
+        
+        final Translator translator = GazePlay.getInstance().getTranslator();
+        toolBoxPane = new TitledPane(translator.translate("Colors!"), colorToolBox);
     }
 
     @Override
@@ -162,23 +168,19 @@ public class ColorsGame implements GameLifeCycle {
     private void buildToolBox(double width, double height) {
 
         this.colorToolBox = new ColorToolBox(this.root, this);
+        toolBoxPane.setContent(colorToolBox);
+        
+        toolBoxPane.setCollapsible(false);
+        toolBoxPane.setAnimated(false);
 
-        final Translator translator = GazePlay.getInstance().getTranslator();
-
-        TitledPane colorToolBoxPane = new TitledPane(translator.translate("Colors!"), colorToolBox);
-        colorToolBoxPane.setCollapsible(false);
-        colorToolBoxPane.setAnimated(false);
-
-        this.root.getChildren().add(colorToolBoxPane);
-
-        double x = 0;
-        double y = 0;
-        colorToolBox.relocate(x, y);
+        this.root.getChildren().add(toolBoxPane);
 
         // Add it here so it appears on top of the tool box
         final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
         root.getChildren().add(progressIndicator);
         progressIndicator.toFront();
+        
+        updateToolBox();
     }
 
     private void buildDraw(String imgURL, double width, double height) {
@@ -191,6 +193,7 @@ public class ColorsGame implements GameLifeCycle {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 updateRectangle();
+                updateToolBox();
                 colorToolBox.widthProperty().removeListener(this);
             }
         };
@@ -219,12 +222,14 @@ public class ColorsGame implements GameLifeCycle {
         root.widthProperty().addListener((observable) -> {
 
             updateRectangle();
+            updateToolBox();
 
         });
 
         root.heightProperty().addListener((observable) -> {
 
             updateRectangle();
+            updateToolBox();
 
         });
 
@@ -244,12 +249,25 @@ public class ColorsGame implements GameLifeCycle {
         double width = dimension2D.getWidth() - colorToolBox.getWidth();
         double height = dimension2D.getHeight();
 
-        rectangle.setTranslateX(colorToolBox.getWidth());
+        //rectangle.setTranslateX(colorToolBox.getWidth());
 
         rectangle.setWidth(width);
         rectangle.setHeight(height);
 
         rectangle.setFill(new ImagePattern(writableImg));
+    }
+    
+    private void updateToolBox() {
+        
+        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        double width = dimension2D.getWidth();
+        double height = dimension2D.getHeight();
+        
+        double ToolBoxWidth = toolBoxPane.getWidth();
+        double x = width - ToolBoxWidth;
+        log.info("translated tool box to : {}, x toolBoxWidth : {}", x, ToolBoxWidth);
+        toolBoxPane.setTranslateX(x);
     }
 
     /**
