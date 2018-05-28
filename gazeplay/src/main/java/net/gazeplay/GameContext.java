@@ -99,12 +99,13 @@ public class GameContext extends GraphicalContext<Pane> {
             ParallelTransition pt = new ParallelTransition();
             pt.getChildren().addAll(rt, ft);
             controlPanel.setDisable(menuOpen);
+            controlPanel.setVisible(true);
             menuOpen = !menuOpen;
             pt.play();
         };
 
         controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 2.5);
-        controlPanel.setOpacity(0);
+        controlPanel.setVisible(false);
         controlPanel.setDisable(true);
         menuOpen = false;
 
