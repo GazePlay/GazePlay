@@ -352,7 +352,7 @@ public abstract class GraphicalContext<T> {
     }
 
     private void setMusicTitle(final MarqueeText musicLabel) {
-        if(musicLabel != null) {
+        if (musicLabel != null) {
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
             String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
             musicLabel.getTextProperty().setValue(musicTitle);
