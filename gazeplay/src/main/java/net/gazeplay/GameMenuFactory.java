@@ -168,66 +168,70 @@ public class GameMenuFactory {
         gameDescriptionPane.setTop(gameTitleContainer);
 
         if (gameSummary.getDescription() != null) {
-            final FlowPane gameDescContainer = new FlowPane(gameDesc);
-            gameDescContainer.setAlignment(Pos.CENTER_LEFT);
-            //gameDescContainer.prefWrapLengthProperty().bind(gameDescriptionPane.maxWidthProperty());
-            gameDescContainer.setPrefWrapLength(50);
+            final Pane gameDescContainer = new StackPane(gameDesc);
+            gameDesc.wrappingWidthProperty().bind(gameDescriptionPane.maxWidthProperty());
+            gameDesc.setTextAlignment(TextAlignment.JUSTIFY);
             gameDescriptionPane.setCenter(gameDescContainer);
-        }
-
-        switch (orientation) {
-        case HORIZONTAL:
-            gameDescriptionPane.setPadding(new Insets(0, 10, 0, 10));
-
-            gameCard.button.setRight(gameDescriptionPane);
-            gameCard.button.setLeft(thumbnailImageViewContainer);
-            
-            // DEBUG
-            gameDescriptionPane.setBorder(new Border(new BorderStroke(Color.BLACK, 
+            gameDescContainer.setBorder(new Border(new BorderStroke(Color.BLACK, 
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        }
+        
+        // DEBUG
+        gameDescriptionPane.setBorder(new Border(new BorderStroke(Color.BLACK, 
+            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        gameCard.setBorder(new Border(new BorderStroke(Color.BLACK, 
+            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        
+        switch (orientation) {
+            case HORIZONTAL:
+                gameDescriptionPane.setPadding(new Insets(0, 10, 0, 10));
 
-            // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
-            StackPane.setAlignment(gameTitleText, Pos.TOP_RIGHT);
-            gameTitleContainer.setAlignment(Pos.TOP_RIGHT);
-            gameTitleText.setTextAlignment(TextAlignment.RIGHT);
+                gameCard.button.setRight(gameDescriptionPane);
+                gameCard.button.setLeft(thumbnailImageViewContainer);
 
-            gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-                // thumbnailImageViewContainer.setPrefWidth(newValue.doubleValue() / 2);
-                thumbnailImageViewContainer.setPrefHeight(newValue.doubleValue() / 2 / 16 * 9);
-                gameDescriptionPane.setPrefHeight(newValue.doubleValue() - thumbnailBorderSize);
-            });
-            gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
-                thumbnailImageViewContainer.setPrefWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
-                thumbnailImageViewContainer.setMaxWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
-                gameDescriptionPane.setPrefWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
-                gameDescriptionPane.setMaxWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
-                gameTitleText.setWrappingWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
 
-            });
+                // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
+                StackPane.setAlignment(gameTitleText, Pos.TOP_RIGHT);
+                gameTitleContainer.setAlignment(Pos.TOP_RIGHT);
+                gameTitleText.setTextAlignment(TextAlignment.RIGHT);
 
-            break;
-        case VERTICAL:
-            gameDescriptionPane.setPadding(new Insets(10, 0, 10, 0));
+                gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+                    // thumbnailImageViewContainer.setPrefWidth(newValue.doubleValue() / 2);
+                    thumbnailImageViewContainer.setPrefHeight(newValue.doubleValue() / 2 / 16 * 9);
+                    gameDescriptionPane.setPrefHeight(newValue.doubleValue() - thumbnailBorderSize);
+                });
+                gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+                    thumbnailImageViewContainer.setPrefWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
+                    thumbnailImageViewContainer.setMaxWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
+                    gameDescriptionPane.setPrefWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
+                    gameDescriptionPane.setMaxWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
+                    gameTitleText.setWrappingWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
 
-            gameCard.button.setBottom(gameDescriptionPane);
-            gameCard.button.setTop(thumbnailImageViewContainer);
+                });
 
-            // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
-            StackPane.setAlignment(gameTitleText, Pos.TOP_CENTER);
-            gameTitleContainer.setAlignment(Pos.TOP_CENTER);
-            gameTitleText.setTextAlignment(TextAlignment.CENTER);
+                break;
+            case VERTICAL:
+                gameDescriptionPane.setPadding(new Insets(10, 0, 10, 0));
 
-            gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
-                thumbnailImageViewContainer.setPrefWidth(newValue.doubleValue() - thumbnailBorderSize);
-                gameDescriptionPane.setPrefWidth(newValue.doubleValue() - thumbnailBorderSize);
-                gameTitleText.setWrappingWidth(newValue.doubleValue() - thumbnailBorderSize);
-            });
-            gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-                thumbnailImageViewContainer.setPrefHeight(newValue.doubleValue() / 2);
-                gameDescriptionPane.setPrefHeight(newValue.doubleValue() / 2);
-            });
+                gameCard.button.setBottom(gameDescriptionPane);
+                gameCard.button.setTop(thumbnailImageViewContainer);
 
-            break;
+                // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
+                StackPane.setAlignment(gameTitleText, Pos.TOP_CENTER);
+                gameTitleContainer.setAlignment(Pos.TOP_CENTER);
+                gameTitleText.setTextAlignment(TextAlignment.CENTER);
+
+                gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+                    thumbnailImageViewContainer.setPrefWidth(newValue.doubleValue() - thumbnailBorderSize);
+                    gameDescriptionPane.setPrefWidth(newValue.doubleValue() - thumbnailBorderSize);
+                    gameTitleText.setWrappingWidth(newValue.doubleValue() - thumbnailBorderSize);
+                });
+                gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+                    thumbnailImageViewContainer.setPrefHeight(newValue.doubleValue() / 2);
+                    gameDescriptionPane.setPrefHeight(newValue.doubleValue() / 2);
+                });
+
+                break;
         }
 
         EventHandler<Event> eventhandler = new EventHandler<Event>() {
