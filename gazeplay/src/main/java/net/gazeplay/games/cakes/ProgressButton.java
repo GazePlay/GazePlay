@@ -97,8 +97,8 @@ public class ProgressButton extends StackPane {
 
             }
         };
-        this.addEventHandler(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
-        this.addEventHandler(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
+        this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
+        this.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
 
         EventHandler<Event> exitbuttonHandler = new EventHandler<Event>() {
             @Override
@@ -109,8 +109,8 @@ public class ProgressButton extends StackPane {
 
             }
         };
-        this.addEventHandler(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
-        this.addEventHandler(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+        this.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
+        this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
         return indicator;
     }
 
