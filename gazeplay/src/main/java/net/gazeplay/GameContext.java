@@ -91,7 +91,7 @@ public class GameContext extends GraphicalContext<Pane> {
          * buttonSize + "px;");
          */
 
-        final HBox root2 = new HBox(5);
+        final HBox root2 = new HBox(2);
         root2.setAlignment(Pos.CENTER_LEFT);
         // Pane root2 = new Pane();
         gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
@@ -115,6 +115,8 @@ public class GameContext extends GraphicalContext<Pane> {
                 from = 1;
                 to = 0;
                 angle = -1 * angle;
+            } else {
+                root2.getChildren().add(controlPanel);
             }
             RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
             rt.setByAngle(angle);
@@ -127,6 +129,14 @@ public class GameContext extends GraphicalContext<Pane> {
             controlPanel.setMouseTransparent(menuOpen);
             controlPanel.setVisible(true);
             menuOpen = !menuOpen;
+            pt.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    if (!menuOpen) {
+                        root2.getChildren().remove(controlPanel);
+                    }
+                }
+            });
             pt.play();
         };
 
@@ -144,6 +154,8 @@ public class GameContext extends GraphicalContext<Pane> {
         root2.getChildren().add(controlPanel);
         root.getChildren().add(gamingRoot);
         root.getChildren().add(root2);
+
+        root2.getChildren().remove(controlPanel);
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot, scene);
 
