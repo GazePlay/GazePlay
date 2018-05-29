@@ -50,7 +50,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
     private StackPane[] cake;
     private Pane randomCake;
-    private Button[] buttons;
+    private ProgressButton[] buttons;
 
     private int mode;
 
@@ -67,7 +67,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         maxCake = 0;
         nappage = false;
         this.mode = mode;
-        buttons = new Button[6];
+        buttons = new ProgressButton[6];
 
     }
 
@@ -137,7 +137,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         disableprogessButtons();
                     }
                     if (maxCake >= 2) {
-                        ((Button) e.getSource()).setDisable(true);
+                        ((ProgressButton) e.getSource()).setDisable(true);
                     }
 
                 }
@@ -223,8 +223,8 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         }
 
         for (int i = 0; i < 6; i++) { // HomePage of the game
-            Button bt = new Button();
-            bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
+        	ProgressButton bt = new ProgressButton();
+            bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
             bt.setLayoutX((i + 1) * dimension2D.getWidth() / 6 - buttonSize / 2);
@@ -233,8 +233,10 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 ImageView iv = new ImageView(new Image("data/cake/menu" + i + ".png"));
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
-                bt.setGraphic(iv);
-                bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.button.setGraphic(iv);
+                bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.assignIndicator(buttonHandler);
+                gameContext.getGazeDeviceManager().addEventFilter(bt);
 
                 buttons[i] = bt;
                 if (i == 2) {
@@ -247,7 +249,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 ImageView iv = new ImageView(new Image("data/cake/validate.png"));
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
-                bt.setGraphic(iv);
+                bt.button.setGraphic(iv);
                 bt.setLayoutX(dimension2D.getWidth() - buttonSize);
                 bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
                 buttonHandler = new EventHandler<Event>() {
@@ -256,7 +258,9 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         winFunction();
                     }
                 };
-                bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.assignIndicator(buttonHandler);
+                gameContext.getGazeDeviceManager().addEventFilter(bt);
                 buttons[i] = bt;
                 p[0].getChildren().add(bt);
             }
@@ -283,33 +287,6 @@ public class cakeFactory extends Parent implements GameLifeCycle {
             sp.getChildren().add(p[i]);
         }
 
-    }
-
-    public Button createprogessButton(int i) {
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        String s = "up";
-        if (i == 1) {
-            s = "down";
-        }
-        Button plus = new Button();
-        plus.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
-                + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
-                + "-fx-max-height: " + buttonSize + "px;");
-        plus.setLayoutX(0.5 * buttonSize);
-        plus.setLayoutY((1 + (i + 1) / 2) * dimension2D.getHeight() / 3);
-        plus.setText(s);
-        EventHandler<Event> buttonPlus = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if ((currentCake - i >= 0) && (currentCake - i <= maxCake)) {
-                    currentCake = currentCake - i;
-                }
-                /* TODO desactiver les decorations si on est sur une couche du bas */
-            }
-        };
-        plus.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonPlus);
-
-        return plus;
     }
 
     public void nappageOn() {
@@ -425,8 +402,8 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         // Other pages
         EventHandler<Event> buttonHandler;
         for (int i = 0; i < k; i++) { // HomePage of the game
-            Button bt = new Button();
-            bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
+        	ProgressButton bt = new ProgressButton();
+            bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
             if (i < k - 1) {
@@ -436,7 +413,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 ImageView iv = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
-                bt.setGraphic(iv);
+                bt.button.setGraphic(iv);
                 buttonHandler = new EventHandler<Event>() {
                     @Override
                     public void handle(Event e) {
@@ -450,13 +427,15 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         }
                     }
                 };
-                bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.assignIndicator(buttonHandler);
+                gameContext.getGazeDeviceManager().addEventFilter(bt);
                 p[j].getChildren().add(bt);
             } else {
                 ImageView iv = new ImageView(new Image("data/cake/return.png"));
                 iv.setFitWidth(2 * buttonSize / 3);
                 iv.setPreserveRatio(true);
-                bt.setGraphic(iv);
+                bt.button.setGraphic(iv);
                 bt.setLayoutX(dimension2D.getWidth() - buttonSize);
                 bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
                 buttonHandler = new EventHandler<Event>() {
@@ -471,7 +450,9 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         }
                     }
                 };
-                bt.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.assignIndicator(buttonHandler);
+                gameContext.getGazeDeviceManager().addEventFilter(bt);
                 p[j].getChildren().add(bt);
             }
 
