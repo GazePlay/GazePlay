@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -54,6 +55,8 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
     private int mode;
 
+    private int currentScreen;
+
     public cakeFactory(GameContext gameContext, Stats stats, int mode) {
         this.gameContext = gameContext;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -68,6 +71,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         nappage = false;
         this.mode = mode;
         buttons = new ProgressButton[6];
+        currentScreen = 0;
 
     }
 
@@ -109,6 +113,16 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         }
     }
 
+    public void active(Pane[] p, int i) {
+        for (Node child : p[currentScreen].getChildren()) {
+            gameContext.getGazeDeviceManager().removeEventFilter(child);
+        }
+        for (Node child : p[i].getChildren()) {
+            gameContext.getGazeDeviceManager().addEventFilter(child);
+        }
+        currentScreen = i;
+    }
+
     public EventHandler<Event> createprogessButtonHandler(Pane[] p, int i) {
         EventHandler<Event> buttonHandler;
         if (i != 4) {
@@ -119,6 +133,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     for (int c = 0; c <= maxCake; c++) {
                         cake[c].toFront();
                     }
+                    active(p, i + 1);
                 }
             };
         } else {
@@ -237,7 +252,6 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 bt.assignIndicator(buttonHandler);
                 gameContext.getGazeDeviceManager().addEventFilter(bt);
-
                 buttons[i] = bt;
                 if (i == 2) {
                     buttons[i].setDisable(!nappage);
@@ -429,7 +443,6 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 };
                 bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 bt.assignIndicator(buttonHandler);
-                gameContext.getGazeDeviceManager().addEventFilter(bt);
                 p[j].getChildren().add(bt);
             } else {
                 ImageView iv = new ImageView(new Image("data/cake/return.png"));
@@ -445,6 +458,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         for (int c = 0; c <= maxCake; c++) {
                             cake[c].toFront();
                         }
+                        active(p, 0);
                         if (mode != 0) {
                             disableprogessButtons();
                         }
@@ -452,7 +466,6 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 };
                 bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 bt.assignIndicator(buttonHandler);
-                gameContext.getGazeDeviceManager().addEventFilter(bt);
                 p[j].getChildren().add(bt);
             }
 
