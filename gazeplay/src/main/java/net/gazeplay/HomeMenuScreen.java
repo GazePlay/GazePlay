@@ -148,7 +148,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.setVgap(flowpaneGap);
         choicePanel.setPadding(new Insets(20, 60, 20, 60));
 
-
         ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
@@ -171,9 +170,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         }
 
-        choicePanel.setBackground(
-                new Background(new BackgroundImage(new Image("data/common/images/back.gif"), null, null, null, new BackgroundSize(1,1,true,true,true,true))));
-        
+        choicePanel.setBackground(new Background(new BackgroundImage(new Image("data/common/images/back.gif"), null,
+                null, null, new BackgroundSize(1, 1, true, true, true, true))));
+
         return choicePanelScroller;
     }
 
