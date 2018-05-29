@@ -6,9 +6,9 @@
 }
 
 .gameChooserButtonVertical {
-    -fx-min-width: 14em;
+    -fx-min-width: 18em;
     -fx-min-height: 14em;
-    -fx-pref-width: 14em;
+    -fx-pref-width: 18em;
     -fx-pref-height: 14em;
 }
 
