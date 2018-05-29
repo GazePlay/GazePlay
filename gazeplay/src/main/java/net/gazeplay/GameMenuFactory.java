@@ -64,10 +64,10 @@ public class GameMenuFactory {
 
         final I18NText gameTitleText = new I18NText(translator, gameSummary.getNameCode());
         gameTitleText.getStyleClass().add("gameChooserButtonTitle");
-        
+
         final I18NText gameDesc = new I18NText(translator, gameSummary.getDescription());
         gameDesc.getStyleClass().add("gameChooserButtonDesc");
-        
+
         BorderPane thumbnailImageViewContainer = new BorderPane();
         thumbnailImageViewContainer.setPadding(new Insets(1, 1, 1, 1));
         thumbnailImageViewContainer.setOpaqueInsets(new Insets(1, 1, 1, 1));
@@ -166,9 +166,12 @@ public class GameMenuFactory {
         final VBox gameTitleContainer = new VBox();
         gameTitleContainer.getChildren().add(gameTitleText);
         gameDescriptionPane.setTop(gameTitleContainer);
-        
-        if(gameSummary.getDescription() != null) {
-            final Pane gameDescContainer = new FlowPane(gameDesc);
+
+        if (gameSummary.getDescription() != null) {
+            final FlowPane gameDescContainer = new FlowPane(gameDesc);
+            gameDescContainer.setAlignment(Pos.CENTER_LEFT);
+            //gameDescContainer.prefWrapLengthProperty().bind(gameDescriptionPane.maxWidthProperty());
+            gameDescContainer.setPrefWrapLength(50);
             gameDescriptionPane.setCenter(gameDescContainer);
         }
 
@@ -178,6 +181,10 @@ public class GameMenuFactory {
 
             gameCard.button.setRight(gameDescriptionPane);
             gameCard.button.setLeft(thumbnailImageViewContainer);
+            
+            // DEBUG
+            gameDescriptionPane.setBorder(new Border(new BorderStroke(Color.BLACK, 
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
             // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
             StackPane.setAlignment(gameTitleText, Pos.TOP_RIGHT);

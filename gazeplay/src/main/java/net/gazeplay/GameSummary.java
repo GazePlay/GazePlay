@@ -17,7 +17,7 @@ public class GameSummary {
 
     @Getter
     private final String backgroundMusicUrl;
-    
+
     @Getter
     private final String description;
 
@@ -28,9 +28,9 @@ public class GameSummary {
     public GameSummary(String nameCode, String gameTypeIndicatorImageLocation, String thumbnailLocation) {
         this(nameCode, gameTypeIndicatorImageLocation, thumbnailLocation, null);
     }
-    
-    public GameSummary(String nameCode, String gameTypeIndicatorImageLocation, 
-            String thumbnailLocation, final String backgroundMusicUrl) {
+
+    public GameSummary(String nameCode, String gameTypeIndicatorImageLocation, String thumbnailLocation,
+            final String backgroundMusicUrl) {
         this(nameCode, gameTypeIndicatorImageLocation, thumbnailLocation, backgroundMusicUrl, null);
     }
 
