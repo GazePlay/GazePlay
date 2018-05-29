@@ -223,7 +223,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         }
 
         for (int i = 0; i < 6; i++) { // HomePage of the game
-        	ProgressButton bt = new ProgressButton();
+            ProgressButton bt = new ProgressButton();
             bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
@@ -402,7 +402,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         // Other pages
         EventHandler<Event> buttonHandler;
         for (int i = 0; i < k; i++) { // HomePage of the game
-        	ProgressButton bt = new ProgressButton();
+            ProgressButton bt = new ProgressButton();
             bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
