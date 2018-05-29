@@ -95,17 +95,14 @@ public class GameContext extends GraphicalContext<Pane> {
         root2.setAlignment(Pos.CENTER_LEFT);
         // Pane root2 = new Pane();
         gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
-            updateConfigButton(bt, buttonImg);
             updateConfigPane(root2);
         });
         gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> {
             updateConfigButton(bt, buttonImg);
+        });
+        root2.heightProperty().addListener((observable) -> {
             updateConfigPane(root2);
         });
-        controlPanel.widthProperty().addListener((observable) -> {
-            updateConfigPane(root2);
-        });
-        updateConfigPane(root2);
 
         EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> {
             double from = 0;
