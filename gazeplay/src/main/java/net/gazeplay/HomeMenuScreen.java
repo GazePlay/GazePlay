@@ -17,7 +17,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,9 +33,7 @@ import net.gazeplay.commons.utils.ProgressPane;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
-import java.util.LinkedList;
 import java.util.List;
-import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Data
 @Slf4j

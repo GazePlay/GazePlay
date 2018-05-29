@@ -560,26 +560,27 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        result.add(
-                new GameSpec(new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/color.jpeg"),
+        result.add(new GameSpec(
+                new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/color.jpeg", null,
+                        "ColorDesc"),
 
-                        new GameSpec.GameLauncher() {
+                new GameSpec.GameLauncher() {
 
-                            private ColorsGamesStats gameStat;
+                    private ColorsGamesStats gameStat;
 
-                            @Override
-                            public Stats createNewStats(Scene scene) {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
 
-                                gameStat = new ColorsGamesStats(scene);
-                                return gameStat;
-                            }
+                        gameStat = new ColorsGamesStats(scene);
+                        return gameStat;
+                    }
 
-                            @Override
-                            public GameLifeCycle createNewGame(GameContext gameContext,
-                                    GameSpec.GameVariant gameVariant, Stats stats) {
-                                return new ColorsGame(gameContext, gameStat);
-                            }
-                        }));
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new ColorsGame(gameContext, gameStat);
+                    }
+                }));
 
         result.add(new GameSpec(
                 new GameSummary("Cakes", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/cakes.jpeg"),

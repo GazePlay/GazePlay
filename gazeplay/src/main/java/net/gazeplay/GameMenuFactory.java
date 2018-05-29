@@ -5,7 +5,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -65,6 +64,9 @@ public class GameMenuFactory {
 
         final I18NText gameTitleText = new I18NText(translator, gameSummary.getNameCode());
         gameTitleText.getStyleClass().add("gameChooserButtonTitle");
+
+        final I18NText gameDesc = new I18NText(translator, gameSummary.getDescription());
+        gameDesc.getStyleClass().add("gameChooserButtonDesc");
 
         BorderPane thumbnailImageViewContainer = new BorderPane();
         thumbnailImageViewContainer.setPadding(new Insets(1, 1, 1, 1));
@@ -164,6 +166,14 @@ public class GameMenuFactory {
         final VBox gameTitleContainer = new VBox();
         gameTitleContainer.getChildren().add(gameTitleText);
         gameDescriptionPane.setTop(gameTitleContainer);
+
+        if (gameSummary.getDescription() != null) {
+            final Pane gameDescContainer = new StackPane(gameDesc);
+            StackPane.setAlignment(gameDesc, Pos.CENTER_LEFT);
+            gameDesc.wrappingWidthProperty().bind(gameDescriptionPane.prefWidthProperty());
+            gameDesc.setTextAlignment(TextAlignment.JUSTIFY);
+            gameDescriptionPane.setCenter(gameDescContainer);
+        }
 
         switch (orientation) {
         case HORIZONTAL:
