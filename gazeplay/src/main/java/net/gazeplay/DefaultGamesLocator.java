@@ -608,7 +608,8 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new cakeFactory(gameContext, stats, gameVariant.getNumber());
                     }
                 }));
-        result.add(new GameSpec(new GameSummary("Labyrinth", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+        result.add(new GameSpec(
+                new GameSummary("Labyrinth", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/labyrinth.png"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
