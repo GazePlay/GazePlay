@@ -119,12 +119,12 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         if (i != currentScreen) {
             for (Node child : p[currentScreen].getChildren()) {
                 if (child instanceof ProgressButton) {
-                    gameContext.getGazeDeviceManager().removeEventFilter(child);
+                   ((ProgressButton)child).disable();
                 }
             }
             for (Node child : p[i].getChildren()) {
                 if (child instanceof ProgressButton) {
-                    gameContext.getGazeDeviceManager().addEventFilter(child);
+                	 ((ProgressButton)child).active();
                 }
             }
             currentScreen = i;
@@ -160,7 +160,11 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         disableprogessButtons();
                     }
                     if (maxCake >= 2) {
+                    	if (e.getSource() instanceof ProgressButton) {
                         ((ProgressButton) e.getSource()).setDisable(true);
+                    	}else if (e.getSource() instanceof Button) {
+                    		 ((Button) e.getSource()).setDisable(true);
+                    	}
                     }
 
                 }
