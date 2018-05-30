@@ -37,7 +37,7 @@ public class StatsDisplay {
                 // if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
                 statsContext.getScene().setCursor(Cursor.WAIT); // Change cursor to wait style
-
+                statsContext.dispose();
                 gazePlay.onReturnToMenu();
 
                 statsContext.getScene().setCursor(Cursor.DEFAULT); // Change cursor to default style

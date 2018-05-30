@@ -5,11 +5,12 @@ import java.util.Deque;
 import java.util.Optional;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.WeakChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.WeakEventHandler;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TitledPane;
@@ -197,8 +198,8 @@ public class ColorsGame implements GameLifeCycle {
                 colorToolBox.widthProperty().removeListener(this);
             }
         };
-
-        colorToolBox.widthProperty().addListener(listener);
+        gameContext.getWeakReferences().add(listener);
+        colorToolBox.widthProperty().addListener(new WeakChangeListener<>(listener));
 
         Image img = new Image(imgURL);
 
@@ -219,19 +220,16 @@ public class ColorsGame implements GameLifeCycle {
         final Stage stage = GazePlay.getInstance().getPrimaryStage();
 
         // Resizing is working but not immediatly
-        root.widthProperty().addListener((observable) -> {
-
+        final ChangeListener sizeListener = (ChangeListener) (ObservableValue observable, Object oldValue,
+                Object newValue) -> {
             updateRectangle();
             updateToolBox();
+        };
+        gameContext.getWeakReferences().add(sizeListener);
+        final WeakChangeListener weakSizeListener = new WeakChangeListener(sizeListener);
+        root.widthProperty().addListener(weakSizeListener);
 
-        });
-
-        root.heightProperty().addListener((observable) -> {
-
-            updateRectangle();
-            updateToolBox();
-
-        });
+        root.heightProperty().addListener(weakSizeListener);
 
         gameContext.getGazeDeviceManager().addEventFilter(rectangle);
 
@@ -262,7 +260,6 @@ public class ColorsGame implements GameLifeCycle {
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         double width = dimension2D.getWidth();
-        double height = dimension2D.getHeight();
 
         double ToolBoxWidth = toolBoxPane.getWidth();
         double x = width - ToolBoxWidth;
@@ -343,7 +340,7 @@ public class ColorsGame implements GameLifeCycle {
 
         final ColorsGame game = this;
 
-        return new EventHandler<Event>() {
+        final EventHandler eventHandler = new EventHandler<Event>() {
 
             private Double gazeXOrigin = 0.;
             private Double gazeYOrigin = 0.;
@@ -353,12 +350,6 @@ public class ColorsGame implements GameLifeCycle {
 
             @Override
             public void handle(Event event) {
-
-                GazePlay gazePlay = GazePlay.getInstance();
-
-                double gameWidth = gazePlay.getPrimaryStage().getWidth();
-                double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
-                double widthDiff = 0;/* screenWidth - gameWidth; */
 
                 if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
@@ -480,6 +471,10 @@ public class ColorsGame implements GameLifeCycle {
             }
 
         };
+
+        final WeakEventHandler weakEventHandler = new WeakEventHandler(eventHandler);
+        getGameContext().getWeakReferences().add(weakEventHandler);
+        return weakEventHandler;
     }
 
     /**

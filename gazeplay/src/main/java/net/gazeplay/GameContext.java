@@ -257,7 +257,6 @@ public class GameContext extends GraphicalContext<Pane> {
 
         super.setUpOnStage(stage);
 
-        log.info("SETTING UP");
         updateConfigPane(configPane);
     }
 
@@ -314,6 +313,7 @@ public class GameContext extends GraphicalContext<Pane> {
             asynchronousStatsPersistTask.run();
         }
 
+        this.dispose();
         StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
 
         gazePlay.onDisplayStats(statsContext);
