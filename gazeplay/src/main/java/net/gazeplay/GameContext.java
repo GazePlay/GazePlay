@@ -32,6 +32,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.IOException;
 import javafx.scene.control.Button;
+import net.gazeplay.commons.utils.games.SystemInfo;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {

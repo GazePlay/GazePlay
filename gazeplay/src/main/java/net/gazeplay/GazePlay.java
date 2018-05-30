@@ -14,6 +14,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.games.SystemInfo;
 
 /**
  * Created by schwab on 17/12/2016.
@@ -76,6 +77,7 @@ public class GazePlay extends Application {
 
     public void onReturnToMenu() {
         homeMenuScreen.setUpOnStage(primaryStage);
+        log.info("Mem info : {}", SystemInfo.MemInfo());
     }
 
     public void onDisplayStats(StatsContext statsContext) {
