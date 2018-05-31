@@ -21,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -45,6 +46,8 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     private int currentCake;
     private int maxCake;
     private boolean nappage;
+
+    public FadeTransition ft;
 
     private Pane[] p;
 
@@ -119,12 +122,12 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         if (i != currentScreen) {
             for (Node child : p[currentScreen].getChildren()) {
                 if (child instanceof ProgressButton) {
-                   ((ProgressButton)child).disable();
+                    ((ProgressButton) child).disable();
                 }
             }
             for (Node child : p[i].getChildren()) {
                 if (child instanceof ProgressButton) {
-                	 ((ProgressButton)child).active();
+                    ((ProgressButton) child).active();
                 }
             }
             currentScreen = i;
@@ -160,11 +163,11 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         disableprogessButtons();
                     }
                     if (maxCake >= 2) {
-                    	if (e.getSource() instanceof ProgressButton) {
-                        ((ProgressButton) e.getSource()).setDisable(true);
-                    	}else if (e.getSource() instanceof Button) {
-                    		 ((Button) e.getSource()).setDisable(true);
-                    	}
+                        if (e.getSource() instanceof ProgressButton) {
+                            ((ProgressButton) e.getSource()).setDisable(true);
+                        } else if (e.getSource() instanceof Button) {
+                            ((Button) e.getSource()).setDisable(true);
+                        }
                     }
 
                 }
@@ -247,6 +250,10 @@ public class cakeFactory extends Parent implements GameLifeCycle {
             Rectangle r = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
             r.setFill(col[i]);
             p[i].getChildren().add(r);
+            Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            back.setFill(new ImagePattern(new Image("data/cake/background.png")));
+            back.setMouseTransparent(true);
+            p[i].getChildren().add(back);
         }
 
         for (int i = 0; i < 6; i++) { // HomePage of the game
@@ -589,11 +596,34 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         randomCake.setLayoutY(dimension2D.getHeight() / 2);
         gameContext.getChildren().add(randomCake);
         if (mode == 2) {
+
+            EventHandler<Event> cakeVanisher = new EventHandler<Event>() {
+                @Override
+                public void handle(Event e) {
+                    log.info("cake is vanishing");
+                    ft = new FadeTransition(Duration.millis(500), randomCake);
+                    ft.setDelay(Duration.millis(500));
+                    ft.setFromValue(1);
+                    ft.setToValue(0);
+                    ft.play();
+                }
+            };
+
+            EventHandler<Event> cakeDisplay = new EventHandler<Event>() {
+                @Override
+                public void handle(Event e) {
+                    ft.stop();
+                    randomCake.setOpacity(1);
+                }
+            };
+            randomCake.addEventHandler(MouseEvent.MOUSE_ENTERED, cakeDisplay);
+            randomCake.addEventHandler(MouseEvent.MOUSE_EXITED, cakeVanisher);
+
             log.info("cake is vanishing");
-            FadeTransition ft = new FadeTransition(Duration.millis(10000), randomCake);
-            ft.setDelay(Duration.millis(10000));
-            ft.setToValue(0);
-            ft.play();
+            FadeTransition ft0 = new FadeTransition(Duration.millis(5000), randomCake);
+            ft0.setDelay(Duration.millis(5000));
+            ft0.setToValue(0);
+            ft0.play();
         }
     }
 
