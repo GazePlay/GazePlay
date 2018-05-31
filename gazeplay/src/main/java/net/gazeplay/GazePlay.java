@@ -37,7 +37,7 @@ public class GazePlay extends Application {
 
     @Getter
     private Translator translator;
-    
+
     @Getter
     private Scene primaryScene;
 
@@ -71,18 +71,19 @@ public class GazePlay extends Application {
         translator = new DefaultTranslator(config, multilinguism);
 
         homeMenuScreen = HomeMenuScreen.newInstance(this, config);
-        
+
         final Parent root = homeMenuScreen.getRoot();
         log.info("already root of scene : {}", root.getScene());
-        this.primaryScene = new Scene(homeMenuScreen.getRoot(), primaryStage.getWidth(), primaryStage.getHeight(), Color.BLACK);
+        this.primaryScene = new Scene(homeMenuScreen.getRoot(), primaryStage.getWidth(), primaryStage.getHeight(),
+                Color.BLACK);
         CssUtil.setPreferredStylesheets(config, primaryScene);
-        
+
         primaryStage.setTitle("GazePlay");
 
         primaryStage.setScene(primaryScene);
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
-        
+
         homeMenuScreen.setUpOnStage(primaryScene);
 
         primaryStage.centerOnScreen();

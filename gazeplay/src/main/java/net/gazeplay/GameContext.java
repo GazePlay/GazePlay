@@ -148,7 +148,8 @@ public class GameContext extends GraphicalContext<Pane> {
 
         root2.getChildren().remove(controlPanel);
 
-        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot, gazePlay.getPrimaryScene());
+        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot,
+                gazePlay.getPrimaryScene());
 
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
@@ -220,7 +221,7 @@ public class GameContext extends GraphicalContext<Pane> {
     private final GazeDeviceManager gazeDeviceManager;
 
     private final Pane configPane;
-    
+
     @Getter
     private final Pane gamingRoot;
 

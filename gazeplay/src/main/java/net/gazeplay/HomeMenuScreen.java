@@ -155,8 +155,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         gameSelected.setValue(false);
 
         for (GameSpec gameSpec : games) {
-            final ProgressPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config,
-                    multilinguism, translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
+            final ProgressPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
+                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
             choicePanel.getChildren().add(gameCard);
             if (getGazePlay().getGazeMenuActivated().getValue()) {
                 enableCard();

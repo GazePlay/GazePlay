@@ -87,7 +87,8 @@ public class Bravo extends Rectangle {
         playWinTransition(root, 0, onFinishedEventHandler);
     }
 
-    public void playWinTransition(final Region root, long initialDelay, EventHandler<ActionEvent> onFinishedEventHandler) {
+    public void playWinTransition(final Region root, long initialDelay,
+            EventHandler<ActionEvent> onFinishedEventHandler) {
         resetState(root);
 
         fullTransition.setOnFinished(actionEvent -> {

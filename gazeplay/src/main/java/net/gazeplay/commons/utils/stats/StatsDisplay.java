@@ -126,7 +126,7 @@ public class StatsDisplay {
             lineChart.setMaxWidth(newValue.doubleValue() * 0.4);
         });
         root.heightProperty().addListener((observable, oldValue, newValue) -> {
-                
+
             lineChart.setMaxHeight(newValue.doubleValue() * 0.4);
         });
         lineChart.setMaxWidth(root.getWidth() * 0.4);
@@ -178,8 +178,7 @@ public class StatsDisplay {
 
                 resetToOriginalIndexInParent(lineChart, originalIndexInParent);
 
-                lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomInLineChartEventHandler(lineChart, root));
+                lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInLineChartEventHandler(lineChart, root));
             }
 
         };

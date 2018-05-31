@@ -180,14 +180,14 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         {
             ImageView heatMap = StatsDisplay.buildHeatChart(stats, root);
             root.widthProperty().addListener((observable, oldValue, newValue) -> {
-                
+
                 heatMap.setFitWidth(newValue.doubleValue() * 0.35);
             });
             root.heightProperty().addListener((observable, oldValue, newValue) -> {
-                
+
                 heatMap.setFitHeight(newValue.doubleValue() * 0.35);
             });
-            
+
             heatMap.setFitWidth(root.getWidth() * 0.35);
             heatMap.setFitHeight(root.getHeight() * 0.35);
 

@@ -96,7 +96,7 @@ public abstract class GraphicalContext<T extends Parent> {
     private Button playTrack;
 
     public void setUpOnStage(final Scene scene) {
-        
+
         // Make sure we are the root of the scene
         final Parent sceneRoot = scene.getRoot();
         log.info("root is {}", root);
@@ -104,7 +104,7 @@ public abstract class GraphicalContext<T extends Parent> {
         log.info("new root children nb : {}", root.getChildrenUnmodifiable().size());
         log.info("new root parent : {}", root.getParent());
         scene.setRoot(root);
-        
+
         log.info("scene root {}", scene.getRoot());
 
         final Configuration config = Configuration.getInstance();
@@ -118,7 +118,7 @@ public abstract class GraphicalContext<T extends Parent> {
     public abstract ObservableList<Node> getChildren();
 
     public void clear() {
-        
+
         getChildren().clear();
 
         log.info("Nodes not removed: {}", getChildren().size());
