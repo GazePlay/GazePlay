@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -39,7 +41,7 @@ public class BravoTestVisual {
 	public static class BravoTestApp extends Application {
 
 		private Scene scene;
-		private Group root;
+		private Pane root;
 
 		@Override
 		public void start(Stage primaryStage) {
@@ -48,7 +50,7 @@ public class BravoTestVisual {
 
 			primaryStage.setFullScreen(true);
 
-			root = new Group();
+			root = new BorderPane();
 
 			Screen screen = Screen.getMainScreen();
 			scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
@@ -65,7 +67,7 @@ public class BravoTestVisual {
 
 			long startTime = System.currentTimeMillis();
 
-			bravo.playWinTransition(scene, 2000, actionEvent -> {
+			bravo.playWinTransition(root, 2000, actionEvent -> {
 				long finishedTime = System.currentTimeMillis();
 
 				duration = finishedTime - startTime;

@@ -9,7 +9,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -37,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
+import javafx.scene.layout.Region;
 import net.gazeplay.commons.utils.games.Utils;
 
 import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZED;
@@ -382,11 +382,10 @@ public class WhereIsIt implements GameLifeCycle {
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 
-        Scene scene = gameContext.getScene();
-
         Text error = new Text(multilinguism.getTrad("WII-error", language));
-        error.setX(scene.getWidth() / 2. - 100);
-        error.setY(scene.getHeight() / 2.);
+        final Region root = gameContext.getRoot();
+        error.setX(root.getWidth() / 2. - 100);
+        error.setY(root.getHeight() / 2.);
         error.setId("item");
         gameContext.getChildren().addAll(error);
     }
