@@ -99,13 +99,7 @@ public abstract class GraphicalContext<T extends Parent> {
 
         // Make sure we are the root of the scene
         final Parent sceneRoot = scene.getRoot();
-        log.info("root is {}", root);
-        log.info("root scene is {}, new scene is {}, new scene root is {}", root.getScene(), scene, scene.getRoot());
-        log.info("new root children nb : {}", root.getChildrenUnmodifiable().size());
-        log.info("new root parent : {}", root.getParent());
         scene.setRoot(root);
-
-        log.info("scene root {}", scene.getRoot());
 
         final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
