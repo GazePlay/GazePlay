@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,10 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
@@ -39,15 +37,12 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Data
 @Slf4j
-public abstract class GraphicalContext<T> {
+public abstract class GraphicalContext<T extends Parent> {
 
     @Getter
     private final GazePlay gazePlay;
 
     protected final T root;
-
-    @Getter
-    protected final Scene scene;
 
     public static final String RESOURCES_PATH = "data" + File.separator + "common";
     public static final String IMAGES_PATH = RESOURCES_PATH + File.separator + "images";
@@ -100,30 +95,31 @@ public abstract class GraphicalContext<T> {
     private Button pauseTrack;
     private Button playTrack;
 
-    public void setUpOnStage(Stage stage) {
-        stage.setTitle("GazePlay");
-
-        // setting the scene again will exit fullscreen
-        // so we need to backup the fullscreen status, and restore it after the scene has been set
-        boolean fullscreen = stage.isFullScreen();
-        stage.setScene(scene);
-        stage.setFullScreen(fullscreen);
-
-        stage.setOnCloseRequest((WindowEvent we) -> stage.close());
+    public void setUpOnStage(final Scene scene) {
+        
+        // Make sure we are the root of the scene
+        final Parent sceneRoot = scene.getRoot();
+        log.info("root is {}", root);
+        log.info("root scene is {}, new scene is {}, new scene root is {}", root.getScene(), scene, scene.getRoot());
+        log.info("new root children nb : {}", root.getChildrenUnmodifiable().size());
+        final Parent transitionRoot = new StackPane();
+        scene.setRoot(transitionRoot);
+        scene.setRoot(root);
+        
+        log.info("scene root {}", scene.getRoot());
 
         final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
 
         updateMusicControler();
 
-        stage.show();
         log.info("Finished setup stage with the game scene");
     }
 
     public abstract ObservableList<Node> getChildren();
 
     public void clear() {
-        getScene().setFill(Color.BLACK);
+        
         getChildren().clear();
 
         log.info("Nodes not removed: {}", getChildren().size());

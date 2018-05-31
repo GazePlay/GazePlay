@@ -46,10 +46,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         BorderPane root = new BorderPane();
 
-        Scene scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
-                Color.BLACK);
-
-        return new HomeMenuScreen(gazePlay, games, scene, root, config);
+        return new HomeMenuScreen(gazePlay, games, root, config);
     }
 
     private final List<GameSpec> games;
@@ -64,8 +61,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private final GameMenuFactory gameMenuFactory = new GameMenuFactory();
 
-    public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, Scene scene, BorderPane root, Configuration config) {
-        super(gazePlay, root, scene);
+    public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, BorderPane root, Configuration config) {
+        super(gazePlay, root);
         this.games = games;
         this.gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
@@ -158,7 +155,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         gameSelected.setValue(false);
 
         for (GameSpec gameSpec : games) {
-            final ProgressPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), getScene(), config,
+            final ProgressPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config,
                     multilinguism, translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
             choicePanel.getChildren().add(gameCard);
             if (getGazePlay().getGazeMenuActivated().getValue()) {
@@ -186,11 +183,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     private Node createLogo() {
-        double width = scene.getWidth() * 0.5;
-        double height = scene.getHeight() * 0.2;
+        double width = root.getWidth() * 0.5;
+        double height = root.getHeight() * 0.2;
 
-        double posY = scene.getHeight() * 0.1;
-        double posX = (scene.getWidth() - width) / 2;
+        double posY = root.getHeight() * 0.1;
+        double posX = (root.getWidth() - width) / 2;
 
         Rectangle logo = new Rectangle(posX, posY, width, height);
         logo.setFill(new ImagePattern(new Image("data/common/images/gazeplay.jpg"), 0, 0, 1, 1, true));

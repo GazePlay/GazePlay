@@ -24,6 +24,7 @@ import net.gazeplay.games.bubbles.BubblesGamesStats;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import javafx.scene.layout.Region;
 
 @Slf4j
 public class StatsDisplay {
@@ -36,11 +37,11 @@ public class StatsDisplay {
 
                 // if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                statsContext.getScene().setCursor(Cursor.WAIT); // Change cursor to wait style
+                statsContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
 
                 gazePlay.onReturnToMenu();
 
-                statsContext.getScene().setCursor(Cursor.DEFAULT); // Change cursor to default style
+                statsContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
                 // }
             }
         };
@@ -51,7 +52,7 @@ public class StatsDisplay {
         return homeButton;
     }
 
-    public static LineChart<String, Number> buildLineChart(Stats stats, Scene scene) {
+    public static LineChart<String, Number> buildLineChart(Stats stats, final Region root) {
 
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
@@ -114,19 +115,27 @@ public class StatsDisplay {
         sdp.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
         sdm.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
 
-        EventHandler<Event> openLineChartEvent = createZoomInLineChartEventHandler(lineChart, scene);
+        EventHandler<Event> openLineChartEvent = createZoomInLineChartEventHandler(lineChart, root);
 
         lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED, openLineChartEvent);
 
         lineChart.setLegendVisible(false);
 
-        lineChart.setMaxWidth(scene.getWidth() * 0.4);
-        lineChart.setMaxHeight(scene.getHeight() * 0.4);
+        root.widthProperty().addListener((observable, oldValue, newValue) -> {
+
+            lineChart.setMaxWidth(newValue.doubleValue() * 0.4);
+        });
+        root.heightProperty().addListener((observable, oldValue, newValue) -> {
+                
+            lineChart.setMaxHeight(newValue.doubleValue() * 0.4);
+        });
+        lineChart.setMaxWidth(root.getWidth() * 0.4);
+        lineChart.setMaxHeight(root.getHeight() * 0.4);
 
         return lineChart;
     }
 
-    public static ImageView buildHeatChart(Stats stats, Scene scene) {
+    public static ImageView buildHeatChart(Stats stats, final Region root) {
         ImageView heatMap = new ImageView();
         heatMap.setPreserveRatio(true);
 
@@ -137,7 +146,7 @@ public class StatsDisplay {
 
         heatMap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
 
-        EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, scene);
+        EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, root);
         heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMapEvent);
 
         return heatMap;
@@ -177,7 +186,7 @@ public class StatsDisplay {
     }
 
     private static EventHandler<Event> createZoomInLineChartEventHandler(LineChart<String, Number> lineChart,
-            Scene scene) {
+            final Region root) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -188,12 +197,12 @@ public class StatsDisplay {
                 zoomInAndCenter(lineChart, lineChart.getWidth(), lineChart.getHeight(), false);
 
                 lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOutLineChartEventHandler(lineChart, scene, originalIndexInParent));
+                        createZoomOutLineChartEventHandler(lineChart, root, originalIndexInParent));
             }
         };
     }
 
-    private static EventHandler<Event> createZoomOutHeatMapEventHandler(ImageView heatMap, Scene scene,
+    private static EventHandler<Event> createZoomOutHeatMapEventHandler(ImageView heatMap, final Region root,
             int originalIndexInParent) {
         return new EventHandler<Event>() {
             @Override
@@ -204,12 +213,12 @@ public class StatsDisplay {
 
                 resetToOriginalIndexInParent(heatMap, originalIndexInParent);
 
-                heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInHeatMapEventHandler(heatMap, scene));
+                heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInHeatMapEventHandler(heatMap, root));
             }
         };
     }
 
-    private static EventHandler<Event> createZoomInHeatMapEventHandler(ImageView heatMap, Scene scene) {
+    private static EventHandler<Event> createZoomInHeatMapEventHandler(ImageView heatMap, final Region root) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -220,7 +229,7 @@ public class StatsDisplay {
                 zoomInAndCenter(heatMap, heatMap.getFitWidth(), heatMap.getFitHeight(), true);
 
                 heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOutHeatMapEventHandler(heatMap, scene, originalIndexInParent));
+                        createZoomOutHeatMapEventHandler(heatMap, root, originalIndexInParent));
             }
         };
     }
