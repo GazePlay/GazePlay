@@ -352,7 +352,9 @@ public class GameMenuFactory {
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
 
             final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+            log.info("is default music set : {}", musicManager.getIsCustomMusicSet().getValue());
             if (!musicManager.getIsCustomMusicSet().getValue() || musicManager.getPlaylist().isEmpty()) {
+                musicManager.emptyPlaylist();
                 musicManager.playMusicAlone(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
                 gameContext.updateMusicControler();
             }

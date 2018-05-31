@@ -40,6 +40,8 @@ public class BackgroundMusicManager {
 
     @Getter
     private final List<MediaPlayer> playlist = new ArrayList<MediaPlayer>();
+    
+    private final List<MediaPlayer> defaultPlayList = new ArrayList<MediaPlayer>();
     @Getter
     private MediaPlayer currentMusic;
 
@@ -56,7 +58,7 @@ public class BackgroundMusicManager {
 
     @Getter
     private final BooleanProperty isCustomMusicSet = new SimpleBooleanProperty(this, "isCustomMusicSet", false);
-
+    
     public BackgroundMusicManager() {
         config = Configuration.getInstance();
 
@@ -83,6 +85,14 @@ public class BackgroundMusicManager {
         });
 
     }
+    
+    public void onEndGame() {
+        
+        if(!isCustomMusicSet.getValue()) {
+            emptyPlaylist();
+            playlist.addAll(defaultPlayList);
+        }
+    }
 
     public void getAudioFromFolder(String folderPath) {
 
@@ -107,6 +117,10 @@ public class BackgroundMusicManager {
 
         if (!folderPath.equals(Configuration.DEFAULT_VALUE_MUSIC_FOLDER)) {
             isCustomMusicSet.setValue(true);
+        }
+        else {
+            defaultPlayList.clear();
+            defaultPlayList.addAll(playlist);
         }
     }
 
@@ -318,9 +332,9 @@ public class BackgroundMusicManager {
                 if (isPlaying()) {
                     pause();
                 }
-                currentMusic = localMediaPlayer;
+                playlist.add(localMediaPlayer);
+                changeMusic(playlist.size() - 1);
                 play();
-                musicIndexProperty.setValue(0);
             }
         };
 
