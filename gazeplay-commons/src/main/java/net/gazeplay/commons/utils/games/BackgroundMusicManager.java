@@ -105,7 +105,7 @@ public class BackgroundMusicManager {
             changeCurrentMusic();
         }
 
-        if (folderPath.equals(Configuration.DEFAULT_VALUE_MUSIC_FOLDER)) {
+        if (!folderPath.equals(Configuration.DEFAULT_VALUE_MUSIC_FOLDER)) {
             isCustomMusicSet.setValue(true);
         }
     }
