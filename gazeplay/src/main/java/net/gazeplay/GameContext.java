@@ -23,7 +23,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.I18NButton;
@@ -326,7 +325,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     @Override
     public ObservableList<Node> getChildren() {
-        return root.getChildren();
+        return gamingRoot.getChildren();
     }
 
     @Override

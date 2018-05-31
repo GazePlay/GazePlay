@@ -55,9 +55,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     public static ConfigurationContext newInstance(GazePlay gazePlay) {
         BorderPane root = new BorderPane();
 
-        Scene scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
-                Color.BLACK);
-
         return new ConfigurationContext(gazePlay, root);
     }
 

@@ -168,7 +168,7 @@ public class StatsDisplay {
     }
 
     private static EventHandler<Event> createZoomOutLineChartEventHandler(LineChart<String, Number> lineChart,
-            Scene scene, int originalIndexInParent) {
+            final Region root, int originalIndexInParent) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -179,7 +179,7 @@ public class StatsDisplay {
                 resetToOriginalIndexInParent(lineChart, originalIndexInParent);
 
                 lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomInLineChartEventHandler(lineChart, scene));
+                        createZoomInLineChartEventHandler(lineChart, root));
             }
 
         };
