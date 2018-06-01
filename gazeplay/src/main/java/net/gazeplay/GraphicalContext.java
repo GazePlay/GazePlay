@@ -197,16 +197,13 @@ public abstract class GraphicalContext<T extends Parent> {
         grid.add(musicName, 0, 0, 3, 1);
         grid.setMaxWidth(MUSIC_GRID_MAX_WIDTH);
 
-        backgroundMusicManager.getMusicIndexProperty().addListener((observable) -> {
-
-            setMusicTitle(musicName);
-        });
-        // This listener is a bit overkill but we need because in some cases,
-        // the controle panel won't be set up before the index changed but after
-        // the music start playing.
-        backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
-
-            setMusicTitle(musicName);
+        backgroundMusicManager.getIsMusicChanging().addListener((observable, oldValue, newValue) -> {
+            
+            // If we receive a change event and the new value is fales, then it means
+            // that the music has been changed (see changingProperty from Slider)
+            if(!newValue) {
+                setMusicTitle(musicName);
+            }
         });
 
         buttonImg = null;

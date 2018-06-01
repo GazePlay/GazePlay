@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.concurrent.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableMap;
@@ -59,8 +61,9 @@ public class BackgroundMusicManager {
     @Getter
     private final BooleanProperty isCustomMusicSet = new SimpleBooleanProperty(this, "isCustomMusicSet", false);
 
-    @Getter
-    private final BooleanProperty musicChanged = new SimpleBooleanProperty(this, "musicChanged", false);
+    // If there is a change event and the new value is fales, then it means
+    // that the music has been changed (see isChangingProperty from Slider)
+    private final ReadOnlyBooleanWrapper isMusicChanging = new ReadOnlyBooleanWrapper(this, "musicChanged", false);
     
     public BackgroundMusicManager() {
         config = Configuration.getInstance();
@@ -95,6 +98,7 @@ public class BackgroundMusicManager {
             log.info("replaying default music");
             emptyPlaylist();
             playlist.addAll(defaultPlayList);
+            changeCurrentMusic();
         }
     }
 
@@ -158,6 +162,8 @@ public class BackgroundMusicManager {
         if (currentMusic != null) {
             stop();
         }
+        
+        isMusicChanging.setValue(true);
 
         log.info("current index : {}", musicIndexProperty.getValue());
         final MediaPlayer nextMusic = playlist.get(musicIndexProperty.getValue());
@@ -165,6 +171,7 @@ public class BackgroundMusicManager {
         this.currentMusic = nextMusic;
 
         log.info("Changing current music : {}", getMusicTitle(nextMusic));
+        isMusicChanging.setValue(false);
     }
 
     public boolean isPlaying() {
@@ -460,5 +467,9 @@ public class BackgroundMusicManager {
         }
 
         return title;
+    }
+
+    public ReadOnlyBooleanProperty getIsMusicChanging() {
+        return isMusicChanging.getReadOnlyProperty();
     }
 }
