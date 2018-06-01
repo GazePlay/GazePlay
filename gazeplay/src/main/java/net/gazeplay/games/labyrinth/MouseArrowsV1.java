@@ -26,40 +26,34 @@ public class MouseArrowsV1 extends MouseArrows {
     protected void placementFleche() {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
+        double delta = dimension2D.getWidth() * 0.01;
+        double beta = dimension2D.getHeight() * 0.1;
+
         double x = dimension2D.getWidth() * 0.05;
         double y = dimension2D.getHeight() * 0.4;
-        this.buttonUp = new Rectangle(x, y, buttonDimWidth, buttonDimHeight);
+        this.buttonUp = new Rectangle(x + delta, y - delta, buttonDimWidth, buttonDimHeight);
         this.buttonUp.setFill(new ImagePattern(new Image("data/labyrinth/images/upArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorUp = createProgressIndicator(x, y, buttonDimWidth, buttonDimHeight);
-        this.buttonUp.addEventHandler(MouseEvent.ANY, buttonUpEvent);
-        this.buttonUp.addEventHandler(GazeEvent.ANY, buttonUpEvent);
+        this.indicatorUp = createProgressIndicator(x + delta, y - delta, buttonDimWidth, buttonDimHeight);
 
         y = y + 1.5 * buttonDimHeight;
-        this.buttonDown = new Rectangle(x, y, buttonDimWidth, buttonDimHeight);
+        this.buttonDown = new Rectangle(x + delta, y - 2.5 * delta, buttonDimWidth, buttonDimHeight);
         this.buttonDown.setFill(new ImagePattern(new Image("data/labyrinth/images/downArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorDown = createProgressIndicator(x, y, buttonDimWidth, buttonDimHeight);
-        this.buttonDown.addEventHandler(MouseEvent.ANY, buttonDownEvent);
-        this.buttonDown.addEventHandler(GazeEvent.ANY, buttonDownEvent);
+        this.indicatorDown = createProgressIndicator(x + delta, y - 2.5 * delta, buttonDimWidth, buttonDimHeight);
 
         y = y - 1.1 * buttonDimHeight;
         x = x - 0.4 * buttonDimWidth;
         this.buttonLeft = new Rectangle(x, y, buttonDimHeight, buttonDimWidth);
         this.buttonLeft.setFill(new ImagePattern(new Image("data/labyrinth/images/leftArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorLeft = createProgressIndicator(x - buttonDimHeight / 2, y + buttonDimWidth / 4, buttonDimWidth,
-                buttonDimHeight);
-        this.buttonLeft.addEventHandler(MouseEvent.ANY, buttonLeftEvent);
-        this.buttonLeft.addEventHandler(GazeEvent.ANY, buttonLeftEvent);
+        this.indicatorLeft = createProgressIndicator(x, y, buttonDimWidth, buttonDimHeight);
 
         x = x + 1.1 * buttonDimWidth;
         this.buttonRight = new Rectangle(x, y, buttonDimHeight, buttonDimWidth);
         this.buttonRight.setFill(new ImagePattern(new Image("data/labyrinth/images/rightArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorRight = createProgressIndicator(x - buttonDimHeight / 2, y + buttonDimWidth / 4, buttonDimWidth,
-                buttonDimHeight);
-        this.buttonRight.addEventHandler(MouseEvent.ANY, buttonRightEvent);
-        this.buttonRight.addEventHandler(GazeEvent.ANY, buttonRightEvent);
+        // this.indicatorRight = createProgressIndicator(x - buttonDimHeight / 2, y + buttonDimWidth / 4,
+        // buttonDimWidth,
+        // buttonDimHeight);
+        this.indicatorRight = createProgressIndicator(x, y, buttonDimWidth, buttonDimHeight);
 
-        this.getChildren().addAll(buttonUp, buttonDown, buttonLeft, buttonRight);
-        this.getChildren().addAll(indicatorUp, indicatorDown, indicatorLeft, indicatorRight);
     }
 
 }

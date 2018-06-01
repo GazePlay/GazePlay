@@ -17,11 +17,12 @@ public abstract class Mouse extends Parent {
     final Stats stats;
 
     protected Rectangle mouse;
+    protected String orientation;
 
     protected int indiceX; // j
     protected int indiceY; // i
 
-    protected String orientation;
+    public int nbMove;
 
     public Mouse(double positionX, double positionY, double width, double height, GameContext gameContext, Stats stats,
             Labyrinth gameInstance) {
@@ -36,6 +37,8 @@ public abstract class Mouse extends Parent {
 
         this.indiceX = 0;
         this.indiceY = 0;
+
+        nbMove = 0;
 
         this.orientation = "front";
 
@@ -75,6 +78,7 @@ public abstract class Mouse extends Parent {
 
     public void reOrientateMouse(int oldColumn, int oldRow, int newColumn, int newRow) {
         putInBold();
+        nbMove++;
         if (oldColumn != newColumn) {
             if (oldColumn < newColumn) { // Move to the right
                 this.orientation = "right";
