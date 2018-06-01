@@ -57,6 +57,9 @@ public class BackgroundMusicManager {
     @Getter
     private final BooleanProperty isCustomMusicSet = new SimpleBooleanProperty(this, "isCustomMusicSet", false);
 
+    @Getter
+    private final BooleanProperty musicChanged = new SimpleBooleanProperty(this, "musicChanged", false);
+    
     public BackgroundMusicManager() {
         config = Configuration.getInstance();
 
@@ -73,9 +76,9 @@ public class BackgroundMusicManager {
         });
 
         // If music is playing and index is changed, then change the music playing
-        musicIndexProperty.addListener((observable) -> {
-            int newMusicIndex = musicIndexProperty.getValue();
-            if (newMusicIndex < 0 || newMusicIndex >= playlist.size()) {
+        musicIndexProperty.addListener((observable, oldValue, newValue) -> {
+            
+            if (newValue.intValue() < 0 || newValue.intValue() >= playlist.size()) {
                 musicIndexProperty.setValue(0);
                 log.warn("Invalid music index set. 0 will be set instead");
             }
