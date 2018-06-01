@@ -16,8 +16,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
-import javafx.scene.control.Label;
-import javafx.scene.text.Text;
 
 /**
  * Created by schwab on 23/12/2016.
@@ -66,9 +64,16 @@ public class Utils {
         String path = null;
 
         if (url == null) {
-            path = new File(ressource).toURI().toString();
-        } else
+            final File file = new File(ressource);
+            log.info("using file");
+            if (!file.exists()) {
+                log.warn("file doesn't exist : {}", ressource);
+            }
+            path = file.toURI().toString();
+        } else {
+            log.info("using url");
             path = url.toString();
+        }
 
         log.info("path " + path);
 

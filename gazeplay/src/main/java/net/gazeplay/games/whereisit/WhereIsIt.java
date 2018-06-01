@@ -198,11 +198,9 @@ public class WhereIsIt implements GameLifeCycle {
     private void playQuestionSound() {
 
         try {
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            URL soundResourceUrl = classLoader.getResource(currentRoundDetails.questionSoundPath);
             log.info("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
 
-            Utils.playSound(soundResourceUrl.toExternalForm());
+            Utils.playSound(currentRoundDetails.questionSoundPath);
         } catch (Exception e) {
             log.info("Can't play sound: no associated sound : " + e.toString());
         }
