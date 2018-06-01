@@ -6,8 +6,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
@@ -15,6 +18,8 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.SystemInfo;
+import net.gazeplay.commons.utils.CssUtil;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 /**
  * Created by schwab on 17/12/2016.
@@ -33,6 +38,9 @@ public class GazePlay extends Application {
 
     @Getter
     private Translator translator;
+
+    @Getter
+    private Scene primaryScene;
 
     @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
     public GazePlay() {
@@ -64,28 +72,46 @@ public class GazePlay extends Application {
         translator = new DefaultTranslator(config, multilinguism);
 
         homeMenuScreen = HomeMenuScreen.newInstance(this, config);
-        homeMenuScreen.setUpOnStage(primaryStage);
+
+        this.primaryScene = new Scene(homeMenuScreen.getRoot(), primaryStage.getWidth(), primaryStage.getHeight(),
+                Color.BLACK);
+        CssUtil.setPreferredStylesheets(config, primaryScene);
+
+        primaryStage.setTitle("GazePlay");
+
+        primaryStage.setScene(primaryScene);
+
+        primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
+
+        homeMenuScreen.setUpOnStage(primaryScene);
 
         primaryStage.centerOnScreen();
 
         primaryStage.setFullScreen(true);
+        primaryStage.show();
     }
 
     public void onGameLaunch(GameContext gameContext) {
-        gameContext.setUpOnStage(primaryStage);
+        gameContext.setUpOnStage(primaryScene);
+        gameContext.updateMusicControler();
     }
 
     public void onReturnToMenu() {
-        homeMenuScreen.setUpOnStage(primaryStage);
+
+        homeMenuScreen.setUpOnStage(primaryScene);
+        final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
+        musicMananger.onEndGame();
+        // homeMenuScreen.updateMusicControler();
         log.info("Mem info : {}", SystemInfo.MemInfo());
+
     }
 
     public void onDisplayStats(StatsContext statsContext) {
-        statsContext.setUpOnStage(primaryStage);
+        statsContext.setUpOnStage(primaryScene);
     }
 
     public void onDisplayConfigurationManagement(ConfigurationContext configurationContext) {
-        configurationContext.setUpOnStage(primaryStage);
+        configurationContext.setUpOnStage(primaryScene);
     }
 
     public void toggleFullScreen() {

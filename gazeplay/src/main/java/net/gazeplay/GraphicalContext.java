@@ -15,6 +15,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.WeakEventHandler;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,10 +29,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
@@ -47,15 +45,12 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Data
 @Slf4j
-public abstract class GraphicalContext<T> {
+public abstract class GraphicalContext<T extends Parent> {
 
     @Getter
     private final GazePlay gazePlay;
 
     protected final T root;
-
-    @Getter
-    protected final Scene scene;
 
     public static final String RESOURCES_PATH = "data" + File.separator + "common";
     public static final String IMAGES_PATH = RESOURCES_PATH + File.separator + "images";
@@ -89,6 +84,12 @@ public abstract class GraphicalContext<T> {
     // BY</a></div>
     public static final String SPEAKER_ICON = IMAGES_PATH + File.separator + "speaker.png";
 
+    // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
+    // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
+    // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
+    // BY</a></div>
+    public static final String MUTE_ICON = IMAGES_PATH + File.separator + "mute.png";
+
     public static final int ICON_SIZE = 32;
 
     public static final double MUSIC_GRID_MAX_WIDTH = 200;
@@ -107,6 +108,7 @@ public abstract class GraphicalContext<T> {
     private MarqueeText musicName;
     private Button pauseTrack;
     private Button playTrack;
+    private double beforeMutedValue;
 
     /**
      * This list is used to store all references to listeners wrapped in WeakListener and WeakEventHandler. This is done
@@ -115,30 +117,20 @@ public abstract class GraphicalContext<T> {
     @Getter
     private final List<Object> weakReferences = new ArrayList<Object>();
 
-    public void setUpOnStage(Stage stage) {
-        stage.setTitle("GazePlay");
+    public void setUpOnStage(final Scene scene) {
 
-        // setting the scene again will exit fullscreen
-        // so we need to backup the fullscreen status, and restore it after the scene has been set
-        boolean fullscreen = stage.isFullScreen();
-        stage.setScene(scene);
-        stage.setFullScreen(fullscreen);
-
-        stage.setOnCloseRequest((WindowEvent we) -> stage.close());
-
-        final Configuration config = Configuration.getInstance();
-        CssUtil.setPreferredStylesheets(config, scene);
+        // Make sure we are the root of the scene
+        scene.setRoot(root);
 
         updateMusicControler();
 
-        stage.show();
         log.info("Finished setup stage with the game scene");
     }
 
     public abstract ObservableList<Node> getChildren();
 
     public void clear() {
-        getScene().setFill(Color.BLACK);
+
         getChildren().clear();
 
         log.info("Nodes not removed: {}", getChildren().size());
@@ -206,23 +198,12 @@ public abstract class GraphicalContext<T> {
         grid.setHgap(5);
         grid.setVgap(2);
 
-        Image buttonImg = null;
-        try {
-            buttonImg = new Image(SPEAKER_ICON, ICON_SIZE, ICON_SIZE, false, true);
-        } catch (IllegalArgumentException e) {
-            log.warn(e.toString() + " : " + PREVIOUS_ICON);
-        }
-
-        Label volumeLabel;
-        if (buttonImg == null) {
-            volumeLabel = new I18NLabel(getGazePlay().getTranslator(), "Volume");
-        } else {
-            volumeLabel = new Label(null, new ImageView(buttonImg));
-        }
-
-        grid.add(volumeLabel, 0, 1);
         Slider volumeSlider = createMediaVolumeSlider(gazePlay);
         grid.add(volumeSlider, 1, 1, 2, 1);
+
+        final Node volumeButtons = createVolumeButton(volumeSlider);
+        grid.add(volumeButtons, 0, 1);
+
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
         final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
@@ -232,19 +213,19 @@ public abstract class GraphicalContext<T> {
         grid.add(musicName, 0, 0, 3, 1);
         grid.setMaxWidth(MUSIC_GRID_MAX_WIDTH);
 
-        final InvalidationListener changeMusicTitleListener = (Observable observable) -> {
-            setMusicTitle(musicName);
+        final ChangeListener<Boolean> changeMusicTitleListener = (observable, oldValue, newValue) -> {
+
+            // If we receive a change event and the new value is fales, then it means
+            // that the music has been changed (see changingProperty from Slider)
+            if (!newValue) {
+                setMusicTitle(musicName);
+            }
         };
         weakReferences.add(changeMusicTitleListener);
-        backgroundMusicManager.getMusicIndexProperty()
-                .addListener(new WeakInvalidationListener(changeMusicTitleListener));
-        // This listener is a bit overkill but we need because in some cases,
-        // the controle panel won't be set up before the index changed but after
-        // the music start playing.
-        backgroundMusicManager.getIsPlayingPoperty()
-                .addListener(new WeakInvalidationListener(changeMusicTitleListener));
+        backgroundMusicManager.getIsMusicChanging()
+                .addListener(new WeakChangeListener<Boolean>(changeMusicTitleListener));
 
-        buttonImg = null;
+        Image buttonImg = null;
         try {
             buttonImg = new Image(PREVIOUS_ICON, ICON_SIZE, ICON_SIZE, false, true);
         } catch (IllegalArgumentException e) {
@@ -365,6 +346,64 @@ public abstract class GraphicalContext<T> {
         return pane;
     }
 
+    private Node createVolumeButton(final Slider volumeSlider) {
+        Image buttonImg = null;
+        try {
+            buttonImg = new Image(SPEAKER_ICON, ICON_SIZE, ICON_SIZE, false, true);
+        } catch (IllegalArgumentException e) {
+            log.warn(e.toString() + " : " + SPEAKER_ICON);
+        }
+
+        Button muteButton;
+        if (buttonImg == null) {
+            muteButton = new I18NButton(getGazePlay().getTranslator(), "Volume");
+        } else {
+            muteButton = new Button(null, new ImageView(buttonImg));
+        }
+
+        Image muteImg = null;
+        try {
+            muteImg = new Image(MUTE_ICON, ICON_SIZE, ICON_SIZE, false, true);
+        } catch (IllegalArgumentException e) {
+            log.warn(e.toString() + " : " + MUTE_ICON);
+        }
+
+        Button unmuteButton;
+        if (muteImg == null) {
+            unmuteButton = new I18NButton(getGazePlay().getTranslator(), "Volume");
+        } else {
+            unmuteButton = new Button(null, new ImageView(muteImg));
+        }
+
+        final boolean muted = volumeSlider.getValue() == 0;
+        muteButton.setVisible(!muted);
+        unmuteButton.setVisible(muted);
+
+        if (muted) {
+            beforeMutedValue = Configuration.DEFAULT_VALUE_MUSIC_VOLUME;
+        } else {
+            beforeMutedValue = volumeSlider.getValue();
+        }
+
+        muteButton.setOnAction((event) -> {
+            beforeMutedValue = volumeSlider.getValue();
+            volumeSlider.setValue(0);
+        });
+
+        unmuteButton.setOnAction((event) -> {
+            volumeSlider.setValue(beforeMutedValue);
+        });
+
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            final boolean localMuted = newValue.doubleValue() == 0;
+            muteButton.setVisible(!localMuted);
+            unmuteButton.setVisible(localMuted);
+        });
+
+        final StackPane volumeStackPane = new StackPane(muteButton, unmuteButton);
+        return volumeStackPane;
+    }
+
     /**
      * This method only exists because of mavent findbug plugin. Since this class is a singleton, this works.
      * 
@@ -432,22 +471,12 @@ public abstract class GraphicalContext<T> {
         final HBox center = new HBox();
         mainPane.setCenter(center);
         center.setSpacing(5);
-        Image buttonImg = null;
-        try {
-            buttonImg = new Image(SPEAKER_ICON, ICON_SIZE, ICON_SIZE, false, true);
-        } catch (IllegalArgumentException e) {
-            log.warn(e.toString() + " : " + PREVIOUS_ICON);
-        }
-
-        Label volumeLabel;
-        if (buttonImg == null) {
-            volumeLabel = new I18NLabel(getGazePlay().getTranslator(), "Volume");
-        } else {
-            volumeLabel = new Label(null, new ImageView(buttonImg));
-        }
-        center.getChildren().add(volumeLabel);
 
         final Slider effectsVolumeSlider = createEffectsVolumeSlider(gazePlay);
+        final Node volumeButtons = createVolumeButton(effectsVolumeSlider);
+
+        center.getChildren().add(volumeButtons);
+
         center.getChildren().add(effectsVolumeSlider);
 
         return pane;

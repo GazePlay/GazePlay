@@ -23,7 +23,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.I18NButton;
@@ -50,15 +49,10 @@ public class GameContext extends GraphicalContext<Pane> {
 
         final Stage primaryStage = gazePlay.getPrimaryStage();
 
-        final Scene scene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight(), Color.BLACK);
-
         root.prefWidthProperty().bind(primaryStage.widthProperty());
         root.prefHeightProperty().bind(primaryStage.heightProperty());
         root.minWidthProperty().bind(primaryStage.widthProperty());
         root.minHeightProperty().bind(primaryStage.heightProperty());
-
-        final Configuration config = Configuration.getInstance();
-        CssUtil.setPreferredStylesheets(config, scene);
 
         Bravo bravo = new Bravo();
 
@@ -155,13 +149,14 @@ public class GameContext extends GraphicalContext<Pane> {
 
         root2.getChildren().remove(controlPanel);
 
-        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot, scene);
+        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot,
+                gazePlay.getPrimaryScene());
 
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
         GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
-        return new GameContext(gazePlay, gamingRoot, scene, bravo, controlPanel, gamePanelDimensionProvider,
+        return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
                 randomPositionGenerator, gazeDeviceManager, root2);
     }
 
@@ -228,10 +223,14 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final Pane configPane;
 
-    private GameContext(GazePlay gazePlay, Pane gamingRoot, Scene scene, Bravo bravo, HBox menuHBox,
+    @Getter
+    private final Pane gamingRoot;
+
+    private GameContext(GazePlay gazePlay, final Pane root, Pane gamingRoot, Bravo bravo, HBox menuHBox,
             GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
             GazeDeviceManager gazeDeviceManager, final Pane configPane) {
-        super(gazePlay, gamingRoot, scene);
+        super(gazePlay, root);
+        this.gamingRoot = gamingRoot;
         this.bravo = bravo;
         this.menuHBox = menuHBox;
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
@@ -254,9 +253,9 @@ public class GameContext extends GraphicalContext<Pane> {
     }
 
     @Override
-    public void setUpOnStage(Stage stage) {
+    public void setUpOnStage(final Scene scene) {
 
-        super.setUpOnStage(stage);
+        super.setUpOnStage(scene);
 
         updateConfigPane(configPane);
     }
@@ -281,10 +280,10 @@ public class GameContext extends GraphicalContext<Pane> {
             @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> homeEvent = e -> {
-            scene.setCursor(Cursor.WAIT); // Change cursor to wait style
+            root.setCursor(Cursor.WAIT); // Change cursor to wait style
             homeButtonClicked(stats, gazePlay, currentGame);
             // BackgroundMusicManager.getInstance().pause();
-            scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
+            root.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 
         HomeButton homeButton = new HomeButton();
@@ -323,12 +322,16 @@ public class GameContext extends GraphicalContext<Pane> {
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
         getChildren().add(bravo);
         bravo.toFront();
-        bravo.playWinTransition(scene, delay, onFinishedEventHandler);
+        bravo.playWinTransition(root, delay, onFinishedEventHandler);
     }
 
     @Override
     public ObservableList<Node> getChildren() {
-        return root.getChildren();
+        return gamingRoot.getChildren();
     }
 
+    @Override
+    public Pane getRoot() {
+        return gamingRoot;
+    }
 }

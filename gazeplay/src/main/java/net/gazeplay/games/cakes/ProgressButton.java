@@ -22,6 +22,8 @@ public class ProgressButton extends StackPane {
     Timeline timelineProgressBar;
     double buttonWidth;
     double buttonHeight;
+    EventHandler<Event> enterbuttonHandler;
+    EventHandler<Event> exitbuttonHandler;
 
     public ProgressButton() {
         super();
@@ -35,6 +37,16 @@ public class ProgressButton extends StackPane {
         button = new Button(s);
         init();
         this.getChildren().addAll(button, indicator);
+    }
+
+    public void disable() {
+        this.removeEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
+        this.removeEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+    }
+
+    public void active() {
+        this.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
+        this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
     }
 
     public void init() {
@@ -75,7 +87,7 @@ public class ProgressButton extends StackPane {
     public ProgressIndicator assignIndicator(EventHandler<Event> enterEvent) {
         indicator.setMouseTransparent(true);
         indicator.setOpacity(0);
-        EventHandler<Event> enterbuttonHandler = new EventHandler<Event>() {
+        enterbuttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
                 indicator.setOpacity(1);
@@ -97,10 +109,10 @@ public class ProgressButton extends StackPane {
 
             }
         };
-        this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
+        // this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
 
-        EventHandler<Event> exitbuttonHandler = new EventHandler<Event>() {
+        exitbuttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
                 timelineProgressBar.stop();
@@ -109,7 +121,7 @@ public class ProgressButton extends StackPane {
 
             }
         };
-        this.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
+        // this.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
         this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
         return indicator;
     }

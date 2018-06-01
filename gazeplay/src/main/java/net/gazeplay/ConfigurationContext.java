@@ -14,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Control;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -40,7 +39,6 @@ import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.scene.control.ScrollPane;
-import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Slf4j
@@ -57,14 +55,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     public static ConfigurationContext newInstance(GazePlay gazePlay) {
         BorderPane root = new BorderPane();
 
-        Scene scene = new Scene(root, gazePlay.getPrimaryStage().getWidth(), gazePlay.getPrimaryStage().getHeight(),
-                Color.BLACK);
-
-        return new ConfigurationContext(gazePlay, root, scene);
+        return new ConfigurationContext(gazePlay, root);
     }
 
-    private ConfigurationContext(GazePlay gazePlay, BorderPane root, Scene scene) {
-        super(gazePlay, root, scene);
+    private ConfigurationContext(GazePlay gazePlay, BorderPane root) {
+        super(gazePlay, root);
 
         translator = gazePlay.getTranslator();
 
@@ -112,11 +107,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
                 if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    scene.setCursor(Cursor.WAIT); // Change cursor to wait style
+                    root.setCursor(Cursor.WAIT); // Change cursor to wait style
 
                     gazePlay.onReturnToMenu();
 
-                    scene.setCursor(Cursor.DEFAULT); // Change cursor to default style
+                    root.setCursor(Cursor.DEFAULT); // Change cursor to default style
                 }
             }
         };
@@ -356,7 +351,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 configuration.getCssfileProperty().setValue(newPropertyValue);
                 configuration.saveConfigIgnoringExceptions();
 
-                Scene scene = configurationContext.getScene();
+                final GazePlay gazePlay = GazePlay.getInstance();
+                final Scene scene = gazePlay.getPrimaryScene();
 
                 scene.getStylesheets().removeAll(scene.getStylesheets());
                 String styleSheetPath = newValue.getStyleSheetPath();
@@ -381,7 +377,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             @Override
             public void handle(ActionEvent arg0) {
                 FileChooser fileChooser = new FileChooser();
-                Scene scene = configurationContext.getScene();
+                final GazePlay gazePlay = GazePlay.getInstance();
+                final Scene scene = gazePlay.getPrimaryScene();
                 File file = fileChooser.showOpenDialog(scene.getWindow());
                 buttonLoad.setText(file.toString());
 
@@ -420,7 +417,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 if (currentFolder.isDirectory()) {
                     directoryChooser.setInitialDirectory(currentFolder);
                 }
-                File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
+                final GazePlay gazePlay = GazePlay.getInstance();
+                final Scene scene = gazePlay.getPrimaryScene();
+                File file = directoryChooser.showDialog(scene.getWindow());
                 if (file == null) {
                     return;
                 }
@@ -464,7 +463,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (currentFolder.isDirectory()) {
                 directoryChooser.setInitialDirectory(currentFolder);
             }
-            File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
+            final GazePlay gazePlay = GazePlay.getInstance();
+            final Scene scene = gazePlay.getPrimaryScene();
+            File file = directoryChooser.showDialog(scene.getWindow());
             if (file == null) {
                 return;
             }
@@ -626,7 +627,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (currentMusicFolder.isDirectory()) {
                 directoryChooser.setInitialDirectory(currentMusicFolder);
             }
-            File file = directoryChooser.showDialog(configurationContext.getScene().getWindow());
+            final GazePlay gazePlay = GazePlay.getInstance();
+            final Scene scene = gazePlay.getPrimaryScene();
+            File file = directoryChooser.showDialog(scene.getWindow());
             if (file == null) {
                 return;
             }

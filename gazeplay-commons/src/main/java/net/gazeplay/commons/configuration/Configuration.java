@@ -53,7 +53,7 @@ public class Configuration implements Cloneable {
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
-    private static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
+    public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "data" + File.separator + "home" + File.separator
             + "sounds";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;

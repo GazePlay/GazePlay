@@ -4,7 +4,6 @@ import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
@@ -15,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.AsyncUiTaskExecutor;
 
 import java.net.URL;
+import javafx.scene.layout.Region;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.Utils;
 
@@ -83,12 +83,13 @@ public class Bravo extends Rectangle {
         this.enableRewardSound = enableRewardSound;
     }
 
-    public void playWinTransition(Scene scene, EventHandler<ActionEvent> onFinishedEventHandler) {
-        playWinTransition(scene, 0, onFinishedEventHandler);
+    public void playWinTransition(final Region root, EventHandler<ActionEvent> onFinishedEventHandler) {
+        playWinTransition(root, 0, onFinishedEventHandler);
     }
 
-    public void playWinTransition(Scene scene, long initialDelay, EventHandler<ActionEvent> onFinishedEventHandler) {
-        resetState(scene);
+    public void playWinTransition(final Region root, long initialDelay,
+            EventHandler<ActionEvent> onFinishedEventHandler) {
+        resetState(root);
 
         fullTransition.setOnFinished(actionEvent -> {
             log.debug("finished fullTransition");
@@ -156,18 +157,18 @@ public class Bravo extends Rectangle {
         return fullTransition;
     }
 
-    private void resetState(Scene scene) {
+    private void resetState(Region root) {
         Image image = new Image(pictureResourceLocation);
 
         double imageWidth = image.getWidth();
         double imageHeight = image.getHeight();
         double imageHeightToWidthRatio = imageHeight / imageWidth;
 
-        double initialHeight = scene.getHeight() * pictureInitialHeightToSceneHeightRatio;
+        double initialHeight = root.getHeight() * pictureInitialHeightToSceneHeightRatio;
         double initialWidth = initialHeight / imageHeightToWidthRatio;
 
-        double positionX = (scene.getWidth() - initialWidth) / 2;
-        double positionY = (scene.getHeight() - initialHeight) / 2;
+        double positionX = (root.getWidth() - initialWidth) / 2;
+        double positionY = (root.getHeight() - initialHeight) / 2;
 
         setFill(new ImagePattern(image));
 

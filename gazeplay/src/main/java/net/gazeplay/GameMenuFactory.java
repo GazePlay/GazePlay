@@ -54,7 +54,7 @@ public class GameMenuFactory {
         }
     }
 
-    public ProgressPane createGameButton(GazePlay gazePlay, Scene scene, Configuration config,
+    public ProgressPane createGameButton(GazePlay gazePlay, final Region root, Configuration config,
             Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
             GazeDeviceManager gazeDeviceManager, BooleanProperty gameSelected) {
         this.gazeDeviceManager = gazeDeviceManager;
@@ -236,7 +236,7 @@ public class GameMenuFactory {
 
                 if (variants.size() > 1) {
                     log.info("variants = {}", variants);
-                    scene.getRoot().setEffect(new BoxBlur());
+                    root.setEffect(new BoxBlur());
                     Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), gameSpec);
 
                     String dialogTitle = gameName + " : "
@@ -334,7 +334,8 @@ public class GameMenuFactory {
 
         GameSpec.GameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
 
-        final Stats stats = gameLauncher.createNewStats(gameContext.getScene());
+        final Scene scene = gazePlay.getPrimaryScene();
+        final Stats stats = gameLauncher.createNewStats(scene);
 
         if (config.isHeatMapDisabled()) {
             log.info("HeatMap is disabled, skipping instanciation of the HeatMap Data model");
@@ -351,7 +352,9 @@ public class GameMenuFactory {
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
 
             final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+            log.info("is default music set : {}", musicManager.getIsCustomMusicSet().getValue());
             if (!musicManager.getIsCustomMusicSet().getValue() || musicManager.getPlaylist().isEmpty()) {
+                musicManager.emptyPlaylist();
                 musicManager.playMusicAlone(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
                 gameContext.updateMusicControler();
             }
