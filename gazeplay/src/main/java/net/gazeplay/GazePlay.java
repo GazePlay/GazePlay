@@ -19,6 +19,7 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 /**
  * Created by schwab on 17/12/2016.
@@ -72,8 +73,6 @@ public class GazePlay extends Application {
 
         homeMenuScreen = HomeMenuScreen.newInstance(this, config);
 
-        final Parent root = homeMenuScreen.getRoot();
-        log.info("already root of scene : {}", root.getScene());
         this.primaryScene = new Scene(homeMenuScreen.getRoot(), primaryStage.getWidth(), primaryStage.getHeight(),
                 Color.BLACK);
         CssUtil.setPreferredStylesheets(config, primaryScene);
@@ -94,10 +93,14 @@ public class GazePlay extends Application {
 
     public void onGameLaunch(GameContext gameContext) {
         gameContext.setUpOnStage(primaryScene);
+        gameContext.updateMusicControler();
     }
 
     public void onReturnToMenu() {
         homeMenuScreen.setUpOnStage(primaryScene);
+        final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
+        musicMananger.onEndGame();
+        homeMenuScreen.updateMusicControler();
     }
 
     public void onDisplayStats(StatsContext statsContext) {
