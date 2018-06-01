@@ -33,6 +33,7 @@ public class MouseV4 extends Mouse {
         indicator = createProgressIndicator(width, height);
         this.mouse.addEventHandler(GazeEvent.ANY, eventMouse);
         this.mouse.addEventHandler(MouseEvent.ANY, eventMouse);
+        gameContext.getGazeDeviceManager().addEventFilter(this.mouse);
         mettreLesEventHandler();
         this.getChildren().add(indicator);
 
@@ -43,6 +44,8 @@ public class MouseV4 extends Mouse {
             for (int j = 0; j < gameInstance.nbCasesColonne; j++) {
                 gameInstance.walls[i][j].addEventHandler(MouseEvent.ANY, eventBox);
                 gameInstance.walls[i][j].addEventHandler(GazeEvent.ANY, eventBox);
+                gameContext.getGazeDeviceManager().addEventFilter(gameInstance.walls[i][j]);
+
             }
         }
     }

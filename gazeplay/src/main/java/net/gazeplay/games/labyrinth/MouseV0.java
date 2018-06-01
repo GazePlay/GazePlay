@@ -35,6 +35,7 @@ public class MouseV0 extends Mouse {
                 if (gameInstance.walls[i][j].wasNextToTheMouse) {
                     gameInstance.walls[i][j].removeEventHandler(MouseEvent.ANY, event);
                     gameInstance.walls[i][j].removeEventHandler(GazeEvent.ANY, event);
+                    gameContext.getGazeDeviceManager().removeEventFilter(gameInstance.walls[i][j]);
                     gameInstance.walls[i][j].wasNextToTheMouse = false;
                 }
                 // We add the new eventHandler
@@ -42,6 +43,7 @@ public class MouseV0 extends Mouse {
                     gameInstance.walls[i][j].wasNextToTheMouse = true;
                     gameInstance.walls[i][j].addEventHandler(MouseEvent.ANY, event);
                     gameInstance.walls[i][j].addEventHandler(GazeEvent.ANY, event);
+                    gameContext.getGazeDeviceManager().addEventFilter(gameInstance.walls[i][j]);
                 }
             }
         }

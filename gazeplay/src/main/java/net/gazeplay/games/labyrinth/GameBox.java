@@ -23,6 +23,8 @@ public class GameBox extends Parent {
 
     public boolean wasNextToTheMouse;
 
+    public boolean visited;
+
     public GameBox(double height, double width, double coordX, double coordY, int wall, int nc, int nr) {
 
         this.x = coordX;
@@ -48,6 +50,18 @@ public class GameBox extends Parent {
         this.getChildren().addAll(r, indicator);
     }
 
+    public GameBox(int x, int y, boolean wall, boolean visit) {
+        numCol = x;
+        numRow = y;
+        if (visit) {
+            visited = true;
+        } else {
+            visited = false;
+        }
+        isAWall = wall;
+
+    }
+
     public boolean isAWall() {
         return isAWall;
     }
@@ -66,6 +80,14 @@ public class GameBox extends Parent {
         indicator.setMinHeight(width * 0.9);
         indicator.setOpacity(0);
         return indicator;
+    }
+
+    public GameBox clone(Boolean b) {
+        return new GameBox(this.numCol, this.numRow, this.isAWall, b);
+    }
+
+    public boolean equals(GameBox g) {
+        return (this.numCol == g.numCol && this.numRow == g.numRow);
     }
 
 }

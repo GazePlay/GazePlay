@@ -8,7 +8,9 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import net.gazeplay.GameContext;
@@ -49,10 +51,31 @@ public abstract class MouseArrows extends Mouse {
         this.buttonLeftEvent = buildButtonLeftEvent();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        buttonDimHeight = dimension2D.getHeight() / 12;
-        buttonDimWidth = dimension2D.getWidth() / 15;
+        buttonDimHeight = dimension2D.getHeight() / gameInstance.nbCasesLignes;
+        buttonDimWidth = dimension2D.getWidth() / gameInstance.nbCasesColonne;
 
         placementFleche();
+
+        this.buttonUp.addEventHandler(MouseEvent.ANY, buttonUpEvent);
+        this.buttonUp.addEventHandler(GazeEvent.ANY, buttonUpEvent);
+        gameContext.getGazeDeviceManager().addEventFilter(this.buttonUp);
+
+        this.buttonDown.addEventHandler(MouseEvent.ANY, buttonDownEvent);
+        this.buttonDown.addEventHandler(GazeEvent.ANY, buttonDownEvent);
+        gameContext.getGazeDeviceManager().addEventFilter(this.buttonDown);
+
+        this.buttonLeft.addEventHandler(MouseEvent.ANY, buttonLeftEvent);
+        this.buttonLeft.addEventHandler(GazeEvent.ANY, buttonLeftEvent);
+        gameContext.getGazeDeviceManager().addEventFilter(this.buttonLeft);
+
+        this.buttonRight.addEventHandler(MouseEvent.ANY, buttonRightEvent);
+        this.buttonRight.addEventHandler(GazeEvent.ANY, buttonRightEvent);
+        gameContext.getGazeDeviceManager().addEventFilter(this.buttonRight);
+
+        this.getChildren().addAll(buttonUp, buttonDown, buttonLeft, buttonRight);
+        this.getChildren().addAll(indicatorUp, indicatorDown, indicatorLeft, indicatorRight);
+
+        updateArrowsColor();
 
     }
 
@@ -60,8 +83,46 @@ public abstract class MouseArrows extends Mouse {
 
     protected abstract void recomputeArrowsPositions();
 
+    protected void updateArrowsColor() {
+        // If we can go up
+        if (indiceY - 1 >= 0 && gameInstance.isFreeForMouse(indiceY - 1, indiceX)) {
+            putInBold("up", this.buttonUp);
+        } else {
+            putInLight("up", this.buttonUp);
+        }
+        // If we can go down
+        if (indiceY + 1 < gameInstance.nbCasesLignes && gameInstance.isFreeForMouse(indiceY + 1, indiceX)) {
+            putInBold("down", this.buttonDown);
+        } else {
+            putInLight("down", this.buttonDown);
+        }
+        // If we can go right
+        if (indiceX + 1 < gameInstance.nbCasesColonne && gameInstance.isFreeForMouse(indiceY, indiceX + 1)) {
+            putInBold("right", this.buttonRight);
+        } else {
+            putInLight("right", this.buttonRight);
+        }
+        // If we can go left
+        if (indiceX - 1 >= 0 && gameInstance.isFreeForMouse(indiceY, indiceX - 1)) {
+            putInBold("left", this.buttonLeft);
+        } else {
+            putInLight("left", this.buttonLeft);
+        }
+    }
+
     private Boolean isActivated(Event e) {
         return (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED);
+    }
+
+    /* s = "up" / "down" / "right" / Left */
+    protected void putInBold(String s, Rectangle b) {
+        b.setFill(new ImagePattern(new Image("data/labyrinth/images/" + s + "Arrow.png"), 5, 5, 1, 1, true));
+        b.setOpacity(1);
+    }
+
+    protected void putInLight(String s, Rectangle b) {
+        b.setFill(new ImagePattern(new Image("data/labyrinth/images/" + s + "ArrowLight.png"), 5, 5, 1, 1, true));
+        b.setOpacity(0.5);
     }
 
     public EventHandler<Event> buildButtonUp() {
@@ -87,6 +148,7 @@ public abstract class MouseArrows extends Mouse {
                             mouse.setX(gameInstance.positionX(indiceX));
                             mouse.setY(gameInstance.positionY(indiceY));
                             recomputeArrowsPositions();
+                            updateArrowsColor();
                             gameInstance.testIfCheese(indiceY, indiceX);
                         }
                     });
@@ -129,6 +191,7 @@ public abstract class MouseArrows extends Mouse {
                             mouse.setX(gameInstance.positionX(indiceX));
                             mouse.setY(gameInstance.positionY(indiceY));
                             recomputeArrowsPositions();
+                            updateArrowsColor();
 
                             gameInstance.testIfCheese(indiceY, indiceX);
                         }
@@ -171,6 +234,7 @@ public abstract class MouseArrows extends Mouse {
                             mouse.setX(gameInstance.positionX(indiceX));
                             mouse.setY(gameInstance.positionY(indiceY));
                             recomputeArrowsPositions();
+                            updateArrowsColor();
                             gameInstance.testIfCheese(indiceY, indiceX);
                         }
                     });
@@ -213,6 +277,7 @@ public abstract class MouseArrows extends Mouse {
                             mouse.setX(gameInstance.positionX(indiceX));
                             mouse.setY(gameInstance.positionY(indiceY));
                             recomputeArrowsPositions();
+                            updateArrowsColor();
                             gameInstance.testIfCheese(indiceY, indiceX);
                         }
                     });
@@ -230,6 +295,14 @@ public abstract class MouseArrows extends Mouse {
 
             }
         };
+    }
+
+    protected void creationButton(Rectangle b, double x, double y, double width, double height, String s,
+            EventHandler<Event> e) {
+        b = new Rectangle(x, y, width, height);
+        b.setFill(new ImagePattern(new Image("data/labyrinth/images/" + s + "Arrow.png"), 5, 5, 1, 1, true));
+        b.addEventHandler(MouseEvent.ANY, e);
+        b.addEventHandler(GazeEvent.ANY, e);
     }
 
     protected ProgressIndicator createProgressIndicator(double x, double y, double width, double height) {

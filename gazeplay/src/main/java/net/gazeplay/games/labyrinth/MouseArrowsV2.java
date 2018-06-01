@@ -33,29 +33,18 @@ public class MouseArrowsV2 extends MouseArrows {
         this.buttonUp = new Rectangle(x, y - dy, buttonDimWidth, buttonDimHeight);
         this.buttonUp.setFill(new ImagePattern(new Image("data/labyrinth/images/upArrow.png"), 5, 5, 1, 1, true));
         this.indicatorUp = createProgressIndicator(x, y - dy, buttonDimWidth, buttonDimHeight);
-        this.buttonUp.addEventHandler(MouseEvent.ANY, buttonUpEvent);
-        this.buttonUp.addEventHandler(GazeEvent.ANY, buttonUpEvent);
 
         this.buttonDown = new Rectangle(x, y + dy2, buttonDimWidth, buttonDimHeight);
         this.buttonDown.setFill(new ImagePattern(new Image("data/labyrinth/images/downArrow.png"), 5, 5, 1, 1, true));
         this.indicatorDown = createProgressIndicator(x, y + dy2, buttonDimWidth, buttonDimHeight);
-        this.buttonDown.addEventHandler(MouseEvent.ANY, buttonDownEvent);
-        this.buttonDown.addEventHandler(GazeEvent.ANY, buttonDownEvent);
 
-        this.buttonLeft = new Rectangle(x - dx, y, buttonDimHeight, buttonDimWidth);
+        this.buttonLeft = new Rectangle(x - 1.25 * dx, y, buttonDimHeight, buttonDimWidth);
         this.buttonLeft.setFill(new ImagePattern(new Image("data/labyrinth/images/leftArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorLeft = createProgressIndicator(x - dx, y, buttonDimHeight, buttonDimWidth);
-        this.buttonLeft.addEventHandler(MouseEvent.ANY, buttonLeftEvent);
-        this.buttonLeft.addEventHandler(GazeEvent.ANY, buttonLeftEvent);
+        this.indicatorLeft = createProgressIndicator(x - dx, y, buttonDimWidth, buttonDimHeight);
 
         this.buttonRight = new Rectangle(x + dx2, y, buttonDimHeight, buttonDimWidth);
         this.buttonRight.setFill(new ImagePattern(new Image("data/labyrinth/images/rightArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorRight = createProgressIndicator(x + dx2, y, buttonDimHeight, buttonDimWidth);
-        this.buttonRight.addEventHandler(MouseEvent.ANY, buttonRightEvent);
-        this.buttonRight.addEventHandler(GazeEvent.ANY, buttonRightEvent);
-
-        this.getChildren().addAll(buttonUp, buttonDown, buttonLeft, buttonRight);
-        this.getChildren().addAll(indicatorUp, indicatorDown, indicatorLeft, indicatorRight);
+        this.indicatorRight = createProgressIndicator(x + dx2, y, buttonDimWidth, buttonDimHeight);
     }
 
     @Override
@@ -78,7 +67,7 @@ public class MouseArrowsV2 extends MouseArrows {
         this.indicatorDown.setTranslateX(x);
         this.indicatorDown.setTranslateY(y + dy2);
 
-        this.buttonLeft.setX(x - dx);
+        this.buttonLeft.setX(x - 1.25 * dx);
         this.buttonLeft.setY(y);
         this.indicatorLeft.setTranslateX(x - dx);
         this.indicatorLeft.setTranslateY(y);
