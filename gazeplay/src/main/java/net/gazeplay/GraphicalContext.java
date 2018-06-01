@@ -194,10 +194,10 @@ public abstract class GraphicalContext<T extends Parent> {
         grid.setMaxWidth(MUSIC_GRID_MAX_WIDTH);
 
         backgroundMusicManager.getIsMusicChanging().addListener((observable, oldValue, newValue) -> {
-            
+
             // If we receive a change event and the new value is fales, then it means
             // that the music has been changed (see changingProperty from Slider)
-            if(!newValue) {
+            if (!newValue) {
                 setMusicTitle(musicName);
             }
         });

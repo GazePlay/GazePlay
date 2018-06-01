@@ -99,7 +99,7 @@ public class GazePlay extends Application {
         homeMenuScreen.setUpOnStage(primaryScene);
         final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
         musicMananger.onEndGame();
-        //homeMenuScreen.updateMusicControler();
+        // homeMenuScreen.updateMusicControler();
     }
 
     public void onDisplayStats(StatsContext statsContext) {

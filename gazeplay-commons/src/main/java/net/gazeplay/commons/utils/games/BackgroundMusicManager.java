@@ -64,7 +64,7 @@ public class BackgroundMusicManager {
     // If there is a change event and the new value is fales, then it means
     // that the music has been changed (see isChangingProperty from Slider)
     private final ReadOnlyBooleanWrapper isMusicChanging = new ReadOnlyBooleanWrapper(this, "musicChanged", false);
-    
+
     public BackgroundMusicManager() {
         config = Configuration.getInstance();
 
@@ -82,7 +82,7 @@ public class BackgroundMusicManager {
 
         // If music is playing and index is changed, then change the music playing
         musicIndexProperty.addListener((observable, oldValue, newValue) -> {
-            
+
             if (newValue.intValue() < 0 || newValue.intValue() >= playlist.size()) {
                 musicIndexProperty.setValue(0);
                 log.warn("Invalid music index set. 0 will be set instead");
@@ -159,10 +159,12 @@ public class BackgroundMusicManager {
             return;
         }
 
+        final boolean wasPlaying = isPlaying();
+
         if (currentMusic != null) {
             stop();
         }
-        
+
         isMusicChanging.setValue(true);
 
         log.info("current index : {}", musicIndexProperty.getValue());
@@ -172,6 +174,10 @@ public class BackgroundMusicManager {
 
         log.info("Changing current music : {}", getMusicTitle(nextMusic));
         isMusicChanging.setValue(false);
+
+        if (wasPlaying) {
+            play();
+        }
     }
 
     public boolean isPlaying() {
@@ -207,8 +213,10 @@ public class BackgroundMusicManager {
             stop();
             currentMusic = null;
         }
+        isMusicChanging.setValue(true);
         playlist.clear();
         musicIndexProperty.setValue(0);
+        isMusicChanging.setValue(false);
     }
 
     public void pause() {
@@ -349,15 +357,12 @@ public class BackgroundMusicManager {
                 }
                 playlist.add(localMediaPlayer);
                 changeMusic(playlist.size() - 1);
+                // If Music hasn't changed (for exemple if previous index is the same),
+                // then do the change manually
                 if (currentMusic != localMediaPlayer) {
                     changeCurrentMusic();
                 }
-                log.info("playlist : {}", playlist);
-                log.info("currentMusic : {}", currentMusic);
-                log.info("current media {}", currentMusic.getMedia());
-                log.info("current source {}", currentMusic.getMedia().getSource());
-                // Music hasn't changed (for exemple if previous index is the same),
-                // then do the change manually
+
                 play();
             }
         };
