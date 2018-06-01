@@ -89,6 +89,7 @@ public class BackgroundMusicManager {
     public void onEndGame() {
         
         if(!isCustomMusicSet.getValue()) {
+            log.info("replaying default music");
             emptyPlaylist();
             playlist.addAll(defaultPlayList);
         }
@@ -156,6 +157,7 @@ public class BackgroundMusicManager {
             stop();
         }
 
+        log.info("current index : {}", musicIndexProperty.getValue());
         final MediaPlayer nextMusic = playlist.get(musicIndexProperty.getValue());
 
         this.currentMusic = nextMusic;
@@ -184,7 +186,6 @@ public class BackgroundMusicManager {
         boolean isPlaying = isPlaying();
 
         musicIndexProperty.setValue(newMusicIndex);
-        // log.info("current index : {}", currentMusicIndex);
 
         if (isPlaying) {
 
@@ -284,6 +285,11 @@ public class BackgroundMusicManager {
             if (localMediaPlayer != null) {
                 playlist.add(localMediaPlayer);
                 changeMusic(playlist.indexOf(localMediaPlayer));
+                // Music hasn't changed (for exemple if previous index is the same),
+                // then do the change manually
+                if(currentMusic != localMediaPlayer) {
+                    changeCurrentMusic();
+                }
                 play();
             }
         };
@@ -317,8 +323,7 @@ public class BackgroundMusicManager {
                 final File mediaFile = downloadAndGetFromCache(resourceURL, resourceUrlExternalForm);
 
                 final String localResourceName = mediaFile.toURI().toString();
-                log.info("Playing sound {}", localResourceName);
-
+                
                 try {
                     localMediaPlayer = createMediaPlayer(resourceUrlAsString);
                 } catch (RuntimeException e) {
@@ -329,11 +334,21 @@ public class BackgroundMusicManager {
 
             if (localMediaPlayer != null) {
 
+                log.info("Playing sound {}", localMediaPlayer.getMedia().getSource());
                 if (isPlaying()) {
                     pause();
                 }
                 playlist.add(localMediaPlayer);
                 changeMusic(playlist.size() - 1);
+                if(currentMusic != localMediaPlayer) {
+                    changeCurrentMusic();
+                }
+                log.info("playlist : {}", playlist);
+                log.info("currentMusic : {}", currentMusic);
+                log.info("current media {}", currentMusic.getMedia());
+                log.info("current source {}", currentMusic.getMedia().getSource());
+                // Music hasn't changed (for exemple if previous index is the same),
+                // then do the change manually
                 play();
             }
         };

@@ -93,12 +93,14 @@ public class GazePlay extends Application {
 
     public void onGameLaunch(GameContext gameContext) {
         gameContext.setUpOnStage(primaryScene);
+        gameContext.updateMusicControler();
     }
 
     public void onReturnToMenu() {
         homeMenuScreen.setUpOnStage(primaryScene);
         final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
         musicMananger.onEndGame();
+        homeMenuScreen.updateMusicControler();
     }
 
     public void onDisplayStats(StatsContext statsContext) {
