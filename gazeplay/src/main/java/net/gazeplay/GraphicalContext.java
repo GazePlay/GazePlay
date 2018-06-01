@@ -98,11 +98,7 @@ public abstract class GraphicalContext<T extends Parent> {
     public void setUpOnStage(final Scene scene) {
 
         // Make sure we are the root of the scene
-        final Parent sceneRoot = scene.getRoot();
         scene.setRoot(root);
-
-        final Configuration config = Configuration.getInstance();
-        CssUtil.setPreferredStylesheets(config, scene);
 
         updateMusicControler();
 
