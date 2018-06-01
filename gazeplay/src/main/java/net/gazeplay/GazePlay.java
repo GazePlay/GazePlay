@@ -6,7 +6,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
@@ -100,7 +99,7 @@ public class GazePlay extends Application {
         homeMenuScreen.setUpOnStage(primaryScene);
         final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
         musicMananger.onEndGame();
-        homeMenuScreen.updateMusicControler();
+        // homeMenuScreen.updateMusicControler();
     }
 
     public void onDisplayStats(StatsContext statsContext) {
