@@ -40,7 +40,7 @@ public class BackgroundMusicManager {
 
     @Getter
     private final List<MediaPlayer> playlist = new ArrayList<MediaPlayer>();
-    
+
     private final List<MediaPlayer> defaultPlayList = new ArrayList<MediaPlayer>();
     @Getter
     private MediaPlayer currentMusic;
@@ -58,7 +58,7 @@ public class BackgroundMusicManager {
 
     @Getter
     private final BooleanProperty isCustomMusicSet = new SimpleBooleanProperty(this, "isCustomMusicSet", false);
-    
+
     public BackgroundMusicManager() {
         config = Configuration.getInstance();
 
@@ -85,10 +85,10 @@ public class BackgroundMusicManager {
         });
 
     }
-    
+
     public void onEndGame() {
-        
-        if(!isCustomMusicSet.getValue()) {
+
+        if (!isCustomMusicSet.getValue()) {
             log.info("replaying default music");
             emptyPlaylist();
             playlist.addAll(defaultPlayList);
@@ -118,8 +118,7 @@ public class BackgroundMusicManager {
 
         if (!folderPath.equals(Configuration.DEFAULT_VALUE_MUSIC_FOLDER)) {
             isCustomMusicSet.setValue(true);
-        }
-        else {
+        } else {
             defaultPlayList.clear();
             defaultPlayList.addAll(playlist);
         }
@@ -287,7 +286,7 @@ public class BackgroundMusicManager {
                 changeMusic(playlist.indexOf(localMediaPlayer));
                 // Music hasn't changed (for exemple if previous index is the same),
                 // then do the change manually
-                if(currentMusic != localMediaPlayer) {
+                if (currentMusic != localMediaPlayer) {
                     changeCurrentMusic();
                 }
                 play();
@@ -323,7 +322,7 @@ public class BackgroundMusicManager {
                 final File mediaFile = downloadAndGetFromCache(resourceURL, resourceUrlExternalForm);
 
                 final String localResourceName = mediaFile.toURI().toString();
-                
+
                 try {
                     localMediaPlayer = createMediaPlayer(resourceUrlAsString);
                 } catch (RuntimeException e) {
@@ -340,7 +339,7 @@ public class BackgroundMusicManager {
                 }
                 playlist.add(localMediaPlayer);
                 changeMusic(playlist.size() - 1);
-                if(currentMusic != localMediaPlayer) {
+                if (currentMusic != localMediaPlayer) {
                     changeCurrentMusic();
                 }
                 log.info("playlist : {}", playlist);
