@@ -40,6 +40,9 @@ public class GameMenuFactory {
 
     public GazeDeviceManager gazeDeviceManager;
 
+    private final static double THUMBNAIL_WIDTH_RATIO = 1;
+    private final static double THUMBNAIL_HEIGHT_RATIO = 0.4;
+
     private List<ProgressPane> pausedEvents = new LinkedList<ProgressPane>();
 
     public void pause() {
@@ -125,12 +128,11 @@ public class GameMenuFactory {
                 break;
             case VERTICAL:
                 gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
-                    double preferedWidth = newValue.doubleValue() - thumbnailBorderSize;
+                    double preferedWidth = newValue.doubleValue() * THUMBNAIL_WIDTH_RATIO;
                     imageView.setFitWidth(preferedWidth);
-                    imageView.setFitHeight(preferedWidth / buttonGraphics.getWidth() * buttonGraphics.getHeight());
                 });
                 gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-                    imageView.setFitHeight(newValue.doubleValue() / 2);
+                    imageView.setFitHeight(newValue.doubleValue() * THUMBNAIL_HEIGHT_RATIO);
                 });
                 break;
             }
