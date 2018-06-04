@@ -47,6 +47,11 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     private int maxCake;
     private boolean nappage;
 
+    final int NB_BASES = 4;
+    final int NB_NAPPAGES = 5;
+    final int NB_BONBONS = 3;
+    final int NB_DECORS = 2;
+
     public FadeTransition ft;
 
     private Pane[] p;
@@ -81,7 +86,6 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     }
 
     public void disableprogessButtons() {
-        buttons[4].setDisable(false);
         boolean win = true;
         boolean currentOk = true;
         for (int i = 0; i < 3; i++) {
@@ -119,7 +123,11 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     }
 
     public void active(int i) {
-        if (i != currentScreen) {
+        if (i == -1) {
+            for (int j = 0; j < p.length; j++) {
+                p[j].setDisable(true);
+            }
+        } else if (i != currentScreen) {
             for (Node child : p[currentScreen].getChildren()) {
                 if (child instanceof ProgressButton) {
                     ((ProgressButton) child).disable();
@@ -130,8 +138,17 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     ((ProgressButton) child).active();
                 }
             }
+
+            for (int j = 0; j < p.length; j++) {
+                if (j == i) {
+                    p[j].setDisable(false);
+                } else {
+                    p[j].setDisable(true);
+                }
+            }
             currentScreen = i;
         }
+
     }
 
     public EventHandler<Event> createprogessButtonHandler(int i) {
@@ -178,6 +195,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     }
 
     public void winFunction() {
+        active(-1);
         if (mode != 0) {
             FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
             ft.setToValue(1);
@@ -300,18 +318,20 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
         }
 
-        // p[0].getChildren().addAll(createprogessButton(1), createprogessButton(-1));
-
         for (int j = 1; j < 5; j++) {
-            int k = 6;
+            int k = 0;
             if (j == 1) {
-                k = 5;
+                k = NB_BASES + 1;
+                ;
+            }
+            if (j == 2) {
+                k = NB_NAPPAGES + 1;
             }
             if (j == 3) {
-                k = 4;
+                k = NB_BONBONS + 1;
             }
             if (j == 4) {
-                k = 3;
+                k = NB_DECORS + 1;
             }
             otherPages(j, k);
         }
@@ -462,6 +482,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 };
                 bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 bt.assignIndicator(buttonHandler);
+                gameContext.getGazeDeviceManager().addEventFilter(bt);
                 p[j].getChildren().add(bt);
             } else {
                 ImageView iv = new ImageView(new Image("data/cake/return.png"));
@@ -477,14 +498,15 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         for (int c = 0; c <= maxCake; c++) {
                             cake[c].toFront();
                         }
+                        active(0);
                         if (mode != 0) {
                             disableprogessButtons();
                         }
-                        active(0);
                     }
                 };
                 bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 bt.assignIndicator(buttonHandler);
+                gameContext.getGazeDeviceManager().addEventFilter(bt);
                 p[j].getChildren().add(bt);
             }
 
@@ -630,6 +652,8 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
 
+        gameContext.getChildren().add(this);
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
                 layers[i][j] = -1;
@@ -646,11 +670,12 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(sp);
         createCake(0);
 
+        active(0);
+
         if (mode != 0) {
             generateRandomCake();
             disableprogessButtons();
         }
-        gameContext.getChildren().add(this);
 
         stats.notifyNewRoundReady();
 
