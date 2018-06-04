@@ -57,8 +57,8 @@ public class ColorToolBox extends StackPane {
 
     public static final double COLORIZE_BUTTONS_SIZE_PX = 64;
 
-    public static final String COLORS_IMAGES_PATH = "data" + File.pathSeparator + "colors" + File.pathSeparator
-            + "images" + File.pathSeparator;
+    public static final String COLORS_IMAGES_PATH = "data" + File.separator + "colors" + File.separator + "images"
+            + File.separator;
 
     // Credits
     // <div>Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a
