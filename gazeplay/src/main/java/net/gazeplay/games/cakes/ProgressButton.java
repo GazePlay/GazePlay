@@ -101,16 +101,14 @@ public class ProgressButton extends StackPane {
                 timelineProgressBar.onFinishedProperty().set(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
+                        indicator.setOpacity(0);
                         enterEvent.handle(null);
-
                     }
                 });
                 timelineProgressBar.play();
 
             }
         };
-        // this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
-        this.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
 
         exitbuttonHandler = new EventHandler<Event>() {
             @Override
@@ -121,8 +119,7 @@ public class ProgressButton extends StackPane {
 
             }
         };
-        // this.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
-        this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+
         return indicator;
     }
 

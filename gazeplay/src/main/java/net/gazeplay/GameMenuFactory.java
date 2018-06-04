@@ -262,7 +262,6 @@ public class GameMenuFactory {
 
         gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventhandler);
         gameCard.assignIndicator(eventhandler);
-
         pausedEvents.add(gameCard);
         return gameCard;
     }
@@ -327,6 +326,7 @@ public class GameMenuFactory {
 
         // SecondScreen secondScreen = SecondScreen.launch();
         if (gazePlay.getGazeMenuActivated().getValue()) {
+            pause();
             play();
         }
         // this.gazeDeviceManager.clear();
