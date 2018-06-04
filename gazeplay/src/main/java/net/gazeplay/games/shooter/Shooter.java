@@ -75,7 +75,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         gameType = type;
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        log.info("dimension2D = {}", dimension2D);
         centerX = 8.7 * dimension2D.getWidth() / 29.7;
         centerY = 10 * dimension2D.getHeight() / 21;
         hand = new StackPane();

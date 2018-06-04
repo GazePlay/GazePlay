@@ -315,6 +315,8 @@ public class GameContext extends GraphicalContext<Pane> {
 
         StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
 
+        this.clear();
+
         gazePlay.onDisplayStats(statsContext);
     }
 

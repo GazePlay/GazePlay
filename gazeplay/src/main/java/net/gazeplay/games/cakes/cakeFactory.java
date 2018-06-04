@@ -128,16 +128,11 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 p[j].setDisable(true);
             }
         } else if (i != currentScreen) {
-            for (Node child : p[currentScreen].getChildren()) {
-                if (child instanceof ProgressButton) {
-                    ((ProgressButton) child).disable();
-                }
-            }
-            for (Node child : p[i].getChildren()) {
-                if (child instanceof ProgressButton) {
-                    ((ProgressButton) child).active();
-                }
-            }
+            /*
+             * for (Node child : p[currentScreen].getChildren()) { if (child instanceof ProgressButton) {
+             * ((ProgressButton) child).disable(); } } for (Node child : p[i].getChildren()) { if (child instanceof
+             * ProgressButton) { ((ProgressButton) child).active(); } }
+             */
 
             for (int j = 0; j < p.length; j++) {
                 if (j == i) {
@@ -288,6 +283,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 bt.button.setGraphic(iv);
                 bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 bt.assignIndicator(buttonHandler);
+                bt.active();
                 gameContext.getGazeDeviceManager().addEventFilter(bt);
                 buttons[i] = bt;
                 if (i == 2) {
@@ -311,6 +307,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 };
                 bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 bt.assignIndicator(buttonHandler);
+                bt.active();
                 gameContext.getGazeDeviceManager().addEventFilter(bt);
                 buttons[i] = bt;
                 p[0].getChildren().add(bt);
@@ -482,6 +479,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 };
                 bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 bt.assignIndicator(buttonHandler);
+                bt.active();
                 gameContext.getGazeDeviceManager().addEventFilter(bt);
                 p[j].getChildren().add(bt);
             } else {
@@ -506,6 +504,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 };
                 bt.button.addEventHandler(MouseEvent.MOUSE_PRESSED, buttonHandler);
                 bt.assignIndicator(buttonHandler);
+                bt.active();
                 gameContext.getGazeDeviceManager().addEventFilter(bt);
                 p[j].getChildren().add(bt);
             }
