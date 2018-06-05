@@ -86,6 +86,7 @@ public class MolesChar extends Parent {
         this.moleMoved.opacityProperty().set(1);
         this.moleMoved.addEventHandler(MouseEvent.ANY, enterEvent);
         this.moleMoved.addEventHandler(GazeEvent.ANY, enterEvent);
+        gameContext.getGazeDeviceManager().addEventFilter(this.moleMoved);
 
         this.mole = new Rectangle(this.posX, this.posY, width, height);
         this.mole.setFill(new ImagePattern(new Image("data/whackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
@@ -170,6 +171,8 @@ public class MolesChar extends Parent {
                 canTouched = true;
 
                 gameInstance.gameContext.getChildren().add(moleMoved);
+                gameContext.getGazeDeviceManager().addEventFilter(moleMoved);
+
                 mole.opacityProperty().set(0);
 
                 out = true;
@@ -203,6 +206,7 @@ public class MolesChar extends Parent {
 
         this.mole.opacityProperty().set(1);
         gameInstance.gameContext.getChildren().remove(moleMoved);
+        gameContext.getGazeDeviceManager().removeEventFilter(this.moleMoved);
 
         double timeGoIn = 1500;
         if (touched) {
