@@ -1,5 +1,6 @@
 package net.gazeplay;
 
+import java.io.File;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
@@ -32,10 +33,14 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.util.List;
+import javafx.scene.image.ImageView;
 
 @Data
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
+
+    private final static String LOGO_PATH = "data" + File.separator + "common" + File.separator + "images"
+            + File.separator + "gazeplay.jpg";
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
@@ -184,12 +189,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         double width = root.getWidth() * 0.5;
         double height = root.getHeight() * 0.2;
 
-        double posY = root.getHeight() * 0.1;
-        double posX = (root.getWidth() - width) / 2;
+        final Image logoImage = new Image(LOGO_PATH, width, height, true, true);
+        final ImageView logoView = new ImageView(logoImage);
 
-        Rectangle logo = new Rectangle(posX, posY, width, height);
-        logo.setFill(new ImagePattern(new Image("data/common/images/gazeplay.jpg"), 0, 0, 1, 1, true));
+        root.heightProperty().addListener((observable, oldValue, newValue) -> {
+            final double newHeight = newValue.doubleValue() * 0.2;
+            final Image newLogoImage = new Image(LOGO_PATH, width, newHeight, true, true);
+            logoView.setImage(newLogoImage);
+        });
 
-        return logo;
+        return logoView;
     }
 }
