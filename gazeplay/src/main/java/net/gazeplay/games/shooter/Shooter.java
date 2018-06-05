@@ -518,7 +518,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), sp);
         double min = Math.ceil(0);
-        double max = Math.floor(endPoints.length);
+        double max = Math.floor(endPoints.length - 1);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
         Point randomPoint = endPoints[r];
         tt1.setToY(-sp.centerY + randomPoint.y);
