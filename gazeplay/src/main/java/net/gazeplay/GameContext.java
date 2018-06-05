@@ -222,7 +222,6 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final Pane configPane;
 
-    @Getter
     private final Pane gamingRoot;
 
     private GameContext(GazePlay gazePlay, final Pane root, Pane gamingRoot, Bravo bravo, HBox menuHBox,
