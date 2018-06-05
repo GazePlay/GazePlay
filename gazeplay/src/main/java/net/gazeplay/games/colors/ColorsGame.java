@@ -179,6 +179,8 @@ public class ColorsGame implements GameLifeCycle {
         root.getChildren().add(progressIndicator);
         progressIndicator.toFront();
 
+        colorToolBox.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
+
         updateToolBox();
     }
 

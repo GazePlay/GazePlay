@@ -29,35 +29,35 @@ import net.gazeplay.commons.utils.stats.Stats;
 @Slf4j
 public class Shooter extends Parent implements GameLifeCycle {
 
-    private static final int maxRadius = 70;
-    private static final int minRadius = 30;
+    private static final int MAX_RADIUS = 70;
+    private static final int MIN_RADIUS = 30;
 
-    private static final int maxTimeLength = 7;
-    private static final int minTimeLength = 4;
+    private static final int MAX_TIME_LENGTH = 7;
+    private static final int MIN_TIME_LENGTH = 4;
 
-    private double centerX;
-    private double centerY;
+    private final double centerX;
+    private final double centerY;
 
     private final GameContext gameContext;
 
-    private Image blue;
-    private Image green;
-    private Image yellow;
-    private Image orange;
-    private Image red;
-    private Image flash;
+    private final Image blue;
+    private final Image green;
+    private final Image yellow;
+    private final Image orange;
+    private final Image red;
+    private final Image flash;
 
-    private String date;
+    private final String date;
     private Label text;
     private Label textb;
     private int score;
 
     private StackPane hand;
-    private ImageView cage;
+    private final ImageView cage;
 
     private Boolean left;
 
-    private String gameType;
+    private final String gameType;
 
     private final Stats stats;
 
@@ -80,6 +80,8 @@ public class Shooter extends Parent implements GameLifeCycle {
         hand = new StackPane();
 
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
+        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
@@ -115,20 +117,22 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
 
-        Point[] points = new Point[10];
-        points[0] = new Point(0, 0);
+        Point[] points = new Point[8];
+        // init all points
+        for (int i = 0; i < points.length; ++i) {
+            points[i] = new Point(0, 0);
+        }
 
-        points[1] = new Point(0, imageRectangle.getHeight());
-        points[2] = new Point(imageRectangle.getWidth() / 2, imageRectangle.getHeight());
-
-        points[3] = new Point(imageRectangle.getWidth(), 0);
-        points[4] = new Point(imageRectangle.getWidth(), imageRectangle.getHeight() / 2);
-
-        points[5] = new Point(0, imageRectangle.getHeight() / 2);
-        points[6] = new Point(imageRectangle.getWidth() / 2, 0);
-
-        points[7] = new Point(imageRectangle.getWidth(), imageRectangle.getHeight());
         this.endPoints = points;
+        // then update them
+        updatePoints(imageRectangle);
+
+        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
+            updatePoints(imageRectangle);
+        });
+        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> {
+            updatePoints(imageRectangle);
+        });
 
         enterEvent = new EventHandler<Event>() {
             @Override
@@ -145,6 +149,26 @@ public class Shooter extends Parent implements GameLifeCycle {
             }
         };
 
+    }
+
+    private void updatePoints(final Rectangle rectangle) {
+
+        endPoints[1].y = rectangle.getHeight();
+
+        endPoints[2].x = rectangle.getWidth() / 2;
+        endPoints[2].y = rectangle.getHeight();
+
+        endPoints[3].x = rectangle.getWidth();
+
+        endPoints[4].x = rectangle.getWidth();
+        endPoints[4].y = rectangle.getHeight() / 2;
+
+        endPoints[5].y = rectangle.getHeight() / 2;
+
+        endPoints[6].x = rectangle.getWidth() / 2;
+
+        endPoints[7].x = rectangle.getWidth();
+        endPoints[7].y = rectangle.getHeight();
     }
 
     public float getAngle(Point target) {
@@ -454,7 +478,7 @@ public class Shooter extends Parent implements GameLifeCycle {
     }
 
     private void resize(ImageView i) {
-        double d = minRadius;
+        double d = MIN_RADIUS;
         i.setFitHeight(d);
         i.setFitWidth(d * 5 / 4);
     }
@@ -490,11 +514,11 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     private void moveCircle(Target sp) {
 
-        double timelength = ((maxTimeLength - minTimeLength) * Math.random() + minTimeLength) * 1000;
+        double timelength = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
 
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), sp);
         double min = Math.ceil(0);
-        double max = Math.floor(7);
+        double max = Math.floor(endPoints.length);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
         Point randomPoint = endPoints[r];
         tt1.setToY(-sp.centerY + randomPoint.y);

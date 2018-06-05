@@ -145,9 +145,6 @@ public class GameContext extends GraphicalContext<Pane> {
         root2.getChildren().add(controlPanel);
         root.getChildren().add(gamingRoot);
         root.getChildren().add(root2);
-        
-        /*gamingRoot.setBorder(new Border(new BorderStroke(Color.BLACK, 
-            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));*/
 
         root2.getChildren().remove(controlPanel);
 
@@ -158,9 +155,8 @@ public class GameContext extends GraphicalContext<Pane> {
 
         GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
-        return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, 
-                gamePanelDimensionProvider, randomPositionGenerator, 
-                gazeDeviceManager, root2);
+        return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
+                randomPositionGenerator, gazeDeviceManager, root2);
     }
 
     private static void updateConfigButton(Button button, ImageView btnImg) {
@@ -226,7 +222,6 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final Pane configPane;
 
-    @Getter
     private final Pane gamingRoot;
 
     private GameContext(GazePlay gazePlay, final Pane root, Pane gamingRoot, Bravo bravo, HBox menuHBox,

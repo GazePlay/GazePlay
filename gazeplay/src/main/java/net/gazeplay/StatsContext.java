@@ -226,5 +226,4 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     public ObservableList<Node> getChildren() {
         return root.getChildren();
     }
-
 }
