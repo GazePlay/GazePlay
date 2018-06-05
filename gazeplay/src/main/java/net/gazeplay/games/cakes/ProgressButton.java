@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -28,13 +29,6 @@ public class ProgressButton extends StackPane {
     public ProgressButton() {
         super();
         button = new Button();
-        init();
-        this.getChildren().addAll(button, indicator);
-    }
-
-    public ProgressButton(String s) {
-        super();
-        button = new Button(s);
         init();
         this.getChildren().addAll(button, indicator);
     }
@@ -87,6 +81,9 @@ public class ProgressButton extends StackPane {
     public ProgressIndicator assignIndicator(EventHandler<Event> enterEvent) {
         indicator.setMouseTransparent(true);
         indicator.setOpacity(0);
+        ProgressButton pb = this;
+        Event e1 = new Event(pb, pb, GazeEvent.ANY);
+
         enterbuttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -102,7 +99,9 @@ public class ProgressButton extends StackPane {
                     @Override
                     public void handle(ActionEvent actionEvent) {
                         indicator.setOpacity(0);
-                        enterEvent.handle(null);
+                        if (enterEvent != null) {
+                            enterEvent.handle(e1);
+                        }
                     }
                 });
                 timelineProgressBar.play();
