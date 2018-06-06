@@ -1,5 +1,6 @@
-
 package net.gazeplay.games.cakes;
+
+import java.util.List;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -12,49 +13,38 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
-public class cakeFactory extends Parent implements GameLifeCycle {
+public class cakeFactory2 extends Parent implements GameLifeCycle {
 
-    @Getter
     private final GameContext gameContext;
-
     private final Stats stats;
-
-    @Getter
     private double buttonSize;
-
     private double centerX;
     private double centerY;
 
-    @Getter
-    @Setter
     private int currentCake;
-
-    @Getter
-    @Setter
     private int maxCake;
-
-    @Getter
-    @Setter
-    private int mode;
-
-    @Getter
-    @Setter
     private boolean nappage;
 
     final int NB_BASES = 4;
@@ -64,24 +54,18 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
     public FadeTransition ft;
 
-    @Getter
-    @Setter
     private Pane[] p;
 
     int[][] layers = new int[3][4];
     int[][] model = new int[3][4];
 
-    @Getter
-    @Setter
     private StackPane[] cake;
-
     private Pane randomCake;
-
-    @Getter
-    @Setter
     private ProgressButton[] buttons;
 
-    public cakeFactory(GameContext gameContext, Stats stats, int mode) {
+    private int mode;
+
+    public cakeFactory2(GameContext gameContext, Stats stats, int mode) {
         this.gameContext = gameContext;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
@@ -92,7 +76,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         cake = new StackPane[3];
         currentCake = 0;
         maxCake = 0;
-        setNappage(false);
+        nappage = false;
         this.mode = mode;
         buttons = new ProgressButton[6];
 
@@ -214,6 +198,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 @Override
                 public void handle(ActionEvent actionEvent) {
 
+                    boolean win = true;
                     for (int i = 0; i < 3; i++) {
                         for (int j = 0; j < 3; j++) {
                             if (layers[i][j] == model[i][j]) {
@@ -226,7 +211,22 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                         stats.incNbGoals();
                         stats.notifyNewRoundReady();
                     }
-                    playWin();
+                    gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+
+                        @Override
+                        public void handle(ActionEvent actionEvent) {
+
+                            dispose();
+
+                            gameContext.clear();
+
+                            launch();
+
+                            stats.notifyNewRoundReady();
+
+                            gameContext.onGameStarted();
+                        }
+                    });
                 }
             });
 
@@ -234,41 +234,92 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         } else {
             stats.incNbGoals();
             stats.notifyNewRoundReady();
+            gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
 
+                @Override
+                public void handle(ActionEvent actionEvent) {
+
+                    dispose();
+
+                    gameContext.clear();
+
+                    launch();
+
+                    stats.notifyNewRoundReady();
+
+                    gameContext.onGameStarted();
+                }
+            });
         }
     }
 
-    public void playWin() {
-        gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent actionEvent) {
-
-                dispose();
-
-                gameContext.clear();
-
-                launch();
-
-                stats.notifyNewRoundReady();
-
-                gameContext.onGameStarted();
-            }
-        });
-    }
-
     public void createStack(StackPane sp) {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Color[] col = { Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL,
                 Color.LIGHTSTEELBLUE };
         p = new Pane[6];
         for (int i = 0; i < 6; i++) {
-            p[i] = new ScreenCake(i, col[i], this);
+            p[i] = new Pane();
+            Rectangle r = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            r.setFill(col[i]);
+            p[i].getChildren().add(r);
+            Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            back.setFill(new ImagePattern(new Image("data/cake/background.png")));
+            back.setMouseTransparent(true);
+            p[i].getChildren().add(back);
+        }
+
+        for (int i = 0; i < 6; i++) { // HomePage of the game
+            ProgressButton bt = new ProgressButton();
+            bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
+                    + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
+                    + "-fx-max-height: " + buttonSize + "px;");
+            bt.setLayoutX((i + 1) * dimension2D.getWidth() / 6 - buttonSize / 2);
+            EventHandler<Event> buttonHandler = createprogessButtonHandler(i);
+            if (i != 5) {
+                ImageView iv = new ImageView(new Image("data/cake/menu" + i + ".png"));
+                iv.setFitWidth(2 * buttonSize / 3);
+                iv.setPreserveRatio(true);
+                bt.button.setGraphic(iv);
+                bt.button.addEventFilter(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.assignIndicator(buttonHandler);
+                bt.active();
+                gameContext.getGazeDeviceManager().addEventFilter(bt);
+                buttons[i] = bt;
+                if (i == 2) {
+                    buttons[i].setDisable(!nappage);
+                }
+                ;
+                p[0].getChildren().add(bt);
+
+            } else {
+                ImageView iv = new ImageView(new Image("data/cake/validate.png"));
+                iv.setFitWidth(2 * buttonSize / 3);
+                iv.setPreserveRatio(true);
+                bt.button.setGraphic(iv);
+                bt.setLayoutX(dimension2D.getWidth() - buttonSize);
+                bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
+                buttonHandler = new EventHandler<Event>() {
+                    @Override
+                    public void handle(Event e) {
+                        winFunction();
+                    }
+                };
+                bt.button.addEventFilter(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.assignIndicator(buttonHandler);
+                bt.active();
+                gameContext.getGazeDeviceManager().addEventFilter(bt);
+                buttons[i] = bt;
+                p[0].getChildren().add(bt);
+            }
+
         }
 
         for (int j = 1; j < 5; j++) {
             int k = 0;
             if (j == 1) {
                 k = NB_BASES + 1;
+                ;
             }
             if (j == 2) {
                 k = NB_NAPPAGES + 1;
@@ -288,21 +339,12 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
     }
 
-    public void execAnim(int i, int j) {
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        if (j == 1) {
-            aerographAnimation(i, j, dimension2D);
-        } else {
-            ImageView temp = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
-            temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
-            temp.setPreserveRatio(true);
-            cake[currentCake].getChildren().set(j - 1, temp);
-        }
-
-        layers[currentCake][j - 1] = i + 1;
+    public void nappageOn() {
+        nappage = true;
     }
 
-    public void aerographAnimation(int i, int j, Dimension2D dimension2D) {
+    public void execAnim(int i, int j) {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double cakeheight = (((ImageView) cake[currentCake].getChildren().get(0)).getImage().getHeight()
                 * ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth())
                 / ((ImageView) cake[currentCake].getChildren().get(0)).getImage().getWidth();
@@ -313,167 +355,164 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         double Yppos = Ypos + 7 * cakeheight / 8;
         Ypos = Ypos + 1.9 * cakeheight / 8;
 
-        ImageView aerograph = new ImageView(new Image("data/cake/aero.png"));
-        ImageView aerograph2 = new ImageView(new Image("data/cake/aero.png"));
-        aerograph.setFitWidth(dimension2D.getWidth() / 2.5);
-        aerograph2.setFitWidth(dimension2D.getWidth() / 2.5);
-        aerograph2.setScaleX(-1);
-        aerograph.setPreserveRatio(true);
-        aerograph2.setPreserveRatio(true);
-        double height = ((aerograph.getImage().getHeight()) * (dimension2D.getWidth() / 2.5))
-                / aerograph.getImage().getWidth();
-        double offset = aerograph.getFitWidth();
-        aerograph.setLayoutX(-offset);
-        aerograph2.setLayoutX(dimension2D.getWidth());
-        aerograph.setLayoutY(dimension2D.getHeight() / (3 * (currentCake + 1)));
-        aerograph2.setLayoutY(dimension2D.getHeight() / (3 * (currentCake + 1)));
-        gameContext.getChildren().addAll(aerograph, aerograph2);
+        if (j == 1) {
+            ImageView aerograph = new ImageView(new Image("data/cake/aero.png"));
+            ImageView aerograph2 = new ImageView(new Image("data/cake/aero.png"));
+            aerograph.setFitWidth(dimension2D.getWidth() / 2.5);
+            aerograph2.setFitWidth(dimension2D.getWidth() / 2.5);
+            aerograph2.setScaleX(-1);
+            aerograph.setPreserveRatio(true);
+            aerograph2.setPreserveRatio(true);
+            double height = ((aerograph.getImage().getHeight()) * (dimension2D.getWidth() / 2.5))
+                    / aerograph.getImage().getWidth();
+            double offset = aerograph.getFitWidth();
+            aerograph.setLayoutX(-offset);
+            aerograph2.setLayoutX(dimension2D.getWidth());
+            aerograph.setLayoutY(dimension2D.getHeight() / (3 * (currentCake + 1)));
+            aerograph2.setLayoutY(dimension2D.getHeight() / (3 * (currentCake + 1)));
+            gameContext.getChildren().addAll(aerograph, aerograph2);
 
-        Polygon spray = new Polygon();
-        spray.getPoints()
-                .addAll(new Double[] { offset, 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
-                        dimension2D.getWidth() / 2 + cakewidth / 4, Ypos, dimension2D.getWidth() / 2 + cakewidth / 3,
-                        Yppos, dimension2D.getWidth() / 2 - cakewidth / 3, Yppos });
+            Polygon spray = new Polygon();
+            spray.getPoints().addAll(new Double[] { offset, 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
+                    dimension2D.getWidth() / 2 + cakewidth / 4, Ypos, dimension2D.getWidth() / 2 + cakewidth / 3, Yppos,
+                    dimension2D.getWidth() / 2 - cakewidth / 3, Yppos });
 
-        Polygon spray2 = new Polygon();
-        spray2.getPoints()
-                .addAll(new Double[] { dimension2D.getWidth() - offset,
-                        9 * height / 11 + aerograph.localToParent(0, 0).getY(),
-                        dimension2D.getWidth() / 2 - cakewidth / 4, Ypos, dimension2D.getWidth() / 2 - cakewidth / 3,
-                        Yppos, dimension2D.getWidth() / 2 + cakewidth / 3, Yppos });
+            Polygon spray2 = new Polygon();
+            spray2.getPoints().addAll(new Double[] { dimension2D.getWidth() - offset,
+                    9 * height / 11 + aerograph.localToParent(0, 0).getY(), dimension2D.getWidth() / 2 - cakewidth / 4,
+                    Ypos, dimension2D.getWidth() / 2 - cakewidth / 3, Yppos, dimension2D.getWidth() / 2 + cakewidth / 3,
+                    Yppos });
 
-        spray.setOpacity(0);
-        spray2.setOpacity(0);
-        gameContext.getChildren().addAll(spray, spray2);
-        TranslateTransition tt = new TranslateTransition(Duration.millis(500), aerograph);
-        tt.setToX(offset);
-        TranslateTransition tt2 = new TranslateTransition(Duration.millis(500), aerograph2);
-        tt2.setToX(-offset);
+            spray.setOpacity(0);
+            spray2.setOpacity(0);
+            gameContext.getChildren().addAll(spray, spray2);
+            TranslateTransition tt = new TranslateTransition(Duration.millis(500), aerograph);
+            tt.setToX(offset);
+            TranslateTransition tt2 = new TranslateTransition(Duration.millis(500), aerograph2);
+            tt2.setToX(-offset);
 
-        Color[] c = { Color.rgb(232, 193, 136), Color.rgb(255, 114, 113), Color.rgb(113, 171, 255),
-                Color.rgb(128, 70, 50) };
+            Color[] c = { Color.rgb(232, 193, 136), Color.rgb(255, 114, 113), Color.rgb(113, 171, 255),
+                    Color.rgb(128, 70, 50) };
 
-        spray.setFill(c[i]);
-        spray2.setFill(c[i]);
+            spray.setFill(c[i]);
+            spray2.setFill(c[i]);
 
-        ParallelTransition pt = new ParallelTransition();
-        pt.getChildren().addAll(tt, tt2);
+            ParallelTransition pt = new ParallelTransition();
+            pt.getChildren().addAll(tt, tt2);
 
-        FadeTransition ft = new FadeTransition(Duration.millis(700), spray);
-        ft.setToValue(0.5);
-        FadeTransition ft2 = new FadeTransition(Duration.millis(700), spray2);
-        ft2.setToValue(0.5);
-        ImageView temp2 = (ImageView) cake[currentCake].getChildren().get(j - 1);
-        ImageView temp = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
-        temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
-        temp.setPreserveRatio(true);
-        cake[currentCake].getChildren().set(j - 1, temp);
-        cake[currentCake].getChildren().add(j, temp2);
-        FadeTransition ft3 = new FadeTransition(Duration.millis(700), temp2);
-        ft3.setToValue(0);
+            FadeTransition ft = new FadeTransition(Duration.millis(700), spray);
+            ft.setToValue(0.5);
+            FadeTransition ft2 = new FadeTransition(Duration.millis(700), spray2);
+            ft2.setToValue(0.5);
+            ImageView temp2 = (ImageView) cake[currentCake].getChildren().get(j - 1);
+            ImageView temp = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
+            temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
+            temp.setPreserveRatio(true);
+            cake[currentCake].getChildren().set(j - 1, temp);
+            cake[currentCake].getChildren().add(j, temp2);
+            FadeTransition ft3 = new FadeTransition(Duration.millis(700), temp2);
+            ft3.setToValue(0);
 
-        ParallelTransition pt2 = new ParallelTransition();
-        pt2.getChildren().addAll(ft, ft2, ft3);
+            ParallelTransition pt2 = new ParallelTransition();
+            pt2.getChildren().addAll(ft, ft2, ft3);
 
-        SequentialTransition sq = new SequentialTransition();
-        sq.getChildren().addAll(pt, pt2);
-        sq.play();
+            SequentialTransition sq = new SequentialTransition();
+            sq.getChildren().addAll(pt, pt2);
+            sq.play();
 
-        sq.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
+            sq.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
 
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), aerograph);
-                tt.setToX(0);
-                TranslateTransition tt2 = new TranslateTransition(Duration.millis(500), aerograph2);
-                tt2.setToX(0);
-                ParallelTransition pt = new ParallelTransition();
-                pt.getChildren().addAll(tt, tt2);
-                pt.play();
-                cake[currentCake].getChildren().remove(temp2);
-                gameContext.getChildren().removeAll(spray, spray2);
+                    TranslateTransition tt = new TranslateTransition(Duration.millis(500), aerograph);
+                    tt.setToX(0);
+                    TranslateTransition tt2 = new TranslateTransition(Duration.millis(500), aerograph2);
+                    tt2.setToX(0);
+                    ParallelTransition pt = new ParallelTransition();
+                    pt.getChildren().addAll(tt, tt2);
+                    pt.play();
+                    cake[currentCake].getChildren().remove(temp2);
+                    gameContext.getChildren().removeAll(spray, spray2);
 
-            }
-        });
+                }
+            });
+        } else {
+            ImageView temp = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
+            temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
+            temp.setPreserveRatio(true);
+            cake[currentCake].getChildren().set(j - 1, temp);
+        }
+
+        layers[currentCake][j - 1] = i + 1;
     }
 
     public void otherPages(int j, int k) {
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         // Other pages
+        EventHandler<Event> buttonHandler;
         for (int i = 0; i < k; i++) { // HomePage of the game
             ProgressButton bt = new ProgressButton();
             bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
             if (i < k - 1) {
-                createSelectionButton(bt, i, j, k, dimension2D);
+                bt.setLayoutX((i + 1) * dimension2D.getWidth() / k - buttonSize / 2);
+                int index = i;
+                int jndex = j - 1;
+                ImageView iv = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
+                iv.setFitWidth(2 * buttonSize / 3);
+                iv.setPreserveRatio(true);
+                bt.button.setGraphic(iv);
+                buttonHandler = new EventHandler<Event>() {
+                    @Override
+                    public void handle(Event e) {
+                        if (jndex == 1) {
+                            nappageOn();
+                        }
+                        execAnim(index, j);
+                        winButton(true);
+                    }
+                };
+                bt.button.addEventFilter(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.assignIndicator(buttonHandler);
+                bt.active();
+                gameContext.getGazeDeviceManager().addEventFilter(bt);
+                p[j].getChildren().add(bt);
             } else {
-                createReturnButton(bt, j, dimension2D);
+                ImageView iv = new ImageView(new Image("data/cake/return.png"));
+                iv.setFitWidth(2 * buttonSize / 3);
+                iv.setPreserveRatio(true);
+                bt.button.setGraphic(iv);
+                bt.setLayoutX(dimension2D.getWidth() - buttonSize);
+                bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
+                buttonHandler = new EventHandler<Event>() {
+                    @Override
+                    public void handle(Event e) {
+                        p[0].toFront();
+                        for (int c = 0; c <= maxCake; c++) {
+                            cake[c].toFront();
+                        }
+                        active(0);
+                        if (mode != 0) {
+                            winButton(false);
+                        }
+                    }
+                };
+                bt.button.addEventFilter(MouseEvent.MOUSE_PRESSED, buttonHandler);
+                bt.assignIndicator(buttonHandler);
+                bt.active();
+                gameContext.getGazeDeviceManager().addEventFilter(bt);
+                p[j].getChildren().add(bt);
             }
 
         }
     }
 
-    public void createSelectionButton(ProgressButton bt, int i, int j, int k, Dimension2D dimension2D) {
-        EventHandler<Event> buttonHandler;
-        bt.setLayoutX((i + 1) * dimension2D.getWidth() / k - buttonSize / 2);
-        int index = i;
-        int jndex = j - 1;
-        ImageView iv = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
-        iv.setFitWidth(2 * buttonSize / 3);
-        iv.setPreserveRatio(true);
-        bt.button.setGraphic(iv);
-        buttonHandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (jndex == 1) {
-                    setNappage(true);
-                }
-                execAnim(index, j);
-                winButton(true);
-            }
-        };
-        bt.button.addEventFilter(MouseEvent.MOUSE_PRESSED, buttonHandler);
-        bt.assignIndicator(buttonHandler);
-        bt.active();
-        gameContext.getGazeDeviceManager().addEventFilter(bt);
-        p[j].getChildren().add(bt);
-    }
-
-    public void createReturnButton(ProgressButton bt, int j, Dimension2D dimension2D) {
-        EventHandler<Event> buttonHandler;
-        ImageView iv = new ImageView(new Image("data/cake/return.png"));
-        iv.setFitWidth(2 * buttonSize / 3);
-        iv.setPreserveRatio(true);
-        bt.button.setGraphic(iv);
-        bt.setLayoutX(dimension2D.getWidth() - buttonSize);
-        bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
-        buttonHandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                for (int c = 0; c <= maxCake; c++) {
-                    cake[c].toFront();
-                }
-                active(0);
-                if (mode != 0) {
-                    winButton(false);
-                }
-
-                p[0].toFront();
-            }
-        };
-        bt.button.addEventFilter(MouseEvent.MOUSE_PRESSED, buttonHandler);
-        bt.assignIndicator(buttonHandler);
-        bt.active();
-        gameContext.getGazeDeviceManager().addEventFilter(bt);
-        p[j].getChildren().add(bt);
-    }
-
     public void createCake(int i) {
         layers[i][0] = 1;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        setNappage(false);
+        nappage = false;
         if (i != 0) {
             cake[i - 1].getChildren().set(3, new ImageView());
             buttons[2].setDisable(true);
@@ -640,6 +679,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
     }
 
+    // done
     @Override
     public void dispose() {
         active(0);
@@ -650,7 +690,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         cake = new StackPane[3];
         currentCake = 0;
         maxCake = 0;
-        setNappage(false);
+        nappage = false;
     }
 
 }

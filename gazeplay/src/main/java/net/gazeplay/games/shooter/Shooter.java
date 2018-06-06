@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -49,7 +50,6 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     private final String date;
     private Label text;
-    private Label textb;
     private int score;
 
     private StackPane hand;
@@ -64,6 +64,7 @@ public class Shooter extends Parent implements GameLifeCycle {
     private final Point[] endPoints;
 
     private final EventHandler<Event> enterEvent;
+    private final EventHandler<GazeEvent> handEventGaze;
 
     // done
     public Shooter(GameContext gameContext, Stats stats, String type) {
@@ -97,7 +98,7 @@ public class Shooter extends Parent implements GameLifeCycle {
             }
         };
 
-        EventHandler<GazeEvent> handEventGaze = new EventHandler<GazeEvent>() {
+        handEventGaze = new EventHandler<GazeEvent>() {
             @Override
             public void handle(GazeEvent e) {
                 double x = e.getX();
@@ -200,7 +201,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     }
 
-    public boolean moveCage(Boolean left) {
+    public boolean moveCage(Boolean leftside) {
 
         double min = Math.ceil(0);
         double max = Math.floor(2);
@@ -233,7 +234,7 @@ public class Shooter extends Parent implements GameLifeCycle {
                 cst = 3;
             }
 
-            if (left) {
+            if (leftside) {
                 val = y + (dimension2D.getWidth() / cst);
             } else {
                 val = y - (dimension2D.getWidth() / cst);
@@ -253,10 +254,66 @@ public class Shooter extends Parent implements GameLifeCycle {
         st.getChildren().addAll(timeline, timeline3, timeline2);
         st.play();
 
+        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
+            st.stop();
+            updateCage();
+            left = true;
+        });
+
         return leftorright;
     }
 
-    // done
+    public void updateHand() {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        double x = dimension2D.getHeight();
+        for (Node child : hand.getChildren()) {
+            ((ImageView) child).setPreserveRatio(true);
+            ((ImageView) child).setFitHeight(x);
+        }
+        hand.setLayoutY(0);
+        hand.setLayoutX(3 * (dimension2D.getWidth() / 7));
+        double cst2;
+        if (gameType.equals("biboule")) {
+            cst2 = 2;
+        } else {// equals robot
+            cst2 = 1.7;
+        }
+        hand.setLayoutY(dimension2D.getHeight() / cst2);
+    }
+
+    public void updateCage() {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        cage.setLayoutX(8.5 * dimension2D.getWidth() / 29.7);
+
+        double y;
+        if (gameType.equals("biboule")) {
+            cage.setLayoutY(8.5 * dimension2D.getHeight() / 21);
+            y = dimension2D.getHeight() / 6.5;
+        } else {// equals robot
+            cage.setLayoutY(3.5 * dimension2D.getHeight() / 21);
+            y = dimension2D.getHeight() / 8.5;
+        }
+        cage.setFitHeight(y);
+        cage.setPreserveRatio(true);
+    }
+
+    public void updateScore(Label sc, Label tc) {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        if (gameType.equals("biboule")) {
+            sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight() / 18));
+            sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
+            sc.setLayoutY(1.8 * dimension2D.getHeight() / 21);
+        } else {
+            sc.setFont(Font.font(dimension2D.getHeight() / 20));
+            sc.setLayoutX(16 * dimension2D.getWidth() / 29.7);
+            sc.setLayoutY(15.2 * dimension2D.getHeight() / 21);
+
+            tc.setFont(Font.font(dimension2D.getHeight() / 20));
+            tc.setLayoutX(15 * dimension2D.getWidth() / 29.7);
+            tc.setLayoutY(14 * dimension2D.getHeight() / 21);
+        }
+    }
+
     @Override
     public void launch() {
 
@@ -274,7 +331,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         }
         sc.setText(cst);
         sc.setTextFill(Color.WHITE);
-        ;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         ImageView iv1 = new ImageView(new Image("data/" + gameType + "/images/hand.png"));
         ImageView iv2 = new ImageView(new Image("data/" + gameType + "/images/handShot.png"));
@@ -321,25 +377,25 @@ public class Shooter extends Parent implements GameLifeCycle {
             this.getChildren().add(tc);
         }
         text = sc;
+
         this.getChildren().add(sc);
 
         this.gameContext.resetBordersToFront();
         iv.setMouseTransparent(true);
 
-        cage.setLayoutX(8.5 * dimension2D.getWidth() / 29.7);
+        updateCage();
 
-        double y;
-        if (gameType.equals("biboule")) {
-            cage.setLayoutY(8.5 * dimension2D.getHeight() / 21);
-            y = dimension2D.getHeight() / 6.5;
-        } else {// equals robot
-            textb = tc;
-            cage.setLayoutY(3.5 * dimension2D.getHeight() / 21);
-            y = dimension2D.getHeight() / 8.5;
-        }
+        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
+            updateScore(sc, tc);
+            updateCage();
+            updateHand();
+        });
+        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> {
+            updateScore(sc, tc);
+            updateCage();
+            updateHand();
+        });
 
-        cage.setPreserveRatio(true);
-        cage.setFitHeight(y);
         cage.toBack();
         left = true;
         this.getChildren().add(cage);
@@ -367,6 +423,7 @@ public class Shooter extends Parent implements GameLifeCycle {
     // done
     @Override
     public void dispose() {
+        this.removeEventFilter(GazeEvent.ANY, handEventGaze);
         this.getChildren().clear();
     }
 
@@ -530,9 +587,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         } else {
             this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
             text.toBack();
-            if (!gameType.equals("biboule")) {
-                textb.toBack();
-            }
             cage.toBack();
         }
 

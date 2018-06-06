@@ -94,9 +94,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         MenuBar menuBar = Utils.buildLicence();
 
-        Node logo = createLogo();
-        StackPane topLogoPane = new StackPane();
-        topLogoPane.getChildren().add(logo);
+        // Node logo = createLogo();
+        // StackPane topLogoPane = new StackPane();
+        // topLogoPane.getChildren().add(logo);
 
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
@@ -119,7 +119,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         BorderPane topPane = new BorderPane();
         topPane.setTop(menuBar);
-        topPane.setCenter(topLogoPane);
+        // topPane.setCenter(topLogoPane);
         topPane.setRight(topRightPane);
 
         root.setTop(topPane);
