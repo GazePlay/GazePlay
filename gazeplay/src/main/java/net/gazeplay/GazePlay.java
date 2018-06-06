@@ -17,6 +17,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.games.SystemInfo;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
@@ -96,10 +97,13 @@ public class GazePlay extends Application {
     }
 
     public void onReturnToMenu() {
+
         homeMenuScreen.setUpOnStage(primaryScene);
         final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
         musicMananger.onEndGame();
         // homeMenuScreen.updateMusicControler();
+        log.info("Mem info : {}", SystemInfo.MemInfo());
+
     }
 
     public void onDisplayStats(StatsContext statsContext) {

@@ -1,11 +1,19 @@
 package net.gazeplay;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.WeakChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.WeakEventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -100,6 +108,13 @@ public abstract class GraphicalContext<T extends Parent> {
     private Button playTrack;
     private double beforeMutedValue;
 
+    /**
+     * This list is used to store all references to listeners wrapped in WeakListener and WeakEventHandler. This is done
+     * to avoid memory leak.
+     */
+    @Getter
+    private final List<Object> weakReferences = new ArrayList<Object>();
+
     public void setUpOnStage(final Scene scene) {
 
         // Make sure we are the root of the scene
@@ -117,6 +132,11 @@ public abstract class GraphicalContext<T extends Parent> {
         getChildren().clear();
 
         log.info("Nodes not removed: {}", getChildren().size());
+    }
+
+    public void dispose() {
+        clear();
+        weakReferences.clear();
     }
 
     public I18NButton createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
@@ -191,14 +211,17 @@ public abstract class GraphicalContext<T extends Parent> {
         grid.add(musicName, 0, 0, 3, 1);
         grid.setMaxWidth(MUSIC_GRID_MAX_WIDTH);
 
-        backgroundMusicManager.getIsMusicChanging().addListener((observable, oldValue, newValue) -> {
+        final ChangeListener<Boolean> changeMusicTitleListener = (observable, oldValue, newValue) -> {
 
             // If we receive a change event and the new value is fales, then it means
             // that the music has been changed (see changingProperty from Slider)
             if (!newValue) {
                 setMusicTitle(musicName);
             }
-        });
+        };
+        weakReferences.add(changeMusicTitleListener);
+        backgroundMusicManager.getIsMusicChanging()
+                .addListener(new WeakChangeListener<Boolean>(changeMusicTitleListener));
 
         Image buttonImg = null;
         try {
@@ -213,10 +236,13 @@ public abstract class GraphicalContext<T extends Parent> {
         } else {
             previousTrack = new Button("", new ImageView(buttonImg));
         }
-        previousTrack.setOnAction((event) -> {
 
+        final EventHandler<ActionEvent> previousHandler = (ActionEvent event) -> {
             backgroundMusicManager.previous();
-        });
+        };
+        weakReferences.add(previousHandler);
+
+        previousTrack.setOnAction(new WeakEventHandler<>(previousHandler));
 
         buttonImg = null;
         try {
@@ -230,9 +256,13 @@ public abstract class GraphicalContext<T extends Parent> {
         } else {
             pauseTrack = new Button("", new ImageView(buttonImg));
         }
-        pauseTrack.setOnAction((event) -> {
-            backgroundMusicManager.pause();
-        });
+
+        final EventHandler<ActionEvent> pauseHandler = (ActionEvent event) -> {
+            final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+            musicManager.pause();
+        };
+        weakReferences.add(pauseHandler);
+        pauseTrack.setOnAction(new WeakEventHandler<>(pauseHandler));
 
         buttonImg = null;
         try {
@@ -246,17 +276,16 @@ public abstract class GraphicalContext<T extends Parent> {
         } else {
             playTrack = new Button("", new ImageView(buttonImg));
         }
-        playTrack.setOnAction((event) -> {
-            backgroundMusicManager.play();
-        });
+        final EventHandler<ActionEvent> playHandler = (ActionEvent event) -> {
+            final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+            musicManager.play();
+        };
+        weakReferences.add(playHandler);
+        playTrack.setOnAction(new WeakEventHandler<>(playHandler));
 
-        if (backgroundMusicManager.isPlaying()) {
-            playTrack.setVisible(false);
-            pauseTrack.setVisible(true);
-        } else {
-            playTrack.setVisible(true);
-            pauseTrack.setVisible(false);
-        }
+        final boolean isPlaying = backgroundMusicManager.isPlaying();
+        playTrack.setVisible(!isPlaying);
+        pauseTrack.setVisible(isPlaying);
 
         final StackPane stackPane = new StackPane(pauseTrack, playTrack);
 
@@ -267,16 +296,13 @@ public abstract class GraphicalContext<T extends Parent> {
             log.warn(e.toString() + " : " + NEXT_ICON);
         }
 
-        backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
+        final ChangeListener<Boolean> setVisibleListener = ((observable, oldValue, newValue) -> {
 
-            if (backgroundMusicManager.isPlaying()) {
-                playTrack.setVisible(false);
-                pauseTrack.setVisible(true);
-            } else {
-                playTrack.setVisible(true);
-                pauseTrack.setVisible(false);
-            }
+            playTrack.setVisible(!newValue);
+            pauseTrack.setVisible(newValue);
         });
+        weakReferences.add(setVisibleListener);
+        backgroundMusicManager.getIsPlayingPoperty().addListener(new WeakChangeListener<>(setVisibleListener));
 
         Button nextTrack;
         if (buttonImg == null) {
@@ -284,10 +310,13 @@ public abstract class GraphicalContext<T extends Parent> {
         } else {
             nextTrack = new Button("", new ImageView(buttonImg));
         }
-        nextTrack.setOnAction((event) -> {
 
-            backgroundMusicManager.next();
-        });
+        final EventHandler<ActionEvent> nextHandler = (ActionEvent event) -> {
+            final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+            musicManager.next();
+        };
+        weakReferences.add(nextHandler);
+        nextTrack.setOnAction(new WeakEventHandler<>(nextHandler));
 
         grid.add(previousTrack, 0, 2);
         grid.add(stackPane, 1, 2);
@@ -403,7 +432,8 @@ public abstract class GraphicalContext<T extends Parent> {
         slider.setValue(config.getMusicVolume());
         config.getMusicVolumeProperty().bindBidirectional(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> {
-            config.saveConfigIgnoringExceptions();
+            final Configuration localConfig = Configuration.getInstance();
+            localConfig.saveConfigIgnoringExceptions();
         });
         return slider;
     }
@@ -420,7 +450,8 @@ public abstract class GraphicalContext<T extends Parent> {
         slider.setValue(config.getEffectsVolume());
         config.getEffectsVolumeProperty().bindBidirectional(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> {
-            config.saveConfigIgnoringExceptions();
+            final Configuration localConfig = Configuration.getInstance();
+            localConfig.saveConfigIgnoringExceptions();
         });
         return slider;
     }
