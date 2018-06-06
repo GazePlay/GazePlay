@@ -88,10 +88,10 @@ public class GameContext extends GraphicalContext<Pane> {
         final HBox root2 = new HBox(2);
         root2.setAlignment(Pos.CENTER_LEFT);
         // Pane root2 = new Pane();
-        gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> {
+        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
             updateConfigPane(root2);
         });
-        gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> {
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
             updateConfigButton(bt, buttonImg);
         });
         root2.heightProperty().addListener((observable) -> {
@@ -148,7 +148,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
         root2.getChildren().remove(controlPanel);
 
-        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(gamingRoot,
+        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root,
                 gazePlay.getPrimaryScene());
 
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
