@@ -1,6 +1,9 @@
 
 package net.gazeplay.games.cakes;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -18,7 +21,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,10 +68,14 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     final int NB_DECORS = 2;
 
     public FadeTransition ft;
+    
+    Color[] col = { Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL};
+    @Getter
+    public Rectangle r;
 
     @Getter
     @Setter
-    private Pane[] p;
+    private List<ProgressButton>[] p;
 
     int[][] layers = new int[3][4];
     int[][] model = new int[3][4];
@@ -95,6 +104,14 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         setNappage(false);
         this.mode = mode;
         buttons = new ProgressButton[6];
+        
+        r = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        r.setFill(col[0]);
+        this.getChildren().add(r);
+        Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        back.setFill(new ImagePattern(new Image("data/cake/background.png")));
+        back.setMouseTransparent(true);
+        this.getChildren().add(back);
 
     }
 
@@ -140,22 +157,22 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     public void active(int i) {
         if (i == -1) {
             for (int j = 0; j < p.length; j++) {
-                for (Node child : p[j].getChildren()) {
-                    if (child instanceof ProgressButton) {
-                        child.setDisable(true);
-                    }
+                for (Node child : p[j]) {
+                    	  ((ProgressButton) child).disable();
                 }
             }
         } else {
             for (int j = 0; j < p.length; j++) {
                 boolean b = true;
-                if (j == i) {
-                    b = false;
-                }
-                for (Node child : p[j].getChildren()) {
-                    if (child instanceof ProgressButton) {
-                        child.setDisable(b);
-                    }
+                if (j == i){
+	                for (Node child : p[j]) {
+	                    ((ProgressButton) child).active();
+	                }
+                }else {
+                	for (Node child : p[j]) {
+	                    ((ProgressButton) child).disable();
+	                    
+	                }
                 }
             }
         }
@@ -168,7 +185,9 @@ public class cakeFactory extends Parent implements GameLifeCycle {
             buttonHandler = new EventHandler<Event>() {
                 @Override
                 public void handle(Event e) {
-                    p[i + 1].toFront();
+                	for (Node child : p[i+1]) {
+	                      child.toFront();
+	                }
                     for (int c = 0; c <= maxCake; c++) {
                         cake[c].toFront();
                     }
@@ -246,6 +265,8 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
                 dispose();
 
+                gameContext.getGazeDeviceManager().clear();
+                
                 gameContext.clear();
 
                 launch();
@@ -257,14 +278,15 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         });
     }
 
-    public void createStack(StackPane sp) {
-        Color[] col = { Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL,
-                Color.LIGHTSTEELBLUE };
-        p = new Pane[6];
+    public void createStack() {
+        p = new List[6];
         for (int i = 0; i < 6; i++) {
-            p[i] = new ScreenCake(i, col[i], this);
+            p[i] = new LinkedList<ProgressButton>();
+            p[i].addAll(new ScreenCake(i, this));
         }
 
+        
+        
         for (int j = 1; j < 5; j++) {
             int k = 0;
             if (j == 1) {
@@ -283,7 +305,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         }
 
         for (int i = 5; i >= 0; i--) {
-            sp.getChildren().add(p[i]);
+            this.getChildren().addAll(p[i]);
         }
 
     }
@@ -423,7 +445,8 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         ImageView iv = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
-        bt.button.setGraphic(iv);
+        bt.button.setRadius(buttonSize/2);
+        bt.setImage(iv);
         buttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -438,7 +461,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         bt.assignIndicator(buttonHandler);
         bt.active();
         gameContext.getGazeDeviceManager().addEventFilter(bt);
-        p[j].getChildren().add(bt);
+        p[j].add(bt);
     }
 
     public void createReturnButton(ProgressButton bt, int j, Dimension2D dimension2D) {
@@ -446,7 +469,8 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         ImageView iv = new ImageView(new Image("data/cake/return.png"));
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
-        bt.button.setGraphic(iv);
+        bt.button.setRadius(buttonSize/2);
+        bt.setImage(iv);
         bt.setLayoutX(dimension2D.getWidth() - buttonSize);
         bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
         buttonHandler = new EventHandler<Event>() {
@@ -460,14 +484,18 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                     winButton(false);
                 }
 
-                p[0].toFront();
+                for (Node child : p[0]) {
+                    child.toFront();
+              }
+
+                r.setFill(col[0]);
             }
         };
         bt.button.addEventFilter(MouseEvent.MOUSE_PRESSED, buttonHandler);
         bt.assignIndicator(buttonHandler);
         bt.active();
         gameContext.getGazeDeviceManager().addEventFilter(bt);
-        p[j].getChildren().add(bt);
+        p[j].add(bt);
     }
 
     public void createCake(int i) {
@@ -621,11 +649,9 @@ public class cakeFactory extends Parent implements GameLifeCycle {
             cake[c] = new StackPane();
         }
 
-        StackPane sp = new StackPane();
-        createStack(sp);
-        sp.setLayoutY(0);
-        gameContext.getChildren().add(sp);
         createCake(0);
+        
+        createStack();
 
         active(0);
 
@@ -642,7 +668,6 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
     @Override
     public void dispose() {
-        active(0);
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;
