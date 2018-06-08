@@ -13,6 +13,12 @@ import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+/*
+ * Mouse V4 
+ * To move the mouse you must first select it,
+ * Then the mouse will follow the player's gaze
+ * If the player looks too far or out of the labyrinth, the mouse is deselected
+ */
 public class MouseV4 extends Mouse {
 
     private EventHandler<Event> eventMouse;
@@ -30,7 +36,7 @@ public class MouseV4 extends Mouse {
         isSelectioned = false;
         eventMouse = buildEventMouse();
         eventBox = buildEventBox();
-        indicator = createProgressIndicator(width, height);
+        indicator = createProgressIndicator(mouse.getX(), mouse.getY(), width, height);
         this.mouse.addEventHandler(GazeEvent.ANY, eventMouse);
         this.mouse.addEventHandler(MouseEvent.ANY, eventMouse);
         gameContext.getGazeDeviceManager().addEventFilter(this.mouse);
@@ -40,8 +46,8 @@ public class MouseV4 extends Mouse {
     }
 
     private void mettreLesEventHandler() {
-        for (int i = 0; i < gameInstance.nbCasesLignes; i++) {
-            for (int j = 0; j < gameInstance.nbCasesColonne; j++) {
+        for (int i = 0; i < gameInstance.nbBoxesLine; i++) {
+            for (int j = 0; j < gameInstance.nbBoxesColumns; j++) {
                 gameInstance.walls[i][j].addEventHandler(MouseEvent.ANY, eventBox);
                 gameInstance.walls[i][j].addEventHandler(GazeEvent.ANY, eventBox);
                 gameContext.getGazeDeviceManager().addEventFilter(gameInstance.walls[i][j]);
@@ -65,6 +71,9 @@ public class MouseV4 extends Mouse {
         if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
                 && isSelectioned) {
             GameBox gb = (GameBox) e.getSource();
+            if (gb.isNextTo(indiceY, indiceX)) { // fo comfort with eye tracker
+                return false;
+            }
             if (!(gb.isNextTo(indiceY, indiceX) && gameInstance.isFreeForMouse(gb.numRow, gb.numCol))) {
                 return true;
             }
@@ -152,17 +161,6 @@ public class MouseV4 extends Mouse {
             }
         };
 
-    }
-
-    private ProgressIndicator createProgressIndicator(double width, double height) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(mouse.getX() + width * 0.05);
-        indicator.setTranslateY(mouse.getY() + height * 0.2);
-        indicator.setMinWidth(width * 0.9);
-        indicator.setMinHeight(width * 0.9);
-        indicator.setOpacity(0);
-        indicator.setMouseTransparent(true);
-        return indicator;
     }
 
 }
