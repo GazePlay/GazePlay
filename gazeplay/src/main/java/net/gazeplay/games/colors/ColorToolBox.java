@@ -193,7 +193,7 @@ public class ColorToolBox extends StackPane {
             customColorDialog.show();
             customColorDialog.sizeToScene();
 
-            previousEnableColor = colorsGame.isEnableColorization();
+            previousEnableColor = colorsGame.getDrawingEnable().getValue();
             if (previousEnableColor) {
                 colorsGame.setEnableColorization(false);
             }
@@ -436,18 +436,24 @@ public class ColorToolBox extends StackPane {
         EventHandler enableColorizeButton = (EventHandler) (Event event1) -> {
 
             colorsGame.setEnableColorization(false);
-            colorizeButtonPane.setVisible(false);
-            stopColorizeButtonPane.setVisible(true);
-            colorizeButtonIndicator.setOnFinish(disableColorizeButton);
         };
 
         disableColorizeButton = (EventHandler) (Event event1) -> {
 
             colorsGame.setEnableColorization(true);
-            stopColorizeButtonPane.setVisible(false);
-            colorizeButtonPane.setVisible(true);
-            colorizeButtonIndicator.setOnFinish(enableColorizeButton);
         };
+
+        colorsGame.getDrawingEnable().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                colorizeButtonPane.setVisible(false);
+                stopColorizeButtonPane.setVisible(true);
+                colorizeButtonIndicator.setOnFinish(disableColorizeButton);
+            } else {
+                stopColorizeButtonPane.setVisible(false);
+                colorizeButtonPane.setVisible(true);
+                colorizeButtonIndicator.setOnFinish(enableColorizeButton);
+            }
+        });
 
         colorizeButtonIndicator.setOnFinish(enableColorizeButton);
 
