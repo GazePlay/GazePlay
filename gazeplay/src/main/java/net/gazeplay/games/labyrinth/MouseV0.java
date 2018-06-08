@@ -13,6 +13,15 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.labyrinth.Labyrinth;
 
+/*
+ * MouseV0 : 
+ * To move the mouse :
+ * you have to look at a box that is adjacent to it.
+ * This version does not work with the eye tracker :
+ * It is replaced by the version MouseTransparentArrows
+ * which produces the same effect on the user side 
+ */
+
 public class MouseV0 extends Mouse {
 
     private EventHandler<Event> event;
@@ -29,8 +38,8 @@ public class MouseV0 extends Mouse {
 
     private void mettreAJourLesEventHandler() {
 
-        for (int i = 0; i < gameInstance.nbCasesLignes; i++) {
-            for (int j = 0; j < gameInstance.nbCasesColonne; j++) {
+        for (int i = 0; i < gameInstance.nbBoxesLine; i++) {
+            for (int j = 0; j < gameInstance.nbBoxesColumns; j++) {
                 // We remove the old EventHandler
                 if (gameInstance.walls[i][j].wasNextToTheMouse) {
                     gameInstance.walls[i][j].removeEventHandler(MouseEvent.ANY, event);

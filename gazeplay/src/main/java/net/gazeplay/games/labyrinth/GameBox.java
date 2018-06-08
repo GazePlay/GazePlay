@@ -33,6 +33,10 @@ public class GameBox extends Parent {
         this.numRow = nr;
 
         this.r = new Rectangle();
+        if (wall == 0) {
+            this.r.setStrokeWidth(0.5);
+            this.r.setStroke(Color.DARKORANGE);
+        }
         this.r.setHeight(height);
         this.r.setWidth(width);
         this.r.setY(coordY);

@@ -1,12 +1,16 @@
 package net.gazeplay.games.labyrinth;
 
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.GameContext;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
+
+/*
+ * MouseArrowsV2 : 
+ * Arrows are at around the mouse
+ * They move with the mouse.
+ */
 
 public class MouseArrowsV2 extends MouseArrows {
 
@@ -30,9 +34,9 @@ public class MouseArrowsV2 extends MouseArrows {
         double dx2 = dx * 0.8;
         double dy2 = dy * 0.8;
 
-        this.buttonUp = new Rectangle(x, y - dy, buttonDimWidth, buttonDimHeight);
+        this.buttonUp = new Rectangle(x, y - 1.2 * dy, buttonDimWidth, buttonDimHeight);
         this.buttonUp.setFill(new ImagePattern(new Image("data/labyrinth/images/upArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorUp = createProgressIndicator(x, y - dy, buttonDimWidth, buttonDimHeight);
+        this.indicatorUp = createProgressIndicator(x, y - 1.2 * dy, buttonDimWidth, buttonDimHeight);
 
         this.buttonDown = new Rectangle(x, y + dy2, buttonDimWidth, buttonDimHeight);
         this.buttonDown.setFill(new ImagePattern(new Image("data/labyrinth/images/downArrow.png"), 5, 5, 1, 1, true));
@@ -40,7 +44,7 @@ public class MouseArrowsV2 extends MouseArrows {
 
         this.buttonLeft = new Rectangle(x - 1.25 * dx, y, buttonDimHeight, buttonDimWidth);
         this.buttonLeft.setFill(new ImagePattern(new Image("data/labyrinth/images/leftArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorLeft = createProgressIndicator(x - dx, y, buttonDimWidth, buttonDimHeight);
+        this.indicatorLeft = createProgressIndicator(x - 1.25 * dx, y, buttonDimWidth, buttonDimHeight);
 
         this.buttonRight = new Rectangle(x + dx2, y, buttonDimHeight, buttonDimWidth);
         this.buttonRight.setFill(new ImagePattern(new Image("data/labyrinth/images/rightArrow.png"), 5, 5, 1, 1, true));
@@ -58,9 +62,9 @@ public class MouseArrowsV2 extends MouseArrows {
         double dy2 = dy * 0.8;
 
         this.buttonUp.setX(x);
-        this.buttonUp.setY(y - dy);
+        this.buttonUp.setY(y - 1.2 * dy);
         this.indicatorUp.setTranslateX(x);
-        this.indicatorUp.setTranslateY(y - dy);
+        this.indicatorUp.setTranslateY(y - 1.2 * dy);
 
         this.buttonDown.setX(x);
         this.buttonDown.setY(y + dy2);
@@ -69,7 +73,7 @@ public class MouseArrowsV2 extends MouseArrows {
 
         this.buttonLeft.setX(x - 1.25 * dx);
         this.buttonLeft.setY(y);
-        this.indicatorLeft.setTranslateX(x - dx);
+        this.indicatorLeft.setTranslateX(x - 1.25 * dx);
         this.indicatorLeft.setTranslateY(y);
 
         this.buttonRight.setX(x + dx2);

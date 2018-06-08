@@ -2,13 +2,18 @@ package net.gazeplay.games.labyrinth;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.GameContext;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.labyrinth.Labyrinth;
+
+/*
+ * MouseArrowsV1 : 
+ * Arrows are at the left of the Labyrinth.
+ * This version is not accessible for the menu
+ * This version is not suitable for eye tracking. 
+ */
 
 public class MouseArrowsV1 extends MouseArrows {
 
@@ -27,7 +32,6 @@ public class MouseArrowsV1 extends MouseArrows {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         double delta = dimension2D.getWidth() * 0.01;
-        double beta = dimension2D.getHeight() * 0.1;
 
         double x = dimension2D.getWidth() * 0.05;
         double y = dimension2D.getHeight() * 0.4;
@@ -49,9 +53,6 @@ public class MouseArrowsV1 extends MouseArrows {
         x = x + 1.1 * buttonDimWidth;
         this.buttonRight = new Rectangle(x, y, buttonDimHeight, buttonDimWidth);
         this.buttonRight.setFill(new ImagePattern(new Image("data/labyrinth/images/rightArrow.png"), 5, 5, 1, 1, true));
-        // this.indicatorRight = createProgressIndicator(x - buttonDimHeight / 2, y + buttonDimWidth / 4,
-        // buttonDimWidth,
-        // buttonDimHeight);
         this.indicatorRight = createProgressIndicator(x, y, buttonDimWidth, buttonDimHeight);
 
     }
