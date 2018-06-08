@@ -1,6 +1,7 @@
 package net.gazeplay.games.labyrinth;
 
 import javafx.scene.Parent;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -100,6 +101,17 @@ public abstract class Mouse extends Parent {
                         .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBack.png"), 5, 5, 1, 1, true));
             }
         }
+    }
+
+    protected ProgressIndicator createProgressIndicator(double x, double y, double width, double height) {
+        ProgressIndicator indicator = new ProgressIndicator(0);
+        indicator.setTranslateX(x + width * 0.05);
+        indicator.setTranslateY(y + height * 0.2);
+        indicator.setMouseTransparent(true);
+        indicator.setMinWidth(width);
+        indicator.setMinHeight(height);
+        indicator.setOpacity(0);
+        return indicator;
     }
 
 }

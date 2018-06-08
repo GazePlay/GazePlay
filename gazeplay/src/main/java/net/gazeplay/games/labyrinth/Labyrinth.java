@@ -1,10 +1,8 @@
 package net.gazeplay.games.labyrinth;
 
-import java.util.ArrayList;
-
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
-
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
@@ -23,8 +21,8 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     protected GameBox[][] walls;
     private int[][] wallsPlacement;
 
-    protected final int nbCasesLignes = 7;
-    protected final int nbCasesColonne = 12;
+    protected final int nbBoxesLine = 7;
+    protected final int nbBoxesColumns = 12;
 
     protected final double entiereRecX;
     protected final double entiereRecY;
@@ -54,14 +52,14 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         log.info("dimension2D = {}", dimension2D);
 
         entiereRecX = dimension2D.getWidth() * 0.25;
-        entiereRecY = dimension2D.getHeight() * 0.1;
+        entiereRecY = dimension2D.getHeight() * 0.15;
         entiereRecWidth = dimension2D.getWidth() * 0.6;
-        entiereRecHeight = dimension2D.getHeight() * 0.9;
+        entiereRecHeight = dimension2D.getHeight() * 0.7;
 
-        caseWidth = entiereRecWidth / nbCasesColonne;
-        caseHeight = entiereRecHeight / nbCasesLignes;
-        adjustmentCaseWidth = caseWidth / 4;
-        adjustmentCaseHeight = caseHeight / 4;
+        caseWidth = entiereRecWidth / nbBoxesColumns;
+        caseHeight = entiereRecHeight / nbBoxesLine;
+        adjustmentCaseWidth = caseWidth / 6;
+        adjustmentCaseHeight = caseHeight / 6;
 
     }
 
@@ -81,10 +79,8 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         // Creation of the mouse
         switch (version) {
         case 0:
-            mouse = new MouseV0(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-            break;
-        case 1:
-            mouse = new MouseArrowsV1(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+            mouse = new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext,
+                    stats, this);
             break;
         case 2:
             mouse = new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
@@ -96,7 +92,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
             mouse = new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
             break;
         default:
-            mouse = new MouseV0(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+            mouse = new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
             break;
         }
 
@@ -124,9 +120,9 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     }
 
     private void creationLabyrinth(Rectangle recTotal, Dimension2D dim2D) {
-        walls = new GameBox[nbCasesLignes][nbCasesColonne];
-        for (int i = 0; i < nbCasesLignes; i++) { // i = rows number = Coord Y
-            for (int j = 0; j < nbCasesColonne; j++) { // j = columns number = Coord X
+        walls = new GameBox[nbBoxesLine][nbBoxesColumns];
+        for (int i = 0; i < nbBoxesLine; i++) { // i = rows number = Coord Y
+            for (int j = 0; j < nbBoxesColumns; j++) { // j = columns number = Coord X
                 GameBox g = new GameBox(caseHeight, caseWidth, entiereRecX + j * caseWidth,
                         entiereRecY + i * caseHeight, wallsPlacement[i][j], j, i);
                 walls[i][j] = g;
@@ -162,7 +158,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
      */
 
     public boolean isFreeForMouse(int i, int j) {
-        if (i >= nbCasesLignes || j >= nbCasesColonne) {
+        if (i >= nbBoxesLine || j >= nbBoxesColumns) {
             return false;
         }
         return (!walls[i][j].isAWall());

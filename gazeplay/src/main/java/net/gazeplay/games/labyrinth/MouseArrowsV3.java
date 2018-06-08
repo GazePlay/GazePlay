@@ -1,14 +1,16 @@
 package net.gazeplay.games.labyrinth;
 
 import javafx.geometry.Dimension2D;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.GameContext;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
+
+/*
+ * MouseArrowsV3 : 
+ * Arrows are around the labyrinth. 
+ */
 
 public class MouseArrowsV3 extends MouseArrows {
 
@@ -33,9 +35,9 @@ public class MouseArrowsV3 extends MouseArrows {
         double x = gameInstance.entiereRecX + gameInstance.entiereRecWidth / 2 - delta;
         double y = gameInstance.entiereRecY - 2 * delta;
 
-        this.buttonUp = new Rectangle(x, y + 0.4 * delta, buttonDimWidth, buttonDimHeight);
+        this.buttonUp = new Rectangle(x, y, buttonDimWidth, buttonDimHeight);
         this.buttonUp.setFill(new ImagePattern(new Image("data/labyrinth/images/upArrow.png"), 5, 5, 1, 1, true));
-        this.indicatorUp = createProgressIndicator(x, y + 0.4 * delta, buttonDimWidth, buttonDimHeight);
+        this.indicatorUp = createProgressIndicator(x, y, buttonDimWidth, buttonDimHeight);
 
         y = gameInstance.entiereRecY + gameInstance.entiereRecHeight;
         this.buttonDown = new Rectangle(x, y, buttonDimWidth, buttonDimHeight);

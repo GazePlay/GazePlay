@@ -18,6 +18,9 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.labyrinth.Labyrinth;
 
+/*
+ * Abstract class for all Mouse version containing arrows
+ */
 public abstract class MouseArrows extends Mouse {
 
     protected ProgressIndicator indicatorUp;
@@ -51,8 +54,8 @@ public abstract class MouseArrows extends Mouse {
         this.buttonLeftEvent = buildButtonLeftEvent();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        buttonDimHeight = dimension2D.getHeight() / gameInstance.nbCasesLignes;
-        buttonDimWidth = dimension2D.getWidth() / gameInstance.nbCasesColonne;
+        buttonDimHeight = dimension2D.getHeight() / gameInstance.nbBoxesLine;
+        buttonDimWidth = dimension2D.getWidth() / gameInstance.nbBoxesColumns;
 
         placementFleche();
 
@@ -91,13 +94,13 @@ public abstract class MouseArrows extends Mouse {
             putInLight("up", this.buttonUp);
         }
         // If we can go down
-        if (indiceY + 1 < gameInstance.nbCasesLignes && gameInstance.isFreeForMouse(indiceY + 1, indiceX)) {
+        if (indiceY + 1 < gameInstance.nbBoxesLine && gameInstance.isFreeForMouse(indiceY + 1, indiceX)) {
             putInBold("down", this.buttonDown);
         } else {
             putInLight("down", this.buttonDown);
         }
         // If we can go right
-        if (indiceX + 1 < gameInstance.nbCasesColonne && gameInstance.isFreeForMouse(indiceY, indiceX + 1)) {
+        if (indiceX + 1 < gameInstance.nbBoxesColumns && gameInstance.isFreeForMouse(indiceY, indiceX + 1)) {
             putInBold("right", this.buttonRight);
         } else {
             putInLight("right", this.buttonRight);
@@ -172,7 +175,7 @@ public abstract class MouseArrows extends Mouse {
             @Override
             public void handle(Event e) {
 
-                if (indiceY + 1 < gameInstance.nbCasesLignes && gameInstance.isFreeForMouse(indiceY + 1, indiceX)
+                if (indiceY + 1 < gameInstance.nbBoxesLine && gameInstance.isFreeForMouse(indiceY + 1, indiceX)
                         && isActivated(e)) {
 
                     indicatorDown.setOpacity(1);
@@ -215,7 +218,7 @@ public abstract class MouseArrows extends Mouse {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                if (indiceX + 1 < gameInstance.nbCasesColonne && gameInstance.isFreeForMouse(indiceY, indiceX + 1)
+                if (indiceX + 1 < gameInstance.nbBoxesColumns && gameInstance.isFreeForMouse(indiceY, indiceX + 1)
                         && isActivated(e)) {
 
                     indicatorRight.setOpacity(1);
@@ -303,17 +306,6 @@ public abstract class MouseArrows extends Mouse {
         b.setFill(new ImagePattern(new Image("data/labyrinth/images/" + s + "Arrow.png"), 5, 5, 1, 1, true));
         b.addEventHandler(MouseEvent.ANY, e);
         b.addEventHandler(GazeEvent.ANY, e);
-    }
-
-    protected ProgressIndicator createProgressIndicator(double x, double y, double width, double height) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(x + width * 0.05);
-        indicator.setTranslateY(y + height * 0.2);
-        indicator.setMouseTransparent(true);
-        indicator.setMinWidth(width);
-        indicator.setMinHeight(height);
-        indicator.setOpacity(0);
-        return indicator;
     }
 
 }

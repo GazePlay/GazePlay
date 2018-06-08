@@ -15,8 +15,6 @@ public class Cheese extends Parent {
     public int indexY;
     public int indexX;
 
-    private int tour; // Only for the user test
-
     private Random r;
 
     public boolean alreadyCheese;
@@ -30,7 +28,6 @@ public class Cheese extends Parent {
         indexY = 0;
         indexX = 0;
         cheese.setMouseTransparent(true);
-        tour = 0; // Only for the user test
     }
 
     public void beginCheese() {
@@ -42,24 +39,12 @@ public class Cheese extends Parent {
     public void moveCheese() {
         int x, y;
         do {
-            y = r.nextInt(gameInstance.nbCasesLignes);
-            x = r.nextInt(gameInstance.nbCasesColonne);
+            y = r.nextInt(gameInstance.nbBoxesLine);
+            x = r.nextInt(gameInstance.nbBoxesColumns);
         } while (!gameInstance.isFreeForCheese(y, x));
 
         indexY = y;
         indexX = x;
-
-        if (tour == 0) {
-            indexY = 5;
-            indexX = 4;
-        } else if (tour == 1) {
-            indexY = 2;
-            indexX = 4;
-        } else if (tour == 2) {
-            indexY = 3;
-            indexX = 8;
-        }
-        tour++;
 
         double coordX = gameInstance.positionX(indexX) - gameInstance.adjustmentCaseWidth;
         double coordY = gameInstance.positionY(indexY) + gameInstance.adjustmentCaseHeight;
