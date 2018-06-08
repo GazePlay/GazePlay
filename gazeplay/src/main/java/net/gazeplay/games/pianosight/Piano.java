@@ -45,6 +45,8 @@ public class Piano extends Parent implements GameLifeCycle {
     private static final int maxTimeLength = 7;
     private static final int minTimeLength = 4;
 
+    public static final int[] NOTE_NAMES = { 0, 7, 1, 8, 2, 3, 9, 4, 10, 5, 11, 6 };
+
     // private final EventHandler<Event> enterEvent;
 
     private double centerX;
@@ -246,7 +248,7 @@ public class Piano extends Parent implements GameLifeCycle {
                     int precNote = FirstNote;
                     int precKey = midiReader.key;
 
-                    FirstNote = midiReader.nextNote();
+                    FirstNote = NOTE_NAMES[midiReader.nextNote()];
 
                     if (precNote != -1) {
                         instru.note_on(precKey);
