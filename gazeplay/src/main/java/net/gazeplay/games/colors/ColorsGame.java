@@ -19,6 +19,11 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -197,9 +202,10 @@ public class ColorsGame implements GameLifeCycle {
         root.getChildren().add(progressIndicator);
         progressIndicator.toFront();
 
-        colorToolBox.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
-
         updateToolBox();
+
+        toolBoxPane.maxHeightProperty().bind(gameContext.getRoot().heightProperty());
+        toolBoxPane.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
     }
 
     private void buildDraw(String imgURL, double width, double height) {
@@ -281,7 +287,6 @@ public class ColorsGame implements GameLifeCycle {
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         double width = dimension2D.getWidth();
-        double height = dimension2D.getHeight();
 
         double ToolBoxWidth = toolBoxPane.getWidth();
         double x = width - ToolBoxWidth;
@@ -522,16 +527,15 @@ public class ColorsGame implements GameLifeCycle {
         /*
          * Don't fill the zone if the pixel selected is already of the same color. Also don't fill black zones
          */
-        if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor())
-                && !isEqualColors(color, Color.BLACK)) {
+        if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor()) && !isEqualColors(color, Color.BLACK)
+                && drawingEnable.getValue()) {
             javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(), pixelX, pixelY,
                     (int) writableImg.getWidth(), (int) writableImg.getHeight());
+            rectangle.setFill(new ImagePattern(writableImg));
+            rectangle.toBack();
+
+            stats.incNbGoals();
         }
-
-        rectangle.setFill(new ImagePattern(writableImg));
-        rectangle.toBack();
-
-        stats.incNbGoals();
     }
 
     private void javaFXFloodFill(final PixelWriter pixelWriter, final PixelReader pixelReader, Color newColor, int x,
