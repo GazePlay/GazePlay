@@ -3,6 +3,8 @@ package net.gazeplay.games.colors;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -119,7 +121,7 @@ public class ColorsGame implements GameLifeCycle {
      * Should we enableColorization.
      */
     @Getter
-    private boolean enableColorization = true;
+    private final BooleanProperty drawingEnable = new SimpleBooleanProperty(this, "isDrawingEnable", true);
 
     /**
      * The colorization event handler
@@ -139,6 +141,22 @@ public class ColorsGame implements GameLifeCycle {
 
         final Translator translator = GazePlay.getInstance().getTranslator();
         toolBoxPane = new TitledPane(translator.translate("Colors!"), colorToolBox);
+
+        drawingEnable.addListener((observable, oldValue, newValue) -> {
+            // If we want to stop colorization
+            if (!newValue) {
+                // Hide away the gazeProgressIndicator
+                gazeProgressIndicator.stop();
+
+                // Stop registering colorization events
+                rectangle.removeEventFilter(MouseEvent.ANY, colorizationEventHandler);
+                rectangle.removeEventFilter(GazeEvent.ANY, colorizationEventHandler);
+
+            } else {
+                rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler);
+                rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler);
+            }
+        });
     }
 
     @Override
@@ -639,20 +657,6 @@ public class ColorsGame implements GameLifeCycle {
 
     public void setEnableColorization(boolean enable) {
 
-        // If we want to stop colorization
-        if (!enable) {
-            // Hide away the gazeProgressIndicator
-            gazeProgressIndicator.stop();
-
-            // Stop registering colorization events
-            rectangle.removeEventFilter(MouseEvent.ANY, colorizationEventHandler);
-            rectangle.removeEventFilter(GazeEvent.ANY, colorizationEventHandler);
-
-        } else {
-            rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler);
-            rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler);
-        }
-
-        this.enableColorization = enable;
+        this.drawingEnable.setValue(enable);
     }
 }
