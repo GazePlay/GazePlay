@@ -32,9 +32,9 @@ public class ProgressButton extends StackPane {
     EventHandler<Event> enterbuttonHandler;
     EventHandler<Event> exitbuttonHandler;
     boolean inuse = false;
-    
+
     ImageView image;
-    
+
     public ProgressButton() {
         super();
         button = new Circle();
@@ -43,27 +43,27 @@ public class ProgressButton extends StackPane {
         image = new ImageView();
         this.getChildren().addAll(button, image, indicator);
     }
-    
+
     public void active() {
-    	inuse = true;
-    	this.setOpacity(1);
+        inuse = true;
+        this.setOpacity(1);
         this.indicator.setOpacity(0);
     }
-    
+
     public void disable() {
-    	inuse = false;
-    	this.setOpacity(0);
+        inuse = false;
+        this.setOpacity(0);
     }
-    
+
     public void setImage(ImageView img) {
-    	image = img;
-    	image.setFocusTraversable(true);
-    	image.setMouseTransparent(true);
-    	 this.getChildren().set(1, image);
+        image = img;
+        image.setFocusTraversable(true);
+        image.setMouseTransparent(true);
+        this.getChildren().set(1, image);
     }
-    
+
     public void disable2() {
-    	this.removeEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
+        this.removeEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
         this.removeEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
         this.setDisable(true);
         this.setOpacity(0);
@@ -75,7 +75,7 @@ public class ProgressButton extends StackPane {
         this.setDisable(false);
         this.setOpacity(1);
         this.indicator.setOpacity(0);
-        
+
         this.button.addEventFilter(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
         this.button.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
     }
@@ -87,14 +87,13 @@ public class ProgressButton extends StackPane {
         indicator.setMouseTransparent(true);
         button.radiusProperty().addListener((obs, oldVal, newVal) -> {
             indicator.setMinHeight(2 * newVal.doubleValue());
-            indicator.setMinWidth(2*newVal.doubleValue() );
+            indicator.setMinWidth(2 * newVal.doubleValue());
             buttonHeight = newVal.doubleValue();
-            double width = newVal.doubleValue()*2;
-            width = (width * 90) /100;
-            image.setFitWidth(width );
+            double width = newVal.doubleValue() * 2;
+            width = (width * 90) / 100;
+            image.setFitWidth(width);
             indicator.toFront();
         });
-       
 
         indicator.setOpacity(0);
     }
@@ -108,44 +107,44 @@ public class ProgressButton extends StackPane {
         enterbuttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-            	if(inuse) {
-	                image.toFront();
-	                indicator.setProgress(0);
-	                indicator.setOpacity(1);
-	                timelineProgressBar = new Timeline();
-	
-	                timelineProgressBar.setDelay(new Duration(500));
-	
-	                timelineProgressBar.getKeyFrames()
-	                        .add(new KeyFrame(new Duration(500), new KeyValue(indicator.progressProperty(), 1)));
-	
-	                timelineProgressBar.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-	                    @Override
-	                    public void handle(ActionEvent actionEvent) {
-	                        indicator.setOpacity(0);
-	                        if (enterEvent != null) {
-	                            enterEvent.handle(e1);
-	                        }
-	                    }
-	                });
-	                timelineProgressBar.play();
-            	}
+                if (inuse) {
+                    image.toFront();
+                    indicator.setProgress(0);
+                    indicator.setOpacity(1);
+                    timelineProgressBar = new Timeline();
+
+                    timelineProgressBar.setDelay(new Duration(500));
+
+                    timelineProgressBar.getKeyFrames()
+                            .add(new KeyFrame(new Duration(500), new KeyValue(indicator.progressProperty(), 1)));
+
+                    timelineProgressBar.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent actionEvent) {
+                            indicator.setOpacity(0);
+                            if (enterEvent != null) {
+                                enterEvent.handle(e1);
+                            }
+                        }
+                    });
+                    timelineProgressBar.play();
+                }
             }
         };
 
         exitbuttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-            	if (inuse) {
-	                timelineProgressBar.stop();
-	                indicator.setOpacity(0);
-	                indicator.setProgress(0);
-            	}
+                if (inuse) {
+                    timelineProgressBar.stop();
+                    indicator.setOpacity(0);
+                    indicator.setProgress(0);
+                }
             }
         };
 
         active2();
-        
+
         return indicator;
     }
 

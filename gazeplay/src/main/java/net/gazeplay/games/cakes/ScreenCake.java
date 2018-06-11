@@ -24,15 +24,13 @@ public class ScreenCake extends LinkedList {
 
     public ScreenCake(int i, cakeFactory cakef) {
         super();
-        /*gameContext = cakef.getGameContext();
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Rectangle r = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        r.setFill(c);
-        this.add(r);
-        Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        back.setFill(new ImagePattern(new Image("data/cake/background.png")));
-        back.setMouseTransparent(true);
-        this.add(back);*/
+        /*
+         * gameContext = cakef.getGameContext(); Dimension2D dimension2D =
+         * gameContext.getGamePanelDimensionProvider().getDimension2D(); Rectangle r = new Rectangle(0, 0,
+         * dimension2D.getWidth(), dimension2D.getHeight()); r.setFill(c); this.add(r); Rectangle back = new
+         * Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight()); back.setFill(new ImagePattern(new
+         * Image("data/cake/background.png"))); back.setMouseTransparent(true); this.add(back);
+         */
         if (i == 0) {
             createScreenZero(cakef);
         }
@@ -64,7 +62,7 @@ public class ScreenCake extends LinkedList {
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
         bt.setImage(iv);
-        bt.button.setRadius(buttonSize/2);
+        bt.button.setRadius(buttonSize / 2);
         bt.assignIndicator(buttonHandler);
         bt.active();
         cakef.getButtons()[i] = bt;
@@ -84,7 +82,7 @@ public class ScreenCake extends LinkedList {
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
         bt.setImage(iv);
-        bt.button.setRadius(buttonSize/2);
+        bt.button.setRadius(buttonSize / 2);
         bt.setLayoutX(dimension2D.getWidth() - buttonSize);
         bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
         buttonHandler = new EventHandler<Event>() {
@@ -107,13 +105,13 @@ public class ScreenCake extends LinkedList {
                 @Override
                 public void handle(Event e) {
                     for (Node child : cakef.getP()[i + 1]) {
-	                      child.toFront();
-	                }
+                        child.toFront();
+                    }
                     for (int c = 0; c <= cakef.getMaxCake(); c++) {
                         cakef.getCake()[c].toFront();
                     }
                     cakef.active(i + 1);
-                    cakef.r.setFill(cakef.col[i+1]);
+                    cakef.r.setFill(cakef.col[i + 1]);
                 }
             };
         } else {
