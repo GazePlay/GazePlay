@@ -65,7 +65,6 @@ public class ScreenCake extends LinkedList {
         iv.setPreserveRatio(true);
         bt.setImage(iv);
         bt.button.setRadius(buttonSize/2);
-        bt.addEventFilter(MouseEvent.MOUSE_PRESSED, buttonHandler);
         bt.assignIndicator(buttonHandler);
         bt.active();
         cakef.getButtons()[i] = bt;
@@ -74,7 +73,7 @@ public class ScreenCake extends LinkedList {
         }
         ;
         this.add(bt);
-        //gameContext.getGazeDeviceManager().addEventFilter(bt);
+        gameContext.getGazeDeviceManager().addEventFilter(bt.button);
 
     }
 
@@ -94,12 +93,11 @@ public class ScreenCake extends LinkedList {
                 cakef.winFunction();
             }
         };
-        bt.addEventFilter(MouseEvent.MOUSE_PRESSED, buttonHandler);
         bt.assignIndicator(buttonHandler);
         bt.active();
         cakef.getButtons()[i] = bt;
         this.add(bt);
-        //gameContext.getGazeDeviceManager().addEventFilter(bt);
+        gameContext.getGazeDeviceManager().addEventFilter(bt.button);
     }
 
     public EventHandler<Event> createprogessButtonHandler(int i, cakeFactory cakef) {
