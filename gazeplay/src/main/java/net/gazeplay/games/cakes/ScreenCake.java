@@ -74,7 +74,7 @@ public class ScreenCake extends LinkedList {
         }
         ;
         this.add(bt);
-        gameContext.getGazeDeviceManager().addEventFilter(bt);
+        //gameContext.getGazeDeviceManager().addEventFilter(bt);
 
     }
 
@@ -99,7 +99,7 @@ public class ScreenCake extends LinkedList {
         bt.active();
         cakef.getButtons()[i] = bt;
         this.add(bt);
-        gameContext.getGazeDeviceManager().addEventFilter(bt);
+        //gameContext.getGazeDeviceManager().addEventFilter(bt);
     }
 
     public EventHandler<Event> createprogessButtonHandler(int i, cakeFactory cakef) {

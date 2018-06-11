@@ -167,10 +167,12 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 if (j == i){
 	                for (Node child : p[j]) {
 	                    ((ProgressButton) child).active();
+	                    gameContext.getGazeDeviceManager().addEventFilter(((ProgressButton) child));
 	                }
                 }else {
                 	for (Node child : p[j]) {
 	                    ((ProgressButton) child).disable();
+	                    gameContext.getGazeDeviceManager().removeEventFilter(((ProgressButton) child));
 	                    
 	                }
                 }
@@ -460,7 +462,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         bt.button.addEventFilter(MouseEvent.MOUSE_PRESSED, buttonHandler);
         bt.assignIndicator(buttonHandler);
         bt.active();
-        gameContext.getGazeDeviceManager().addEventFilter(bt);
+        //gameContext.getGazeDeviceManager().addEventFilter(bt);
         p[j].add(bt);
     }
 
@@ -494,7 +496,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         bt.button.addEventFilter(MouseEvent.MOUSE_PRESSED, buttonHandler);
         bt.assignIndicator(buttonHandler);
         bt.active();
-        gameContext.getGazeDeviceManager().addEventFilter(bt);
+        //gameContext.getGazeDeviceManager().addEventFilter(bt);
         p[j].add(bt);
     }
 
