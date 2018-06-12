@@ -199,6 +199,7 @@ public class Piano extends Parent implements GameLifeCycle {
         b.setPrefHeight(dimension2D.getHeight() / 7);
         iv.setPreserveRatio(true);
         iv.setFitHeight(b.getPrefHeight());
+        //TODO add a replay button
         b.setOnMousePressed(evt -> {
             try {
                 loadMusic(true);
@@ -314,6 +315,11 @@ public class Piano extends Parent implements GameLifeCycle {
 
             }
         };
+        
+        /*if ((origin !=0)&&(index==9 || index ==13)) {
+        	a3.setOpacity(0);
+        	a3.setDisable(true);
+        }*/
 
         a3.tileEventEnter = tileEventEnter;
         a3.tileEventExited = tileEventExited;
