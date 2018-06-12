@@ -42,43 +42,43 @@ public abstract class GraphicalContext<T extends Parent> {
     @Getter
     protected final T root;
 
-    public static final String RESOURCES_PATH = "data" + File.separator + "common";
-    public static final String IMAGES_PATH = RESOURCES_PATH + File.separator + "images";
+    public static final String RESOURCES_PATH = "data" + "/" + "common";
+    public static final String IMAGES_PATH = RESOURCES_PATH + "/" + "images";
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
-    public static final String PREVIOUS_ICON = IMAGES_PATH + File.separator + "previous.png";
+    public static final String PREVIOUS_ICON = IMAGES_PATH + "/" + "previous.png";
 
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
-    public static final String NEXT_ICON = IMAGES_PATH + File.separator + "skip.png";
+    public static final String NEXT_ICON = IMAGES_PATH + "/" + "skip.png";
 
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
-    public static final String PAUSE_ICON = IMAGES_PATH + File.separator + "pause.png";
+    public static final String PAUSE_ICON = IMAGES_PATH + "/" + "pause.png";
 
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
-    public static final String PLAY_ICON = IMAGES_PATH + File.separator + "play-button.png";
+    public static final String PLAY_ICON = IMAGES_PATH + "/" + "play-button.png";
 
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
-    public static final String SPEAKER_ICON = IMAGES_PATH + File.separator + "speaker.png";
+    public static final String SPEAKER_ICON = IMAGES_PATH + "/" + "speaker.png";
 
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
-    public static final String MUTE_ICON = IMAGES_PATH + File.separator + "mute.png";
+    public static final String MUTE_ICON = IMAGES_PATH + "/" + "mute.png";
 
     public static final int ICON_SIZE = 32;
 

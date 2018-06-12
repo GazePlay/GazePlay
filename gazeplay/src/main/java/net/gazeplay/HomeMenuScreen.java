@@ -39,8 +39,7 @@ import javafx.scene.image.ImageView;
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
-    private final static String LOGO_PATH = "data" + File.separator + "common" + File.separator + "images"
-            + File.separator + "gazeplay.jpg";
+    private final static String LOGO_PATH = "data/common/images/gazeplay.jpg";
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
@@ -94,9 +93,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         MenuBar menuBar = Utils.buildLicence();
 
-        // Node logo = createLogo();
-        // StackPane topLogoPane = new StackPane();
-        // topLogoPane.getChildren().add(logo);
+        Node logo = createLogo();
+        StackPane topLogoPane = new StackPane();
+        topLogoPane.getChildren().add(logo);
 
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
@@ -119,7 +118,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         BorderPane topPane = new BorderPane();
         topPane.setTop(menuBar);
-        // topPane.setCenter(topLogoPane);
+        topPane.setCenter(topLogoPane);
         topPane.setRight(topRightPane);
 
         root.setTop(topPane);
@@ -189,6 +188,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         double width = root.getWidth() * 0.5;
         double height = root.getHeight() * 0.2;
 
+        log.info(LOGO_PATH);
         final Image logoImage = new Image(LOGO_PATH, width, height, true, true);
         final ImageView logoView = new ImageView(logoImage);
 
