@@ -39,8 +39,7 @@ import javafx.scene.image.ImageView;
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
-    private final static String LOGO_PATH = "data" + File.separator + "common" + File.separator + "images"
-            + File.separator + "gazeplay.jpg";
+    private final static String LOGO_PATH = "data/common/images/gazeplay.jpg";
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
@@ -189,6 +188,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         double width = root.getWidth() * 0.5;
         double height = root.getHeight() * 0.2;
 
+        log.info(LOGO_PATH);
         final Image logoImage = new Image(LOGO_PATH, width, height, true, true);
         final ImageView logoView = new ImageView(logoImage);
 

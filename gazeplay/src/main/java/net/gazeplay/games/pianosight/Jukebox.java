@@ -29,8 +29,8 @@ public class Jukebox extends Pane {
         String s = null;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Midi Files", "*.midi"),
-                new ExtensionFilter("Mid Files", "*.mid"));
+        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Midi & Mid Files", "*.midi", "*.mid"),
+                new ExtensionFilter("Midi Files", "*.midi"), new ExtensionFilter("Mid Files", "*.mid"));
         File selectedFile = fileChooser.showOpenDialog(gc.getGazePlay().getPrimaryStage());
         if (selectedFile != null) {
             s = selectedFile.getAbsolutePath();
