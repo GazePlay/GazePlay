@@ -33,6 +33,12 @@ public class ImageDirectoryLocator {
             boolean checked = checkImageDirectory(imagesDirectory);
             if (checked) {
                 return imagesDirectory;
+            }else {
+            	 final File imagesDirectoryRessource = new File(workingDirectory, "/gazeplay-data/src/main/resources/"+ parentImagesPackageResourceLocation);
+            	 checked = checkImageDirectory(imagesDirectoryRessource);
+                 if (checked) {
+                     return imagesDirectoryRessource;
+                 }
             }
         }
 
