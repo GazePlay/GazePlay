@@ -34,7 +34,7 @@ public class GameSizingComputer {
     }
 
     public GameSizing computeGameSizing(Dimension2D dimension2D) {
-        Rectangle2D bounds = new Rectangle2D(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        Rectangle2D bounds = new Rectangle2D(0, 0, dimension2D.getWidth(), dimension2D.getHeight() * 0.9);
 
         return computeGameSizing(bounds);
     }

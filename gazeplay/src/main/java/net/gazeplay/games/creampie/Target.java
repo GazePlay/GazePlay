@@ -89,7 +89,7 @@ public class Target extends Portrait {
 
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(radiusProperty(), radius)));
 
-        Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
+        Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
 
         timeline2.getKeyFrames()
                 .add(new KeyFrame(new Duration(1), new KeyValue(centerXProperty(), newPosition.getX())));

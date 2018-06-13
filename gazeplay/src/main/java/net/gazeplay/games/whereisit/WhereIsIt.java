@@ -69,6 +69,8 @@ public class WhereIsIt implements GameLifeCycle {
         }
     }
 
+    private Text questionText;
+
     private final WhereIsItGameType gameType;
     private final int nbLines;
     private final int nbColumns;
@@ -115,7 +117,7 @@ public class WhereIsIt implements GameLifeCycle {
 
     private Transition createQuestionTransition(String question, List<Image> Pictos) {
 
-        Text questionText = new Text(question);
+        questionText = new Text(question);
 
         questionText.setId("title");
 
@@ -167,12 +169,16 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         TranslateTransition fullAnimation = new TranslateTransition(
-                Duration.millis(Configuration.getInstance().getQuestionLength()), questionText);
+                Duration.millis(Configuration.getInstance().getQuestionLength() / 2), questionText);
+        fullAnimation.setDelay(Duration.millis(Configuration.getInstance().getQuestionLength()));
+        double bottomCenter = (0.9 * gamePaneDimension2D.getHeight()) - questionText.getY()
+                + questionText.getBoundsInParent().getHeight() * 3;
+        fullAnimation.setToY(bottomCenter);
 
         fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                gameContext.getChildren().remove(questionText);
+                // gameContext.getChildren().remove(questionText);
 
                 gameContext.getChildren().removeAll(pictogramesList);
 
@@ -184,6 +190,8 @@ public class WhereIsIt implements GameLifeCycle {
                     p.toFront();
                     p.setOpacity(1);
                 }
+
+                questionText.toFront();
 
                 stats.notifyNewRoundReady();
 
@@ -645,6 +653,8 @@ public class WhereIsIt implements GameLifeCycle {
             progressIndicator.setVisible(false);
 
             gameInstance.removeAllIncorrectPictureCards();
+
+            this.toFront();
 
             Dimension2D gamePanelDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             log.info("gamePanelDimension2D = {}", gamePanelDimension2D);
