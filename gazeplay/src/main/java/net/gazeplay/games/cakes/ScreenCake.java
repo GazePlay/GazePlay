@@ -63,7 +63,7 @@ public class ScreenCake extends LinkedList {
         iv.setPreserveRatio(true);
         bt.setImage(iv);
         bt.button.setRadius(buttonSize / 2);
-        bt.assignIndicator(buttonHandler);
+        bt.assignIndicator(buttonHandler, cakef.getFixationLength());
         bt.active();
         cakef.getButtons()[i] = bt;
         if (i == 2) {
@@ -91,7 +91,7 @@ public class ScreenCake extends LinkedList {
                 cakef.winFunction();
             }
         };
-        bt.assignIndicator(buttonHandler);
+        bt.assignIndicator(buttonHandler, cakef.getFixationLength());
         bt.active();
         cakef.getButtons()[i] = bt;
         this.add(bt);

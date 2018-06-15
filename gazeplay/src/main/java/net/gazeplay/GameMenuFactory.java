@@ -18,9 +18,11 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
@@ -43,21 +45,36 @@ public class GameMenuFactory {
     private final static double THUMBNAIL_WIDTH_RATIO = 1;
     private final static double THUMBNAIL_HEIGHT_RATIO = 0.4;
 
-    private List<ProgressPane> pausedEvents = new LinkedList<ProgressPane>();
+    @Getter
+    private List<GameButtonPane> pausedEvents = new LinkedList<GameButtonPane>();
 
     public void pause() {
-        for (ProgressPane child : pausedEvents) {
-            gazeDeviceManager.removeEventFilter((ProgressPane) child);
+        if (Configuration.getInstance().isGazeMenuEnable()) {
+            for (GameButtonPane child : pausedEvents) {
+                child.removeEventFilter(GazeEvent.GAZE_ENTERED, child.getEnterhandler());
+                child.removeEventFilter(GazeEvent.GAZE_EXITED, child.getExithandler());
+            }
         }
     }
 
     public void play() {
-        for (ProgressPane child : pausedEvents) {
-            gazeDeviceManager.addEventFilter(child);
+        if (Configuration.getInstance().isGazeMenuEnable()) {
+            for (GameButtonPane child : pausedEvents) {
+                child.addEventFilter(GazeEvent.GAZE_ENTERED, child.getEnterhandler());
+                child.addEventFilter(GazeEvent.GAZE_EXITED, child.getExithandler());
+            }
         }
     }
 
-    public ProgressPane createGameButton(GazePlay gazePlay, final Region root, Configuration config,
+    public void addFilters() {
+        if (Configuration.getInstance().isGazeMenuEnable()) {
+            for (GameButtonPane child : pausedEvents) {
+                gazeDeviceManager.addEventFilter(child);
+            }
+        }
+    }
+
+    public GameButtonPane createGameButton(GazePlay gazePlay, final Region root, Configuration config,
             Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
             GazeDeviceManager gazeDeviceManager, BooleanProperty gameSelected) {
         this.gazeDeviceManager = gazeDeviceManager;
@@ -82,7 +99,7 @@ public class GameMenuFactory {
                     .setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
-        ProgressPane gameCard = new ProgressPane();
+        GameButtonPane gameCard = new GameButtonPane();
         switch (orientation) {
         case HORIZONTAL:
             gameCard.getStyleClass().add("gameChooserButton");
@@ -148,24 +165,30 @@ public class GameMenuFactory {
             imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
             imageView.setPreserveRatio(true);
 
+            final VBox gameTypeIndicatorImageViewContainer = new VBox();
             switch (orientation) {
             case HORIZONTAL:
                 gameCard.heightProperty().addListener(
                         (observableValue, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() / 10));
                 StackPane.setAlignment(imageView, Pos.BOTTOM_RIGHT);
+
+                gameTypeIndicatorImageViewContainer.setAlignment(Pos.BOTTOM_RIGHT);
+                gameTypeIndicatorImageViewContainer.getChildren().add(imageView);
+                gameCard.setBottom(gameTypeIndicatorImageViewContainer);
+                gameCard.setTop(new VBox());
+
                 break;
             case VERTICAL:
                 gameCard.widthProperty().addListener(
                         (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
                 StackPane.setAlignment(imageView, Pos.BOTTOM_RIGHT);
+
+                gameTypeIndicatorImageViewContainer.setAlignment(Pos.TOP_RIGHT);
+                gameTypeIndicatorImageViewContainer.getChildren().add(imageView);
+                gameCard.setTop(gameTypeIndicatorImageViewContainer);
+
                 break;
             }
-
-            final VBox gameTypeIndicatorImageViewContainer = new VBox();
-            gameTypeIndicatorImageViewContainer.setAlignment(Pos.BOTTOM_RIGHT);
-            gameTypeIndicatorImageViewContainer.getChildren().add(imageView);
-
-            gameDescriptionPane.setBottom(gameTypeIndicatorImageViewContainer);
         }
 
         final VBox gameTitleContainer = new VBox();
@@ -184,8 +207,8 @@ public class GameMenuFactory {
         case HORIZONTAL:
             gameDescriptionPane.setPadding(new Insets(0, 10, 0, 10));
 
-            gameCard.button.setRight(gameDescriptionPane);
-            gameCard.button.setLeft(thumbnailImageViewContainer);
+            gameCard.setRight(gameDescriptionPane);
+            gameCard.setLeft(thumbnailImageViewContainer);
 
             // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
             StackPane.setAlignment(gameTitleText, Pos.TOP_RIGHT);
@@ -210,8 +233,8 @@ public class GameMenuFactory {
         case VERTICAL:
             gameDescriptionPane.setPadding(new Insets(10, 0, 10, 0));
 
-            gameCard.button.setBottom(gameDescriptionPane);
-            gameCard.button.setTop(thumbnailImageViewContainer);
+            gameCard.setBottom(gameDescriptionPane);
+            gameCard.setCenter(thumbnailImageViewContainer);
 
             // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
             StackPane.setAlignment(gameTitleText, Pos.TOP_CENTER);
@@ -231,12 +254,11 @@ public class GameMenuFactory {
             break;
         }
 
-        EventHandler<Event> eventhandler = new EventHandler<Event>() {
+        gameCard.setEventhandler(new EventHandler<Event>() {
             @Override
-            public void handle(Event mouseEvent) {
-                if (gazePlay.getGazeMenuActivated().getValue()) {
-                    pause();
-                }
+            public void handle(Event e) {
+                pause();
+
                 Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
                 if (variants.size() > 1) {
@@ -261,10 +283,9 @@ public class GameMenuFactory {
                     }
                 }
             }
-        };
+        });
 
-        gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, eventhandler);
-        gameCard.assignIndicator(eventhandler);
+        gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, gameCard.getEventhandler());
         pausedEvents.add(gameCard);
         return gameCard;
     }
@@ -276,9 +297,7 @@ public class GameMenuFactory {
         dialog.initOwner(primaryStage);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setOnCloseRequest(windowEvent -> {
-            if (gazePlay.getGazeMenuActivated().getValue()) {
-                play();
-            }
+            play();
             primaryStage.getScene().getRoot().setEffect(null);
         });
 
@@ -328,12 +347,9 @@ public class GameMenuFactory {
         GameContext gameContext = GameContext.newInstance(gazePlay);
 
         // SecondScreen secondScreen = SecondScreen.launch();
-        if (gazePlay.getGazeMenuActivated().getValue()) {
-            pause();
-            play();
-        }
         // this.gazeDeviceManager.clear();
         // this.gazeDeviceManager.destroy();
+        pause();
 
         gazePlay.onGameLaunch(gameContext);
 

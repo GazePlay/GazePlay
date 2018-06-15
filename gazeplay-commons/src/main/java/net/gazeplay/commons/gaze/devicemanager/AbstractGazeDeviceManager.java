@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,10 +23,12 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     private final List<GazeMotionListener> gazeMotionListeners = new CopyOnWriteArrayList<>();
 
     @Getter
-    private final Map<IdentityKey<Node>, GazeInfos> shapesEventFilter = new ConcurrentHashMap<>();
+    private final Map<IdentityKey<Node>, GazeInfos> shapesEventFilter = Collections
+            .synchronizedMap(new HashMap<IdentityKey<Node>, GazeInfos>());
 
     @Getter
-    private final Map<IdentityKey<Node>, GazeInfos> shapesEventHandler = new ConcurrentHashMap<>();
+    private final Map<IdentityKey<Node>, GazeInfos> shapesEventHandler = Collections
+            .synchronizedMap(new HashMap<IdentityKey<Node>, GazeInfos>());
 
     public AbstractGazeDeviceManager() {
 
@@ -95,7 +99,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         gazeMotionListeners.clear();
     }
 
-    void onGazeUpdate(Point2D gazePositionOnScreen) {
+    synchronized void onGazeUpdate(Point2D gazePositionOnScreen) {
         // log.info("gazedata = " + gazePositionOnScreen);
 
         notifyAllGazeMotionListeners(gazePositionOnScreen);
@@ -113,7 +117,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
                 Point2D localPosition = node.screenToLocal(positionX, positionY);
 
-                if (localPosition != null && node.contains(localPosition)) {
+                if (localPosition != null && localPosition.getX() >= 0 && localPosition.getY() >= 0
+                        && node.contains(localPosition)) {
                     if (gi.isOn()) {
                         Platform.runLater(() -> node
                                 .fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY)));

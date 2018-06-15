@@ -14,6 +14,7 @@ import javafx.stage.WindowEvent;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
@@ -46,15 +47,9 @@ public class GazePlay extends Application {
         instance = this;
     }
 
-    @Getter
-    private BooleanProperty gazeMenuActivated;
-
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-
-        gazeMenuActivated = new SimpleBooleanProperty();
-        gazeMenuActivated.setValue(false);
 
         Screen screen = Screen.getPrimary();
 
@@ -84,9 +79,8 @@ public class GazePlay extends Application {
 
         homeMenuScreen.setUpOnStage(primaryScene);
 
-        primaryStage.centerOnScreen();
-
         primaryStage.setFullScreen(true);
+        primaryStage.centerOnScreen();
         primaryStage.show();
     }
 
@@ -96,9 +90,17 @@ public class GazePlay extends Application {
     }
 
     public void onReturnToMenu() {
+
         homeMenuScreen.setUpOnStage(primaryScene);
         final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
         musicMananger.onEndGame();
+
+        homeMenuScreen.setGazeDeviceManager(GazeDeviceManagerFactory.getInstance().createNewGazeListener());
+        homeMenuScreen.getGameMenuFactory().addFilters();
+        homeMenuScreen.getGameMenuFactory().play();
+
+        log.info("here is the list of pausedEvent = {}", homeMenuScreen.getGameMenuFactory().getPausedEvents());
+
         // homeMenuScreen.updateMusicControler();
     }
 
