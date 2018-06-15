@@ -46,7 +46,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
     private double centerX;
     private double centerY;
-    
+
     @Getter
     private int fixationLength;
 
@@ -497,7 +497,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 r.setFill(col[0]);
             }
         };
-        bt.assignIndicator(buttonHandler,fixationLength);
+        bt.assignIndicator(buttonHandler, fixationLength);
         bt.active();
         gameContext.getGazeDeviceManager().addEventFilter(bt.button);
         p[j].add(bt);

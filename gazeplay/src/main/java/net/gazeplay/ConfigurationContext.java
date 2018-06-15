@@ -222,6 +222,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        {
+            I18NText label = new I18NText(translator, "EnableGazeMenu", COLON);
+            CheckBox input = buildGazeMenu(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
         return grid;
     }
 
@@ -579,6 +586,21 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         checkBox.selectedProperty().addListener((o) -> {
 
             configuration.getHeatMapDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildGazeMenu(Configuration configuration, ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isGazeMenuEnable());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getGazeMenuProperty().setValue(false);
+            //TODO replace by checkBox.isSelected(), not works fine for now
             configuration.saveConfigIgnoringExceptions();
         });
 

@@ -49,22 +49,28 @@ public class GameMenuFactory {
     private List<GameButtonPane> pausedEvents = new LinkedList<GameButtonPane>();
 
     public void pause() {
-        for (GameButtonPane child : pausedEvents) {
-            child.removeEventFilter(GazeEvent.GAZE_ENTERED, child.getEnterhandler());
-            child.removeEventFilter(GazeEvent.GAZE_EXITED, child.getExithandler());
+        if (Configuration.getInstance().isGazeMenuEnable()) {
+            for (GameButtonPane child : pausedEvents) {
+                child.removeEventFilter(GazeEvent.GAZE_ENTERED, child.getEnterhandler());
+                child.removeEventFilter(GazeEvent.GAZE_EXITED, child.getExithandler());
+            }
         }
     }
 
     public void play() {
-    	for (GameButtonPane child : pausedEvents) {
-            child.addEventFilter(GazeEvent.GAZE_ENTERED, child.getEnterhandler());
-            child.addEventFilter(GazeEvent.GAZE_EXITED, child.getExithandler());
+        if (Configuration.getInstance().isGazeMenuEnable()) {
+            for (GameButtonPane child : pausedEvents) {
+                child.addEventFilter(GazeEvent.GAZE_ENTERED, child.getEnterhandler());
+                child.addEventFilter(GazeEvent.GAZE_EXITED, child.getExithandler());
+            }
         }
     }
-    
+
     public void addFilters() {
-    	for (GameButtonPane child : pausedEvents) {
-            gazeDeviceManager.addEventFilter(child);
+        if (Configuration.getInstance().isGazeMenuEnable()) {
+            for (GameButtonPane child : pausedEvents) {
+                gazeDeviceManager.addEventFilter(child);
+            }
         }
     }
 
@@ -159,19 +165,18 @@ public class GameMenuFactory {
             imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
             imageView.setPreserveRatio(true);
 
-
             final VBox gameTypeIndicatorImageViewContainer = new VBox();
             switch (orientation) {
             case HORIZONTAL:
                 gameCard.heightProperty().addListener(
                         (observableValue, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() / 10));
                 StackPane.setAlignment(imageView, Pos.BOTTOM_RIGHT);
-                
+
                 gameTypeIndicatorImageViewContainer.setAlignment(Pos.BOTTOM_RIGHT);
                 gameTypeIndicatorImageViewContainer.getChildren().add(imageView);
                 gameCard.setBottom(gameTypeIndicatorImageViewContainer);
                 gameCard.setTop(new VBox());
-                
+
                 break;
             case VERTICAL:
                 gameCard.widthProperty().addListener(
@@ -181,7 +186,7 @@ public class GameMenuFactory {
                 gameTypeIndicatorImageViewContainer.setAlignment(Pos.TOP_RIGHT);
                 gameTypeIndicatorImageViewContainer.getChildren().add(imageView);
                 gameCard.setTop(gameTypeIndicatorImageViewContainer);
-                
+
                 break;
             }
         }
@@ -249,12 +254,12 @@ public class GameMenuFactory {
             break;
         }
 
-        gameCard.setEventhandler( new EventHandler<Event>() {
+        gameCard.setEventhandler(new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-            	pause();
-            	
-            	Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
+                pause();
+
+                Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
                 if (variants.size() > 1) {
                     log.info("variants = {}", variants);
@@ -280,7 +285,7 @@ public class GameMenuFactory {
             }
         });
 
-        gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED,  gameCard.getEventhandler());
+        gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, gameCard.getEventhandler());
         pausedEvents.add(gameCard);
         return gameCard;
     }
@@ -292,7 +297,7 @@ public class GameMenuFactory {
         dialog.initOwner(primaryStage);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setOnCloseRequest(windowEvent -> {
-        	play();
+            play();
             primaryStage.getScene().getRoot().setEffect(null);
         });
 
@@ -342,8 +347,8 @@ public class GameMenuFactory {
         GameContext gameContext = GameContext.newInstance(gazePlay);
 
         // SecondScreen secondScreen = SecondScreen.launch();
-        //this.gazeDeviceManager.clear();
-        //this.gazeDeviceManager.destroy();
+        // this.gazeDeviceManager.clear();
+        // this.gazeDeviceManager.destroy();
         pause();
 
         gazePlay.onGameLaunch(gameContext);

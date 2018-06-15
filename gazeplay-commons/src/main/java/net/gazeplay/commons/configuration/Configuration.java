@@ -40,6 +40,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_MUSIC_VOLUME = "MUSIC_VOLUME";
     private static final String PROPERTY_NAME_MUSIC_FOLDER = "MUSIC_FOLDER";
     private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
+    private static final String PROPERTY_NAME_GAZE_MENU = "GAZE_MENU";
 
     private static final String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
@@ -58,6 +59,7 @@ public class Configuration implements Cloneable {
             + "sounds";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
     public static final String DEFAULT_VALUE_FILE_DIR = getFileDirectoryDefaultValue();
+    public static final boolean DEFAULT_VALUE_GAZE_MENU = false;
 
     private static String getFileDirectoryDefaultValue() {
         return Utils.getGazePlayFolder() + "files" /* + Utils.FILESEPARATOR */;
@@ -96,6 +98,10 @@ public class Configuration implements Cloneable {
     @Getter
     protected final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE,
             DEFAULT_VALUE_GAZEMODE);
+
+    @Getter
+    protected final BooleanProperty gazeMenuProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MENU,
+            DEFAULT_VALUE_GAZE_MENU);
 
     @Getter
     protected final StringProperty eyetrackerProperty = new SimpleStringProperty(this, PROPERTY_NAME_EYETRACKER,
@@ -263,6 +269,11 @@ public class Configuration implements Cloneable {
             }
         }
 
+        buffer = prop.getProperty(PROPERTY_NAME_GAZE_MENU);
+        if (buffer != null) {
+            gazeMenuProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+
     }
 
     private Properties toProperties() {
@@ -296,6 +307,9 @@ public class Configuration implements Cloneable {
         properties.setProperty(PROPERTY_NAME_MUSIC_VOLUME, Double.toString(this.musicVolumeProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MUSIC_FOLDER, this.musicFolderProperty.getValue());
         properties.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, Double.toString(effectsVolumeProperty.getValue()));
+        /*
+         * properties.setProperty(PROPERTY_NAME_GAZE_MENU, Boolean.toString(this.gazeMenuProperty.getValue()));
+         */
 
         return properties;
     }
@@ -373,5 +387,9 @@ public class Configuration implements Cloneable {
 
     public Double getEffectsVolume() {
         return effectsVolumeProperty.getValue();
+    }
+
+    public Boolean isGazeMenuEnable() {
+        return gazeMenuProperty.getValue();
     }
 }
