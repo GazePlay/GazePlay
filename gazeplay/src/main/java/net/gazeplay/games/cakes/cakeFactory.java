@@ -30,6 +30,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -45,6 +46,9 @@ public class cakeFactory extends Parent implements GameLifeCycle {
 
     private double centerX;
     private double centerY;
+    
+    @Getter
+    private int fixationLength;
 
     @Getter
     @Setter
@@ -104,6 +108,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
         setNappage(false);
         this.mode = mode;
         buttons = new ProgressButton[6];
+        this.fixationLength = Configuration.getInstance().getFixationLength();
 
         r = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         r.setFill(col[0]);
@@ -459,7 +464,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 winButton(true);
             }
         };
-        bt.assignIndicator(buttonHandler);
+        bt.assignIndicator(buttonHandler, fixationLength);
         bt.active();
         gameContext.getGazeDeviceManager().addEventFilter(bt.button);
         p[j].add(bt);
@@ -492,7 +497,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
                 r.setFill(col[0]);
             }
         };
-        bt.assignIndicator(buttonHandler);
+        bt.assignIndicator(buttonHandler,fixationLength);
         bt.active();
         gameContext.getGazeDeviceManager().addEventFilter(bt.button);
         p[j].add(bt);

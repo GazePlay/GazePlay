@@ -98,7 +98,7 @@ public class ProgressButton extends StackPane {
         indicator.setOpacity(0);
     }
 
-    public ProgressIndicator assignIndicator(EventHandler<Event> enterEvent) {
+    public ProgressIndicator assignIndicator(EventHandler<Event> enterEvent, int fixationLength) {
         indicator.setMouseTransparent(true);
         indicator.setOpacity(0);
         ProgressButton pb = this;
@@ -116,7 +116,7 @@ public class ProgressButton extends StackPane {
                     timelineProgressBar.setDelay(new Duration(500));
 
                     timelineProgressBar.getKeyFrames()
-                            .add(new KeyFrame(new Duration(500), new KeyValue(indicator.progressProperty(), 1)));
+                            .add(new KeyFrame(new Duration(fixationLength), new KeyValue(indicator.progressProperty(), 1)));
 
                     timelineProgressBar.onFinishedProperty().set(new EventHandler<ActionEvent>() {
                         @Override

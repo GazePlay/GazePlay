@@ -1,21 +1,28 @@
 package net.gazeplay;
 
 import java.io.File;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.gaze.devicemanager.TobiiGazeDeviceManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
@@ -102,7 +111,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().addAll(exitButton);
 
-        Node gamePickerChoicePane = createGamePickerChoicePane(games, config);
+
+        ProgressIndicator indicator = new ProgressIndicator(0);
+        Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
 
         VBox centerCenterPane = new VBox();
         centerCenterPane.setSpacing(40);
@@ -135,7 +146,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config) {
+    private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config, 
+            ProgressIndicator indicator) {
 
         final int flowpaneGap = 20;
         choicePanel = new FlowPane();
@@ -154,28 +166,78 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
         BooleanProperty gameSelected = new SimpleBooleanProperty();
-        gameSelected.setValue(false);
+        gameSelected.setValue(false);       
+				
+	        for (GameSpec gameSpec : games) {
+	            final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
+	                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
+	            choicePanel.getChildren().add(gameCard);
+	            
+	            
+	            gameCard.setEnterhandler(new EventHandler<Event>() {
+	                @Override
+	                public void handle(Event e) {
+	                	indicator.setProgress(0);
+	                	indicator.setOpacity(1);
+	                	indicator.toFront();
+	                	switch (gameButtonOrientation) {
+	                    case HORIZONTAL:
+	                    	((BorderPane)((GameButtonPane)e.getSource()).getLeft()).setRight(indicator);
+	                        break;
+	                    case VERTICAL:
+	                    	((BorderPane)((GameButtonPane)e.getSource()).getCenter()).setRight(indicator);
+	                        break;
+	                    }
+	                	((GameButtonPane)e.getSource()).setTimelineProgressBar( new Timeline() );
 
-        for (GameSpec gameSpec : games) {
-            final ProgressPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
-                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
-            choicePanel.getChildren().add(gameCard);
-            if (getGazePlay().getGazeMenuActivated().getValue()) {
-                enableCard();
-            }
+	                	((GameButtonPane)e.getSource()).getTimelineProgressBar().setDelay(new Duration(config.getFixationLength()));
+	                	
+	                	((GameButtonPane)e.getSource()).getTimelineProgressBar().getKeyFrames()
+	                             .add(new KeyFrame(new Duration(config.getFixationLength()*5), new KeyValue(indicator.progressProperty(), 1)));
 
-        }
-
+	                	((GameButtonPane)e.getSource()).getTimelineProgressBar().onFinishedProperty().set(new EventHandler<ActionEvent>() {
+	                         @Override
+	                         public void handle(ActionEvent actionEvent) {
+	     	                	indicator.setOpacity(0);
+	                         	((GameButtonPane)e.getSource()).getEventhandler().handle(null);
+	                         }
+	                     });
+	                	((GameButtonPane)e.getSource()).getTimelineProgressBar().play();
+	                	
+	                }
+	            });
+	            
+	            gameCard.setExithandler(new EventHandler<Event>() {
+	                @Override
+	                public void handle(Event e) {
+	                	((GameButtonPane)e.getSource()).getTimelineProgressBar().stop();
+	                	indicator.setProgress(0);
+	                	indicator.setOpacity(0);
+	                	switch (gameButtonOrientation) {
+	                    case HORIZONTAL:
+	                    	((BorderPane)((GameButtonPane)e.getSource()).getLeft()).setRight(null);
+	                        break;
+	                    case VERTICAL:
+	                    	((BorderPane)((GameButtonPane)e.getSource()).getCenter()).setRight(null);
+	                        break;
+	                    }
+	                	
+	                }
+	            });
+	            
+	            gameCard.addEventFilter(GazeEvent.GAZE_ENTERED, gameCard.getEnterhandler());
+	            gameCard.addEventFilter(GazeEvent.GAZE_EXITED, gameCard.getExithandler());
+	            
+	            
+	            gazeDeviceManager.addEventFilter(gameCard);
+	
+	        }
+        
+        
         choicePanel.setBackground(new Background(new BackgroundImage(new Image("data/common/images/back.gif"), null,
                 null, null, new BackgroundSize(1, 1, true, true, true, true))));
 
         return choicePanelScroller;
-    }
-
-    public void enableCard() {
-        for (Node child : choicePanel.getChildren()) {
-            gazeDeviceManager.addEventFilter((ProgressPane) child);
-        }
     }
 
     private CustomButton createExitButton() {
