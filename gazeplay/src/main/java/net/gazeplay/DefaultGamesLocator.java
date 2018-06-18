@@ -10,8 +10,8 @@ import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
 import net.gazeplay.games.bubbles.BubbleType;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
-import net.gazeplay.games.cakes.cakeFactory;
-import net.gazeplay.games.cakes.cakeStats;
+import net.gazeplay.games.cakes.CakeFactory;
+import net.gazeplay.games.cakes.CakeStats;
 import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
 import net.gazeplay.games.cups.CupsAndBalls;
@@ -600,13 +600,13 @@ public class DefaultGamesLocator implements GamesLocator {
                 }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new cakeStats(scene);
+                        return new CakeStats(scene);
                     }
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
                             Stats stats) {
-                        return new cakeFactory(gameContext, stats, gameVariant.getNumber());
+                        return new CakeFactory(gameContext, stats, gameVariant.getNumber());
                     }
                 }));
         result.add(new GameSpec(

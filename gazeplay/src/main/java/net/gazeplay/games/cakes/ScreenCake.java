@@ -22,7 +22,7 @@ public class ScreenCake extends LinkedList {
 
     public GameContext gameContext;
 
-    public ScreenCake(int i, cakeFactory cakef) {
+    public ScreenCake(int i, CakeFactory cakef) {
         super();
         /*
          * gameContext = cakef.getGameContext(); Dimension2D dimension2D =
@@ -36,7 +36,7 @@ public class ScreenCake extends LinkedList {
         }
     }
 
-    public void createScreenZero(cakeFactory cakef) {
+    public void createScreenZero(CakeFactory cakef) {
         gameContext = cakef.getGameContext();
         double buttonSize = cakef.getButtonSize();
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -56,7 +56,7 @@ public class ScreenCake extends LinkedList {
         }
     }
 
-    public void createButton(int i, ProgressButton bt, EventHandler<Event> buttonHandler, cakeFactory cakef) {
+    public void createButton(int i, ProgressButton bt, EventHandler<Event> buttonHandler, CakeFactory cakef) {
         double buttonSize = cakef.getButtonSize();
         ImageView iv = new ImageView(new Image("data/cake/menu" + i + ".png"));
         iv.setFitWidth(2 * buttonSize / 3);
@@ -75,7 +75,7 @@ public class ScreenCake extends LinkedList {
 
     }
 
-    public void createValidationButton(int i, ProgressButton bt, EventHandler<Event> buttonHandler, cakeFactory cakef) {
+    public void createValidationButton(int i, ProgressButton bt, EventHandler<Event> buttonHandler, CakeFactory cakef) {
         double buttonSize = cakef.getButtonSize();
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         ImageView iv = new ImageView(new Image("data/cake/validate.png"));
@@ -98,7 +98,7 @@ public class ScreenCake extends LinkedList {
         gameContext.getGazeDeviceManager().addEventFilter(bt.button);
     }
 
-    public EventHandler<Event> createprogessButtonHandler(int i, cakeFactory cakef) {
+    public EventHandler<Event> createprogessButtonHandler(int i, CakeFactory cakef) {
         EventHandler<Event> buttonHandler;
         if (i != 4) {
             buttonHandler = new EventHandler<Event>() {

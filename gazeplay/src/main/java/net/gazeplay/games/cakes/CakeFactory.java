@@ -34,7 +34,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
-public class cakeFactory extends Parent implements GameLifeCycle {
+public class CakeFactory extends Parent implements GameLifeCycle {
 
     @Getter
     private final GameContext gameContext;
@@ -94,7 +94,7 @@ public class cakeFactory extends Parent implements GameLifeCycle {
     @Setter
     private ProgressButton[] buttons;
 
-    public cakeFactory(GameContext gameContext, Stats stats, int mode) {
+    public CakeFactory(GameContext gameContext, Stats stats, int mode) {
         this.gameContext = gameContext;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("dimension2D = {}", dimension2D);
