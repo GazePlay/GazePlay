@@ -34,26 +34,25 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
                     @Override
                     protected Void call() {
                         while (!stopRequested) {
+                            float[] pointAsFloatArray = Tobii.gazePosition();
+
+                            final float xRatio = pointAsFloatArray[0];
+                            final float yRatio = pointAsFloatArray[1];
+
+                            final double positionX = xRatio * screenWidth;
+                            final double positionY = yRatio * screenHeight;
+
+                            Point2D point = new Point2D(positionX, positionY);
+                            onGazeUpdate(point);
+
+                            // sleep is mandatory to avoid too much calls to gazePosition()
                             try {
-                                float[] pointAsFloatArray = Tobii.gazePosition();
-
-                                final float xRatio = pointAsFloatArray[0];
-                                final float yRatio = pointAsFloatArray[1];
-
-                                final double positionX = xRatio * screenWidth;
-                                final double positionY = yRatio * screenHeight;
-
-                                Point2D point = new Point2D(positionX, positionY);
-                                onGazeUpdate(point);
-
-                                // sleep is mandatory to avoid too much calls to gazePosition()
-                                Thread.sleep(10);
-                            } catch (Throwable e) {
-                                log.error("Exception on Gaze position update : {}", e);
-                                for (StackTraceElement s : e.getStackTrace()) {
-                                    System.err.println(s.toString());
-                                }
+                                Thread.sleep(25);
+                            } catch (InterruptedException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
                             }
+
                         }
                         return null;
                     }
@@ -69,8 +68,9 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
         stopRequested = true;
         Service<Void> calculateService = this.calculateService;
         if (calculateService != null) {
-            calculateService.cancel();
-            calculateService.reset();
+            while (!calculateService.cancel())
+                ;
+            // calculateService.reset();
         }
     }
 

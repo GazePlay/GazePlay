@@ -107,6 +107,14 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         final double positionX = gazePositionOnScreen.getX();
         final double positionY = gazePositionOnScreen.getY();
 
+        /*
+         * Collection<GazeInfos> s = shapesEventFilter.values(); // Needn't be in synchronized block
+         * 
+         * synchronized (shapesEventFilter) { // Synchronizing on m, not s! Iterator<GazeInfos> i = s.iterator(); //
+         * Must be in synchronized block while (i.hasNext()) { GazeInfos gi = i.next(); final Node node = gi.getNode();
+         * synchronized (node) { if (!node.isDisable()) {
+         */
+
         for (GazeInfos gi : shapesEventFilter.values()) {
 
             final Node node = gi.getNode();
