@@ -5,6 +5,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.Configuration;
 import tobii.Tobii;
 
 @Slf4j
@@ -13,9 +14,11 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
     private Service<Void> calculateService;
 
     private transient boolean stopRequested = false;
+    private Configuration config;
 
-    public TobiiGazeDeviceManager() {
+    public TobiiGazeDeviceManager(Configuration config) {
         super();
+        this.config = config;
     }
 
     public void init() {
@@ -47,7 +50,10 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
 
                             // sleep is mandatory to avoid too much calls to gazePosition()
                             try {
-                                Thread.sleep(25);
+                                Thread.sleep(10);
+                                if (config.isGazeMenuEnable()) {
+                                    Thread.sleep(10);
+                                }
                             } catch (InterruptedException e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();
