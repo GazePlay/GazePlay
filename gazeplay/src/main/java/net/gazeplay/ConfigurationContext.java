@@ -599,7 +599,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         checkBox.selectedProperty().addListener((o) -> {
 
-            configuration.getGazeMenuProperty().setValue(false);
+            configuration.getGazeMenuProperty().setValue(checkBox.isSelected());
             // TODO replace by checkBox.isSelected(), not works fine for now
             configuration.saveConfigIgnoringExceptions();
         });
