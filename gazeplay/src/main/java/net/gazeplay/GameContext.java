@@ -98,7 +98,7 @@ public class GameContext extends GraphicalContext<Pane> {
             updateConfigPane(root2);
         });
 
-        EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> {
+        EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
             double from = 0;
             double to = 1;
             double angle = 360;
@@ -138,8 +138,10 @@ public class GameContext extends GraphicalContext<Pane> {
         controlPanel.setMouseTransparent(true);
         menuOpen = false;
 
-        bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEnterControlPanelEventHandler);
+        bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedControlPanelEventHandler);
         bt.getStyleClass().add("button");
+
+        buttonTransparentHandler(bt);
 
         root2.getChildren().add(bt);
         root2.getChildren().add(controlPanel);
@@ -157,6 +159,38 @@ public class GameContext extends GraphicalContext<Pane> {
 
         return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
                 randomPositionGenerator, gazeDeviceManager, root2);
+    }
+
+    private static void buttonTransparentHandler(Button bt) {
+        FadeTransition fd = new FadeTransition(Duration.millis(500), bt);
+        fd.setFromValue(1);
+        fd.setToValue(0.1);
+
+        FadeTransition initialFd = new FadeTransition(Duration.seconds(1), bt);
+        initialFd.setFromValue(1);
+        initialFd.setToValue(0.1);
+        initialFd.setDelay(Duration.seconds(2));
+
+        EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> {
+            if (!menuOpen) {
+                fd.stop();
+                initialFd.stop();
+                bt.setOpacity(1);
+            }
+        };
+
+        bt.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
+
+        EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent -> {
+            if (!menuOpen) {
+                fd.play();
+            }
+        };
+
+        bt.addEventFilter(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
+
+        initialFd.play();
+
     }
 
     private static void updateConfigButton(Button button, ImageView btnImg) {

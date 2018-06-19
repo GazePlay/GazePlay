@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.LazyImageLibrary;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -33,7 +34,7 @@ public class Divisor implements GameLifeCycle {
         Target target;
 
         if (lapin) {
-            ImageLibrary imageLibrary = new LazyImageLibrary(Utils.getImagesSubDirectory("../divisor/images/rabbit"));
+            ImageLibrary imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images");
 
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -48,7 +49,8 @@ public class Divisor implements GameLifeCycle {
             target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
                     this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         } else {
-            ImageLibrary imageLibrary = new LazyImageLibrary(Utils.getImagesSubDirectory("../divisor/images/basic"));
+
+            ImageLibrary imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("divisor/basic"));
             target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
                     this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         }
