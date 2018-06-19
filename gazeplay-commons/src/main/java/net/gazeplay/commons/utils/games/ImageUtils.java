@@ -39,6 +39,21 @@ public class ImageUtils {
         return new LazyImageLibrary(defaultImageDirectory, fallbackImageLibrary);
     }
 
+    public static ImageLibrary createCustomizedImageLibrary(ImageLibrary fallbackImageLibrary, String path) {
+        File defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory("data/" + path);
+
+        if (defaultImageDirectory == null) {
+            defaultImageDirectory = ImageDirectoryLocator
+                    .locateImagesDirectoryInUnpackedDistDirectory("gazeplay-data/src/main/resources/data/" + path);
+        }
+
+        if (defaultImageDirectory == null) {
+            defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInExplodedClassPath("data/" + path);
+        }
+
+        return new LazyImageLibrary(defaultImageDirectory, fallbackImageLibrary);
+    }
+
     @Deprecated
     public static List<Image> loadAllImages(File directoryFile) {
         List<File> files = listImageFiles(directoryFile);

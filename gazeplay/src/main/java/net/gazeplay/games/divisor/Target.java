@@ -9,6 +9,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -153,6 +154,7 @@ class Target extends Parent {
         for (int i = 0; i < 30; i++) {
             Circle particle = new Circle(x, y, particleRadius);
             particle.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+
             particles.add(particle);
             this.gameContext.getChildren().add(particle);
             Position particleDestination = randomPosWithRange(this.pos, this.radius * 1.5, particleRadius);
