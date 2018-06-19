@@ -680,15 +680,24 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static void changeMusicFolder(final String newMusicFolder) {
 
+        String musicFolder = newMusicFolder;
         final Configuration configuration = Configuration.getInstance();
 
-        configuration.getMusicFolderProperty().setValue(newMusicFolder);
+        if (newMusicFolder == Configuration.DEFAULT_VALUE_MUSIC_FOLDER) {
+            // TODO find a way to access to this files in a "cleaner" way
+            musicFolder = (new File(".")).getAbsolutePath() + "/gazeplay-data/src/main/resources/data" + File.separator
+                    + "home" + File.separator + "sounds";
+            configuration.getMusicFolderProperty().setValue(Configuration.DEFAULT_VALUE_MUSIC_FOLDER);
+        } else {
+            configuration.getMusicFolderProperty().setValue(musicFolder);
+        }
+
         configuration.saveConfigIgnoringExceptions();
 
         BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
 
         musicManager.emptyPlaylist();
-        musicManager.getAudioFromFolder(newMusicFolder);
+        musicManager.getAudioFromFolder(musicFolder);
         musicManager.play();
     }
 
