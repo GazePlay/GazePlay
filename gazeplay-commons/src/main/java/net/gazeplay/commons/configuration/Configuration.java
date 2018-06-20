@@ -41,6 +41,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_MUSIC_FOLDER = "MUSIC_FOLDER";
     private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
     private static final String PROPERTY_NAME_GAZE_MENU = "GAZE_MENU";
+    private static final String PROPERTY_NAME_GAZE_MOUSE = "GAZE_MOUSE";
 
     private static final String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
@@ -59,6 +60,9 @@ public class Configuration implements Cloneable {
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
     public static final String DEFAULT_VALUE_FILE_DIR = getFileDirectoryDefaultValue();
     public static final boolean DEFAULT_VALUE_GAZE_MENU = false;
+    public static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
+
+    public static boolean isMouseFree = false;
 
     private static String getFileDirectoryDefaultValue() {
         return Utils.getGazePlayFolder() + "files" /* + Utils.FILESEPARATOR */;
@@ -141,6 +145,10 @@ public class Configuration implements Cloneable {
     @Getter
     protected final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
+
+    @Getter
+    protected final BooleanProperty gazeMouseProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MOUSE,
+            DEFAULT_VALUE_GAZE_MOUSE);
 
     @Getter
     protected final DoubleProperty musicVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_MUSIC_VOLUME,
@@ -273,6 +281,11 @@ public class Configuration implements Cloneable {
             gazeMenuProperty.setValue(Boolean.parseBoolean(buffer));
         }
 
+        buffer = prop.getProperty(PROPERTY_NAME_GAZE_MOUSE);
+        if (buffer != null) {
+            gazeMouseProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+
     }
 
     private Properties toProperties() {
@@ -390,5 +403,9 @@ public class Configuration implements Cloneable {
 
     public Boolean isGazeMenuEnable() {
         return gazeMenuProperty.getValue();
+    }
+
+    public Boolean isGazeMouseEnable() {
+        return gazeMouseProperty.getValue();
     }
 }

@@ -1,10 +1,15 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
+import java.awt.AWTException;
+import java.awt.Robot;
 import com.sun.glass.ui.Screen;
+
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
 import lombok.extern.slf4j.Slf4j;
+
 import net.gazeplay.commons.configuration.Configuration;
 import tobii.Tobii;
 
@@ -16,9 +21,10 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
     private transient boolean stopRequested = false;
     private Configuration config;
 
-    public TobiiGazeDeviceManager(Configuration config) {
+    public TobiiGazeDeviceManager() {
         super();
-        this.config = config;
+        config = Configuration.getInstance();
+
     }
 
     public void init() {
@@ -44,6 +50,18 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
 
                             final double positionX = xRatio * screenWidth;
                             final double positionY = yRatio * screenHeight;
+
+                            if (config.isGazeMouseEnable() && !config.isMouseFree) {
+                                Platform.runLater(() -> {
+                                    try {
+                                        Robot robot = new Robot();
+                                        robot.mouseMove((int) positionX, (int) positionY);
+                                    } catch (AWTException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    }
+                                });
+                            }
 
                             Point2D point = new Point2D(positionX, positionY);
                             onGazeUpdate(point);

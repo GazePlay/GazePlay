@@ -229,6 +229,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        {
+            I18NText label = new I18NText(translator, "EnableGazeMouse (Press S to stop/start) (Press space to click)",
+                    COLON);
+            CheckBox input = buildGazeMouse(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
         return grid;
     }
 
@@ -600,7 +608,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         checkBox.selectedProperty().addListener((o) -> {
 
             configuration.getGazeMenuProperty().setValue(checkBox.isSelected());
-            // TODO replace by checkBox.isSelected(), not works fine for now
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildGazeMouse(Configuration configuration, ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isGazeMouseEnable());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getGazeMouseProperty().setValue(checkBox.isSelected());
             configuration.saveConfigIgnoringExceptions();
         });
 

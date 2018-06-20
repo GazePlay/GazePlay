@@ -1,12 +1,20 @@
 package net.gazeplay;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.InputEvent;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -82,6 +90,31 @@ public class GazePlay extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.centerOnScreen();
         primaryStage.show();
+
+        this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent ke) {
+                if (ke.getCode() == KeyCode.SPACE && config.isGazeMouseEnable()) {
+                    Platform.runLater(() -> {
+                        try {
+                            Robot robot = new Robot();
+                            robot.mousePress(InputEvent.BUTTON1_MASK);
+                            robot.mouseRelease(InputEvent.BUTTON1_MASK);
+                        } catch (AWTException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            }
+        });
+
+        this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent ke) {
+                if (ke.getCode() == KeyCode.S && config.isGazeMouseEnable()) {
+                    config.isMouseFree = !config.isMouseFree;
+                }
+            }
+        });
     }
 
     public void onGameLaunch(GameContext gameContext) {
