@@ -87,7 +87,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         HBox Bar = createBars();
         gameContext.getChildren().add(Bar);
 
-        //gameContext.getChildren().add(new Mypet());
+        // gameContext.getChildren().add(new Mypet());
 
     }
 
