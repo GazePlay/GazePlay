@@ -1,5 +1,6 @@
 package net.gazeplay.games.pet;
 
+import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -32,10 +33,14 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private final static int BATH_MODE = 1;
     private final static int EAT_MODE = 2;
     private final static int SPORT_MODE = 3;
-    public int[] it = { 20, 20, 20 };
 
     private final GameContext gameContext;
     private final Stats stats;
+    private final static int LIFE_SIZE = 18;
+
+    public int[] it = { LIFE_SIZE, LIFE_SIZE, LIFE_SIZE };
+    public Timeline[] t = { new Timeline(), new Timeline(), new Timeline() };
+    private final Color[] color = {Color.DARKSEAGREEN, Color.ALICEBLUE, Color.DARKSALMON,Color.LAVENDER};
 
     @Getter
     @Setter
@@ -95,7 +100,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             Bars.setLayoutY(newValue.doubleValue() / 2);
         });
 
-        double offset = dimension2D.getHeight() / 20;
+        double offset = dimension2D.getHeight() / LIFE_SIZE;
 
         Bars.setSpacing(offset);
 
@@ -110,40 +115,12 @@ public class PetHouse extends Parent implements GameLifeCycle {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double size = dimension2D.getHeight() / 20;
 
-        for (int i = 0; i < 20; i++) {
-            Rectangle r = new Rectangle(0, 0, (6 * size) / 20, size);
+        for (int i = 0; i < LIFE_SIZE; i++) {
+            Rectangle r = new Rectangle(0, 0, (6 * size) / LIFE_SIZE, size);
             r.setFill(c);
             Bar.getChildren().add(r);
         }
-        int index = getIt(c);
 
-        Timeline t = new Timeline();
-        t.setDelay(Duration.millis(500));
-        t.getKeyFrames().add(new KeyFrame(Duration.millis(500),
-                new KeyValue(((Rectangle) Bar.getChildren().get(index)).fillProperty(), Color.WHITE)));
-        int i = 5;
-
-        t.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                int index = getIt(c);
-                if (index != -1) {
-                    t.getKeyFrames().clear();
-                    t.getKeyFrames().add(new KeyFrame(Duration.millis(500),
-                            new KeyValue(((Rectangle) Bar.getChildren().get(index)).fillProperty(), Color.WHITE)));
-                    t.play();
-                } else {
-                    t.stop();
-                }
-            }
-        });
-
-        t.play();
-
-        return Bar;
-    }
-
-    public int getIt(Color c) {
         int i = 0;
         if (c == Color.BLUE) {
             i = 0;
@@ -152,6 +129,37 @@ public class PetHouse extends Parent implements GameLifeCycle {
         } else {
             i = 2;
         }
+
+        int index = getIt(i);
+
+        t[i] = new Timeline();
+        t[i].setDelay(Duration.millis(500));
+        t[i].getKeyFrames().add(new KeyFrame(Duration.millis(500),
+                new KeyValue(((Rectangle) Bar.getChildren().get(index)).fillProperty(), Color.WHITE)));
+
+        final int number = i;
+        t[i].setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                int index = getIt(number);
+                if (index != -1) {
+                    t[number].getKeyFrames().clear();
+                    t[number].getKeyFrames().add(new KeyFrame(Duration.millis(500),
+                            new KeyValue(((Rectangle) Bar.getChildren().get(index)).fillProperty(), Color.WHITE)));
+                    t[number].play();
+                } else {
+                    t[number].stop();
+                }
+            }
+        });
+
+        t[i].play();
+
+        return Bar;
+    }
+
+    public int getIt(int i) {
+
         int temp = it[i];
         it[i]--;
         return it[i];
@@ -165,7 +173,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
             bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
-            EventHandler<Event> buttonHandler = createprogessButtonHandler();
             ImageView iv = new ImageView(new Image("data/cake/menu" + i + ".png"));
             iv.setFitWidth(2 * buttonSize / 3);
             iv.setPreserveRatio(true);
@@ -173,14 +180,10 @@ public class PetHouse extends Parent implements GameLifeCycle {
             bt.button.setRadius(buttonSize / 2);
             bt.setLayoutY((((i % 2) + 1) * (dimension2D.getHeight() / 2.5)) - (buttonSize * 1.5));
 
+            EventHandler<Event> buttonHandler = createprogessButtonHandler(i);
+
             if (i < 2) {
                 bt.setLayoutX(dimension2D.getWidth() - buttonSize * 1.2);
-                buttonHandler = new EventHandler<Event>() {
-                    @Override
-                    public void handle(Event e) {
-                        background.setFill(Color.BEIGE /* new ImagePattern(new Image("background.jpg")) */);
-                    }
-                };
             } else {
                 bt.setLayoutX(buttonSize * 0.2);
             }
@@ -192,12 +195,17 @@ public class PetHouse extends Parent implements GameLifeCycle {
         }
     }
 
-    public EventHandler<Event> createprogessButtonHandler() {
+    public EventHandler<Event> createprogessButtonHandler(int number) {
         EventHandler<Event> buttonHandler;
         buttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                background.setFill(Color.CORAL /* new ImagePattern(new Image("background.jpg")) */);
+                background.setFill(color[number%4] /* new ImagePattern(new Image("background.jpg")) */);
+                if (t[number % 3].getStatus() == Status.STOPPED) {
+                    t[number % 3].play();
+                } else {
+                    t[number % 3].stop();
+                }
             }
         };
         return buttonHandler;
