@@ -1,4 +1,4 @@
-package net.gazeplay.games.cakes;
+package net.gazeplay.commons.utils;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
