@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import net.gazeplay.GameContext;
+import net.gazeplay.commons.utils.ProgressButton;
 
 public class ScreenCake extends LinkedList {
 

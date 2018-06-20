@@ -36,6 +36,7 @@ import net.gazeplay.games.divisor.DivisorStats;
 import net.gazeplay.games.moles.MoleStats;
 import net.gazeplay.games.moles.Moles;
 import net.gazeplay.games.order.OrderStats;
+import net.gazeplay.games.pet.PetHouse;
 import net.gazeplay.games.order.Order;
 import net.gazeplay.games.room.Room;
 import net.gazeplay.games.room.RoomStats;
@@ -556,6 +557,21 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                         return new Moles(gameContext, stats);
+                    }
+
+                }));
+
+        result.add(new GameSpec(new GameSummary("Pet", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene);
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new PetHouse(gameContext, stats);
                     }
 
                 }));
