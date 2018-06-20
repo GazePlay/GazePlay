@@ -40,7 +40,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     public int[] it = { LIFE_SIZE, LIFE_SIZE, LIFE_SIZE };
     public Timeline[] t = { new Timeline(), new Timeline(), new Timeline() };
-    private final Color[] color = {Color.DARKSEAGREEN, Color.ALICEBLUE, Color.DARKSALMON,Color.LAVENDER};
+    private final Color[] color = { Color.DARKSEAGREEN, Color.ALICEBLUE, Color.DARKSALMON, Color.LAVENDER };
 
     @Getter
     @Setter
@@ -61,6 +61,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(this.background);
 
         Rectangle zone = new Rectangle(0, 0, dimension2D.getWidth() / 1.7, (2 * dimension2D.getHeight()) / 2.5);
+
         zone.setFill(Color.WHITE /* new ImagePattern(new Image("background.jpg")) */);
         zone.setX(dimension2D.getWidth() / 2 - dimension2D.getWidth() / (1.7 * 2));
         zone.setY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 2.5);
@@ -200,7 +201,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         buttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                background.setFill(color[number%4] /* new ImagePattern(new Image("background.jpg")) */);
+                background.setFill(color[number % 4] /* new ImagePattern(new Image("background.jpg")) */);
                 if (t[number % 3].getStatus() == Status.STOPPED) {
                     t[number % 3].play();
                 } else {
