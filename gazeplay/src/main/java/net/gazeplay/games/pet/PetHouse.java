@@ -41,6 +41,8 @@ public class PetHouse extends Parent implements GameLifeCycle {
     public int[] it = { LIFE_SIZE, LIFE_SIZE, LIFE_SIZE };
     public Timeline[] t = { new Timeline(), new Timeline(), new Timeline() };
     private final Color[] color = { Color.DARKSEAGREEN, Color.ALICEBLUE, Color.DARKSALMON, Color.LAVENDER };
+    private final String[] screen = { "park.jpg", "room.jpg", "kitchen.jpg", "shower.jpg" };
+    private final Color[] colorBar = { Color.BLUE, Color.RED, Color.GREEN };
 
     @Getter
     @Setter
@@ -48,6 +50,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     @Getter
     private Rectangle background;
+
+    @Getter
+    private Rectangle zone;
 
     public PetHouse(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
@@ -60,7 +65,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
         this.background.setFill(Color.BEIGE /* new ImagePattern(new Image("background.jpg")) */);
         gameContext.getChildren().add(this.background);
 
-        Rectangle zone = new Rectangle(0, 0, dimension2D.getWidth() / 1.7, (2 * dimension2D.getHeight()) / 2.5);
+        double facteur = (2 / 2.5) + (1 - 2 / 2.5) / 3;
+
+        zone = new Rectangle(0, 0, dimension2D.getWidth() / 1.7, facteur * dimension2D.getHeight());
 
         zone.setFill(Color.WHITE /* new ImagePattern(new Image("background.jpg")) */);
         zone.setX(dimension2D.getWidth() / 2 - dimension2D.getWidth() / (1.7 * 2));
@@ -79,6 +86,8 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
         HBox Bar = createBars();
         gameContext.getChildren().add(Bar);
+
+        // gameContext.getChildren().add(new Mypet());
 
     }
 
@@ -105,31 +114,24 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
         Bars.setSpacing(offset);
 
-        Bars.getChildren().addAll(createColoredProgressBar(Color.BLUE), createColoredProgressBar(Color.RED),
-                createColoredProgressBar(Color.GREEN));
+        Bars.getChildren().addAll(createColoredProgressBar(0), createColoredProgressBar(1),
+                createColoredProgressBar(2));
 
         return Bars;
     }
 
-    public HBox createColoredProgressBar(Color c) {
+    public HBox createColoredProgressBar(int numero) {
         HBox Bar = new HBox();
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double size = dimension2D.getHeight() / 20;
 
         for (int i = 0; i < LIFE_SIZE; i++) {
             Rectangle r = new Rectangle(0, 0, (6 * size) / LIFE_SIZE, size);
-            r.setFill(c);
+            r.setFill(colorBar[numero]);
             Bar.getChildren().add(r);
         }
 
-        int i = 0;
-        if (c == Color.BLUE) {
-            i = 0;
-        } else if (c == Color.RED) {
-            i = 1;
-        } else {
-            i = 2;
-        }
+        int i = numero;
 
         int index = getIt(i);
 
@@ -160,8 +162,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
     }
 
     public int getIt(int i) {
-
-        int temp = it[i];
         it[i]--;
         return it[i];
     }
@@ -201,7 +201,8 @@ public class PetHouse extends Parent implements GameLifeCycle {
         buttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                background.setFill(color[number % 4] /* new ImagePattern(new Image("background.jpg")) */);
+                background.setFill(color[number % 4]);
+                zone.setFill(new ImagePattern(new Image("data/pet/images/" + screen[number % 4]), 0, 0, 1, 1, true));
                 if (t[number % 3].getStatus() == Status.STOPPED) {
                     t[number % 3].play();
                 } else {
