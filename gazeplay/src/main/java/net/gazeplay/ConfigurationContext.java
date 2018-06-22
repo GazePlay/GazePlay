@@ -655,6 +655,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static Node buildMusicInput(Configuration config, ConfigurationContext configurationContext) {
 
+        changeMusicFolder(config.getMusicFolder());
+
         final HBox pane = new HBox(5);
         final String musicFolder = config.getMusicFolder();
         Button buttonLoad = new Button(musicFolder);
