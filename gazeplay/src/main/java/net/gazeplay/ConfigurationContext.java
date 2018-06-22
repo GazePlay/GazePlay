@@ -655,10 +655,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static Node buildMusicInput(Configuration config, ConfigurationContext configurationContext) {
 
-        // TODO
-        // config.getMusicFolderProperty().addListener((o) -> {
-        // changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER);
-        // });
+        changeMusicFolder(config.getMusicFolder());
 
         final HBox pane = new HBox(5);
         final String musicFolder = config.getMusicFolder();

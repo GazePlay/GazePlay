@@ -71,7 +71,12 @@ public class Mypet extends Pane {
 
     private ParallelTransition pt;
     private Timeline t;
-    private Timeline t2;
+
+    @Getter
+    private boolean eyesAreOpen = true;
+
+    @Getter
+    private String emotion = "basic";
 
     public Mypet(double height, double width) {
         Image tmp = new Image("data/pet/images/body.png");
@@ -143,6 +148,7 @@ public class Mypet extends Pane {
     }
 
     public void setBasic() {
+        emotion = "basic";
         getBody().setImage(new Image("data/pet/images/body.png"));
         getLeftWing().setImage(new Image("data/pet/images/wing.png"));
         getRightWing().setImage(new Image("data/pet/images/wing.png"));
@@ -153,6 +159,11 @@ public class Mypet extends Pane {
     }
 
     public void setHappy() {
+
+        emotion = "happy";
+        getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
+        getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
+        getMouth().setFill(new ImagePattern(new Image("data/pet/images/smile.png")));
 
     }
 
@@ -218,9 +229,8 @@ public class Mypet extends Pane {
     }
 
     public void setBlinking() {
+        eyesAreOpen = true;
         t = new Timeline();
-        t2 = new Timeline();
-        double time = Math.random() * 10000;
         t.getKeyFrames().add(new KeyFrame(Duration.millis(200),
                 new KeyValue(getLeftEye().fillProperty(), new ImagePattern(new Image("data/pet/images/eye.png")))));
         t.getKeyFrames().add(new KeyFrame(Duration.millis(200),
@@ -230,33 +240,33 @@ public class Mypet extends Pane {
             @Override
             public void handle(ActionEvent e) {
                 double time = Math.random() * 10000;
-                t2.getKeyFrames().clear();
-                t2.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getLeftEye().fillProperty(),
-                        new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
-                t2.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getRightEye().fillProperty(),
-                        new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
-                t2.play();
-            }
-        });
-
-        t2.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getLeftEye().fillProperty(),
-                new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
-        t2.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getRightEye().fillProperty(),
-                new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
-        t2.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
                 t.getKeyFrames().clear();
-                double time = Math.random() * 10000;
-                t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getLeftEye().fillProperty(),
-                        new ImagePattern(new Image("data/pet/images/eye.png")))));
-                t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getRightEye().fillProperty(),
-                        new ImagePattern(new Image("data/pet/images/eye.png")))));
+                if (eyesAreOpen) {
+                    t.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getLeftEye().fillProperty(),
+                            new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
+                    t.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getRightEye().fillProperty(),
+                            new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
+                } else {
+                    t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getLeftEye().fillProperty(),
+                            new ImagePattern(new Image("data/pet/images/eye.png")))));
+                    t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getRightEye().fillProperty(),
+                            new ImagePattern(new Image("data/pet/images/eye.png")))));
+                }
+                eyesAreOpen = !eyesAreOpen;
                 t.play();
+
             }
         });
 
-        t.play();
+    }
+
+    public void setBlinkingEnabled(boolean b) {
+        if (b) {
+            t.play();
+        } else {
+            t.stop();
+        }
+
     }
 
     public void createHandlers() {
@@ -271,19 +281,14 @@ public class Mypet extends Pane {
             @Override
             public void handle(Event e) {
                 t.stop();
-                t2.stop();
-                getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
-                getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
-                getMouth().setFill(new ImagePattern(new Image("data/pet/images/smile.png")));
+                setHappy();
             }
         };
 
         EventHandler<Event> exithandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-                getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-                getMouth().setFill(new ImagePattern(new Image("data/pet/images/mouth.png")));
+                setBasic();
                 t.play();
             }
         };
@@ -301,7 +306,6 @@ public class Mypet extends Pane {
             @Override
             public void handle(Event e) {
                 t.stop();
-                t2.stop();
                 getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
                 getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
             }
@@ -313,7 +317,6 @@ public class Mypet extends Pane {
             @Override
             public void handle(Event e) {
                 t.stop();
-                t2.stop();
                 getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
                 getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
             }
