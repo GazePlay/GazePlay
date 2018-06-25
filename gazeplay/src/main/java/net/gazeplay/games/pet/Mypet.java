@@ -63,6 +63,8 @@ public class Mypet extends Pane {
     private final double hratio;
     private final double wratio;
 
+    private int eatingBool = 10;;
+
     @Getter
     private double bibouleh;
 
@@ -71,6 +73,7 @@ public class Mypet extends Pane {
 
     private ParallelTransition pt;
     private Timeline t;
+    private PetHouse ph;
 
     @Getter
     private boolean eyesAreOpen = true;
@@ -78,7 +81,7 @@ public class Mypet extends Pane {
     @Getter
     private String emotion = "basic";
 
-    public Mypet(double height, double width) {
+    public Mypet(double height, double width, PetHouse ph) {
         Image tmp = new Image("data/pet/images/body.png");
 
         double old_valueh = tmp.getHeight();
@@ -90,6 +93,7 @@ public class Mypet extends Pane {
         wratio = new_valuew / old_valuew;
 
         init();
+        this.ph = ph;
         this.getChildren().addAll(leftWing, rightWing, body, mouth, rightEye, leftEye);
 
         setMovingWings(true);
@@ -155,6 +159,7 @@ public class Mypet extends Pane {
         getMouth().setFill(new ImagePattern(new Image("data/pet/images/mouth.png")));
         getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
         getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+        eyesAreOpen = true;
 
     }
 
@@ -164,6 +169,44 @@ public class Mypet extends Pane {
         getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
         getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
         getMouth().setFill(new ImagePattern(new Image("data/pet/images/smile.png")));
+        eyesAreOpen = false;
+
+    }
+
+    public void setEating() {
+
+        emotion = "eating";
+        eatingBool = 10;
+
+        ph.refill(1);
+        Timeline eat = new Timeline();
+        eat.getKeyFrames().add(new KeyFrame(Duration.millis(200),
+                new KeyValue(getMouth().fillProperty(), new ImagePattern(new Image("data/pet/images/mouth.png")))));
+
+        eat.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if ((eatingBool > 0) && (eatingBool % 2 == 0)) {
+                    eat.getKeyFrames().clear();
+                    eat.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getMouth().fillProperty(),
+                            new ImagePattern(new Image("data/pet/images/smile.png")))));
+                    eat.play();
+                } else if ((eatingBool > 0) && (eatingBool % 2 == 1)) {
+                    eat.getKeyFrames().clear();
+                    eat.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getMouth().fillProperty(),
+                            new ImagePattern(new Image("data/pet/images/mouth.png")))));
+                    eat.play();
+                } else {
+                    setBasic();
+                    setBlinkingEnabled(true);
+                }
+                eatingBool--;
+            }
+        });
+
+        eat.play();
+
+        eyesAreOpen = false;
 
     }
 
@@ -218,11 +261,6 @@ public class Mypet extends Pane {
             pt.setCycleCount(Animation.INDEFINITE);
             pt.setAutoReverse(true);
             pt.play();
-
-            /*
-             * TranslateTransition t = new TranslateTransition(new Duration(1000),this); t.setToX(600);
-             * t.setAutoReverse(true); t.setCycleCount(10); t.play();
-             */
         } else {
             pt.stop();
         }
@@ -272,6 +310,33 @@ public class Mypet extends Pane {
     public void createHandlers() {
         createEyesHandlers();
         createBodyHandlers();
+        createMouthHandlers();
+    }
+
+    public void createMouthHandlers() {
+        EventHandler<Event> enterhandler = new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+                if (ph.getMode() == PetHouse.EAT_MODE) {
+                    setBlinkingEnabled(false);
+                    setHappy();
+                    ph.hand.setFill(new ImagePattern(new Image("data/pet/images/emptyspoon.png")));
+                }
+            }
+        };
+
+        EventHandler<Event> exithandler = new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+                if ((ph.getMode() == PetHouse.EAT_MODE) && (ph.isSpoonFull())) {
+                    setEating();
+                    ph.setSpoonFull(false);
+                }
+            }
+        };
+
+        getMouth().addEventFilter(MouseEvent.MOUSE_ENTERED, enterhandler);
+        getMouth().addEventFilter(MouseEvent.MOUSE_EXITED, exithandler);
     }
 
     public void createBodyHandlers() {
@@ -280,16 +345,20 @@ public class Mypet extends Pane {
         EventHandler<Event> enterhandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                t.stop();
-                setHappy();
+                if (ph.getMode() == PetHouse.INIT_MODE) {
+                    t.stop();
+                    setHappy();
+                }
             }
         };
 
         EventHandler<Event> exithandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                setBasic();
-                t.play();
+                if (ph.getMode() == PetHouse.INIT_MODE) {
+                    setBasic();
+                    t.play();
+                }
             }
         };
 
@@ -305,9 +374,11 @@ public class Mypet extends Pane {
         EventHandler<Event> lefteyehandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                t.stop();
-                getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
-                getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+                if (ph.getMode() == PetHouse.INIT_MODE) {
+                    t.stop();
+                    getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
+                    getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+                }
             }
         };
 
@@ -316,9 +387,11 @@ public class Mypet extends Pane {
         EventHandler<Event> righteyehandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                t.stop();
-                getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-                getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
+                if (ph.getMode() == PetHouse.INIT_MODE) {
+                    t.stop();
+                    getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+                    getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
+                }
             }
         };
 
@@ -327,9 +400,11 @@ public class Mypet extends Pane {
         EventHandler<Event> exiteyehandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-                getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-                t.play();
+                if (ph.getMode() == PetHouse.INIT_MODE) {
+                    getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+                    getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+                    t.play();
+                }
             }
         };
 
