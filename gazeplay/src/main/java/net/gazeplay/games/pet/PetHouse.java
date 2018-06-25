@@ -372,6 +372,8 @@ public class PetHouse extends Parent implements GameLifeCycle {
                     break;
                 case SPORT_MODE:
                     j = 1;
+
+                    doSport();
                     break;
                 default:
                     j = 1;
@@ -493,6 +495,28 @@ public class PetHouse extends Parent implements GameLifeCycle {
             t.play();
         }
 
+    }
+
+    public void doSport() {
+        double coefx = (zone.getWidth() - zone.getWidth() / 3);
+        double coefy = (zone.getHeight() - zone.getHeight() / 3);
+        double xpos0 = zone.getX() + Math.random() * coefx;
+        double ypos0 = zone.getY() + Math.random() * coefy;
+        Timeline rd = new Timeline();
+        rd.getKeyFrames().add(new KeyFrame(Duration.millis(1000), new KeyValue(pet.layoutXProperty(), xpos0)));
+        rd.getKeyFrames().add(new KeyFrame(Duration.millis(1000), new KeyValue(pet.layoutYProperty(), ypos0)));
+        rd.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                rd.getKeyFrames().clear();
+                double xpos = zone.getX() + Math.random() * coefx;
+                double ypos = zone.getY() + Math.random() * coefy;
+                rd.getKeyFrames().add(new KeyFrame(Duration.millis(1000), new KeyValue(pet.layoutXProperty(), xpos)));
+                rd.getKeyFrames().add(new KeyFrame(Duration.millis(1000), new KeyValue(pet.layoutYProperty(), ypos)));
+                rd.play();
+            }
+        });
+        rd.play();
     }
 
     public void letsEat() {
