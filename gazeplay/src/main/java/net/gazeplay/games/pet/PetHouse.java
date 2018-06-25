@@ -1,6 +1,8 @@
 package net.gazeplay.games.pet;
 
 import java.awt.MouseInfo;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.sun.glass.ui.Cursor;
 
@@ -38,19 +40,21 @@ import net.gazeplay.games.cakes.CakeFactory;
 @Slf4j
 public class PetHouse extends Parent implements GameLifeCycle {
 
-    private final static int INIT_MODE = 1;
-    private final static int BATH_MODE = 3;
-    private final static int EAT_MODE = 2;
-    private final static int SPORT_MODE = 0;
+    public final static int INIT_MODE = 1;
+    public final static int BATH_MODE = 3;
+    public final static int EAT_MODE = 2;
+    public final static int SPORT_MODE = 0;
 
     private final GameContext gameContext;
     private final Stats stats;
     private final static int LIFE_SIZE = 18;
+    private List<Circle> wather;
 
     private final double handSize;
 
     private Mypet pet;
     private HBox Bars;
+    private ImageView bowl;
 
     private Integer waterNeeded = 100;
 
@@ -60,13 +64,17 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private final String[] screen = { "park.jpg", "room.jpg", "kitchen.jpg", "shower.jpg" };
     private final String[] cursor = { "hand.png", "hand.png", "hand.png", "pommeau.png" };
     private final Color[] colorBar = { Color.BLUE, Color.RED, Color.GREEN };
-    private final int[] regressionTime = { 2, 1, 3 };
+    private final int[] regressionTime = { 1, 2, 1 };
 
     @Getter
     @Setter
     private int mode;
 
     private boolean inside = false;
+
+    @Getter
+    @Setter
+    private boolean spoonFull = false;
 
     @Getter
     private Rectangle background;
@@ -86,6 +94,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         this.background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         this.background.setFill(Color.BEIGE /* new ImagePattern(new Image("background.jpg")) */);
         gameContext.getChildren().add(this.background);
+        wather = new ArrayList();
 
         double facteur = (2 / 2.5) + (1 - 2 / 2.5) / 3;
 
@@ -117,7 +126,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
         activateBars();
 
-        pet = new Mypet(zone.getHeight(), zone.getWidth());
+        pet = new Mypet(zone.getHeight(), zone.getWidth(), this);
 
         pet.setLayoutX(zone.getX() + zone.getWidth() / 2 - pet.getBiboulew() / 2);
         pet.setLayoutY(zone.getY() + zone.getHeight() / 2 - pet.getBibouleh() / 2);
@@ -126,11 +135,17 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
             @Override
             public void handle(MouseEvent event) {
-                Cursor.setVisible(false);
+                Cursor.setVisible(true);
                 inside = true;
-                hand.setX(MouseInfo.getPointerInfo().getLocation().getX()
+                double offsetx = 0;
+                double offsety = 0;
+                if (mode == EAT_MODE) {
+                    offsetx = hand.getWidth() / 4;
+                    offsety = -hand.getHeight() / 4;
+                }
+                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
                         - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(MouseInfo.getPointerInfo().getLocation().getY()
+                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
                         - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
                 hand.toFront();
                 hand.setVisible(true);
@@ -155,10 +170,16 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
             @Override
             public void handle(MouseEvent event) {
-                Cursor.setVisible(false);
-                hand.setX(MouseInfo.getPointerInfo().getLocation().getX()
+                Cursor.setVisible(true);
+                double offsetx = 0;
+                double offsety = 0;
+                if (mode == EAT_MODE) {
+                    offsetx = hand.getWidth() / 4;
+                    offsety = -hand.getHeight() / 4;
+                }
+                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
                         - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(MouseInfo.getPointerInfo().getLocation().getY()
+                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
                         - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
             }
 
@@ -174,9 +195,15 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 inside = true;
                 hand.toFront();
                 hand.setVisible(true);
-                hand.setX(MouseInfo.getPointerInfo().getLocation().getX()
+                double offsetx = 0;
+                double offsety = 0;
+                if (mode == EAT_MODE) {
+                    offsetx = hand.getWidth() / 4;
+                    offsety = -hand.getHeight() / 4;
+                }
+                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
                         - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(MouseInfo.getPointerInfo().getLocation().getY()
+                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
                         - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
             }
 
@@ -317,7 +344,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
         buttonHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-
+                turnOffShower();
+                gameContext.getChildren().remove(bowl);
+                pet.setBasic();
                 setMode(number);
 
                 background.setFill(color[number % 4]);
@@ -325,16 +354,21 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 switch (number) {
                 case INIT_MODE:
                     j = 2;
+                    hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
                     break;
                 case BATH_MODE:
                     j = 1;
                     hand.setWidth(3 * handSize);
                     hand.setHeight(2 * handSize);
+                    hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
                     turnOnShower();
-
                     break;
                 case EAT_MODE:
-                    j = 2;
+                    j = 1;
+                    hand.setWidth(3 * handSize);
+                    hand.setHeight(2 * handSize);
+                    hand.setFill(new ImagePattern(new Image("data/pet/images/emptyspoon.png")));
+                    letsEat();
                     break;
                 case SPORT_MODE:
                     j = 1;
@@ -349,7 +383,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 t.play();
 
                 zone.setFill(new ImagePattern(new Image("data/pet/images/" + screen[number % 4]), 0, 0, 1, 1, true));
-                hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
 
             }
         };
@@ -358,7 +391,10 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     public void refill(int i) {
         if (it[i] < LIFE_SIZE) {
-            if (it[i] < LIFE_SIZE - 1) {
+            if ((it[i] < LIFE_SIZE - 2) && (i == 1)) {
+                log.info("here ?");
+                it[i] = it[i] + 3;
+            } else if (it[i] < LIFE_SIZE - 1) {
                 it[i] = it[i] + 2;
             } else {
                 it[i] = it[i] + 1;
@@ -369,16 +405,28 @@ public class PetHouse extends Parent implements GameLifeCycle {
                     .add(new KeyFrame(Duration.millis(500), new KeyValue(
                             ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(getIt(i))).fillProperty(),
                             Color.WHITE)));
-            ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i])).setFill(Color.BLUE);
-            ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i] - 1)).setFill(Color.BLUE);
+            ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i])).setFill(this.colorBar[i]);
+            ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i] - 1)).setFill(this.colorBar[i]);
+            if ((i == 1) && (it[i] < LIFE_SIZE - 1 && it[i] >= 0)) {
+                ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i] - 2)).setFill(this.colorBar[i]);
+            }
             timelines[i].play();
         }
     }
 
-    public void turnOnShower() {
+    public void turnOffShower() {
+        for (Circle c : wather) {
+            gameContext.getChildren().remove(c);
+        }
+        wather.clear();
 
+    }
+
+    public void turnOnShower() {
+        wather = new ArrayList<Circle>();
         for (int i = 0; i < 50; i++) {
             Circle c = new Circle();
+            wather.add(c);
             c.toFront();
             c.setMouseTransparent(true);
             c.setOpacity(0);
@@ -387,34 +435,35 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
             gameContext.getChildren().add(c);
             TranslateTransition t = new TranslateTransition(Duration.seconds(1 + Math.random() * 1), c);
-
+            int index = i;
             c.translateYProperty().addListener((observable, oldValue, newValue) -> {
                 if (pet.localToParent(pet.getChildren().get(2).getBoundsInParent()).contains(c.getBoundsInParent())) {
                     t.stop();
-                    t.setFromX(hand.getX() + Math.random() * (hand.getWidth() / 2));
-                    t.setFromY(hand.getY() + hand.getHeight() / 2);
-                    t.setToY(zone.getHeight());
-                    t.play();
+                    if (inside && mode == BATH_MODE) {
+                        t.setFromX(hand.getX() + Math.random() * (hand.getWidth() / 2));
+                        t.setFromY(hand.getY() + hand.getHeight() / 2);
+                        t.setToY(zone.getHeight());
+                        t.play();
 
-                    pet.setBlinkingEnabled(false);
-                    if (pet.isEyesAreOpen()) {
-                        pet.setHappy();
-                    }
-
-                    synchronized (waterNeeded) {
-
-                        waterNeeded--;
-
-                        if (waterNeeded <= 0) {
-                            refill(0);
-                            waterNeeded = 100;
+                        pet.setBlinkingEnabled(false);
+                        if (pet.isEyesAreOpen()) {
+                            log.info("I'm going here");
+                            pet.setHappy();
                         }
 
+                        synchronized (waterNeeded) {
+                            waterNeeded--;
+                            if (waterNeeded <= 0) {
+                                refill(0);
+                                waterNeeded = 100;
+                            }
+                        }
+                        ;
+                    } else {
+                        c.setOpacity(0);
+                        t.play();
                     }
-                    ;
 
-                } else {
-                    pet.setBlinkingEnabled(true);
                 }
 
             });
@@ -436,12 +485,60 @@ public class PetHouse extends Parent implements GameLifeCycle {
                         t.play();
                     } else {
                         t.stop();
+                        c.setOpacity(0);
                     }
 
                 }
             });
             t.play();
         }
+
+    }
+
+    public void letsEat() {
+
+        bowl = new ImageView(new Image("data/pet/images/bowl.png"));
+        bowl.setPreserveRatio(true);
+        if (zone.getWidth() > zone.getHeight()) {
+            bowl.setFitHeight(zone.getHeight() / 5);
+        } else {
+            bowl.setFitWidth(zone.getWidth() / 4);
+        }
+
+        bowl.setY(zone.getY() + 4 * zone.getHeight() / 5);
+        bowl.setX(zone.getX());
+
+        EventHandler<MouseEvent> handevent = new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                pet.setBasic();
+                pet.setBlinkingEnabled(true);
+                Cursor.setVisible(true);
+                inside = true;
+                double offsetx = 0;
+                double offsety = 0;
+                if (mode == EAT_MODE) {
+                    offsetx = hand.getWidth() / 4;
+                    offsety = -hand.getHeight() / 4;
+                }
+                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
+                        - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
+                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
+                        - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
+                hand.toFront();
+                hand.setVisible(true);
+
+                hand.setFill(new ImagePattern(new Image("data/pet/images/fullspoon.png")));
+                setSpoonFull(true);
+
+            }
+
+        };
+
+        bowl.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
+
+        gameContext.getChildren().add(bowl);
 
     }
 
