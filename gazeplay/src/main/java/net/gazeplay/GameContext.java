@@ -144,11 +144,9 @@ public class GameContext extends GraphicalContext<Pane> {
         buttonTransparentHandler(bt);
 
         root2.getChildren().add(bt);
-        root2.getChildren().add(controlPanel);
         root.getChildren().add(gamingRoot);
         root.getChildren().add(root2);
 
-        root2.getChildren().remove(controlPanel);
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root,
                 gazePlay.getPrimaryScene());
@@ -301,6 +299,7 @@ public class GameContext extends GraphicalContext<Pane> {
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
         menuHBox.getChildren().add(createMusicControlPane());
         menuHBox.getChildren().add(createEffectsVolumePane());
+        menuHBox.getChildren().add(createSpeedEffectsPane());
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);

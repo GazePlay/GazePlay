@@ -214,6 +214,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+        
+        {
+            I18NText label = new I18NText(translator, "WhiteBackground", COLON);
+            CheckBox input = buildEnabledWhiteBackground(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
 
         {
             I18NText label = new I18NText(translator, "MusicFolder", COLON);
@@ -599,7 +606,21 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return checkBox;
     }
+    
+    private static CheckBox buildEnabledWhiteBackground(Configuration configuration,
+            ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
 
+        checkBox.setSelected(configuration.isBackgroundWhite());
+
+        checkBox.selectedProperty().addListener((o) -> {
+            configuration.getWhiteBackgroundProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+    
     private static CheckBox buildGazeMenu(Configuration configuration, ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 

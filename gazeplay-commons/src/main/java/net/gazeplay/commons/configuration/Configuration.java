@@ -42,6 +42,9 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
     private static final String PROPERTY_NAME_GAZE_MENU = "GAZE_MENU";
     private static final String PROPERTY_NAME_GAZE_MOUSE = "GAZE_MOUSE";
+    private static final String PROPERTY_NAME_WHITE_BCKGRD = "WHITE_BACKGROUND";
+
+    private static final String PROPERTY_NAME_SPEED_EFFECTS = "SPEED_EFFECTS";
 
     private static final String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
@@ -61,6 +64,8 @@ public class Configuration implements Cloneable {
     public static final String DEFAULT_VALUE_FILE_DIR = getFileDirectoryDefaultValue();
     public static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     public static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
+    public static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
+    public static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
 
     public static boolean isMouseFree = false;
 
@@ -149,6 +154,10 @@ public class Configuration implements Cloneable {
     @Getter
     protected final BooleanProperty gazeMouseProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MOUSE,
             DEFAULT_VALUE_GAZE_MOUSE);
+    
+    @Getter
+    protected final BooleanProperty whiteBackgroundProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_WHITE_BCKGRD,
+            DEFAULT_VALUE_WHITE_BCKGRD);
 
     @Getter
     protected final DoubleProperty musicVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_MUSIC_VOLUME,
@@ -161,6 +170,10 @@ public class Configuration implements Cloneable {
     @Getter
     protected final DoubleProperty effectsVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_EFFECTS_VOLUME,
             DEFAULT_VALUE_EFFECTS_VOLUME);
+    
+    @Getter
+    protected final DoubleProperty speedEffectsProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_SPEED_EFFECTS,
+    		DEFAULT_VALUE_SPEED_EFFECTS);
 
     private Configuration() {
 
@@ -275,6 +288,15 @@ public class Configuration implements Cloneable {
                 log.warn("Malformed property");
             }
         }
+        
+        buffer = prop.getProperty(PROPERTY_NAME_SPEED_EFFECTS);
+        if (buffer != null) {
+            try {
+                speedEffectsProperty.setValue(Double.parseDouble(buffer));
+            } catch (NumberFormatException e) {
+                log.warn("Malformed property");
+            }
+        }
 
         buffer = prop.getProperty(PROPERTY_NAME_GAZE_MENU);
         if (buffer != null) {
@@ -285,6 +307,11 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             gazeMouseProperty.setValue(Boolean.parseBoolean(buffer));
         }
+        
+		buffer = prop.getProperty(PROPERTY_NAME_WHITE_BCKGRD);
+		if (buffer != null) {
+			whiteBackgroundProperty.setValue(Boolean.parseBoolean(buffer));
+		}
 
     }
 
@@ -319,6 +346,8 @@ public class Configuration implements Cloneable {
         properties.setProperty(PROPERTY_NAME_MUSIC_VOLUME, Double.toString(this.musicVolumeProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MUSIC_FOLDER, this.musicFolderProperty.getValue());
         properties.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, Double.toString(effectsVolumeProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_SPEED_EFFECTS, Double.toString(speedEffectsProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
         /*
          * properties.setProperty(PROPERTY_NAME_GAZE_MENU, Boolean.toString(this.gazeMenuProperty.getValue()));
          */
@@ -400,6 +429,18 @@ public class Configuration implements Cloneable {
     public Double getEffectsVolume() {
         return effectsVolumeProperty.getValue();
     }
+    
+    public Double getSpeedEffects() {
+    	double modifVal = speedEffectsProperty.getValue();
+    	modifVal = 8 - modifVal; 
+    	if(modifVal < 6) {
+    		modifVal = 1/(5-modifVal); 
+    		
+    	}else {
+    		modifVal = modifVal - 3;
+    	}
+        return modifVal;
+    }
 
     public Boolean isGazeMenuEnable() {
         return gazeMenuProperty.getValue();
@@ -407,5 +448,9 @@ public class Configuration implements Cloneable {
 
     public Boolean isGazeMouseEnable() {
         return gazeMouseProperty.getValue();
+    }
+    
+    public Boolean isBackgroundWhite() {
+    	return whiteBackgroundProperty.getValue();
     }
 }

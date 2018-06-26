@@ -372,7 +372,9 @@ public abstract class GraphicalContext<T extends Parent> {
         final StackPane volumeStackPane = new StackPane(muteButton, unmuteButton);
         return volumeStackPane;
     }
-
+    
+    
+   
     /**
      * This method only exists because of mavent findbug plugin. Since this class is a singleton, this works.
      * 
@@ -424,6 +426,23 @@ public abstract class GraphicalContext<T extends Parent> {
         });
         return slider;
     }
+    
+    private Slider createSpeedEffectSlider(@NonNull GazePlay gazePlay) {
+
+        final Configuration config = Configuration.getInstance();
+        Slider slider = new Slider();
+        slider.setMin(0);
+        slider.setMax(8);
+        slider.setShowTickMarks(true);
+        slider.setMajorTickUnit(1);
+        slider.setSnapToTicks(true);
+        slider.setValue(config.getEffectsVolume());
+        config.getSpeedEffectsProperty().bindBidirectional(slider.valueProperty());
+        slider.valueProperty().addListener((observable) -> {
+           config.saveConfigIgnoringExceptions();
+        });
+        return slider;
+    }
 
     public void onGameStarted() {
     }
@@ -448,6 +467,26 @@ public abstract class GraphicalContext<T extends Parent> {
 
         return pane;
     }
+    
+    public TitledPane createSpeedEffectsPane() {
+    	I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "SpeedEffects");
+        pane.setCollapsible(false);
+
+        final BorderPane mainPane = new BorderPane();
+        pane.setContent(mainPane);
+
+        final HBox center = new HBox();
+        mainPane.setCenter(center);
+        center.setSpacing(5);
+
+        final Slider speedEffectsSlider = createSpeedEffectSlider(gazePlay);
+
+        center.getChildren().add(speedEffectsSlider);
+
+        return pane;
+    }
+    
+    
 
     public void updateMusicControler() {
 
