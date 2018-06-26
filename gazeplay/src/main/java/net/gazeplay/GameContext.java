@@ -147,7 +147,6 @@ public class GameContext extends GraphicalContext<Pane> {
         root.getChildren().add(gamingRoot);
         root.getChildren().add(root2);
 
-
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root,
                 gazePlay.getPrimaryScene());
 

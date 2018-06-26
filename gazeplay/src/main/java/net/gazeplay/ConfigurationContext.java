@@ -214,7 +214,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
-        
+
         {
             I18NText label = new I18NText(translator, "WhiteBackground", COLON);
             CheckBox input = buildEnabledWhiteBackground(config, configurationContext);
@@ -606,7 +606,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return checkBox;
     }
-    
+
     private static CheckBox buildEnabledWhiteBackground(Configuration configuration,
             ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
@@ -620,7 +620,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return checkBox;
     }
-    
+
     private static CheckBox buildGazeMenu(Configuration configuration, ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 

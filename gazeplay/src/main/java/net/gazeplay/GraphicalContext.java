@@ -372,9 +372,7 @@ public abstract class GraphicalContext<T extends Parent> {
         final StackPane volumeStackPane = new StackPane(muteButton, unmuteButton);
         return volumeStackPane;
     }
-    
-    
-   
+
     /**
      * This method only exists because of mavent findbug plugin. Since this class is a singleton, this works.
      * 
@@ -426,7 +424,7 @@ public abstract class GraphicalContext<T extends Parent> {
         });
         return slider;
     }
-    
+
     private Slider createSpeedEffectSlider(@NonNull GazePlay gazePlay) {
 
         final Configuration config = Configuration.getInstance();
@@ -439,7 +437,7 @@ public abstract class GraphicalContext<T extends Parent> {
         slider.setValue(config.getEffectsVolume());
         config.getSpeedEffectsProperty().bindBidirectional(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> {
-           config.saveConfigIgnoringExceptions();
+            config.saveConfigIgnoringExceptions();
         });
         return slider;
     }
@@ -467,9 +465,9 @@ public abstract class GraphicalContext<T extends Parent> {
 
         return pane;
     }
-    
+
     public TitledPane createSpeedEffectsPane() {
-    	I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "SpeedEffects");
+        I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "SpeedEffects");
         pane.setCollapsible(false);
 
         final BorderPane mainPane = new BorderPane();
@@ -485,8 +483,6 @@ public abstract class GraphicalContext<T extends Parent> {
 
         return pane;
     }
-    
-    
 
     public void updateMusicControler() {
 

@@ -69,9 +69,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private final String[] cursor = { "hand.png", "hand.png", "hand.png", "pommeau.png" };
     private final Color[] colorBar = { Color.BLUE, Color.RED, Color.GREEN };
     private final int[] regressionTime = { 1, 2, 1 };
-    
+
     private Boolean baloonGone = false;
-    
+
     private Timeline rd;
 
     @Getter
@@ -158,57 +158,56 @@ public class PetHouse extends Parent implements GameLifeCycle {
                         - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
                 hand.toFront();
                 hand.setVisible(true);
-                
-             }
+
+            }
 
         };
 
         pet.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
-        
+
         EventHandler<MouseEvent> enterevent = new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event) {
-		        if(mode == SPORT_MODE) {
-        			if(baloonGone == false) {
-        				baloonGone = true;
-	                	rd.stop();
-	                	ImageView baloon = new ImageView("data/pet/images/eye.png");
-	                	gameContext.getChildren().add(baloon);
-	                	
-	                	TranslateTransition tt = new TranslateTransition(Duration.millis(1000),baloon);
-	                	tt.setToX(pet.getLayoutX());
-	                	tt.setToY(pet.getLayoutY());
-	                	
-	                	TranslateTransition t2 = new TranslateTransition(Duration.millis(500),baloon);
-	                	t2.setToX(zone.getWidth());
-	                	t2.setToY(zone.getHeight());
-	                	SequentialTransition st = new SequentialTransition();
-	                	
-	                	st.getChildren().addAll(tt,t2);
-	                	
-	                	RotateTransition rt = new RotateTransition(Duration.millis(500),baloon);
-	                	rt.setByAngle(360);
-	                	rt.setCycleCount(Animation.INDEFINITE);
+                if (mode == SPORT_MODE) {
+                    if (baloonGone == false) {
+                        baloonGone = true;
+                        rd.stop();
+                        ImageView baloon = new ImageView("data/pet/images/eye.png");
+                        gameContext.getChildren().add(baloon);
 
-	                	ParallelTransition pt = new ParallelTransition();
-	                	pt.getChildren().addAll(st,rt);
-	                	st.setOnFinished(new EventHandler<ActionEvent>() {
-	                        @Override
-	                        public void handle(ActionEvent e) {
-	                        	rd.play();
-	                        	gameContext.getChildren().remove(baloon);
-		        				baloonGone = false;
-	                        }
-	                	});
-	                	pt.play();
-        			}
-		        }
+                        TranslateTransition tt = new TranslateTransition(Duration.millis(1000), baloon);
+                        tt.setToX(pet.getLayoutX());
+                        tt.setToY(pet.getLayoutY());
+
+                        TranslateTransition t2 = new TranslateTransition(Duration.millis(500), baloon);
+                        t2.setToX(zone.getWidth());
+                        t2.setToY(zone.getHeight());
+                        SequentialTransition st = new SequentialTransition();
+
+                        st.getChildren().addAll(tt, t2);
+
+                        RotateTransition rt = new RotateTransition(Duration.millis(500), baloon);
+                        rt.setByAngle(360);
+                        rt.setCycleCount(Animation.INDEFINITE);
+
+                        ParallelTransition pt = new ParallelTransition();
+                        pt.getChildren().addAll(st, rt);
+                        st.setOnFinished(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent e) {
+                                rd.play();
+                                gameContext.getChildren().remove(baloon);
+                                baloonGone = false;
+                            }
+                        });
+                        pt.play();
+                    }
+                }
             }
-       };
+        };
 
-
-       pet.addEventFilter(MouseEvent.MOUSE_ENTERED, enterevent);
+        pet.addEventFilter(MouseEvent.MOUSE_ENTERED, enterevent);
         gameContext.getChildren().add(pet);
 
     }
@@ -461,10 +460,10 @@ public class PetHouse extends Parent implements GameLifeCycle {
                     .add(new KeyFrame(Duration.millis(500), new KeyValue(
                             ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(getIt(i))).fillProperty(),
                             Color.WHITE)));
-            
+
             ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i])).setFill(this.colorBar[i]);
-            if(it[i]>0) {
-            	((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i] - 1)).setFill(this.colorBar[i]);
+            if (it[i] > 0) {
+                ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i] - 1)).setFill(this.colorBar[i]);
             }
             if ((i == 1) && (it[i] < LIFE_SIZE - 1 && it[i] >= 0)) {
                 ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i] - 2)).setFill(this.colorBar[i]);
