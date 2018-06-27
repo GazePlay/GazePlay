@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
+
 import javafx.scene.layout.Region;
 import net.gazeplay.commons.utils.games.Utils;
 
@@ -113,13 +115,17 @@ public class WhereIsIt implements GameLifeCycle {
             animation.play();
             playQuestionSound();
         }
+
     }
 
     private Transition createQuestionTransition(String question, List<Image> Pictos) {
 
         questionText = new Text(question);
 
-        questionText.setId("title");
+        questionText.setTranslateY(0);
+
+        String color = (Configuration.getInstance().isBackgroundWhite()) ? "titleB" : "titleW";
+        questionText.setId(color);
 
         final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 

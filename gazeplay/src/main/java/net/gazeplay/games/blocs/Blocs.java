@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import lombok.Data;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.AspectRatioImageRectangleUtil;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -112,10 +113,12 @@ public class Blocs implements GameLifeCycle {
                 Bloc bloc = new Bloc(i * width, j * height, width + 1, height + 1, i, j);// width+1, height+1 to avoid
                 // spaces between blocks for
                 // Scratchcard
-                if (colors)
+                if (colors) {
                     bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
-                else
-                    bloc.setFill(Color.BLACK);
+                } else {
+                    Color c = (Configuration.getInstance().isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
+                    bloc.setFill(c);
+                }
                 gameContext.getChildren().add(bloc);
                 currentRoundDetails.blocs[i][j] = bloc;
 

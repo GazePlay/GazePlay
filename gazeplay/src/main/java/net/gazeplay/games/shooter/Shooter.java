@@ -23,6 +23,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -84,6 +85,10 @@ public class Shooter extends Parent implements GameLifeCycle {
         imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
+
+        int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
+        imageRectangle.setOpacity(1 - coef * 0.9);
+
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
 
@@ -571,7 +576,8 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     private void moveCircle(Target sp) {
 
-        double timelength = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
+        double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
+        double timelength = Configuration.getInstance().getSpeedEffects() * timebasic;
 
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), sp);
         double min = Math.ceil(0);

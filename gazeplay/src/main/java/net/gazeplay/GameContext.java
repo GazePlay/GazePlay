@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.I18NButton;
@@ -56,11 +57,14 @@ public class GameContext extends GraphicalContext<Pane> {
         Bravo bravo = new Bravo();
 
         Pane gamingRoot = new Pane();
-        gamingRoot.setStyle("-fx-background-color: black;");
         gamingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
         gamingRoot.prefHeightProperty().bind(primaryStage.heightProperty());
         gamingRoot.minWidthProperty().bind(primaryStage.widthProperty());
         gamingRoot.minHeightProperty().bind(primaryStage.heightProperty());
+
+        Configuration config = Configuration.getInstance();
+        Color color = (config.isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
+        gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
 
         HBox controlPanel = createControlPanel();
         // Adapt the size and position of buttons to screen width
@@ -144,11 +148,8 @@ public class GameContext extends GraphicalContext<Pane> {
         buttonTransparentHandler(bt);
 
         root2.getChildren().add(bt);
-        root2.getChildren().add(controlPanel);
         root.getChildren().add(gamingRoot);
         root.getChildren().add(root2);
-
-        root2.getChildren().remove(controlPanel);
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root,
                 gazePlay.getPrimaryScene());
@@ -301,6 +302,7 @@ public class GameContext extends GraphicalContext<Pane> {
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
         menuHBox.getChildren().add(createMusicControlPane());
         menuHBox.getChildren().add(createEffectsVolumePane());
+        menuHBox.getChildren().add(createSpeedEffectsPane());
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
