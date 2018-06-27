@@ -103,7 +103,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         this.background.setFill(Color.BEIGE /* new ImagePattern(new Image("background.jpg")) */);
         gameContext.getChildren().add(this.background);
         wather = new ArrayList();
-        Timeline rd = new Timeline();
+        rd = new Timeline();
 
         double facteur = (2 / 2.5) + (1 - 2 / 2.5) / 3;
 
