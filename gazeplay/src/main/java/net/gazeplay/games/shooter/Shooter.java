@@ -85,6 +85,10 @@ public class Shooter extends Parent implements GameLifeCycle {
         imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
+        
+        int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
+        imageRectangle.setOpacity(1 - coef * 0.9);
+        
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
 

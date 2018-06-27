@@ -46,6 +46,16 @@
     -fx-font-size: 60;
 }
 
+#titleW {
+    -fx-fill: white;
+    -fx-font-size: 60;
+}
+
+#titleB {
+    -fx-fill: black;
+    -fx-font-size: 60;
+}
+
 #item {
 
     -fx-fill: white;

@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.I18NButton;
@@ -56,11 +57,14 @@ public class GameContext extends GraphicalContext<Pane> {
         Bravo bravo = new Bravo();
 
         Pane gamingRoot = new Pane();
-        gamingRoot.setStyle("-fx-background-color: black;");
         gamingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
         gamingRoot.prefHeightProperty().bind(primaryStage.heightProperty());
         gamingRoot.minWidthProperty().bind(primaryStage.widthProperty());
         gamingRoot.minHeightProperty().bind(primaryStage.heightProperty());
+
+        Configuration config = Configuration.getInstance();
+        Color color = (config.isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
+        gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
 
         HBox controlPanel = createControlPanel();
         // Adapt the size and position of buttons to screen width

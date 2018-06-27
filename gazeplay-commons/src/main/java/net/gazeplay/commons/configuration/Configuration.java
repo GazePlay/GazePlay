@@ -432,14 +432,12 @@ public class Configuration implements Cloneable {
 
     public Double getSpeedEffects() {
         double modifVal = speedEffectsProperty.getValue();
-        modifVal = 8 - modifVal;
-        if (modifVal < 6) {
+        if (modifVal < 4) {
             modifVal = 1 / (5 - modifVal);
-
         } else {
             modifVal = modifVal - 3;
         }
-        return modifVal;
+        return 1 / modifVal;
     }
 
     public Boolean isGazeMenuEnable() {

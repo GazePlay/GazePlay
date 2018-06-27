@@ -17,9 +17,11 @@ import javafx.scene.Node;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -33,6 +35,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.gaze.devicemanager.TobiiGazeDeviceManager;
 import net.gazeplay.commons.ui.I18NButton;
+import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
@@ -48,7 +51,7 @@ import javafx.scene.image.ImageView;
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
-    private final static String LOGO_PATH = "data/common/images/gazeplay.jpg";
+    private final static String LOGO_PATH = "data/common/images/gazeplay.png";
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
@@ -135,9 +138,29 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setBottom(bottomPane);
         root.setCenter(centerPanel);
 
-        root.setStyle("-fx-background-color: rgba(0, 0, 0, 1); " + "-fx-background-radius: 8px; "
+        /*
+         * config.getWhiteBackgroundProperty().addListener((val, oldvalue, newvalue) -> { Color c =
+         * (newvalue.booleanValue()) ? Color.WHITE : Color.BLACK; ((BorderPane) root.getBottom()).setBackground(new
+         * Background(new BackgroundFill(c, null, null))); ((BorderPane) root.getTop()).setBackground(new Background(new
+         * BackgroundFill(c, null, null))); });
+         * 
+         * int i = (config.isBackgroundWhite()) ? 1 : 0;
+         * 
+         * root.setStyle("-fx-background-color: rgba(" + i + "," + i + "," + i + ", 1); " +
+         * "-fx-background-radius: 8px; " + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " +
+         * "-fx-border-color: rgba(60, 63, 65, 0.7); " +
+         * "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+         * 
+         * Color c = (config.isBackgroundWhite()) ? Color.WHITE : Color.BLACK; ((BorderPane)
+         * root.getBottom()).setBackground(new Background(new BackgroundFill(c, null, null))); ((BorderPane)
+         * root.getTop()).setBackground(new Background(new BackgroundFill(c, null, null))); menuBar.setBackground(new
+         * Background(new BackgroundFill(c, null, null)));
+         */
+
+        root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
                 + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+
     }
 
     @Override
@@ -234,8 +257,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         }
 
-        choicePanel.setBackground(new Background(new BackgroundImage(new Image("data/common/images/back.gif"), null,
-                null, null, new BackgroundSize(1, 1, true, true, true, true))));
+        /*
+         * choicePanel.setBackground(new Background(new BackgroundImage(new Image("data/common/images/back.gif"), null,
+         * null, null, new BackgroundSize(1, 1, true, true, true, true))));
+         */
 
         return choicePanelScroller;
     }

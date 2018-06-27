@@ -15,9 +15,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
@@ -34,11 +39,13 @@ import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Languages;
+import sun.security.krb5.Config;
 
 import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Slf4j
@@ -94,7 +101,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         root.setCenter(settingsPanelScroller);
 
         root.setStyle(
-                "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+                "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+
     }
 
     private HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
@@ -126,7 +134,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    private static GridPane buildConfigGridPane(ConfigurationContext configurationContext, GazePlay gazePlay) {
+    private GridPane buildConfigGridPane(ConfigurationContext configurationContext, GazePlay gazePlay) {
 
         final Configuration config = Configuration.getInstance();
 
@@ -607,7 +615,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private static CheckBox buildEnabledWhiteBackground(Configuration configuration,
+    private CheckBox buildEnabledWhiteBackground(Configuration configuration,
             ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
@@ -617,7 +625,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             configuration.getWhiteBackgroundProperty().setValue(checkBox.isSelected());
             configuration.saveConfigIgnoringExceptions();
         });
-
         return checkBox;
     }
 
