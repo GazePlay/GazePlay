@@ -42,6 +42,9 @@ public class GazePlay extends Application {
     private HomeMenuScreen homeMenuScreen;
 
     @Getter
+    private UserProfilContext userProfileScreen;
+
+    @Getter
     private Stage primaryStage;
 
     @Getter
@@ -75,8 +78,12 @@ public class GazePlay extends Application {
 
         homeMenuScreen = HomeMenuScreen.newInstance(this, config);
 
+        // this.primaryScene = new Scene(homeMenuScreen.getRoot(), primaryStage.getWidth(), primaryStage.getHeight(),
+        // Color.BLACK);
+
         this.primaryScene = new Scene(homeMenuScreen.getRoot(), primaryStage.getWidth(), primaryStage.getHeight(),
                 Color.BLACK);
+
         CssUtil.setPreferredStylesheets(config, primaryScene);
 
         primaryStage.setTitle("GazePlay");
@@ -85,7 +92,10 @@ public class GazePlay extends Application {
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
 
-        homeMenuScreen.setUpOnStage(primaryScene);
+        userProfileScreen = userProfileScreen.newInstance(this, config);
+
+        userProfileScreen.setUpOnStage(primaryScene);
+        // homeMenuScreen.setUpOnStage(primaryScene);
 
         primaryStage.setFullScreen(true);
         primaryStage.centerOnScreen();

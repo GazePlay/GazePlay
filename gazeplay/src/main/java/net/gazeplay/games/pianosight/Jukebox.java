@@ -38,25 +38,9 @@ public class Jukebox extends Pane {
         return s;
     }
 
-    public String getSSwing() {
-        JFileChooser chooser = new JFileChooser();
-        int returnVal = chooser.showOpenDialog(null);
-        s = chooser.getSelectedFile().getName();
-        return s;
-    }
-
     public Jukebox(GameContext gctx) {
         super();
         gc = gctx;
-
-        /*
-         * URL fileURL = ClassLoader.getSystemResource("data/pianosight/songs/AuClairDeLaLune.txt"); try { URLConnection
-         * ucon = fileURL.openConnection(); BufferedReader buf = new BufferedReader(new
-         * InputStreamReader(ucon.getInputStream()));
-         * 
-         * String ligne = ""; while ( ( ligne = buf.readLine() ) != null){ System.out.println(ligne +"\n"); } } catch
-         * (IOException e) {}
-         */
     }
 
 }
