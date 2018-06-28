@@ -18,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -182,7 +183,8 @@ public class MolesChar extends Parent {
                 int time = r.nextInt(timeMoleStayOut) + 2000;
 
                 timeMoleOut.getKeyFrames()
-                        .add(new KeyFrame(new Duration(time), new KeyValue(progressIndicator.progressProperty(), 1)));
+                        .add(new KeyFrame(new Duration(Configuration.getInstance().getSpeedEffects() * time),
+                                new KeyValue(progressIndicator.progressProperty(), 1)));
                 timeMoleOut.play();
                 timeMoleOut.setOnFinished(new EventHandler<ActionEvent>() {
 

@@ -18,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -95,35 +96,42 @@ class Target extends Parent {
     }
 
     private void move() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(20), new EventHandler<ActionEvent>() {
-            int dx = randomDirection();
-            int dy = randomDirection();
+        Timeline timeline = new Timeline(new KeyFrame(
+                Duration.millis(Configuration.getInstance().getSpeedEffects() * 20), new EventHandler<ActionEvent>() {
+                    int dx = randomDirection();
+                    int dy = randomDirection();
 
-            double height = dimension.getHeight();
-            double width = dimension.getWidth();
+                    double height = dimension.getHeight();
+                    double width = dimension.getWidth();
 
-            @Override
-            public void handle(ActionEvent t) {
-                double newCenterX = Target.this.pos.getX() + dx;
-                double newCenterY = Target.this.pos.getY() + dy;
+                    @Override
+                    public void handle(ActionEvent t) {
+                        double newCenterX = Target.this.pos.getX() + dx;
+                        double newCenterY = Target.this.pos.getY() + dy;
 
-                Position newPos = new Position(newCenterX, newCenterY);
-                Target.this.pos = newPos;
+                        Position newPos = new Position(newCenterX, newCenterY);
+                        Target.this.pos = newPos;
 
-                Target.this.cercle.setCenterX(newCenterX);
-                Target.this.cercle.setCenterY(newCenterY);
+                        Target.this.cercle.setCenterX(newCenterX);
+                        Target.this.cercle.setCenterY(newCenterY);
 
-                if (newCenterX <= (Target.this.radius) || newCenterX >= (width - Target.this.radius)) {
-                    dx = -dx;
-                }
+                        if (newCenterX <= (Target.this.radius) || newCenterX >= (width - Target.this.radius)) {
+                            dx = -dx;
+                        }
 
-                if (newCenterY <= (Target.this.radius) || newCenterY >= (height - Target.this.radius)) {
-                    dy = -dy;
-                }
-            }
-        }));
+                        if (newCenterY <= (Target.this.radius) || newCenterY >= (height - Target.this.radius)) {
+                            dy = -dy;
+                        }
+                    }
+                }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
+        Configuration.getInstance().getSpeedEffectsProperty().addListener((o) -> {
+            timeline.stop();
+            move();
+        });
+
     }
 
     public void enter() {
@@ -175,8 +183,9 @@ class Target extends Parent {
                 if (((!lapin) && (gameContext.getChildren().isEmpty()))
                         || ((lapin) && (gameContext.getChildren().size() <= 1))) {
                     long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-                    Label l = new Label("Temps : " + Long.toString(totalTime) + "s");
-                    l.setTextFill(Color.WHITE);
+                    Label l = new Label("Score : " + Long.toString(totalTime) + "s");
+                    Color color = (Configuration.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+                    l.setTextFill(color);
                     l.setFont(Font.font(50));
                     l.setLineSpacing(10);
                     l.setLayoutX(15);
