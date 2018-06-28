@@ -18,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -175,8 +176,9 @@ class Target extends Parent {
                 if (((!lapin) && (gameContext.getChildren().isEmpty()))
                         || ((lapin) && (gameContext.getChildren().size() <= 1))) {
                     long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-                    Label l = new Label("Temps : " + Long.toString(totalTime) + "s");
-                    l.setTextFill(Color.WHITE);
+                    Label l = new Label("Score : " + Long.toString(totalTime) + "s");
+                    Color color = (Configuration.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+                    l.setTextFill(color);
                     l.setFont(Font.font(50));
                     l.setLineSpacing(10);
                     l.setLayoutX(15);

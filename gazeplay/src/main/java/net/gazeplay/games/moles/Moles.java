@@ -22,6 +22,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 
 @Slf4j
 public class Moles extends Parent implements GameLifeCycle {
@@ -67,6 +68,13 @@ public class Moles extends Parent implements GameLifeCycle {
 
         Rectangle imageFond = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageFond.setFill(new ImagePattern(new Image("data/whackmole/images/molesGround.jpg")));
+        int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
+        
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(coef*0.9);   
+        
+        imageFond.setEffect(colorAdjust);
+        
         gameContext.getChildren().add(imageFond);
 
         List<MolesChar> molesList = initMoles(config);
@@ -76,6 +84,9 @@ public class Moles extends Parent implements GameLifeCycle {
 
         Rectangle imageFondTrans = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageFondTrans.setFill(new ImagePattern(new Image("data/whackmole/images/molesGroundTransparent.png")));
+
+        imageFondTrans.setEffect(colorAdjust);
+        
         gameContext.getChildren().add(imageFondTrans);
 
         this.nbMolesWhacked = 0;
@@ -84,7 +95,8 @@ public class Moles extends Parent implements GameLifeCycle {
         lab = new Label();
         String s = "Score:" + nbMolesWhacked;
         lab.setText(s);
-        lab.setTextFill(Color.WHITE);
+        Color col = (Configuration.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+        lab.setTextFill(col);
         lab.setFont(Font.font(dimension2D.getHeight() / 14));
         lab.setLineSpacing(10);
         lab.setLayoutX(0.4 * dimension2D.getWidth());

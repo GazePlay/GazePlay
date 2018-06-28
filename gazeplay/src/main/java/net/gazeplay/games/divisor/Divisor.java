@@ -7,6 +7,7 @@ import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.LazyImageLibrary;
@@ -40,6 +41,9 @@ public class Divisor implements GameLifeCycle {
             Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
             try {
                 imageRectangle.setFill(new ImagePattern(new Image("data/divisor/images/Background.png")));
+                int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
+                imageRectangle.setOpacity(1 - coef * 0.9);
+                
             } catch (Exception e) {
                 log.info("File not found : {}", e.getMessage());
             }
