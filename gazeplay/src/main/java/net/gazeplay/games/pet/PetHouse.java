@@ -322,7 +322,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             HBox Bar = (HBox) Bars.getChildren().get(i);
 
             timelines[i] = new Timeline();
-            timelines[i].setDelay(Duration.seconds(Configuration.getInstance().getSpeedEffects()*regressionTime[i]));
+            timelines[i].setDelay(Duration.seconds(Configuration.getInstance().getSpeedEffects() * regressionTime[i]));
             timelines[i].getKeyFrames().add(new KeyFrame(Duration.millis(500),
                     new KeyValue(((Rectangle) Bar.getChildren().get(index)).fillProperty(), Color.WHITE)));
 
@@ -333,7 +333,8 @@ public class PetHouse extends Parent implements GameLifeCycle {
                     int index = getIt(number);
                     if (index >= 0) {
                         timelines[number].getKeyFrames().clear();
-                        timelines[number].setDelay(Duration.seconds(Configuration.getInstance().getSpeedEffects()*regressionTime[number]));
+                        timelines[number].setDelay(Duration
+                                .seconds(Configuration.getInstance().getSpeedEffects() * regressionTime[number]));
                         timelines[number].getKeyFrames().add(new KeyFrame(Duration.millis(500),
                                 new KeyValue(((Rectangle) Bar.getChildren().get(index)).fillProperty(), Color.WHITE)));
                         timelines[number].play();
@@ -555,43 +556,49 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     }
 
-    public void doSport() {    	
+    public void doSport() {
         double coefx = (zone.getWidth() - zone.getWidth() / 3);
         double coefy = (zone.getHeight() - zone.getHeight() / 3);
         double xpos0 = zone.getX() + Math.random() * coefx;
         double ypos0 = zone.getY() + Math.random() * coefy;
         rd = new Timeline();
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects()*1000), new KeyValue(pet.layoutXProperty(), xpos0)));
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects()*1000), new KeyValue(pet.layoutYProperty(), ypos0)));
+        rd.getKeyFrames().add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects() * 1000),
+                new KeyValue(pet.layoutXProperty(), xpos0)));
+        rd.getKeyFrames().add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects() * 1000),
+                new KeyValue(pet.layoutYProperty(), ypos0)));
         rd.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 rd.getKeyFrames().clear();
                 double xpos = zone.getX() + Math.random() * coefx;
                 double ypos = zone.getY() + Math.random() * coefy;
-                rd.getKeyFrames().add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects()*1000), new KeyValue(pet.layoutXProperty(), xpos)));
-                rd.getKeyFrames().add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects()*1000), new KeyValue(pet.layoutYProperty(), ypos)));
+                rd.getKeyFrames()
+                        .add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects() * 1000),
+                                new KeyValue(pet.layoutXProperty(), xpos)));
+                rd.getKeyFrames()
+                        .add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects() * 1000),
+                                new KeyValue(pet.layoutYProperty(), ypos)));
                 rd.play();
             }
         });
         rd.play();
     }
-    
+
     public void stopSport() {
-    	rd.stop();
+        rd.stop();
 
         rd.getKeyFrames().clear();
         double xpos = zone.getX() + zone.getWidth() / 2 - pet.getBiboulew() / 2;
         double ypos = zone.getY() + zone.getHeight() / 2 - pet.getBibouleh() / 2;
         rd.getKeyFrames().add(new KeyFrame(Duration.millis(100), new KeyValue(pet.layoutXProperty(), xpos)));
         rd.getKeyFrames().add(new KeyFrame(Duration.millis(100), new KeyValue(pet.layoutYProperty(), ypos)));
-        
-    	 rd.setOnFinished(new EventHandler<ActionEvent>() {
-             @Override
-             public void handle(ActionEvent e) {
-             }
-    	 });
-    	 rd.play();
+
+        rd.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+            }
+        });
+        rd.play();
     }
 
     public void letsEat() {

@@ -265,7 +265,7 @@ public class ColorToolBox extends StackPane {
 
         if (!Configuration.getInstance().isBackgroundWhite()) {
 
-        	this.getStyleClass().add("bg-colored");
+            this.getStyleClass().add("bg-colored");
         }
     }
 

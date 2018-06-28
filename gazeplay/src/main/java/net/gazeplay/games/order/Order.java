@@ -88,7 +88,7 @@ public class Order implements GameLifeCycle {
     public void spawn() {
         Target[] tabTarget = new Target[nbTarget];
         Timeline timer = new Timeline();
-        
+
         timer.setOnFinished(new EventHandler<ActionEvent>() {
             int i = 0;
 
@@ -99,7 +99,8 @@ public class Order implements GameLifeCycle {
                 tabTarget[i] = t;
                 i++;
                 if (i < nbTarget) {
-                    timer.getKeyFrames().add(new KeyFrame(Duration.seconds(Configuration.getInstance().getSpeedEffects()*1)));
+                    timer.getKeyFrames()
+                            .add(new KeyFrame(Duration.seconds(Configuration.getInstance().getSpeedEffects() * 1)));
                     timer.play();
                 } else {
                     for (int j = 0; j < nbTarget; j++) {

@@ -96,41 +96,42 @@ class Target extends Parent {
     }
 
     private void move() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects()*20), new EventHandler<ActionEvent>() {
-            int dx = randomDirection();
-            int dy = randomDirection();
+        Timeline timeline = new Timeline(new KeyFrame(
+                Duration.millis(Configuration.getInstance().getSpeedEffects() * 20), new EventHandler<ActionEvent>() {
+                    int dx = randomDirection();
+                    int dy = randomDirection();
 
-            double height = dimension.getHeight();
-            double width = dimension.getWidth();
+                    double height = dimension.getHeight();
+                    double width = dimension.getWidth();
 
-            @Override
-            public void handle(ActionEvent t) {
-                double newCenterX = Target.this.pos.getX() + dx;
-                double newCenterY = Target.this.pos.getY() + dy;
+                    @Override
+                    public void handle(ActionEvent t) {
+                        double newCenterX = Target.this.pos.getX() + dx;
+                        double newCenterY = Target.this.pos.getY() + dy;
 
-                Position newPos = new Position(newCenterX, newCenterY);
-                Target.this.pos = newPos;
+                        Position newPos = new Position(newCenterX, newCenterY);
+                        Target.this.pos = newPos;
 
-                Target.this.cercle.setCenterX(newCenterX);
-                Target.this.cercle.setCenterY(newCenterY);
+                        Target.this.cercle.setCenterX(newCenterX);
+                        Target.this.cercle.setCenterY(newCenterY);
 
-                if (newCenterX <= (Target.this.radius) || newCenterX >= (width - Target.this.radius)) {
-                    dx = -dx;
-                }
+                        if (newCenterX <= (Target.this.radius) || newCenterX >= (width - Target.this.radius)) {
+                            dx = -dx;
+                        }
 
-                if (newCenterY <= (Target.this.radius) || newCenterY >= (height - Target.this.radius)) {
-                    dy = -dy;
-                }
-            }
-        }));
+                        if (newCenterY <= (Target.this.radius) || newCenterY >= (height - Target.this.radius)) {
+                            dy = -dy;
+                        }
+                    }
+                }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
-        
-        Configuration.getInstance().getSpeedEffectsProperty().addListener((o)->{
-        	timeline.stop();
-        	move();
+
+        Configuration.getInstance().getSpeedEffectsProperty().addListener((o) -> {
+            timeline.stop();
+            move();
         });
-        
+
     }
 
     public void enter() {

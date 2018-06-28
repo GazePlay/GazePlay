@@ -154,8 +154,8 @@ public class CupsAndBalls implements GameLifeCycle {
             log.error("The cup positions haven't been set up properly");
         }
 
-        TranslateTransition movementTransition = new TranslateTransition(Duration.millis(Configuration.getInstance().getSpeedEffects()*exchangeCupDuration),
-                cupToMove);
+        TranslateTransition movementTransition = new TranslateTransition(
+                Duration.millis(Configuration.getInstance().getSpeedEffects() * exchangeCupDuration), cupToMove);
         movementTransition.setByX(newPos.getX() - initPos.getX());
         movementTransition.setByY(newPos.getY() - initPos.getY());
 

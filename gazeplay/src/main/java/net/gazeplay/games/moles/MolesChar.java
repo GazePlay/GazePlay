@@ -183,7 +183,8 @@ public class MolesChar extends Parent {
                 int time = r.nextInt(timeMoleStayOut) + 2000;
 
                 timeMoleOut.getKeyFrames()
-                        .add(new KeyFrame(new Duration(Configuration.getInstance().getSpeedEffects()*time), new KeyValue(progressIndicator.progressProperty(), 1)));
+                        .add(new KeyFrame(new Duration(Configuration.getInstance().getSpeedEffects() * time),
+                                new KeyValue(progressIndicator.progressProperty(), 1)));
                 timeMoleOut.play();
                 timeMoleOut.setOnFinished(new EventHandler<ActionEvent>() {
 
