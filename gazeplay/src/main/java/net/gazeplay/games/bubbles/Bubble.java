@@ -252,7 +252,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         Timeline timeline = new Timeline();
 
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(timelength),
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(Configuration.getInstance().getSpeedEffects()*timelength),
                 new KeyValue(circle.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
 
         timeline.setOnFinished(new EventHandler<ActionEvent>() {

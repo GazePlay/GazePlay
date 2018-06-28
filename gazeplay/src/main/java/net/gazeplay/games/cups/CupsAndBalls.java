@@ -8,6 +8,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.cups.utils.Action;
 import net.gazeplay.games.cups.utils.PositionCup;
@@ -153,7 +154,7 @@ public class CupsAndBalls implements GameLifeCycle {
             log.error("The cup positions haven't been set up properly");
         }
 
-        TranslateTransition movementTransition = new TranslateTransition(Duration.millis(exchangeCupDuration),
+        TranslateTransition movementTransition = new TranslateTransition(Duration.millis(Configuration.getInstance().getSpeedEffects()*exchangeCupDuration),
                 cupToMove);
         movementTransition.setByX(newPos.getX() - initPos.getX());
         movementTransition.setByY(newPos.getY() - initPos.getY());

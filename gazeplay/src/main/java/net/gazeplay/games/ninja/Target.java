@@ -9,6 +9,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
@@ -115,7 +116,7 @@ public class Target extends Portrait {
         final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
         log.info("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
 
-        TranslateTransition translation = new TranslateTransition(new Duration(length), this);
+        TranslateTransition translation = new TranslateTransition(new Duration(Configuration.getInstance().getSpeedEffects()*length), this);
         translation.setByX(-this.getCenterX() + newPosition.getX());
         translation.setByY(-this.getCenterY() + newPosition.getY());
         translation.setOnFinished(new EventHandler<ActionEvent>() {

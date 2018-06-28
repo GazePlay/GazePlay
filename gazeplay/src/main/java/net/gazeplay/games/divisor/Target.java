@@ -96,7 +96,7 @@ class Target extends Parent {
     }
 
     private void move() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(20), new EventHandler<ActionEvent>() {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects()*20), new EventHandler<ActionEvent>() {
             int dx = randomDirection();
             int dy = randomDirection();
 
@@ -125,6 +125,12 @@ class Target extends Parent {
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+        
+        Configuration.getInstance().getSpeedEffectsProperty().addListener((o)->{
+        	timeline.stop();
+        	move();
+        });
+        
     }
 
     public void enter() {
