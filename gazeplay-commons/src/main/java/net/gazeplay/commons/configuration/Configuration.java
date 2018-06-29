@@ -70,8 +70,8 @@ public class Configuration implements Cloneable {
     public static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     public static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
     public static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
-    private static final String DEFAULT_VALUE_USER_NAME = null;
-    private static final String DEFAULT_VALUE_USER_PICTURE  = null;
+    private static final String DEFAULT_VALUE_USER_NAME = "";
+    private static final String DEFAULT_VALUE_USER_PICTURE  = "";
 
     public static boolean isMouseFree = false;
 
@@ -105,6 +105,10 @@ public class Configuration implements Cloneable {
             config.populateFromProperties(properties);
         }
         return config;
+    }
+    
+    public Configuration reset() {
+    	return Configuration.createFromPropertiesResource();
     }
 
     @Getter

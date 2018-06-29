@@ -143,7 +143,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToHeight(true);
 
 
-    	HBox userCard = createUser(choicePanel, gazePlay, null, null, 0);
+    	HBox userCard = createUser(choicePanel, gazePlay, null, null, 0,config);
         choicePanel.getChildren().add(userCard);
         
         File directory = new File(Utils.getGazePlayFolder()+"users");
@@ -166,18 +166,20 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 						}
 	        		}
         		}
-        	userCard = createUser(choicePanel, gazePlay, nameList[i-1], ip, i);
+        	userCard = createUser(choicePanel, gazePlay, nameList[i-1], ip, i,config);
             choicePanel.getChildren().add(userCard);
         	
         }
+        Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+ "GazePlay.properties");
+    	
         
-        userCard = createUser(choicePanel, gazePlay,null, null, nbUser);
+        userCard = createUser(choicePanel, gazePlay,null, null, nbUser, config);
         choicePanel.getChildren().add(userCard);
         
         return choicePanelScroller;
     }
 
-    private HBox createUser(FlowPane choicePanel, GazePlay gazePlay, String name, ImagePattern ip, int i) {
+    private HBox createUser(FlowPane choicePanel, GazePlay gazePlay, String name, ImagePattern ip, int i,Configuration config) {
         HBox user = new HBox();
         user.setAlignment(Pos.TOP_RIGHT);
 
@@ -234,8 +236,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             @Override
             public void handle(Event event) {
             	Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"users"+Utils.FILESEPARATOR+t.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
-            	Configuration conf2 = Configuration.createFromPropertiesResource();
-            	gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), conf2));
+            	config.reset();
+            	gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
                 gazePlay.getHomeMenuScreen().setUpOnStage(gazePlay.getPrimaryScene());
             }
         };
@@ -524,10 +526,24 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                         ip = new ImagePattern(((ImageView) tfi.getGraphic()).getImage());
                     }
 
-                    choicePanel.getChildren().add(createUser(choicePanel, gazePlay, tf.getText(), ip, temp));
+                    choicePanel.getChildren().add(createUser(choicePanel, gazePlay, tf.getText(), ip, temp,config));
                     choicePanel.getChildren().add(user);
+                    
+                    log.info("Entre ici");
+                    
+                    Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"users"+Utils.FILESEPARATOR+tf.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
+                	Configuration conf2 = Configuration.createFromPropertiesResource();
+                	conf2.setUserName(tf.getText());
+                	if(!tfi.getText().equals("choose an image")) {
+                		conf2.setUserPicture(tfi.getText());
+                	}
+                	conf2.saveConfigIgnoringExceptions();
+
+                    log.info("Et là");
+                	
                     dialog.close();
                     primaryStage.getScene().getRoot().setEffect(null);
+                    
                 }
             };
         } else {
@@ -540,6 +556,15 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                         ip = new ImagePattern(((ImageView) tfi.getGraphic()).getImage());
                     }
                     modifUser(user, choicePanel, gazePlay, tf.getText(), ip, temp);
+                    
+                    /*Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"users"+Utils.FILESEPARATOR+t.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
+                	Configuration conf2 = Configuration.createFromPropertiesResource();
+                	conf2.setUserName(t.getText());
+                	if(!tfi.getText().equals("choose an image")) {
+                		conf2.setUserPicture(tfi.getText());
+                	}
+                	conf2.saveConfigIgnoringExceptions();*/
+                    
                     dialog.close();
                     primaryStage.getScene().getRoot().setEffect(null);
                 }
