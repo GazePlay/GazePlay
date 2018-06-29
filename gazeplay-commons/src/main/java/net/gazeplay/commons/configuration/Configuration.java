@@ -19,6 +19,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import lombok.Getter;
+import lombok.Setter;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 import net.gazeplay.commons.utils.games.Utils;
@@ -43,10 +44,13 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_GAZE_MENU = "GAZE_MENU";
     private static final String PROPERTY_NAME_GAZE_MOUSE = "GAZE_MOUSE";
     private static final String PROPERTY_NAME_WHITE_BCKGRD = "WHITE_BACKGROUND";
-
     private static final String PROPERTY_NAME_SPEED_EFFECTS = "SPEED_EFFECTS";
+    private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
+    private static final String PROPERTY_NAME_USER_PICTURE  = "USER_PICTURE";
 
-    private static final String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
+    @Getter
+    @Setter
+    private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
 
     private static final boolean DEFAULT_VALUE_GAZEMODE = true;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
@@ -66,6 +70,8 @@ public class Configuration implements Cloneable {
     public static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     public static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
     public static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
+    private static final String DEFAULT_VALUE_USER_NAME = null;
+    private static final String DEFAULT_VALUE_USER_PICTURE  = null;
 
     public static boolean isMouseFree = false;
 
@@ -81,9 +87,10 @@ public class Configuration implements Cloneable {
         }
     }
 
-    private static Configuration createFromPropertiesResource() {
+    public static Configuration createFromPropertiesResource() {
         Properties properties;
         try {
+        	log.info("loading new properties from ={}",CONFIGPATH);
             properties = loadProperties(CONFIGPATH);
         } catch (FileNotFoundException e) {
             log.warn("Config file not found : {}", CONFIGPATH);
@@ -175,7 +182,14 @@ public class Configuration implements Cloneable {
     protected final DoubleProperty speedEffectsProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_SPEED_EFFECTS,
             DEFAULT_VALUE_SPEED_EFFECTS);
 
-    private Configuration() {
+    @Getter
+    protected final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME,
+            DEFAULT_VALUE_USER_NAME);
+    @Getter
+    protected final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE,
+            DEFAULT_VALUE_USER_PICTURE);
+
+    protected Configuration() {
 
         // Listeners
         musicVolumeProperty.addListener((observable) -> {
@@ -312,6 +326,16 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             whiteBackgroundProperty.setValue(Boolean.parseBoolean(buffer));
         }
+        
+        buffer = prop.getProperty(PROPERTY_NAME_USER_NAME);
+        if (buffer != null) {
+            userNameProperty.setValue(buffer);
+        }
+        
+        buffer = prop.getProperty(PROPERTY_NAME_USER_PICTURE);
+        if (buffer != null) {
+            userPictureProperty.setValue(buffer);
+        }
 
     }
 
@@ -348,6 +372,8 @@ public class Configuration implements Cloneable {
         properties.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, Double.toString(effectsVolumeProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_SPEED_EFFECTS, Double.toString(speedEffectsProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_USER_NAME, this.userNameProperty.getValue());
+        properties.setProperty(PROPERTY_NAME_USER_PICTURE, this.userPictureProperty.getValue());
         /*
          * properties.setProperty(PROPERTY_NAME_GAZE_MENU, Boolean.toString(this.gazeMenuProperty.getValue()));
          */
@@ -451,4 +477,21 @@ public class Configuration implements Cloneable {
     public Boolean isBackgroundWhite() {
         return whiteBackgroundProperty.getValue();
     }
+    
+    public String getUserName() {
+        return userNameProperty.getValue();
+    }
+    
+    public String getUserPicture() {
+        return userPictureProperty.getValue();
+    }
+    
+    public void setUserName(String newName) {
+        userNameProperty.setValue(newName);
+    }
+    
+    public void setUserPicture(String newPicture) {
+        userPictureProperty.setValue(newPicture);
+    }
+    
 }

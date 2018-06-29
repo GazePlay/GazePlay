@@ -20,6 +20,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
@@ -39,6 +40,7 @@ public class GazePlay extends Application {
     private static GazePlay instance;
 
     @Getter
+    @Setter
     private HomeMenuScreen homeMenuScreen;
 
     @Getter
