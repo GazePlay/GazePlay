@@ -65,7 +65,9 @@ public class Configuration implements Cloneable {
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
-    public static final String DEFAULT_VALUE_FILE_DIR = getFileDirectoryDefaultValue();
+    @Setter
+    @Getter
+    public static String DEFAULT_VALUE_FILE_DIR = getFileDirectoryDefaultValue();
     public static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     public static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     public static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
@@ -77,6 +79,11 @@ public class Configuration implements Cloneable {
 
     private static String getFileDirectoryDefaultValue() {
         return Utils.getGazePlayFolder() + "files" /* + Utils.FILESEPARATOR */;
+    }
+
+    public static String getFileDirectoryUserValue(String user) {
+        return Utils.getGazePlayFolder() + "profiles/" + user + Utils.FILESEPARATOR
+                + "files" /* + Utils.FILESEPARATOR */;
     }
 
     private static Properties loadProperties(String propertiesFilePath) throws IOException {
@@ -111,9 +118,13 @@ public class Configuration implements Cloneable {
         return Configuration.createFromPropertiesResource();
     }
 
-    public static final Configuration getInstance() {
-        return Configuration.createFromPropertiesResource();
-    }
+    /*
+     * public static final Configuration getInstance() { return Configuration.createFromPropertiesResource(); }
+     */
+
+    @Getter
+    @Setter
+    private static Configuration instance = Configuration.createFromPropertiesResource();
 
     @Getter
     protected final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE,
@@ -419,6 +430,10 @@ public class Configuration implements Cloneable {
 
     public String getFileDir() {
         return filedirProperty.getValue();
+    }
+
+    public void setFileDir(String s) {
+        filedirProperty.setValue(s);
     }
 
     public Integer getFixationLength() {
