@@ -247,11 +247,18 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             @Override
             public void handle(Event event) {
 
-                Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + t.getText()
-                        + Utils.FILESEPARATOR + "GazePlay.properties");
-                config = Configuration.createFromPropertiesResource();
+                if (!user.name.equals("Default User")) {
+
+                    Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.name
+                            + Utils.FILESEPARATOR + "GazePlay.properties");
+                    Configuration.setInstance(Configuration.createFromPropertiesResource());
+
+                    config = Configuration.getInstance();
+
+                }
 
                 gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
+                choicePanel.getChildren().clear();
                 gazePlay.getHomeMenuScreen().setUpOnStage(gazePlay.getPrimaryScene());
 
             }
@@ -561,15 +568,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                     User newser = createUser(choicePanel, gazePlay, tf.getText(), ip, temp);
 
-                    boolean isNew = true;
-                    for (String names : allUsers) {
-                        if (names.equals(newser.name)) {
-                            isNew = false;
-                            break;
-                        }
-                    }
-
-                    if (isNew) {
+                    if (checkNewName(newser.name)) {
 
                         choicePanel.getChildren().remove(user);
                         choicePanel.getChildren().add(newser);
@@ -587,6 +586,9 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                         if (!tfi.getText().equals("choose an image")) {
                             conf2.setUserPicture(tfi.getText());
                         }
+
+                        conf2.setFileDir(Configuration.getFileDirectoryUserValue(newser.name));
+
                         conf2.saveConfigIgnoringExceptions();
 
                         dialog.close();
@@ -634,6 +636,18 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         dialog.setScene(scene);
 
         return dialog;
+    }
+
+    private boolean checkNewName(String s) {
+        boolean isNew = true;
+        for (String names : allUsers) {
+            if (names.equals(s)) {
+                isNew = false;
+                break;
+            }
+        }
+
+        return (isNew && !s.equals("Default User"));
     }
 
     private void modifUser(HBox user, FlowPane choicePanel, GazePlay gazePlay, String name, ImagePattern ip, int temp) {
