@@ -739,7 +739,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     + "home" + File.separator + "sounds";
             config.getMusicFolderProperty().setValue(Configuration.DEFAULT_VALUE_MUSIC_FOLDER);
         } else {
-        	config.getMusicFolderProperty().setValue(musicFolder);
+            config.getMusicFolderProperty().setValue(musicFolder);
         }
 
         config.saveConfigIgnoringExceptions();

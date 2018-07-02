@@ -80,7 +80,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     @Setter
     @Getter
     private GazeDeviceManager gazeDeviceManager;
-    
+
     @Setter
     private Configuration config;
 
@@ -93,14 +93,13 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     public UserProfilContext(GazePlay gazePlay, BorderPane root, GamePanelDimensionProvider gamePanelDimensionProvider,
             Configuration config) {
         super(gazePlay, root);
-        
+
         this.config = config;
 
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
         cardHeight = gamePanelDimensionProvider.getDimension2D().getHeight() / 4;
-        
+
         cardWidth = gamePanelDimensionProvider.getDimension2D().getWidth() / 8;
-        
 
         Node logo = createLogo();
         StackPane topLogoPane = new StackPane();
@@ -146,40 +145,39 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
-
-    	HBox userCard = createUser(choicePanel, gazePlay, null, null, 0);
+        HBox userCard = createUser(choicePanel, gazePlay, null, null, 0);
         choicePanel.getChildren().add(userCard);
-        
-        File directory = new File(Utils.getGazePlayFolder()+"profiles");
-        log.info(Utils.getGazePlayFolder()+"profiles");
+
+        File directory = new File(Utils.getGazePlayFolder() + "profiles");
+        log.info(Utils.getGazePlayFolder() + "profiles");
         String[] nameList = directory.list();
-        nbUser=nbUser+nameList.length;
+        nbUser = nbUser + nameList.length;
 
         for (int i = 1; i < nbUser; i++) {
-        	Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"profiles"+Utils.FILESEPARATOR+nameList[i-1]+Utils.FILESEPARATOR+ "GazePlay.properties");
-        	Configuration conf2 = Configuration.createFromPropertiesResource();
-        	ImagePattern ip = null;
-        		String s = conf2.getUserPicture();
-        		if (s!=null) {
-	        		File f = new File(s);
-	        		if (f.exists()) {
-	        			try {
-							ip = new ImagePattern(new Image(new FileInputStream(f)));
-						} catch (FileNotFoundException e) {
-							e.printStackTrace();
-						}
-	        		}
-        		}
-        	userCard = createUser(choicePanel, gazePlay, nameList[i-1], ip, i);
+            Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + nameList[i - 1]
+                    + Utils.FILESEPARATOR + "GazePlay.properties");
+            Configuration conf2 = Configuration.createFromPropertiesResource();
+            ImagePattern ip = null;
+            String s = conf2.getUserPicture();
+            if (s != null) {
+                File f = new File(s);
+                if (f.exists()) {
+                    try {
+                        ip = new ImagePattern(new Image(new FileInputStream(f)));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            userCard = createUser(choicePanel, gazePlay, nameList[i - 1], ip, i);
             choicePanel.getChildren().add(userCard);
-        	
+
         }
-        Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+ "GazePlay.properties");
-    	
-        
-        userCard = createUser(choicePanel, gazePlay,null, null, nbUser);
+        Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "GazePlay.properties");
+
+        userCard = createUser(choicePanel, gazePlay, null, null, nbUser);
         choicePanel.getChildren().add(userCard);
-        
+
         return choicePanelScroller;
     }
 
@@ -197,13 +195,13 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         Rectangle r = new Rectangle(0, 0, cardWidth, cardHeight);
         if (ip != null) {
             r.setFill(ip);
-         } else {
-        	if(i!=nbUser) {
-        		r.setFill(new ImagePattern(new Image("data/common/images/DefaultUser.png")));
-        	}else {
-        		r.setFill(new ImagePattern(new Image("data/common/images/DefaultUser.png")));
-        	}
-            
+        } else {
+            if (i != nbUser) {
+                r.setFill(new ImagePattern(new Image("data/common/images/DefaultUser.png")));
+            } else {
+                r.setFill(new ImagePattern(new Image("data/common/images/DefaultUser.png")));
+            }
+
         }
         c.setCenter(r);
         String userName;
@@ -239,15 +237,16 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         enterh = new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
-                
-            	Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"profiles"+Utils.FILESEPARATOR+t.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
-            	config = Configuration.createFromPropertiesResource();
-            	
-            	log.info("1={}", config.getUserPicture());
-            	
-            	gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(),config));
+
+                Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + t.getText()
+                        + Utils.FILESEPARATOR + "GazePlay.properties");
+                config = Configuration.createFromPropertiesResource();
+
+                log.info("1={}", config.getUserPicture());
+
+                gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
                 gazePlay.getHomeMenuScreen().setUpOnStage(gazePlay.getPrimaryScene());
-                
+
             }
         };
 
@@ -534,18 +533,19 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                     choicePanel.getChildren().add(createUser(choicePanel, gazePlay, tf.getText(), ip, temp));
                     choicePanel.getChildren().add(user);
-                                        
-                    Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"profiles"+Utils.FILESEPARATOR+tf.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
-                	Configuration conf2 = Configuration.createFromPropertiesResource();
-                	conf2.setUserName(tf.getText());
-                	if(!tfi.getText().equals("choose an image")) {
-                		conf2.setUserPicture(tfi.getText());
-                	}
-                	conf2.saveConfigIgnoringExceptions();
-                	
+
+                    Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
+                            + tf.getText() + Utils.FILESEPARATOR + "GazePlay.properties");
+                    Configuration conf2 = Configuration.createFromPropertiesResource();
+                    conf2.setUserName(tf.getText());
+                    if (!tfi.getText().equals("choose an image")) {
+                        conf2.setUserPicture(tfi.getText());
+                    }
+                    conf2.saveConfigIgnoringExceptions();
+
                     dialog.close();
                     primaryStage.getScene().getRoot().setEffect(null);
-                    
+
                 }
             };
         } else {
@@ -558,15 +558,15 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                         ip = new ImagePattern(((ImageView) tfi.getGraphic()).getImage());
                     }
                     modifUser(user, choicePanel, gazePlay, tf.getText(), ip, temp);
-                    
-                    /*Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"profiles"+Utils.FILESEPARATOR+t.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
-                	Configuration conf2 = Configuration.createFromPropertiesResource();
-                	conf2.setUserName(t.getText());
-                	if(!tfi.getText().equals("choose an image")) {
-                		conf2.setUserPicture(tfi.getText());
-                	}
-                	conf2.saveConfigIgnoringExceptions();*/
-                    
+
+                    /*
+                     * Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"profiles"+Utils.FILESEPARATOR+t.getText()+
+                     * Utils.FILESEPARATOR+ "GazePlay.properties"); Configuration conf2 =
+                     * Configuration.createFromPropertiesResource(); conf2.setUserName(t.getText());
+                     * if(!tfi.getText().equals("choose an image")) { conf2.setUserPicture(tfi.getText()); }
+                     * conf2.saveConfigIgnoringExceptions();
+                     */
+
                     dialog.close();
                     primaryStage.getScene().getRoot().setEffect(null);
                 }

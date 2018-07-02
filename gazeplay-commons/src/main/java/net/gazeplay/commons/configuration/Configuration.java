@@ -46,7 +46,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_WHITE_BCKGRD = "WHITE_BACKGROUND";
     private static final String PROPERTY_NAME_SPEED_EFFECTS = "SPEED_EFFECTS";
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
-    private static final String PROPERTY_NAME_USER_PICTURE  = "USER_PICTURE";
+    private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
 
     @Getter
     @Setter
@@ -71,7 +71,7 @@ public class Configuration implements Cloneable {
     public static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
     public static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
     private static final String DEFAULT_VALUE_USER_NAME = "";
-    public static final String DEFAULT_VALUE_USER_PICTURE  = "";
+    public static final String DEFAULT_VALUE_USER_PICTURE = "";
 
     public static boolean isMouseFree = false;
 
@@ -90,7 +90,7 @@ public class Configuration implements Cloneable {
     public static Configuration createFromPropertiesResource() {
         Properties properties;
         try {
-        	log.info("loading new properties from ={}",CONFIGPATH);
+            log.info("loading new properties from ={}", CONFIGPATH);
             properties = loadProperties(CONFIGPATH);
         } catch (FileNotFoundException e) {
             log.warn("Config file not found : {}", CONFIGPATH);
@@ -106,13 +106,13 @@ public class Configuration implements Cloneable {
         }
         return config;
     }
-    
+
     public Configuration reset() {
-    	return Configuration.createFromPropertiesResource();
+        return Configuration.createFromPropertiesResource();
     }
 
     public static final Configuration getInstance() {
-    	return Configuration.createFromPropertiesResource();
+        return Configuration.createFromPropertiesResource();
     }
 
     @Getter
@@ -331,12 +331,12 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             whiteBackgroundProperty.setValue(Boolean.parseBoolean(buffer));
         }
-        
+
         buffer = prop.getProperty(PROPERTY_NAME_USER_NAME);
         if (buffer != null) {
             userNameProperty.setValue(buffer);
         }
-        
+
         buffer = prop.getProperty(PROPERTY_NAME_USER_PICTURE);
         if (buffer != null) {
             userPictureProperty.setValue(buffer);
@@ -482,21 +482,21 @@ public class Configuration implements Cloneable {
     public Boolean isBackgroundWhite() {
         return whiteBackgroundProperty.getValue();
     }
-    
+
     public String getUserName() {
         return userNameProperty.getValue();
     }
-    
+
     public String getUserPicture() {
         return userPictureProperty.getValue();
     }
-    
+
     public void setUserName(String newName) {
         userNameProperty.setValue(newName);
     }
-    
+
     public void setUserPicture(String newPicture) {
         userPictureProperty.setValue(newPicture);
     }
-    
+
 }
