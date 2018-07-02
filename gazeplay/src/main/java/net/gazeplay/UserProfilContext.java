@@ -80,6 +80,9 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     @Setter
     @Getter
     private GazeDeviceManager gazeDeviceManager;
+    
+    @Setter
+    private Configuration config;
 
     @Getter
     private final GamePanelDimensionProvider gamePanelDimensionProvider;
@@ -90,12 +93,14 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     public UserProfilContext(GazePlay gazePlay, BorderPane root, GamePanelDimensionProvider gamePanelDimensionProvider,
             Configuration config) {
         super(gazePlay, root);
+        
+        this.config = config;
 
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
         cardHeight = gamePanelDimensionProvider.getDimension2D().getHeight() / 4;
-        ;
+        
         cardWidth = gamePanelDimensionProvider.getDimension2D().getWidth() / 8;
-        ;
+        
 
         Node logo = createLogo();
         StackPane topLogoPane = new StackPane();
@@ -108,7 +113,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         topRightPane.getChildren().addAll(exitButton);
 
         ProgressIndicator indicator = new ProgressIndicator(0);
-        Node userPickerChoicePane = createuUserPickerChoicePane(gazePlay, config, indicator);
+        Node userPickerChoicePane = createuUserPickerChoicePane(gazePlay, indicator);
 
         VBox centerCenterPane = new VBox();
         centerCenterPane.setSpacing(40);
@@ -128,8 +133,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
     }
 
-    private ScrollPane createuUserPickerChoicePane(GazePlay gazePlay, Configuration config,
-            ProgressIndicator indicator) {
+    private ScrollPane createuUserPickerChoicePane(GazePlay gazePlay, ProgressIndicator indicator) {
 
         final int flowpaneGap = 40;
         FlowPane choicePanel = new FlowPane();
@@ -143,16 +147,16 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToHeight(true);
 
 
-    	HBox userCard = createUser(choicePanel, gazePlay, null, null, 0,config);
+    	HBox userCard = createUser(choicePanel, gazePlay, null, null, 0);
         choicePanel.getChildren().add(userCard);
         
-        File directory = new File(Utils.getGazePlayFolder()+"users");
-        log.info(Utils.getGazePlayFolder()+"users");
+        File directory = new File(Utils.getGazePlayFolder()+"profiles");
+        log.info(Utils.getGazePlayFolder()+"profiles");
         String[] nameList = directory.list();
         nbUser=nbUser+nameList.length;
 
         for (int i = 1; i < nbUser; i++) {
-        	Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"users"+Utils.FILESEPARATOR+nameList[i-1]+Utils.FILESEPARATOR+ "GazePlay.properties");
+        	Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"profiles"+Utils.FILESEPARATOR+nameList[i-1]+Utils.FILESEPARATOR+ "GazePlay.properties");
         	Configuration conf2 = Configuration.createFromPropertiesResource();
         	ImagePattern ip = null;
         		String s = conf2.getUserPicture();
@@ -166,20 +170,20 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 						}
 	        		}
         		}
-        	userCard = createUser(choicePanel, gazePlay, nameList[i-1], ip, i,config);
+        	userCard = createUser(choicePanel, gazePlay, nameList[i-1], ip, i);
             choicePanel.getChildren().add(userCard);
         	
         }
         Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+ "GazePlay.properties");
     	
         
-        userCard = createUser(choicePanel, gazePlay,null, null, nbUser, config);
+        userCard = createUser(choicePanel, gazePlay,null, null, nbUser);
         choicePanel.getChildren().add(userCard);
         
         return choicePanelScroller;
     }
 
-    private HBox createUser(FlowPane choicePanel, GazePlay gazePlay, String name, ImagePattern ip, int i,Configuration config) {
+    private HBox createUser(FlowPane choicePanel, GazePlay gazePlay, String name, ImagePattern ip, int i) {
         HBox user = new HBox();
         user.setAlignment(Pos.TOP_RIGHT);
 
@@ -235,10 +239,15 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         enterh = new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
-            	Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"users"+Utils.FILESEPARATOR+t.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
-            	config.reset();
-            	gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
+                
+            	Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"profiles"+Utils.FILESEPARATOR+t.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
+            	config = Configuration.createFromPropertiesResource();
+            	
+            	log.info("1={}", config.getUserPicture());
+            	
+            	gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(),config));
                 gazePlay.getHomeMenuScreen().setUpOnStage(gazePlay.getPrimaryScene());
+                
             }
         };
 
@@ -261,7 +270,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             };
         }
 
-        c.addEventFilter(MouseEvent.MOUSE_PRESSED, enterh);
+        c.addEventFilter(MouseEvent.MOUSE_CLICKED, enterh);
         return user;
     }
 
@@ -412,7 +421,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
-        final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
 
         dialog.setScene(scene);
@@ -440,8 +448,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         choicePanelScroller.setMinWidth(primaryStage.getWidth() / 3);
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
-
-        final Configuration config = Configuration.getInstance();
 
         HBox nameField = new HBox();
         nameField.setAlignment(Pos.CENTER);
@@ -526,20 +532,16 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                         ip = new ImagePattern(((ImageView) tfi.getGraphic()).getImage());
                     }
 
-                    choicePanel.getChildren().add(createUser(choicePanel, gazePlay, tf.getText(), ip, temp,config));
+                    choicePanel.getChildren().add(createUser(choicePanel, gazePlay, tf.getText(), ip, temp));
                     choicePanel.getChildren().add(user);
-                    
-                    log.info("Entre ici");
-                    
-                    Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"users"+Utils.FILESEPARATOR+tf.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
+                                        
+                    Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"profiles"+Utils.FILESEPARATOR+tf.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
                 	Configuration conf2 = Configuration.createFromPropertiesResource();
                 	conf2.setUserName(tf.getText());
                 	if(!tfi.getText().equals("choose an image")) {
                 		conf2.setUserPicture(tfi.getText());
                 	}
                 	conf2.saveConfigIgnoringExceptions();
-
-                    log.info("Et là");
                 	
                     dialog.close();
                     primaryStage.getScene().getRoot().setEffect(null);
@@ -557,7 +559,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     }
                     modifUser(user, choicePanel, gazePlay, tf.getText(), ip, temp);
                     
-                    /*Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"users"+Utils.FILESEPARATOR+t.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
+                    /*Configuration.setCONFIGPATH(Utils.getGazePlayFolder()+"profiles"+Utils.FILESEPARATOR+t.getText()+Utils.FILESEPARATOR+ "GazePlay.properties");
                 	Configuration conf2 = Configuration.createFromPropertiesResource();
                 	conf2.setUserName(t.getText());
                 	if(!tfi.getText().equals("choose an image")) {

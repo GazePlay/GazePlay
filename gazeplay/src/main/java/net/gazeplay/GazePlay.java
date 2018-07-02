@@ -73,7 +73,7 @@ public class GazePlay extends Application {
 
         primaryStage.setMaximized(false);
 
-        final Configuration config = Configuration.getInstance();
+        Configuration config = Configuration.getInstance();
         final Multilinguism multilinguism = Multilinguism.getSingleton();
 
         translator = new DefaultTranslator(config, multilinguism);
@@ -94,7 +94,7 @@ public class GazePlay extends Application {
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
 
-        userProfileScreen = userProfileScreen.newInstance(this, config);
+        userProfileScreen = UserProfilContext.newInstance(this, config);
 
         userProfileScreen.setUpOnStage(primaryScene);
         // homeMenuScreen.setUpOnStage(primaryScene);
@@ -138,7 +138,6 @@ public class GazePlay extends Application {
 
         homeMenuScreen.setGazeDeviceManager(GazeDeviceManagerFactory.getInstance().createNewGazeListener());
         homeMenuScreen.getGameMenuFactory().addFilters();
-
         homeMenuScreen.setUpOnStage(primaryScene);
         final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
         musicMananger.onEndGame();

@@ -71,7 +71,7 @@ public class Configuration implements Cloneable {
     public static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
     public static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
     private static final String DEFAULT_VALUE_USER_NAME = "";
-    private static final String DEFAULT_VALUE_USER_PICTURE  = "";
+    public static final String DEFAULT_VALUE_USER_PICTURE  = "";
 
     public static boolean isMouseFree = false;
 
@@ -111,8 +111,9 @@ public class Configuration implements Cloneable {
     	return Configuration.createFromPropertiesResource();
     }
 
-    @Getter
-    private static final Configuration instance = Configuration.createFromPropertiesResource();
+    public static final Configuration getInstance() {
+    	return Configuration.createFromPropertiesResource();
+    }
 
     @Getter
     protected final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE,

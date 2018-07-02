@@ -683,7 +683,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static Node buildMusicInput(Configuration config, ConfigurationContext configurationContext) {
 
-        changeMusicFolder(config.getMusicFolder());
+        changeMusicFolder(config.getMusicFolder(), config);
 
         final HBox pane = new HBox(5);
         final String musicFolder = config.getMusicFolder();
@@ -714,14 +714,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
 
-            changeMusicFolder(newPropertyValue);
+            changeMusicFolder(newPropertyValue, config);
         });
 
         pane.getChildren().add(buttonLoad);
 
         final Button resetButton = new Button(translator.translate("reset"));
         resetButton.setOnAction((event) -> {
-            changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER);
+            changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER, config);
         });
 
         pane.getChildren().add(resetButton);
@@ -729,21 +729,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return pane;
     }
 
-    private static void changeMusicFolder(final String newMusicFolder) {
+    private static void changeMusicFolder(final String newMusicFolder, Configuration config) {
 
         String musicFolder = newMusicFolder;
-        final Configuration configuration = Configuration.getInstance();
 
         if (newMusicFolder == Configuration.DEFAULT_VALUE_MUSIC_FOLDER) {
             // TODO find a way to access to this files in a "cleaner" way
             musicFolder = (new File(".")).getAbsolutePath() + "/gazeplay-data/src/main/resources/data" + File.separator
                     + "home" + File.separator + "sounds";
-            configuration.getMusicFolderProperty().setValue(Configuration.DEFAULT_VALUE_MUSIC_FOLDER);
+            config.getMusicFolderProperty().setValue(Configuration.DEFAULT_VALUE_MUSIC_FOLDER);
         } else {
-            configuration.getMusicFolderProperty().setValue(musicFolder);
+        	config.getMusicFolderProperty().setValue(musicFolder);
         }
 
-        configuration.saveConfigIgnoringExceptions();
+        config.saveConfigIgnoringExceptions();
 
         BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
 
