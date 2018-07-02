@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import javafx.collections.ObservableList;
@@ -31,10 +32,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -48,6 +51,7 @@ import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.GamePanelDimensionProvider;
+import net.gazeplay.commons.utils.games.Utils;
 
 @Data
 @Slf4j
@@ -78,21 +82,27 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     @Getter
     private GazeDeviceManager gazeDeviceManager;
 
+    @Setter
+    private Configuration config;
+
     @Getter
     private final GamePanelDimensionProvider gamePanelDimensionProvider;
 
     private final double cardHeight;
     private final double cardWidth;
 
+    private List<String> allUsers;
+
     public UserProfilContext(GazePlay gazePlay, BorderPane root, GamePanelDimensionProvider gamePanelDimensionProvider,
             Configuration config) {
         super(gazePlay, root);
 
+        this.config = config;
+
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
         cardHeight = gamePanelDimensionProvider.getDimension2D().getHeight() / 4;
-        ;
+
         cardWidth = gamePanelDimensionProvider.getDimension2D().getWidth() / 8;
-        ;
 
         Node logo = createLogo();
         StackPane topLogoPane = new StackPane();
@@ -105,7 +115,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         topRightPane.getChildren().addAll(exitButton);
 
         ProgressIndicator indicator = new ProgressIndicator(0);
-        Node userPickerChoicePane = createuUserPickerChoicePane(gazePlay, config, indicator);
+        Node userPickerChoicePane = createuUserPickerChoicePane(gazePlay, indicator);
 
         VBox centerCenterPane = new VBox();
         centerCenterPane.setSpacing(40);
@@ -125,8 +135,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
     }
 
-    private ScrollPane createuUserPickerChoicePane(GazePlay gazePlay, Configuration config,
-            ProgressIndicator indicator) {
+    private ScrollPane createuUserPickerChoicePane(GazePlay gazePlay, ProgressIndicator indicator) {
 
         final int flowpaneGap = 40;
         FlowPane choicePanel = new FlowPane();
@@ -139,47 +148,95 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
-        BorderPane userCard = createUser(choicePanel, gazePlay, null, null, 0);
+        HBox userCard = createUser(choicePanel, gazePlay, null, null, 0);
         choicePanel.getChildren().add(userCard);
 
-        for (int i = 1; i <= nbUser; i++) {
-            userCard = createUser(choicePanel, gazePlay, null, null, i);
-            choicePanel.getChildren().add(userCard);
+        File directory = new File(Utils.getGazePlayFolder() + "profiles");
+        log.info(Utils.getGazePlayFolder() + "profiles");
+        String[] nameList = directory.list();
+        if (nameList != null) {
+            nbUser = nbUser + nameList.length;
+            allUsers = new LinkedList<String>();
+            for (String names : nameList) {
+                allUsers.add(names);
+            }
         }
+
+        for (int i = 1; i < nbUser; i++) {
+            log.info("Profile founded : ={}", nameList[i - 1]);
+            Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + nameList[i - 1]
+                    + Utils.FILESEPARATOR + "GazePlay.properties");
+            Configuration conf2 = Configuration.createFromPropertiesResource();
+            ImagePattern ip = null;
+            String s = conf2.getUserPicture();
+            if (s != null) {
+                File f = new File(s);
+                if (f.exists()) {
+                    try {
+                        ip = new ImagePattern(new Image(new FileInputStream(f)));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            userCard = createUser(choicePanel, gazePlay, nameList[i - 1], ip, i);
+            choicePanel.getChildren().add(userCard);
+
+        }
+        Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "GazePlay.properties");
+
+        userCard = createUser(choicePanel, gazePlay, null, null, nbUser);
+        choicePanel.getChildren().add(userCard);
 
         return choicePanelScroller;
     }
 
-    private BorderPane createUser(FlowPane choicePanel, GazePlay gazePlay, String name, ImagePattern ip, int i) {
+    private User createUser(FlowPane choicePanel, GazePlay gazePlay, String name, ImagePattern ip, int i) {
+        User user = new User();
+        user.setAlignment(Pos.TOP_RIGHT);
+
         BorderPane c = new BorderPane();
         c.getStyleClass().add("gameChooserButton");
         c.getStyleClass().add("button");
-        c.setPadding(new Insets(40, 50, 10, 50));
+        c.setPadding(new Insets(10, 10, 10, 10));
+
+        user.getChildren().add(c);
 
         Rectangle r = new Rectangle(0, 0, cardWidth, cardHeight);
         if (ip != null) {
             r.setFill(ip);
         } else {
-            r.setFill(Color.DIMGRAY);
-        }
-        c.setCenter(r);
-        String userName;
-        if (i == 0) {
-            userName = "Default User";
-        } else if (i == nbUser) {
-            userName = "Add User";
-        } else {
-            if ((name != null) && (!name.equals(""))) {
-                userName = name;
+            if (i != nbUser) {
+                r.setFill(new ImagePattern(new Image("data/common/images/DefaultUser.png")));
             } else {
-                userName = "User" + i;
+                r.setFill(new ImagePattern(new Image("data/common/images/DefaultUser.png")));
             }
 
-            CustomButton rm = createRemoveButton(getGazePlay(), choicePanel, c);
-            BorderPane.setAlignment(rm, Pos.TOP_RIGHT);
-            c.setTop(rm);
         }
-        Text t = new Text(userName);
+        c.setCenter(r);
+        if (i == 0) {
+            user.name = "Default User";
+        } else if (i == nbUser) {
+            user.name = "Add User";
+        } else {
+            if ((name != null) && (!name.equals(""))) {
+                user.name = name;
+            } else {
+                user.name = "User" + i;
+            }
+
+            BorderPane rm = createRemoveButton(getGazePlay(), choicePanel, user);
+
+            BorderPane modif = createModifButton(getGazePlay(), choicePanel, user);
+
+            VBox buttonBox = new VBox();
+            // buttonBox.setSpacing(10);
+
+            buttonBox.getChildren().addAll(modif, rm);
+
+            user.getChildren().add(buttonBox);
+        }
+        Text t = new Text(user.name);
         t.setFill(Color.WHITE);
         t.getStyleClass().add("gameChooserButtonTitle");
         BorderPane.setAlignment(t, Pos.BOTTOM_CENTER);
@@ -189,7 +246,14 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         enterh = new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
+
+                Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + t.getText()
+                        + Utils.FILESEPARATOR + "GazePlay.properties");
+                config = Configuration.createFromPropertiesResource();
+
+                gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
                 gazePlay.getHomeMenuScreen().setUpOnStage(gazePlay.getPrimaryScene());
+
             }
         };
 
@@ -200,7 +264,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                     log.info("Adding user");
                     root.setEffect(new BoxBlur());
-                    Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, c);
+                    Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, true);
 
                     String dialogTitle = "New User";
                     dialog.setTitle(dialogTitle);
@@ -212,16 +276,17 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             };
         }
 
-        c.getCenter().addEventFilter(MouseEvent.MOUSE_PRESSED, enterh);
-        return c;
+        c.addEventFilter(MouseEvent.MOUSE_CLICKED, enterh);
+        return user;
     }
 
-    private CustomButton createRemoveButton(GazePlay gazePlay, FlowPane choicePanel, BorderPane c) {
-        CustomButton removeButton = new CustomButton("data/common/images/power-off.png");
+    private BorderPane createRemoveButton(GazePlay gazePlay, FlowPane choicePanel, User user) {
+        double size = Screen.getPrimary().getBounds().getWidth() / 50;
+        CustomButton removeButton = new CustomButton("data/common/images/error.png", size);
         EventHandler<Event> removeHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
-                Stage dialog = createRemoveDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, c);
+                Stage dialog = createRemoveDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user);
 
                 String dialogTitle = "Do you really want to remove this user ?";
                 dialog.setTitle(dialogTitle);
@@ -232,7 +297,55 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             }
         };
         removeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, removeHandler);
-        return removeButton;
+
+        BorderPane rbp = new BorderPane();
+        rbp.getStyleClass().add("gameChooserButton");
+        rbp.getStyleClass().add("button");
+        rbp.setCenter(removeButton);
+        rbp.maxWidthProperty().bind(removeButton.widthProperty());
+        rbp.maxHeightProperty().bind(removeButton.heightProperty());
+
+        /*
+         * Circle shape = new Circle(); shape.setRadius((110*size)/100);
+         * 
+         * rbp.setShape(shape);
+         */
+
+        return rbp;
+    }
+
+    private BorderPane createModifButton(GazePlay gazePlay, FlowPane choicePanel, User user) {
+        double size = Screen.getPrimary().getBounds().getWidth() / 50;
+        CustomButton removeButton = new CustomButton("data/common/images/configuration-button-alt3.png", size);
+        EventHandler<Event> removeHandler = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, false);
+
+                String dialogTitle = "User Modification";
+                dialog.setTitle(dialogTitle);
+                dialog.show();
+
+                dialog.toFront();
+                dialog.setAlwaysOnTop(true);
+            }
+        };
+        removeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, removeHandler);
+
+        BorderPane rbp = new BorderPane();
+        rbp.getStyleClass().add("gameChooserButton");
+        rbp.getStyleClass().add("button");
+        rbp.setCenter(removeButton);
+        rbp.maxWidthProperty().bind(removeButton.widthProperty());
+        rbp.maxHeightProperty().bind(removeButton.heightProperty());
+
+        /*
+         * Circle shape = new Circle(); shape.setRadius((110*size)/100);
+         * 
+         * rbp.setShape(shape);
+         */
+
+        return rbp;
     }
 
     private CustomButton createExitButton() {
@@ -258,7 +371,17 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return logoView;
     }
 
-    private Stage createRemoveDialog(GazePlay gazePlay, Stage primaryStage, FlowPane choicePanel, BorderPane c) {
+    private void deleteDir(File file) {
+        File[] contents = file.listFiles();
+        if (contents != null) {
+            for (File f : contents) {
+                deleteDir(f);
+            }
+        }
+        file.delete();
+    }
+
+    private Stage createRemoveDialog(GazePlay gazePlay, Stage primaryStage, FlowPane choicePanel, User user) {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(primaryStage);
@@ -288,7 +411,15 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         EventHandler<Event> yesHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
-                choicePanel.getChildren().remove(c);
+                choicePanel.getChildren().remove(user);
+                File userDirectory = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.name);
+                deleteDir(userDirectory);
+                for (String names : allUsers) {
+                    if (names.equals(user.name)) {
+                        allUsers.remove(names);
+                    }
+                }
+                log.info("Profile: " + user.name + " deleted");
                 dialog.close();
             }
         };
@@ -314,7 +445,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
-        final Configuration config = Configuration.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
 
         dialog.setScene(scene);
@@ -322,7 +452,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
-    private Stage createDialog(GazePlay gazePlay, Stage primaryStage, FlowPane choicePanel, BorderPane c) {
+    private Stage createDialog(GazePlay gazePlay, Stage primaryStage, FlowPane choicePanel, User user,
+            boolean newUser) {
         // initialize the confirmation dialog
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -342,17 +473,21 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
-        final Configuration config = Configuration.getInstance();
-
         HBox nameField = new HBox();
-        nameField.setAlignment(Pos.CENTER);
-
-        Text t = new Text("Name : ");
-        t.setFill(Color.WHITE);
 
         TextField tf = new TextField();
-        tf.setPromptText("enter a name");
-        tf.setMaxWidth(primaryStage.getWidth() / 10);
+
+        if (newUser) {
+
+            nameField.setAlignment(Pos.CENTER);
+
+            Text t = new Text("Name : ");
+            t.setFill(Color.WHITE);
+            tf.setPromptText("enter a name");
+            tf.setMaxWidth(primaryStage.getWidth() / 10);
+
+            nameField.getChildren().addAll(t, tf);
+        }
 
         HBox imageField = new HBox();
         imageField.setAlignment(Pos.CENTER);
@@ -400,8 +535,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         imageField.getChildren().addAll(ti, tfi, reset);
 
-        nameField.getChildren().addAll(t, tf);
-
         choicePane.getChildren().addAll(imageField, nameField, iv);
 
         Button button = new Button("Validate");
@@ -412,25 +545,86 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         button.setMinWidth(primaryStage.getWidth() / 10);
         choicePane.getChildren().add(button);
 
-        EventHandler<Event> event = new EventHandler<Event>() {
-            @Override
-            public void handle(Event mouseEvent) {
-                int temp = nbUser;
-                nbUser++;
-                choicePanel.getChildren().remove(c);
+        EventHandler<Event> event;
 
-                ImagePattern ip = null;
-                if (tfi.getGraphic() != null) {
-                    ip = new ImagePattern(((ImageView) tfi.getGraphic()).getImage());
+        if (newUser) {
+            event = new EventHandler<Event>() {
+                @Override
+                public void handle(Event mouseEvent) {
+                    int temp = nbUser;
+                    nbUser++;
+
+                    ImagePattern ip = null;
+                    if (tfi.getGraphic() != null) {
+                        ip = new ImagePattern(((ImageView) tfi.getGraphic()).getImage());
+                    }
+
+                    User newser = createUser(choicePanel, gazePlay, tf.getText(), ip, temp);
+
+                    boolean isNew = true;
+                    for (String names : allUsers) {
+                        if (names.equals(newser.name)) {
+                            isNew = false;
+                            break;
+                        }
+                    }
+
+                    if (isNew) {
+
+                        choicePanel.getChildren().remove(user);
+                        choicePanel.getChildren().add(newser);
+                        choicePanel.getChildren().add(user);
+
+                        Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
+                                + newser.name + Utils.FILESEPARATOR + "GazePlay.properties");
+                        Configuration conf2 = Configuration.createFromPropertiesResource();
+
+                        File userDirectory = new File(
+                                Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + newser.name);
+                        userDirectory.mkdirs();
+
+                        conf2.setUserName(newser.name);
+                        if (!tfi.getText().equals("choose an image")) {
+                            conf2.setUserPicture(tfi.getText());
+                        }
+                        conf2.saveConfigIgnoringExceptions();
+
+                        dialog.close();
+                        primaryStage.getScene().getRoot().setEffect(null);
+
+                    } else {
+                        Text error = new Text("This profile name is already used !");
+                        error.setFill(Color.RED);
+                        choicePane.getChildren().add(error);
+                    }
+
                 }
+            };
+        } else {
+            event = new EventHandler<Event>() {
+                @Override
+                public void handle(Event mouseEvent) {
+                    int temp = nbUser;
+                    ImagePattern ip = null;
+                    if (tfi.getGraphic() != null) {
+                        ip = new ImagePattern(((ImageView) tfi.getGraphic()).getImage());
+                    }
+                    modifUser(user, choicePanel, gazePlay, user.name, ip, temp);
 
-                choicePanel.getChildren().add(createUser(choicePanel, gazePlay, tf.getText(), ip, temp));
-                choicePanel.getChildren().add(c);
-                dialog.close();
-                primaryStage.getScene().getRoot().setEffect(null);
-            }
-        };
+                    Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.name
+                            + Utils.FILESEPARATOR + "GazePlay.properties");
+                    Configuration conf2 = Configuration.createFromPropertiesResource();
 
+                    if (!tfi.getText().equals("choose an image")) {
+                        conf2.setUserPicture(tfi.getText());
+                    }
+                    conf2.saveConfigIgnoringExceptions();
+
+                    dialog.close();
+                    primaryStage.getScene().getRoot().setEffect(null);
+                }
+            };
+        }
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
@@ -440,6 +634,19 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         dialog.setScene(scene);
 
         return dialog;
+    }
+
+    private void modifUser(HBox user, FlowPane choicePanel, GazePlay gazePlay, String name, ImagePattern ip, int temp) {
+
+        BorderPane c = (BorderPane) user.getChildren().get(0);
+        Rectangle r = (Rectangle) c.getCenter();
+        if (ip != null) {
+            r.setFill(ip);
+        }
+        if ((name != null) && (!name.equals(""))) {
+            String userName = name;
+            ((Text) c.getBottom()).setText(userName);
+        }
     }
 
     private String getImage(Button tfi, Stage primaryStage) {

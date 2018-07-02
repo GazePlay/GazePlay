@@ -23,6 +23,13 @@ public class CustomButton extends Rectangle {
         this.setFill(value);
     }
 
+    public CustomButton(String imageResourceLocation, double size) {
+        super(0, 0, size, size);
+
+        ImagePattern value = new ImagePattern(new Image(imageResourceLocation), 0, 0, 1, 1, true);
+        this.setFill(value);
+    }
+
     public void recomputeSizeAndPosition(Scene scene) {
         double size = scene.getWidth() / 10;
 
