@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sun.glass.ui.Cursor;
+import com.sun.glass.ui.Screen;
 
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -30,6 +31,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +43,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.ProgressButton;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.cakes.CakeFactory;
+import tobii.Tobii;
 
 @Slf4j
 public class PetHouse extends Parent implements GameLifeCycle {
@@ -55,7 +58,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     @Getter
     private final Stats stats;
     private final static int LIFE_SIZE = 18;
-    private List<Circle> wather;
+    private List<Circle> water;
 
     private final double handSize;
 
@@ -93,11 +96,20 @@ public class PetHouse extends Parent implements GameLifeCycle {
     @Getter
     private Rectangle zone;
 
+    private boolean enterZone = false;
+
     public Rectangle hand;
+
+    private final int screenWidth;
+    private final int screenHeight;
 
     public PetHouse(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
+
+        Screen mainScreen = Screen.getMainScreen();
+        screenWidth = mainScreen.getWidth();
+        screenHeight = mainScreen.getHeight();
 
         setMode(INIT_MODE);
 
@@ -105,7 +117,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         this.background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         this.background.setFill(Color.BEIGE /* new ImagePattern(new Image("background.jpg")) */);
         gameContext.getChildren().add(this.background);
-        wather = new ArrayList();
+        water = new ArrayList();
         rd = new Timeline();
 
         double facteur = (2 / 2.5) + (1 - 2 / 2.5) / 3;
@@ -133,8 +145,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
 
-        createButtons();
-
         Bars = createBars();
         gameContext.getChildren().add(Bars);
 
@@ -145,12 +155,10 @@ public class PetHouse extends Parent implements GameLifeCycle {
         pet.setLayoutX(zone.getX() + zone.getWidth() / 2 - pet.getBiboulew() / 2);
         pet.setLayoutY(zone.getY() + zone.getHeight() / 2 - pet.getBibouleh() / 2);
 
-        gameContext.getGazeDeviceManager().addEventFilter(pet);
-
         EventHandler<Event> handevent = new EventHandler<Event>() {
 
             @Override
-            public void handle(Event event) {
+            public void handle(Event e) {
                 Cursor.setVisible(true);
                 inside = true;
                 double offsetx = 0;
@@ -159,10 +167,27 @@ public class PetHouse extends Parent implements GameLifeCycle {
                     offsetx = hand.getWidth() / 4;
                     offsety = -hand.getHeight() / 4;
                 }
-                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
-                        - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
-                        - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
+
+                if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                    hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
+                            - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
+                    hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
+                            - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
+                } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
+                    float[] pointAsFloatArray = Tobii.gazePosition();
+
+                    final float xRatio = pointAsFloatArray[0];
+                    final float yRatio = pointAsFloatArray[1];
+
+                    final double positionX = xRatio * screenWidth;
+                    final double positionY = yRatio * screenHeight;
+
+                    hand.setX(offsetx + positionX - gameContext.getGazePlay().getPrimaryStage().getX()
+                            - hand.getWidth() / 2);
+                    hand.setY(offsety + positionY - gameContext.getGazePlay().getPrimaryStage().getY()
+                            - hand.getHeight() / 2);
+                }
+
                 hand.toFront();
                 hand.setVisible(true);
 
@@ -182,6 +207,8 @@ public class PetHouse extends Parent implements GameLifeCycle {
                         baloonGone = true;
                         rd.stop();
                         ImageView baloon = new ImageView("data/pet/images/ball.png");
+                        baloon.setPreserveRatio(true);
+                        baloon.fitWidthProperty().bind(hand.widthProperty());
                         gameContext.getChildren().add(baloon);
                         pet.setBlinkingEnabled(false);
                         pet.setHappy();
@@ -234,6 +261,8 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
         activateScreen(INIT_MODE);
 
+        createButtons();
+
         stats.notifyNewRoundReady();
 
     }
@@ -248,7 +277,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         EventHandler<Event> handevent = new EventHandler<Event>() {
 
             @Override
-            public void handle(Event event) {
+            public void handle(Event e) {
                 Cursor.setVisible(true);
                 double offsetx = 0;
                 double offsety = 0;
@@ -256,10 +285,25 @@ public class PetHouse extends Parent implements GameLifeCycle {
                     offsetx = hand.getWidth() / 4;
                     offsety = -hand.getHeight() / 4;
                 }
-                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
-                        - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
-                        - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
+                if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                    hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
+                            - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
+                    hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
+                            - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
+                } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
+                    float[] pointAsFloatArray = Tobii.gazePosition();
+
+                    final float xRatio = pointAsFloatArray[0];
+                    final float yRatio = pointAsFloatArray[1];
+
+                    final double positionX = xRatio * screenWidth;
+                    final double positionY = yRatio * screenHeight;
+
+                    hand.setX(offsetx + positionX - gameContext.getGazePlay().getPrimaryStage().getX()
+                            - hand.getWidth() / 2);
+                    hand.setY(offsety + positionY - gameContext.getGazePlay().getPrimaryStage().getY()
+                            - hand.getHeight() / 2);
+                }
             }
 
         };
@@ -267,10 +311,10 @@ public class PetHouse extends Parent implements GameLifeCycle {
         zone.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
         zone.addEventFilter(GazeEvent.GAZE_MOVED, handevent);
 
-        EventHandler<MouseEvent> enterevent = new EventHandler<MouseEvent>() {
+        EventHandler<Event> enterevent = new EventHandler<Event>() {
 
             @Override
-            public void handle(MouseEvent event) {
+            public void handle(Event e) {
                 Cursor.setVisible(false);
                 inside = true;
                 hand.toFront();
@@ -281,21 +325,37 @@ public class PetHouse extends Parent implements GameLifeCycle {
                     offsetx = hand.getWidth() / 4;
                     offsety = -hand.getHeight() / 4;
                 }
-                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
-                        - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
-                        - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                    hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
+                            - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
+                    hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
+                            - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
+
+                } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    float[] pointAsFloatArray = Tobii.gazePosition();
+
+                    final float xRatio = pointAsFloatArray[0];
+                    final float yRatio = pointAsFloatArray[1];
+
+                    final double positionX = xRatio * screenWidth;
+                    final double positionY = yRatio * screenHeight;
+
+                    hand.setX(offsetx + positionX - gameContext.getGazePlay().getPrimaryStage().getX()
+                            - hand.getWidth() / 2);
+                    hand.setY(offsety + positionY - gameContext.getGazePlay().getPrimaryStage().getY()
+                            - hand.getHeight() / 2);
+                }
             }
 
         };
 
         zone.addEventFilter(MouseEvent.MOUSE_ENTERED, enterevent);
-        zone.addEventFilter(GazeEvent.GAZE_ENTERED, handevent);
+        zone.addEventFilter(GazeEvent.GAZE_ENTERED, enterevent);
 
-        EventHandler<MouseEvent> outhandevent = new EventHandler<MouseEvent>() {
+        EventHandler<Event> outhandevent = new EventHandler<Event>() {
 
             @Override
-            public void handle(MouseEvent event) {
+            public void handle(Event event) {
                 inside = false;
                 Cursor.setVisible(true);
                 hand.toBack();
@@ -305,7 +365,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         };
 
         zone.addEventFilter(MouseEvent.MOUSE_EXITED, outhandevent);
-        zone.addEventFilter(GazeEvent.GAZE_EXITED, handevent);
+        zone.addEventFilter(GazeEvent.GAZE_EXITED, outhandevent);
     }
 
     public HBox createBars() {
@@ -420,6 +480,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             bt.active();
             this.getChildren().add(bt);
             gameContext.getGazeDeviceManager().addEventFilter(bt.button);
+            bt.toFront();
         }
     }
 
@@ -437,7 +498,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
     public void activateScreen(int number) {
         turnOffShower();
         stopSport();
-        gameContext.getGazeDeviceManager().removeEventFilter(bowl);
         gameContext.getChildren().remove(bowl);
         pet.setBasic();
         setMode(number);
@@ -517,18 +577,18 @@ public class PetHouse extends Parent implements GameLifeCycle {
     }
 
     public void turnOffShower() {
-        for (Circle c : wather) {
+        for (Circle c : water) {
             gameContext.getChildren().remove(c);
         }
-        wather.clear();
+        water.clear();
 
     }
 
     public void turnOnShower() {
-        wather = new ArrayList<Circle>();
+        water = new ArrayList<Circle>();
         for (int i = 0; i < 50; i++) {
             Circle c = new Circle();
-            wather.add(c);
+            water.add(c);
             c.toFront();
             c.setMouseTransparent(true);
             c.setOpacity(0);
@@ -632,11 +692,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
         rd.getKeyFrames().add(new KeyFrame(Duration.millis(100), new KeyValue(pet.layoutXProperty(), xpos)));
         rd.getKeyFrames().add(new KeyFrame(Duration.millis(100), new KeyValue(pet.layoutYProperty(), ypos)));
 
-        rd.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-            }
-        });
         rd.play();
     }
 
@@ -656,7 +711,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         EventHandler<Event> handevent = new EventHandler<Event>() {
 
             @Override
-            public void handle(Event event) {
+            public void handle(Event e) {
                 pet.setBasic();
                 pet.setBlinkingEnabled(true);
                 Cursor.setVisible(true);
@@ -667,10 +722,27 @@ public class PetHouse extends Parent implements GameLifeCycle {
                     offsetx = hand.getWidth() / 4;
                     offsety = -hand.getHeight() / 4;
                 }
-                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
-                        - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
-                        - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
+
+                if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                    hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
+                            - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
+                    hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
+                            - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
+                } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
+                    float[] pointAsFloatArray = Tobii.gazePosition();
+
+                    final float xRatio = pointAsFloatArray[0];
+                    final float yRatio = pointAsFloatArray[1];
+
+                    final double positionX = xRatio * screenWidth;
+                    final double positionY = yRatio * screenHeight;
+
+                    hand.setX(offsetx + positionX - gameContext.getGazePlay().getPrimaryStage().getX()
+                            - hand.getWidth() / 2);
+                    hand.setY(offsety + positionY - gameContext.getGazePlay().getPrimaryStage().getY()
+                            - hand.getHeight() / 2);
+                }
+
                 hand.toFront();
                 hand.setVisible(true);
 
@@ -683,7 +755,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
         bowl.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
         bowl.addEventFilter(GazeEvent.GAZE_MOVED, handevent);
-        gameContext.getGazeDeviceManager().addEventFilter(bowl);
+        // gameContext.getGazeDeviceManager().addEventFilter(bowl);
 
         gameContext.getChildren().add(bowl);
 
