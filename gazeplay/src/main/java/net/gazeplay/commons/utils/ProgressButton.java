@@ -57,7 +57,6 @@ public class ProgressButton extends StackPane {
 
     public void setImage(ImageView img) {
         image = img;
-        image.setFocusTraversable(true);
         image.setMouseTransparent(true);
         this.getChildren().set(1, image);
     }

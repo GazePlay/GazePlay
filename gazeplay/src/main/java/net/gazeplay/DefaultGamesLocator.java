@@ -37,6 +37,7 @@ import net.gazeplay.games.moles.MoleStats;
 import net.gazeplay.games.moles.Moles;
 import net.gazeplay.games.order.OrderStats;
 import net.gazeplay.games.pet.PetHouse;
+import net.gazeplay.games.pet.PetStats;
 import net.gazeplay.games.order.Order;
 import net.gazeplay.games.room.Room;
 import net.gazeplay.games.room.RoomStats;
@@ -565,7 +566,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene);
+                        return new PetStats(scene);
                     }
 
                     @Override

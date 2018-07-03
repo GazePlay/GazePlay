@@ -22,6 +22,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,7 +47,7 @@ public class Mypet extends Pane {
 
     @Getter
     @Setter
-    private ImageView body;
+    private Rectangle body;
 
     @Getter
     @Setter
@@ -64,6 +65,10 @@ public class Mypet extends Pane {
     private final double wratio;
 
     private int eatingBool = 10;;
+
+    private boolean[] eyeTouched = { false, false };
+    private boolean bodyTouched = false;
+    private boolean mouthTouched = false;
 
     @Getter
     private double bibouleh;
@@ -105,28 +110,28 @@ public class Mypet extends Pane {
 
     public void init() {
         Image corps = new Image("data/pet/images/body.png");
-        setBody((new ImageView(corps)));
-        getBody().setFitHeight(corps.getHeight() * hratio);
-        getBody().setFitWidth(corps.getWidth() * wratio);
+        setBody(new Rectangle(0, 0, corps.getWidth() * wratio, corps.getHeight() * hratio));
 
-        bibouleh = 3 * getBody().getFitHeight() / 2;
-        biboulew = 3 * getBody().getFitWidth() / 2;
+        getBody().setFill(new ImagePattern(corps));
 
-        getBody().setLayoutX(biboulew / 2 - getBody().getFitWidth() / 2);
-        getBody().setLayoutY(bibouleh - getBody().getFitHeight());
+        bibouleh = 3 * getBody().getHeight() / 2;
+        biboulew = 3 * getBody().getWidth() / 2;
+
+        getBody().setLayoutX(biboulew / 2 - getBody().getWidth() / 2);
+        getBody().setLayoutY(bibouleh - getBody().getHeight());
 
         Image wings = new Image("data/pet/images/wing.png");
 
         setLeftWing((new ImageView(wings)));
         getLeftWing().setPreserveRatio(true);
         getLeftWing().setFitHeight(wings.getHeight() * hratio);
-        getLeftWing().setLayoutX(biboulew / 2 - 2 * getBody().getFitWidth() / 3);
+        getLeftWing().setLayoutX(biboulew / 2 - 2 * getBody().getWidth() / 3);
         getLeftWing().setRotate(-30);
 
         setRightWing((new ImageView(wings)));
         getRightWing().setPreserveRatio(true);
         getRightWing().setFitHeight(wings.getHeight() * hratio);
-        getRightWing().setLayoutX(biboulew / 2 + getBody().getFitWidth() / 3);
+        getRightWing().setLayoutX(biboulew / 2 + getBody().getWidth() / 3);
         getRightWing().setRotate(30);
 
         Image mouth = new Image("data/pet/images/mouth.png");
@@ -153,7 +158,7 @@ public class Mypet extends Pane {
 
     public void setBasic() {
         emotion = "basic";
-        getBody().setImage(new Image("data/pet/images/body.png"));
+        getBody().setFill(new ImagePattern(new Image("data/pet/images/body.png")));
         getLeftWing().setImage(new Image("data/pet/images/wing.png"));
         getRightWing().setImage(new Image("data/pet/images/wing.png"));
         getMouth().setFill(new ImagePattern(new Image("data/pet/images/mouth.png")));
@@ -170,6 +175,16 @@ public class Mypet extends Pane {
         getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
         getMouth().setFill(new ImagePattern(new Image("data/pet/images/smile.png")));
         eyesAreOpen = false;
+
+    }
+
+    public void setSmiling() {
+
+        emotion = "smile";
+        getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+        getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+        getMouth().setFill(new ImagePattern(new Image("data/pet/images/smile.png")));
+        eyesAreOpen = true;
 
     }
 
@@ -207,34 +222,6 @@ public class Mypet extends Pane {
         eat.play();
 
         eyesAreOpen = false;
-
-    }
-
-    public void setSad() {
-
-    }
-
-    public void setAngry() {
-
-    }
-
-    public void setDisturbed() {
-
-    }
-
-    public void setDirty() {
-
-    }
-
-    public void setHungry() {
-
-    }
-
-    public void setTired() {
-
-    }
-
-    public void setSleepy() {
 
     }
 
@@ -314,56 +301,42 @@ public class Mypet extends Pane {
     }
 
     public void createMouthHandlers() {
-        EventHandler<Event> enterhandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (ph.getMode() == PetHouse.EAT_MODE) {
+
+        ph.hand.xProperty().addListener((o) -> {
+            if (ph.getMode() == PetHouse.EAT_MODE) {
+                Shape intersect = Shape.intersect(ph.hand, getMouth());
+                if ((intersect.getBoundsInLocal().getWidth() != -1) && !mouthTouched) {
                     setBlinkingEnabled(false);
                     setHappy();
                     ph.hand.setFill(new ImagePattern(new Image("data/pet/images/emptyspoon.png")));
-                }
-            }
-        };
-
-        EventHandler<Event> exithandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if ((ph.getMode() == PetHouse.EAT_MODE) && (ph.isSpoonFull())) {
+                    mouthTouched = true;
+                } else if ((intersect.getBoundsInLocal().getWidth() == -1) && mouthTouched && (ph.isSpoonFull())) {
                     setEating();
                     ph.setSpoonFull(false);
+                    mouthTouched = false;
                 }
             }
-        };
-
-        getMouth().addEventFilter(MouseEvent.MOUSE_ENTERED, enterhandler);
-        getMouth().addEventFilter(MouseEvent.MOUSE_EXITED, exithandler);
+        });
     }
 
     public void createBodyHandlers() {
         getBody().setCursor(Cursor.OPEN_HAND);
 
-        EventHandler<Event> enterhandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (ph.getMode() == PetHouse.INIT_MODE) {
+        ph.hand.xProperty().addListener((o) -> {
+            if (ph.getMode() == PetHouse.INIT_MODE) {
+                Shape intersect = Shape.intersect(ph.hand, getBody());
+                if ((intersect.getBoundsInLocal().getWidth() != -1) && !bodyTouched && !eyeTouched[0]
+                        && !eyeTouched[1]) {
                     t.stop();
                     setHappy();
-                }
-            }
-        };
-
-        EventHandler<Event> exithandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (ph.getMode() == PetHouse.INIT_MODE) {
+                    bodyTouched = true;
+                } else if ((intersect.getBoundsInLocal().getWidth() == -1) && bodyTouched) {
                     setBasic();
                     t.play();
+                    bodyTouched = false;
                 }
             }
-        };
-
-        getBody().addEventFilter(MouseEvent.MOUSE_ENTERED, enterhandler);
-        getBody().addEventFilter(MouseEvent.MOUSE_EXITED, exithandler);
+        });
 
     }
 
@@ -371,54 +344,35 @@ public class Mypet extends Pane {
         getLeftEye().setCursor(Cursor.HAND);
         getRightEye().setCursor(Cursor.HAND);
 
-        EventHandler<Event> lefteyehandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (ph.getMode() == PetHouse.INIT_MODE) {
-                    t.stop();
-                    getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
-                    getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-                }
-            }
-        };
+        ph.hand.xProperty().addListener((o) -> {
+            if (ph.getMode() == PetHouse.INIT_MODE) {
+                Shape intersect = Shape.intersect(ph.hand, getLeftEye());
+                Shape intersect2 = Shape.intersect(ph.hand, getRightEye());
 
-        getLeftEye().addEventHandler(MouseEvent.MOUSE_ENTERED, lefteyehandler);
-
-        EventHandler<Event> righteyehandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (ph.getMode() == PetHouse.INIT_MODE) {
-                    t.stop();
-                    getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
-                    getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
-                }
-            }
-        };
-
-        getRightEye().addEventHandler(MouseEvent.MOUSE_ENTERED, righteyehandler);
-
-        EventHandler<Event> exiteyehandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (ph.getMode() == PetHouse.INIT_MODE) {
+                if ((intersect.getBoundsInLocal().getWidth() == -1) && (intersect2.getBoundsInLocal().getWidth() == -1)
+                        && (eyeTouched[0] == true) && (eyeTouched[1] == true)) {
                     getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
                     getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
                     t.play();
+                    eyeTouched[0] = false;
+                    eyeTouched[1] = false;
+                } else {
+                    if ((intersect.getBoundsInLocal().getWidth() != -1)) {
+                        t.stop();
+                        getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
+                        getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+                        eyeTouched[0] = true;
+                    }
+
+                    if ((intersect2.getBoundsInLocal().getWidth() != -1)) {
+                        t.stop();
+                        getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+                        getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
+                        eyeTouched[1] = true;
+                    }
                 }
             }
-        };
-
-        getLeftEye().addEventHandler(MouseEvent.MOUSE_EXITED, exiteyehandler);
-        getRightEye().addEventHandler(MouseEvent.MOUSE_EXITED, exiteyehandler);
+        });
     }
 
-    public void setDryer(int i) {
-        if (i == DRYER_LEFT) {
-
-        } else if (i == DRYER_RIGHT) {
-
-        } else { // if (i == DRYER_UP)
-
-        }
-    }
 }

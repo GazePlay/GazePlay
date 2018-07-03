@@ -7,10 +7,13 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -58,34 +61,42 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     @Override
     public void addEventFilter(Node gs) {
-        shapesEventFilter.put(new IdentityKey<>(gs), new GazeInfos(gs));
-        final int nodesEventFilterListSize = shapesEventFilter.size();
-        // log.info("nodesEventFilterListSize = {}", nodesEventFilterListSize);
+        synchronized (shapesEventFilter) {
+            shapesEventFilter.put(new IdentityKey<>(gs), new GazeInfos(gs));
+            final int nodesEventFilterListSize = shapesEventFilter.size();
+            // log.info("nodesEventFilterListSize = {}", nodesEventFilterListSize);
+        }
     }
 
     @Override
     public void addEventHandler(Node gs) {
-        shapesEventHandler.put(new IdentityKey<>(gs), new GazeInfos(gs));
+        synchronized (shapesEventFilter) {
+            shapesEventHandler.put(new IdentityKey<>(gs), new GazeInfos(gs));
+        }
     }
 
     @Override
     public void removeEventFilter(Node gs) {
-        GazeInfos removed = shapesEventFilter.remove(new IdentityKey<>(gs));
-        if (removed == null) {
-            log.warn("EventFilter to remove not found");
-        } else {
-            if (removed.isOn()) {
-                Platform.runLater(() -> removed.getNode()
-                        .fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, System.currentTimeMillis(), 0, 0)));
+        synchronized (shapesEventFilter) {
+            GazeInfos removed = shapesEventFilter.remove(new IdentityKey<>(gs));
+            if (removed == null) {
+                log.warn("EventFilter to remove not found");
+            } else {
+                if (removed.isOn()) {
+                    Platform.runLater(() -> removed.getNode()
+                            .fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, System.currentTimeMillis(), 0, 0)));
+                }
             }
         }
     }
 
     @Override
     public void removeEventHandler(Node gs) {
-        GazeInfos removed = shapesEventHandler.remove(new IdentityKey<>(gs));
-        if (removed == null) {
-            log.warn("EventHandler to remove not found");
+        synchronized (shapesEventFilter) {
+            GazeInfos removed = shapesEventHandler.remove(new IdentityKey<>(gs));
+            if (removed == null) {
+                log.warn("EventHandler to remove not found");
+            }
         }
     }
 
@@ -94,9 +105,11 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
      */
     @Override
     public void clear() {
-        shapesEventFilter.clear();
-        shapesEventHandler.clear();
-        gazeMotionListeners.clear();
+        synchronized (shapesEventFilter) {
+            shapesEventFilter.clear();
+            shapesEventHandler.clear();
+            gazeMotionListeners.clear();
+        }
     }
 
     synchronized void onGazeUpdate(Point2D gazePositionOnScreen) {
@@ -107,49 +120,53 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         final double positionX = gazePositionOnScreen.getX();
         final double positionY = gazePositionOnScreen.getY();
 
-        for (GazeInfos gi : shapesEventFilter.values()) {
+        Collection<GazeInfos> c = shapesEventFilter.values(); // Needn't be in synchronized block
+        synchronized (shapesEventFilter) { // Synchronizing on m, not s!
+            Iterator<GazeInfos> i = c.iterator(); // Must be in synchronized block
+            while (i.hasNext()) {
+                GazeInfos gi = i.next();
 
-            final Node node = gi.getNode();
+                final Node node = gi.getNode();
 
-            // log.info("localPosition = " + localPosition);
+                // log.info("localPosition = " + localPosition);
 
-            if (!node.isDisable()) {
+                if (!node.isDisable()) {
 
-                Point2D localPosition = node.screenToLocal(positionX, positionY);
+                    Point2D localPosition = node.screenToLocal(positionX, positionY);
 
-                if (localPosition != null && localPosition.getX() >= 0 && localPosition.getY() >= 0
-                        && node.contains(localPosition)) {
-                    if (gi.isOn()) {
-                        Platform.runLater(() -> node
-                                .fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY)));
+                    if (localPosition != null && localPosition.getX() >= 0 && localPosition.getY() >= 0
+                            && node.contains(localPosition)) {
+                        if (gi.isOn()) {
+                            Platform.runLater(() -> node.fireEvent(
+                                    new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY)));
 
-                        // log.info(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
-                    } else {
+                            // log.info(GazeEvent.GAZE_MOVED + " : " + gi.getNode());
+                        } else {
 
-                        gi.setOn(true);
-                        gi.setTime(System.currentTimeMillis());
-                        Platform.runLater(() -> node
-                                .fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), positionX, positionY)));
+                            gi.setOn(true);
+                            gi.setTime(System.currentTimeMillis());
+                            Platform.runLater(() -> node.fireEvent(
+                                    new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), positionX, positionY)));
 
-                        // log.info(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
+                            // log.info(GazeEvent.GAZE_ENTERED + " : " + gi.getNode());
+                        }
+                    } else {// gaze is not on the shape
+
+                        if (gi.isOn()) {// gaze was on the shape previously
+
+                            gi.setOn(false);
+                            gi.setTime(-1);
+                            Platform.runLater(() -> node.fireEvent(
+                                    new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), positionX, positionY)));
+                            // log.info(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
+                        } else {// gaze was not on the shape previously
+                            // nothing to do
+
+                        }
+
                     }
-                } else {// gaze is not on the shape
-
-                    if (gi.isOn()) {// gaze was on the shape previously
-
-                        gi.setOn(false);
-                        gi.setTime(-1);
-                        Platform.runLater(() -> node
-                                .fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), positionX, positionY)));
-                        // log.info(GazeEvent.GAZE_EXITED + " : " + gi.getNode());
-                    } else {// gaze was not on the shape previously
-                        // nothing to do
-
-                    }
-
                 }
             }
         }
-
     }
 }
