@@ -173,6 +173,16 @@ public class Mypet extends Pane {
 
     }
 
+    public void setSmiling() {
+
+        emotion = "smile";
+        getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+        getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
+        getMouth().setFill(new ImagePattern(new Image("data/pet/images/smile.png")));
+        eyesAreOpen = true;
+
+    }
+
     public void setEating() {
 
         emotion = "eating";

@@ -421,9 +421,11 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                 choicePanel.getChildren().remove(user);
                 File userDirectory = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.name);
                 deleteDir(userDirectory);
-                for (String names : allUsers) {
-                    if (names.equals(user.name)) {
-                        allUsers.remove(names);
+                if (allUsers != null) {
+                    for (String names : allUsers) {
+                        if (names.equals(user.name)) {
+                            allUsers.remove(names);
+                        }
                     }
                 }
                 log.info("Profile: " + user.name + " deleted");
@@ -640,10 +642,13 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
     private boolean checkNewName(String s) {
         boolean isNew = true;
-        for (String names : allUsers) {
-            if (names.equals(s)) {
-                isNew = false;
-                break;
+
+        if (allUsers != null) {
+            for (String names : allUsers) {
+                if (names.equals(s)) {
+                    isNew = false;
+                    break;
+                }
             }
         }
 
