@@ -162,12 +162,10 @@ public class Piano extends Parent implements GameLifeCycle {
             if (fileName == null) {
                 return;
             } else {
-
                 File f = new File(fileName);
                 inputStream = new FileInputStream(f);
             }
         } else {
-
             fileName = "RIVER.mid";
             inputStream = Utils.getInputStream("data/pianosight/songs/" + fileName);
         }

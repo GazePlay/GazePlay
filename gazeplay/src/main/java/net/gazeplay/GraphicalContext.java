@@ -433,10 +433,13 @@ public abstract class GraphicalContext<T extends Parent> {
         slider.setMax(8);
         slider.setShowTickMarks(true);
         slider.setMajorTickUnit(1);
-        slider.setSnapToTicks(true);
-        slider.setValue(config.getEffectsVolume());
-        config.getSpeedEffectsProperty().bindBidirectional(slider.valueProperty());
+        slider.setSnapToTicks(false);
+        slider.setValue(config.getSpeedEffects());
+        log.info("the speed of the effects is = {}", config.getSpeedEffects());
+        config.getSpeedEffectsProperty().bind(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> {
+            log.info("the speed of the slider is = {}", slider.getValue());
+            log.info("the speed of the effects is = {}", config.getSpeedEffects());
             config.saveConfigIgnoringExceptions();
         });
         return slider;

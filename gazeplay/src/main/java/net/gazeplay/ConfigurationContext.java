@@ -245,8 +245,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            I18NText label = new I18NText(translator, "EnableGazeMouse (Press S to stop/start) (Press space to click)",
-                    COLON);
+            I18NText label = new I18NText(translator, "EnableGazeMouse", COLON);
             CheckBox input = buildGazeMouse(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);

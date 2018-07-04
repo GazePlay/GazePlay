@@ -71,3 +71,20 @@ EffectsVolume,volume des effets,effects volume,Effektvolumen,volumen de efectos
 reset,réinitialiser,reset,zurücksetzen,restablecimiento
 ColorDesc,Faîtes des coloriages en utilisant n'importe quelle image puis sauvegardez la.,Do some colouring on any image then save it.,Färben Sie mit einem beliebigen Bild und speichern Sie das Bild.,Coloree usando cualquier imagen y luego guárdela.
 Labyrinth,Labyrinthe,Labyrinth,Labyrinth,Laberinto
+Pet,J'ai un Biboule !,I've got a Biball !, ,Yo tengo un Bibole ! 
+SpeedEffects,Vitesse des animations, Effect speed, , Velocidad de los animationes
+WhiteBackground,Mode fond blanc, White Background mode, ,Modo blanco fondo de pantalla 
+EnableGazeMouse,Active l'émulation de la souris visuelle (Appuyez sur S pour Stopper/Commencer l'émulation) (Appuyez sur espace pour émuler un click de souris),Enable the Gaze Mouse emulation (Press S to stop/start the emulation) (Press space to emulate click),  ,Activación de la emulación del ratón visual (presione S para detener/iniciar la emulación) (Presione espacio para emular el clic)
+AddUser,Ajouter un nouvel utilisateur,Add new user, , Agregar un usuario
+DefaultUser,Utilisateur par Défaut,Default User, , Usuario predeterminado
+NewUser,Nouvel utilisateur,New user,, Nuevo usario
+Remove,Voulez vous vraiment supprimer cet utilisateur ?, Do you really want to delete this user ?, ,¿Realmente quieres eliminar a este usuario?
+UserModif,Modification de l'utilisateur, User Modification, Modificación del usario
+YesRemove,Oui supprimer,Yes delete, ,Si eliminar
+NoCancel,Non annuler,No cancel, ,No annular
+Name,Nom :,Name :, ,Nombre :
+enterName,Entrer un nom, Enter a name, , Ingrese un nombre
+ChooseImage,Choisissez une image, Choose an image, ,Elige una imagen 
+Image, Image :, Image :, ,Imagen : 
+Reset,Réinitialiser, Reset, , Reiniciar
+AlreadyUsed,Ce nom d'utilisateur existe déjà,This user name exists already, , Este nombre de usario ya existe
