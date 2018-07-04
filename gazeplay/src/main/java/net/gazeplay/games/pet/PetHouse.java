@@ -53,6 +53,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     public final static int EAT_MODE = 2;
     public final static int SPORT_MODE = 0;
 
+    @Getter
     private final GameContext gameContext;
 
     @Getter
@@ -76,9 +77,11 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private final Color[] colorBar = { Color.BLUE, Color.RED, Color.GREEN };
     private final int[] regressionTime = { 1, 2, 1 };
 
+    @Getter
+    @Setter
     private Boolean baloonGone = false;
 
-    private Timeline rd;
+    public Timeline rd;
 
     @Getter
     @Setter
@@ -198,67 +201,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         pet.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
         pet.addEventFilter(GazeEvent.GAZE_MOVED, handevent);
 
-        EventHandler<MouseEvent> enterevent = new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent event) {
-                if (mode == SPORT_MODE) {
-                    if (baloonGone == false) {
-                        baloonGone = true;
-                        rd.stop();
-                        ImageView baloon = new ImageView("data/pet/images/ball.png");
-                        baloon.setPreserveRatio(true);
-                        baloon.fitWidthProperty().bind(hand.widthProperty());
-                        gameContext.getChildren().add(baloon);
-                        pet.setBlinkingEnabled(false);
-                        pet.setHappy();
-
-                        TranslateTransition tt = new TranslateTransition(Duration.millis(1000), baloon);
-                        tt.setToX(pet.getLayoutX() + (pet.getWidth() / 3));
-                        tt.setToY(pet.getLayoutY());
-
-                        TranslateTransition t2 = new TranslateTransition(Duration.millis(500), baloon);
-                        t2.setToX(zone.getWidth());
-                        t2.setToY(zone.getHeight());
-                        SequentialTransition st = new SequentialTransition();
-
-                        st.getChildren().addAll(tt, t2);
-
-                        tt.setOnFinished(new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent e) {
-                                pet.setSmiling();
-                            }
-                        });
-
-                        RotateTransition rt = new RotateTransition(Duration.millis(500), baloon);
-                        rt.setByAngle(360);
-                        rt.setCycleCount(Animation.INDEFINITE);
-
-                        ParallelTransition pt = new ParallelTransition();
-                        pt.getChildren().addAll(st, rt);
-                        st.setOnFinished(new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent e) {
-                                rd.play();
-                                pt.stop();
-                                gameContext.getChildren().remove(baloon);
-                                baloonGone = false;
-                                pet.setBasic();
-                                pet.setBlinkingEnabled(true);
-                                refill(2);
-                            }
-                        });
-                        pt.play();
-                    }
-                }
-            }
-        };
-
-        pet.addEventFilter(MouseEvent.MOUSE_ENTERED, enterevent);
         gameContext.getChildren().add(pet);
-        pet.addEventFilter(GazeEvent.GAZE_ENTERED, handevent);
-
         activateScreen(INIT_MODE);
 
         createButtons();
@@ -685,12 +628,17 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     public void stopSport() {
         rd.stop();
-
         rd.getKeyFrames().clear();
         double xpos = zone.getX() + zone.getWidth() / 2 - pet.getBiboulew() / 2;
         double ypos = zone.getY() + zone.getHeight() / 2 - pet.getBibouleh() / 2;
         rd.getKeyFrames().add(new KeyFrame(Duration.millis(100), new KeyValue(pet.layoutXProperty(), xpos)));
         rd.getKeyFrames().add(new KeyFrame(Duration.millis(100), new KeyValue(pet.layoutYProperty(), ypos)));
+        rd.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                // do nothing
+            }
+        });
 
         rd.play();
     }
@@ -712,22 +660,18 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
             @Override
             public void handle(Event e) {
-                pet.setBasic();
-                pet.setBlinkingEnabled(true);
-                Cursor.setVisible(true);
-                inside = true;
                 double offsetx = 0;
                 double offsety = 0;
                 if (mode == EAT_MODE) {
                     offsetx = hand.getWidth() / 4;
                     offsety = -hand.getHeight() / 4;
                 }
-
                 if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
                     hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
                             - gameContext.getGazePlay().getPrimaryStage().getX() - hand.getWidth() / 2);
                     hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
                             - gameContext.getGazePlay().getPrimaryStage().getY() - hand.getHeight() / 2);
+
                 } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
                     float[] pointAsFloatArray = Tobii.gazePosition();
 
@@ -746,16 +690,29 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 hand.toFront();
                 hand.setVisible(true);
 
-                hand.setFill(new ImagePattern(new Image("data/pet/images/fullspoon.png")));
-                setSpoonFull(true);
-
             }
 
         };
 
+        EventHandler<Event> handenter = new EventHandler<Event>() {
+
+            @Override
+            public void handle(Event e) {
+                pet.setBasic();
+                pet.setBlinkingEnabled(true);
+                Cursor.setVisible(true);
+                inside = true;
+                hand.setFill(new ImagePattern(new Image("data/pet/images/fullspoon.png")));
+                setSpoonFull(true);
+            }
+        };
+
+        bowl.addEventFilter(MouseEvent.MOUSE_ENTERED, handenter);
+        bowl.addEventFilter(GazeEvent.GAZE_ENTERED, handenter);
+
         bowl.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
         bowl.addEventFilter(GazeEvent.GAZE_MOVED, handevent);
-        // gameContext.getGazeDeviceManager().addEventFilter(bowl);
+        gameContext.getGazeDeviceManager().addEventFilter(bowl);
 
         gameContext.getChildren().add(bowl);
 

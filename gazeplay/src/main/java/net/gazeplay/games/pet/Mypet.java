@@ -5,6 +5,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -321,9 +322,9 @@ public class Mypet extends Pane {
 
     public void createBodyHandlers() {
         getBody().setCursor(Cursor.OPEN_HAND);
-
         ph.hand.xProperty().addListener((o) -> {
             if (ph.getMode() == PetHouse.INIT_MODE) {
+
                 Shape intersect = Shape.intersect(ph.hand, getBody());
                 if ((intersect.getBoundsInLocal().getWidth() != -1) && !bodyTouched && !eyeTouched[0]
                         && !eyeTouched[1]) {
@@ -335,7 +336,60 @@ public class Mypet extends Pane {
                     t.play();
                     bodyTouched = false;
                 }
+            } else if ((ph.getMode() == PetHouse.SPORT_MODE)) {
+
+                Shape intersect = Shape.intersect(ph.hand, getBody());
+                if (!ph.getBaloonGone() && (intersect.getBoundsInLocal().getWidth() != -1)) {
+                    log.info("enter baloon");
+                    ph.setBaloonGone(true);
+                    ph.rd.stop();
+                    ImageView baloon = new ImageView("data/pet/images/ball.png");
+                    baloon.setPreserveRatio(true);
+                    baloon.fitWidthProperty().bind(ph.hand.widthProperty());
+                    ph.getGameContext().getChildren().add(baloon);
+                    setBlinkingEnabled(false);
+                    setHappy();
+
+                    TranslateTransition tt = new TranslateTransition(Duration.millis(1000), baloon);
+                    tt.setToX(getLayoutX() + (getWidth() / 3));
+                    tt.setToY(getLayoutY());
+
+                    TranslateTransition t2 = new TranslateTransition(Duration.millis(500), baloon);
+                    t2.setToX(ph.getZone().getWidth());
+                    t2.setToY(ph.getZone().getHeight());
+                    SequentialTransition st = new SequentialTransition();
+
+                    st.getChildren().addAll(tt, t2);
+
+                    tt.setOnFinished(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            setSmiling();
+                        }
+                    });
+
+                    RotateTransition rt = new RotateTransition(Duration.millis(500), baloon);
+                    rt.setByAngle(360);
+                    rt.setCycleCount(Animation.INDEFINITE);
+
+                    ParallelTransition pt = new ParallelTransition();
+                    pt.getChildren().addAll(st, rt);
+                    st.setOnFinished(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            ph.rd.play();
+                            pt.stop();
+                            ph.getGameContext().getChildren().remove(baloon);
+                            ph.setBaloonGone(false);
+                            setBasic();
+                            setBlinkingEnabled(true);
+                            ph.refill(2);
+                        }
+                    });
+                    pt.play();
+                }
             }
+
         });
 
     }
