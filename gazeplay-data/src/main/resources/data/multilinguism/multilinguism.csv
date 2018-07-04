@@ -65,26 +65,26 @@ Room,La chambre,The room,Das Zimmer,La habitación
 Whac-a-mole,Jeu de la taupe,Whac-a-mole,Whac-a-mole,Juego de la topo
 Cakes, La Fabrique a Gateaux,The cake factory ,Die Kuchenfabrik , La Fabrica de Pasteles
 MusicFolder,Dossier musiques,music folder,Musikmappe,carpeta de música
-Order,Ordre,Einordnen,Clase,
+Order,Ordre,Order,Reihenfolge,
 UncountedShot,Tir non comptabilisés,Uncounted Shots,Unzählige Schüsse,Disparos sin contar
 EffectsVolume,volume des effets,effects volume,Effektvolumen,volumen de efectos
 reset,réinitialiser,reset,zurücksetzen,restablecimiento
 ColorDesc,Faîtes des coloriages en utilisant n'importe quelle image puis sauvegardez la.,Do some colouring on any image then save it.,Färben Sie mit einem beliebigen Bild und speichern Sie das Bild.,Coloree usando cualquier imagen y luego guárdela.
 Labyrinth,Labyrinthe,Labyrinth,Labyrinth,Laberinto
-Pet,J'ai un Biboule !,I've got a Biball !, ,Yo tengo un Bibole ! 
-SpeedEffects,Vitesse des animations, Effect speed, , Velocidad de los animationes
-WhiteBackground,Mode fond blanc, White Background mode, ,Modo blanco fondo de pantalla 
-EnableGazeMouse,Active l'émulation de la souris visuelle (Appuyez sur S pour Stopper/Commencer l'émulation) (Appuyez sur espace pour émuler un click de souris),Enable the Gaze Mouse emulation (Press S to stop/start the emulation) (Press space to emulate click),  ,Activación de la emulación del ratón visual (presione S para detener/iniciar la emulación) (Presione espacio para emular el clic)
-AddUser,Ajouter un nouvel utilisateur,Add new user, , Agregar un usuario
-DefaultUser,Utilisateur par Défaut,Default User, , Usuario predeterminado
-NewUser,Nouvel utilisateur,New user,, Nuevo usario
-Remove,Voulez vous vraiment supprimer cet utilisateur ?, Do you really want to delete this user ?, ,¿Realmente quieres eliminar a este usuario?
-UserModif,Modification de l'utilisateur, User Modification, Modificación del usario
-YesRemove,Oui supprimer,Yes delete, ,Si eliminar
-NoCancel,Non annuler,No cancel, ,No annular
-Name,Nom :,Name :, ,Nombre :
-enterName,Entrer un nom, Enter a name, , Ingrese un nombre
-ChooseImage,Choisissez une image, Choose an image, ,Elige una imagen 
-Image, Image :, Image :, ,Imagen : 
-Reset,Réinitialiser, Reset, , Reiniciar
-AlreadyUsed,Ce nom d'utilisateur existe déjà,This user name exists already, , Este nombre de usario ya existe
+Pet,J'ai un Biboule !,I've got a Biball !,Ich habe ein Biboles,Yo tengo un Bibole ! 
+SpeedEffects,Vitesse des animations, Effect speed,Weißer Hintergrund, Velocidad de los animationes
+WhiteBackground,Mode fond blanc, White Background mode,Animationsgeschwindigkeit,Modo blanco fondo de pantalla 
+EnableGazeMouse,Activer l'émulation de la souris visuelle (Appuyez sur S pour arrêter/commencer l'émulation) (Appuyez sur espace pour émuler un click de souris),Enable the Gaze Mouse emulation (Press S to stop/start the emulation) (Press space to emulate click),|Aktivieren der visuellen Mausemulation (Drücken Sie S, um die Emulation zu stoppen/starten) (Drücken Sie die Leertaste, um den Mausklick zu emulieren).|,Activación de la emulación del ratón visual (presione S para detener/iniciar la emulación) (Presione espacio para emular el clic)
+AddUser,Ajouter un nouvel utilisateur,Add new user,Neuen Benutzer hinzufügen, Agregar un usuario
+DefaultUser,Utilisateur par Défaut,Default User,Standardbenutzer, Usuario predeterminado
+NewUser,Nouvel utilisateur,New user,Neuer Benutzer, Nuevo usario
+Remove,Voulez vous vraiment supprimer cet utilisateur ?,Do you really want to delete this user ?,Wollen Sie diesen Benutzer wirklich löschen? ,¿Realmente quieres eliminar a este usuario?
+UserModif,Modification de l'utilisateur, User Modification,Ändern des Benutzers, Modificación del usario
+YesRemove,|Oui, supprimer|,|Yes, delete|,|Ja, löschen|,Si eliminar
+NoCancel,|Non, annuler|,|No, cancel|,|Nein, Annullierer|,No annular
+Name,Nom :,Name :,Name,Nombre :
+enterName,Entrer un nom,Enter a name,Geben Sie einen Namen, Ingrese un nombre
+ChooseImage,Choisissez une image,Choose an image,Wählen Sie ein Bild,Elige una imagen 
+Image,Image,Image,Bild,Imagen : 
+Reset,Réinitialiser,reset,Zurücksetzen, Reiniciar
+AlreadyUsed,Ce nom d'utilisateur existe déjà,This user name exists already,Dieser Benutzername existiert bereits, Este nombre de usario ya existe
