@@ -215,9 +215,9 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         }
         c.setCenter(r);
         if (i == 0) {
-            user.name = "Default User";
+            user.name = getGazePlay().getTranslator().translate("DefaultUser");
         } else if (i == nbUser) {
-            user.name = "Add User";
+            user.name = getGazePlay().getTranslator().translate("AddUser");
         } else {
             if ((name != null) && (!name.equals(""))) {
                 user.name = name;
@@ -273,7 +273,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     root.setEffect(new BoxBlur());
                     Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, true);
 
-                    String dialogTitle = "New User";
+                    String dialogTitle = getGazePlay().getTranslator().translate("NewUser");
                     dialog.setTitle(dialogTitle);
                     dialog.show();
 
@@ -295,7 +295,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             public void handle(Event event) {
                 Stage dialog = createRemoveDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user);
 
-                String dialogTitle = "Do you really want to remove this user ?";
+                String dialogTitle = getGazePlay().getTranslator().translate("Remove");
                 dialog.setTitle(dialogTitle);
                 dialog.show();
 
@@ -329,7 +329,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             public void handle(Event event) {
                 Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, false);
 
-                String dialogTitle = "User Modification";
+                String dialogTitle = getGazePlay().getTranslator().translate("UserModif");
                 dialog.setTitle(dialogTitle);
                 dialog.show();
 
@@ -407,7 +407,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
-        Button yes = new Button("Yes, remove !");
+        Button yes = new Button(getGazePlay().getTranslator().translate("YesRemove"));
         yes.getStyleClass().add("gameChooserButton");
         yes.getStyleClass().add("gameVariation");
         yes.getStyleClass().add("button");
@@ -435,7 +435,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         yes.addEventFilter(MouseEvent.MOUSE_CLICKED, yesHandler);
 
-        Button no = new Button("No, cancel.");
+        Button no = new Button(getGazePlay().getTranslator().translate("NoCancel"));
         no.getStyleClass().add("gameChooserButton");
         no.getStyleClass().add("gameVariation");
         no.getStyleClass().add("button");
@@ -490,9 +490,9 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
             nameField.setAlignment(Pos.CENTER);
 
-            Text t = new Text("Name : ");
+            Text t = new Text(getGazePlay().getTranslator().translate("Name"));
             t.setFill(Color.WHITE);
-            tf.setPromptText("enter a name");
+            tf.setPromptText(getGazePlay().getTranslator().translate("enterName"));
             tf.setMaxWidth(primaryStage.getWidth() / 10);
 
             nameField.getChildren().addAll(t, tf);
@@ -501,10 +501,10 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         HBox imageField = new HBox();
         imageField.setAlignment(Pos.CENTER);
 
-        Text ti = new Text("Image : ");
+        Text ti = new Text(getGazePlay().getTranslator().translate("Image"));
         ti.setFill(Color.WHITE);
 
-        Button tfi = new Button("choose an image");
+        Button tfi = new Button(getGazePlay().getTranslator().translate("ChooseImage"));
         tfi.getStyleClass().add("gameChooserButton");
         tfi.getStyleClass().add("gameVariation");
         tfi.getStyleClass().add("button");
@@ -525,7 +525,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         tfi.addEventFilter(MouseEvent.MOUSE_CLICKED, chooseImageHandler);
 
-        Button reset = new Button("reset");
+        Button reset = new Button(getGazePlay().getTranslator().translate("Reset"));
         reset.getStyleClass().add("gameChooserButton");
         reset.getStyleClass().add("gameVariation");
         reset.getStyleClass().add("button");
@@ -536,7 +536,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             @Override
             public void handle(Event event) {
                 tfi.setGraphic(null);
-                tfi.setText("choose an image");
+                tfi.setText(getGazePlay().getTranslator().translate("ChooseImage"));
             }
         };
 
@@ -546,7 +546,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         choicePane.getChildren().addAll(imageField, nameField, iv);
 
-        Button button = new Button("Validate");
+        Button button = new Button("Ok");
         button.getStyleClass().add("gameChooserButton");
         button.getStyleClass().add("gameVariation");
         button.getStyleClass().add("button");
@@ -585,7 +585,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                         userDirectory.mkdirs();
 
                         conf2.setUserName(newser.name);
-                        if (!tfi.getText().equals("choose an image")) {
+                        if (!tfi.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
                             conf2.setUserPicture(tfi.getText());
                         }
 
@@ -597,7 +597,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                         primaryStage.getScene().getRoot().setEffect(null);
 
                     } else {
-                        Text error = new Text("This profile name is already used !");
+                        Text error = new Text(getGazePlay().getTranslator().translate("AlreadyUsed"));
                         error.setFill(Color.RED);
                         choicePane.getChildren().add(error);
                     }
@@ -619,7 +619,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                             + Utils.FILESEPARATOR + "GazePlay.properties");
                     Configuration conf2 = Configuration.createFromPropertiesResource();
 
-                    if (!tfi.getText().equals("choose an image")) {
+                    if (!tfi.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
                         conf2.setUserPicture(tfi.getText());
                     }
                     conf2.saveConfigIgnoringExceptions();
@@ -652,7 +652,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             }
         }
 
-        return (isNew && !s.equals("Default User"));
+        return (isNew && !s.equals(getGazePlay().getTranslator().translate("DefaultUser")));
     }
 
     private void modifUser(HBox user, FlowPane choicePanel, GazePlay gazePlay, String name, ImagePattern ip, int temp) {
