@@ -247,7 +247,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             @Override
             public void handle(Event event) {
 
-                if (!user.name.equals("Default User")) {
+                if (!user.name.equals(getGazePlay().getTranslator().translate("DefaultUser"))) {
 
                     Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.name
                             + Utils.FILESEPARATOR + "GazePlay.properties");
@@ -672,8 +672,11 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         String s = null;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("PNG Files", "*.png"),
-                new ExtensionFilter("JPeg Files", "*.jpg", "*.jpeg"));
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff"),
+                new ExtensionFilter("PNG Files", "*.png"), new ExtensionFilter("JPeg Files", "*.jpg", "*.jpeg"),
+                new ExtensionFilter("GIF Files", "*.gif"), new ExtensionFilter("BMP Files", "*.bmp"),
+                new ExtensionFilter("TIFF Files", "*.tiff"));
         File selectedFile = fileChooser.showOpenDialog(primaryStage);
 
         if (selectedFile != null) {
