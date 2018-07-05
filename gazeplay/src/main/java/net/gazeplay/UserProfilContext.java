@@ -247,7 +247,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             @Override
             public void handle(Event event) {
 
-                if (!user.name.equals("Default User")) {
+                if (!user.name.equals(getGazePlay().getTranslator().translate("DefaultUser"))) {
 
                     Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.name
                             + Utils.FILESEPARATOR + "GazePlay.properties");
@@ -256,6 +256,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     config = Configuration.getInstance();
 
                 }
+                log.info("THE USER NAME IS : ={}", config.getUserName());
 
                 gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
                 choicePanel.getChildren().clear();
@@ -418,6 +419,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         EventHandler<Event> yesHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
+                dialog.close();
                 choicePanel.getChildren().remove(user);
                 File userDirectory = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.name);
                 deleteDir(userDirectory);
@@ -429,7 +431,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     }
                 }
                 log.info("Profile: " + user.name + " deleted");
-                dialog.close();
             }
         };
 
@@ -578,13 +579,16 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                         Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
                                 + newser.name + Utils.FILESEPARATOR + "GazePlay.properties");
-                        Configuration conf2 = Configuration.createFromPropertiesResource();
-
+                        Configuration.setInstance(Configuration.createFromPropertiesResource());
+                        Configuration conf2 = Configuration.getInstance();
                         File userDirectory = new File(
                                 Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + newser.name);
                         userDirectory.mkdirs();
 
                         conf2.setUserName(newser.name);
+
+                        log.info("THE NAME OF THE NEW USER IS = {}", conf2.getUserName());
+
                         if (!tfi.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
                             conf2.setUserPicture(tfi.getText());
                         }
@@ -672,8 +676,11 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         String s = null;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("PNG Files", "*.png"),
-                new ExtensionFilter("JPeg Files", "*.jpg", "*.jpeg"));
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff"),
+                new ExtensionFilter("PNG Files", "*.png"), new ExtensionFilter("JPeg Files", "*.jpg", "*.jpeg"),
+                new ExtensionFilter("GIF Files", "*.gif"), new ExtensionFilter("BMP Files", "*.bmp"),
+                new ExtensionFilter("TIFF Files", "*.tiff"));
         File selectedFile = fileChooser.showOpenDialog(primaryStage);
 
         if (selectedFile != null) {

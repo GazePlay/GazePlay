@@ -12,11 +12,12 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
 
     public static final double GAZE_PROGRESS_INDICATOR_WIDTH = 15;
     public static final double GAZE_PROGRESS_INDICATOR_HEIGHT = GAZE_PROGRESS_INDICATOR_WIDTH;
-    public static final double GAZE_PROGRESS_INDICATOR_OFFSET = 2;
+    public static final double GAZE_PROGRESS_INDICATOR_OFFSET = 0;
 
     public GazeFollowerIndicator(final Node root) {
 
         super();
+        this.setMouseTransparent(true);
 
         this.setMinWidth(GAZE_PROGRESS_INDICATOR_WIDTH);
         this.setMinHeight(GAZE_PROGRESS_INDICATOR_HEIGHT);
@@ -48,8 +49,8 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
 
     private void moveGazeIndicator(double x, double y) {
 
-        this.setTranslateX(x);
-        this.setTranslateY(y);
+        this.setTranslateX(x - (3 * GAZE_PROGRESS_INDICATOR_WIDTH) / 2);
+        this.setTranslateY(y - GAZE_PROGRESS_INDICATOR_HEIGHT / 2);
 
     }
 }
