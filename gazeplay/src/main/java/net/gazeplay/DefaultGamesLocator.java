@@ -92,7 +92,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Order", DEFAULT_MEMORIZATION_GAME_THUMBNAIL),
+        result.add(new GameSpec(
+                new GameSummary("Order", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/order.jpeg"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -562,7 +563,8 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        result.add(new GameSpec(new GameSummary("Pet", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+        result.add(new GameSpec(
+                new GameSummary("Pet", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/I-have-a-biboule.jpeg"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
