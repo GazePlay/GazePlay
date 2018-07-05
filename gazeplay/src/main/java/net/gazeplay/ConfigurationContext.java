@@ -380,7 +380,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 configuration.saveConfigIgnoringExceptions();
 
                 final GazePlay gazePlay = GazePlay.getInstance();
-                //final Scene scene = gazePlay.getPrimaryScene();
+                // final Scene scene = gazePlay.getPrimaryScene();
 
                 CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
 
