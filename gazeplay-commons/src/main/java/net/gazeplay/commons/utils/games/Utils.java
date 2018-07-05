@@ -159,6 +159,16 @@ public class Utils {
         return getGazePlayFolder() + "statistics" + FILESEPARATOR;
     }
 
+    public static String getUserStatsFolder(String user) {
+
+        if (!user.equals("")) {
+            return getGazePlayFolder() + "profiles" + FILESEPARATOR + user + FILESEPARATOR + "statistics"
+                    + FILESEPARATOR;
+        } else {
+            return getStatsFolder();
+        }
+    }
+
     /**
      * @return current date with respect to the format yyyy-MM-dd
      */

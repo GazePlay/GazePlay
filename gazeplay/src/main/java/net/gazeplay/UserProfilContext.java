@@ -256,6 +256,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     config = Configuration.getInstance();
 
                 }
+                log.info("THE USER NAME IS : ={}", config.getUserName());
 
                 gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
                 choicePanel.getChildren().clear();
@@ -578,13 +579,16 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                         Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
                                 + newser.name + Utils.FILESEPARATOR + "GazePlay.properties");
-                        Configuration conf2 = Configuration.createFromPropertiesResource();
-
+                        Configuration.setInstance(Configuration.createFromPropertiesResource());
+                        Configuration conf2 = Configuration.getInstance();
                         File userDirectory = new File(
                                 Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + newser.name);
                         userDirectory.mkdirs();
 
                         conf2.setUserName(newser.name);
+
+                        log.info("THE NAME OF THE NEW USER IS = {}", conf2.getUserName());
+
                         if (!tfi.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
                             conf2.setUserPicture(tfi.getText());
                         }

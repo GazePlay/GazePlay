@@ -12,7 +12,7 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
 
     public static final double GAZE_PROGRESS_INDICATOR_WIDTH = 15;
     public static final double GAZE_PROGRESS_INDICATOR_HEIGHT = GAZE_PROGRESS_INDICATOR_WIDTH;
-    public static final double GAZE_PROGRESS_INDICATOR_OFFSET = 2;
+    public static final double GAZE_PROGRESS_INDICATOR_OFFSET = 0;
 
     public GazeFollowerIndicator(final Node root) {
 
