@@ -36,6 +36,7 @@ import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
+import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Languages;
@@ -143,6 +144,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         grid.setHgap(50);
         grid.setVgap(50);
         // grid.setPadding(new Insets(50, 50, 50, 50));
+
+        grid.getStyleClass().add("item");
 
         AtomicInteger currentFormRow = new AtomicInteger(1);
 
@@ -383,11 +386,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 final GazePlay gazePlay = GazePlay.getInstance();
                 final Scene scene = gazePlay.getPrimaryScene();
 
-                scene.getStylesheets().removeAll(scene.getStylesheets());
-                String styleSheetPath = newValue.getStyleSheetPath();
-                if (styleSheetPath != null) {
-                    scene.getStylesheets().add(styleSheetPath);
-                }
+                CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
+
+                /*
+                 * scene.getStylesheets().removeAll(scene.getStylesheets()); String styleSheetPath =
+                 * newValue.getStyleSheetPath(); if (styleSheetPath != null) {
+                 * scene.getStylesheets().add(styleSheetPath); }
+                 */
             }
         });
 

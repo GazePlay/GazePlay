@@ -256,9 +256,11 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     config = Configuration.getInstance();
 
                 }
-                log.info("THE USER NAME IS : ={}", config.getUserName());
+
+                CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
 
                 gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
+
                 choicePanel.getChildren().clear();
                 gazePlay.getHomeMenuScreen().setUpOnStage(gazePlay.getPrimaryScene());
 
