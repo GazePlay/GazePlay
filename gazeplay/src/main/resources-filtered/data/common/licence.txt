@@ -4,10 +4,18 @@ Version : ${project.version} (${build.date})
 
 contact : didier.schwab@univ-grenoble-alpes.fr
 
-Ce logiciel a été réalisé par Didier Schwab dans le cadre d'un projet de recherche
+Ce logiciel est réalisé dans le cadre d'un projet de recherche
 au sein de l'équipe getalp (Groupe d'Étude en Traduction Automatique/Traitement
 Automatisé des Langues et de la parole) du LIG (Laboratoire d'Informatique de Grenoble)
 dont les partenaire académiques sont l'Université Grenoble Alpes, le CNRS, Grenoble INP, l'INRIA.
+
+Ce projet a été initié par Didier Schwab qui a été rejoint par de nombreuses personnes. Le dépôt
+github du projet peut permettre de constater leur contribution directe.
+
+https://github.com/schwabdidier/GazePlay
+
+Cette présente page a également pour objectif de rassembler les contribution indirectes au cours
+de rencontrer plus ou moins informelles.
 
 Plusieurs étudiants ont contribué au développement des jeux et/ou aux idées dans le cadre
 de leur formation :
@@ -15,12 +23,15 @@ de leur formation :
 - en 2018-2019 : Mélanie CARRIÈRE (Univ.Grenoble Alpes), Dumitru CORINI (Univ.Grenoble Alpes),
  Vincent GIVAUDAN (Univ.Grenoble Alpes), Thomas MEDARD (Univ.Grenoble Alpes), Sébastien RIOU (Univ.Grenoble Alpes)
 
-Merci également à la communauté open source pour son aide : Yann Robert (Maven, logs, lombok,...)
+Merci également à la communauté open source pour son aide : Yann ROBERT (Maven, logs, lombok,...)
 
 Merci à Loïc Vial (lolo la science) en particulier pour le lien entre la bibliothèque Tobii en C++ et Java
 
+Merci au personnel de l'EEAP Coste Rousse à Prades-le-Lez et au personnel de l'IMP Ninon Vallin à Grenoble
+pour leurs retours.
+
 Plusieurs personnes ont également contribué par leurs idées, par leur aide technique ou matérielle :
-Sandra Chaulet, Francis Jambon, Émilie Janots, Claire Lemaire, Frédéric Pons, François Portet,
+Sandra Chaulet, Francis Jambon, Émilie Janots, Claire Lemaire (traduction allemand), Frédéric Pons, François Portet,
 Céline Chalbos Schwab, Andon Tchechmedjiev, John Tranier,
 et bien sûr Tess, ainsi que toutes ses petites copines inspiratrices.
 

@@ -39,7 +39,7 @@ Robots,Robots,Robots,Roboters,Robots
 Memory,Memory,Memory,Memory,Memory
 EnableRewardSound,Activer le son « bravo »,Enable Reward sound,Aktiviere den Sound Bravo,Aktivigu la sonon Bravo
 DisableHeatMap,Désactiver la Heat Map,Disable Heat Map,Deaktivieren Sie die Heat Map,Desactivar mapa de calor
-EnableGazeMenu,Activer le menu regard (Beta), Enable the Gaze Menu (Beta),Aktivieren Sie das Blickmenü (Beta), activar el menú de mirada (Beta)
+EnableGazeMenu,Activer le menu regard (Beta),Enable the Gaze Menu (Beta),Aktivieren Sie das Blickmenü (Beta),activar el menú de mirada (Beta)
 MenuOrientation,Orientation du menu (nécessite de relancer le jeu),Menu Orientation (restart game to take effect),Menüorientierung (erfordert Neustart des Spiels),Orientación del menú (requiere reiniciar el juego)
 Music,Musique,Music,Musik,Musica
 Volume,Volume,Volume,Volume,Volume
@@ -74,15 +74,15 @@ Labyrinth,Labyrinthe,Labyrinth,Labyrinth,Laberinto
 Pet,J'ai un Biboule !,I've got a Biball !,Ich habe ein Biboles,Yo tengo un Bibole ! 
 SpeedEffects,Vitesse des animations, Effect speed,Weißer Hintergrund, Velocidad de los animationes
 WhiteBackground,Mode fond blanc, White Background mode,Animationsgeschwindigkeit,Modo blanco fondo de pantalla 
-EnableGazeMouse,Activer l'émulation de la souris visuelle (Appuyez sur S pour arrêter/commencer l'émulation) (Appuyez sur espace pour émuler un click de souris),Enable the Gaze Mouse emulation (Press S to stop/start the emulation) (Press space to emulate click),|Aktivieren der visuellen Mausemulation (Drücken Sie S, um die Emulation zu stoppen/starten) (Drücken Sie die Leertaste, um den Mausklick zu emulieren).|,Activación de la emulación del ratón visual (presione S para detener/iniciar la emulación) (Presione espacio para emular el clic)
+EnableGazeMouse,Activer l'émulation de la souris visuelle ; appuyez sur S pour arrêter/commencer l'émulation ; appuyez sur espace pour émuler un click de souris,Enable the Gaze Mouse emulation ; press S to stop/start the emulation ; Press space to emulate click,Aktivieren der visuellen Mausemulation ; drücken Sie S um die Emulation zu stoppen/starten ; Drücken Sie die Leertaste um den Mausklick zu emulieren.,Activación de la emulación del ratón visual ; presione S para detener/iniciar la emulación ; presione espacio para emular el clic
 AddUser,Ajouter un nouvel utilisateur,Add new user,Neuen Benutzer hinzufügen, Agregar un usuario
 DefaultUser,Utilisateur par Défaut,Default User,Standardbenutzer, Usuario predeterminado
 NewUser,Nouvel utilisateur,New user,Neuer Benutzer, Nuevo usario
 Remove,Voulez vous vraiment supprimer cet utilisateur ?,Do you really want to delete this user ?,Wollen Sie diesen Benutzer wirklich löschen? ,¿Realmente quieres eliminar a este usuario?
 UserModif,Modification de l'utilisateur, User Modification,Ändern des Benutzers, Modificación del usario
-YesRemove,|Oui, supprimer|,|Yes, delete|,|Ja, löschen|,Si eliminar
-NoCancel,|Non, annuler|,|No, cancel|,|Nein, Annullierer|,No annular
-Name,Nom :,Name :,Name,Nombre :
+YesRemove,Oui (supprimer),Yes (delete),Ja (löschen),Si (eliminar)
+NoCancel,Non (annuler),No (cancel),Nein (Annullierer),No (annular)
+Name,Nom,Name,Name,Nombre
 enterName,Entrer un nom,Enter a name,Geben Sie einen Namen, Ingrese un nombre
 ChooseImage,Choisissez une image,Choose an image,Wählen Sie ein Bild,Elige una imagen 
 Image,Image,Image,Bild,Imagen : 
