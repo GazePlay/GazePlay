@@ -26,7 +26,6 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
-import net.gazeplay.commons.utils.ProgressPane;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;

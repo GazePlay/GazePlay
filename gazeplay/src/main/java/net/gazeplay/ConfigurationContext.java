@@ -15,15 +15,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -40,13 +34,10 @@ import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Languages;
-import sun.security.krb5.Config;
-
 import java.io.File;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
 @Slf4j
@@ -389,7 +380,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 configuration.saveConfigIgnoringExceptions();
 
                 final GazePlay gazePlay = GazePlay.getInstance();
-                final Scene scene = gazePlay.getPrimaryScene();
+                //final Scene scene = gazePlay.getPrimaryScene();
 
                 CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
 
