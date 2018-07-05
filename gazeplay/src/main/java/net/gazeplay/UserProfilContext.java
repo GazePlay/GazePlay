@@ -418,6 +418,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         EventHandler<Event> yesHandler = new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
+                dialog.close();
                 choicePanel.getChildren().remove(user);
                 File userDirectory = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.name);
                 deleteDir(userDirectory);
@@ -429,7 +430,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     }
                 }
                 log.info("Profile: " + user.name + " deleted");
-                dialog.close();
             }
         };
 
