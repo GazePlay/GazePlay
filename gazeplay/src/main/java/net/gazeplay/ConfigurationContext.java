@@ -385,15 +385,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
                 final GazePlay gazePlay = GazePlay.getInstance();
                 final Scene scene = gazePlay.getPrimaryScene();
-                
 
-                CssUtil.setPreferredStylesheets(configuration,  gazePlay.getPrimaryScene());
+                CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
 
-                /*scene.getStylesheets().removeAll(scene.getStylesheets());
-                String styleSheetPath = newValue.getStyleSheetPath();
-                if (styleSheetPath != null) {
-                    scene.getStylesheets().add(styleSheetPath);
-                }*/
+                /*
+                 * scene.getStylesheets().removeAll(scene.getStylesheets()); String styleSheetPath =
+                 * newValue.getStyleSheetPath(); if (styleSheetPath != null) {
+                 * scene.getStylesheets().add(styleSheetPath); }
+                 */
             }
         });
 
