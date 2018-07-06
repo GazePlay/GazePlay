@@ -46,6 +46,7 @@ import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.GamePanelDimensionProvider;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
 
 @Data
@@ -253,6 +254,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                 }
 
                 CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
+
+                BackgroundMusicManager.setInstance(new BackgroundMusicManager());
 
                 gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
 
