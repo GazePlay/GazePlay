@@ -3,6 +3,7 @@ package net.gazeplay.commons.utils.games;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.threads.CustomThreadFactory;
 import net.gazeplay.commons.threads.GroupingThreadFactory;
@@ -37,8 +38,9 @@ public class BackgroundMusicManager {
     public static final List<String> SUPPORTED_FILE_EXTENSIONS = Arrays.asList(".aif", ".aiff", ".fxm", ".flv", ".m3u8",
             ".mp3", ".mp4", ".m4v", ".m4a", ".mp4", ".wav");
 
+    @Setter
     @Getter
-    private static final BackgroundMusicManager instance = new BackgroundMusicManager();
+    private static BackgroundMusicManager instance = new BackgroundMusicManager();
 
     @Getter
     private final List<MediaPlayer> playlist = new ArrayList<MediaPlayer>();
