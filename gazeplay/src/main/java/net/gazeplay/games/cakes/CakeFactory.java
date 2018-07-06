@@ -151,8 +151,8 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             }
         }
         if (!winOnly) {
-            buttons[4].setDisable(!currentOk);
-            buttons[2].setDisable(!nappage);
+            buttons[4].disable(!currentOk);
+            buttons[2].disable(!nappage);
             if (!currentOk) {
                 buttons[4].setOpacity(0.5);
             }
@@ -510,7 +510,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         setNappage(false);
         if (i != 0) {
             cake[i - 1].getChildren().set(3, new ImageView());
-            buttons[2].setDisable(true);
+            buttons[2].disable(true);
         }
 
         Pane grab = new Pane();

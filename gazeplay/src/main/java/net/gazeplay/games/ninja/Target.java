@@ -48,7 +48,7 @@ public class Target extends Portrait {
 
     private boolean animationStopped = true;
 
-    private TranslateTransition currentTranslation;
+    public TranslateTransition currentTranslation;
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
             ImageLibrary imageLibrary) {

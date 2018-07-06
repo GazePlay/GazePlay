@@ -18,6 +18,7 @@ import javafx.util.Duration;
 import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 @Data
@@ -48,11 +49,23 @@ public class ProgressButton extends StackPane {
         inuse = true;
         this.setOpacity(1);
         this.indicator.setOpacity(0);
+        this.setDisable(false);
+        this.button.setDisable(false);
+    }
+
+    public void disable(boolean b) {
+        if (b) {
+            disable();
+        } else {
+            active();
+        }
     }
 
     public void disable() {
         inuse = false;
         this.setOpacity(0);
+        this.setDisable(true);
+        this.button.setDisable(true);
     }
 
     public void setImage(ImageView img) {
@@ -61,22 +74,16 @@ public class ProgressButton extends StackPane {
         this.getChildren().set(1, image);
     }
 
-    public void disable2() {
-        this.removeEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
-        this.removeEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
-        this.setDisable(true);
-        this.setOpacity(0);
-    }
-
     public void active2() {
-        this.button.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
-        this.button.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+        this.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
+        this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
         this.setDisable(false);
+        this.button.setDisable(false);
         this.setOpacity(1);
         this.indicator.setOpacity(0);
 
-        this.button.addEventFilter(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
-        this.button.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
+        this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
+        this.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
     }
 
     public void init() {
@@ -84,6 +91,7 @@ public class ProgressButton extends StackPane {
         buttonHeight = 0;
         indicator = new ProgressIndicator(0);
         indicator.setMouseTransparent(true);
+        timelineProgressBar = new Timeline();
         button.radiusProperty().addListener((obs, oldVal, newVal) -> {
             indicator.setMinHeight(2 * newVal.doubleValue());
             indicator.setMinWidth(2 * newVal.doubleValue());
@@ -91,7 +99,6 @@ public class ProgressButton extends StackPane {
             double width = newVal.doubleValue() * 2;
             width = (width * 90) / 100;
             image.setFitWidth(width);
-            indicator.toFront();
         });
 
         indicator.setOpacity(0);
@@ -107,12 +114,13 @@ public class ProgressButton extends StackPane {
             @Override
             public void handle(Event e) {
                 if (inuse) {
-                    image.toFront();
                     indicator.setProgress(0);
-                    indicator.setOpacity(1);
-                    timelineProgressBar = new Timeline();
+                    indicator.setOpacity(0.5);
 
-                    timelineProgressBar.setDelay(new Duration(500));
+                    timelineProgressBar.stop();
+                    timelineProgressBar.getKeyFrames().clear();
+
+                    timelineProgressBar.setDelay(new Duration(Configuration.getInstance().getFixationLength()));
 
                     timelineProgressBar.getKeyFrames().add(
                             new KeyFrame(new Duration(fixationLength), new KeyValue(indicator.progressProperty(), 1)));
@@ -135,6 +143,7 @@ public class ProgressButton extends StackPane {
             @Override
             public void handle(Event e) {
                 if (inuse) {
+
                     timelineProgressBar.stop();
                     indicator.setOpacity(0);
                     indicator.setProgress(0);
