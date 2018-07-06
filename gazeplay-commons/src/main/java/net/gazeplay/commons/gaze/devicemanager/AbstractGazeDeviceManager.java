@@ -134,8 +134,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
                     Point2D localPosition = node.screenToLocal(positionX, positionY);
 
-                    if (localPosition != null && localPosition.getX() >= 0 && localPosition.getY() >= 0
-                            && node.contains(localPosition)) {
+                    if (localPosition != null && node.contains(localPosition)) {
                         if (gi.isOn()) {
                             Platform.runLater(() -> node.fireEvent(
                                     new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY)));
