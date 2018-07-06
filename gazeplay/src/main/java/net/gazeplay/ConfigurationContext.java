@@ -733,7 +733,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         String musicFolder = newMusicFolder;
 
-        if (newMusicFolder == Configuration.DEFAULT_VALUE_MUSIC_FOLDER) {
+        if (newMusicFolder == "") {
             // TODO find a way to access to this files in a "cleaner" way
             musicFolder = (new File(".")).getAbsolutePath() + "/gazeplay-data/src/main/resources/data" + File.separator
                     + "home" + File.separator + "sounds";
