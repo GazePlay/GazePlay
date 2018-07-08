@@ -12,13 +12,10 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Position;
-import net.gazeplay.commons.utils.RandomPositionGenerator;
-import net.gazeplay.commons.utils.stats.Stats;
 
 /**
  *

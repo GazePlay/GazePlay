@@ -8,7 +8,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.DefaultGamesLocator;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 import java.util.concurrent.atomic.AtomicInteger;

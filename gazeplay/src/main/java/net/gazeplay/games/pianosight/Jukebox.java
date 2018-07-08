@@ -1,22 +1,13 @@
 package net.gazeplay.games.pianosight;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
-import net.gazeplay.commons.utils.games.Utils;
+
+import java.io.File;
 
 @Slf4j
 public class Jukebox extends Pane {

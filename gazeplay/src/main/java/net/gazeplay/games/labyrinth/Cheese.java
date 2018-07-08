@@ -1,11 +1,11 @@
 package net.gazeplay.games.labyrinth;
 
-import java.util.Random;
-
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+
+import java.util.Random;
 
 public class Cheese extends Parent {
 

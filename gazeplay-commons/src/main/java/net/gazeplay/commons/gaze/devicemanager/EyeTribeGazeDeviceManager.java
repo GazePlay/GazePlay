@@ -4,7 +4,6 @@ import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
 import com.theeyetribe.clientsdk.data.GazeData;
 import javafx.geometry.Point2D;
-import net.gazeplay.commons.gaze.SecondScreen;
 
 /**
  * Created by schwab on 16/08/2016.

@@ -1,7 +1,5 @@
 package net.gazeplay.games.moles;
 
-import java.util.Random;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -21,6 +19,8 @@ import net.gazeplay.GameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
+
+import java.util.Random;
 
 @Slf4j
 public class MolesChar extends Parent {

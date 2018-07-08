@@ -1,7 +1,5 @@
 package net.gazeplay.games.cups;
 
-import net.gazeplay.games.cups.utils.PositionCup;
-import java.awt.Point;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -12,7 +10,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.cups.utils.PositionCup;
+
+import java.awt.*;
 
 @Slf4j
 public class Cup {

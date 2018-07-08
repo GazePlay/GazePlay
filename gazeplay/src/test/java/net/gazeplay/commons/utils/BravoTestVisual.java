@@ -2,8 +2,9 @@ package net.gazeplay.commons.utils;
 
 import com.sun.glass.ui.Screen;
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -12,8 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 
 import static junit.framework.TestCase.assertTrue;
 

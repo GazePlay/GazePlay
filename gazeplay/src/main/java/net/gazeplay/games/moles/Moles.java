@@ -1,6 +1,9 @@
 package net.gazeplay.games.moles;
 
 import javafx.geometry.Dimension2D;
+import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -13,16 +16,8 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
-import javafx.scene.Parent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javafx.scene.control.Label;
-import javafx.scene.effect.ColorAdjust;
+import java.util.*;
 
 @Slf4j
 public class Moles extends Parent implements GameLifeCycle {

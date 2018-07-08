@@ -4,14 +4,12 @@ package net.gazeplay.games.pianosight;
  * Created by schwab on 09/08/2016.
  */
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.sound.midi.MidiSystem;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Synthesizer;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by schwab on 28/08/2016.

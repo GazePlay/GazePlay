@@ -1,15 +1,10 @@
 package net.gazeplay.games.pianosight;
 
+import lombok.extern.slf4j.Slf4j;
+
+import javax.sound.midi.*;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiEvent;
-import javax.sound.midi.MidiMessage;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.ShortMessage;
-import javax.sound.midi.Track;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class midiReader {

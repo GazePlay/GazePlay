@@ -3,7 +3,9 @@ package net.gazeplay.commons.utils.stats;
 import javafx.scene.Scene;
 import net.gazeplay.commons.utils.games.Utils;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class HiddenItemsGamesStats extends Stats {
 

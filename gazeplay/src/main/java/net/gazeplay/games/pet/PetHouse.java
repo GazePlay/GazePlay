@@ -1,27 +1,15 @@
 package net.gazeplay.games.pet;
 
-import java.awt.MouseInfo;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.sun.glass.ui.Cursor;
 import com.sun.glass.ui.Screen;
-
-import javafx.animation.Animation;
-import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
-import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,7 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,8 +29,11 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.ProgressButton;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.cakes.CakeFactory;
 import tobii.Tobii;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class PetHouse extends Parent implements GameLifeCycle {

@@ -1,17 +1,15 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
-import java.awt.AWTException;
-import java.awt.Robot;
 import com.sun.glass.ui.Screen;
-
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
 import lombok.extern.slf4j.Slf4j;
-
 import net.gazeplay.commons.configuration.Configuration;
 import tobii.Tobii;
+
+import java.awt.*;
 
 @Slf4j
 public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {

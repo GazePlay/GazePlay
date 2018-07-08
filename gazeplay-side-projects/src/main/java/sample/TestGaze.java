@@ -1,6 +1,5 @@
 package sample;
 
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -8,6 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 /**
  * Created by schwab on 15/08/2016.

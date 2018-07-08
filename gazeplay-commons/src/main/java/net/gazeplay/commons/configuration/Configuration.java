@@ -1,28 +1,16 @@
 package net.gazeplay.commons.configuration;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.gaze.EyeTracker;
-
-import java.util.Properties;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.EyeTracker;
+import net.gazeplay.commons.utils.games.Utils;
+
+import java.io.*;
+import java.util.Properties;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
-import net.gazeplay.commons.utils.games.Utils;
 
 @Slf4j
 public class Configuration implements Cloneable {

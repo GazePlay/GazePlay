@@ -1,9 +1,10 @@
 package net.gazeplay.games.cups.utils;
 
-import java.awt.Point;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.awt.*;
 
 @Slf4j
 public class PositionCup {

@@ -1,8 +1,5 @@
 package net.gazeplay.games.shooter;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -27,6 +24,9 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 public class Shooter extends Parent implements GameLifeCycle {

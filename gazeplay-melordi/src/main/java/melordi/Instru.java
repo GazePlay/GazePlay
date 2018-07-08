@@ -4,12 +4,12 @@ package melordi;
  * Created by schwab on 09/08/2016.
  */
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Synthesizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Instru {
 

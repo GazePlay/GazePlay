@@ -6,7 +6,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.labyrinth.Labyrinth;
 
 /*
  * MouseArrowsV1 : 

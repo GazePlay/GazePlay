@@ -1,9 +1,6 @@
 
 package net.gazeplay.games.cakes;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -14,7 +11,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -33,6 +29,9 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.ProgressButton;
 import net.gazeplay.commons.utils.stats.Stats;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Slf4j
 public class CakeFactory extends Parent implements GameLifeCycle {

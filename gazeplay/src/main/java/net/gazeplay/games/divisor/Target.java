@@ -1,15 +1,12 @@
 package net.gazeplay.games.divisor;
 
-import java.util.ArrayList;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -24,10 +21,8 @@ import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.ArrayList;
 import java.util.Random;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyValue;
-import javafx.scene.Parent;
 
 /**
  *

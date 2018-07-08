@@ -7,14 +7,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**

@@ -3,7 +3,6 @@ package net.gazeplay.commons.utils;
 import javafx.geometry.Dimension2D;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.games.pianosight.Piano;
 
 import java.util.Random;
 

@@ -2,7 +2,6 @@ package net.gazeplay.commons.gaze.devicemanager;
 
 import javafx.scene.Node;
 import net.gazeplay.commons.gaze.GazeMotionListener;
-import net.gazeplay.commons.utils.stats.Stats;
 
 public interface GazeDeviceManager {
 

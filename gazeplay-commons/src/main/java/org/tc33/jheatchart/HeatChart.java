@@ -19,14 +19,17 @@
  */
 package org.tc33.jheatchart;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.FileImageOutputStream;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
-
-import javax.imageio.*;
-import javax.imageio.stream.FileImageOutputStream;
 
 /**
  * The <code>HeatChart</code> class describes a chart which can display 3-dimensions of values - x,y and z, where x and

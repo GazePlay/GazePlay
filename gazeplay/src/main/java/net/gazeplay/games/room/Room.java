@@ -1,11 +1,7 @@
 package net.gazeplay.games.room;
 
 import javafx.geometry.Pos;
-import javafx.scene.AmbientLight;
-import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.PointLight;
-import javafx.scene.SubScene;
+import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;

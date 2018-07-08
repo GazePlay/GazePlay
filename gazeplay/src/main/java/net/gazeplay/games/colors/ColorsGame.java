@@ -1,8 +1,5 @@
 package net.gazeplay.games.colors;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Optional;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -35,6 +32,10 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Optional;
 
 /**
  * Game where you select a color in order to colorize a white and black draw.

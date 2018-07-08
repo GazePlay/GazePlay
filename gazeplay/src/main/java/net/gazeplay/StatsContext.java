@@ -17,14 +17,10 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
-import net.gazeplay.commons.utils.stats.HiddenItemsGamesStats;
-import net.gazeplay.commons.utils.stats.ShootGamesStats;
-import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.commons.utils.stats.StatsDisplay;
+import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import net.gazeplay.commons.utils.stats.ExplorationGamesStats;
 
 @Slf4j
 @Data

@@ -2,7 +2,6 @@ package net.gazeplay.games.labyrinth;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;

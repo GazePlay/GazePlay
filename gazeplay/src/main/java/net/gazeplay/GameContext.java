@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -31,7 +32,6 @@ import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.IOException;
-import javafx.scene.control.Button;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {

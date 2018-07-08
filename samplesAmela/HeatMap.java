@@ -1,7 +1,6 @@
 package samplesAmela;
 
 
-import com.theeyetribe.clientsdk.GazeManager;
 import gaze.GazeEvent;
 import gaze.GazeUtils;
 import javafx.animation.Animation;
@@ -23,7 +22,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -31,11 +29,8 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Amela Fejza on 6/2/2017.

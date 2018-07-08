@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -12,8 +13,6 @@ import javafx.util.Duration;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.AsyncUiTaskExecutor;
-
-import javafx.scene.layout.Region;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.Utils;
 

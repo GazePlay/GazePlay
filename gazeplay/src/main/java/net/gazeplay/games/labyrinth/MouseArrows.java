@@ -16,7 +16,6 @@ import javafx.util.Duration;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.labyrinth.Labyrinth;
 
 /*
  * Abstract class for all Mouse version containing arrows

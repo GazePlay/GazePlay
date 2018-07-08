@@ -1,23 +1,16 @@
 package net.gazeplay.games.cakes;
 
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
-
-import java.awt.List;
-import java.util.LinkedList;
-
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.utils.ProgressButton;
+
+import java.util.LinkedList;
 
 public class ScreenCake extends LinkedList {
 

@@ -6,7 +6,6 @@ import gaze.GazeEvent;
 import gaze.GazeUtils;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
-import javafx.animation.FillTransition;
 import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;

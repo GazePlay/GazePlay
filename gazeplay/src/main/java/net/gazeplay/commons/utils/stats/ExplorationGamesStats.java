@@ -1,10 +1,11 @@
 package net.gazeplay.commons.utils.stats;
 
+import javafx.scene.Scene;
+import net.gazeplay.commons.utils.games.Utils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javafx.scene.Scene;
-import net.gazeplay.commons.utils.games.Utils;
 
 public class ExplorationGamesStats extends Stats {
 

@@ -14,6 +14,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
@@ -23,7 +24,6 @@ import net.gazeplay.games.bubbles.BubblesGamesStats;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import javafx.scene.layout.Region;
 
 @Slf4j
 public class StatsDisplay {
