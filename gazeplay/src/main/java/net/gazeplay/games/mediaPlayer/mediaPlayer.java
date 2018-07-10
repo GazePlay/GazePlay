@@ -2,25 +2,41 @@ package net.gazeplay.games.mediaPlayer;
 
 import java.io.File;
 
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.GazePlay;
+import net.gazeplay.User;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.CssUtil;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.shooter.Point;
 import net.gazeplay.games.shooter.Shooter;
@@ -273,6 +289,102 @@ public class mediaPlayer extends Parent implements GameLifeCycle {
 
         playPause.addEventFilter(MouseEvent.MOUSE_CLICKED, eventPlayPause);
 
+        EventHandler<MouseEvent> eventAddVideo = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                Stage dialog = createDialog(gameContext.getGazePlay().getPrimaryStage());
+                dialog.setTitle("new Title");
+                dialog.show();
+
+                dialog.toFront();
+                dialog.setAlwaysOnTop(true);
+            }
+        };
+
+        addVideo.addEventFilter(MouseEvent.MOUSE_CLICKED, eventAddVideo);
+
     }
 
+    private Stage createDialog(Stage primaryStage) {
+        // initialize the confirmation dialog
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initOwner(primaryStage);
+        dialog.initStyle(StageStyle.UTILITY);
+        dialog.setOnCloseRequest(windowEvent -> {
+            primaryStage.getScene().getRoot().setEffect(null);
+        });
+
+        HBox choicePane = new HBox();
+        choicePane.setSpacing(20);
+        choicePane.setAlignment(Pos.CENTER);
+
+        ScrollPane choicePanelScroller = new ScrollPane(choicePane);
+        choicePanelScroller.setMinHeight(primaryStage.getHeight() / 3);
+        choicePanelScroller.setMinWidth(primaryStage.getWidth() / 3);
+        choicePanelScroller.setFitToWidth(true);
+        choicePanelScroller.setFitToHeight(true);
+
+        // URL BLOCK ___
+        VBox urlSide = new VBox();
+
+        HBox urlField = new HBox();
+        urlField.setAlignment(Pos.CENTER);
+        Text t = new Text("URL: ");
+        TextField tf = new TextField();
+        tf.setPromptText("enter a web URL");
+        tf.setMaxWidth(primaryStage.getWidth() / 10);
+        urlField.getChildren().addAll(t, tf);
+
+        Button buttonURL = new Button("Ok");
+        buttonURL.getStyleClass().add("gameChooserButton");
+        buttonURL.getStyleClass().add("gameVariation");
+        buttonURL.getStyleClass().add("button");
+        buttonURL.setMinHeight(primaryStage.getHeight() / 10);
+        buttonURL.setMinWidth(primaryStage.getWidth() / 10);
+
+        urlSide.getChildren().addAll(urlField, buttonURL);
+        // ___ URL BLOCK
+
+        // PATH BLOCK ___
+        VBox pathSide = new VBox();
+
+        Button pathField = new Button("new media");
+        pathField.getStyleClass().add("gameChooserButton");
+        pathField.getStyleClass().add("gameVariation");
+        pathField.getStyleClass().add("button");
+        pathField.setMinHeight(primaryStage.getHeight() / 10);
+        pathField.setMinWidth(primaryStage.getWidth() / 10);
+
+        Button buttonPath = new Button("Ok");
+        buttonPath.getStyleClass().add("gameChooserButton");
+        buttonPath.getStyleClass().add("gameVariation");
+        buttonPath.getStyleClass().add("button");
+        buttonPath.setMinHeight(primaryStage.getHeight() / 10);
+        buttonPath.setMinWidth(primaryStage.getWidth() / 10);
+
+        pathSide.getChildren().addAll(pathField, buttonPath);
+        // ___ PATH BLOCK
+
+        EventHandler<Event> event;
+        event = new EventHandler<Event>() {
+            @Override
+            public void handle(Event mouseEvent) {
+                dialog.close();
+                primaryStage.getScene().getRoot().setEffect(null);
+            }
+        };
+        buttonPath.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
+        buttonURL.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
+
+        urlSide.setAlignment(Pos.CENTER);
+        pathSide.setAlignment(Pos.CENTER);
+        choicePane.getChildren().addAll(urlSide, pathSide);
+
+        Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
+
+        dialog.setScene(scene);
+
+        return dialog;
+    }
 }
