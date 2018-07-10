@@ -37,6 +37,7 @@ public class mediaPlayer extends Parent implements GameLifeCycle {
     private HBox window, tools;
     private VBox scrollList, videoSide;
     private boolean full = false;
+    private boolean play = false;
 
     @Override
     public void launch() {
@@ -145,6 +146,7 @@ public class mediaPlayer extends Parent implements GameLifeCycle {
 
                 BorderPane.setAlignment(webview, Pos.CENTER);
                 videoRoot.setCenter(webview);
+                play = true;
 
             }
         };
@@ -167,10 +169,34 @@ public class mediaPlayer extends Parent implements GameLifeCycle {
                 BorderPane.setAlignment(mediaView, Pos.CENTER);
                 videoRoot.setCenter(mediaView);
                 player.play();
+                play = true;
 
             }
         };
         titre2.addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre2);
+
+        EventHandler<MouseEvent> eventTitre3 = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+
+                Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+                File media = new File("D:/Musique/La cour des grands (Deluxe)/01 - La cour des grands.mp3");
+                MediaPlayer player = new MediaPlayer(new Media(media.toURI().toString()));
+                MediaView mediaView = new MediaView(player);
+                mediaView.setFitHeight(dimension2D.getHeight() / 2);
+                mediaView.setFitWidth(dimension2D.getWidth() / 3);
+
+                videoRoot.getChildren().clear();
+
+                BorderPane.setAlignment(mediaView, Pos.CENTER);
+                videoRoot.setCenter(mediaView);
+                player.play();
+                play = true;
+
+            }
+        };
+        titre3.addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre3);
 
         EventHandler<MouseEvent> eventFull = new EventHandler<MouseEvent>() {
             @Override
@@ -224,13 +250,28 @@ public class mediaPlayer extends Parent implements GameLifeCycle {
                     }
                     full = !full;
 
-                } else if (videoRoot.getCenter() instanceof MediaView) {
-
                 }
 
             }
         };
         fullScreen.addEventFilter(MouseEvent.MOUSE_CLICKED, eventFull);
+
+        EventHandler<MouseEvent> eventPlayPause = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if (videoRoot.getCenter() instanceof MediaView) {
+                    MediaView mediaView = (MediaView) videoRoot.getCenter();
+                    if (play) {
+                        mediaView.getMediaPlayer().pause();
+                    } else {
+                        mediaView.getMediaPlayer().play();
+                    }
+                    play = !play;
+                }
+            }
+        };
+
+        playPause.addEventFilter(MouseEvent.MOUSE_CLICKED, eventPlayPause);
 
     }
 
