@@ -26,6 +26,7 @@ import net.gazeplay.games.labyrinth.Labyrinth;
 import net.gazeplay.games.labyrinth.LabyrinthStats;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
+import net.gazeplay.games.mediaPlayer.mediaPlayer;
 import net.gazeplay.games.memory.Memory;
 import net.gazeplay.games.moles.MoleStats;
 import net.gazeplay.games.moles.Moles;
@@ -575,6 +576,21 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                         return new PetHouse(gameContext, stats);
+                    }
+
+                }));
+
+        result.add(new GameSpec(new GameSummary("Media Player", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new PetStats(scene);
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new mediaPlayer(gameContext, stats);
                     }
 
                 }));

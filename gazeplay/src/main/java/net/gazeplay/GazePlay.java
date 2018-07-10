@@ -48,6 +48,9 @@ public class GazePlay extends Application {
     private Stage primaryStage;
 
     @Getter
+    private LoadingScreen lds;
+
+    @Getter
     private Translator translator;
 
     @Getter
@@ -96,7 +99,10 @@ public class GazePlay extends Application {
 
         userProfileScreen = UserProfilContext.newInstance(this, config);
 
+        lds = LoadingScreen.newInstance(this);
+
         userProfileScreen.setUpOnStage(primaryScene);
+
         // homeMenuScreen.setUpOnStage(primaryScene);
 
         primaryStage.setFullScreen(true);
@@ -155,6 +161,11 @@ public class GazePlay extends Application {
 
     public void onDisplayConfigurationManagement(ConfigurationContext configurationContext) {
         configurationContext.setUpOnStage(primaryScene);
+    }
+
+    public void loading() {
+        lds.setUpOnStage(primaryScene);
+        primaryStage.show();
     }
 
     public void toggleFullScreen() {
