@@ -26,7 +26,7 @@ import net.gazeplay.games.labyrinth.Labyrinth;
 import net.gazeplay.games.labyrinth.LabyrinthStats;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
-import net.gazeplay.games.mediaPlayer.mediaPlayer;
+import net.gazeplay.games.mediaPlayer.GazeMediaPlayer;
 import net.gazeplay.games.memory.Memory;
 import net.gazeplay.games.moles.MoleStats;
 import net.gazeplay.games.moles.Moles;
@@ -590,7 +590,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new mediaPlayer(gameContext, stats);
+                        return new GazeMediaPlayer(gameContext, stats);
                     }
 
                 }));

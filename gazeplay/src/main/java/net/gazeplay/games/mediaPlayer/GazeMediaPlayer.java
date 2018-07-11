@@ -11,18 +11,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
@@ -31,34 +27,29 @@ import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GazePlay;
-import net.gazeplay.User;
-import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.CssUtil;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.shooter.Point;
-import net.gazeplay.games.shooter.Shooter;
 
 @Slf4j
-public class mediaPlayer extends Parent implements GameLifeCycle {
+public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     private final GameContext gameContext;
     private final Stats stats;
 
-    private Button titre1, titre2, titre3;
-    private Button left, playPause, right, fullScreen, addVideo;
+    private Button[] titre;
+    private Button left, playPause, right, fullScreen, addVideo, upArrow, downArrow;
     private BorderPane videoRoot;
     private HBox window, tools;
     private VBox scrollList, videoSide;
     private boolean full = false;
     private boolean play = false;
+    private MediaFileReader musicList;
+
+    EventHandler<MouseEvent>[] eventTitre;
 
     @Override
     public void launch() {
         createHandlers();
-
+        createUpDownHandlers();
     }
 
     @Override
@@ -67,37 +58,46 @@ public class mediaPlayer extends Parent implements GameLifeCycle {
 
     }
 
-    public mediaPlayer(GameContext gameContext, Stats stats) {
+    public GazeMediaPlayer(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        eventTitre = new EventHandler[3];
+
+        musicList = new MediaFileReader();
 
         window = new HBox();
 
         scrollList = new VBox();
 
-        Button upArrow = new Button("^");
+        titre = new Button[3];
+
+        upArrow = new Button("^");
         upArrow.setPrefWidth(dimension2D.getWidth() / 4);
         upArrow.setPrefHeight(dimension2D.getHeight() / 7);
         // Premier titre a afficher
-        titre1 = new Button("WebView");
-        titre1.setPrefWidth(dimension2D.getWidth() / 4);
-        titre1.setPrefHeight(dimension2D.getHeight() / 7);
+        titre[0] = new Button("WebView");
+        titre[0].setPrefWidth(dimension2D.getWidth() / 4);
+        titre[0].setPrefHeight(dimension2D.getHeight() / 7);
+        putMusic(0, true);
         // Second titre a afficher
-        titre2 = new Button("MediaPlayer");
-        titre2.setPrefWidth(dimension2D.getWidth() / 4);
-        titre2.setPrefHeight(dimension2D.getHeight() / 7);
+        titre[1] = new Button("MediaPlayer");
+        titre[1].setPrefWidth(dimension2D.getWidth() / 4);
+        titre[1].setPrefHeight(dimension2D.getHeight() / 7);
+        putMusic(1, true);
         // Troisieme titre a afficher
-        titre3 = new Button("MP3Player");
-        titre3.setPrefWidth(dimension2D.getWidth() / 4);
-        titre3.setPrefHeight(dimension2D.getHeight() / 7);
-        Button downArrow = new Button("v");
+        titre[2] = new Button("MP3Player");
+        titre[2].setPrefWidth(dimension2D.getWidth() / 4);
+        titre[2].setPrefHeight(dimension2D.getHeight() / 7);
+        putMusic(2, true);
+        downArrow = new Button("v");
         downArrow.setPrefWidth(dimension2D.getWidth() / 4);
         downArrow.setPrefHeight(dimension2D.getHeight() / 7);
 
         scrollList.setSpacing(dimension2D.getHeight() / 30);
         scrollList.setAlignment(Pos.CENTER);
-        scrollList.getChildren().addAll(upArrow, titre1, titre2, titre3, downArrow);
+        scrollList.getChildren().addAll(upArrow, titre[0], titre[1], titre[2], downArrow);
 
         videoSide = new VBox();
 
@@ -147,73 +147,6 @@ public class mediaPlayer extends Parent implements GameLifeCycle {
     }
 
     public void createHandlers() {
-        EventHandler<MouseEvent> eventTitre1 = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-
-                Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-                String videoUrl = "http://www.youtube.com/embed/YE7VzlLtp-4?autoplay=1";
-                WebView webview = new WebView();
-                webview.getEngine().load(videoUrl);
-                webview.setPrefSize(dimension2D.getWidth() / 3, dimension2D.getHeight() / 2); // 360p
-
-                videoRoot.getChildren().clear();
-
-                BorderPane.setAlignment(webview, Pos.CENTER);
-                videoRoot.setCenter(webview);
-                play = true;
-
-            }
-        };
-        titre1.addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre1);
-
-        EventHandler<MouseEvent> eventTitre2 = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-
-                Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-                File media = new File("C:/Users/super/Downloads/oow2010-2.flv");
-                MediaPlayer player = new MediaPlayer(new Media(media.toURI().toString()));
-                MediaView mediaView = new MediaView(player);
-                mediaView.setFitHeight(dimension2D.getHeight() / 2);
-                mediaView.setFitWidth(dimension2D.getWidth() / 3);
-
-                videoRoot.getChildren().clear();
-
-                BorderPane.setAlignment(mediaView, Pos.CENTER);
-                videoRoot.setCenter(mediaView);
-                player.play();
-                play = true;
-
-            }
-        };
-        titre2.addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre2);
-
-        EventHandler<MouseEvent> eventTitre3 = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-
-                Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-                File media = new File("D:/Musique/La cour des grands (Deluxe)/01 - La cour des grands.mp3");
-                MediaPlayer player = new MediaPlayer(new Media(media.toURI().toString()));
-                MediaView mediaView = new MediaView(player);
-                mediaView.setFitHeight(dimension2D.getHeight() / 2);
-                mediaView.setFitWidth(dimension2D.getWidth() / 3);
-
-                videoRoot.getChildren().clear();
-
-                BorderPane.setAlignment(mediaView, Pos.CENTER);
-                videoRoot.setCenter(mediaView);
-                player.play();
-                play = true;
-
-            }
-        };
-        titre3.addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre3);
-
         EventHandler<MouseEvent> eventFull = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
@@ -223,8 +156,13 @@ public class mediaPlayer extends Parent implements GameLifeCycle {
                 if (videoRoot.getCenter() instanceof MediaView) {
                     MediaView mediaView = (MediaView) videoRoot.getCenter();
                     if (!full) {
+
                         mediaView.setFitWidth(dimension2D.getWidth());
-                        mediaView.setFitHeight((7 * dimension2D.getHeight()) / 8);
+                        if (mediaView.getMediaPlayer().getMedia().getWidth() != 0) {
+                            mediaView.setFitHeight((7 * dimension2D.getHeight()) / 8);
+                        } else {
+                            mediaView.setFitHeight(0);
+                        }
                         gameContext.getChildren().clear();
                         videoSide.setSpacing(0);
                         videoSide.getChildren().remove(addVideo);
@@ -305,6 +243,40 @@ public class mediaPlayer extends Parent implements GameLifeCycle {
 
     }
 
+    private void createUpDownHandlers() {
+
+        EventHandler<MouseEvent> eventDownArrow = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                titre[0].setText(titre[1].getText());
+                titre[0].removeEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[0]);
+                titre[0].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[1]);
+                titre[1].setText(titre[2].getText());
+                titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[1]);
+                titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[2]);
+                putMusic(2, true);
+            }
+        };
+
+        downArrow.addEventFilter(MouseEvent.MOUSE_CLICKED, eventDownArrow);
+
+        EventHandler<MouseEvent> eventUpArrow = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                titre[2].setText(titre[1].getText());
+                titre[2].removeEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[2]);
+                titre[2].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[1]);
+                titre[1].setText(titre[0].getText());
+                titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[1]);
+                titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[0]);
+                putMusic(0, false);
+            }
+        };
+
+        upArrow.addEventFilter(MouseEvent.MOUSE_CLICKED, eventUpArrow);
+
+    }
+
     private Stage createDialog(Stage primaryStage) {
         // initialize the confirmation dialog
         final Stage dialog = new Stage();
@@ -366,16 +338,26 @@ public class mediaPlayer extends Parent implements GameLifeCycle {
         pathSide.getChildren().addAll(pathField, buttonPath);
         // ___ PATH BLOCK
 
-        EventHandler<Event> event;
-        event = new EventHandler<Event>() {
+        EventHandler<Event> eventURL;
+        eventURL = new EventHandler<Event>() {
             @Override
             public void handle(Event mouseEvent) {
                 dialog.close();
                 primaryStage.getScene().getRoot().setEffect(null);
             }
         };
-        buttonPath.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
-        buttonURL.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
+
+        EventHandler<Event> eventPath;
+        eventPath = new EventHandler<Event>() {
+            @Override
+            public void handle(Event mouseEvent) {
+                dialog.close();
+                primaryStage.getScene().getRoot().setEffect(null);
+            }
+        };
+
+        buttonPath.addEventHandler(MouseEvent.MOUSE_CLICKED, eventURL);
+        buttonURL.addEventHandler(MouseEvent.MOUSE_CLICKED, eventPath);
 
         urlSide.setAlignment(Pos.CENTER);
         pathSide.setAlignment(Pos.CENTER);
@@ -386,5 +368,65 @@ public class mediaPlayer extends Parent implements GameLifeCycle {
         dialog.setScene(scene);
 
         return dialog;
+    }
+
+    public void putMusic(int i, boolean next) {
+        MediaFile mf;
+        if (next) {
+            mf = musicList.next();
+        } else {
+            mf = musicList.previous();
+        }
+        titre[i].setText(mf.getName());
+
+        if (mf.getType().equals("URL")) {
+
+            eventTitre[i] = new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+
+                    Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+                    String videoUrl = mf.getPath();
+                    WebView webview = new WebView();
+                    webview.getEngine().load(videoUrl);
+                    webview.setPrefSize(dimension2D.getWidth() / 3, dimension2D.getHeight() / 2); // 360p
+
+                    videoRoot.getChildren().clear();
+
+                    BorderPane.setAlignment(webview, Pos.CENTER);
+                    videoRoot.setCenter(webview);
+                    play = true;
+
+                }
+            };
+
+        } else {
+
+            eventTitre[i] = new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+
+                    Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+                    File media = new File(mf.getPath());
+                    MediaPlayer player = new MediaPlayer(new Media(media.toURI().toString()));
+                    MediaView mediaView = new MediaView(player);
+                    mediaView.setFitHeight(dimension2D.getHeight() / 2);
+                    mediaView.setFitWidth(dimension2D.getWidth() / 3);
+
+                    videoRoot.getChildren().clear();
+
+                    BorderPane.setAlignment(mediaView, Pos.CENTER);
+                    videoRoot.setCenter(mediaView);
+                    player.play();
+                    play = true;
+
+                }
+            };
+        }
+
+        titre[i].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[i]);
+
     }
 }
