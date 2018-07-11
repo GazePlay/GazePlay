@@ -5,7 +5,7 @@
 	<groupId>com.github.schwabdidier</groupId>
 	<artifactId>gazeplay-project</artifactId>
 	<packaging>pom</packaging>
-	<version>1.4.0-SNAPSHOT</version>
+	<version>1.4.1-SNAPSHOT</version>
 
 	<licenses>
 		<license>
@@ -334,16 +334,19 @@
 
 	<repositories>
 		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
 			<id>bintray</id>
 			<name>bintray</name>
 			<url>http://jcenter.bintray.com</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 
