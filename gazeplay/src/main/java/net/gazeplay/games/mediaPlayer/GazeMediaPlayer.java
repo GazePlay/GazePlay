@@ -1,6 +1,8 @@
 package net.gazeplay.games.mediaPlayer;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -44,12 +46,13 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     private boolean play = false;
     private MediaFileReader musicList;
 
-    EventHandler<MouseEvent>[] eventTitre;
+    List<EventHandler<MouseEvent>> eventTitre;
 
     @Override
     public void launch() {
         createHandlers();
         createUpDownHandlers();
+        createLeftRightHandlers();
     }
 
     @Override
@@ -63,7 +66,10 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         this.stats = stats;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        eventTitre = new EventHandler[3];
+        eventTitre = new ArrayList<EventHandler<MouseEvent>>();
+        eventTitre.add(null);
+        eventTitre.add(null);
+        eventTitre.add(null);
 
         musicList = new MediaFileReader();
 
@@ -151,60 +157,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             @Override
             public void handle(MouseEvent e) {
 
-                Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-                if (videoRoot.getCenter() instanceof MediaView) {
-                    MediaView mediaView = (MediaView) videoRoot.getCenter();
-                    if (!full) {
-
-                        mediaView.setFitWidth(dimension2D.getWidth());
-                        if (mediaView.getMediaPlayer().getMedia().getWidth() != 0) {
-                            mediaView.setFitHeight((7 * dimension2D.getHeight()) / 8);
-                        } else {
-                            mediaView.setFitHeight(0);
-                        }
-                        gameContext.getChildren().clear();
-                        videoSide.setSpacing(0);
-                        videoSide.getChildren().remove(addVideo);
-                        BorderPane bp = new BorderPane();
-                        bp.setCenter(videoSide);
-                        double x = dimension2D.getHeight() - mediaView.getFitHeight() + left.getHeight();
-                        bp.setLayoutY(x / 2);
-                        gameContext.getChildren().add(bp);
-                    } else {
-                        mediaView.setFitHeight(dimension2D.getHeight() / 2);
-                        mediaView.setFitWidth(dimension2D.getWidth() / 3);
-                        gameContext.getChildren().clear();
-                        videoSide.getChildren().setAll(addVideo, videoRoot, tools);
-                        videoSide.setSpacing(dimension2D.getHeight() / 30);
-                        window.getChildren().clear();
-                        window.getChildren().addAll(scrollList, videoSide);
-                        gameContext.getChildren().add(window);
-                    }
-                    full = !full;
-
-                } else if (videoRoot.getCenter() instanceof WebView) {
-                    WebView webview = (WebView) videoRoot.getCenter();
-                    if (!full) {
-                        webview.setPrefSize(dimension2D.getWidth(), (7 * dimension2D.getHeight()) / 8); // 360p
-                        gameContext.getChildren().clear();
-                        videoSide.setSpacing(0);
-                        videoSide.getChildren().remove(addVideo);
-                        BorderPane bp = new BorderPane();
-                        bp.setCenter(videoSide);
-                        gameContext.getChildren().add(bp);
-                    } else {
-                        webview.setPrefSize(dimension2D.getWidth() / 3, dimension2D.getHeight() / 2); // 360p
-                        gameContext.getChildren().clear();
-                        videoSide.setSpacing(dimension2D.getHeight() / 30);
-                        window.getChildren().clear();
-                        videoSide.getChildren().setAll(addVideo, videoRoot, tools);
-                        window.getChildren().addAll(scrollList, videoSide);
-                        gameContext.getChildren().add(window);
-                    }
-                    full = !full;
-
-                }
+                fullScreenCheck();
 
             }
         };
@@ -243,18 +196,117 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     }
 
+    public void stopMedia() {
+        if (videoRoot.getCenter() instanceof MediaView) {
+            MediaView mediaView = (MediaView) videoRoot.getCenter();
+            mediaView.getMediaPlayer().stop();
+        }
+    }
+
+    public void createLeftRightHandlers() {
+        EventHandler<MouseEvent> eventLeft = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                stopMedia();
+                playMusic(true);
+
+            }
+        };
+        left.addEventFilter(MouseEvent.MOUSE_CLICKED, eventLeft);
+
+        EventHandler<MouseEvent> eventRight = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                stopMedia();
+                playMusic(false);
+
+            }
+        };
+
+        right.addEventFilter(MouseEvent.MOUSE_CLICKED, eventRight);
+    }
+
+    private void playMusic(boolean next) {
+        MediaFile mf;
+        if (next) {
+            mf = musicList.nextPlayed();
+        } else {
+            mf = musicList.prevPlayed();
+        }
+
+        if (mf.getType().equals("URL")) {
+
+            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+            String videoUrl = mf.getPath();
+            WebView webview = new WebView();
+            webview.getEngine().load(videoUrl);
+            play = true;
+
+            if (full) {
+                BorderPane bp = (BorderPane) videoSide.getParent();
+                bp.setLayoutY(0);
+                webview.setPrefSize(dimension2D.getWidth(), (7 * dimension2D.getHeight()) / 8); // 360p
+            } else {
+
+                webview.setPrefSize(dimension2D.getWidth() / 3, dimension2D.getHeight() / 2); // 360p
+            }
+
+            BorderPane.setAlignment(webview, Pos.CENTER);
+            videoRoot.setCenter(webview);
+
+        } else {
+            stopMedia();
+
+            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+            File media = new File(mf.getPath());
+            MediaPlayer player = new MediaPlayer(new Media(media.toURI().toString()));
+            MediaView mediaView = new MediaView(player);
+
+            BorderPane.setAlignment(mediaView, Pos.CENTER);
+            videoRoot.setCenter(mediaView);
+            player.play();
+
+            if (full) {
+                mediaView.setFitWidth(dimension2D.getWidth());
+                mediaView.setFitHeight((7 * dimension2D.getHeight()) / 8);
+                BorderPane bp = (BorderPane) videoSide.getParent();
+                double x = dimension2D.getHeight() - mediaView.getFitHeight() + left.getHeight();
+                log.info("the screen height" + dimension2D.getHeight() + "\n the mediaheight" + mediaView.getFitHeight()
+                        + "\n left height" + left.getHeight());
+                bp.setLayoutY(x / 2);
+            } else {
+                mediaView.setFitHeight(dimension2D.getHeight() / 2);
+                mediaView.setFitWidth(dimension2D.getWidth() / 3);
+            }
+
+        }
+
+    }
+
     private void createUpDownHandlers() {
 
         EventHandler<MouseEvent> eventDownArrow = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
+                EventHandler<MouseEvent> temp0 = eventTitre.get(0);
+                EventHandler<MouseEvent> temp1 = eventTitre.get(1);
+                EventHandler<MouseEvent> temp2 = eventTitre.get(2);
+
+                titre[0].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp0);
+                titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp1);
+
+                eventTitre.set(0, temp1);
+                eventTitre.set(1, temp2);
+
                 titre[0].setText(titre[1].getText());
-                titre[0].removeEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[0]);
-                titre[0].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[1]);
                 titre[1].setText(titre[2].getText());
-                titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[1]);
-                titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[2]);
+
+                titre[0].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(0));
+                titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(1));
                 putMusic(2, true);
+
             }
         };
 
@@ -263,13 +315,23 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         EventHandler<MouseEvent> eventUpArrow = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
+                EventHandler<MouseEvent> temp0 = eventTitre.get(0);
+                EventHandler<MouseEvent> temp1 = eventTitre.get(1);
+                EventHandler<MouseEvent> temp2 = eventTitre.get(2);
+
+                titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp1);
+                titre[2].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp2);
+
+                eventTitre.set(1, temp0);
+                eventTitre.set(2, temp1);
+
                 titre[2].setText(titre[1].getText());
-                titre[2].removeEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[2]);
-                titre[2].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[1]);
                 titre[1].setText(titre[0].getText());
-                titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[1]);
-                titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[0]);
+
+                titre[2].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(2));
+                titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(1));
                 putMusic(0, false);
+
             }
         };
 
@@ -379,11 +441,14 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         }
         titre[i].setText(mf.getName());
 
+        EventHandler<MouseEvent> event;
+
         if (mf.getType().equals("URL")) {
 
-            eventTitre[i] = new EventHandler<MouseEvent>() {
+            event = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
+                    stopMedia();
 
                     Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -392,20 +457,22 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                     webview.getEngine().load(videoUrl);
                     webview.setPrefSize(dimension2D.getWidth() / 3, dimension2D.getHeight() / 2); // 360p
 
-                    videoRoot.getChildren().clear();
-
                     BorderPane.setAlignment(webview, Pos.CENTER);
                     videoRoot.setCenter(webview);
                     play = true;
+
+                    musicList.setPlaying(musicList.mediaList.indexOf(mf));
 
                 }
             };
 
         } else {
 
-            eventTitre[i] = new EventHandler<MouseEvent>() {
+            event = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
+
+                    stopMedia();
 
                     Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -415,18 +482,82 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                     mediaView.setFitHeight(dimension2D.getHeight() / 2);
                     mediaView.setFitWidth(dimension2D.getWidth() / 3);
 
-                    videoRoot.getChildren().clear();
-
                     BorderPane.setAlignment(mediaView, Pos.CENTER);
                     videoRoot.setCenter(mediaView);
                     player.play();
                     play = true;
 
+                    musicList.setPlaying(musicList.mediaList.indexOf(mf));
                 }
             };
         }
 
-        titre[i].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre[i]);
+        titre[i].addEventFilter(MouseEvent.MOUSE_CLICKED, event);
+        eventTitre.set(i, event);
 
+    }
+
+    private void fullScreenCheck() {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        if (!full) {
+            enableFullScreen();
+        } else {
+            disableFullScreen();
+        }
+        full = !full;
+    }
+
+    public void enableFullScreen() {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        if (videoRoot.getCenter() instanceof MediaView) {
+            MediaView mediaView = (MediaView) videoRoot.getCenter();
+            mediaView.setFitWidth(dimension2D.getWidth());
+            if (mediaView.getMediaPlayer().getMedia().getWidth() != 0) {
+                mediaView.setFitHeight((7 * dimension2D.getHeight()) / 8);
+            } else {
+                mediaView.setFitHeight(0);
+            }
+            gameContext.getChildren().clear();
+            videoSide.setSpacing(0);
+            videoSide.getChildren().remove(addVideo);
+            BorderPane bp = new BorderPane();
+            bp.setCenter(videoSide);
+            double x = dimension2D.getHeight() - mediaView.getFitHeight() + left.getHeight();
+            bp.setLayoutY(x / 2);
+            gameContext.getChildren().add(bp);
+        } else if (videoRoot.getCenter() instanceof WebView) {
+            WebView webview = (WebView) videoRoot.getCenter();
+            webview.setPrefSize(dimension2D.getWidth(), (7 * dimension2D.getHeight()) / 8); // 360p
+            gameContext.getChildren().clear();
+            videoSide.setSpacing(0);
+            videoSide.getChildren().remove(addVideo);
+            BorderPane bp = new BorderPane();
+            bp.setCenter(videoSide);
+            gameContext.getChildren().add(bp);
+        }
+    }
+
+    public void disableFullScreen() {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        if (videoRoot.getCenter() instanceof MediaView) {
+            MediaView mediaView = (MediaView) videoRoot.getCenter();
+            mediaView.setFitHeight(dimension2D.getHeight() / 2);
+            mediaView.setFitWidth(dimension2D.getWidth() / 3);
+            gameContext.getChildren().clear();
+            videoSide.getChildren().setAll(addVideo, videoRoot, tools);
+            videoSide.setSpacing(dimension2D.getHeight() / 30);
+            window.getChildren().clear();
+            window.getChildren().addAll(scrollList, videoSide);
+            gameContext.getChildren().add(window);
+        } else if (videoRoot.getCenter() instanceof WebView) {
+            WebView webview = (WebView) videoRoot.getCenter();
+            webview.setPrefSize(dimension2D.getWidth() / 3, dimension2D.getHeight() / 2); // 360p
+            gameContext.getChildren().clear();
+            videoSide.setSpacing(dimension2D.getHeight() / 30);
+            window.getChildren().clear();
+            videoSide.getChildren().setAll(addVideo, videoRoot, tools);
+            window.getChildren().addAll(scrollList, videoSide);
+            gameContext.getChildren().add(window);
+        }
     }
 }

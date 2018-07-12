@@ -20,4 +20,7 @@ public class MediaFile {
         name = n;
     }
 
+    public boolean equals(MediaFile mf) {
+        return ((mf.path == path) && (mf.type == type));
+    }
 }
