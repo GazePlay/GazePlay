@@ -1,13 +1,16 @@
 package net.gazeplay.games.mediaPlayer;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -101,15 +104,15 @@ public class MediaFileReader {
             File f = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + c.getUserName()
                     + Utils.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
 
-            FileWriter fw = new FileWriter(f, true);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f, true), "UTF8"));
 
             if (mediaList.size() == 0) {
-                fw.write("" + mf.getType() + "," + mf.getPath() + "," + mf.getName());
+                bw.write("" + mf.getType() + "," + mf.getPath() + "," + mf.getName());
             } else {
-                fw.write("\n" + mf.getType() + "," + mf.getPath() + "," + mf.getName());
+                bw.write("\n" + mf.getType() + "," + mf.getPath() + "," + mf.getName());
             }
 
-            fw.close();
+            bw.close();
 
         } catch (IOException e) {
             e.printStackTrace();
