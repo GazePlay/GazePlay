@@ -1,12 +1,16 @@
 package net.gazeplay.games.mediaPlayer;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -38,8 +42,11 @@ public class MediaFileReader {
         try {
             c = Configuration.getInstance();
 
-            File f = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + c.getUserName()
-                    + Utils.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
+            File f0 = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + c.getUserName()
+                    + Utils.FILESEPARATOR + "/data/mediaPlayer");
+            f0.mkdirs();
+            File f = new File(f0, "playerList.csv");
+            f.createNewFile();
 
             BufferedReader b = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF8"));
 
@@ -58,23 +65,60 @@ public class MediaFileReader {
     }
 
     public MediaFile next() {
-        MediaFile mf = mediaList.get(index = (index + 1) % mediaList.size());
-        return mf;
+        if (mediaList.size() > 0) {
+            MediaFile mf = mediaList.get(index = (index + 1) % mediaList.size());
+            return mf;
+        }
+        return null;
     }
 
     public MediaFile previous() {
-        MediaFile mf = mediaList.get((index - 3 + mediaList.size()) % mediaList.size());
-        index = (index - 1 + mediaList.size()) % mediaList.size();
-        return mf;
+        if (mediaList.size() > 0) {
+            MediaFile mf = mediaList.get((index - 3 + mediaList.size()) % mediaList.size());
+            index = (index - 1 + mediaList.size()) % mediaList.size();
+            return mf;
+        }
+        return null;
     }
 
     public MediaFile nextPlayed() {
-        playing = (playing + 1) % mediaList.size();
-        return mediaList.get(playing);
+        if (mediaList.size() > 0) {
+            playing = (playing + 1) % mediaList.size();
+            return mediaList.get(playing);
+        }
+        return null;
     }
 
     public MediaFile prevPlayed() {
-        playing = (playing - 1 + mediaList.size()) % mediaList.size();
-        return mediaList.get(playing);
+        if (mediaList.size() > 0) {
+            playing = (playing - 1 + mediaList.size()) % mediaList.size();
+            return mediaList.get(playing);
+        }
+        return null;
+    }
+
+    public void addMedia(MediaFile mf) {
+        try {
+            c = Configuration.getInstance();
+
+            File f = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + c.getUserName()
+                    + Utils.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
+
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f, true), "UTF8"));
+
+            if (mediaList.size() == 0) {
+                bw.write("" + mf.getType() + "," + mf.getPath() + "," + mf.getName());
+            } else {
+                bw.write("\n" + mf.getType() + "," + mf.getPath() + "," + mf.getName());
+            }
+
+            bw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mediaList.add(mf);
+
     }
 }
