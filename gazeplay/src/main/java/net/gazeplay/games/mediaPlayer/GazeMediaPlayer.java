@@ -200,7 +200,12 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         if (videoRoot.getCenter() instanceof MediaView) {
             MediaView mediaView = (MediaView) videoRoot.getCenter();
             mediaView.getMediaPlayer().stop();
+        } else if (videoRoot.getCenter() instanceof WebView) {
+            WebView webView = (WebView) videoRoot.getCenter();
+            webView = new WebView();
+            ;
         }
+        videoRoot.setCenter(null);
     }
 
     public void createLeftRightHandlers() {
@@ -248,7 +253,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 bp.setLayoutY(0);
                 webview.setPrefSize(dimension2D.getWidth(), (7 * dimension2D.getHeight()) / 8); // 360p
             } else {
-
                 webview.setPrefSize(dimension2D.getWidth() / 3, dimension2D.getHeight() / 2); // 360p
             }
 
@@ -260,26 +264,33 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-            File media = new File(mf.getPath());
-            MediaPlayer player = new MediaPlayer(new Media(media.toURI().toString()));
+            File file = new File(mf.getPath());
+            Media media = new Media(file.toURI().toString());
+            MediaPlayer player = new MediaPlayer(media);
             MediaView mediaView = new MediaView(player);
-
-            BorderPane.setAlignment(mediaView, Pos.CENTER);
-            videoRoot.setCenter(mediaView);
-            player.play();
 
             if (full) {
                 mediaView.setFitWidth(dimension2D.getWidth());
                 mediaView.setFitHeight((7 * dimension2D.getHeight()) / 8);
-                BorderPane bp = (BorderPane) videoSide.getParent();
-                double x = dimension2D.getHeight() - mediaView.getFitHeight() + left.getHeight();
-                log.info("the screen height" + dimension2D.getHeight() + "\n the mediaheight" + mediaView.getFitHeight()
-                        + "\n left height" + left.getHeight());
+                gameContext.getChildren().clear();
+                videoSide.setSpacing(0);
+                videoSide.getChildren().remove(addVideo);
+                BorderPane bp = new BorderPane();
+                bp.setCenter(videoSide);
+                double offset = (mediaView.getFitHeight() == 0) ? (7 * dimension2D.getHeight()) / 8
+                        : mediaView.getFitHeight();
+
+                double x = (dimension2D.getHeight() - (offset + left.getHeight()));
                 bp.setLayoutY(x / 2);
+                gameContext.getChildren().add(bp);
             } else {
                 mediaView.setFitHeight(dimension2D.getHeight() / 2);
                 mediaView.setFitWidth(dimension2D.getWidth() / 3);
             }
+
+            BorderPane.setAlignment(mediaView, Pos.CENTER);
+            videoRoot.setCenter(mediaView);
+            player.play();
 
         }
 
