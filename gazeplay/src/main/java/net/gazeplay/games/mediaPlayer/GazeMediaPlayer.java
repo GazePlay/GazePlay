@@ -207,10 +207,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         if (videoRoot.getCenter() instanceof MediaView) {
             MediaView mediaView = (MediaView) videoRoot.getCenter();
             mediaView.getMediaPlayer().stop();
-        } else if (videoRoot.getCenter() instanceof WebView) {
-            WebView webView = (WebView) videoRoot.getCenter();
-            webView = new WebView();
-            ;
         }
         videoRoot.setCenter(null);
     }
