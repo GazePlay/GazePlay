@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,6 +28,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -50,6 +52,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     private BorderPane videoRoot;
     private HBox window, tools;
     private VBox scrollList, videoSide;
+    private Text musicTitle;
     private boolean full = false;
     private boolean play = false;
     private MediaFileReader musicList;
@@ -75,9 +78,16 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         eventTitre = new ArrayList<EventHandler<MouseEvent>>();
-        eventTitre.add(null);
-        eventTitre.add(null);
-        eventTitre.add(null);
+
+        EventHandler<MouseEvent> empty = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+
+            }
+        };
+        eventTitre.add(empty);
+        eventTitre.add(empty);
+        eventTitre.add(empty);
 
         musicList = new MediaFileReader();
 
@@ -122,9 +132,13 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         videoRoot = new BorderPane();
 
         WebView video = new WebView();
+        video.setPrefSize(dimension2D.getWidth() / 3, dimension2D.getHeight() / 2); // 360p
 
         BorderPane.setAlignment(video, Pos.CENTER);
         videoRoot.setCenter(video);
+
+        musicTitle = new Text();
+        musicTitle.setFill(Color.WHITE);
 
         tools = new HBox();
 
@@ -147,7 +161,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         videoSide.setSpacing(dimension2D.getHeight() / 30);
         videoSide.setAlignment(Pos.CENTER);
-        videoSide.getChildren().addAll(addVideo, videoRoot, tools);
+        videoSide.getChildren().addAll(addVideo, videoRoot, musicTitle, tools);
 
         window.setSpacing(dimension2D.getWidth() / 15);
         window.setAlignment(Pos.CENTER);
@@ -297,6 +311,8 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         }
 
+        musicTitle.setText(mf.getName());
+
     }
 
     private void createUpDownHandlers() {
@@ -315,7 +331,13 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 eventTitre.set(1, temp2);
 
                 titre[0].setText(titre[1].getText());
+                Node g1 = titre[1].getGraphic();
+                titre[1].setGraphic(null);
+                titre[0].setGraphic(g1);
                 titre[1].setText(titre[2].getText());
+                Node g2 = titre[2].getGraphic();
+                titre[2].setGraphic(null);
+                titre[1].setGraphic(g2);
 
                 titre[0].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(0));
                 titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(1));
@@ -340,7 +362,13 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 eventTitre.set(2, temp1);
 
                 titre[2].setText(titre[1].getText());
+                Node g1 = titre[1].getGraphic();
+                titre[1].setGraphic(null);
+                titre[2].setGraphic(g1);
                 titre[1].setText(titre[0].getText());
+                Node g0 = titre[0].getGraphic();
+                titre[0].setGraphic(null);
+                titre[1].setGraphic(g0);
 
                 titre[2].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(2));
                 titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(1));
@@ -382,6 +410,25 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         TextField title = new TextField();
         title.setPromptText("enter the title of the media");
         title.setMaxWidth(primaryStage.getWidth() / 5);
+
+        Button tfi = new Button(gameContext.getGazePlay().getTranslator().translate("ChooseImage"));
+        tfi.getStyleClass().add("gameChooserButton");
+        tfi.getStyleClass().add("gameVariation");
+        tfi.getStyleClass().add("button");
+        tfi.setMinHeight(primaryStage.getHeight() / 20);
+        tfi.setMinWidth(primaryStage.getWidth() / 10);
+
+        EventHandler<Event> chooseImageHandler = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                String s = getImage(tfi, dialog);
+                if (s != null) {
+                    tfi.setText(s);
+                }
+            }
+        };
+
+        tfi.addEventFilter(MouseEvent.MOUSE_CLICKED, chooseImageHandler);
 
         // URL BLOCK ___
         VBox urlSide = new VBox();
@@ -449,7 +496,14 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                     if (name == null || name.equals("")) {
                         name = "media" + musicList.mediaList.size();
                     }
-                    MediaFile mf = new MediaFile("URL", tf.getText(), name);
+
+                    MediaFile mf;
+                    if (tfi.getText().equals(gameContext.getGazePlay().getTranslator().translate("ChooseImage"))) {
+                        mf = new MediaFile("URL", tf.getText(), name, null);
+                    } else {
+                        mf = new MediaFile("URL", tf.getText(), name, tfi.getText());
+                    }
+
                     musicList.addMedia(mf);
                     primaryStage.getScene().getRoot().setEffect(null);
                 } else {
@@ -470,7 +524,12 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                     if (name == null || name.equals("")) {
                         name = "media" + musicList.mediaList.size();
                     }
-                    MediaFile mf = new MediaFile("MEDIA", pathField.getText(), name);
+                    MediaFile mf;
+                    if (tfi.getText().equals(gameContext.getGazePlay().getTranslator().translate("ChooseImage"))) {
+                        mf = new MediaFile("MEDIA", pathField.getText(), name, null);
+                    } else {
+                        mf = new MediaFile("MEDIA", pathField.getText(), name, tfi.getText());
+                    }
                     musicList.addMedia(mf);
                     primaryStage.getScene().getRoot().setEffect(null);
                 } else {
@@ -487,7 +546,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         pathSide.setAlignment(Pos.CENTER);
         sides.getChildren().addAll(urlSide, new Separator(Orientation.VERTICAL), pathSide);
 
-        choicePane.getChildren().addAll(titleText, title, sides, t);
+        choicePane.getChildren().addAll(titleText, tfi, title, sides, t);
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
@@ -540,6 +599,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
                     musicList.setPlaying(musicList.mediaList.indexOf(mf));
 
+                    musicTitle.setText(mf.getName());
                 }
             };
 
@@ -570,11 +630,23 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                     play = true;
 
                     musicList.setPlaying(musicList.mediaList.indexOf(mf));
+                    musicTitle.setText(mf.getName());
                 }
             };
 
             titre[i].addEventFilter(MouseEvent.MOUSE_CLICKED, event);
             eventTitre.set(i, event);
+        }
+
+        if (mf.getImagepath() != null) {
+            File f = new File(mf.getImagepath());
+            ImageView iv = new ImageView(new Image(f.toURI().toString()));
+            iv.setPreserveRatio(true);
+            iv.setFitHeight((90 * titre[i].getHeight()) / 100);
+            iv.setFitWidth((90 * titre[i].getHeight()) / 100);
+            titre[i].setGraphic(iv);
+        } else {
+            titre[i].setGraphic(null);
         }
 
     }
@@ -626,7 +698,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             mediaView.setFitHeight(dimension2D.getHeight() / 2);
             mediaView.setFitWidth(dimension2D.getWidth() / 3);
             gameContext.getChildren().clear();
-            videoSide.getChildren().setAll(addVideo, videoRoot, tools);
+            videoSide.getChildren().setAll(addVideo, videoRoot, musicTitle, tools);
             videoSide.setSpacing(dimension2D.getHeight() / 30);
             window.getChildren().clear();
             window.getChildren().addAll(scrollList, videoSide);
@@ -637,7 +709,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             gameContext.getChildren().clear();
             videoSide.setSpacing(dimension2D.getHeight() / 30);
             window.getChildren().clear();
-            videoSide.getChildren().setAll(addVideo, videoRoot, tools);
+            videoSide.getChildren().setAll(addVideo, videoRoot, musicTitle, tools);
             window.getChildren().addAll(scrollList, videoSide);
             gameContext.getChildren().add(window);
         }
@@ -651,5 +723,31 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         putMusic(1, false);
         putMusic(0, false);
 
+    }
+
+    private String getImage(Button tfi, Stage primaryStage) {
+        String s = null;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff"),
+                new ExtensionFilter("PNG Files", "*.png"), new ExtensionFilter("JPeg Files", "*.jpg", "*.jpeg"),
+                new ExtensionFilter("GIF Files", "*.gif"), new ExtensionFilter("BMP Files", "*.bmp"),
+                new ExtensionFilter("TIFF Files", "*.tiff"));
+        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+
+        if (selectedFile != null) {
+            s = selectedFile.getAbsolutePath();
+            ImageView iv;
+            try {
+                iv = new ImageView(new Image(new FileInputStream(selectedFile)));
+                iv.setPreserveRatio(true);
+                iv.setFitHeight(primaryStage.getHeight() / 10);
+                tfi.setGraphic(iv);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return s;
     }
 }
