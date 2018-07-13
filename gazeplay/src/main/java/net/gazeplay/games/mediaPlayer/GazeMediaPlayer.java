@@ -39,6 +39,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -57,7 +58,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     private boolean play = false;
     private MediaFileReader musicList;
 
-    List<EventHandler<MouseEvent>> eventTitre;
+    List<EventHandler<Event>> eventTitre;
 
     @Override
     public void launch() {
@@ -77,11 +78,11 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         this.stats = stats;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        eventTitre = new ArrayList<EventHandler<MouseEvent>>();
+        eventTitre = new ArrayList<EventHandler<Event>>();
 
-        EventHandler<MouseEvent> empty = new EventHandler<MouseEvent>() {
+        EventHandler<Event> empty = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(Event e) {
 
             }
         };
@@ -92,6 +93,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         musicList = new MediaFileReader();
 
         window = new HBox();
+        gameContext.getGazeDeviceManager().addEventFilter(gameContext.getRoot());
 
         scrollList = new VBox();
 
@@ -175,19 +177,20 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     }
 
     public void createHandlers() {
-        EventHandler<MouseEvent> eventFull = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventFull = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(Event e) {
 
                 fullScreenCheck();
 
             }
         };
         fullScreen.addEventFilter(MouseEvent.MOUSE_CLICKED, eventFull);
+        fullScreen.addEventFilter(GazeEvent.GAZE_ENTERED, eventFull);
 
-        EventHandler<MouseEvent> eventPlayPause = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventPlayPause = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(Event e) {
                 if (videoRoot.getCenter() instanceof MediaView) {
                     MediaView mediaView = (MediaView) videoRoot.getCenter();
                     if (play) {
@@ -201,10 +204,11 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         };
 
         playPause.addEventFilter(MouseEvent.MOUSE_CLICKED, eventPlayPause);
+        playPause.addEventFilter(GazeEvent.GAZE_ENTERED, eventPlayPause);
 
-        EventHandler<MouseEvent> eventAddVideo = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventAddVideo = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(Event e) {
                 Stage dialog = createDialog(gameContext.getGazePlay().getPrimaryStage());
                 dialog.setTitle("new Title");
                 dialog.show();
@@ -226,19 +230,20 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     }
 
     public void createLeftRightHandlers() {
-        EventHandler<MouseEvent> eventLeft = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventLeft = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(Event e) {
                 stopMedia();
                 playMusic(true);
 
             }
         };
         left.addEventFilter(MouseEvent.MOUSE_CLICKED, eventLeft);
+        left.addEventFilter(GazeEvent.GAZE_ENTERED, eventLeft);
 
-        EventHandler<MouseEvent> eventRight = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventRight = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(Event e) {
                 stopMedia();
                 playMusic(false);
 
@@ -246,6 +251,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         };
 
         right.addEventFilter(MouseEvent.MOUSE_CLICKED, eventRight);
+        right.addEventFilter(GazeEvent.GAZE_ENTERED, eventRight);
     }
 
     private void playMusic(boolean next) {
@@ -317,16 +323,17 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     private void createUpDownHandlers() {
 
-        EventHandler<MouseEvent> eventDownArrow = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventDownArrow = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
-                EventHandler<MouseEvent> temp0 = eventTitre.get(0);
-                EventHandler<MouseEvent> temp1 = eventTitre.get(1);
-                EventHandler<MouseEvent> temp2 = eventTitre.get(2);
+            public void handle(Event e) {
+                EventHandler<Event> temp0 = eventTitre.get(0);
+                EventHandler<Event> temp1 = eventTitre.get(1);
+                EventHandler<Event> temp2 = eventTitre.get(2);
 
                 titre[0].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp0);
                 titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp1);
-
+                titre[0].removeEventFilter(GazeEvent.GAZE_ENTERED, temp0);
+                titre[1].removeEventFilter(GazeEvent.GAZE_ENTERED, temp1);
                 eventTitre.set(0, temp1);
                 eventTitre.set(1, temp2);
 
@@ -341,23 +348,28 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
                 titre[0].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(0));
                 titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(1));
+                titre[0].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(0));
+                titre[1].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(1));
+
                 putMusic(2, true);
 
             }
         };
 
         downArrow.addEventFilter(MouseEvent.MOUSE_CLICKED, eventDownArrow);
+        downArrow.addEventFilter(GazeEvent.GAZE_ENTERED, eventDownArrow);
 
-        EventHandler<MouseEvent> eventUpArrow = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventUpArrow = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
-                EventHandler<MouseEvent> temp0 = eventTitre.get(0);
-                EventHandler<MouseEvent> temp1 = eventTitre.get(1);
-                EventHandler<MouseEvent> temp2 = eventTitre.get(2);
+            public void handle(Event e) {
+                EventHandler<Event> temp0 = eventTitre.get(0);
+                EventHandler<Event> temp1 = eventTitre.get(1);
+                EventHandler<Event> temp2 = eventTitre.get(2);
 
                 titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp1);
                 titre[2].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp2);
-
+                titre[1].removeEventFilter(GazeEvent.GAZE_ENTERED, temp1);
+                titre[2].removeEventFilter(GazeEvent.GAZE_ENTERED, temp2);
                 eventTitre.set(1, temp0);
                 eventTitre.set(2, temp1);
 
@@ -372,12 +384,15 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
                 titre[2].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(2));
                 titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(1));
+                titre[2].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(2));
+                titre[1].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(1));
                 putMusic(0, false);
 
             }
         };
 
         upArrow.addEventFilter(MouseEvent.MOUSE_CLICKED, eventUpArrow);
+        upArrow.addEventFilter(GazeEvent.GAZE_ENTERED, eventUpArrow);
 
     }
 
@@ -575,15 +590,15 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             mf = musicList.previous();
         }
 
-        EventHandler<MouseEvent> event;
+        EventHandler<Event> event;
 
         if (mf != null && mf.getType().equals("URL")) {
 
             titre[i].setText(mf.getName());
 
-            event = new EventHandler<MouseEvent>() {
+            event = new EventHandler<Event>() {
                 @Override
-                public void handle(MouseEvent e) {
+                public void handle(Event e) {
                     stopMedia();
 
                     Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -604,15 +619,16 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             };
 
             titre[i].addEventFilter(MouseEvent.MOUSE_CLICKED, event);
+            titre[i].addEventFilter(GazeEvent.GAZE_ENTERED, event);
             eventTitre.set(i, event);
 
         } else if (mf != null && mf.getType().equals("MEDIA")) {
 
             titre[i].setText(mf.getName());
 
-            event = new EventHandler<MouseEvent>() {
+            event = new EventHandler<Event>() {
                 @Override
-                public void handle(MouseEvent e) {
+                public void handle(Event e) {
 
                     stopMedia();
 
@@ -635,10 +651,11 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             };
 
             titre[i].addEventFilter(MouseEvent.MOUSE_CLICKED, event);
+            titre[i].addEventFilter(GazeEvent.GAZE_ENTERED, event);
             eventTitre.set(i, event);
         }
 
-        if (mf.getImagepath() != null) {
+        if (mf != null && mf.getImagepath() != null) {
             File f = new File(mf.getImagepath());
             ImageView iv = new ImageView(new Image(f.toURI().toString()));
             iv.setPreserveRatio(true);

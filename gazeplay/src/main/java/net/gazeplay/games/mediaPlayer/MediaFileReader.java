@@ -105,8 +105,14 @@ public class MediaFileReader {
         try {
             c = Configuration.getInstance();
 
-            File f = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + c.getUserName()
-                    + Utils.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
+            File f;
+
+            if (c.getUserName() == null || c.getUserName().equals("")) {
+                f = new File(Utils.getGazePlayFolder() + "data/mediaPlayer/playerList.csv");
+            } else {
+                f = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + c.getUserName()
+                        + Utils.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
+            }
 
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f, true), "UTF8"));
 
