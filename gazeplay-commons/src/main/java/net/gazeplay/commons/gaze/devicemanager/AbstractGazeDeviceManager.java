@@ -27,6 +27,9 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     private final Map<IdentityKey<Node>, GazeInfos> shapesEventHandler = Collections
             .synchronizedMap(new HashMap<IdentityKey<Node>, GazeInfos>());
 
+    private final List<Node> toRemove = new LinkedList<Node>();
+    private final List<Node> toAdd = new LinkedList<Node>();
+
     public AbstractGazeDeviceManager() {
 
     }
@@ -55,11 +58,17 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     @Override
     public void addEventFilter(Node gs) {
+        toAdd.add(gs);
+    }
+
+    public void add() {
         synchronized (shapesEventFilter) {
-        	log.info(""+gs+"  added!!");
-            shapesEventFilter.put(new IdentityKey<>(gs), new GazeInfos(gs));
-            final int nodesEventFilterListSize = shapesEventFilter.size();
-            // log.info("nodesEventFilterListSize = {}", nodesEventFilterListSize);
+            List<Node> temp = new LinkedList<Node>();
+            temp.addAll(toAdd);
+            for (Node node : temp) {
+                shapesEventFilter.put(new IdentityKey<>(node), new GazeInfos(node));
+                toAdd.remove(node);
+            }
         }
     }
 
@@ -72,15 +81,29 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     @Override
     public void removeEventFilter(Node gs) {
+        toRemove.add(gs);
+        if (gs instanceof Pane) {
+            for (Node child : ((Pane) gs).getChildren()) {
+                removeEventFilter(child);
+            }
+        }
+    }
+
+    public void delete() {
         synchronized (shapesEventFilter) {
-            GazeInfos removed = shapesEventFilter.remove(new IdentityKey<>(gs));
-            if (removed == null) {
-                log.warn("EventFilter to remove not found");
-            } else {
-                if (removed.isOn()) {
-                    Platform.runLater(() -> removed.getNode()
-                            .fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, System.currentTimeMillis(), 0, 0)));
+            List<Node> temp = new LinkedList<Node>();
+            temp.addAll(toRemove);
+            for (Node node : temp) {
+                GazeInfos removed = shapesEventFilter.remove(new IdentityKey<>(node));
+                if (removed == null) {
+                    log.warn("EventFilter to remove not found");
+                } else {
+                    if (removed.isOn()) {
+                        Platform.runLater(() -> removed.getNode()
+                                .fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, System.currentTimeMillis(), 0, 0)));
+                    }
                 }
+                toRemove.remove(node);
             }
         }
     }
@@ -108,54 +131,68 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     }
 
     synchronized void onGazeUpdate(Point2D gazePositionOnScreen) {
-    	
-        notifyAllGazeMotionListeners(gazePositionOnScreen);
+
+        // notifyAllGazeMotionListeners(gazePositionOnScreen);
 
         final double positionX = gazePositionOnScreen.getX();
         final double positionY = gazePositionOnScreen.getY();
 
+        add();
+        delete();
+
         Collection<GazeInfos> c = shapesEventFilter.values();
+
         synchronized (shapesEventFilter) {
             Iterator<GazeInfos> i = c.iterator();
+
             while (i.hasNext()) {
                 GazeInfos gi = i.next();
 
                 final Node node = gi.getNode();
 
-            	EventFire(positionX,positionY,gi,node);
-                recursiveEventFire(positionX,positionY,node);
-                
+                EventFire(positionX, positionY, gi, node);
+                // log.info("Fire : "+node+" then recursion !");
+                recursiveEventFire(positionX, positionY, node);
+
+            }
+
+        }
+    }
+
+    public void recursiveEventFire(double positionX, double positionY, Node node) {
+        if (node instanceof Pane) {
+            for (Node child : ((Pane) node).getChildren()) {
+                if (!shapesEventFilter.containsKey(new IdentityKey<>(child))) {
+                    // log.info("child : "+child+" added !");
+                    addEventFilter(child);
+                }
+                // log.info("child : "+child+" fired !");
+                GazeInfos gi = shapesEventFilter.get(new IdentityKey<>(child));
+                if (gi != null) {
+                    EventFire(positionX, positionY, gi, child);
+                }
+                recursiveEventFire(positionX, positionY, child);
+
             }
         }
     }
-    
-    public void recursiveEventFire(double positionX,double positionY,Node node) {
-    	if(node instanceof Pane) {
-    		for(Node child : ((Pane) node).getChildren()) {
-    			//if(!shapesEventFilter.containsKey(new IdentityKey<>(node))) {
-    				addEventFilter(child);
-    			//}
-            	EventFire(positionX,positionY,shapesEventFilter.get(new IdentityKey<>(node)),node);
-    			recursiveEventFire(positionX,positionY,child);
-    		}
-    	}
-    }
-    
-    public void EventFire(double positionX,double positionY,GazeInfos gi,Node node) {
-    	if (!node.isDisable()) {
+
+    public void EventFire(double positionX, double positionY, GazeInfos gi, Node node) {
+        // log.info("GazeInfo: " + gi);
+        if (!node.isDisable()) {
 
             Point2D localPosition = node.screenToLocal(positionX, positionY);
 
             if (localPosition != null && node.contains(localPosition)) {
                 if (gi.isOn()) {
-                    Platform.runLater(() -> node.fireEvent(
-                            new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY)));
+                    Platform.runLater(() -> node
+                            .fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY)));
                 } else {
 
                     gi.setOn(true);
                     gi.setTime(System.currentTimeMillis());
-                    Platform.runLater(() -> node.fireEvent(
-                            new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), positionX, positionY)));
+                    Platform.runLater(() -> node
+                            .fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), positionX, positionY)));
                 }
             } else {// gaze is not on the shape
 
@@ -163,8 +200,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
                     gi.setOn(false);
                     gi.setTime(-1);
-                    Platform.runLater(() -> node.fireEvent(
-                            new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), positionX, positionY)));
+                    Platform.runLater(() -> node
+                            .fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), positionX, positionY)));
                 } else {// gaze was not on the shape previously
                     // nothing to do
 
