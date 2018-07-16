@@ -54,7 +54,11 @@ public class MediaFileReader {
 
             while ((readLine = b.readLine()) != null) {
                 String[] split = readLine.split(",");
-                mediaList.add(new MediaFile(split[0], split[1], split[2]));
+                if (split.length == 3 || split[3] == null || split[3].equals("")) {
+                    mediaList.add(new MediaFile(split[0], split[1], split[2], null));
+                } else {
+                    mediaList.add(new MediaFile(split[0], split[1], split[2], split[3]));
+                }
             }
 
             b.close();
@@ -74,7 +78,7 @@ public class MediaFileReader {
 
     public MediaFile previous() {
         if (mediaList.size() > 0) {
-            MediaFile mf = mediaList.get((index - 3 + mediaList.size()) % mediaList.size());
+            MediaFile mf = mediaList.get((index - 3 + 3 * mediaList.size()) % mediaList.size());
             index = (index - 1 + mediaList.size()) % mediaList.size();
             return mf;
         }
@@ -101,15 +105,21 @@ public class MediaFileReader {
         try {
             c = Configuration.getInstance();
 
-            File f = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + c.getUserName()
-                    + Utils.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
+            File f;
+
+            if (c.getUserName() == null || c.getUserName().equals("")) {
+                f = new File(Utils.getGazePlayFolder() + "data/mediaPlayer/playerList.csv");
+            } else {
+                f = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + c.getUserName()
+                        + Utils.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
+            }
 
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f, true), "UTF8"));
 
             if (mediaList.size() == 0) {
-                bw.write("" + mf.getType() + "," + mf.getPath() + "," + mf.getName());
+                bw.write("" + mf.getType() + "," + mf.getPath() + "," + mf.getName() + "," + mf.getImagepath());
             } else {
-                bw.write("\n" + mf.getType() + "," + mf.getPath() + "," + mf.getName());
+                bw.write("\n" + mf.getType() + "," + mf.getPath() + "," + mf.getName() + "," + mf.getImagepath());
             }
 
             bw.close();

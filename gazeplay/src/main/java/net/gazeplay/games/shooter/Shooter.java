@@ -143,13 +143,14 @@ public class Shooter extends Parent implements GameLifeCycle {
         enterEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    if (!((Target) e.getTarget()).done) {
-                        ((Target) e.getTarget()).done = true;
-                        enter((Target) e.getTarget());
-                        stats.incNbGoals();
-                        stats.notifyNewRoundReady();
+                if (e.getTarget() instanceof Target) {
+                    if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                        if (!((Target) e.getTarget()).done) {
+                            ((Target) e.getTarget()).done = true;
+                            enter((Target) e.getTarget());
+                            stats.incNbGoals();
+                            stats.notifyNewRoundReady();
+                        }
                     }
                 }
             }

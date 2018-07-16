@@ -13,11 +13,14 @@ public class MediaFile {
     private final String path;
     @Getter
     private final String name;
+    @Getter
+    private final String imagepath;
 
-    MediaFile(String t, String p, String n) {
+    MediaFile(String t, String p, String n, String i) {
         type = t;
         path = p;
         name = n;
+        imagepath = i;
     }
 
     public boolean equals(MediaFile mf) {

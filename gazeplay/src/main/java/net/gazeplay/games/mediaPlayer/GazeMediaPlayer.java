@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,6 +28,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -37,6 +39,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -50,11 +53,12 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     private BorderPane videoRoot;
     private HBox window, tools;
     private VBox scrollList, videoSide;
+    private Text musicTitle;
     private boolean full = false;
     private boolean play = false;
     private MediaFileReader musicList;
 
-    List<EventHandler<MouseEvent>> eventTitre;
+    List<EventHandler<Event>> eventTitre;
 
     @Override
     public void launch() {
@@ -74,14 +78,22 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         this.stats = stats;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        eventTitre = new ArrayList<EventHandler<MouseEvent>>();
-        eventTitre.add(null);
-        eventTitre.add(null);
-        eventTitre.add(null);
+        eventTitre = new ArrayList<EventHandler<Event>>();
+
+        EventHandler<Event> empty = new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+
+            }
+        };
+        eventTitre.add(empty);
+        eventTitre.add(empty);
+        eventTitre.add(empty);
 
         musicList = new MediaFileReader();
 
         window = new HBox();
+        gameContext.getGazeDeviceManager().addEventFilter(gameContext.getRoot());
 
         scrollList = new VBox();
 
@@ -122,9 +134,13 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         videoRoot = new BorderPane();
 
         WebView video = new WebView();
+        video.setPrefSize(dimension2D.getWidth() / 3, dimension2D.getHeight() / 2); // 360p
 
         BorderPane.setAlignment(video, Pos.CENTER);
         videoRoot.setCenter(video);
+
+        musicTitle = new Text();
+        musicTitle.setFill(Color.WHITE);
 
         tools = new HBox();
 
@@ -147,7 +163,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         videoSide.setSpacing(dimension2D.getHeight() / 30);
         videoSide.setAlignment(Pos.CENTER);
-        videoSide.getChildren().addAll(addVideo, videoRoot, tools);
+        videoSide.getChildren().addAll(addVideo, videoRoot, musicTitle, tools);
 
         window.setSpacing(dimension2D.getWidth() / 15);
         window.setAlignment(Pos.CENTER);
@@ -161,19 +177,20 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     }
 
     public void createHandlers() {
-        EventHandler<MouseEvent> eventFull = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventFull = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(Event e) {
 
                 fullScreenCheck();
 
             }
         };
         fullScreen.addEventFilter(MouseEvent.MOUSE_CLICKED, eventFull);
+        fullScreen.addEventFilter(GazeEvent.GAZE_ENTERED, eventFull);
 
-        EventHandler<MouseEvent> eventPlayPause = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventPlayPause = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(Event e) {
                 if (videoRoot.getCenter() instanceof MediaView) {
                     MediaView mediaView = (MediaView) videoRoot.getCenter();
                     if (play) {
@@ -187,10 +204,11 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         };
 
         playPause.addEventFilter(MouseEvent.MOUSE_CLICKED, eventPlayPause);
+        playPause.addEventFilter(GazeEvent.GAZE_ENTERED, eventPlayPause);
 
-        EventHandler<MouseEvent> eventAddVideo = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventAddVideo = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(Event e) {
                 Stage dialog = createDialog(gameContext.getGazePlay().getPrimaryStage());
                 dialog.setTitle("new Title");
                 dialog.show();
@@ -212,19 +230,20 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     }
 
     public void createLeftRightHandlers() {
-        EventHandler<MouseEvent> eventLeft = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventLeft = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(Event e) {
                 stopMedia();
                 playMusic(true);
 
             }
         };
         left.addEventFilter(MouseEvent.MOUSE_CLICKED, eventLeft);
+        left.addEventFilter(GazeEvent.GAZE_ENTERED, eventLeft);
 
-        EventHandler<MouseEvent> eventRight = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventRight = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(Event e) {
                 stopMedia();
                 playMusic(false);
 
@@ -232,6 +251,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         };
 
         right.addEventFilter(MouseEvent.MOUSE_CLICKED, eventRight);
+        right.addEventFilter(GazeEvent.GAZE_ENTERED, eventRight);
     }
 
     private void playMusic(boolean next) {
@@ -297,59 +317,82 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         }
 
+        musicTitle.setText(mf.getName());
+
     }
 
     private void createUpDownHandlers() {
 
-        EventHandler<MouseEvent> eventDownArrow = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventDownArrow = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
-                EventHandler<MouseEvent> temp0 = eventTitre.get(0);
-                EventHandler<MouseEvent> temp1 = eventTitre.get(1);
-                EventHandler<MouseEvent> temp2 = eventTitre.get(2);
+            public void handle(Event e) {
+                EventHandler<Event> temp0 = eventTitre.get(0);
+                EventHandler<Event> temp1 = eventTitre.get(1);
+                EventHandler<Event> temp2 = eventTitre.get(2);
 
                 titre[0].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp0);
                 titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp1);
-
+                titre[0].removeEventFilter(GazeEvent.GAZE_ENTERED, temp0);
+                titre[1].removeEventFilter(GazeEvent.GAZE_ENTERED, temp1);
                 eventTitre.set(0, temp1);
                 eventTitre.set(1, temp2);
 
                 titre[0].setText(titre[1].getText());
+                Node g1 = titre[1].getGraphic();
+                titre[1].setGraphic(null);
+                titre[0].setGraphic(g1);
                 titre[1].setText(titre[2].getText());
+                Node g2 = titre[2].getGraphic();
+                titre[2].setGraphic(null);
+                titre[1].setGraphic(g2);
 
                 titre[0].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(0));
                 titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(1));
+                titre[0].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(0));
+                titre[1].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(1));
+
                 putMusic(2, true);
 
             }
         };
 
         downArrow.addEventFilter(MouseEvent.MOUSE_CLICKED, eventDownArrow);
+        downArrow.addEventFilter(GazeEvent.GAZE_ENTERED, eventDownArrow);
 
-        EventHandler<MouseEvent> eventUpArrow = new EventHandler<MouseEvent>() {
+        EventHandler<Event> eventUpArrow = new EventHandler<Event>() {
             @Override
-            public void handle(MouseEvent e) {
-                EventHandler<MouseEvent> temp0 = eventTitre.get(0);
-                EventHandler<MouseEvent> temp1 = eventTitre.get(1);
-                EventHandler<MouseEvent> temp2 = eventTitre.get(2);
+            public void handle(Event e) {
+                EventHandler<Event> temp0 = eventTitre.get(0);
+                EventHandler<Event> temp1 = eventTitre.get(1);
+                EventHandler<Event> temp2 = eventTitre.get(2);
 
                 titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp1);
                 titre[2].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp2);
-
+                titre[1].removeEventFilter(GazeEvent.GAZE_ENTERED, temp1);
+                titre[2].removeEventFilter(GazeEvent.GAZE_ENTERED, temp2);
                 eventTitre.set(1, temp0);
                 eventTitre.set(2, temp1);
 
                 titre[2].setText(titre[1].getText());
+                Node g1 = titre[1].getGraphic();
+                titre[1].setGraphic(null);
+                titre[2].setGraphic(g1);
                 titre[1].setText(titre[0].getText());
+                Node g0 = titre[0].getGraphic();
+                titre[0].setGraphic(null);
+                titre[1].setGraphic(g0);
 
                 titre[2].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(2));
                 titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(1));
+                titre[2].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(2));
+                titre[1].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(1));
                 putMusic(0, false);
 
             }
         };
 
         upArrow.addEventFilter(MouseEvent.MOUSE_CLICKED, eventUpArrow);
+        upArrow.addEventFilter(GazeEvent.GAZE_ENTERED, eventUpArrow);
 
     }
 
@@ -382,6 +425,25 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         TextField title = new TextField();
         title.setPromptText("enter the title of the media");
         title.setMaxWidth(primaryStage.getWidth() / 5);
+
+        Button tfi = new Button(gameContext.getGazePlay().getTranslator().translate("ChooseImage"));
+        tfi.getStyleClass().add("gameChooserButton");
+        tfi.getStyleClass().add("gameVariation");
+        tfi.getStyleClass().add("button");
+        tfi.setMinHeight(primaryStage.getHeight() / 20);
+        tfi.setMinWidth(primaryStage.getWidth() / 10);
+
+        EventHandler<Event> chooseImageHandler = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                String s = getImage(tfi, dialog);
+                if (s != null) {
+                    tfi.setText(s);
+                }
+            }
+        };
+
+        tfi.addEventFilter(MouseEvent.MOUSE_CLICKED, chooseImageHandler);
 
         // URL BLOCK ___
         VBox urlSide = new VBox();
@@ -449,7 +511,14 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                     if (name == null || name.equals("")) {
                         name = "media" + musicList.mediaList.size();
                     }
-                    MediaFile mf = new MediaFile("URL", tf.getText(), name);
+
+                    MediaFile mf;
+                    if (tfi.getText().equals(gameContext.getGazePlay().getTranslator().translate("ChooseImage"))) {
+                        mf = new MediaFile("URL", tf.getText(), name, null);
+                    } else {
+                        mf = new MediaFile("URL", tf.getText(), name, tfi.getText());
+                    }
+
                     musicList.addMedia(mf);
                     primaryStage.getScene().getRoot().setEffect(null);
                 } else {
@@ -470,7 +539,12 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                     if (name == null || name.equals("")) {
                         name = "media" + musicList.mediaList.size();
                     }
-                    MediaFile mf = new MediaFile("MEDIA", pathField.getText(), name);
+                    MediaFile mf;
+                    if (tfi.getText().equals(gameContext.getGazePlay().getTranslator().translate("ChooseImage"))) {
+                        mf = new MediaFile("MEDIA", pathField.getText(), name, null);
+                    } else {
+                        mf = new MediaFile("MEDIA", pathField.getText(), name, tfi.getText());
+                    }
                     musicList.addMedia(mf);
                     primaryStage.getScene().getRoot().setEffect(null);
                 } else {
@@ -487,7 +561,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         pathSide.setAlignment(Pos.CENTER);
         sides.getChildren().addAll(urlSide, new Separator(Orientation.VERTICAL), pathSide);
 
-        choicePane.getChildren().addAll(titleText, title, sides, t);
+        choicePane.getChildren().addAll(titleText, tfi, title, sides, t);
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
@@ -516,15 +590,15 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             mf = musicList.previous();
         }
 
-        EventHandler<MouseEvent> event;
+        EventHandler<Event> event;
 
         if (mf != null && mf.getType().equals("URL")) {
 
             titre[i].setText(mf.getName());
 
-            event = new EventHandler<MouseEvent>() {
+            event = new EventHandler<Event>() {
                 @Override
-                public void handle(MouseEvent e) {
+                public void handle(Event e) {
                     stopMedia();
 
                     Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -540,19 +614,21 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
                     musicList.setPlaying(musicList.mediaList.indexOf(mf));
 
+                    musicTitle.setText(mf.getName());
                 }
             };
 
             titre[i].addEventFilter(MouseEvent.MOUSE_CLICKED, event);
+            titre[i].addEventFilter(GazeEvent.GAZE_ENTERED, event);
             eventTitre.set(i, event);
 
         } else if (mf != null && mf.getType().equals("MEDIA")) {
 
             titre[i].setText(mf.getName());
 
-            event = new EventHandler<MouseEvent>() {
+            event = new EventHandler<Event>() {
                 @Override
-                public void handle(MouseEvent e) {
+                public void handle(Event e) {
 
                     stopMedia();
 
@@ -570,11 +646,24 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                     play = true;
 
                     musicList.setPlaying(musicList.mediaList.indexOf(mf));
+                    musicTitle.setText(mf.getName());
                 }
             };
 
             titre[i].addEventFilter(MouseEvent.MOUSE_CLICKED, event);
+            titre[i].addEventFilter(GazeEvent.GAZE_ENTERED, event);
             eventTitre.set(i, event);
+        }
+
+        if (mf != null && mf.getImagepath() != null) {
+            File f = new File(mf.getImagepath());
+            ImageView iv = new ImageView(new Image(f.toURI().toString()));
+            iv.setPreserveRatio(true);
+            iv.setFitHeight((90 * titre[i].getHeight()) / 100);
+            iv.setFitWidth((90 * titre[i].getHeight()) / 100);
+            titre[i].setGraphic(iv);
+        } else {
+            titre[i].setGraphic(null);
         }
 
     }
@@ -626,7 +715,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             mediaView.setFitHeight(dimension2D.getHeight() / 2);
             mediaView.setFitWidth(dimension2D.getWidth() / 3);
             gameContext.getChildren().clear();
-            videoSide.getChildren().setAll(addVideo, videoRoot, tools);
+            videoSide.getChildren().setAll(addVideo, videoRoot, musicTitle, tools);
             videoSide.setSpacing(dimension2D.getHeight() / 30);
             window.getChildren().clear();
             window.getChildren().addAll(scrollList, videoSide);
@@ -637,7 +726,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             gameContext.getChildren().clear();
             videoSide.setSpacing(dimension2D.getHeight() / 30);
             window.getChildren().clear();
-            videoSide.getChildren().setAll(addVideo, videoRoot, tools);
+            videoSide.getChildren().setAll(addVideo, videoRoot, musicTitle, tools);
             window.getChildren().addAll(scrollList, videoSide);
             gameContext.getChildren().add(window);
         }
@@ -651,5 +740,31 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         putMusic(1, false);
         putMusic(0, false);
 
+    }
+
+    private String getImage(Button tfi, Stage primaryStage) {
+        String s = null;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff"),
+                new ExtensionFilter("PNG Files", "*.png"), new ExtensionFilter("JPeg Files", "*.jpg", "*.jpeg"),
+                new ExtensionFilter("GIF Files", "*.gif"), new ExtensionFilter("BMP Files", "*.bmp"),
+                new ExtensionFilter("TIFF Files", "*.tiff"));
+        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+
+        if (selectedFile != null) {
+            s = selectedFile.getAbsolutePath();
+            ImageView iv;
+            try {
+                iv = new ImageView(new Image(new FileInputStream(selectedFile)));
+                iv.setPreserveRatio(true);
+                iv.setFitHeight(primaryStage.getHeight() / 10);
+                tfi.setGraphic(iv);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return s;
     }
 }

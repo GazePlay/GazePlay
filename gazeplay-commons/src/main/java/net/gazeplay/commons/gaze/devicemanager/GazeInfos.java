@@ -30,4 +30,8 @@ class GazeInfos {
         this.on = on;
     }
 
+    public String toString() {
+        return "At " + time + " on " + on + "Node " + node;
+    }
+
 }

@@ -62,7 +62,7 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
                             }
 
                             Point2D point = new Point2D(positionX, positionY);
-                            onGazeUpdate(point);
+                            Platform.runLater(() -> onGazeUpdate(point));
 
                             // sleep is mandatory to avoid too much calls to gazePosition()
                             try {
