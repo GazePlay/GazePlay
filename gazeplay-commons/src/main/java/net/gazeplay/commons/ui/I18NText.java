@@ -20,7 +20,16 @@ public class I18NText extends Text implements Translator.LanguageChangeListener 
 
     @Override
     public void languageChanged() {
-        setText(translator.translate(textKeys));
+        if (textKeys != null && "EnableGazeMouse".equals(textKeys[0])) {
+            String[] labelParts = translator.translate(textKeys).split(";");
+            String concatenateLabel = "";
+            for (String labels : labelParts) {
+                concatenateLabel = concatenateLabel + labels + "\n\t";
+            }
+            this.setText(concatenateLabel);
+        } else {
+            setText(translator.translate(textKeys));
+        }
     }
 
 }
