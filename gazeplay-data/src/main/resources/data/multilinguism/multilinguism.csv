@@ -1,90 +1,90 @@
-,fra,eng,deu,spa
-Colon, : ,: ,: ,
-Creampie,Tartes à la crème,Cream pies,Sahnetorte,
-Ninja,Ninja !,Ninja !,Ninja !,
-MagicCards,Cartes magiques,Magic cards,Zauberkarten,
-Blocks,Blocs,Blocks,Blocks,
-ScratchCard,Cartes à gratter,ScratchCards,Rubbellose,
-ColoredBubbles,Bulles colorées,Colored Bubbles,Farbige blasen,
-PortraitBubbles,Bulles portrait,Portrait Bubbles,Porträt Blasen,
-WhereIsTheAnimal,Où est cet animal ?,Where is this animal?,Wo ist dieses Tier?,
-WhereIsTheColor,Où est cette couleur ?,Where is this color?,Wo ist die Farbe?,
-WhereIsIt,Où est-ce ?,Where is it ?,Wo ist es?,
-StatsTitle,Statistiques,Statistics,Statistiken,
-Aver,Moyenne,Average,Durchschnitt,Media
-Med,Médiane,Median,Median,
-TotalLength,Temps de jeu actif,Total active playtime,Zeit auf dem Spiel,
-Shoots,Tirs,Shoots,Schüsse,
-BubbleShoot,Bulles éclatées,Burst bubbles,Zum Platzen gebrachte Blasen,
-HiddenItemsShoot,Images découvertes,Uncovered Images,Entdeckte Bilder,
-Length,Temps effectif de jeu,Actual play Time,Gespielte Zeit,
-ShootaverageLength,Temps de réaction moyen,Average reaction time,Durchschnittliche Reaktionszeit,
-AverageLength,Temps moyen,Average time,Durchschnittliche Zeit,
-ShootmedianLength,Temps de réaction médian,Median reaction time,Median-Reaktionszeit,
-MedianLength,Temps médian,Median time,Median-Zeit,
-StandDev,Écart-type,Standard deviation,Standardabweichung,
-UncountedShoot,Tirs non comptés,Uncounted shoot,Nicht gezählte Schüsse,
-ConfigTitle,Configuration,Configuration,Konfiguration,
-Lang,Langue,Language,Sprache,
-EyeTracker,Oculomètre,Eye Tracker,Eyetracker,
-FileDir,Répertoire des fichiers,Files Directory ,Dateiverzeichnis,
-FixationLength,Durée de la fixation (secondes),Fixation Length (seconds),Dauer der Fixierung  (Sekunden),
-LayoutFile,Fichier de style,Style Sheets,Style Sheets,
-WhereIsItDirectory,Répertoire du jeu « Où est-ce ? >,« Where is it? » Game directory,Spielverzeichnis « Wo ist es? »,
-WII-error,Vérifiez le répertoire du jeu « Où est-ce ? ».,Check « Where is it? » Game directory,Überprüfen Spielverzeichnis « Wo ist es? »,
-QuestionLength,Durée d’affichage des question,Question Display Length,Dauer der Veröffentlichung von Fragen,
-Cups and Balls,Gobelets Pass Pass,Cups and Balls,Bechertrick,Tazas y bolas
-Biboules,Biboules,Biballs,Biboles,Biboules
-Robots,Robots,Robots,Roboters,Robots
-Memory,Memory,Memory,Memory,Memory
-EnableRewardSound,Activer le son « bravo »,Enable Reward sound,Aktiviere den Sound Bravo,Aktivigu la sonon Bravo
-DisableHeatMap,Désactiver la Heat Map,Disable Heat Map,Deaktivieren Sie die Heat Map,Desactivar mapa de calor
-EnableGazeMenu,Activer le menu regard (Beta),Enable the Gaze Menu (Beta),Aktivieren Sie das Blickmenü (Beta),activar el menú de mirada (Beta)
-MenuOrientation,Orientation du menu (nécessite de relancer le jeu),Menu Orientation (restart game to take effect),Menüorientierung (erfordert Neustart des Spiels),Orientación del menú (requiere reiniciar el juego)
-Music,Musique,Music,Musik,Musica
-Volume,Volume,Volume,Volume,Volume
-OpenMemory,Memory ouvert,OpenMemory,OpenMemory,OpenMemory
-Video Player with Feedback,Lecteur Video avec retour,Video Player with Feedback,Video Player mit Feedback,Reproductor de video con comentarios
-Choose Game Variante,Choisi une variante,Choose Variante,Wählen Sie Variante,Elija Variante
-Enter FullScreen,Mettre en Plein écran,Enter FullScreen,Vollbild,Pantalla completa
-Exit FullScreen,Sortir du Plein écran,Exit FullScreen,Beenden Sie den Vollbildmodus,Salir de pantalla completa
-Scribble,Gribouille,Scribble,Kritzeln,Garabato
-Colors,Couleurs !,Colors !,Farben!,Colores !
-Lapins,Lapins,Rabbits,Conejos,Kaninchen
-Divisor,Diviseur,Divisor,Divisor,Divisor
-Piano,Piano,Piano,Piano,Piano
-Colors!,Coloriage,Coloring,Färbung,Colorante
-LoadImg,Charger image,Load image,Bild laden,Cargar imagen
-SaveImg,Sauvegarder image,Save image,Bild speichern,Guardar imagen
-imgLoadChooserTitle,Choisissez votre image à charger,Choose your image to load,Wählen Sie Ihr Bild zum Laden,Elige tu imagen para cargar
-imgSaveChooserTitle,choisissez votre image à sauvegarder,Choose your image to save,Wähle dein Bild zum Speichern aus,Elige tu imagen para guardar
-confirmBWText,Voulez-vous décoloriser l'image ,Do you want to discolor the image ,Willst du das Bild verfärben ,¿Quieres decolorar la imagen 
-confirmBWTitle,Transformer en noir et blanc ?,Transform in black and white ?,In schwarz und weiß verwandeln?,Transformar en blanco y negro?
-confirmBWHeader,Transformer l'image en noir et blanc ?,Transform the image in black and white,Verwandle das Bild in Schwarz-Weiß?,Transformar la imagen en blanco y negro?
-Room,La chambre,The room,Das Zimmer,La habitación
-Whac-a-mole,Jeu de la taupe,Whac-a-mole,Whac-a-mole,Juego de la topo
-Cakes, La Fabrique a Gateaux,The cake factory ,Die Kuchenfabrik , La Fabrica de Pasteles
-MusicFolder,Dossier musiques,music folder,Musikmappe,carpeta de música
-Order,Ordre,Order,Reihenfolge,
-UncountedShot,Tir non comptabilisés,Uncounted Shots,Unzählige Schüsse,Disparos sin contar
-EffectsVolume,volume des effets,effects volume,Effektvolumen,volumen de efectos
-reset,réinitialiser,reset,zurücksetzen,restablecimiento
-ColorDesc,Faîtes des coloriages en utilisant n'importe quelle image puis sauvegardez la.,Do some colouring on any image then save it.,Färben Sie mit einem beliebigen Bild und speichern Sie das Bild.,Coloree usando cualquier imagen y luego guárdela.
-Labyrinth,Labyrinthe,Labyrinth,Labyrinth,Laberinto
-Pet,J'ai un Biboule !,I've got a Biball !,Ich habe ein Biboles,Yo tengo un Bibole ! 
-SpeedEffects,Vitesse des animations, Effect speed,Weißer Hintergrund, Velocidad de los animationes
-WhiteBackground,Mode fond blanc, White Background mode,Animationsgeschwindigkeit,Modo blanco fondo de pantalla 
-EnableGazeMouse,Activer l'émulation de la souris visuelle ; appuyez sur S pour arrêter/commencer l'émulation ; appuyez sur espace pour émuler un click de souris,Enable the Gaze Mouse emulation ; press S to stop/start the emulation ; Press space to emulate click,Aktivieren der visuellen Mausemulation ; drücken Sie S um die Emulation zu stoppen/starten ; Drücken Sie die Leertaste um den Mausklick zu emulieren.,Activación de la emulación del ratón visual ; presione S para detener/iniciar la emulación ; presione espacio para emular el clic
-AddUser,Ajouter un nouvel utilisateur,Add new user,Neuen Benutzer hinzufügen, Agregar un usuario
-DefaultUser,Utilisateur par Défaut,Default User,Standardbenutzer, Usuario predeterminado
-NewUser,Nouvel utilisateur,New user,Neuer Benutzer, Nuevo usario
-Remove,Voulez vous vraiment supprimer cet utilisateur ?,Do you really want to delete this user ?,Wollen Sie diesen Benutzer wirklich löschen? ,¿Realmente quieres eliminar a este usuario?
-UserModif,Modification de l'utilisateur, User Modification,Ändern des Benutzers, Modificación del usario
-YesRemove,Oui (supprimer),Yes (delete),Ja (löschen),Si (eliminar)
-NoCancel,Non (annuler),No (cancel),Nein (Annullierer),No (annular)
-Name,Nom,Name,Name,Nombre
-enterName,Entrer un nom,Enter a name,Geben Sie einen Namen, Ingrese un nombre
-ChooseImage,Choisissez une image,Choose an image,Wählen Sie ein Bild,Elige una imagen 
-Image,Image,Image,Bild,Imagen : 
-Reset,Réinitialiser,reset,Zurücksetzen, Reiniciar
-AlreadyUsed,Ce nom d'utilisateur existe déjà,This user name exists already,Dieser Benutzername existiert bereits, Este nombre de usario ya existe
+,fra,eng,deu,nld,spa,est
+Colon, : ,: ,: ,:,:,
+Creampie,Tartes à la crème,Cream pies,Sahnetorte,Taarten,Tarta de crema,
+Ninja,Ninja !,Ninja !,Ninja !,Ninja !,Ninja,
+MagicCards,Cartes magiques,Magic cards,Zauberkarten,Magische kaarten,Tarjetas mágicas,
+Blocks,Blocs,Blocks,Blocks,Blokken,Bloques,
+ScratchCard,Cartes à gratter,ScratchCards,Rubbellose,Kraskaart,Tarjetas para raspar,
+ColoredBubbles,Bulles colorées,Colored Bubbles,Farbige blasen,Kleur Bubbels,Burbujas de colores,
+PortraitBubbles,Bulles portrait,Portrait Bubbles,Porträt Blasen,Foto Bubbels,Burbujas retrato,
+WhereIsTheAnimal,Où est cet animal ?,Where is this animal?,Wo ist dieses Tier?,Waar is dit dier?,Donde está este animal?,
+WhereIsTheColor,Où est cette couleur ?,Where is this color?,Wo ist die Farbe?,Waar is deze kleur?,Donde ves este color?,
+WhereIsIt,Où est-ce ?,Where is it ?,Wo ist es?,Waar is het?,Donde está?,
+StatsTitle,Statistiques,Statistics,Statistiken,Statistieken,Estadísticas,
+Aver,Moyenne,Average,Durchschnitt,Gemiddelde,Promedio,
+Med,Médiane,Median,Median,Mediaan,Mediana,
+TotalLength,Temps de jeu actif,Total active playtime,Zeit auf dem Spiel,Totale actieve speeltijd,Tiempo activo de juego,
+Shoots,Tirs,Shoots,Schüsse,Aantal hits,Tiros,
+BubbleShoot,Bulles éclatées,Burst bubbles,Zum Platzen gebrachte Blasen,Barst de bubbels,Burbujas reventadas,
+HiddenItemsShoot,Images découvertes,Uncovered Images,Entdeckte Bilder,Ontdek de prenten,Imagenes descubiertas,
+Length,Temps effectif de jeu,Actual play Time,Gespielte Zeit,Totale speeltijd,Tiempo efectivo de juego,
+ShootaverageLength,Temps de réaction moyen,Average reaction time,Durchschnittliche Reaktionszeit,Gemiddelde reactietijd,Tiempo promedio de reaccion,
+AverageLength,Temps moyen,Average time,Durchschnittliche Zeit,Gemiddelde tijd,Tiempo promedio,
+ShootmedianLength,Temps de réaction médian,Median reaction time,Median-Reaktionszeit,Mediaan reactietijd,Tiempo medio de reaccion,
+MedianLength,Temps médian,Median time,Median-Zeit,Mediaan tijd,Mediana del tiempo,
+StandDev,Écart-type,Standard deviation,Standardabweichung,Standaard afwijking,desviación estandar,
+UncountedShoot,Tirs non comptés,Uncounted shoot,Nicht gezählte Schüsse,Ongetelde hits,Tiros no contados,
+ConfigTitle,Configuration,Configuration,Konfiguration,Configuratie,Configuración,
+Lang,Langue,Language,Sprache,Taal,Idioma,
+EyeTracker,Oculomètre,Eye Tracker,Eyetracker,Oogsturingsmodule,Eye tracker,
+FileDir,Répertoire des fichiers,Files Directory ,Dateiverzeichnis,Bestands locatie,Directorio,
+FixationLength,Durée de la fixation (secondes),Fixation Length (seconds),Dauer der Fixierung  (Sekunden),Fixatietijd (seconden),Duración de la fijación,
+LayoutFile,Fichier de style,Style Sheets,Style Sheets,Stijlen,Hojas de estilo,
+WhereIsItDirectory,Répertoire du jeu « Où est-ce ? >,« Where is it? » Game directory,Spielverzeichnis « Wo ist es? »,"Waar is het" Spel bestandslocatie,Directorio del juego "Donde está?",
+WII-error,Vérifiez le répertoire du jeu « Où est-ce ? ».,Check « Where is it? » Game directory,Überprüfen Spielverzeichnis « Wo ist es? »,verifiëer "Waar is het" Spel bestandslocatie,Verifica el directorio del juego "Donde está?",
+QuestionLength,Durée d’affichage des question,Question Display Length,Dauer der Veröffentlichung von Fragen,Hoe lang de vraag tonen?,Duración de visualización de las preguntas,
+Cups and Balls,Gobelets Pass Pass,Cups and Balls,Bechertrick,Bekers en Ballen,Tazas y bolas,
+Biboules,Biboules,Biballs,Biboles,Vliegjes,Biboules,
+Robots,Robots,Robots,Roboters,Robotten,Robots,
+Memory,Memory,Memory,Memory,Memory,Memory,
+EnableRewardSound,Activer le son « bravo »,Enable Reward sound,Aktiviere den Sound Bravo,Activeer beloningsgeluid,Activar el sonido Bravo,
+DisableHeatMap,Désactiver la Heat Map,Disable Heat Map,Deaktivieren Sie die Heat Map,Deactiveer Heat Map,Desactivar mapa de calor,
+EnableGazeMenu,Activer le menu regard (Beta),Enable the Gaze Menu (Beta),Aktivieren Sie das Blickmenü (Beta),Activeer menu blikrichting (Beta),activar el menú de mirada (Beta),
+MenuOrientation,Orientation du menu (nécessite de relancer le jeu),Menu Orientation (restart game to take effect),Menüorientierung (erfordert Neustart des Spiels),Richting menu (herstart nodig voor activering),Orientación del menú (requiere reiniciar el juego),
+Music,Musique,Music,Musik,Muziek,Musica,
+Volume,Volume,Volume,Volume,Volume,Volumen,
+OpenMemory,Memory ouvert,OpenMemory,OpenMemory,Open Memory,Memory abierto,
+Video Player with Feedback,Lecteur Video avec retour,Video Player with Feedback,Video Player mit Feedback,Video speler met feedback,Reproductor de video con comentarios,
+Choose Game Variante,Choisi une variante,Choose Variante,Wählen Sie Variante,Kies een variant,Elija Variante,
+Enter FullScreen,Mettre en Plein écran,Enter FullScreen,Vollbild,Toon op volledig scherm,Pantalla completa,
+Exit FullScreen,Sortir du Plein écran,Exit FullScreen,Beenden Sie den Vollbildmodus,Stop tonen op volledig scherm,Salir de pantalla completa,
+Scribble,Gribouille,Scribble,Kritzeln,Kribbel Krabbel,Garabato,
+Colors,Couleurs !,Colors !,Farben!,Kleuren !,Colores!,
+Lapins,Lapins,Rabbits,Conejos,Konijnen,Conejos,
+Divisor,Diviseur,Divisor,Divisor,Delen,Divisor,
+Piano,Piano,Piano,Piano,Piano,Piano,
+Colors!,Coloriage,Coloring,Färbung,Schilderen,Colorear,
+LoadImg,Charger image,Load image,Bild laden,Laad foto,Cargar imagen,
+SaveImg,Sauvegarder image,Save image,Bild speichern,Bewaar foto,Guardar imagen,
+imgLoadChooserTitle,Choisissez votre image à charger,Choose your image to load,Wählen Sie Ihr Bild zum Laden,Kies je foto om te laden,Elige tu imagen para cargar,
+imgSaveChooserTitle,choisissez votre image à sauvegarder,Choose your image to save,Wähle dein Bild zum Speichern aus,Kies je foto om te bewaren,Elige tu imagen para guardar,
+confirmBWText,Voulez-vous décoloriser l'image ,Do you want to discolor the image ,Willst du das Bild verfärben ,Wil je deze kleurplaat terug wit maken?,¿Quieres decolorar la imagen,
+confirmBWTitle,Transformer en noir et blanc ?,Transform in black and white ?,In schwarz und weiß verwandeln?,Omzetten in zwart-wit?,Transformar en blanco y negro?,
+confirmBWHeader,Transformer l'image en noir et blanc ?,Transform the image in black and white,Verwandle das Bild in Schwarz-Weiß?,Beeld omzetten in zwart wit.,Transformar la imagen en blanco y negro?,
+Room,La chambre,The room,Das Zimmer,De kamer,La habitación,
+Whac-a-mole,Jeu de la taupe,Whac-a-mole,Whac-a-mole,Klop een mol,Juego del topo,
+Cakes, La Fabrique a Gateaux,The cake factory ,Die Kuchenfabrik ,De cakejes fabriek,La Fabrica de Pasteles,
+MusicFolder,Dossier musiques,music folder,Musikmappe,Muziek folder,carpeta de música,
+Order,Ordre,Order,Reihenfolge,Bestellen,Orden,
+UncountedShot,Tir non comptabilisés,Uncounted Shots,Unzählige Schüsse,Ongetelde hits,Disparos sin contar,
+EffectsVolume,volume des effets,effects volume,Effektvolumen,Volume effecten,volumen de efectos,
+reset,réinitialiser,reset,zurücksetzen,Reset,restablecimiento,
+ColorDesc,Faîtes des coloriages en utilisant n'importe quelle image puis sauvegardez la.,Do some colouring on any image then save it.,Färben Sie mit einem beliebigen Bild und speichern Sie das Bild.,Kleur om het even welke plaat en bewaar.,Coloree usando cualquier imagen y luego guárdela.,
+Labyrinth,Labyrinthe,Labyrinth,Labyrinth,Labyrint,Laberinto,
+Pet,J'ai un Biboule !,I've got a Biball !,Ich habe ein Biboles,Ik heb een paar !,Yo tengo un Bibole!,
+SpeedEffects,Vitesse des animations, Effect speed,Weißer Hintergrund,Snelheids effecten,Velocidad de las animaciones,
+WhiteBackground,Mode fond blanc, White Background mode,Animationsgeschwindigkeit,Witte achtergrond modus,Modo fondo de pantalla blanco,
+EnableGazeMouse,Activer l'émulation de la souris visuelle ; appuyez sur S pour arrêter/commencer l'émulation ; appuyez sur espace pour émuler un click de souris,Enable the Gaze Mouse emulation ; press S to stop/start the emulation ; Press space to emulate click,Aktivieren der visuellen Mausemulation ; drücken Sie S um die Emulation zu stoppen/starten ; Drücken Sie die Leertaste um den Mausklick zu emulieren.,Activeer de oogsturing via muissimulatie ; druk S om de muissimulaite te stoppen/starten ; klik op de spatiebar om een klik na te doen,Activación de la emulación del ratón visual ; presione S para detener/iniciar la emulación ; presione espacio para emular el clic,
+AddUser,Ajouter un nouvel utilisateur,Add new user,Neuen Benutzer hinzufügen,Voeg een nieuwe gebruiker toe,Agregar un usuario,
+DefaultUser,Utilisateur par Défaut,Default User,Standardbenutzer,Standaard Gebruiker,Usuario predeterminado,
+NewUser,Nouvel utilisateur,New user,Neuer Benutzer,Nieuwe gebruiker,Nuevo usario,
+Remove,Voulez vous vraiment supprimer cet utilisateur ?,Do you really want to delete this user ?,Wollen Sie diesen Benutzer wirklich löschen? ,Ben je zeker dat je deze gebruiker wil verwijderen?,¿Realmente quieres eliminar a este usuario?,
+UserModif,Modification de l'utilisateur, User Modification,Ändern des Benutzers,Gebruikers instellingen,Modificación del usario,
+YesRemove,Oui (supprimer),Yes (delete),Ja (löschen),Ja (verwijder),Si (eliminar),
+NoCancel,Non (annuler),No (cancel),Nein (Annullierer),Neen (cancel),No (anular),
+Name,Nom,Name,Name,Naam,Nombre,
+enterName,Entrer un nom,Enter a name,Geben Sie einen Namen,Geef een naam,Ingresa un nombre,
+ChooseImage,Choisissez une image,Choose an image,Wählen Sie ein Bild,Kies een kleurplaat,Elige una imagen,
+Image,Image,Image,Bild,Kleurplaat,Imagen,
+Reset,Réinitialiser,reset,Zurücksetzen,Reset,Reiniciar,
+AlreadyUsed,Ce nom d'utilisateur existe déjà,This user name exists already,Dieser Benutzername existiert bereits,Deze gebruikersnaam bestaat reeds,Este nombre de usario ya existe,
