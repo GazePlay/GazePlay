@@ -40,6 +40,7 @@ import net.gazeplay.games.pet.PetStats;
 import net.gazeplay.games.pianosight.Piano;
 import net.gazeplay.games.room.Room;
 import net.gazeplay.games.room.RoomStats;
+import net.gazeplay.games.rushHour.RushHour;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.shooter.Shooter;
 import net.gazeplay.games.shooter.ShooterGamesStats;
@@ -198,7 +199,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(new GameSummary("WhereIsTheAnimal", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
-                "data/Thumbnails/animals.jpeg"), new GameSpec.GameVariantGenerator() {
+                "data/Thumbnails/whereisanimal.png"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -228,9 +229,8 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        result.add(new GameSpec(
-                new GameSummary("WhereIsTheColor", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/colors.jpeg"),
-                new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(new GameSummary("WhereIsTheColor", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+                "data/Thumbnails/whereiscolor.png"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -260,7 +260,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("WhereIsIt", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/whereisit.jpeg"),
+                new GameSummary("WhereIsIt", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/whereisit.png"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -323,7 +323,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(
-                new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/divisor.jpeg"),
+                new GameSpec(new GameSummary("Divisor", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/divisor.png"),
                         new GameSpec.GameLauncher() {
                             @Override
                             public Stats createNewStats(Scene scene) {
@@ -564,8 +564,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        result.add(new GameSpec(
-                new GameSummary("Pet", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/I-have-a-biboule.jpeg"),
+        result.add(new GameSpec(new GameSummary("Pet", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/pet.png"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -580,7 +579,8 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        result.add(new GameSpec(new GameSummary("Media Player", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+        result.add(new GameSpec(
+                new GameSummary("Media Player", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/gazeMedia.png"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -594,9 +594,23 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
 
                 }));
+        result.add(new GameSpec(new GameSummary("RushHour", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new PetStats(scene);
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new RushHour(gameContext);
+                    }
+
+                }));
 
         result.add(new GameSpec(
-                new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/color.jpeg", null,
+                new GameSummary("Colors!", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/colors.png", null,
                         "ColorDesc"),
 
                 new GameSpec.GameLauncher() {
