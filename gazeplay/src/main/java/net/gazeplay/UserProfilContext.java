@@ -29,6 +29,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.CustomButton;
@@ -244,6 +245,10 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                     config = Configuration.getInstance();
 
+                }
+
+                if (gazePlay.getTranslator() instanceof DefaultTranslator) {
+                    ((DefaultTranslator) gazePlay.getTranslator()).setConfig(config);
                 }
 
                 CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
