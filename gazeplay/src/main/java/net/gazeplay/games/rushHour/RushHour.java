@@ -5,7 +5,9 @@ import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -22,6 +24,7 @@ public class RushHour extends Parent implements GameLifeCycle {
     public GameContext gameContext;
     public int size = 100;
     public Rectangle ground;
+    public boolean endOfGame = false;
 
     public Car toWin;
 
@@ -30,8 +33,6 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     public RushHour(GameContext gameContext) {
         this.gameContext = gameContext;
-        setLevel(0);
-
     }
 
     public void setLevel(int i) {
@@ -47,90 +48,109 @@ public class RushHour extends Parent implements GameLifeCycle {
     }
 
     public void setLevel0() {
-        Car red = new Car(2, 1, Color.RED, true, size, gameContext);
+
+        ProgressIndicator pi = new ProgressIndicator(0);
+        pi.setPrefSize(size, size);
+        pi.setMouseTransparent(true);
+
+        Pane p = new Pane();
+
+        p.getChildren().add(pi);
+
+        Car red = new Car(2, 1, Color.RED, true, size, pi, gameContext);
         red.setToX(1);
         red.setToY(2);
         garage.add(red);
-        gameContext.getChildren().add(red);
+        p.getChildren().add(red);
 
         toWin = red;
 
-        Car blue = new Car(1, 3, Color.BLUE, false, size, gameContext);
+        Car blue = new Car(1, 3, Color.BLUE, false, size, pi, gameContext);
         blue.setToX(3);
         blue.setToY(1);
         garage.add(blue);
-        gameContext.getChildren().add(blue);
+        p.getChildren().add(blue);
 
-        Car vert = new Car(2, 1, Color.GREEN, true, size, gameContext);
+        Car vert = new Car(2, 1, Color.GREEN, true, size, pi, gameContext);
         vert.setToX(1);
         vert.setToY(0);
         garage.add(vert);
-        gameContext.getChildren().add(vert);
+        p.getChildren().add(vert);
 
-        Car purple = new Car(1, 3, Color.PURPLE, false, size, gameContext);
+        Car purple = new Car(1, 3, Color.PURPLE, false, size, pi, gameContext);
         purple.setToX(0);
         purple.setToY(0);
         garage.add(purple);
-        gameContext.getChildren().add(purple);
+        p.getChildren().add(purple);
 
-        Car orange = new Car(1, 2, Color.ORANGE, false, size, gameContext);
+        Car orange = new Car(1, 2, Color.ORANGE, false, size, pi, gameContext);
         orange.setToX(0);
         orange.setToY(3);
         garage.add(orange);
-        gameContext.getChildren().add(orange);
+        p.getChildren().add(orange);
 
-        Car lightBlue = new Car(2, 1, Color.LIGHTBLUE, true, size, gameContext);
+        Car lightBlue = new Car(2, 1, Color.LIGHTBLUE, true, size, pi, gameContext);
         lightBlue.setToX(1);
         lightBlue.setToY(4);
         garage.add(lightBlue);
-        gameContext.getChildren().add(lightBlue);
+        p.getChildren().add(lightBlue);
 
-        Car lightGreen = new Car(3, 1, Color.LIGHTGREEN, true, size, gameContext);
+        Car lightGreen = new Car(3, 1, Color.LIGHTGREEN, true, size, pi, gameContext);
         lightGreen.setToX(2);
         lightGreen.setToY(5);
         garage.add(lightGreen);
-        gameContext.getChildren().add(lightGreen);
+        p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(1, 3, Color.YELLOW, false, size, gameContext);
+        Car yellow = new Car(1, 3, Color.YELLOW, false, size, pi, gameContext);
         yellow.setToX(5);
         yellow.setToY(3);
         garage.add(yellow);
-        gameContext.getChildren().add(yellow);
+        p.getChildren().add(yellow);
 
-        createGarage(6, 6, new Rectangle((6 + 1) * size, ((6 / 2)) * size, size, size));
+        createGarage(6, 6, new Rectangle((6 + 1) * size, ((6 / 2)) * size, size, size), p);
 
         toWinListener();
+
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        p.setLayoutX(dimension2D.getWidth() / 2 - ground.getWidth() / 2);
+        p.setLayoutY(dimension2D.getHeight() / 2 - ground.getHeight() / 2);
+
+        gameContext.getChildren().add(p);
 
     }
 
     @Override
     public void launch() {
-        // TODO Auto-generated method stub
-
+        endOfGame = false;
+        setLevel(0);
     }
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-
+        gameContext.getChildren().clear();
     }
 
     public void toWinListener() {
         toWin.xProperty().addListener((o) -> {
-            if (Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
+            if (!endOfGame && Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
+                endOfGame = true;
                 gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
 
                     @Override
                     public void handle(ActionEvent actionEvent) {
 
                         log.info("you won !");
+                        dispose();
+                        launch();
                     }
                 });
             }
         });
 
         toWin.yProperty().addListener((o) -> {
-            if (Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
+            if (!endOfGame && Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
+                endOfGame = true;
                 gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
 
                     @Override
@@ -163,17 +183,20 @@ public class RushHour extends Parent implements GameLifeCycle {
                 if (Shape.intersect(car, car2).getBoundsInLocal().getWidth() != -1) {
                     log.info("intersect");
                     car.setIntersect(true);
+                    car.setSelected(false);
                 }
             }
         }
         if (Shape.intersect(car, walls).getBoundsInLocal().getWidth() != -1) {
             log.info("intersect");
             car.setIntersect(true);
+            car.setSelected(false);
         }
 
     }
 
-    public void createGarage(int longueur, int hauteur, Rectangle givenDoor) {
+    public void createGarage(int longueur, int hauteur, Rectangle givenDoor, Pane p) {
+
         Rectangle up = new Rectangle(0, 0, (longueur + 2) * size, size);
         Rectangle down = new Rectangle(0, (hauteur + 1) * size, (longueur + 2) * size, size);
         Rectangle left = new Rectangle(0, 0, size, (hauteur + 2) * size);
@@ -191,11 +214,11 @@ public class RushHour extends Parent implements GameLifeCycle {
         ground = new Rectangle(0, 0, size * (longueur + 2), size * (hauteur + 2));
         ground.setFill(Color.SLATEGRAY);
 
-        gameContext.getChildren().add(ground);
+        p.getChildren().add(ground);
 
         ground.toBack();
 
-        gameContext.getChildren().add(walls);
+        p.getChildren().add(walls);
     }
 
 }
