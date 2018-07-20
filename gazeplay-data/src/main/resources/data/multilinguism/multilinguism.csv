@@ -1,90 +1,90 @@
-,fra,eng,deu,ita,nld,spa,est,vnm,chn,jpn
-Colon, : ,: ,: ,:,:,:,,:,,:
-Creampie,Tartes à la crème,Cream pies,Sahnetorte,Torte alla crema,Taarten,Tarta de crema,,Bánh kem,奶油派,クリームパイ
-Ninja,Ninja !,Ninja !,Ninja !,Ninja!,Ninja !,Ninja,,Ninja !,忍者 ！,にんじゃ !
-MagicCards,Cartes magiques,Magic cards,Zauberkarten,Carte magiche,Magische kaarten,Tarjetas mágicas,,Những quân bài ma thuật,魔幻卡,マジックカード
-Blocks,Blocs,Blocks,Blocks,Blocchi,Blokken,Bloques,,Các hình khối,,ブロック
-ScratchCard,Cartes à gratter,ScratchCards,Rubbellose,Gratta e vinci,Kraskaart,Tarjetas para raspar,,Thẻ cào,刮刮乐,スクラッチカード
-ColoredBubbles,Bulles colorées,Colored Bubbles,Farbige blasen,Bolle colorate,Kleur Bubbels,Burbujas de colores,,Bong bóng màu,多彩泡泡,たしょくのあわ
-PortraitBubbles,Bulles portrait,Portrait Bubbles,Porträt Blasen,Bolle con ritratto,Foto Bubbels,Burbujas retrato,,Bong bóng có chân dung,肥皂泡,しょうぞうのあわ
-WhereIsTheAnimal,Où est cet animal ?,Where is this animal?,Wo ist dieses Tier?,Dov'è questo animale?,Waar is dit dier?,Donde está este animal?,,Con vật này ở đâu?,这个动物在哪？,このせいぶつはドコ？
-WhereIsTheColor,Où est cette couleur ?,Where is this color?,Wo ist die Farbe?,Dov'è questo colore?,Waar is deze kleur?,Donde ves este color?,,Màu này ở đâu?,这个颜色在哪？,このいろはドコ？
-WhereIsIt,Où est-ce ?,Where is it ?,Wo ist es?,Dov'è?,Waar is het?,Donde está?,,Nó ở đâu?,它在哪？,これはドコ？
-StatsTitle,Statistiques,Statistics,Statistiken,Statistiche,Statistieken,Estadísticas,,Số liệu thống kê,统计,統計
-Aver,Moyenne,Average,Durchschnitt,Media,Gemiddelde,Promedio,,Trung bình,平均值,平均
-Med,Médiane,Median,Median,Mediana,Mediaan,Mediana,,Giá trị giữa,中位数,中央値
-TotalLength,Temps de jeu actif,Total active playtime,Zeit auf dem Spiel,Tempo totale di gioco attivo,Totale actieve speeltijd,Tiempo activo de juego,,Tổng thời gian chơi,总游戏时间,遊び時間
-Shoots,Tirs,Shoots,Schüsse,Tiri,Aantal hits,Tiros,,Lần bắn,射击,射撃
-BubbleShoot,Bulles éclatées,Burst bubbles,Zum Platzen gebrachte Blasen,Scoppia le bolle,Barst de bubbels,Burbujas reventadas,,Số bóng bắn vỡ,戳泡泡,
-HiddenItemsShoot,Images découvertes,Uncovered Images,Entdeckte Bilder,Immagini scoperte,Ontdek de prenten,Imagenes descubiertas,,Số hình đã mở,,
-Length,Temps effectif de jeu,Actual play Time,Gespielte Zeit,Tempo di gioco effettivo,Totale speeltijd,Tiempo efectivo de juego,,Thời gian chơi,实际游戏时间,
-ShootaverageLength,Temps de réaction moyen,Average reaction time,Durchschnittliche Reaktionszeit,Tempo medio di reazione,Gemiddelde reactietijd,Tiempo promedio de reaccion,,Thời gian phản ứng trung bình,平均反应时长,
-AverageLength,Temps moyen,Average time,Durchschnittliche Zeit,Tempo medio,Gemiddelde tijd,Tiempo promedio,,Thời gian trung bình,平均时长,
-ShootmedianLength,Temps de réaction médian,Median reaction time,Median-Reaktionszeit,Mediana tempo di reazione,Mediaan reactietijd,Tiempo medio de reaccion,,Giá trị giữa của thời gian phản ứng,中位反应时长,
-MedianLength,Temps médian,Median time,Median-Zeit,Mediana tempo,Mediaan tijd,Mediana del tiempo,,Giá trị giữa của thời gian,中位时长,
-StandDev,Écart-type,Standard deviation,Standardabweichung,Deviazione standard,Standaard afwijking,desviación estandar,,Độ lệch chuẩn,标准差,
-UncountedShoot,Tirs non comptés,Uncounted shoot,Nicht gezählte Schüsse,Tiri non conteggiati,Ongetelde hits,Tiros no contados,,Lần bắn ko được tính,未计数射击,
-ConfigTitle,Configuration,Configuration,Konfiguration,Configurazione,Configuratie,Configuración,,Tùy chỉnh,恭喜你！,
-Lang,Langue,Language,Sprache,Lingua,Taal,Idioma,,Ngôn ngữ,语言,
-EyeTracker,Oculomètre,Eye Tracker,Eyetracker,Tracciatore oculare (eye tracker),Oogsturingsmodule,Eye tracker,,Theo dõi ánh mắt,眼球跟踪,
-FileDir,Répertoire des fichiers,Files Directory ,Dateiverzeichnis,Cartella,Bestands locatie,Directorio,,Thư mục,文件夹,
-FixationLength,Durée de la fixation (secondes),Fixation Length (seconds),Dauer der Fixierung  (Sekunden),Durata fissazione (secondi),Fixatietijd (seconden),Duración de la fijación,,Độ dài cố định (giây),注视时长（秒）,
-LayoutFile,Fichier de style,Style Sheets,Style Sheets,Fogli di stile,Stijlen,Hojas de estilo,,Tập tin Định dạng,,
-WhereIsItDirectory,Répertoire du jeu « Où est-ce ? >,« Where is it? » Game directory,Spielverzeichnis « Wo ist es? »,Cartella gioco "Dov'è?",Waar is het Spel bestandslocatie,"Directorio del juego ""Donde está?""",,"Thư mục game ""Nó ở đâu?""",《它在哪》游戏目录,
-WII-error,Vérifiez le répertoire du jeu « Où est-ce ? ».,Check « Where is it? » Game directory,Überprüfen Spielverzeichnis « Wo ist es? »,Controllo cartella di gioco "Dov'è?","verifiëer ""Waar is het"" Spel bestandslocatie","Verifica el directorio del juego ""Donde está?""",,"Kiểm tra Thư mục game ""Nó ở đâu?"" ",查找《它在哪》游戏目录,
-QuestionLength,Durée d’affichage des question,Question Display Length,Dauer der Veröffentlichung von Fragen,Durata esposizione della domanda,Hoe lang de vraag tonen?,Duración de visualización de las preguntas,,Thời gian hiển thị câu hỏi,,
-Cups and Balls,Gobelets Pass Pass,Cups and Balls,Bechertrick,Tazze e palle,Bekers en Ballen,Tazas y bolas,,Chiếc cốc và Quả bóng,杯子和球,
-Biboules,Biboules,Biballs,Biboles,Bipall,Vliegjes,Biboules,,Bóng Bi,垒球,
-Robots,Robots,Robots,Roboters,Robot,Robotten,Robots,,Rô-bốt,机器人,
-Memory,Memory,Memory,Memory,Memory,Memory,Memory,,Bộ nhớ,记忆,
-EnableRewardSound,Activer le son « bravo »,Enable Reward sound,Aktiviere den Sound Bravo,Attiva suono ricompensa,Activeer beloningsgeluid,Activar el sonido Bravo,,"Bật tiếng ""Chúc mừng""",打开奖励音效,
-DisableHeatMap,Désactiver la Heat Map,Disable Heat Map,Deaktivieren Sie die Heat Map,Disattiva mappa di calore,Deactiveer Heat Map,Desactivar mapa de calor,,"Tắt ""Bản đồ nhiệt""",关闭热量地图,
-EnableGazeMenu,Activer le menu regard (Beta),Enable the Gaze Menu (Beta),Aktivieren Sie das Blickmenü (Beta),Attiva il menù di vista (beta),Activeer menu blikrichting (Beta),activar el menú de mirada (Beta),,Bật Menu Gaze,,
-MenuOrientation,Orientation du menu (nécessite de relancer le jeu),Menu Orientation (restart game to take effect),Menüorientierung (erfordert Neustart des Spiels),Orientazione del menù (è richiesto il riavvio del gioco),Richting menu (herstart nodig voor activering),Orientación del menú (requiere reiniciar el juego),,Phương ngang/dọc của menu (Khởi động lại để có hiệu lực),,
-Music,Musique,Music,Musik,Musica,Muziek,Musica,,Âm nhạc,,
-Volume,Volume,Volume,Volume,Volume,Volume,Volumen,,Âm lượng,,
-OpenMemory,Memory ouvert,OpenMemory,OpenMemory,Memory aperto,Open Memory,Memory abierto,,Bộ nhớ Mở rộng,,
-Video Player with Feedback,Lecteur Video avec retour,Video Player with Feedback,Video Player mit Feedback,Lettore video con feedback,Video speler met feedback,Reproductor de video con comentarios,,Trình chơi nhạc có Phản hồi,,
-Choose Game Variante,Choisi une variante,Choose Variante,Wählen Sie Variante,Scegli una variante,Kies een variant,Elija Variante,,Chọn loại bạn muốn,,
-Enter FullScreen,Mettre en plein écran,Enter FullScreen,Vollbild,Attiva modalità schermo intero,Toon op volledig scherm,Pantalla completa,,"Chuyển sang ""Toàn màn hình""",,
-Exit FullScreen,Sortir du plein écran,Exit FullScreen,Beenden Sie den Vollbildmodus,Esci da modalità schermo intero,Stop tonen op volledig scherm,Salir de pantalla completa,,"Thoát ""Toàn màn hình""",,
-Scribble,Gribouille,Scribble,Kritzeln,Scarabocchio,Kribbel Krabbel,Garabato,,Nguệch ngoạc,,
-Colors,Couleurs !,Colors !,Farben!,Colori!,Kleuren !,Colores!,,Màu!,,
-Lapins,Lapins,Rabbits,Conejos,Conigli,Konijnen,Conejos,,Thỏ,,
-Divisor,Diviseur,Divisor,Divisor,Divisore,Delen,Divisor,,Phép chia,,
-Piano,Piano,Piano,Piano,Piano,Piano,Piano,,Đàn Piano,,
-Colors!,Coloriage,Coloring,Färbung,Colorare,Schilderen,Colorear,,Tô màu,,
-LoadImg,Charger image,Load image,Bild laden,Carica immagine,Laad foto,Cargar imagen,,Load ảnh,,
-SaveImg,Sauvegarder image,Save image,Bild speichern,Salva immagine,Bewaar foto,Guardar imagen,,Lưu ảnh,,
-imgLoadChooserTitle,Choisissez votre image à charger,Choose your image to load,Wählen Sie Ihr Bild zum Laden,Scegli la tua immagine da caricare,Kies je foto om te laden,Elige tu imagen para cargar,,Chọn ảnh để mở,,
-imgSaveChooserTitle,choisissez votre image à sauvegarder,Choose your image to save,Wähle dein Bild zum Speichern aus,Scegli da tua immagine da salvare,Kies je foto om te bewaren,Elige tu imagen para guardar,,Chọn ảnh để lưu,,
-confirmBWText,Voulez-vous décoloriser l'image ,Do you want to discolor the image ,Willst du das Bild verfärben ,Vuoi scolorire l'immagine,Wil je deze kleurplaat terug wit maken?,¿Quieres decolorar la imagen,,Bạn có muốn bỏ màu của hình không?,,
-confirmBWTitle,Transformer en noir et blanc ?,Transform in black and white ?,In schwarz und weiß verwandeln?,Trasformare in bianco e nero?,Omzetten in zwart-wit?,Transformar en blanco y negro?,,"Chuyển sang chế độ ""Đen trắng""",,
-confirmBWHeader,Transformer l'image en noir et blanc ?,Transform the image in black and white,Verwandle das Bild in Schwarz-Weiß?,Trasformare l'immagine in banco e nero?,Beeld omzetten in zwart wit.,Transformar la imagen en blanco y negro?,,"Chuyển hình sang ""Đen trắng""",,
-Room,La chambre,The room,Das Zimmer,La camera,De kamer,La habitación,,Căn phòng,,
-Whac-a-mole,Jeu de la taupe,Whac-a-mole,Whac-a-mole,Colpisci una talpa,Klop een mol,Juego del topo,,Chơi đập chuột,,
-Cakes, La Fabrique a Gateaux,The cake factory ,Die Kuchenfabrik ,La fabbrica dei dolci,De cakejes fabriek,La Fabrica de Pasteles,,Xưởng làm bánh ga-tô,,
-MusicFolder,Dossier musiques,music folder,Musikmappe,Cartella musica,Muziek folder,carpeta de música,,Thư mục âm nhạc,,
-Order,Ordre,Order,Reihenfolge,Ordinare,Bestellen,Orden,,Thứ tự,,
-UncountedShot,Tir non comptabilisés,Uncounted Shots,Unzählige Schüsse,Spari non conteggiati,Ongetelde hits,Disparos sin contar,,Những lần bắn không được tính,,
-EffectsVolume,volume des effets,effects volume,Effektvolumen,Volume degli effetti,Volume effecten,volumen de efectos,,Âm lượng của hiệu ứng,,
-reset,réinitialiser,reset,zurücksetzen,Resetta,Reset,restablecimiento,,Đặt lại,,
-ColorDesc,Faîtes des coloriages en utilisant n'importe quelle image puis sauvegardez la.,Do some colouring on any image then save it.,Färben Sie mit einem beliebigen Bild und speichern Sie das Bild.,Colora usando qualsiasi immagine e salvala,Kleur om het even welke plaat en bewaar.,Coloree usando cualquier imagen y luego guárdela.,,Tô màu một hình bất kì và lưu lại,,
-Labyrinth,Labyrinthe,Labyrinth,Labyrinth,Labirinto,Labyrint,Laberinto,,Mê cung,,
-Pet,J'ai un Biboule !,I've got a Biball !,Ich habe ein Biboles,Ho un Biball!,Ik heb een paar !,Yo tengo un Bibole!,,Tôi có Bóng Bi!,,
-SpeedEffects,Vitesse des animations,Effect speed,Weißer Hintergrund,Velocità delle animazioni,Snelheids effecten,Velocidad de las animaciones,,Tốc độ của hiệu ứng,,
-WhiteBackground,Mode fond blanc,White Background mode,Animationsgeschwindigkeit,Modalità sfondo bianco,Witte achtergrond modus,Modo fondo de pantalla blanco,,Chế độ hình nền trắng,,
-EnableGazeMouse,Activer l'émulation de la souris visuelle ; appuyez sur S pour arrêter/commencer l'émulation ; appuyez sur espace pour émuler un click de souris,Enable the Gaze Mouse emulation ; press S to stop/start the emulation ; Press space to emulate click,Aktivieren der visuellen Mausemulation ; drücken Sie S um die Emulation zu stoppen/starten ; Drücken Sie die Leertaste um den Mausklick zu emulieren.,Attiva modalità emulazione mouse ; premi S per fermare/avviare l'emulatore ; premi spazio per emulare il click del mouse,Activeer de oogsturing via muissimulatie ; druk S om de muissimulaite te stoppen/starten ; klik op de spatiebar om een klik na te doen,Activación de la emulación del ratón visual ; presione S para detener/iniciar la emulación ; presione espacio para emular el clic,,Bật giả lập Chuột Gaze; ấn S để dừng/bắt đầu giả lập,,
-AddUser,Ajouter un nouvel utilisateur,Add new user,Neuen Benutzer hinzufügen,Aggiungi un nuovo utente,Voeg een nieuwe gebruiker toe,Agregar un usuario,,Thêm người dùng mới,,
-DefaultUser,Utilisateur par Défaut,Default User,Standardbenutzer,Utente standard,Standaard Gebruiker,Usuario predeterminado,,Người dùng mặc định,,
-NewUser,Nouvel utilisateur,New user,Neuer Benutzer,Nuovo utente,Nieuwe gebruiker,Nuevo usario,,Người dùng mới,,
-Remove,Voulez vous vraiment supprimer cet utilisateur ?,Do you really want to delete this user ?,Wollen Sie diesen Benutzer wirklich löschen? ,Vuoi davvero eliminare questo utente?,Ben je zeker dat je deze gebruiker wil verwijderen?,¿Realmente quieres eliminar a este usuario?,,Bạn có muốn xóa người dùng này thật không,,
-UserModif,Modification de l'utilisateur, User Modification,Ändern des Benutzers,Modifica utente,Gebruikers instellingen,Modificación del usario,,Tùy chỉnh người dùng,,
-YesRemove,Oui (supprimer),Yes (delete),Ja (löschen),Si (rimuovi),Ja (verwijder),Si (eliminar),,Có (xóa),,
-NoCancel,Non (annuler),No (cancel),Nein (Annullierer),No (annulla),Neen (cancel),No (anular),,Không (quay Lại),,
-Name,Nom,Name,Name,Nome,Naam,Nombre,,Tên,,
-enterName,Entrer un nom,Enter a name,Geben Sie einen Namen,Inserisci un nome,Geef een naam,Ingresa un nombre,,Nhập tên,,
-ChooseImage,Choisissez une image,Choose an image,Wählen Sie ein Bild,Scegli un'immagine,Kies een kleurplaat,Elige una imagen,,Chọn một hình,,
-Image,Image,Image,Bild,Immagine,Kleurplaat,Imagen,,Hình ảnh,,
-Reset,Réinitialiser,reset,Zurücksetzen,Resetta,Reset,Reiniciar,,Đặt lại,,
-AlreadyUsed,Ce nom d'utilisateur existe déjà,This user name exists already,Dieser Benutzername existiert bereits,Questo nome utente è già utilizzato,Deze gebruikersnaam bestaat reeds,Este nombre de usario ya existe,,Tên người dùng này đã tồn tại,,
+,fra,eng,deu,ita,nld,spa,est,vnm,chn,jpn,rus
+Colon, : ,: ,: ,:,:,:,,:,,:,:
+Creampie,Tartes à la crème,Cream pies,Sahnetorte,Torte alla crema,Taarten,Tarta de crema,,Bánh kem,奶油派,クリームパイ,Кремовый пирог
+Ninja,Ninja !,Ninja !,Ninja !,Ninja!,Ninja !,Ninja,,Ninja !,忍者 ！,にんじゃ !,Ниндзя
+MagicCards,Cartes magiques,Magic cards,Zauberkarten,Carte magiche,Magische kaarten,Tarjetas mágicas,,Những quân bài ma thuật,魔幻卡,マジックカード,Магические карты
+Blocks,Blocs,Blocks,Blocks,Blocchi,Blokken,Bloques,,Các hình khối,,ブロック,Блоки
+ScratchCard,Cartes à gratter,ScratchCards,Rubbellose,Gratta e vinci,Kraskaart,Tarjetas para raspar,,Thẻ cào,刮刮乐,スクラッチカード,Лотерейка
+ColoredBubbles,Bulles colorées,Colored Bubbles,Farbige blasen,Bolle colorate,Kleur Bubbels,Burbujas de colores,,Bong bóng màu,多彩泡泡,たしょくのあわ,Цветные пузыри
+PortraitBubbles,Bulles portrait,Portrait Bubbles,Porträt Blasen,Bolle con ritratto,Foto Bubbels,Burbujas retrato,,Bong bóng có chân dung,肥皂泡,しょうぞうのあわ,Пузырьки с картинками
+WhereIsTheAnimal,Où est cet animal ?,Where is this animal?,Wo ist dieses Tier?,Dov'è questo animale?,Waar is dit dier?,Donde está este animal?,,Con vật này ở đâu?,这个动物在哪？,このせいぶつはドコ？,Где это животное?
+WhereIsTheColor,Où est cette couleur ?,Where is this color?,Wo ist die Farbe?,Dov'è questo colore?,Waar is deze kleur?,Donde ves este color?,,Màu này ở đâu?,这个颜色在哪？,このいろはドコ？,Где этот цвет?
+WhereIsIt,Où est-ce ?,Where is it ?,Wo ist es?,Dov'è?,Waar is het?,Donde está?,,Nó ở đâu?,它在哪？,これはドコ？,Где это находится?
+StatsTitle,Statistiques,Statistics,Statistiken,Statistiche,Statistieken,Estadísticas,,Số liệu thống kê,统计,統計,Статистика
+Aver,Moyenne,Average,Durchschnitt,Media,Gemiddelde,Promedio,,Trung bình,平均值,平均,Средний показатель
+Med,Médiane,Median,Median,Mediana,Mediaan,Mediana,,Giá trị giữa,中位数,中央値,Медианное значение
+TotalLength,Temps de jeu actif,Total active playtime,Zeit auf dem Spiel,Tempo totale di gioco attivo,Totale actieve speeltijd,Tiempo activo de juego,,Tổng thời gian chơi,总游戏时间,遊び時間,Общее время воспроизведения
+Shoots,Tirs,Shoots,Schüsse,Tiri,Aantal hits,Tiros,,Lần bắn,射击,射撃,Выстрелы
+BubbleShoot,Bulles éclatées,Burst bubbles,Zum Platzen gebrachte Blasen,Scoppia le bolle,Barst de bubbels,Burbujas reventadas,,Số bóng bắn vỡ,戳泡泡,,Шарики
+HiddenItemsShoot,Images découvertes,Uncovered Images,Entdeckte Bilder,Immagini scoperte,Ontdek de prenten,Imagenes descubiertas,,Số hình đã mở,,,Стреляй в скрытые предметы
+Length,Temps effectif de jeu,Actual play Time,Gespielte Zeit,Tempo di gioco effettivo,Totale speeltijd,Tiempo efectivo de juego,,Thời gian chơi,实际游戏时间,,Время в игре
+ShootaverageLength,Temps de réaction moyen,Average reaction time,Durchschnittliche Reaktionszeit,Tempo medio di reazione,Gemiddelde reactietijd,Tiempo promedio de reaccion,,Thời gian phản ứng trung bình,平均反应时长,,Среднее время реагирования
+AverageLength,Temps moyen,Average time,Durchschnittliche Zeit,Tempo medio,Gemiddelde tijd,Tiempo promedio,,Thời gian trung bình,平均时长,,Среднее время 
+ShootmedianLength,Temps de réaction médian,Median reaction time,Median-Reaktionszeit,Mediana tempo di reazione,Mediaan reactietijd,Tiempo medio de reaccion,,Giá trị giữa của thời gian phản ứng,中位反应时长,,Медианное время реагирования
+MedianLength,Temps médian,Median time,Median-Zeit,Mediana tempo,Mediaan tijd,Mediana del tiempo,,Giá trị giữa của thời gian,中位时长,,Медианное время 
+StandDev,Écart-type,Standard deviation,Standardabweichung,Deviazione standard,Standaard afwijking,desviación estandar,,Độ lệch chuẩn,标准差,,Стандартное отклонение
+UncountedShoot,Tirs non comptés,Uncounted shoot,Nicht gezählte Schüsse,Tiri non conteggiati,Ongetelde hits,Tiros no contados,,Lần bắn ko được tính,未计数射击,,Неучтенный выстрел
+ConfigTitle,Configuration,Configuration,Konfiguration,Configurazione,Configuratie,Configuración,,Tùy chỉnh,恭喜你！,,Конфигурация
+Lang,Langue,Language,Sprache,Lingua,Taal,Idioma,,Ngôn ngữ,语言,,Язык
+EyeTracker,Oculomètre,Eye Tracker,Eyetracker,Tracciatore oculare (eye tracker),Oogsturingsmodule,Eye tracker,,Theo dõi ánh mắt,眼球跟踪,,АйТрекер
+FileDir,Répertoire des fichiers,Files Directory ,Dateiverzeichnis,Cartella,Bestands locatie,Directorio,,Thư mục,文件夹,,Директоия файлов
+FixationLength,Durée de la fixation (secondes),Fixation Length (seconds),Dauer der Fixierung  (Sekunden),Durata fissazione (secondi),Fixatietijd (seconden),Duración de la fijación,,Độ dài cố định (giây),注视时长（秒）,,Длина фиксации (в секундах)
+LayoutFile,Fichier de style,Style Sheets,Style Sheets,Fogli di stile,Stijlen,Hojas de estilo,,Tập tin Định dạng,,,Таблица стилей
+WhereIsItDirectory,Répertoire du jeu « Où est-ce ? >,« Where is it? » Game directory,Spielverzeichnis « Wo ist es? »,Cartella gioco "Dov'è?",Waar is het Spel bestandslocatie,"Directorio del juego ""Donde está?""",,"Thư mục game ""Nó ở đâu?""",《它在哪》游戏目录,,"Где это?" директория Игры
+WII-error,Vérifiez le répertoire du jeu « Où est-ce ? ».,Check « Where is it? » Game directory,Überprüfen Spielverzeichnis « Wo ist es? »,Controllo cartella di gioco "Dov'è?","verifiëer ""Waar is het"" Spel bestandslocatie","Verifica el directorio del juego ""Donde está?""",,"Kiểm tra Thư mục game ""Nó ở đâu?"" ",查找《它在哪》游戏目录,,Проверка "Где это" директория Игры
+QuestionLength,Durée d’affichage des question,Question Display Length,Dauer der Veröffentlichung von Fragen,Durata esposizione della domanda,Hoe lang de vraag tonen?,Duración de visualización de las preguntas,,Thời gian hiển thị câu hỏi,,,Длина дисплея вопроса
+Cups and Balls,Gobelets Pass Pass,Cups and Balls,Bechertrick,Tazze e palle,Bekers en Ballen,Tazas y bolas,,Chiếc cốc và Quả bóng,杯子和球,,Чашки и шарики
+Biboules,Biboules,Biballs,Biboles,Bipall,Vliegjes,Biboules,,Bóng Bi,垒球,,Безделушки
+Robots,Robots,Robots,Roboters,Robot,Robotten,Robots,,Rô-bốt,机器人,,Роботы
+Memory,Memory,Memory,Memory,Memory,Memory,Memory,,Bộ nhớ,记忆,,Память
+EnableRewardSound,Activer le son « bravo »,Enable Reward sound,Aktiviere den Sound Bravo,Attiva suono ricompensa,Activeer beloningsgeluid,Activar el sonido Bravo,,"Bật tiếng ""Chúc mừng""",打开奖励音效,,Включить звук вознаграждения
+DisableHeatMap,Désactiver la Heat Map,Disable Heat Map,Deaktivieren Sie die Heat Map,Disattiva mappa di calore,Deactiveer Heat Map,Desactivar mapa de calor,,"Tắt ""Bản đồ nhiệt""",关闭热量地图,,Отключить тепловую карту
+EnableGazeMenu,Activer le menu regard (Beta),Enable the Gaze Menu (Beta),Aktivieren Sie das Blickmenü (Beta),Attiva il menù di vista (beta),Activeer menu blikrichting (Beta),activar el menú de mirada (Beta),,Bật Menu Gaze,,,Включить меню Гейз (бета)
+MenuOrientation,Orientation du menu (nécessite de relancer le jeu),Menu Orientation (restart game to take effect),Menüorientierung (erfordert Neustart des Spiels),Orientazione del menù (è richiesto il riavvio del gioco),Richting menu (herstart nodig voor activering),Orientación del menú (requiere reiniciar el juego),,Phương ngang/dọc của menu (Khởi động lại để có hiệu lực),,,Управление через Меню (перезапустите игру для ввода в дйствие)
+Music,Musique,Music,Musik,Musica,Muziek,Musica,,Âm nhạc,,,Музыка
+Volume,Volume,Volume,Volume,Volume,Volume,Volumen,,Âm lượng,,,Громкость
+OpenMemory,Memory ouvert,OpenMemory,OpenMemory,Memory aperto,Open Memory,Memory abierto,,Bộ nhớ Mở rộng,,,Доступная память
+Video Player with Feedback,Lecteur Video avec retour,Video Player with Feedback,Video Player mit Feedback,Lettore video con feedback,Video speler met feedback,Reproductor de video con comentarios,,Trình chơi nhạc có Phản hồi,,,Видеоплеер с Обратной связью
+Choose Game Variante,Choisi une variante,Choose Variante,Wählen Sie Variante,Scegli una variante,Kies een variant,Elija Variante,,Chọn loại bạn muốn,,,Выбрать вариант игры
+Enter FullScreen,Mettre en plein écran,Enter FullScreen,Vollbild,Attiva modalità schermo intero,Toon op volledig scherm,Pantalla completa,,"Chuyển sang ""Toàn màn hình""",,,Войти в режим Полного экрана
+Exit FullScreen,Sortir du plein écran,Exit FullScreen,Beenden Sie den Vollbildmodus,Esci da modalità schermo intero,Stop tonen op volledig scherm,Salir de pantalla completa,,"Thoát ""Toàn màn hình""",,,Выйти из режима Полного экрана
+Scribble,Gribouille,Scribble,Kritzeln,Scarabocchio,Kribbel Krabbel,Garabato,,Nguệch ngoạc,,,Каракули
+Colors,Couleurs !,Colors !,Farben!,Colori!,Kleuren !,Colores!,,Màu!,,,Цвета
+Lapins,Lapins,Rabbits,Conejos,Conigli,Konijnen,Conejos,,Thỏ,,,Кролики
+Divisor,Diviseur,Divisor,Divisor,Divisore,Delen,Divisor,,Phép chia,,,Делитель
+Piano,Piano,Piano,Piano,Piano,Piano,Piano,,Đàn Piano,,,Пианино
+Colors!,Coloriage,Coloring,Färbung,Colorare,Schilderen,Colorear,,Tô màu,,,Раскраска
+LoadImg,Charger image,Load image,Bild laden,Carica immagine,Laad foto,Cargar imagen,,Load ảnh,,,Загрузить изображение
+SaveImg,Sauvegarder image,Save image,Bild speichern,Salva immagine,Bewaar foto,Guardar imagen,,Lưu ảnh,,,Сохранить изображение
+imgLoadChooserTitle,Choisissez votre image à charger,Choose your image to load,Wählen Sie Ihr Bild zum Laden,Scegli la tua immagine da caricare,Kies je foto om te laden,Elige tu imagen para cargar,,Chọn ảnh để mở,,,Выберите изображение для загрузки
+imgSaveChooserTitle,choisissez votre image à sauvegarder,Choose your image to save,Wähle dein Bild zum Speichern aus,Scegli da tua immagine da salvare,Kies je foto om te bewaren,Elige tu imagen para guardar,,Chọn ảnh để lưu,,,Выберите изображние для сохранения
+confirmBWText,Voulez-vous décoloriser l'image ,Do you want to discolor the image ,Willst du das Bild verfärben ,Vuoi scolorire l'immagine,Wil je deze kleurplaat terug wit maken?,¿Quieres decolorar la imagen,,Bạn có muốn bỏ màu của hình không?,,,Хотите обесцветить изображение?
+confirmBWTitle,Transformer en noir et blanc ?,Transform in black and white ?,In schwarz und weiß verwandeln?,Trasformare in bianco e nero?,Omzetten in zwart-wit?,Transformar en blanco y negro?,,"Chuyển sang chế độ ""Đen trắng""",,,Преобразовать в черное и белое?
+confirmBWHeader,Transformer l'image en noir et blanc ?,Transform the image in black and white,Verwandle das Bild in Schwarz-Weiß?,Trasformare l'immagine in banco e nero?,Beeld omzetten in zwart wit.,Transformar la imagen en blanco y negro?,,"Chuyển hình sang ""Đen trắng""",,,Преобразовать картинку в черное и белое?
+Room,La chambre,The room,Das Zimmer,La camera,De kamer,La habitación,,Căn phòng,,,Комната
+Whac-a-mole,Jeu de la taupe,Whac-a-mole,Whac-a-mole,Colpisci una talpa,Klop een mol,Juego del topo,,Chơi đập chuột,,,Замочи крота
+Cakes, La Fabrique a Gateaux,The cake factory ,Die Kuchenfabrik ,La fabbrica dei dolci,De cakejes fabriek,La Fabrica de Pasteles,,Xưởng làm bánh ga-tô,,,Фабрика тортиков
+MusicFolder,Dossier musiques,music folder,Musikmappe,Cartella musica,Muziek folder,carpeta de música,,Thư mục âm nhạc,,,Папка Музыка
+Order,Ordre,Order,Reihenfolge,Ordinare,Bestellen,Orden,,Thứ tự,,,Заказать
+UncountedShot,Tir non comptabilisés,Uncounted Shots,Unzählige Schüsse,Spari non conteggiati,Ongetelde hits,Disparos sin contar,,Những lần bắn không được tính,,,Неучтенный выстрел
+EffectsVolume,volume des effets,effects volume,Effektvolumen,Volume degli effetti,Volume effecten,volumen de efectos,,Âm lượng của hiệu ứng,,,Объм эффектов
+reset,réinitialiser,reset,zurücksetzen,Resetta,Reset,restablecimiento,,Đặt lại,,,Сброс
+ColorDesc,Faîtes des coloriages en utilisant n'importe quelle image puis sauvegardez la.,Do some colouring on any image then save it.,Färben Sie mit einem beliebigen Bild und speichern Sie das Bild.,Colora usando qualsiasi immagine e salvala,Kleur om het even welke plaat en bewaar.,Coloree usando cualquier imagen y luego guárdela.,,Tô màu một hình bất kì và lưu lại,,,Раскрасьте какое-либо изображение и сохраните его.
+Labyrinth,Labyrinthe,Labyrinth,Labyrinth,Labirinto,Labyrint,Laberinto,,Mê cung,,,Лабиринт
+Pet,J'ai un Biboule !,I've got a Biball !,Ich habe ein Biboles,Ho un Biball!,Ik heb een paar !,Yo tengo un Bibole!,,Tôi có Bóng Bi!,,,Домашний питомец
+SpeedEffects,Vitesse des animations,Effect speed,Weißer Hintergrund,Velocità delle animazioni,Snelheids effecten,Velocidad de las animaciones,,Tốc độ của hiệu ứng,,,Эффекты скорости
+WhiteBackground,Mode fond blanc,White Background mode,Animationsgeschwindigkeit,Modalità sfondo bianco,Witte achtergrond modus,Modo fondo de pantalla blanco,,Chế độ hình nền trắng,,,Режим белого фона
+EnableGazeMouse,Activer l'émulation de la souris visuelle ; appuyez sur S pour arrêter/commencer l'émulation ; appuyez sur espace pour émuler un click de souris,Enable the Gaze Mouse emulation ; press S to stop/start the emulation ; Press space to emulate click,Aktivieren der visuellen Mausemulation ; drücken Sie S um die Emulation zu stoppen/starten ; Drücken Sie die Leertaste um den Mausklick zu emulieren.,Attiva modalità emulazione mouse ; premi S per fermare/avviare l'emulatore ; premi spazio per emulare il click del mouse,Activeer de oogsturing via muissimulatie ; druk S om de muissimulaite te stoppen/starten ; klik op de spatiebar om een klik na te doen,Activación de la emulación del ratón visual ; presione S para detener/iniciar la emulación ; presione espacio para emular el clic,,Bật giả lập Chuột Gaze; ấn S để dừng/bắt đầu giả lập,,,Включить эмуляцию Gaze мышки ; нажмите на S ; чтобы начать/остановить эмуляцию; нажмите пробел для эмуляции клика
+AddUser,Ajouter un nouvel utilisateur,Add new user,Neuen Benutzer hinzufügen,Aggiungi un nuovo utente,Voeg een nieuwe gebruiker toe,Agregar un usuario,,Thêm người dùng mới,,,Добавить нового пользователя
+DefaultUser,Utilisateur par Défaut,Default User,Standardbenutzer,Utente standard,Standaard Gebruiker,Usuario predeterminado,,Người dùng mặc định,,,Пользователь по умолчанию
+NewUser,Nouvel utilisateur,New user,Neuer Benutzer,Nuovo utente,Nieuwe gebruiker,Nuevo usario,,Người dùng mới,,,Новый пользователь
+Remove,Voulez vous vraiment supprimer cet utilisateur ?,Do you really want to delete this user ?,Wollen Sie diesen Benutzer wirklich löschen? ,Vuoi davvero eliminare questo utente?,Ben je zeker dat je deze gebruiker wil verwijderen?,¿Realmente quieres eliminar a este usuario?,,Bạn có muốn xóa người dùng này thật không,,,Вы действительно хотите удалить данного пользователя?
+UserModif,Modification de l'utilisateur, User Modification,Ändern des Benutzers,Modifica utente,Gebruikers instellingen,Modificación del usario,,Tùy chỉnh người dùng,,,Обновление данных пользователя
+YesRemove,Oui (supprimer),Yes (delete),Ja (löschen),Si (rimuovi),Ja (verwijder),Si (eliminar),,Có (xóa),,,Да (удалить)
+NoCancel,Non (annuler),No (cancel),Nein (Annullierer),No (annulla),Neen (cancel),No (anular),,Không (quay Lại),,,Нет (отменить)
+Name,Nom,Name,Name,Nome,Naam,Nombre,,Tên,,,Имя
+enterName,Entrer un nom,Enter a name,Geben Sie einen Namen,Inserisci un nome,Geef een naam,Ingresa un nombre,,Nhập tên,,,Введите имя
+ChooseImage,Choisissez une image,Choose an image,Wählen Sie ein Bild,Scegli un'immagine,Kies een kleurplaat,Elige una imagen,,Chọn một hình,,,Выберите изображение
+Image,Image,Image,Bild,Immagine,Kleurplaat,Imagen,,Hình ảnh,,,Изображение
+Reset,Réinitialiser,reset,Zurücksetzen,Resetta,Reset,Reiniciar,,Đặt lại,,,Сброс и перезагрузка
+AlreadyUsed,Ce nom d'utilisateur existe déjà,This user name exists already,Dieser Benutzername existiert bereits,Questo nome utente è già utilizzato,Deze gebruikersnaam bestaat reeds,Este nombre de usario ya existe,,Tên người dùng này đã tồn tại,,,Пользователь с таким именем уже существует
