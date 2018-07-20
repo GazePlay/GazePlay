@@ -38,6 +38,7 @@ public class Car extends Rectangle {
     private boolean intersect = false;
     private Timeline timelineProgressBar;
     GameContext gameContext;
+    private ProgressIndicator pi;
 
     private boolean selected = false;
 
@@ -48,14 +49,15 @@ public class Car extends Rectangle {
         this.direction = direction;
         this.size = size;
         this.setOpacity(0.7);
+        this.pi = pi;
 
         EventHandler<Event> enterEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                pi.setOpacity(1);
-                pi.toFront();
                 pi.setLayoutX(getX() + getWidth() / 2 - pi.getWidth() / 2);
                 pi.setLayoutY(getY() + getHeight() / 2 - pi.getHeight() / 2);
+                pi.setOpacity(1);
+                pi.toFront();
                 timelineProgressBar = new Timeline();
                 timelineProgressBar.getKeyFrames()
                         .add(new KeyFrame(new Duration(Configuration.getInstance().getFixationLength()),
@@ -78,14 +80,14 @@ public class Car extends Rectangle {
             public void handle(Event e) {
                 Point mouse = MouseInfo.getPointerInfo().getLocation();
 
-                if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
-                    int way = checkPos(mouse);
-                    if (selected && !endOfGame && !intersect && !onMouse(mouse)) {
-                        // moveToMouse(mouse);
-                        moveTo(way, mouse);
-                    }
-                    intersect = false;
+                // if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
+                int way = checkPos(mouse);
+                if (selected && !endOfGame && !intersect && !onMouse(mouse)) {
+                    // moveToMouse(mouse);
+                    moveTo(way, mouse);
                 }
+                intersect = false;
+                // }
 
                 if (!selected) {
                     timelineProgressBar.stop();
@@ -113,6 +115,9 @@ public class Car extends Rectangle {
         }
 
         setSelected(false);
+        timelineProgressBar.stop();
+        pi.setProgress(0);
+        pi.setOpacity(0);
         return 0;
     }
 
