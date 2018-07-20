@@ -28,6 +28,7 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.ProgressButton;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.LinkedList;
@@ -114,7 +115,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         r.setFill(col[0]);
         this.getChildren().add(r);
         Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        back.setFill(new ImagePattern(new Image("data/cake/background.png")));
+        back.setFill(new ImagePattern(new Image("data/cake/images/background.png")));
         back.setMouseTransparent(true);
         this.getChildren().add(back);
 
@@ -322,7 +323,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         if (j == 1) {
             aerographAnimation(i, j, dimension2D);
         } else {
-            ImageView temp = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
+            ImageView temp = new ImageView(new Image("data/cake/images/" + (j - 1) + "" + (i + 1) + ".png"));
             temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
             temp.setPreserveRatio(true);
             cake[currentCake].getChildren().set(j - 1, temp);
@@ -342,8 +343,8 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         double Yppos = Ypos + 7 * cakeheight / 8;
         Ypos = Ypos + 1.9 * cakeheight / 8;
 
-        ImageView aerograph = new ImageView(new Image("data/cake/aero.png"));
-        ImageView aerograph2 = new ImageView(new Image("data/cake/aero.png"));
+        ImageView aerograph = new ImageView(new Image("data/cake/images/aero.png"));
+        ImageView aerograph2 = new ImageView(new Image("data/cake/images/aero.png"));
         aerograph.setFitWidth(dimension2D.getWidth() / 2.5);
         aerograph2.setFitWidth(dimension2D.getWidth() / 2.5);
         aerograph2.setScaleX(-1);
@@ -388,17 +389,17 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         ParallelTransition pt = new ParallelTransition();
         pt.getChildren().addAll(tt, tt2);
 
-        FadeTransition ft = new FadeTransition(Duration.millis(700), spray);
+        FadeTransition ft = new FadeTransition(Duration.seconds(2.5), spray);
         ft.setToValue(0.5);
-        FadeTransition ft2 = new FadeTransition(Duration.millis(700), spray2);
+        FadeTransition ft2 = new FadeTransition(Duration.seconds(2.5), spray2);
         ft2.setToValue(0.5);
         ImageView temp2 = (ImageView) cake[currentCake].getChildren().get(j - 1);
-        ImageView temp = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
+        ImageView temp = new ImageView(new Image("data/cake/images/" + (j - 1) + "" + (i + 1) + ".png"));
         temp.setFitWidth(dimension2D.getWidth() / (4 + currentCake));
         temp.setPreserveRatio(true);
         cake[currentCake].getChildren().set(j - 1, temp);
         cake[currentCake].getChildren().add(j, temp2);
-        FadeTransition ft3 = new FadeTransition(Duration.millis(700), temp2);
+        FadeTransition ft3 = new FadeTransition(Duration.seconds(1.5), temp2);
         ft3.setToValue(0);
 
         ParallelTransition pt2 = new ParallelTransition();
@@ -406,6 +407,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
         SequentialTransition sq = new SequentialTransition();
         sq.getChildren().addAll(pt, pt2);
+        Utils.playSound("data/cake/sounds/spray.mp3");
         sq.play();
 
         sq.setOnFinished(new EventHandler<ActionEvent>() {
@@ -449,7 +451,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         bt.setLayoutX((i + 1) * dimension2D.getWidth() / k - buttonSize / 2);
         int index = i;
         int jndex = j - 1;
-        ImageView iv = new ImageView(new Image("data/cake/" + (j - 1) + "" + (i + 1) + ".png"));
+        ImageView iv = new ImageView(new Image("data/cake/images/" + (j - 1) + "" + (i + 1) + ".png"));
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
         bt.button.setRadius(buttonSize / 2);
@@ -472,7 +474,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     public void createReturnButton(ProgressButton bt, int j, Dimension2D dimension2D) {
         EventHandler<Event> buttonHandler;
-        ImageView iv = new ImageView(new Image("data/cake/return.png"));
+        ImageView iv = new ImageView(new Image("data/cake/images/return.png"));
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
         bt.button.setRadius(buttonSize / 2);
@@ -513,10 +515,10 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         }
 
         Pane grab = new Pane();
-        ImageView cakeGrabed = new ImageView(new Image("data/cake/01.png"));
+        ImageView cakeGrabed = new ImageView(new Image("data/cake/images/01.png"));
         cakeGrabed.setFitWidth(dimension2D.getWidth() / (4 + i));
         cakeGrabed.setPreserveRatio(true);
-        ImageView grabs = new ImageView(new Image("data/cake/grab.png"));
+        ImageView grabs = new ImageView(new Image("data/cake/images/grab.png"));
         grabs.setFitWidth(dimension2D.getWidth() / (4 + i));
         grabs.setPreserveRatio(true);
         double height = ((grabs.getImage().getHeight()) * (dimension2D.getWidth() / (4 + i)))
@@ -532,9 +534,10 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         if (i != 0) {
             centerY = centerY - cakeheight / 2;
         }
-        TranslateTransition tt = new TranslateTransition(Duration.millis(500), grab);
+        TranslateTransition tt = new TranslateTransition(Duration.millis(1500), grab);
         tt.setToX(centerX - cakeGrabed.getFitWidth() / 2 + offset);
-        TranslateTransition tt2 = new TranslateTransition(Duration.millis(500), grab);
+
+        TranslateTransition tt2 = new TranslateTransition(Duration.millis(1000), grab);
         tt2.setToY(centerY);
         SequentialTransition sq = new SequentialTransition();
         sq.getChildren().addAll(tt, tt2);
@@ -545,7 +548,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                 grab.getChildren().remove(cakeGrabed);
 
                 cake[i] = new StackPane();
-                ImageView base = new ImageView(new Image("data/cake/01.png"));
+                ImageView base = new ImageView(new Image("data/cake/images/01.png"));
                 base.setFitWidth(dimension2D.getWidth() / (4 + i));
                 base.setPreserveRatio(true);
                 cake[i].getChildren().addAll(base, new ImageView(), new ImageView(), new ImageView());
@@ -566,6 +569,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
             }
         });
+        Utils.playSound("data/cake/sounds/grabcoming.mp3");
         sq.play();
     }
 
@@ -590,7 +594,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             ;
             cakeheight = 0;
             for (int j = 0; j < k; j++) {
-                ImageView cakemodel = new ImageView(new Image("data/cake/" + j + "" + model[i][j] + ".png"));
+                ImageView cakemodel = new ImageView(new Image("data/cake/images/" + j + "" + model[i][j] + ".png"));
                 cakemodel.setFitWidth(dimension2D.getWidth() / (2 * (4 + i)));
                 cakemodel.setPreserveRatio(true);
                 cakeheight = ((cakemodel.getImage().getHeight()) * (dimension2D.getWidth() / (2 * (4 + i))))
