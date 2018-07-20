@@ -65,7 +65,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private final String[] screen = { "park.jpg", "room.jpg", "kitchen.jpg", "shower.jpg" };
     private final String[] cursor = { "glove.png", "hand.png", "emptyspoon.png", "pommeau.png" };
     private final Color[] colorBar = { Color.BLUE, Color.RED, Color.GREEN };
-    private final int[] regressionTime = { 1, 2, 1 };
+    private final double[] regressionTime = { 1, 2, 4 };
 
     @Getter
     @Setter
@@ -498,7 +498,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             if (it[i] > 0) {
                 ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i] - 1)).setFill(this.colorBar[i]);
             }
-            if ((i == 1) && (it[i] < LIFE_SIZE - 1 && it[i] >= 0)) {
+            if ((i != 0) && (it[i] < LIFE_SIZE - 1 && it[i] >= 0)) {
                 ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i] - 2)).setFill(this.colorBar[i]);
             }
             timelines[i].play();
