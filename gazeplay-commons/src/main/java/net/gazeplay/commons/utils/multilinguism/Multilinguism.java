@@ -33,7 +33,7 @@ public class Multilinguism {
 
     public String getTrad(String key, String language) {
         String translate = i18n.translate(key, language);
-        if (translate == null) {
+        if (translate == null || "".equals(translate)) {
             log.warn("No translation found for key '{}'", key);
             return "[untranslated!] " + key;
         }

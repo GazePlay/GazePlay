@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
+import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
@@ -468,7 +469,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         pane.getChildren().add(buttonLoad);
 
-        final Button resetButton = new Button(translator.translate("reset"));
+        final I18NButton resetButton = new I18NButton(translator, "reset", COLON);
         resetButton.setOnAction((event) -> {
             configuration.getFiledirProperty().setValue(Configuration.DEFAULT_VALUE_FILE_DIR);
         });
@@ -513,7 +514,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         pane.getChildren().add(buttonLoad);
 
-        final Button resetButton = new Button(translator.translate("reset"));
+        final I18NButton resetButton = new I18NButton(translator, "reset", COLON);
         resetButton.setOnAction((event) -> {
             configuration.getWhereIsItDirProperty().setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR);
         });
@@ -720,7 +721,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         pane.getChildren().add(buttonLoad);
 
-        final Button resetButton = new Button(translator.translate("reset"));
+        final I18NButton resetButton = new I18NButton(translator, "reset", COLON);
         resetButton.setOnAction((event) -> {
             changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER, config);
         });

@@ -250,7 +250,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                 }
 
-                if (gazePlay.getTranslator() instanceof DefaultTranslator) {
+                if (getGazePlay().getTranslator() instanceof DefaultTranslator) {
                     ((DefaultTranslator) gazePlay.getTranslator()).setConfig(config);
                 }
 
