@@ -469,7 +469,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         pane.getChildren().add(buttonLoad);
 
-        final I18NButton resetButton = new I18NButton(translator, "reset", COLON);
+        final I18NButton resetButton = new I18NButton(translator, "reset");
         resetButton.setOnAction((event) -> {
             configuration.getFiledirProperty().setValue(Configuration.DEFAULT_VALUE_FILE_DIR);
         });
@@ -514,7 +514,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         pane.getChildren().add(buttonLoad);
 
-        final I18NButton resetButton = new I18NButton(translator, "reset", COLON);
+        final I18NButton resetButton = new I18NButton(translator, "reset");
         resetButton.setOnAction((event) -> {
             configuration.getWhereIsItDirProperty().setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR);
         });
@@ -721,7 +721,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         pane.getChildren().add(buttonLoad);
 
-        final I18NButton resetButton = new I18NButton(translator, "reset", COLON);
+        final I18NButton resetButton = new I18NButton(translator, "reset");
         resetButton.setOnAction((event) -> {
             changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER, config);
         });
