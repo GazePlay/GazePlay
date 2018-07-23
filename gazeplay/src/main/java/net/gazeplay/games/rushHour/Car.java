@@ -42,6 +42,18 @@ public class Car extends Rectangle {
 
     private boolean selected = false;
 
+    /**
+     * Creates a new instance of a Car with the size and direction.
+     * 
+     * @param l
+     *            length of the car
+     * @param h
+     *            height of the car
+     * @param direction
+     *            of the car, true for horizontal, false for vertical
+     * @param size,
+     *            the size of one block
+     */
     Car(int l, int h, Color c, boolean direction, int size, ProgressIndicator pi, GameContext gameContext) {
         super(0, 0, l * size, h * size);
         this.setFill(c);
@@ -82,6 +94,7 @@ public class Car extends Rectangle {
 
                 // if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
                 int way = checkPos(mouse);
+                log.info("The Value Of Way is : " + way);
                 if (selected && !endOfGame && !intersect && !onMouse(mouse)) {
                     // moveToMouse(mouse);
                     moveTo(way, mouse);

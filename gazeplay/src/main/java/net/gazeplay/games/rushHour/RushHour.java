@@ -31,23 +31,17 @@ public class RushHour extends Parent implements GameLifeCycle {
     public List<Car> garage;
     public Shape walls;
 
+    int level;
+    int numberLevels = 2;
+
     public RushHour(GameContext gameContext) {
         this.gameContext = gameContext;
+        level = 0;
     }
 
     public void setLevel(int i) {
 
         garage = new LinkedList<Car>();
-
-        if (i == 0) {
-            setLevel0();
-        }
-
-        setIntersections();
-
-    }
-
-    public void setLevel0() {
 
         ProgressIndicator pi = new ProgressIndicator(0);
         pi.setPrefSize(size, size);
@@ -56,6 +50,65 @@ public class RushHour extends Parent implements GameLifeCycle {
         Pane p = new Pane();
 
         p.getChildren().add(pi);
+
+        if (i == 0) {
+            setLevel0(p, pi);
+        } else if (i == 1) {
+            setLevel1(p, pi);
+        }
+
+        toWinListener();
+
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        p.setLayoutX(dimension2D.getWidth() / 2 - ground.getWidth() / 2);
+        p.setLayoutY(dimension2D.getHeight() / 2 - ground.getHeight() / 2);
+
+        gameContext.getChildren().add(p);
+
+        setIntersections();
+
+    }
+
+    public void setLevel1(Pane p, ProgressIndicator pi) {
+
+        Car red = new Car(2, 1, Color.RED, true, size, pi, gameContext);
+        red.setToX(0);
+        red.setToY(2);
+        garage.add(red);
+        p.getChildren().add(red);
+
+        toWin = red;
+
+        Car blue = new Car(1, 3, Color.BLUE, false, size, pi, gameContext);
+        blue.setToX(5);
+        blue.setToY(1);
+        garage.add(blue);
+        p.getChildren().add(blue);
+
+        Car vert = new Car(2, 1, Color.GREEN, true, size, pi, gameContext);
+        vert.setToX(4);
+        vert.setToY(0);
+        garage.add(vert);
+        p.getChildren().add(vert);
+
+        Car purple = new Car(3, 1, Color.PURPLE, true, size, pi, gameContext);
+        purple.setToX(0);
+        purple.setToY(3);
+        garage.add(purple);
+        p.getChildren().add(purple);
+
+        Car yellow = new Car(1, 3, Color.YELLOW, false, size, pi, gameContext);
+        yellow.setToX(2);
+        yellow.setToY(0);
+        garage.add(yellow);
+        p.getChildren().add(yellow);
+
+        createGarage(6, 6, new Rectangle((6 + 1) * size, ((6 / 2)) * size, size, size), p);
+
+    }
+
+    public void setLevel0(Pane p, ProgressIndicator pi) {
 
         Car red = new Car(2, 1, Color.RED, true, size, pi, gameContext);
         red.setToX(1);
@@ -109,21 +162,13 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(6, 6, new Rectangle((6 + 1) * size, ((6 / 2)) * size, size, size), p);
 
-        toWinListener();
-
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        p.setLayoutX(dimension2D.getWidth() / 2 - ground.getWidth() / 2);
-        p.setLayoutY(dimension2D.getHeight() / 2 - ground.getHeight() / 2);
-
-        gameContext.getChildren().add(p);
-
     }
 
     @Override
     public void launch() {
         endOfGame = false;
-        setLevel(0);
+        setLevel(level);
+        level = (level + 1) % numberLevels;
     }
 
     @Override
