@@ -40,6 +40,9 @@ import net.gazeplay.commons.utils.games.Utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -252,6 +255,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                 }
 
                 CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
+
+                BackgroundMusicManager.getInstance().stop();
 
                 BackgroundMusicManager.setInstance(new BackgroundMusicManager());
 
@@ -588,7 +593,13 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                         log.info("THE NAME OF THE NEW USER IS = {}", conf2.getUserName());
 
                         if (!tfi.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
-                            conf2.setUserPicture(tfi.getText());
+
+                            File src = new File(tfi.getText());
+                            File dst = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
+                                    + newser.name + Utils.FILESEPARATOR + src.getName());
+                            copyFileUsingStream(src, dst);
+
+                            conf2.setUserPicture(dst.getAbsolutePath());
                         }
 
                         conf2.setFileDir(Configuration.getFileDirectoryUserValue(newser.name));
@@ -622,7 +633,13 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     Configuration conf2 = Configuration.createFromPropertiesResource();
 
                     if (!tfi.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
-                        conf2.setUserPicture(tfi.getText());
+
+                        File src = new File(tfi.getText());
+                        File dst = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.name
+                                + Utils.FILESEPARATOR + src.getName());
+                        copyFileUsingStream(src, dst);
+
+                        conf2.setUserPicture(dst.getAbsolutePath());
                     }
                     conf2.saveConfigIgnoringExceptions();
 
@@ -694,6 +711,27 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             }
         }
         return s;
+    }
+
+    private static boolean copyFileUsingStream(File source, File dest) {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+
+            is.close();
+            os.close();
+            return true;
+        } catch (Exception e) {
+            log.info("Unable to copy the profile picture");
+            return false;
+        }
     }
 
 }

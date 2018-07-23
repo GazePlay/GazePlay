@@ -117,7 +117,7 @@ public class ProgressButton extends StackPane {
                     timelineProgressBar.stop();
                     timelineProgressBar.getKeyFrames().clear();
 
-                    timelineProgressBar.setDelay(new Duration(Configuration.getInstance().getFixationLength()));
+                    timelineProgressBar.setDelay(new Duration(300));
 
                     timelineProgressBar.getKeyFrames().add(
                             new KeyFrame(new Duration(fixationLength), new KeyValue(indicator.progressProperty(), 1)));

@@ -3,6 +3,7 @@ package net.gazeplay.games.pet;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -331,16 +332,61 @@ public class Mypet extends Pane {
                     baloon.setPreserveRatio(true);
                     baloon.fitWidthProperty().bind(ph.hand.widthProperty());
                     ph.getGameContext().getChildren().add(baloon);
+                    Dimension2D dimension2D = ph.getGameContext().getGamePanelDimensionProvider().getDimension2D();
+                    baloon.setX(0);
+
+                    TranslateTransition tt = new TranslateTransition(Duration.millis(1000), baloon);
+                    int nombreAleatoire = (int) (Math.random() * 4);
+                    switch (nombreAleatoire) {
+                    case 0:
+                        tt.setFromX(0);
+                        tt.setFromY((int) (Math.random() * dimension2D.getHeight()));
+                        break;
+                    case 1:
+                        tt.setFromY(0);
+                        tt.setFromX((int) (Math.random() * dimension2D.getWidth()));
+                        break;
+                    case 2:
+                        tt.setFromX(dimension2D.getWidth());
+                        tt.setFromY((int) (Math.random() * dimension2D.getHeight()));
+                        break;
+                    case 3:
+                        tt.setFromY(dimension2D.getHeight());
+                        tt.setFromX((int) (Math.random() * dimension2D.getWidth()));
+                        break;
+                    }
+
+                    // TODO random position of the baloon enter
+
                     setBlinkingEnabled(false);
                     setHappy();
 
-                    TranslateTransition tt = new TranslateTransition(Duration.millis(1000), baloon);
                     tt.setToX(getLayoutX() + (getWidth() / 3));
                     tt.setToY(getLayoutY());
 
                     TranslateTransition t2 = new TranslateTransition(Duration.millis(500), baloon);
-                    t2.setToX(ph.getZone().getWidth());
-                    t2.setToY(ph.getZone().getHeight());
+                    nombreAleatoire = (int) (Math.random() * 4);
+                    switch (nombreAleatoire) {
+                    case 0:
+                        t2.setToX(0);
+                        t2.setToY((int) (Math.random() * dimension2D.getHeight()));
+                        break;
+                    case 1:
+                        t2.setToY(0);
+                        t2.setToX((int) (Math.random() * dimension2D.getWidth()));
+                        break;
+                    case 2:
+                        t2.setToX(dimension2D.getWidth());
+                        t2.setToY((int) (Math.random() * dimension2D.getHeight()));
+                        break;
+                    case 3:
+                        t2.setToY(dimension2D.getHeight());
+                        t2.setToX((int) (Math.random() * dimension2D.getWidth()));
+                        break;
+                    }
+
+                    // TODO random position of the baloon exit
+
                     SequentialTransition st = new SequentialTransition();
 
                     st.getChildren().addAll(tt, t2);
