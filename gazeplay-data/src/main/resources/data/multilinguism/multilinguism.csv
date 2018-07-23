@@ -1,5 +1,5 @@
 ,fra,eng,deu,ita,nld,spa,est,vnm,chn,jpn,rus
-Colon, : ,: ,: ,:,:,:,,:,,:,:
+Colon, : ,: ,: ,:,:,:,,:,:,:,:
 Creampie,Tartes à la crème,Cream pies,Sahnetorte,Torte alla crema,Taarten,Tarta de crema,,Bánh kem,奶油派,クリームパイ,Кремовый пирог
 Ninja,Ninja !,Ninja !,Ninja !,Ninja!,Ninja !,Ninja,,Ninja !,忍者 ！,にんじゃ !,Ниндзя
 MagicCards,Cartes magiques,Magic cards,Zauberkarten,Carte magiche,Magische kaarten,Tarjetas mágicas,,Những quân bài ma thuật,魔幻卡,マジックカード,Магические карты
@@ -30,8 +30,8 @@ EyeTracker,Oculomètre,Eye Tracker,Eyetracker,Tracciatore oculare (eye tracker),
 FileDir,Répertoire des fichiers,Files Directory ,Dateiverzeichnis,Cartella,Bestands locatie,Directorio,,Thư mục,文件夹,,Директоия файлов
 FixationLength,Durée de la fixation (secondes),Fixation Length (seconds),Dauer der Fixierung  (Sekunden),Durata fissazione (secondi),Fixatietijd (seconden),Duración de la fijación,,Độ dài cố định (giây),注视时长（秒）,,Длина фиксации (в секундах)
 LayoutFile,Fichier de style,Style Sheets,Style Sheets,Fogli di stile,Stijlen,Hojas de estilo,,Tập tin Định dạng,,,Таблица стилей
-WhereIsItDirectory,Répertoire du jeu « Où est-ce ? >,« Where is it? » Game directory,Spielverzeichnis « Wo ist es? »,Cartella gioco "Dov'è?",Waar is het Spel bestandslocatie,"Directorio del juego ""Donde está?""",,"Thư mục game ""Nó ở đâu?""",《它在哪》游戏目录,,"Где это?" директория Игры
-WII-error,Vérifiez le répertoire du jeu « Où est-ce ? ».,Check « Where is it? » Game directory,Überprüfen Spielverzeichnis « Wo ist es? »,Controllo cartella di gioco "Dov'è?","verifiëer ""Waar is het"" Spel bestandslocatie","Verifica el directorio del juego ""Donde está?""",,"Kiểm tra Thư mục game ""Nó ở đâu?"" ",查找《它在哪》游戏目录,,Проверка "Где это" директория Игры
+WhereIsItDirectory,Répertoire du jeu « Où est-ce ? >,« Where is it? » Game directory,Spielverzeichnis « Wo ist es? »,"Cartella gioco ""Dov'è?""",Waar is het Spel bestandslocatie,"Directorio del juego ""Donde está?""",,"Thư mục game ""Nó ở đâu?""",《它在哪》游戏目录,,Где это? директория Игры
+WII-error,Vérifiez le répertoire du jeu « Où est-ce ? ».,Check « Where is it? » Game directory,Überprüfen Spielverzeichnis « Wo ist es? »,"Controllo cartella di gioco ""Dov'è?""","verifiëer ""Waar is het"" Spel bestandslocatie","Verifica el directorio del juego ""Donde está?""",,"Kiểm tra Thư mục game ""Nó ở đâu?"" ",查找《它在哪》游戏目录,,"Проверка ""Где это"" директория Игры"
 QuestionLength,Durée d’affichage des question,Question Display Length,Dauer der Veröffentlichung von Fragen,Durata esposizione della domanda,Hoe lang de vraag tonen?,Duración de visualización de las preguntas,,Thời gian hiển thị câu hỏi,,,Длина дисплея вопроса
 Cups and Balls,Gobelets Pass Pass,Cups and Balls,Bechertrick,Tazze e palle,Bekers en Ballen,Tazas y bolas,,Chiếc cốc và Quả bóng,杯子和球,,Чашки и шарики
 Biboules,Biboules,Biballs,Biboles,Bipall,Vliegjes,Biboules,,Bóng Bi,垒球,,Безделушки
