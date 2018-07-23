@@ -65,6 +65,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         p.setLayoutY(dimension2D.getHeight() / 2 - ground.getHeight() / 2);
 
         gameContext.getChildren().add(p);
+        gameContext.getGazeDeviceManager().addEventFilter(p);
 
         setIntersections();
 

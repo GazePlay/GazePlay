@@ -256,6 +256,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                 CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
 
+                BackgroundMusicManager.getInstance().stop();
+
                 BackgroundMusicManager.setInstance(new BackgroundMusicManager());
 
                 gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));

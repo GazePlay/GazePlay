@@ -3,6 +3,8 @@ package net.gazeplay.games.rushHour;
 import java.awt.MouseInfo;
 import java.awt.Point;
 
+import com.sun.glass.ui.Screen;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -23,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.DefaultGamesLocator;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import tobii.Tobii;
 
 @Slf4j
 public class Car extends Rectangle {
@@ -86,15 +90,31 @@ public class Car extends Rectangle {
         };
 
         this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterEvent);
+        this.addEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
 
         EventHandler<Event> exitEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
                 Point mouse = MouseInfo.getPointerInfo().getLocation();
+                if (e.getEventType() == GazeEvent.GAZE_EXITED) {
+                    Screen mainScreen = Screen.getMainScreen();
 
-                // if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
+                    double screenWidth = mainScreen.getWidth();
+                    double screenHeight = mainScreen.getHeight();
+
+                    float[] pointAsFloatArray = Tobii.gazePosition();
+
+                    final float xRatio = pointAsFloatArray[0];
+                    final float yRatio = pointAsFloatArray[1];
+
+                    final double positionX = xRatio * screenWidth;
+                    final double positionY = yRatio * screenHeight;
+
+                    mouse = new Point();
+                    mouse.setLocation(positionX, positionY);
+                }
+
                 int way = checkPos(mouse);
-                log.info("The Value Of Way is : " + way);
                 if (selected && !endOfGame && !intersect && !onMouse(mouse)) {
                     // moveToMouse(mouse);
                     moveTo(way, mouse);
@@ -111,6 +131,7 @@ public class Car extends Rectangle {
         };
 
         this.addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+        this.addEventFilter(GazeEvent.GAZE_EXITED, exitEvent);
 
     }
 
