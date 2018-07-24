@@ -8,9 +8,11 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import lombok.extern.slf4j.Slf4j;
@@ -81,6 +83,8 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         toWin = red;
 
+        toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
+
         Car blue = new Car(1, 3, Color.BLUE, false, size, pi, gameContext);
         blue.setToX(5);
         blue.setToY(1);
@@ -118,6 +122,13 @@ public class RushHour extends Parent implements GameLifeCycle {
         p.getChildren().add(red);
 
         toWin = red;
+
+        if (toWin.isDirection()) {
+            toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
+        } else {
+            toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiV.png")));
+        }
+        toWin.setEffect(null);
 
         Car blue = new Car(1, 3, Color.BLUE, false, size, pi, gameContext);
         blue.setToX(3);
