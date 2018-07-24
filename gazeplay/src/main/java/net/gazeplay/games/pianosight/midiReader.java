@@ -43,12 +43,10 @@ public class midiReader {
 
     public int nextNote() {
         int note = -1;
-        log.info("Is" + (tickIndex + 1) + "<" + track.size() + "?");
         if (tickIndex + 1 < track.size()) {
             tickIndex++;
             MidiEvent event = track.get(tickIndex);
             long tick = event.getTick();
-            log.info("yes tick" + tickIndex);
             MidiMessage message = event.getMessage();
             if (message instanceof ShortMessage) {
                 ShortMessage sm = (ShortMessage) message;
@@ -60,8 +58,6 @@ public class midiReader {
                         key = sm.getData1();
                         note = key % 12;
                         String noteName = NOTE_NAMES[note];
-
-                        log.info("return " + note);
                         return note;
                     } else {
                         return nextNote();
@@ -73,7 +69,6 @@ public class midiReader {
                 return nextNote();
             }
         }
-        log.info("no, return -1");
         return note;
     }
 }
