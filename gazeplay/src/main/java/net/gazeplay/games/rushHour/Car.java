@@ -68,7 +68,6 @@ public class Car extends Rectangle {
             this.setFill(new ImagePattern(new Image("data/rushHour/carH.png")));
         } else {
             this.setFill(new ImagePattern(new Image("data/rushHour/carV.png")));
-
         }
         Lighting lighting = new Lighting();
         lighting.setDiffuseConstant(100.0);

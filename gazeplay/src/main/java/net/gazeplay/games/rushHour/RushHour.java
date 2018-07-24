@@ -83,8 +83,6 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         toWin = red;
 
-        toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
-
         Car blue = new Car(1, 3, Color.BLUE, false, size, pi, gameContext);
         blue.setToX(5);
         blue.setToY(1);
@@ -122,13 +120,6 @@ public class RushHour extends Parent implements GameLifeCycle {
         p.getChildren().add(red);
 
         toWin = red;
-
-        if (toWin.isDirection()) {
-            toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
-        } else {
-            toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiV.png")));
-        }
-        toWin.setEffect(null);
 
         Car blue = new Car(1, 3, Color.BLUE, false, size, pi, gameContext);
         blue.setToX(3);
@@ -180,6 +171,12 @@ public class RushHour extends Parent implements GameLifeCycle {
     public void launch() {
         endOfGame = false;
         setLevel(level);
+        if (toWin.isDirection()) {
+            toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
+        } else {
+            toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiV.png")));
+        }
+        toWin.setEffect(null);
         level = (level + 1) % numberLevels;
     }
 
