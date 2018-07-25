@@ -12,5 +12,5 @@ package net.gazeplay.commons.utils.multilinguism;
  */
 public enum Languages {
 
-    fra, eng, deu, ita, nld, spa, vnm, chn, jpn, rus
+    fra, eng, deu, ita, nld, spa, vnm, chn, jpn, rus, ara
 }
