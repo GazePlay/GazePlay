@@ -260,6 +260,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                 BackgroundMusicManager.setInstance(new BackgroundMusicManager());
 
+                gazePlay.getHomeMenuScreen().clear();
+
                 gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
 
                 choicePanel.getChildren().clear();

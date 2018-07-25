@@ -44,6 +44,7 @@ class Target extends Parent {
     private final boolean lapin;
     private final ImageLibrary imgLib;
     private final Circle cercle;
+    private Timeline timeline;
 
     public Target(GameContext gameContext, Stats stats, ImageLibrary imgLib, int level, long start,
             Divisor gameInstance, Position pos, boolean lapin) {
@@ -58,6 +59,7 @@ class Target extends Parent {
         this.pos = pos;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.radius = 200 / (level + 1);
+        this.timeline = new Timeline();
 
         this.cercle = new Circle(pos.getX(), pos.getY(), this.radius);
         this.cercle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
@@ -88,11 +90,16 @@ class Target extends Parent {
         move();
 
         this.stats.notifyNewRoundReady();
+
+        Configuration.getInstance().getSpeedEffectsProperty().addListener((o) -> {
+            timeline.stop();
+            move();
+        });
     }
 
     private void move() {
-        Timeline timeline = new Timeline(new KeyFrame(
-                Duration.millis(Configuration.getInstance().getSpeedEffects() * 20), new EventHandler<ActionEvent>() {
+        timeline = new Timeline(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects() * 10),
+                new EventHandler<ActionEvent>() {
                     int dx = randomDirection();
                     int dy = randomDirection();
 
@@ -121,11 +128,6 @@ class Target extends Parent {
                 }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
-
-        Configuration.getInstance().getSpeedEffectsProperty().addListener((o) -> {
-            timeline.stop();
-            move();
-        });
 
     }
 

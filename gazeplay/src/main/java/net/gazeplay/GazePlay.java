@@ -143,12 +143,9 @@ public class GazePlay extends Application {
     public void onReturnToMenu() {
 
         homeMenuScreen.setGazeDeviceManager(GazeDeviceManagerFactory.getInstance().createNewGazeListener());
-        homeMenuScreen.getGameMenuFactory().addFilters();
         homeMenuScreen.setUpOnStage(primaryScene);
         final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
         musicMananger.onEndGame();
-
-        homeMenuScreen.getGameMenuFactory().play();
 
         log.info("here is the list of pausedEvent = {}", homeMenuScreen.getGameMenuFactory().getPausedEvents());
 

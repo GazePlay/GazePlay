@@ -47,32 +47,6 @@ public class GameMenuFactory {
     @Getter
     private List<GameButtonPane> pausedEvents = new LinkedList<GameButtonPane>();
 
-    public void pause() {
-        if (Configuration.getInstance().isGazeMenuEnable()) {
-            for (GameButtonPane child : pausedEvents) {
-                child.removeEventFilter(GazeEvent.GAZE_ENTERED, child.getEnterhandler());
-                child.removeEventFilter(GazeEvent.GAZE_EXITED, child.getExithandler());
-            }
-        }
-    }
-
-    public void play() {
-        if (Configuration.getInstance().isGazeMenuEnable()) {
-            for (GameButtonPane child : pausedEvents) {
-                child.addEventFilter(GazeEvent.GAZE_ENTERED, child.getEnterhandler());
-                child.addEventFilter(GazeEvent.GAZE_EXITED, child.getExithandler());
-            }
-        }
-    }
-
-    public void addFilters() {
-        if (Configuration.getInstance().isGazeMenuEnable()) {
-            for (GameButtonPane child : pausedEvents) {
-                gazeDeviceManager.addEventFilter(child);
-            }
-        }
-    }
-
     public GameButtonPane createGameButton(GazePlay gazePlay, final Region root, Configuration config,
             Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
             GazeDeviceManager gazeDeviceManager, BooleanProperty gameSelected) {
@@ -256,14 +230,14 @@ public class GameMenuFactory {
         gameCard.setEventhandler(new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                pause();
 
                 Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
                 if (variants.size() > 1) {
                     log.info("variants = {}", variants);
                     root.setEffect(new BoxBlur());
-                    Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), gameSpec);
+                    root.setDisable(true);
+                    Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), gameSpec, root);
 
                     String dialogTitle = gameName + " : "
                             + multilinguism.getTrad("Choose Game Variante", config.getLanguage());
@@ -289,15 +263,15 @@ public class GameMenuFactory {
         return gameCard;
     }
 
-    private Stage createDialog(GazePlay gazePlay, Stage primaryStage, GameSpec gameSpec) {
+    private Stage createDialog(GazePlay gazePlay, Stage primaryStage, GameSpec gameSpec, Region root) {
         // initialize the confirmation dialog
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(primaryStage);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setOnCloseRequest(windowEvent -> {
-            play();
             primaryStage.getScene().getRoot().setEffect(null);
+            root.setDisable(false);
         });
 
         FlowPane choicePane = new FlowPane();
@@ -324,6 +298,7 @@ public class GameMenuFactory {
                 @Override
                 public void handle(Event mouseEvent) {
                     dialog.close();
+                    root.setDisable(false);
                     chooseGame(gazePlay, gameSpec, variant, config);
                 }
             };
@@ -348,7 +323,6 @@ public class GameMenuFactory {
         // SecondScreen secondScreen = SecondScreen.launch();
         // this.gazeDeviceManager.clear();
         // this.gazeDeviceManager.destroy();
-        pause();
 
         gazePlay.onGameLaunch(gameContext);
 

@@ -44,7 +44,7 @@ public class Bravo extends Rectangle {
      */
     private static final double pictureFinalHeightToSceneHeightRatio = 0.95d;
 
-    private static final String defaultPictureResourceLocation = "data/common/images/bravo.png";
+    private static final String defaultPictureResourceLocation = "data/common/images/bravo.gif";
 
     private static final String defaultSoundResourceLocation = "data/common/sounds/applause.mp3";
 

@@ -25,4 +25,8 @@ public class GameButtonPane extends BorderPane {
     @Setter
     private Timeline timelineProgressBar;
 
+    @Getter
+    @Setter
+    private boolean active = false;
+
 }

@@ -189,62 +189,31 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             gameCard.setEnterhandler(new EventHandler<Event>() {
                 @Override
                 public void handle(Event e) {
-                    indicator.setProgress(0);
-                    indicator.setOpacity(1);
-                    indicator.toFront();
-                    switch (gameButtonOrientation) {
-                    case HORIZONTAL:
-                        ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(indicator);
-                        break;
-                    case VERTICAL:
-                        ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(indicator);
-                        break;
+                    if (config.isGazeMenuEnable()) {
+                        if (e.getSource() == gameCard && !gameCard.isActive()) {
+                            log.info("ENTERED" + gameCard.getWidth());
+                            gameCard.setActive(true);
+                        }
                     }
-                    ((GameButtonPane) e.getSource()).setTimelineProgressBar(new Timeline());
-
-                    ((GameButtonPane) e.getSource()).getTimelineProgressBar()
-                            .setDelay(new Duration(config.getFixationLength()));
-
-                    ((GameButtonPane) e.getSource()).getTimelineProgressBar().getKeyFrames()
-                            .add(new KeyFrame(new Duration(config.getFixationLength() * 5),
-                                    new KeyValue(indicator.progressProperty(), 1)));
-
-                    ((GameButtonPane) e.getSource()).getTimelineProgressBar().onFinishedProperty()
-                            .set(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent actionEvent) {
-                                    indicator.setOpacity(0);
-                                    ((GameButtonPane) e.getSource()).getEventhandler().handle(null);
-                                }
-                            });
-                    ((GameButtonPane) e.getSource()).getTimelineProgressBar().play();
-
                 }
             });
 
             gameCard.setExithandler(new EventHandler<Event>() {
                 @Override
                 public void handle(Event e) {
-                    ((GameButtonPane) e.getSource()).getTimelineProgressBar().stop();
-                    indicator.setProgress(0);
-                    indicator.setOpacity(0);
-                    switch (gameButtonOrientation) {
-                    case HORIZONTAL:
-                        ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(null);
-                        break;
-                    case VERTICAL:
-                        ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(null);
-                        break;
-                    }
+                    if (config.isGazeMenuEnable()) {
+                        if (e.getSource() == gameCard && gameCard.isActive()) {
+                            log.info("EXITED" + gameCard.getWidth());
 
+                            gameCard.setActive(false);
+                        }
+                    }
                 }
             });
 
-            if (config.isGazeMenuEnable()) {
-                gameCard.addEventFilter(GazeEvent.GAZE_ENTERED, gameCard.getEnterhandler());
-                gameCard.addEventFilter(GazeEvent.GAZE_EXITED, gameCard.getExithandler());
-                gazeDeviceManager.addEventFilter(gameCard);
-            }
+            gameCard.addEventFilter(GazeEvent.GAZE_ENTERED, gameCard.getEnterhandler());
+            gameCard.addEventFilter(GazeEvent.GAZE_EXITED, gameCard.getExithandler());
+            gazeDeviceManager.addEventFilter(gameCard);
 
         }
 
