@@ -39,7 +39,7 @@ Robots,Robots,Robots,Roboters,Robot,Robotten,Robots,,Rô-bốt,机器人,,Роб
 Memory,Memory,Memory,Memory,Memory,Memory,Memory,,Bộ nhớ,记忆,,Память
 EnableRewardSound,Activer le son « bravo »,Enable Reward sound,Aktiviere den Sound Bravo,Attiva suono ricompensa,Activeer beloningsgeluid,Activar el sonido Bravo,,"Bật tiếng ""Chúc mừng""",打开奖励音效,,Включить звук вознаграждения
 DisableHeatMap,Désactiver la Heat Map,Disable Heat Map,Deaktivieren Sie die Heat Map,Disattiva mappa di calore,Deactiveer Heat Map,Desactivar mapa de calor,,"Tắt ""Bản đồ nhiệt""",关闭热量地图,,Отключить тепловую карту
-EnableGazeMenu,Activer le menu regard (Beta),Enable the Gaze Menu (Beta),Aktivieren Sie das Blickmenü (Beta),Attiva il menù di vista (beta),Activeer menu blikrichting (Beta),activar el menú de mirada (Beta),,Bật Menu Gaze,,,Включить меню Гейз (бета)
+EnableGazeMenu,Activer le menu regard (Prochainement),Enable the Gaze Menu (Soon),Aktivieren Sie das Blickmenü (Beta),Attiva il menù di vista (beta),Activeer menu blikrichting (Beta),activar el menú de mirada (Beta),,Bật Menu Gaze,,,Включить меню Гейз (бета)
 MenuOrientation,Orientation du menu (nécessite de relancer le jeu),Menu Orientation (restart game to take effect),Menüorientierung (erfordert Neustart des Spiels),Orientazione del menù (è richiesto il riavvio del gioco),Richting menu (herstart nodig voor activering),Orientación del menú (requiere reiniciar el juego),,Phương ngang/dọc của menu (Khởi động lại để có hiệu lực),,,Управление через Меню (перезапустите игру для ввода в дйствие)
 Music,Musique,Music,Musik,Musica,Muziek,Musica,,Âm nhạc,,,Музыка
 Volume,Volume,Volume,Volume,Volume,Volume,Volumen,,Âm lượng,,,Громкость
