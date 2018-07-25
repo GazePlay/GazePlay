@@ -207,14 +207,15 @@ public class Piano extends Parent implements GameLifeCycle {
                             FirstNote = index;
                         }
 
-                        if (precNote != -1) {
-                            instru.note_on(precKey);
-                            stats.incNbGoals();
-                            stats.notifyNewRoundReady();
+                        instru.note_on(precKey);
+                        stats.incNbGoals();
+                        stats.notifyNewRoundReady();
+
+                        if (FirstNote != -1) {
                             TilesTab.get(precNote).arc.setFill(TilesTab.get(precNote).color1);
                             circleTemp.setFill(Color.BLACK);
                             circleTemp.setOpacity(0);
-                            if (FirstNote > -1) {
+                            if (FirstNote != -1) {
                                 TilesTab.get(FirstNote).arc.setFill(Color.YELLOW);
                             } else {
                                 TilesTab.get(FirstNote).arc.setFill(TilesTab.get(precNote).color1);
@@ -330,6 +331,8 @@ public class Piano extends Parent implements GameLifeCycle {
                                 TilesTab.get(FirstNote).arc.setFill(Color.YELLOW);
                             }
 
+                        } else {
+                            TilesTab.get(precNote).arc.setFill(color2);
                         }
                     }
 
