@@ -4,15 +4,18 @@ import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.AsyncUiTaskExecutor;
+import net.gazeplay.GameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.Utils;
 
@@ -44,7 +47,7 @@ public class Bravo extends Rectangle {
      */
     private static final double pictureFinalHeightToSceneHeightRatio = 0.95d;
 
-    private static final String defaultPictureResourceLocation = "data/common/images/bravo.png";
+    private static final String defaultPictureResourceLocation = "data/common/images/bravo.gif";
 
     private static final String defaultSoundResourceLocation = "data/common/sounds/applause.mp3";
 
@@ -96,6 +99,40 @@ public class Bravo extends Rectangle {
         });
 
         delayedStart(initialDelay);
+    }
+
+    public void setConfetiOnStart(GameContext gc) {
+        Dimension2D dim = gc.getGamePanelDimensionProvider().getDimension2D();
+
+        for (int i = 0; i <= 100; i++) {
+            Rectangle r = new Rectangle(-100, -100, dim.getHeight() / 30, dim.getHeight() / 15);
+            r.setFill(Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+            gc.getChildren().add(r);
+
+            Duration duration = Duration.millis(1500 + (Math.random() * 5000));
+
+            TranslateTransition tt = new TranslateTransition(duration, r);
+            tt.setInterpolator(Interpolator.LINEAR);
+            tt.setFromX(Math.random() * (110 * dim.getWidth() / 100));
+            tt.setFromY(0);
+            tt.setToY(dim.getHeight());
+
+            RotateTransition rt = new RotateTransition(duration, r);
+            rt.setInterpolator(Interpolator.LINEAR);
+            rt.setByAngle(-360 + Math.random() * 2 * 720);
+
+            FadeTransition ft = new FadeTransition(duration, r);
+            ft.setInterpolator(Interpolator.LINEAR);
+            ft.setFromValue(0);
+            ft.setToValue(0.8);
+
+            ParallelTransition pt = new ParallelTransition();
+
+            pt.getChildren().addAll(tt, rt, ft);
+
+            pt.setOnFinished(actionEvent -> gc.getChildren().remove(r));
+            pt.play();
+        }
     }
 
     private void delayedStart(long initialDelay) {

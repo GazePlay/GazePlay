@@ -641,6 +641,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             configuration.saveConfigIgnoringExceptions();
         });
 
+        // TODO
+        checkBox.setDisable(true);
+        // TODO
+
         return checkBox;
     }
 

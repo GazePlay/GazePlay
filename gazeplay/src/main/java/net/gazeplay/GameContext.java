@@ -1,8 +1,10 @@
 package net.gazeplay;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -18,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -358,6 +361,7 @@ public class GameContext extends GraphicalContext<Pane> {
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
         getChildren().add(bravo);
         bravo.toFront();
+        bravo.setConfetiOnStart(this);
         bravo.playWinTransition(root, delay, onFinishedEventHandler);
     }
 
