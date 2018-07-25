@@ -13,10 +13,14 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -60,7 +64,19 @@ public class Car extends Rectangle {
      */
     Car(int l, int h, Color c, boolean direction, int size, ProgressIndicator pi, GameContext gameContext) {
         super(0, 0, l * size, h * size);
-        this.setFill(c);
+        if (direction) {
+            this.setFill(new ImagePattern(new Image("data/rushHour/carH.png")));
+        } else {
+            this.setFill(new ImagePattern(new Image("data/rushHour/carV.png")));
+        }
+        Lighting lighting = new Lighting();
+        lighting.setDiffuseConstant(100.0);
+        lighting.setSpecularConstant(0.0);
+        lighting.setSpecularExponent(0.0);
+        lighting.setSurfaceScale(0.0);
+        lighting.setLight(new Light.Distant(30, 30, c));
+
+        this.setEffect(lighting);
         this.gameContext = gameContext;
         this.direction = direction;
         this.size = size;
