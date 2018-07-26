@@ -317,12 +317,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         rbp.setCenter(removeButton);
         rbp.maxWidthProperty().bind(removeButton.widthProperty());
         rbp.maxHeightProperty().bind(removeButton.heightProperty());
-
-        /*
-         * Circle shape = new Circle(); shape.setRadius((110*size)/100);
-         * 
-         * rbp.setShape(shape);
-         */
+        rbp.minWidthProperty().bind(removeButton.widthProperty());
+        rbp.minHeightProperty().bind(removeButton.heightProperty());
 
         return rbp;
     }
@@ -351,12 +347,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         rbp.setCenter(removeButton);
         rbp.maxWidthProperty().bind(removeButton.widthProperty());
         rbp.maxHeightProperty().bind(removeButton.heightProperty());
-
-        /*
-         * Circle shape = new Circle(); shape.setRadius((110*size)/100);
-         * 
-         * rbp.setShape(shape);
-         */
+        rbp.minWidthProperty().bind(removeButton.widthProperty());
+        rbp.minHeightProperty().bind(removeButton.heightProperty());
 
         return rbp;
     }
