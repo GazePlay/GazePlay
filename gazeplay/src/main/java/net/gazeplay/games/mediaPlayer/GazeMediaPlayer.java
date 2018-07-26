@@ -71,7 +71,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
+        this.stopMedia();
 
     }
 

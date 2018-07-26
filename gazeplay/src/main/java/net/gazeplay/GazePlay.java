@@ -164,6 +164,12 @@ public class GazePlay extends Application {
         lds.setUpOnStage(primaryScene);
         primaryStage.show();
     }
+    
+    public void goToUserPage() {
+    	userProfileScreen = UserProfilContext.newInstance(this, Configuration.getInstance());
+    	userProfileScreen.setUpOnStage(primaryScene);
+        primaryStage.show();
+    }
 
     public void toggleFullScreen() {
 

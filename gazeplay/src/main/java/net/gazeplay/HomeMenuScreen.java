@@ -72,6 +72,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         this.gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
         CustomButton exitButton = createExitButton();
+        CustomButton logoutButton = createLogoutButton(gazePlay);
 
         ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
         ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(configurationContext);
@@ -103,7 +104,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
-        topRightPane.getChildren().addAll(exitButton);
+        topRightPane.getChildren().addAll(logoutButton, exitButton);
 
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
@@ -191,45 +192,42 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 public void handle(Event e) {
                     if (config.isGazeMenuEnable()) {
                         if (e.getSource() == gameCard /* && !gameCard.isActive() */) {
-                            log.info("ENTERED" + gameCard.getWidth());
-                            gameCard.setActive(true);
-                        }
-                    } else { // IMPOSSIBLE
-                        indicator.setProgress(0);
-                        indicator.setOpacity(1);
-                        indicator.toFront();
-                        switch (gameButtonOrientation) {
-                        case HORIZONTAL:
-                            ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(indicator);
-                            break;
-                        case VERTICAL:
-                            ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(indicator);
-                            break;
-                        }
-                        ((GameButtonPane) e.getSource()).setTimelineProgressBar(new Timeline());
+                            indicator.setProgress(0);
+                            indicator.setOpacity(1);
+                            indicator.toFront();
+                            switch (gameButtonOrientation) {
+                            case HORIZONTAL:
+                                ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(indicator);
+                                break;
+                            case VERTICAL:
+                                ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(indicator);
+                                break;
+                            }
+                            ((GameButtonPane) e.getSource()).setTimelineProgressBar(new Timeline());
 
-                        ((GameButtonPane) e.getSource()).getTimelineProgressBar().setDelay(new Duration(500));
+                            ((GameButtonPane) e.getSource()).getTimelineProgressBar().setDelay(new Duration(500));
 
-                        ((GameButtonPane) e.getSource()).getTimelineProgressBar().getKeyFrames()
-                                .add(new KeyFrame(new Duration(config.getFixationLength()),
-                                        new KeyValue(indicator.progressProperty(), 1)));
+                            ((GameButtonPane) e.getSource()).getTimelineProgressBar().getKeyFrames()
+                                    .add(new KeyFrame(new Duration(config.getFixationLength()),
+                                            new KeyValue(indicator.progressProperty(), 1)));
 
-                        ((GameButtonPane) e.getSource()).getTimelineProgressBar().onFinishedProperty()
-                                .set(new EventHandler<ActionEvent>() {
-                                    @Override
-                                    public void handle(ActionEvent actionEvent) {
-                                        indicator.setOpacity(0);
-                                        for (Node n : choicePanel.getChildren()) {
-                                            if (n instanceof GameButtonPane) {
-                                                if (((GameButtonPane) n).getTimelineProgressBar() != null) {
-                                                    ((GameButtonPane) n).getTimelineProgressBar().stop();
+                            ((GameButtonPane) e.getSource()).getTimelineProgressBar().onFinishedProperty()
+                                    .set(new EventHandler<ActionEvent>() {
+                                        @Override
+                                        public void handle(ActionEvent actionEvent) {
+                                            indicator.setOpacity(0);
+                                            for (Node n : choicePanel.getChildren()) {
+                                                if (n instanceof GameButtonPane) {
+                                                    if (((GameButtonPane) n).getTimelineProgressBar() != null) {
+                                                        ((GameButtonPane) n).getTimelineProgressBar().stop();
+                                                    }
                                                 }
                                             }
+                                            ((GameButtonPane) e.getSource()).getEventhandler().handle(null);
                                         }
-                                        ((GameButtonPane) e.getSource()).getEventhandler().handle(null);
-                                    }
-                                });
-                        ((GameButtonPane) e.getSource()).getTimelineProgressBar().play();
+                                    });
+                            ((GameButtonPane) e.getSource()).getTimelineProgressBar().play();
+                        }
                     }
                 }
             });
@@ -239,10 +237,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 public void handle(Event e) {
                     if (config.isGazeMenuEnable()) {
                         if (e.getSource() == gameCard /* && gameCard.isActive() */) {
-                            log.info("EXITED" + gameCard.getWidth());
-
-                            gameCard.setActive(false);
-                        } else { // IMPOSSIBLE
                             indicator.setProgress(0);
                             ((GameButtonPane) e.getSource()).getTimelineProgressBar().stop();
                             indicator.setOpacity(0);
@@ -279,6 +273,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
         return exitButton;
+    }
+
+    private CustomButton createLogoutButton(GazePlay gazePlay) {
+        CustomButton logoutButton = new CustomButton("data/common/images/logout.png");
+        logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
+        return logoutButton;
     }
 
     private Node createLogo() {
