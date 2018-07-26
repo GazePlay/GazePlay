@@ -111,7 +111,7 @@ public class GazePlay extends Application {
 
         this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) {
-                if (ke.getCode() == KeyCode.SPACE && config.isGazeMouseEnable()) {
+                if (ke.getCode() == KeyCode.SPACE && Configuration.getInstance().isGazeMouseEnable()) {
                     Platform.runLater(() -> {
                         try {
                             Robot robot = new Robot();
@@ -128,8 +128,8 @@ public class GazePlay extends Application {
 
         this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) {
-                if (ke.getCode() == KeyCode.S && config.isGazeMouseEnable()) {
-                    config.isMouseFree = !config.isMouseFree;
+                if (ke.getCode() == KeyCode.S && Configuration.getInstance().isGazeMouseEnable()) {
+                    Configuration.getInstance().isMouseFree = !Configuration.getInstance().isMouseFree;
                 }
             }
         });
@@ -164,10 +164,10 @@ public class GazePlay extends Application {
         lds.setUpOnStage(primaryScene);
         primaryStage.show();
     }
-    
+
     public void goToUserPage() {
-    	userProfileScreen = UserProfilContext.newInstance(this, Configuration.getInstance());
-    	userProfileScreen.setUpOnStage(primaryScene);
+        userProfileScreen = UserProfilContext.newInstance(this, Configuration.getInstance());
+        userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
     }
 
