@@ -199,8 +199,10 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         if (ip != null) {
             r.setFill(ip);
         } else {
-            if (i != nbUser) {
-                r.setFill(new ImagePattern(new Image("data/common/images/DefaultUser.png")));
+            if (i == nbUser) {
+                r.setFill(new ImagePattern(new Image("data/common/images/AddUser.png")));
+            } else if (i == 0) {
+                r.setFill(new ImagePattern(new Image("data/common/images/ConfigUser.png")));
             } else {
                 r.setFill(new ImagePattern(new Image("data/common/images/DefaultUser.png")));
             }
