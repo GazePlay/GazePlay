@@ -594,7 +594,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
 
                 }));
-        result.add(new GameSpec(new GameSummary("RushHour", DEFAULT_SEARCHING_GAME_THUMBNAIL),
+        result.add(new GameSpec(
+                new GameSummary("RushHour", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/rushHour.png"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
