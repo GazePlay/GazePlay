@@ -23,6 +23,7 @@ import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.awt.*;
@@ -166,7 +167,23 @@ public class GazePlay extends Application {
     }
 
     public void goToUserPage() {
-        userProfileScreen = UserProfilContext.newInstance(this, Configuration.getInstance());
+
+        Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "GazePlay.properties");
+        Configuration.setInstance(Configuration.createFromPropertiesResource());
+
+        Configuration config = Configuration.getInstance();
+
+        if (getTranslator() instanceof DefaultTranslator) {
+            ((DefaultTranslator) getTranslator()).setConfig(config);
+        }
+
+        CssUtil.setPreferredStylesheets(config, getPrimaryScene());
+
+        BackgroundMusicManager.getInstance().stop();
+
+        BackgroundMusicManager.setInstance(new BackgroundMusicManager());
+
+        userProfileScreen = UserProfilContext.newInstance(this, config);
         userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
     }

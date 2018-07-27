@@ -642,8 +642,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         });
 
         // TODO
+        // ****** REMOVE FROM HERE
         checkBox.setDisable(true);
-        // TODO
+        // TO HERE TO ENABLE******
 
         return checkBox;
     }
