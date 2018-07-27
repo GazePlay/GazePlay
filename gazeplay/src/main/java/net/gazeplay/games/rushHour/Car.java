@@ -42,6 +42,10 @@ public class Car extends Rectangle {
     private boolean direction;
     private int size;
     private int move = 0;
+    private int x;
+    private int y;
+    private int l;
+    private int h;
     @Setter
     private boolean intersect = false;
     private Timeline timelineProgressBar;
@@ -62,7 +66,8 @@ public class Car extends Rectangle {
      * @param size,
      *            the size of one block
      */
-    Car(int l, int h, Color c, boolean direction, int size, ProgressIndicator pi, GameContext gameContext) {
+    Car(int x, int y, int l, int h, Color c, boolean direction, int size, ProgressIndicator pi,
+            GameContext gameContext) {
         super(0, 0, l * size, h * size);
         if (direction) {
             this.setFill(new ImagePattern(new Image("data/rushHour/carH.png")));
@@ -82,6 +87,12 @@ public class Car extends Rectangle {
         this.size = size;
         this.setOpacity(0.7);
         this.pi = pi;
+        this.l = l;
+        this.h = h;
+        this.x = x;
+        this.y = y;
+
+        log.info("" + x + " " + y + " " + l + " " + h + " " + c);
 
         EventHandler<Event> enterEvent = new EventHandler<Event>() {
             @Override
@@ -149,6 +160,17 @@ public class Car extends Rectangle {
         this.addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
         this.addEventFilter(GazeEvent.GAZE_EXITED, exitEvent);
 
+        this.setToX(x);
+        this.setToY(y);
+
+    }
+
+    public void update(int size) {
+        this.size = size;
+        this.setWidth(l * size);
+        this.setHeight(h * size);
+        this.setToX(x);
+        this.setToY(y);
     }
 
     private int checkPos(Point mouse) {
@@ -174,33 +196,20 @@ public class Car extends Rectangle {
     private void moveTo(int way, Point mouse) {
         double saveX = this.getX();
         double saveY = this.getY();
+        int prevx = x;
+        int prevy = y;
         if (this.isDirection()) {
             this.setX(saveX + way * size);
+            x = x + way;
         } else {
             this.setY(saveY + way * size);
+            y = y + way;
         }
         if (intersect) {
             this.setX(saveX);
             this.setY(saveY);
-        }
-    }
-
-    private void moveToMouse(Point mouse) {
-        Point2D coord = this.sceneToLocal(
-                mouse.getX() - gameContext.getGazePlay().getPrimaryScene().getX()
-                        - gameContext.getGazePlay().getPrimaryStage().getX(),
-                mouse.getY() - gameContext.getGazePlay().getPrimaryScene().getY()
-                        - gameContext.getGazePlay().getPrimaryStage().getY());
-        double saveX = this.getX();
-        double saveY = this.getY();
-        if (this.isDirection()) {
-            this.setX(((int) coord.getX() / size) * size);
-        } else {
-            this.setY(((int) coord.getY() / size) * size);
-        }
-        if (intersect) {
-            this.setX(saveX);
-            this.setY(saveY);
+            x = prevx;
+            y = prevy;
         }
     }
 
@@ -216,10 +225,12 @@ public class Car extends Rectangle {
 
     public void setToX(int i) {
         super.setX(size + i * size);
+        x = i;
     }
 
     public void setToY(int i) {
         super.setY(size + i * size);
+        y = i;
     }
 
     public void setSelected(boolean b) {

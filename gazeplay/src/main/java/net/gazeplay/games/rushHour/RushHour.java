@@ -3,6 +3,8 @@ package net.gazeplay.games.rushHour;
 import java.util.LinkedList;
 import java.util.List;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
@@ -24,14 +26,23 @@ import net.gazeplay.GameLifeCycle;
 public class RushHour extends Parent implements GameLifeCycle {
 
     public GameContext gameContext;
-    public int size = 100;
+    public IntegerProperty size;
     public Rectangle ground;
     public boolean endOfGame = false;
+
+    public int garageHeight;
+    public int garageWidth;
+    private Pane p;
+
+    Rectangle up;
+    Rectangle down;
+    Rectangle left;
+    Rectangle right;
+    Rectangle door;
 
     public Car toWin;
 
     public List<Car> garage;
-    public Shape walls;
 
     int level;
     int numberLevels = 2;
@@ -39,17 +50,47 @@ public class RushHour extends Parent implements GameLifeCycle {
     public RushHour(GameContext gameContext) {
         this.gameContext = gameContext;
         level = 0;
+        size = new SimpleIntegerProperty();
+        gameContext.getGazePlay().getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
+
+            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
+                    ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+
+        });
+        gameContext.getGazePlay().getPrimaryStage().heightProperty().addListener((observable, oldValue, newValue) -> {
+
+            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
+                    ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+
+        });
     }
 
     public void setLevel(int i) {
 
         garage = new LinkedList<Car>();
 
-        ProgressIndicator pi = new ProgressIndicator(0);
-        pi.setPrefSize(size, size);
-        pi.setMouseTransparent(true);
+        size = new SimpleIntegerProperty();
 
-        Pane p = new Pane();
+        ProgressIndicator pi = new ProgressIndicator(0);
+        pi.setMouseTransparent(true);
+        IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
+            pi.setPrefSize(newValue.intValue(), newValue.intValue());
+            for (Car car : garage) {
+                car.update(newValue.intValue());
+            }
+
+            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+            ground.setHeight(newValue.intValue() * (garageHeight + 2));
+            ground.setWidth(newValue.intValue() * (garageWidth + 2));
+
+            p.setLayoutX(dimension2D.getWidth() / 2 - ground.getWidth() / 2);
+            p.setLayoutY(dimension2D.getHeight() / 2 - ground.getHeight() / 2);
+        });
+
+        p = new Pane();
 
         p.getChildren().add(pi);
 
@@ -75,95 +116,105 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     public void setLevel1(Pane p, ProgressIndicator pi) {
 
-        Car red = new Car(2, 1, Color.RED, true, size, pi, gameContext);
-        red.setToX(0);
-        red.setToY(2);
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        garageWidth = 6;
+        garageHeight = 6;
+
+        size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
+                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+
+        door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
+                size.getValue(), size.getValue());
+
+        IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
+            door.setX((garageWidth + 1) * newValue.intValue());
+            door.setY(((garageHeight / 2)) * newValue.intValue());
+            door.setWidth(newValue.intValue());
+            door.setHeight(newValue.intValue());
+        });
+
+        createGarage(p);
+
+        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car blue = new Car(1, 3, Color.BLUE, false, size, pi, gameContext);
-        blue.setToX(5);
-        blue.setToY(1);
+        Car blue = new Car(5, 1, 1, 3, Color.BLUE, false, size.getValue(), pi, gameContext);
         garage.add(blue);
         p.getChildren().add(blue);
 
-        Car vert = new Car(2, 1, Color.GREEN, true, size, pi, gameContext);
-        vert.setToX(4);
-        vert.setToY(0);
+        Car vert = new Car(4, 0, 2, 1, Color.GREEN, true, size.getValue(), pi, gameContext);
         garage.add(vert);
         p.getChildren().add(vert);
 
-        Car purple = new Car(3, 1, Color.PURPLE, true, size, pi, gameContext);
-        purple.setToX(0);
-        purple.setToY(3);
+        Car purple = new Car(0, 3, 3, 1, Color.PURPLE, true, size.getValue(), pi, gameContext);
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car yellow = new Car(1, 3, Color.YELLOW, false, size, pi, gameContext);
-        yellow.setToX(2);
-        yellow.setToY(0);
+        Car yellow = new Car(2, 0, 1, 3, Color.YELLOW, false, size.getValue(), pi, gameContext);
         garage.add(yellow);
         p.getChildren().add(yellow);
-
-        createGarage(6, 6, new Rectangle((6 + 1) * size, ((6 / 2)) * size, size, size), p);
 
     }
 
     public void setLevel0(Pane p, ProgressIndicator pi) {
 
-        Car red = new Car(2, 1, Color.RED, true, size, pi, gameContext);
-        red.setToX(1);
-        red.setToY(2);
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        garageWidth = 6;
+        garageHeight = 6;
+
+        size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
+                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+
+        door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
+                size.getValue(), size.getValue());
+
+        IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
+            door.setX((garageWidth + 1) * newValue.intValue());
+            door.setY(((garageHeight / 2)) * newValue.intValue());
+            door.setWidth(newValue.intValue());
+            door.setHeight(newValue.intValue());
+        });
+
+        createGarage(p);
+
+        Car red = new Car(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car blue = new Car(1, 3, Color.BLUE, false, size, pi, gameContext);
-        blue.setToX(3);
-        blue.setToY(1);
+        Car blue = new Car(3, 1, 1, 3, Color.BLUE, false, size.getValue(), pi, gameContext);
         garage.add(blue);
         p.getChildren().add(blue);
 
-        Car vert = new Car(2, 1, Color.GREEN, true, size, pi, gameContext);
-        vert.setToX(1);
-        vert.setToY(0);
+        Car vert = new Car(1, 0, 2, 1, Color.GREEN, true, size.getValue(), pi, gameContext);
         garage.add(vert);
         p.getChildren().add(vert);
 
-        Car purple = new Car(1, 3, Color.PURPLE, false, size, pi, gameContext);
-        purple.setToX(0);
-        purple.setToY(0);
+        Car purple = new Car(0, 0, 1, 3, Color.PURPLE, false, size.getValue(), pi, gameContext);
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(1, 2, Color.ORANGE, false, size, pi, gameContext);
-        orange.setToX(0);
-        orange.setToY(3);
+        Car orange = new Car(0, 3, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
-        Car lightBlue = new Car(2, 1, Color.LIGHTBLUE, true, size, pi, gameContext);
-        lightBlue.setToX(1);
-        lightBlue.setToY(4);
+        Car lightBlue = new Car(1, 4, 2, 1, Color.LIGHTBLUE, true, size.getValue(), pi, gameContext);
         garage.add(lightBlue);
         p.getChildren().add(lightBlue);
 
-        Car lightGreen = new Car(3, 1, Color.LIGHTGREEN, true, size, pi, gameContext);
-        lightGreen.setToX(2);
-        lightGreen.setToY(5);
+        Car lightGreen = new Car(2, 5, 3, 1, Color.LIGHTGREEN, true, size.getValue(), pi, gameContext);
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(1, 3, Color.YELLOW, false, size, pi, gameContext);
-        yellow.setToX(5);
-        yellow.setToY(3);
+        Car yellow = new Car(5, 3, 1, 3, Color.YELLOW, false, size.getValue(), pi, gameContext);
         garage.add(yellow);
         p.getChildren().add(yellow);
-
-        createGarage(6, 6, new Rectangle((6 + 1) * size, ((6 / 2)) * size, size, size), p);
 
     }
 
@@ -210,7 +261,6 @@ public class RushHour extends Parent implements GameLifeCycle {
                     @Override
                     public void handle(ActionEvent actionEvent) {
 
-                        log.info("you won !");
                     }
                 });
             }
@@ -241,7 +291,12 @@ public class RushHour extends Parent implements GameLifeCycle {
                 }
             }
         }
-        if (Shape.intersect(car, walls).getBoundsInLocal().getWidth() != -1) {
+        if (Shape.intersect(car, door).getBoundsInLocal().getWidth() != -1) {
+            // do nothing
+        } else if ((Shape.intersect(car, up).getBoundsInLocal().getWidth() != -1)
+                || (Shape.intersect(car, down).getBoundsInLocal().getWidth() != -1)
+                || (Shape.intersect(car, left).getBoundsInLocal().getWidth() != -1)
+                || (Shape.intersect(car, right).getBoundsInLocal().getWidth() != -1)) {
             log.info("intersect");
             car.setIntersect(true);
             car.setSelected(false);
@@ -249,30 +304,42 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     }
 
-    public void createGarage(int longueur, int hauteur, Rectangle givenDoor, Pane p) {
+    public void createGarage(Pane p) {
+        int longueur = garageWidth;
+        int hauteur = garageHeight;
 
-        Rectangle up = new Rectangle(0, 0, (longueur + 2) * size, size);
-        Rectangle down = new Rectangle(0, (hauteur + 1) * size, (longueur + 2) * size, size);
-        Rectangle left = new Rectangle(0, 0, size, (hauteur + 2) * size);
-        Rectangle right = new Rectangle((longueur + 1) * size, 0, size, (hauteur + 2) * size);
+        up = new Rectangle(0, 0, (longueur + 2) * size.getValue(), size.getValue());
+        down = new Rectangle(0, (hauteur + 1) * size.getValue(), (longueur + 2) * size.getValue(), size.getValue());
+        left = new Rectangle(0, 0, size.getValue(), (hauteur + 2) * size.getValue());
+        right = new Rectangle((longueur + 1) * size.getValue(), 0, size.getValue(), (hauteur + 2) * size.getValue());
+        up.setFill(Color.WHITE);
+        down.setFill(Color.WHITE);
+        left.setFill(Color.WHITE);
+        right.setFill(Color.WHITE);
 
-        Shape upDown = Shape.union(up, down);
-        Shape leftRight = Shape.union(left, right);
-        Shape sides = Shape.union(upDown, leftRight);
+        door.setFill(Color.SLATEGRAY);
 
-        Rectangle door = givenDoor;
+        IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
+            up.setWidth((longueur + 2) * newValue.intValue());
+            up.setHeight(newValue.intValue());
+            down.setWidth((longueur + 2) * newValue.intValue());
+            down.setHeight(newValue.intValue());
+            down.setY((hauteur + 1) * newValue.intValue());
+            left.setWidth(size.getValue());
+            left.setHeight((hauteur + 2) * newValue.intValue());
+            right.setWidth(newValue.intValue());
+            right.setHeight((hauteur + 2) * newValue.intValue());
+            right.setX((longueur + 1) * newValue.intValue());
+        });
 
-        walls = Shape.subtract(sides, door);
-        walls.setFill(Color.WHITE);
-
-        ground = new Rectangle(0, 0, size * (longueur + 2), size * (hauteur + 2));
+        ground = new Rectangle(0, 0, size.getValue() * (longueur + 2), size.getValue() * (hauteur + 2));
         ground.setFill(Color.SLATEGRAY);
 
         p.getChildren().add(ground);
 
         ground.toBack();
 
-        p.getChildren().add(walls);
+        p.getChildren().addAll(up, down, left, right, door);
     }
 
 }
