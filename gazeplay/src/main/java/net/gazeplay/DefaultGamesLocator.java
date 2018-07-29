@@ -580,7 +580,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Media Player", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/gazeMedia.png"),
+                new GameSummary("MediaPlayer", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/gazeMedia.png"),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {

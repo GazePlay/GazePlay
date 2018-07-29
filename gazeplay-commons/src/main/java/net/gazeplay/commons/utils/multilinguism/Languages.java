@@ -5,8 +5,32 @@ package net.gazeplay.commons.utils.multilinguism;
  *
  * They follow ISO 639-3
  *
- * fra: French eng: English deu: German nld: Dutch spa: Spanish vnm: Vietnamese chn: Chinese jpn: Japanese
- * 
+ * ara: Arabic
+ *
+ * chn: Chinese
+ *
+ * deu: German
+ *
+ * eng: English
+ *
+ * fra: French
+ *
+ * hrv: Croatian
+ *
+ * ita: Italian
+ *
+ * jpn: Japanese
+ *
+ * por: Portuguese
+ *
+ * nld: Dutch
+ *
+ * rus: Russian
+ *
+ * spa: Spanish
+ *
+ * vnm: Vietnamese
+ *
  * cf: https://www.cairn.info/revue-de-l-ofce-2012-6-page-253.htm
  *
  */
