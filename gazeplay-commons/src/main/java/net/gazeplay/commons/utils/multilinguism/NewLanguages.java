@@ -53,20 +53,24 @@ public class NewLanguages {
 
         put("ara", "العَرَبِيَّة",
                 "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_the_Arab_League.svg.png");
-        put("chn", "Chinese", "");
+        put("chn", "Chinese",
+                "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_the_People's_Republic_of_China.svg.png");
         put("deu", "Deutsch", "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_Germany.svg.png",
                 "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_Austria.svg.png");
-        put("eng: English", "");
+        put("eng", "English", "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_the_United_Kingdom.svg.png",
+                "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_the_United_States_(Pantone).svg.png");
         put("fra", "Français", "net/gazeplay/commons/utils/multilinguism/flags/Flag_of_La_Francophonie.svg.png",
                 "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_France.svg.png");
-        put("hrv", "Croatian", "");
-        put("ita", "Italian", "");
-        put("jpn", "Japanese", "");
-        put("por", "Portuguese", "");
-        put("nld", "Dutch", "");
-        put("rus", "Russian", "");
-        put("spa", "Spanish", "");
-        put("vnm", "Vietnamese", "");
+        put("hrv", "Croatian", "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_Croatia.svg.png");
+        put("ita", "Italian",
+                "/Users/schwab/Documents/GazePlay/gazeplay-commons/src/main/java/net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_Italy.svg.png");
+        put("jpn", "Japanese", "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_Japan.svg.png");
+        put("por", "Portuguese", "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_Portugal.svg.png");
+        put("nld", "Dutch", "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_the_Netherlands.svg.png");
+        put("rus", "Russian", "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_Russia.svg.png");
+        put("spa", "Spanish", "net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_Spain.svg.png");
+        put("vnm", "Vietnamese",
+                "/Users/schwab/Documents/GazePlay/gazeplay-commons/src/main/java/net/gazeplay/commons/utils/multilinguism/flags/800px-Flag_of_Vietnam.svg.png");
     }
 
     /**
@@ -100,10 +104,14 @@ public class NewLanguages {
         return languageCodeMap.get(language);
     }
 
+    public static String getLanguage(String code) {
+
+        return languageMap.get(code).language;
+    }
+
     public static ArrayList<String> values() {
 
-        System.out.println(languageMap.keySet());
-        return new ArrayList<String>(languageMap.keySet());
+        return new ArrayList<String>(languageCodeMap.keySet());
     }
 }
 

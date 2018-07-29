@@ -546,13 +546,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private static ComboBox<String> buildLanguageChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
         String currentLanguage = null;
+
         if (configuration.getLanguage() != null) {
-            currentLanguage = NewLanguages.getCode(configuration.getLanguage());
+            currentLanguage = NewLanguages.getLanguage(configuration.getLanguage());
         }
 
         ComboBox<String> LanguageBox = new ComboBox<>();
         LanguageBox.getItems().addAll(NewLanguages.values());
-        LanguageBox.getSelectionModel().select(currentLanguage);
+
+        if (currentLanguage != null)
+            LanguageBox.getSelectionModel().select(NewLanguages.getLanguage(configuration.getLanguage()));
 
         LanguageBox.setPrefWidth(PREF_WIDTH);
         LanguageBox.setPrefHeight(PREF_HEIGHT);
@@ -561,7 +564,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 
-                configuration.getLanguageProperty().setValue(newValue);
+                configuration.getLanguageProperty().setValue(NewLanguages.getCode(newValue));
                 configuration.saveConfigIgnoringExceptions();
 
                 configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
