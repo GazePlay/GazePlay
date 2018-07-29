@@ -34,7 +34,7 @@ package net.gazeplay.commons.utils.multilinguism;
  * cf: https://www.cairn.info/revue-de-l-ofce-2012-6-page-253.htm
  *
  */
-public enum Languages {
+public enum OldLanguages {
 
     ara, chn, deu, eng, fra, hrv, ita, jpn, por, nld, rus, spa, vnm
 }

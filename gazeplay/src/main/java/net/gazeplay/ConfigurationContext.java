@@ -11,10 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -36,7 +33,8 @@ import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.multilinguism.Languages;
+import net.gazeplay.commons.utils.multilinguism.NewLanguages;
+import net.gazeplay.commons.utils.multilinguism.OldLanguages;
 
 import java.io.File;
 import java.util.Optional;
@@ -145,7 +143,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "Lang", COLON);
 
-            ChoiceBox<Languages> input = buildLanguageChooser(config, configurationContext);
+            ComboBox<String> input = buildLanguageChooser(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -524,33 +522,53 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return pane;
     }
 
-    private static ChoiceBox<Languages> buildLanguageChooser(Configuration configuration,
+    /*
+     * private static ComboBox<OldLanguages> buildLanguageChooser(Configuration configuration, ConfigurationContext
+     * configurationContext) { OldLanguages currentLanguage = null; if (configuration.getLanguage() != null) {
+     * currentLanguage = OldLanguages.valueOf(configuration.getLanguage()); }
+     * 
+     * ComboBox<OldLanguages> LanguageBox = new ComboBox<>(); //LanguageBox.getItems().addAll(NewLanguages.values());
+     * LanguageBox.getItems().addAll(OldLanguages.values()); LanguageBox.getSelectionModel().select(currentLanguage);
+     * 
+     * LanguageBox.setPrefWidth(PREF_WIDTH); LanguageBox.setPrefHeight(PREF_HEIGHT);
+     * 
+     * LanguageBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<OldLanguages>() {
+     * 
+     * @Override public void changed(ObservableValue<? extends OldLanguages> observable, OldLanguages oldValue,
+     * OldLanguages newValue) {
+     * 
+     * configuration.getLanguageProperty().setValue(newValue.name()); configuration.saveConfigIgnoringExceptions();
+     * 
+     * configurationContext.getGazePlay().getTranslator().notifyLanguageChanged(); } });
+     * 
+     * return LanguageBox; }
+     */
+    private static ComboBox<String> buildLanguageChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
-        Languages currentLanguage = null;
+        String currentLanguage = null;
         if (configuration.getLanguage() != null) {
-            currentLanguage = Languages.valueOf(configuration.getLanguage());
+            currentLanguage = NewLanguages.getCode(configuration.getLanguage());
         }
 
-        ChoiceBox<Languages> choiceBox = new ChoiceBox<>();
-        choiceBox.getItems().addAll(Languages.values());
-        choiceBox.getSelectionModel().select(currentLanguage);
+        ComboBox<String> LanguageBox = new ComboBox<>();
+        LanguageBox.getItems().addAll(NewLanguages.values());
+        LanguageBox.getSelectionModel().select(currentLanguage);
 
-        choiceBox.setPrefWidth(PREF_WIDTH);
-        choiceBox.setPrefHeight(PREF_HEIGHT);
+        LanguageBox.setPrefWidth(PREF_WIDTH);
+        LanguageBox.setPrefHeight(PREF_HEIGHT);
 
-        choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Languages>() {
+        LanguageBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends Languages> observable, Languages oldValue,
-                    Languages newValue) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 
-                configuration.getLanguageProperty().setValue(newValue.name());
+                configuration.getLanguageProperty().setValue(newValue);
                 configuration.saveConfigIgnoringExceptions();
 
                 configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
             }
         });
 
-        return choiceBox;
+        return LanguageBox;
     }
 
     private static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration,
