@@ -1,5 +1,6 @@
 package net.gazeplay;
 
+import com.sun.tools.internal.xjc.Language;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -12,6 +13,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -37,6 +39,9 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -143,8 +148,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "Lang", COLON);
 
-            //ComboBox<String> input = buildLanguageChooser(config, configurationContext);
-            ChoiceBox<String> input = buildLanguageChooser(config, configurationContext);
+            // ComboBox<String> input = buildLanguageChooser(config, configurationContext);
+            MenuButton input = buildLanguageChooser(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -523,39 +528,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return pane;
     }
 
-    private static ComboBox<String> buildLanguageChooser2(Configuration configuration,
+    private static ChoiceBox<String> buildLanguageChooserOld(Configuration configuration,
             ConfigurationContext configurationContext) {
-        String currentLanguage = null;
-
-        if (configuration.getLanguage() != null) {
-            currentLanguage = Languages.getLanguage(configuration.getLanguage());
-        }
-
-        ComboBox<String> LanguageBox = new ComboBox<>();
-        LanguageBox.getItems().addAll(Languages.values());
-
-        if (currentLanguage != null)
-            LanguageBox.getSelectionModel().select(Languages.getLanguage(configuration.getLanguage()));
-
-        LanguageBox.setPrefWidth(PREF_WIDTH);
-        LanguageBox.setPrefHeight(PREF_HEIGHT);
-
-        LanguageBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-
-                configuration.getLanguageProperty().setValue(Languages.getCode(newValue));
-                configuration.saveConfigIgnoringExceptions();
-
-                configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
-            }
-        });
-
-        return LanguageBox;
-    }
-
-    private static ChoiceBox<String> buildLanguageChooser(Configuration configuration,
-                                                         ConfigurationContext configurationContext) {
         String currentLanguage = null;
 
         if (configuration.getLanguage() != null) {
@@ -581,6 +555,63 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
             }
         });
+
+        return LanguageBox;
+    }
+
+    private static MenuButton buildLanguageChooser(Configuration configuration,
+            ConfigurationContext configurationContext) {
+
+        System.out.println("Language chooser");
+
+        String currentLanguage = null;
+
+        if (configuration.getLanguage() != null) {
+            currentLanguage = Languages.getLanguage(configuration.getLanguage());
+        }
+
+        MenuButton LanguageBox = new MenuButton();
+
+        ArrayList<String> languages = Languages.values();
+
+        for(String language: languages){
+
+            System.out.println(language);
+            ArrayList<String> flags = Languages.getFlags(Languages.getCode(language));
+
+            for(String flag:flags) {
+
+                System.out.println(flag);
+                Image image = new Image(flag);
+                ImageView imageView = new ImageView(image);
+                imageView.setPreserveRatio(true);
+                imageView.setFitHeight(25);
+
+                MenuItem menuItem = new MenuItem(language, imageView);
+                LanguageBox.getItems().addAll(menuItem);
+            }
+        }
+
+        System.out.println("sortie");
+        //System.exit(0);
+
+        /*
+        if (currentLanguage != null)
+            LanguageBox.getSelectionModel().select(Languages.getLanguage(configuration.getLanguage()));
+
+        LanguageBox.setPrefWidth(PREF_WIDTH);
+        LanguageBox.setPrefHeight(PREF_HEIGHT);
+
+        LanguageBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+
+                configuration.getLanguageProperty().setValue(Languages.getCode(newValue));
+                configuration.saveConfigIgnoringExceptions();
+
+                configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
+            }
+        });*/
 
         return LanguageBox;
     }
