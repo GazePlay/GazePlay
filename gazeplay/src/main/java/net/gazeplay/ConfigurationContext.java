@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import com.sun.tools.internal.xjc.Language;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -39,9 +38,8 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -528,41 +526,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return pane;
     }
 
-    private static ChoiceBox<String> buildLanguageChooserOld(Configuration configuration,
-            ConfigurationContext configurationContext) {
-        String currentLanguage = null;
-
-        if (configuration.getLanguage() != null) {
-            currentLanguage = Languages.getLanguage(configuration.getLanguage());
-        }
-
-        ChoiceBox<String> LanguageBox = new ChoiceBox<String>();
-        LanguageBox.getItems().addAll(Languages.values());
-
-        if (currentLanguage != null)
-            LanguageBox.getSelectionModel().select(Languages.getLanguage(configuration.getLanguage()));
-
-        LanguageBox.setPrefWidth(PREF_WIDTH);
-        LanguageBox.setPrefHeight(PREF_HEIGHT);
-
-        LanguageBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-
-                configuration.getLanguageProperty().setValue(Languages.getCode(newValue));
-                configuration.saveConfigIgnoringExceptions();
-
-                configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
-            }
-        });
-
-        return LanguageBox;
-    }
-
     private static MenuButton buildLanguageChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
-
-        System.out.println("Language chooser");
 
         String currentLanguage = null;
 
@@ -572,14 +537,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         MenuButton LanguageBox = new MenuButton();
 
-        ArrayList<String> languages = Languages.values();
+        ArrayList<String> CodeLanguages = Languages.getCodes();
 
-        for(String language: languages){
+        CodeLanguages.sort(Comparator.comparing(String::toString));
 
-            System.out.println(language);
-            ArrayList<String> flags = Languages.getFlags(Languages.getCode(language));
+        for (String codeLanguage : CodeLanguages) {
 
-            for(String flag:flags) {
+            System.out.println(codeLanguage);
+            ArrayList<String> flags = Languages.getFlags(codeLanguage);
+
+            for (String flag : flags) {
 
                 System.out.println(flag);
                 Image image = new Image(flag);
@@ -587,31 +554,38 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 imageView.setPreserveRatio(true);
                 imageView.setFitHeight(25);
 
-                MenuItem menuItem = new MenuItem(language, imageView);
+                MenuItem menuItem = new MenuItem(Languages.getLanguage(codeLanguage), imageView);
+
+                menuItem.setOnAction(event -> {
+
+                    configuration.getLanguageProperty().setValue(Languages.getCode(codeLanguage));
+                    configuration.saveConfigIgnoringExceptions();
+
+                    configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
+                });
+
                 LanguageBox.getItems().addAll(menuItem);
             }
         }
 
-        System.out.println("sortie");
-        //System.exit(0);
-
-        /*
-        if (currentLanguage != null)
-            LanguageBox.getSelectionModel().select(Languages.getLanguage(configuration.getLanguage()));
-
         LanguageBox.setPrefWidth(PREF_WIDTH);
         LanguageBox.setPrefHeight(PREF_HEIGHT);
-
-        LanguageBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-
-                configuration.getLanguageProperty().setValue(Languages.getCode(newValue));
-                configuration.saveConfigIgnoringExceptions();
-
-                configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
-            }
-        });*/
+        /*
+         * if (currentLanguage != null) LanguageBox.get
+         * //LanguageBox.getSelectionModel().select(Languages.getLanguage(configuration.getLanguage()));
+         * 
+         * LanguageBox.setPrefWidth(PREF_WIDTH); LanguageBox.setPrefHeight(PREF_HEIGHT);
+         * 
+         * LanguageBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+         * 
+         * @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+         * {
+         * 
+         * configuration.getLanguageProperty().setValue(Languages.getCode(newValue));
+         * configuration.saveConfigIgnoringExceptions();
+         * 
+         * configurationContext.getGazePlay().getTranslator().notifyLanguageChanged(); } });
+         */
 
         return LanguageBox;
     }

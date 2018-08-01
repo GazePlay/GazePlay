@@ -47,26 +47,23 @@ public class Languages {
 
     static {
 
-        put("ara", "العَرَبِيَّة",
-                "data/common/flags/800px-Flag_of_the_Arab_League.svg.png");
-        put("chn", "Chinese",
-                "data/common/flags/800px-Flag_of_the_People's_Republic_of_China.svg.png");
+        put("ara", "العَرَبِيَّة", "data/common/flags/800px-Flag_of_the_Arab_League.svg.png");
+        put("chn", "漢語", "data/common/flags/800px-Flag_of_the_People's_Republic_of_China.svg.png");
         put("deu", "Deutsch", "data/common/flags/800px-Flag_of_Germany.svg.png",
                 "data/common/flags/800px-Flag_of_Austria.svg.png");
         put("eng", "English", "data/common/flags/800px-Flag_of_the_United_Kingdom.svg.png",
                 "data/common/flags/800px-Flag_of_the_United_States_(Pantone).svg.png");
         put("fra", "Français", "data/common/flags/Flag_of_La_Francophonie.svg.png",
                 "data/common/flags/800px-Flag_of_France.svg.png");
-        put("hrv", "Croatian", "data/common/flags/800px-Flag_of_Croatia.svg.png");
-        put("ita", "Italian",
-                "data/common/flags/800px-Flag_of_Italy.svg.png");
-        put("jpn", "Japanese", "data/common/flags/800px-Flag_of_Japan.svg.png");
-        put("por", "Portuguese", "data/common/flags/800px-Flag_of_Portugal.svg.png");
-        put("nld", "Dutch", "data/common/flags/800px-Flag_of_the_Netherlands.svg.png");
-        put("rus", "Russian", "data/common/flags/800px-Flag_of_Russia.svg.png");
-        put("spa", "Spanish", "data/common/flags/800px-Flag_of_Spain.svg.png");
-        put("vnm", "Vietnamese",
-                "data/common/flags/800px-Flag_of_Vietnam.svg.png");
+        put("hrv", "Hrvatski", "data/common/flags/800px-Flag_of_Croatia.svg.png");
+        put("ita", "Italiano", "data/common/flags/800px-Flag_of_Italy.svg.png");
+        put("jpn", "日本語", "data/common/flags/800px-Flag_of_Japan.svg.png");
+        put("por", "Português", "data/common/flags/800px-Flag_of_Portugal.svg.png",
+                "data/common/flags/800px-Flag_of_Brazil.svg.png");
+        put("nld", "Nederlands", "data/common/flags/800px-Flag_of_the_Netherlands.svg.png");
+        put("rus", "Pу́сский язы́к", "data/common/flags/800px-Flag_of_Russia.svg.png");
+        put("spa", "Español", "data/common/flags/800px-Flag_of_Spain.svg.png");
+        put("vnm", "Tiếng Việt", "data/common/flags/800px-Flag_of_Vietnam.svg.png");
     }
 
     /**
@@ -105,9 +102,14 @@ public class Languages {
         return languageMap.get(code).language;
     }
 
-    public static ArrayList<String> values() {
+    public static ArrayList<String> getLanguages() {
 
         return new ArrayList<String>(languageCodeMap.keySet());
+    }
+
+    public static ArrayList<String> getCodes() {
+
+        return new ArrayList<String>(languageMap.keySet());
     }
 
     public static ArrayList<String> getFlags(String code) {

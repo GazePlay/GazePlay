@@ -32,14 +32,14 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- * The <code>HeatChart</code> class describes a chart which can display 3-dimensions of values - x,y and z, where x and
- * y are the usual 2-dimensional axis and z is portrayed by colour intensity. Heat charts are sometimes known as heat
- * maps.
+ * The <code>HeatChart</code> class describes a chart which can display 3-dimensions of getLanguages - x,y and z, where
+ * x and y are the usual 2-dimensional axis and z is portrayed by colour intensity. Heat charts are sometimes known as
+ * heat maps.
  * 
  * <p>
  * Use of this chart would typically involve 3 steps:
  * <ol>
- * <li>Construction of a new instance, providing the necessary z-values.</li>
+ * <li>Construction of a new instance, providing the necessary z-getLanguages.</li>
  * <li>Configure the visual settings.</li>
  * <li>A call to either <code>getChartImage()</code> or <code>saveToFile(String)</code>.</li>
  * </ol>
@@ -47,30 +47,30 @@ import java.util.Iterator;
  * <h3>Instantiation</h3>
  * <p>
  * Construction of a new <code>HeatChart</code> instance is through its one constructor which takes a 2-dimensional
- * array of <tt>doubles</tt> which should contain the z-values for the chart. Consider this array to be the grid of
- * values which will instead be represented as colours in the chart.
+ * array of <tt>doubles</tt> which should contain the z-getLanguages for the chart. Consider this array to be the grid
+ * of getLanguages which will instead be represented as colours in the chart.
  * 
  * <p>
- * Setting of the x-values and y-values which are displayed along the appropriate axis is optional, and by default will
- * simply display the values 0 to n-1, where n is the number of rows or columns. Otherwise, the x/y axis values can be
- * set with the <code>setXValues</code> and <code>setYValues
+ * Setting of the x-getLanguages and y-getLanguages which are displayed along the appropriate axis is optional, and by
+ * default will simply display the getLanguages 0 to n-1, where n is the number of rows or columns. Otherwise, the x/y
+ * axis getLanguages can be set with the <code>setXValues</code> and <code>setYValues
  * </code> methods. Both methods are overridden with two forms:
  * 
- * <h4>Object axis values</h4>
+ * <h4>Object axis getLanguages</h4>
  * 
  * <p>
- * The simplist way to set the axis values is to use the methods which take an array of Object[]. This array must have
- * the same length as the number of columns for setXValues and same as the number of rows for setYValues. The string
- * representation of the objects will then be used as the axis values.
+ * The simplist way to set the axis getLanguages is to use the methods which take an array of Object[]. This array must
+ * have the same length as the number of columns for setXValues and same as the number of rows for setYValues. The
+ * string representation of the objects will then be used as the axis getLanguages.
  * 
  * <h4>Offset and Interval</h4>
  * 
  * <p>
- * This is convenient way of defining numerical values along the axis. One of the two methods takes an interval and an
- * offset for either the x or y axis. These parameters supply the necessary information to describe the values based
- * upon the z-value indexes. The quantity of x-values and y-values is already known from the lengths of the z-values
- * array dimensions. Then the offset parameters indicate what the first value will be, with the intervals providing the
- * increment from one column or row to the next.
+ * This is convenient way of defining numerical getLanguages along the axis. One of the two methods takes an interval
+ * and an offset for either the x or y axis. These parameters supply the necessary information to describe the
+ * getLanguages based upon the z-value indexes. The quantity of x-getLanguages and y-getLanguages is already known from
+ * the lengths of the z-getLanguages array dimensions. Then the offset parameters indicate what the first value will be,
+ * with the intervals providing the increment from one column or row to the next.
  * 
  * <p>
  * <strong>Consider an example:</strong> <blockquote>
@@ -90,9 +90,9 @@ import java.util.Iterator;
  * </blockquote>
  * 
  * <p>
- * In this example, the z-values range from 0.7 to 1.6. The x-values range from the xOffset value 1.0 to 4.0, which is
- * calculated as the number of x-values multiplied by the xInterval, shifted by the xOffset of 1.0. The y-values are
- * calculated in the same way to give a range of values from 0.0 to 6.0.
+ * In this example, the z-getLanguages range from 0.7 to 1.6. The x-getLanguages range from the xOffset value 1.0 to
+ * 4.0, which is calculated as the number of x-getLanguages multiplied by the xInterval, shifted by the xOffset of 1.0.
+ * The y-getLanguages are calculated in the same way to give a range of getLanguages from 0.0 to 6.0.
  * 
  * <h3>configuration</h3>
  * <p>
@@ -132,7 +132,7 @@ public class HeatChart {
      */
     public static final double SCALE_EXPONENTIAL = 3;
 
-    // x, y, z data values.
+    // x, y, z data getLanguages.
     private double[][] zValues;
     private Object[] xValues;
     private Object[] yValues;
@@ -200,30 +200,30 @@ public class HeatChart {
     // Heat map dimensions.
     private Dimension heatMapSize;
 
-    // Control variable for mapping z-values to colours.
+    // Control variable for mapping z-getLanguages to colours.
     private double colourScale;
 
     /**
-     * Constructs a heatmap for the given z-values against x/y-values that by default will be the values 0 to n-1, where
-     * n is the number of columns or rows.
+     * Constructs a heatmap for the given z-getLanguages against x/y-getLanguages that by default will be the
+     * getLanguages 0 to n-1, where n is the number of columns or rows.
      * 
      * @param zValues
-     *            the z-values, where each element is a row of z-values in the resultant heat chart.
+     *            the z-getLanguages, where each element is a row of z-getLanguages in the resultant heat chart.
      */
     public HeatChart(double[][] zValues) {
         this(zValues, min(zValues), max(zValues));
     }
 
     /**
-     * Constructs a heatmap for the given z-values against x/y-values that by default will be the values 0 to n-1, where
-     * n is the number of columns or rows.
+     * Constructs a heatmap for the given z-getLanguages against x/y-getLanguages that by default will be the
+     * getLanguages 0 to n-1, where n is the number of columns or rows.
      * 
      * @param zValues
-     *            the z-values, where each element is a row of z-values in the resultant heat chart.
+     *            the z-getLanguages, where each element is a row of z-getLanguages in the resultant heat chart.
      * @param low
-     *            the minimum possible value, which may or may not appear in the z-values.
+     *            the minimum possible value, which may or may not appear in the z-getLanguages.
      * @param high
-     *            the maximum possible value, which may or may not appear in the z-values.
+     *            the maximum possible value, which may or may not appear in the z-getLanguages.
      */
     public HeatChart(double[][] zValues, double low, double high) {
         this.zValues = zValues;
@@ -289,19 +289,20 @@ public class HeatChart {
     }
 
     /**
-     * Returns the 2-dimensional array of z-values currently in use. Each element is a double array which represents one
-     * row of the heat map, or all the z-values for one y-value.
+     * Returns the 2-dimensional array of z-getLanguages currently in use. Each element is a double array which
+     * represents one row of the heat map, or all the z-getLanguages for one y-value.
      * 
-     * @return an array of the z-values in current use, that is, those values which will define the colour of each cell
-     *         in the resultant heat map.
+     * @return an array of the z-getLanguages in current use, that is, those getLanguages which will define the colour
+     *         of each cell in the resultant heat map.
      */
     public double[][] getZValues() {
         return zValues;
     }
 
     /**
-     * Replaces the z-values array. See the {@link #setZValues(double[][], double, double)} method for an example of
-     * z-values. The smallest and largest values in the array are used as the minimum and maximum values respectively.
+     * Replaces the z-getLanguages array. See the {@link #setZValues(double[][], double, double)} method for an example
+     * of z-getLanguages. The smallest and largest getLanguages in the array are used as the minimum and maximum
+     * getLanguages respectively.
      * 
      * @param zValues
      *            the array to replace the current array with. The number of elements in each inner array must be
@@ -312,9 +313,9 @@ public class HeatChart {
     }
 
     /**
-     * Replaces the z-values array. The number of elements should match the number of y-values, with each element
-     * containing a double array with an equal number of elements that matches the number of x-values. Use this method
-     * where the minimum and maximum values possible are not contained within the dataset.
+     * Replaces the z-getLanguages array. The number of elements should match the number of y-getLanguages, with each
+     * element containing a double array with an equal number of elements that matches the number of x-getLanguages. Use
+     * this method where the minimum and maximum getLanguages possible are not contained within the dataset.
      * 
      * <h2>Example</h2>
      * 
@@ -365,9 +366,9 @@ public class HeatChart {
      *            the array to replace the current array with. The number of elements in each inner array must be
      *            identical.
      * @param low
-     *            the minimum possible value, which may or may not appear in the z-values.
+     *            the minimum possible value, which may or may not appear in the z-getLanguages.
      * @param high
-     *            the maximum possible value, which may or may not appear in the z-values.
+     *            the maximum possible value, which may or may not appear in the z-getLanguages.
      */
     public void setZValues(double[][] zValues, double low, double high) {
         this.zValues = zValues;
@@ -376,8 +377,8 @@ public class HeatChart {
     }
 
     /**
-     * Sets the x-values which are plotted along the x-axis. The x-values are calculated based upon the indexes of the
-     * z-values array:
+     * Sets the x-getLanguages which are plotted along the x-axis. The x-getLanguages are calculated based upon the
+     * indexes of the z-getLanguages array:
      * 
      * <blockcode>
      * 
@@ -392,7 +393,7 @@ public class HeatChart {
      * from zero.
      * 
      * <p>
-     * Alternatively the x-values can be set more directly with the <code>setXValues(Object[])</code> method.
+     * Alternatively the x-getLanguages can be set more directly with the <code>setXValues(Object[])</code> method.
      * 
      * @param xOffset
      *            an offset value to be applied to the index of each z-value element.
@@ -400,7 +401,7 @@ public class HeatChart {
      *            an interval that will separate each x-value item.
      */
     public void setXValues(double xOffset, double xInterval) {
-        // Update the x-values according to the offset and interval.
+        // Update the x-getLanguages according to the offset and interval.
         xValues = new Object[zValues[0].length];
         for (int i = 0; i < zValues[0].length; i++) {
             xValues[i] = xOffset + (i * xInterval);
@@ -408,20 +409,20 @@ public class HeatChart {
     }
 
     /**
-     * Sets the x-values which are plotted along the x-axis. The given x-values array must be the same length as the
-     * z-values array has columns. Each of the x-values elements will be displayed according to their toString
-     * representation.
+     * Sets the x-getLanguages which are plotted along the x-axis. The given x-getLanguages array must be the same
+     * length as the z-getLanguages array has columns. Each of the x-getLanguages elements will be displayed according
+     * to their toString representation.
      * 
      * @param xValues
-     *            an array of elements to be displayed as values along the x-axis.
+     *            an array of elements to be displayed as getLanguages along the x-axis.
      */
     public void setXValues(Object[] xValues) {
         this.xValues = xValues;
     }
 
     /**
-     * Sets the y-values which are plotted along the y-axis. The y-values are calculated based upon the indexes of the
-     * z-values array:
+     * Sets the y-getLanguages which are plotted along the y-axis. The y-getLanguages are calculated based upon the
+     * indexes of the z-getLanguages array:
      * 
      * <blockcode>
      * 
@@ -436,7 +437,7 @@ public class HeatChart {
      * from zero.
      * 
      * <p>
-     * Alternatively the y-values can be set more directly with the <code>setYValues(Object[])</code> method.
+     * Alternatively the y-getLanguages can be set more directly with the <code>setYValues(Object[])</code> method.
      * 
      * @param yOffset
      *            an offset value to be applied to the index of each z-value element.
@@ -444,7 +445,7 @@ public class HeatChart {
      *            an interval that will separate each y-value item.
      */
     public void setYValues(double yOffset, double yInterval) {
-        // Update the y-values according to the offset and interval.
+        // Update the y-getLanguages according to the offset and interval.
         yValues = new Object[zValues.length];
         for (int i = 0; i < zValues.length; i++) {
             yValues[i] = yOffset + (i * yInterval);
@@ -452,78 +453,78 @@ public class HeatChart {
     }
 
     /**
-     * Sets the y-values which are plotted along the y-axis. The given y-values array must be the same length as the
-     * z-values array has columns. Each of the y-values elements will be displayed according to their toString
-     * representation.
+     * Sets the y-getLanguages which are plotted along the y-axis. The given y-getLanguages array must be the same
+     * length as the z-getLanguages array has columns. Each of the y-getLanguages elements will be displayed according
+     * to their toString representation.
      * 
      * @param yValues
-     *            an array of elements to be displayed as values along the y-axis.
+     *            an array of elements to be displayed as getLanguages along the y-axis.
      */
     public void setYValues(Object[] yValues) {
         this.yValues = yValues;
     }
 
     /**
-     * Returns the x-values which are currently set to display along the x-axis. The array that is returned is either
-     * that which was explicitly set with <code>setXValues(Object[])</code> or that was generated from the offset and
-     * interval that were given to <code>setXValues(double, double)</code>, in which case the object type of each
+     * Returns the x-getLanguages which are currently set to display along the x-axis. The array that is returned is
+     * either that which was explicitly set with <code>setXValues(Object[])</code> or that was generated from the offset
+     * and interval that were given to <code>setXValues(double, double)</code>, in which case the object type of each
      * element will be <code>Double</code>.
      * 
-     * @return an array of the values that are to be displayed along the x-axis.
+     * @return an array of the getLanguages that are to be displayed along the x-axis.
      */
     public Object[] getXValues() {
         return xValues;
     }
 
     /**
-     * Returns the y-values which are currently set to display along the y-axis. The array that is returned is either
-     * that which was explicitly set with <code>setYValues(Object[])</code> or that was generated from the offset and
-     * interval that were given to <code>setYValues(double, double)</code>, in which case the object type of each
+     * Returns the y-getLanguages which are currently set to display along the y-axis. The array that is returned is
+     * either that which was explicitly set with <code>setYValues(Object[])</code> or that was generated from the offset
+     * and interval that were given to <code>setYValues(double, double)</code>, in which case the object type of each
      * element will be <code>Double</code>.
      * 
-     * @return an array of the values that are to be displayed along the y-axis.
+     * @return an array of the getLanguages that are to be displayed along the y-axis.
      */
     public Object[] getYValues() {
         return yValues;
     }
 
     /**
-     * Sets whether the text of the values along the x-axis should be drawn horizontally left-to-right, or vertically
-     * top-to-bottom.
+     * Sets whether the text of the getLanguages along the x-axis should be drawn horizontally left-to-right, or
+     * vertically top-to-bottom.
      * 
      * @param xValuesHorizontal
-     *            true if x-values should be drawn horizontally, false if they should be drawn vertically.
+     *            true if x-getLanguages should be drawn horizontally, false if they should be drawn vertically.
      */
     public void setXValuesHorizontal(boolean xValuesHorizontal) {
         this.xValuesHorizontal = xValuesHorizontal;
     }
 
     /**
-     * Returns whether the text of the values along the x-axis are to be drawn horizontally left-to-right, or vertically
-     * top-to-bottom.
+     * Returns whether the text of the getLanguages along the x-axis are to be drawn horizontally left-to-right, or
+     * vertically top-to-bottom.
      * 
-     * @return true if the x-values will be drawn horizontally, false if they will be drawn vertically.
+     * @return true if the x-getLanguages will be drawn horizontally, false if they will be drawn vertically.
      */
     public boolean isXValuesHorizontal() {
         return xValuesHorizontal;
     }
 
     /**
-     * Sets whether the text of the values along the y-axis should be drawn horizontally left-to-right, or vertically
-     * top-to-bottom.
+     * Sets whether the text of the getLanguages along the y-axis should be drawn horizontally left-to-right, or
+     * vertically top-to-bottom.
      * 
      * @param yValuesHorizontal
-     *            true if y-values should be drawn horizontally, false if they should be drawn vertically.
+     *            true if y-getLanguages should be drawn horizontally, false if they should be drawn vertically.
      */
     public void setYValuesHorizontal(boolean yValuesHorizontal) {
         this.yValuesHorizontal = yValuesHorizontal;
     }
 
     /**
-     * Returns whether the text of the values along the y-axis are to be drawn horizontally left-to-right, or vertically
-     * top-to-bottom.
+     * Returns whether the text of the getLanguages along the y-axis are to be drawn horizontally left-to-right, or
+     * vertically top-to-bottom.
      * 
-     * @return true if the y-values will be drawn horizontally, false if they will be drawn vertically.
+     * @return true if the y-getLanguages will be drawn horizontally, false if they will be drawn vertically.
      */
     public boolean isYValuesHorizontal() {
         return yValuesHorizontal;
@@ -900,157 +901,159 @@ public class HeatChart {
     }
 
     /**
-     * Returns the font which describes the visual style of the axis values. The axis values are those values displayed
-     * alongside the axis bars at regular intervals. Both axis use the same font.
+     * Returns the font which describes the visual style of the axis getLanguages. The axis getLanguages are those
+     * getLanguages displayed alongside the axis bars at regular intervals. Both axis use the same font.
      * 
-     * @return the font in use for the axis values.
+     * @return the font in use for the axis getLanguages.
      */
     public Font getAxisValuesFont() {
         return axisValuesFont;
     }
 
     /**
-     * Sets the font which describes the visual style of the axis values. The axis values are those values displayed
-     * alongside the axis bars at regular intervals. Both axis use the same font.
+     * Sets the font which describes the visual style of the axis getLanguages. The axis getLanguages are those
+     * getLanguages displayed alongside the axis bars at regular intervals. Both axis use the same font.
      * 
      * <p>
      * Defaults to Sans-Serif, PLAIN, 10 pixels.
      * 
      * @param axisValuesFont
-     *            the font that should be used for the axis values.
+     *            the font that should be used for the axis getLanguages.
      */
     public void setAxisValuesFont(Font axisValuesFont) {
         this.axisValuesFont = axisValuesFont;
     }
 
     /**
-     * Returns the colour of the axis values as they will be painted along the axis bars. Both axis use the same colour.
+     * Returns the colour of the axis getLanguages as they will be painted along the axis bars. Both axis use the same
+     * colour.
      * 
-     * @return the colour of the values displayed along the axis bars.
+     * @return the colour of the getLanguages displayed along the axis bars.
      */
     public Color getAxisValuesColour() {
         return axisValuesColour;
     }
 
     /**
-     * Sets the colour to be used for the axis values as they will be painted along the axis bars. Both axis use the
-     * same colour.
+     * Sets the colour to be used for the axis getLanguages as they will be painted along the axis bars. Both axis use
+     * the same colour.
      * 
      * <p>
      * Defaults to Color.BLACK.
      * 
      * @param axisValuesColour
-     *            the new colour to be used for the axis bar values.
+     *            the new colour to be used for the axis bar getLanguages.
      */
     public void setAxisValuesColour(Color axisValuesColour) {
         this.axisValuesColour = axisValuesColour;
     }
 
     /**
-     * Returns the frequency of the values displayed along the x-axis. The frequency is how many columns in the
+     * Returns the frequency of the getLanguages displayed along the x-axis. The frequency is how many columns in the
      * x-dimension have their value displayed. A frequency of 2 would mean every other column has a value shown and a
      * frequency of 3 would mean every third column would be given a value.
      * 
-     * @return the frequency of the values displayed against columns.
+     * @return the frequency of the getLanguages displayed against columns.
      */
     public int getXAxisValuesFrequency() {
         return xAxisValuesFrequency;
     }
 
     /**
-     * Sets the frequency of the values displayed along the x-axis. The frequency is how many columns in the x-dimension
-     * have their value displayed. A frequency of 2 would mean every other column has a value and a frequency of 3 would
-     * mean every third column would be given a value.
+     * Sets the frequency of the getLanguages displayed along the x-axis. The frequency is how many columns in the
+     * x-dimension have their value displayed. A frequency of 2 would mean every other column has a value and a
+     * frequency of 3 would mean every third column would be given a value.
      * 
      * <p>
      * Defaults to 1. Every column is given a value.
      * 
      * @param axisValuesFrequency
-     *            the frequency of the values displayed against columns, where 1 is every column and 2 is every other
-     *            column.
+     *            the frequency of the getLanguages displayed against columns, where 1 is every column and 2 is every
+     *            other column.
      */
     public void setXAxisValuesFrequency(int axisValuesFrequency) {
         this.xAxisValuesFrequency = axisValuesFrequency;
     }
 
     /**
-     * Returns the frequency of the values displayed along the y-axis. The frequency is how many rows in the y-dimension
-     * have their value displayed. A frequency of 2 would mean every other row has a value and a frequency of 3 would
-     * mean every third row would be given a value.
+     * Returns the frequency of the getLanguages displayed along the y-axis. The frequency is how many rows in the
+     * y-dimension have their value displayed. A frequency of 2 would mean every other row has a value and a frequency
+     * of 3 would mean every third row would be given a value.
      * 
-     * @return the frequency of the values displayed against rows.
+     * @return the frequency of the getLanguages displayed against rows.
      */
     public int getYAxisValuesFrequency() {
         return yAxisValuesFrequency;
     }
 
     /**
-     * Sets the frequency of the values displayed along the y-axis. The frequency is how many rows in the y-dimension
-     * have their value displayed. A frequency of 2 would mean every other row has a value and a frequency of 3 would
-     * mean every third row would be given a value.
+     * Sets the frequency of the getLanguages displayed along the y-axis. The frequency is how many rows in the
+     * y-dimension have their value displayed. A frequency of 2 would mean every other row has a value and a frequency
+     * of 3 would mean every third row would be given a value.
      * 
      * <p>
      * Defaults to 1. Every row is given a value.
      * 
      * @param axisValuesFrequency
-     *            the frequency of the values displayed against rows, where 1 is every row and 2 is every other row.
+     *            the frequency of the getLanguages displayed against rows, where 1 is every row and 2 is every other
+     *            row.
      */
     public void setYAxisValuesFrequency(int axisValuesFrequency) {
         yAxisValuesFrequency = axisValuesFrequency;
     }
 
     /**
-     * Returns whether axis values are to be shown at all for the x-axis.
+     * Returns whether axis getLanguages are to be shown at all for the x-axis.
      * 
      * <p>
-     * If axis values are not shown then more space is allocated to the heat map.
+     * If axis getLanguages are not shown then more space is allocated to the heat map.
      * 
-     * @return true if the x-axis values will be displayed, false otherwise.
+     * @return true if the x-axis getLanguages will be displayed, false otherwise.
      */
     public boolean isShowXAxisValues() {
-        // TODO Could get rid of these flags and use a frequency of -1 to signal no values.
+        // TODO Could get rid of these flags and use a frequency of -1 to signal no getLanguages.
         return showXAxisValues;
     }
 
     /**
-     * Sets whether axis values are to be shown at all for the x-axis.
+     * Sets whether axis getLanguages are to be shown at all for the x-axis.
      * 
      * <p>
-     * If axis values are not shown then more space is allocated to the heat map.
+     * If axis getLanguages are not shown then more space is allocated to the heat map.
      * 
      * <p>
      * Defaults to true.
      * 
      * @param showXAxisValues
-     *            true if x-axis values should be displayed, false if they should be hidden.
+     *            true if x-axis getLanguages should be displayed, false if they should be hidden.
      */
     public void setShowXAxisValues(boolean showXAxisValues) {
         this.showXAxisValues = showXAxisValues;
     }
 
     /**
-     * Returns whether axis values are to be shown at all for the y-axis.
+     * Returns whether axis getLanguages are to be shown at all for the y-axis.
      * 
      * <p>
-     * If axis values are not shown then more space is allocated to the heat map.
+     * If axis getLanguages are not shown then more space is allocated to the heat map.
      * 
-     * @return true if the y-axis values will be displayed, false otherwise.
+     * @return true if the y-axis getLanguages will be displayed, false otherwise.
      */
     public boolean isShowYAxisValues() {
         return showYAxisValues;
     }
 
     /**
-     * Sets whether axis values are to be shown at all for the y-axis.
+     * Sets whether axis getLanguages are to be shown at all for the y-axis.
      * 
      * <p>
-     * If axis values are not shown then more space is allocated to the heat map.
+     * If axis getLanguages are not shown then more space is allocated to the heat map.
      * 
      * <p>
      * Defaults to true.
      * 
      * @param showYAxisValues
-     *            true if y-axis values should be displayed, false if they should be hidden.
+     *            true if y-axis getLanguages should be displayed, false if they should be hidden.
      */
     public void setShowYAxisValues(boolean showYAxisValues) {
         this.showYAxisValues = showYAxisValues;
@@ -1070,7 +1073,7 @@ public class HeatChart {
     }
 
     /**
-     * Sets the colour to be used to fill cells of the heat map with the highest z-values in the dataset.
+     * Sets the colour to be used to fill cells of the heat map with the highest z-getLanguages in the dataset.
      * 
      * <p>
      * The full colour range will go through each RGB step between the high value colour and the low value colour.
@@ -1101,7 +1104,7 @@ public class HeatChart {
     }
 
     /**
-     * Sets the colour to be used to fill cells of the heat map with the lowest z-values in the dataset.
+     * Sets the colour to be used to fill cells of the heat map with the lowest z-getLanguages in the dataset.
      * 
      * <p>
      * The full colour range will go through each RGB step between the high value colour and the low value colour.
@@ -1121,9 +1124,9 @@ public class HeatChart {
     /**
      * Returns the scale that is currently in use to map z-value to colour. A value of 1.0 will give a
      * <strong>linear</strong> scale, which will spread the distribution of colours evenly amoungst the full range of
-     * represented z-values. A value of greater than 1.0 will give an <strong>exponential</strong> scale that will
-     * produce greater emphasis for the separation between higher values and a value between 0.0 and 1.0 will provide a
-     * <strong>logarithmic</strong> scale, with greater separation of low values.
+     * represented z-getLanguages. A value of greater than 1.0 will give an <strong>exponential</strong> scale that will
+     * produce greater emphasis for the separation between higher getLanguages and a value between 0.0 and 1.0 will
+     * provide a <strong>logarithmic</strong> scale, with greater separation of low getLanguages.
      * 
      * @return the scale factor that is being used to map from z-value to colour.
      */
@@ -1134,9 +1137,10 @@ public class HeatChart {
     /**
      * Sets the scale that is currently in use to map z-value to colour. A value of 1.0 will give a
      * <strong>linear</strong> scale, which will spread the distribution of colours evenly amoungst the full range of
-     * represented z-values. A value of greater than 1.0 will give an <strong>exponential</strong> scale that will
-     * produce greater emphasis for the separation between higher values and a value between 0.0 and 1.0 will provide a
-     * <strong>logarithmic</strong> scale, with greater separation of low values. Values of 0.0 or less are illegal.
+     * represented z-getLanguages. A value of greater than 1.0 will give an <strong>exponential</strong> scale that will
+     * produce greater emphasis for the separation between higher getLanguages and a value between 0.0 and 1.0 will
+     * provide a <strong>logarithmic</strong> scale, with greater separation of low getLanguages. Values of 0.0 or less
+     * are illegal.
      * 
      * <p>
      * Defaults to a linear scale value of 1.0.
@@ -1150,8 +1154,8 @@ public class HeatChart {
 
     /*
      * Calculate and update the field for the distance between the low colour and high colour. The distance is the
-     * number of steps between one colour and the other using an RGB coding with 0-255 values for each of red, green and
-     * blue. So the maximum colour distance is 255 + 255 + 255.
+     * number of steps between one colour and the other using an RGB coding with 0-255 getLanguages for each of red,
+     * green and blue. So the maximum colour distance is 255 + 255 + 255.
      */
     private void updateColourDistance() {
         int r1 = lowValueColour.getRed();
@@ -1273,7 +1277,7 @@ public class HeatChart {
         // Draw the axis bars.
         drawAxisBars(chartGraphics);
 
-        // Draw axis values.
+        // Draw axis getLanguages.
         drawXValues(chartGraphics);
         drawYValues(chartGraphics);
 
@@ -1298,7 +1302,7 @@ public class HeatChart {
      * Calculates all unknown component dimensions.
      */
     private void measureComponents() {
-        // TODO This would be a good place to check that all settings have sensible values or throw illegal state
+        // TODO This would be a good place to check that all settings have sensible getLanguages or throw illegal state
         // exception.
 
         // TODO Put this somewhere so it only gets created once.
@@ -1468,7 +1472,7 @@ public class HeatChart {
         if (xAxisLabel != null) {
             // Strings are drawn from the baseline position of the leftmost char.
             int yPosXAxisLabel = chartSize.height - (margin / 2) - xAxisLabelDescent;
-            // TODO This will need to be updated if the y-axis values/label can be moved to the right.
+            // TODO This will need to be updated if the y-axis getLanguages/label can be moved to the right.
             int xPosXAxisLabel = heatMapC.x - (xAxisLabelSize.width / 2);
 
             chartGraphics.setFont(axisLabelsFont);
@@ -1527,7 +1531,7 @@ public class HeatChart {
     }
 
     /*
-     * Draws the x-values onto the x-axis if showXAxisValues is set to true.
+     * Draws the x-getLanguages onto the x-axis if showXAxisValues is set to true.
      */
     private void drawXValues(Graphics2D chartGraphics) {
         if (!showXAxisValues) {
@@ -1575,7 +1579,7 @@ public class HeatChart {
     }
 
     /*
-     * Draws the y-values onto the y-axis if showYAxisValues is set to true.
+     * Draws the y-getLanguages onto the y-axis if showYAxisValues is set to true.
      */
     private void drawYValues(Graphics2D chartGraphics) {
         if (!showYAxisValues) {
@@ -1622,13 +1626,13 @@ public class HeatChart {
     }
 
     /*
-     * Determines what colour a heat map cell should be based upon the cell values.
+     * Determines what colour a heat map cell should be based upon the cell getLanguages.
      */
     private Color getCellColour(double data, double min, double max) {
         double range = max - min;
         double position = data - min;
 
-        // What proportion of the way through the possible values is that.
+        // What proportion of the way through the possible getLanguages is that.
         double percentPosition = position / range;
 
         // Which colour group does that put us in.
