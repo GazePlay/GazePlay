@@ -44,7 +44,7 @@ import java.util.Set;
  * see https://iso639-3.sil.org/code_tables/639/data/c
  *
  */
-public class NewLanguages {
+public class Languages {
 
     private static final HashMap<String, CodeLanguagesFlags> languageMap = new HashMap<>(50);
     private static final HashMap<String, String> languageCodeMap = new HashMap<>(50);
