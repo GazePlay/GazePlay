@@ -146,7 +146,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "Lang", COLON);
 
-            // ComboBox<String> input = buildLanguageChooser(config, configurationContext);
             MenuButton input = buildLanguageChooser(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
@@ -529,12 +528,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private static MenuButton buildLanguageChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
 
-        String currentLanguage = null;
-
-        if (configuration.getLanguage() != null) {
-            currentLanguage = Languages.getLanguage(configuration.getLanguage());
-        }
-
+        String currentLanguage = configuration.getLanguage();
         MenuButton LanguageBox = new MenuButton();
 
         ArrayList<String> CodeLanguages = Languages.getCodes();
@@ -543,49 +537,32 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         for (String codeLanguage : CodeLanguages) {
 
-            System.out.println(codeLanguage);
             ArrayList<String> flags = Languages.getFlags(codeLanguage);
 
             for (String flag : flags) {
 
-                System.out.println(flag);
                 Image image = new Image(flag);
                 ImageView imageView = new ImageView(image);
                 imageView.setPreserveRatio(true);
                 imageView.setFitHeight(25);
 
-                MenuItem menuItem = new MenuItem(Languages.getLanguage(codeLanguage), imageView);
+                MenuItem LanguagesItem = new MenuItem(Languages.getLanguage(codeLanguage), imageView);
 
-                menuItem.setOnAction(event -> {
+                LanguagesItem.setOnAction(eventMenuLanguages -> {
 
-                    configuration.getLanguageProperty().setValue(Languages.getCode(codeLanguage));
+                    configuration.getLanguageProperty().setValue(codeLanguage);
+
                     configuration.saveConfigIgnoringExceptions();
 
                     configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
                 });
 
-                LanguageBox.getItems().addAll(menuItem);
+                LanguageBox.getItems().add(LanguagesItem);
             }
         }
 
         LanguageBox.setPrefWidth(PREF_WIDTH);
         LanguageBox.setPrefHeight(PREF_HEIGHT);
-        /*
-         * if (currentLanguage != null) LanguageBox.get
-         * //LanguageBox.getSelectionModel().select(Languages.getLanguage(configuration.getLanguage()));
-         * 
-         * LanguageBox.setPrefWidth(PREF_WIDTH); LanguageBox.setPrefHeight(PREF_HEIGHT);
-         * 
-         * LanguageBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-         * 
-         * @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-         * {
-         * 
-         * configuration.getLanguageProperty().setValue(Languages.getCode(newValue));
-         * configuration.saveConfigIgnoringExceptions();
-         * 
-         * configurationContext.getGazePlay().getTranslator().notifyLanguageChanged(); } });
-         */
 
         return LanguageBox;
     }

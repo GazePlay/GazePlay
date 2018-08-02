@@ -44,6 +44,7 @@ public class Languages {
 
     private static final HashMap<String, CodeLanguageFlag> languageMap = new HashMap<>(50);
     private static final HashMap<String, String> languageCodeMap = new HashMap<>(50);
+    private static final String DEFAULT_CODE = "fra";
 
     static {
 
@@ -98,6 +99,9 @@ public class Languages {
     }
 
     public static String getLanguage(String code) {
+
+        // if (code == null)
+        // code = DEFAULT_CODE;
 
         return languageMap.get(code).language;
     }
