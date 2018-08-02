@@ -455,10 +455,12 @@ public class WhereIsIt implements GameLifeCycle {
             return "";
         }
 
-        if (language.equals("deu")) {
+        if (!(language.equals("fra") || language.equals("eng"))) {
             // erase when translation is complete
             language = "eng";
         }
+
+        log.info("language is " + language);
 
         final String voice;
         if (Math.random() > 0.5) {
@@ -489,7 +491,7 @@ public class WhereIsIt implements GameLifeCycle {
             return traduction;
         }
 
-        if (language.equals("deu")) {
+        if (!(language.equals("fra") || language.equals("eng"))) {
             // erase when translation is complete
             language = "eng";
         }

@@ -528,8 +528,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private static MenuButton buildLanguageChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
 
-        String currentLanguage = configuration.getLanguage();
-        MenuButton LanguageBox = new MenuButton();
+        String currentCodeLanguage = configuration.getLanguage();
+
+        String currentLanguage = Languages.getLanguage(currentCodeLanguage);
+
+        Image currentFlag = new Image(Languages.getFlags(currentCodeLanguage).get(0));
+        ImageView currentFlagImageView = new ImageView(currentFlag);
+        currentFlagImageView.setPreserveRatio(true);
+        currentFlagImageView.setFitHeight(25);
+
+        MenuButton LanguageBox = new MenuButton(currentLanguage, currentFlagImageView);
 
         ArrayList<String> CodeLanguages = Languages.getCodes();
 
@@ -555,6 +563,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     configuration.saveConfigIgnoringExceptions();
 
                     configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
+
+                    LanguageBox.setText(Languages.getLanguage(codeLanguage));
+
+                    LanguageBox.setGraphic(imageView);
                 });
 
                 LanguageBox.getItems().add(LanguagesItem);
