@@ -100,8 +100,8 @@ public class Languages {
 
     public static String getLanguage(String code) {
 
-        // if (code == null)
-        // code = DEFAULT_CODE;
+        if (code == null)
+            code = DEFAULT_CODE;
 
         return languageMap.get(code).language;
     }
