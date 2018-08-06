@@ -31,10 +31,10 @@ public class HiddenItemsGamesStats extends Stats {
             out.print(',');
             out.print("Average Length");
             out.print(',');
-            out.print("Standard Déviation");
+            out.print("Standard Deviation");
             out.print(',');
             for (int i = 0; i < getNbGoals(); i++) {
-                out.print("shoot ");
+                out.print("shot ");
                 out.print(i);
                 out.print(",");
             }

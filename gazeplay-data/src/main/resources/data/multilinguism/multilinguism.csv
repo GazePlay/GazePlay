@@ -14,16 +14,16 @@ StatsTitle,احصائيات,统计,Statistiken,Statistics,Statistiques,Statistik
 Aver,معدل,平均值,Durchschnitt,Average,Moyenne,Prosječan,Media,平均,Média,Gemiddelde,Средний показатель,Promedio,Trung bình
 Med,متوسط,中位数,Median,Median,Médiane,Srednji,Mediana,中央値,Mediana,Mediaan,Медианное значение,Mediana,Giá trị giữa
 TotalLength,زمن اللعب المقضى,总游戏时间,Zeit auf dem Spiel,Total active playtime,Temps de jeu actif,Ukupno aktivno vrijeme igranja,Tempo totale di gioco attivo,遊び時間,Tempo de jogo activo,Totale actieve speeltijd,Общее время воспроизведения,Tiempo activo de juego,Tổng thời gian chơi
-Shoots,رميات,射击,Schüsse,Shoots,Tirs,Pogoci,Tiri,射撃,Tiros,Aantal hits,Выстрелы,Tiros,Lần bắn
-BubbleShoot,فقاعات انفجرت,戳泡泡,Zum Platzen gebrachte Blasen,Burst bubbles,Bulles éclatées,Rasprsni mjehuriće,Scoppia le bolle,,Bulha atingido,Barst de bubbels,Шарики,Burbujas reventadas,Số bóng bắn vỡ
-HiddenItemsShoot,الصور المكتشفة,,Entdeckte Bilder,Uncovered Images,Images découvertes,Skrivene slike ,Immagini scoperte,,Imagens descobstas,Ontdek de prenten,Стреляй в скрытые предметы,Imagenes descubiertas,Số hình đã mở
+Shots,رميات,射击,Schüsse,Shots,Tirs,Pogoci,Tiri,射撃,Tiros,Aantal hits,Выстрелы,Tiros,Lần bắn
+BubbleShot,فقاعات انفجرت,戳泡泡,Zum Platzen gebrachte Blasen,Burst bubbles,Bulles éclatées,Rasprsni mjehuriće,Scoppia le bolle,,Bulha atingido,Barst de bubbels,Шарики,Burbujas reventadas,Số bóng bắn vỡ
+HiddenItemsShot,الصور المكتشفة,,Entdeckte Bilder,Uncovered Images,Images découvertes,Skrivene slike ,Immagini scoperte,,Imagens descobstas,Ontdek de prenten,Стреляй в скрытые предметы,Imagenes descubiertas,Số hình đã mở
 Length,الوقت الفعال للعبة,实际游戏时间,Gespielte Zeit,Actual play Time,Temps effectif de jeu,Efektivno vrijeme igranja,Tempo di gioco effettivo,,Tempo de jogo efectivo,Totale speeltijd,Время в игре,Tiempo efectivo de juego,Thời gian chơi
-ShootaverageLength,معدل وقت رد الفعل,平均反应时长,Durchschnittliche Reaktionszeit,Average reaction time,Temps de réaction moyen,Prosječno vrijeme reakcije,Tempo medio di reazione,,Tempo médio de reaçâo,Gemiddelde reactietijd,Среднее время реагирования,Tiempo promedio de reaccion,Thời gian phản ứng trung bình
+ShotaverageLength,معدل وقت رد الفعل,平均反应时长,Durchschnittliche Reaktionszeit,Average reaction time,Temps de réaction moyen,Prosječno vrijeme reakcije,Tempo medio di reazione,,Tempo médio de reaçâo,Gemiddelde reactietijd,Среднее время реагирования,Tiempo promedio de reaccion,Thời gian phản ứng trung bình
 AverageLength,معدل الوقت,平均时长,Durchschnittliche Zeit,Average time,Temps moyen,Prosječo vrijeme,Tempo medio,,Tempo médio,Gemiddelde tijd,Среднее время ,Tiempo promedio,Thời gian trung bình
-ShootmedianLength, متوسط وقت رد الفعل,中位反应时长,Median-Reaktionszeit,Median reaction time,Temps de réaction médian,Srednje vrijeme reakcije,Mediana tempo di reazione,,Tempo mediano de reaçâo,Mediaan reactietijd,Медианное время реагирования,Tiempo medio de reaccion,Giá trị giữa của thời gian phản ứng
+ShotmedianLength, متوسط وقت رد الفعل,中位反应时长,Median-Reaktionszeit,Median reaction time,Temps de réaction médian,Srednje vrijeme reakcije,Mediana tempo di reazione,,Tempo mediano de reaçâo,Mediaan reactietijd,Медианное время реагирования,Tiempo medio de reaccion,Giá trị giữa của thời gian phản ứng
 MedianLength,متوسط الوقت,中位时长,Median-Zeit,Median time,Temps médian,Srednje vrijeme,Mediana tempo,,Tempo mediano,Mediaan tijd,Медианное время ,Mediana del tiempo,Giá trị giữa của thời gian
 StandDev,الانحراف المعياري,标准差,Standardabweichung,Standard deviation,Écart-type,Standardno odstupanje,Deviazione standard,,Desvio padrão,Standaard afwijking,Стандартное отклонение,desviación estandar,Độ lệch chuẩn
-UncountedShoot,رميات غير محتسبة,未计数射击,Nicht gezählte Schüsse,Uncounted shoot,Tirs non comptés,Neubrojeni pogoci,Tiri non conteggiati,,Tiros nào contabilisados,Ongetelde hits,Неучтенный выстрел,Tiros no contados,Lần bắn ko được tính
+UncountedShot,رميات غير محتسبة,未计数射击,Nicht gezählte Schüsse,Uncounted Shots,Tirs non comptés,Neubrojeni pogoci,Tiri non conteggiati,,Tiros nào contabilisados,Ongetelde hits,Неучтенный выстрел,Tiros no contados,Lần bắn ko được tính
 ConfigTitle,ترتيب,恭喜你！,Konfiguration,Configuration,Configuration,Konfiguracija,Configurazione,,Configuraçaô,Configuratie,Конфигурация,Configuración,Tùy chỉnh
 Lang,لغة,语言,Sprache,Language,Langue,Jezik,Lingua,,lingua,Taal,Язык,Idioma,Ngôn ngữ
 EyeTracker,العين تعقب,眼球跟踪,Eyetracker,Eye Tracker,Oculomètre,Instrument za praćenje pogleda (Eye Tracker),Tracciatore oculare (eye tracker),,Seguimento do olhar,Oogsturingsmodule,АйТрекер,Eye tracker,Theo dõi ánh mắt
@@ -66,7 +66,6 @@ Whac-a-mole,لعبة واكامول,,Whac-a-mole,Whac-a-mole,Jeu de la taupe,Igr
 Cakes,مصنع المرطبات,,Die Kuchenfabrik ,The cake factory , La Fabrique a Gateaux,Tvornica kolača,La fabbrica dei dolci,,,De cakejes fabriek,Фабрика тортиков,La Fabrica de Pasteles,Xưởng làm bánh ga-tô
 MusicFolder,ملف الموسيقى,,Musikmappe,music folder,Dossier musiques,Datoteka Muzika,Cartella musica,,,Muziek folder,Папка Музыка,carpeta de música,Thư mục âm nhạc
 Order,امر,,Reihenfolge,Order,Ordre,Poredak,Ordinare,,,Bestellen,Заказать,Orden,Thứ tự
-UncountedShot,رميات لا تحتسب,,Unzählige Schüsse,Uncounted Shots,Tir non comptabilisés,Neubrojeni pogoci,Spari non conteggiati,,,Ongetelde hits,Неучтенный выстрел,Disparos sin contar,Những lần bắn không được tính
 EffectsVolume,حجم الاثار,,Effektvolumen,effects volume,volume des effets,Glasnoća efekata,Volume degli effetti,,,Volume effecten,Объм эффектов,volumen de efectos,Âm lượng của hiệu ứng
 reset,اعادة تعيين,,zurücksetzen,reset,réinitialiser,Resetiraj,Resetta,,,Reset,Сброс,restablecimiento,Đặt lại
 ColorDesc,قم بالتلوين باستخدام اي صورة و حفظها,,Färben Sie mit einem beliebigen Bild und speichern Sie das Bild.,Do some colouring on any image then save it.,Coloriez des images !,Oboji bilo koju sliku i sačuvaj,Colora usando qualsiasi immagine e salvala,,,Kleur om het even welke plaat en bewaar.,Раскрасьте какое-либо изображение и сохраните его.,Coloree usando cualquier imagen y luego guárdela.,Tô màu một hình bất kì và lưu lại

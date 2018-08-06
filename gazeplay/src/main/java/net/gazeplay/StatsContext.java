@@ -85,11 +85,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         {
             final I18NText label;
             if (stats instanceof BubblesGamesStats) {
-                label = new I18NText(translator, "BubbleShoot", COLON);
+                label = new I18NText(translator, "BubbleShot", COLON);
             } else if (stats instanceof ShootGamesStats) {
-                label = new I18NText(translator, "Shoots", COLON);
+                label = new I18NText(translator, "Shots", COLON);
             } else if (stats instanceof HiddenItemsGamesStats) {
-                label = new I18NText(translator, "HiddenItemsShoot", COLON);
+                label = new I18NText(translator, "HiddenItemsShot", COLON);
             } else {
                 label = new I18NText(translator, "Score", COLON);
             }
@@ -116,7 +116,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             final I18NText label;
 
             if (stats instanceof ShootGamesStats) {
-                label = new I18NText(translator, "ShootaverageLength", COLON);
+                label = new I18NText(translator, "ShotaverageLength", COLON);
             } else {
                 label = new I18NText(translator, "AverageLength", COLON);
             }
@@ -132,7 +132,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             final I18NText label;
 
             if (stats instanceof ShootGamesStats) {
-                label = new I18NText(translator, "ShootmedianLength", COLON);
+                label = new I18NText(translator, "ShotmedianLength", COLON);
             } else {
                 label = new I18NText(translator, "MedianLength", COLON);
             }
@@ -154,11 +154,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         {
             if (stats instanceof ShootGamesStats && !(stats instanceof BubblesGamesStats)
-                    && ((ShootGamesStats) stats).getNbUnCountedShoots() != 0) {
+                    && ((ShootGamesStats) stats).getNbUnCountedShots() != 0) {
 
                 final I18NText label = new I18NText(translator, "UncountedShot", COLON);
 
-                final Text value = new Text(String.valueOf(((ShootGamesStats) stats).getNbUnCountedShoots()));
+                final Text value = new Text(String.valueOf(((ShootGamesStats) stats).getNbUnCountedShots()));
                 if (!(stats instanceof ExplorationGamesStats)) {
                     addToGrid(grid, currentFormRow, label, value);
                 }

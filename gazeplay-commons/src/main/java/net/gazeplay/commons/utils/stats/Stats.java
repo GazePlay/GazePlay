@@ -39,7 +39,7 @@ public class Stats implements GazeMotionListener {
     @Setter
     private long accidentalShotPreventionPeriod = 0;
     @Getter
-    private int nbUnCountedShoots;
+    private int nbUnCountedShots;
     private double[][] heatMap;
     @Getter
     private SavedStatsInfo savedStatsInfo;
@@ -150,7 +150,7 @@ public class Stats implements GazeMotionListener {
         final long currentRoundEndTime = System.currentTimeMillis();
         final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
         if (currentRoundDuration < accidentalShotPreventionPeriod) {
-            nbUnCountedShoots++;
+            nbUnCountedShots++;
         } else {
             nbGoals++;
             this.roundsDurationReport.addRoundDuration(currentRoundDuration);

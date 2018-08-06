@@ -32,12 +32,12 @@ public class ShootGamesStats extends Stats {
             out.print(',');
             out.print("Average Length");
             out.print(',');
-            out.print("Standard Déviation");
+            out.print("Standard Deviation");
             out.print(',');
-            out.print("Uncounted Shoots");
+            out.print("Uncounted Shots");
             out.print(',');
             for (int i = 0; i < getNbGoals(); i++) {
-                out.print("shoot ");
+                out.print("shot ");
                 out.print(i);
                 out.print(",");
             }
@@ -57,7 +57,7 @@ public class ShootGamesStats extends Stats {
             out.print(',');
             out.print(computeRoundsDurationStandardDeviation());
             out.print(',');
-            out.print(getNbUnCountedShoots());
+            out.print(getNbUnCountedShots());
             out.print(',');
             printLengthBetweenGoalsToString(out);
             out.println();
