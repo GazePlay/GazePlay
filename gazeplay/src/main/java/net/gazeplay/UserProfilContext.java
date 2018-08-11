@@ -525,7 +525,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         tfi.addEventFilter(MouseEvent.MOUSE_CLICKED, chooseImageHandler);
 
-        Button reset = new Button(getGazePlay().getTranslator().translate("Reset"));
+        Button reset = new Button(getGazePlay().getTranslator().translate("reset"));
         reset.getStyleClass().add("gameChooserButton");
         reset.getStyleClass().add("gameVariation");
         reset.getStyleClass().add("button");
