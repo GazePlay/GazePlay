@@ -56,10 +56,11 @@ public class Languages {
                 "data/common/flags/800px-Flag_of_Austria.svg.png");
         put("eng", "English", "data/common/flags/800px-Flag_of_the_United_Kingdom.svg.png",
                 "data/common/flags/800px-Flag_of_the_United_States_(Pantone).svg.png");
-        put("fin", "Suomi", "data/common/flags/data/common/flags/800px-Flag_of_Finland.svg.png");
+        put("fin", "Suomi", "data/common/flags/800px-Flag_of_Finland.svg.png");
         put("fra", "Français", "data/common/flags/Flag_of_La_Francophonie.svg.png",
                 "data/common/flags/800px-Flag_of_France.svg.png");
         put("hrv", "Hrvatski", "data/common/flags/800px-Flag_of_Croatia.svg.png");
+        put("ind", "Bahasa Indonesia", "data/common/flags/800px-Flag_of_Indonesia.svg.png");
         put("ita", "Italiano", "data/common/flags/800px-Flag_of_Italy.svg.png");
         put("jpn", "日本語", "data/common/flags/800px-Flag_of_Japan.svg.png");
         put("pol", "polszczyzna", "data/common/flags/800px-Flag_of_Poland.svg.png");
@@ -69,6 +70,7 @@ public class Languages {
         put("rus", "Pу́сский язы́к", "data/common/flags/800px-Flag_of_Russia.svg.png");
         put("spa", "Español", "data/common/flags/800px-Flag_of_Spain.svg.png");
         put("vnm", "Tiếng Việt", "data/common/flags/800px-Flag_of_Vietnam.svg.png");
+        put("zsm", "Bahasa Melayu", "data/common/flags/800px-Flag_of_Malaysia.svg.png");
     }
 
     /**

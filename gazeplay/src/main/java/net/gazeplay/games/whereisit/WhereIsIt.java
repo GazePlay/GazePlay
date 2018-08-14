@@ -111,7 +111,8 @@ public class WhereIsIt implements GameLifeCycle {
 
             Transition animation = createQuestionTransition(currentRoundDetails.question, currentRoundDetails.pictos);
             animation.play();
-            playQuestionSound();
+            if (currentRoundDetails.questionSoundPath != null)
+                playQuestionSound();
         }
 
     }
@@ -457,7 +458,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         if (!(language.equals("fra") || language.equals("eng"))) {
             // erase when translation is complete
-            language = "eng";
+            return null;
         }
 
         log.info("language is " + language);
@@ -489,11 +490,6 @@ public class WhereIsIt implements GameLifeCycle {
             String traduction = localMultilinguism.getTrad(folder, language);
 
             return traduction;
-        }
-
-        if (!(language.equals("fra") || language.equals("eng"))) {
-            // erase when translation is complete
-            language = "eng";
         }
 
         Multilinguism localMultilinguism = Multilinguism.getForResource(gameType.languageResourceLocation);
