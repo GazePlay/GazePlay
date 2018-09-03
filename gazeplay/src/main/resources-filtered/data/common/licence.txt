@@ -23,9 +23,9 @@ de leur formation :
 - en 2018-2019 : Mélanie CARRIÈRE (Univ.Grenoble Alpes), Dumitru CORINI (Univ.Grenoble Alpes),
  Vincent GIVAUDAN (Univ.Grenoble Alpes), Thomas MEDARD (Univ.Grenoble Alpes), Sébastien RIOU (Univ.Grenoble Alpes)
 
-Merci également à la communauté open source pour son aide : Yann ROBERT (Maven, logs, lombok,...)
+Merci également à la communauté open source pour son aide : Yann ROBERT, Anantaplex (Maven, logs, lombok,...)
 
-Merci à Loïc Vial (lolo la science) en particulier pour le lien entre la bibliothèque Tobii en C++ et Java
+Merci à Loïc Vial, Univ. Grenoble Alpes (lolo la science) en particulier pour le lien entre la bibliothèque Tobii en C++ et Java
 
 Merci au personnel de l'EEAP Coste Rousse à Prades-le-Lez et au personnel de l'IMP Ninon Vallin à Grenoble
 pour leurs retours.
