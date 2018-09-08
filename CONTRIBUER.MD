@@ -112,4 +112,10 @@ Un badge est ajouté en haut du README.md, indiquant le status de la branche pri
 
 En savoir plus https://docs.travis-ci.com/user/getting-started/
 
+### Ligne de commande "idéale"
+
+Cette ligne de commande réalise l'ensemble des opérations vérifiées par Travis
+```
+mvn clean install -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
+```
 
