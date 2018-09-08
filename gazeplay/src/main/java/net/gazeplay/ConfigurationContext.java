@@ -554,7 +554,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 imageView.setPreserveRatio(true);
                 imageView.setFitHeight(25);
 
-                MenuItem LanguagesItem = new MenuItem(Languages.getLanguage(codeLanguage), imageView);
+                String language = Languages.getLanguage(codeLanguage);
+
+                MenuItem LanguagesItem = new MenuItem(language, imageView);
 
                 LanguagesItem.setOnAction(eventMenuLanguages -> {
 
@@ -567,6 +569,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     LanguageBox.setText(Languages.getLanguage(codeLanguage));
 
                     LanguageBox.setGraphic(imageView);
+
+                    if (!language.equals("Français") && !language.equals("English") && !language.equals("Deutsch")) {
+
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Language information");
+                        alert.setHeaderText(
+                                "If you think that some words are odd in the games, it is maybe a problem of translation. Please contact us to propose a better ones (gazeplay.net)\nand they will be in the next version.");
+                        alert.show();
+                    }
+
                 });
 
                 LanguageBox.getItems().add(LanguagesItem);
