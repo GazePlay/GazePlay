@@ -575,8 +575,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Language information");
                         alert.setHeaderText(
-                                "Translation has just been performed for your language. If you think that some words sound odd in the games, it is maybe a problem of translation. \nPlease contact us to propose better ones (gazeplay.net) "
-                                        + "and they will be in the next version.");
+                                "Translation has just been performed for your language. If you think that some words sound odd in the games, it is maybe a problem of translation. \nPlease contact us to propose better ones (gazeplay.net) and they will be in the next version.");
                         alert.show();
                     }
 

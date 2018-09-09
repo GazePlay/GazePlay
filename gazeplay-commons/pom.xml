@@ -5,12 +5,12 @@
 	<groupId>com.github.schwabdidier</groupId>
 	<artifactId>gazeplay-commons</artifactId>
 	<packaging>jar</packaging>
-	<version>1.4.1</version>
+	<version>1.4.1-SNAPSHOT</version>
 
 	<parent>
 		<groupId>com.github.schwabdidier</groupId>
 		<artifactId>gazeplay-project</artifactId>
-		<version>1.4.1</version>
+		<version>1.4.1-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
