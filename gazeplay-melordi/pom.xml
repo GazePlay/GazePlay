@@ -5,12 +5,12 @@
 	<groupId>com.github.schwabdidier</groupId>
 	<artifactId>gazeplay-melordi</artifactId>
 	<packaging>jar</packaging>
-	<version>1.4.1-SNAPSHOT</version>
+	<version>1.4.1</version>
 
 	<parent>
 		<groupId>com.github.schwabdidier</groupId>
 		<artifactId>gazeplay-project</artifactId>
-		<version>1.4.1-SNAPSHOT</version>
+		<version>1.4.1</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>com.github.schwabdidier</groupId>
 			<artifactId>gazeplay-commons</artifactId>
-			<version>1.4.1-SNAPSHOT</version>
+			<version>1.4.1</version>
 		</dependency>
 		
 
