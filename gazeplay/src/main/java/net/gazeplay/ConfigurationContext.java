@@ -570,7 +570,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
                     LanguageBox.setGraphic(imageView);
 
-                    if (!language.equals("Français") && !language.equals("English") && !language.equals("Deutsch")) {
+                    if (codeLanguage.equals("ell")) {
+
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Language information");
+                        alert.setHeaderText("Translations have been provided by MK Prossopsis Ltd.");
+                        alert.show();
+                    } else if (!codeLanguage.equals("fra") && !codeLanguage.equals("eng")
+                            && !codeLanguage.equals("deu")) {
 
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Language information");

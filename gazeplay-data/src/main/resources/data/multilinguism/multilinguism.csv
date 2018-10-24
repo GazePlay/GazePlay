@@ -73,7 +73,7 @@ Labyrinth,متاهة,,Labyrinth,Λαβύρινθος,Labyrinth,labyrintti,Labyri
 Pet,لدي كويرات,,Ich habe ein Biboles,Έχω ένα Biball!,I've got a Biball !,lemmikki,J'ai un Biboule !,Imam Biboule!,Saya mempunyai Biball!,Ho un Biball!,,Mam Biballa!,*Eu tenho um Biball!,Saya mempunyai Biball!,Ik heb een paar !,Домашний питомец,Yo tengo un Bibole!,Tôi có Bóng Bi!
 SpeedEffects,سرعة,,Weißer Hintergrund,Ταχύτητα επίδρασης,Effect speed,vauhtiefektit,Vitesse des animations,Brzina animacije,Kelajuan kesan,Velocità delle animazioni,,Szybkość efektu,*Velocidade do efeito,Kelajuan kesan,Snelheids effecten,Эффекты скорости,Velocidad de las animaciones,Tốc độ của hiệu ứng
 WhiteBackground,اختيار شاشة بيضاء,,Animationsgeschwindigkeit,Λειτουργία λευκού φόντου,White Background mode,valkoinen tausta,Mode fond blanc,Bijela pozadina,Mod Latar Belakang Putih,Modalità sfondo bianco,,Tryb białego tła,*Modo de fundo branco,Mod Latar Belakang Putih,Witte achtergrond modus,Режим белого фона,Modo fondo de pantalla blanco,Chế độ hình nền trắng
-EnableGazeMouse,تشغيل مظاهات الفارة البصرية اضغط س لايقاف/تشغيل,,Aktivieren der visuellen Mausemulation ; drücken Sie S um die Emulation zu stoppen/starten ; Drücken Sie die Leertaste um den Mausklick zu emulieren.,Ενεργοποιήστε την εξομοίωση του Mouse Gaze. πατήστε S για να διακόψετε / ξεκινήσετε την εξομοίωση. Πατήστε το πλήκτρο διαστήματος για να εξομοιώσετε το κλικ.,Enable the Gaze Mouse emulation ; press S to stop/start the emulation ; Press space to emulate click,aktivoi katseohjainhiiri,Activer l'émulation de la souris visuelle ; appuyez sur S pour arrêter/commencer l'émulation ; appuyez sur espace pour émuler un click de souris,Aktiviraj opciju pogled; Pritisni S za stop/start; Pritisni razmaknicu za efekt klik misa,Dayakan emulasi Gaze Mouse; tekan S untuk menghentikan / memulakan emulasi; Tekan ruang untuk meniru klik,Attiva modalità emulazione mouse ; premi S per fermare/avviare l'emulatore ; premi spazio per emulare il click del mouse,,Włącz emulację Gaze Mouse; naciśnij S,*Ative a emulação do Gaze Mouse; pressione S para parar / iniciar a emulação; Pressione espaço para emular clique,Dayakan emulasi Gaze Mouse; tekan S untuk menghentikan / memulakan emulasi; Tekan ruang untuk meniru klik,Activeer de oogsturing via muissimulatie ; druk S om de muissimulaite te stoppen/starten ; klik op de spatiebar om een klik na te doen,Включить эмуляцию Gaze мышки ; нажмите на S ; чтобы начать/остановить эмуляцию; нажмите пробел для эмуляции клика,Activación de la emulación del ratón visual ; presione S para detener/iniciar la emulación ; presione espacio para emular el clic,Bật giả lập Chuột Gaze; ấn S để dừng/bắt đầu giả lập
+EnableGazeMouse,تشغيل مظاهات الفارة البصرية اضغط س لايقاف/تشغيل,,Aktivieren der visuellen Mausemulation ; drücken Sie S um die Emulation zu stoppen/starten ; Drücken Sie die Leertaste um den Mausklick zu emulieren.,Ενεργοποιήστε την εξομοίωση του Mouse Gaze. πατήστε S για να διακόψετε ; ξεκινήσετε την εξομοίωση. Πατήστε το πλήκτρο διαστήματος για να εξομοιώσετε το κλικ.,Enable the Gaze Mouse emulation ; press S to stop/start the emulation ; Press space to emulate click,aktivoi katseohjainhiiri,Activer l'émulation de la souris visuelle ; appuyez sur S pour arrêter/commencer l'émulation ; appuyez sur espace pour émuler un click de souris,Aktiviraj opciju pogled; Pritisni S za stop/start; Pritisni razmaknicu za efekt klik misa,Dayakan emulasi Gaze Mouse; tekan S untuk menghentikan / memulakan emulasi; Tekan ruang untuk meniru klik,Attiva modalità emulazione mouse ; premi S per fermare/avviare l'emulatore ; premi spazio per emulare il click del mouse,,Włącz emulację Gaze Mouse; naciśnij S,*Ative a emulação do Gaze Mouse; pressione S para parar / iniciar a emulação; Pressione espaço para emular clique,Dayakan emulasi Gaze Mouse; tekan S untuk menghentikan / memulakan emulasi; Tekan ruang untuk meniru klik,Activeer de oogsturing via muissimulatie ; druk S om de muissimulaite te stoppen/starten ; klik op de spatiebar om een klik na te doen,Включить эмуляцию Gaze мышки ; нажмите на S ; чтобы начать/остановить эмуляцию; нажмите пробел для эмуляции клика,Activación de la emulación del ratón visual ; presione S para detener/iniciar la emulación ; presione espacio para emular el clic,Bật giả lập Chuột Gaze; ấn S để dừng/bắt đầu giả lập
 AddUser,اظافة مستخدم جديد,,Neuen Benutzer hinzufügen,Προσθήκη νέου χρήστη,Add new user,lisää käyttäjä,Ajouter un nouvel utilisateur,Dodaj novog korisnika,Tambah pengguna baharu,Aggiungi un nuovo utente,,Dodaj nowego użytkownika, aby zatrzymać / rozpocząć emulację; Naciśnij spację,Tambah pengguna baharu, aby emulować kliknięcie,Добавить нового пользователя,Agregar un usuario,Thêm người dùng mới
 DefaultUser,مستخدم افتراضي,,Standardbenutzer,Προεπιλεγμένος χρήστης,Default User,poista käyttäjä,Utilisateur par Défaut,Zadani korisnik,Pengguna Lalai,Utente standard,,Domyślny użytkownik,*Usuário padrão,Pengguna Lalai,Standaard Gebruiker,Пользователь по умолчанию,Usuario predeterminado,Người dùng mặc định
 NewUser, مستخدم جديد,,Neuer Benutzer,Νέος χρήστης,New user,uusi käyttäjä,Nouvel utilisateur,Novi korisnik,Pengguna baru,Nuovo utente,,Nowy użytkownik,*Novo usuário,Pengguna baru,Nieuwe gebruiker,Новый пользователь,Nuevo usario,Người dùng mới
@@ -88,30 +88,3 @@ Image,صورة,,Bild,Εικόνα,Image,kuva,Image,Slika,Gambar,Immagine,,Obraz,
 AlreadyUsed,اسم المستخدم غير متوفر,,Dieser Benutzername existiert bereits,Αυτό το όνομα χρήστη υπάρχει ήδη,This user name exists already,käytössä,Ce nom d'utilisateur existe déjà,Ime korisnika već postoji,Nama pengguna ini sudah wujud,Questo nome utente è già utilizzato,,Ta nazwa użytkownika już istnieje,*Este nome de usuário já existe,Nama pengguna ini sudah wujud,Deze gebruikersnaam bestaat reeds,Пользователь с таким именем уже существует,Este nombre de usario ya existe,Tên người dùng này đã tồn tại
 MediaPlayer,مشغل الوسائط,,Media Player,Media Player,Media Player,media player,Media Player,Media Player,Pemain media,Media Player,,Odtwarzacz multimedialny,Media Player,Pemain media,Media Player,Медиа плеер,Media Player,Media Player
 RushHour,ساعة الذروة,,Rush Hour,Ώρα αιχμής,Rush Hour,Rush hour ; ruuhka-aika,Rush Hour,Rush Hour,Masa yang sibuk,Rush Hour,,Godziny szczytu,Rush Hour,Masa yang sibuk,Rush Hour,Час пик,Rush Hour,*Giờ cao điểm
-,,,,Πού είναι η αρκούδα;,,,,,,,,,,,,,,
-,,,,Πού είναι η μέλισσα;,,,,,,,,,,,,,,
-,,,,Που είναι η γάτα?,,,,,,,,,,,,,,
-,,,,Πού είναι ο κροκόδειλος;,,,,,,,,,,,,,,
-,,,,Που είναι ο σκύλος?,,,,,,,,,,,,,,
-,,,,Πού είναι ο αετός;,,,,,,,,,,,,,,
-,,,,Πού είναι ο ελέφαντας;,,,,,,,,,,,,,,
-,,,,Πού είναι το άλογο;,,,,,,,,,,,,,,
-,,,,Πού είναι το λιοντάρι;,,,,,,,,,,,,,,
-,,,,Πού είναι η κουκουβάγια;,,,,,,,,,,,,,,
-,,,,Πού είναι ο παπαγάλος;,,,,,,,,,,,,,,
-,,,,Πού είναι το περιστέρι;,,,,,,,,,,,,,,
-,,,,Πού είναι το κουνέλι;,,,,,,,,,,,,,,
-,,,,Πού είναι ο σκίουρος;,,,,,,,,,,,,,,
-,,,,Πού είναι η τίγρη;,,,,,,,,,,,,,,
-,,,,Πού είναι η χελώνα;,,,,,,,,,,,,,,
-,,,,Πού είναι το μαύρο;,,,,,,,,,,,,,,
-,,,,Πού είναι το μπλε;,,,,,,,,,,,,,,
-,,,,Πού είναι το καφέ;,,,,,,,,,,,,,,
-,,,,Πού είναι το πράσινο;,,,,,,,,,,,,,,
-,,,,Πού είναι το γκρι;,,,,,,,,,,,,,,
-,,,,Πού είναι το πορτοκαλί;,,,,,,,,,,,,,,
-,,,,Πού είναι το ροζ;,,,,,,,,,,,,,,
-,,,,Πού είναι το μοβ;,,,,,,,,,,,,,,
-,,,,Πού είναι το κόκκινο;,,,,,,,,,,,,,,
-,,,,Πού είναι το λευκό;,,,,,,,,,,,,,,
-,,,,Πού είναι το κίτρινο;,,,,,,,,,,,,,,

@@ -56,6 +56,7 @@ public class Languages {
                 "data/common/flags/800px-Flag_of_Austria.svg.png");
         put("eng", "English", "data/common/flags/800px-Flag_of_the_United_Kingdom.svg.png",
                 "data/common/flags/800px-Flag_of_the_United_States_(Pantone).svg.png");
+        put("ell", "ελληνικά", "data/common/flags/800px-Flag_of_Greece.svg.png");
         put("fin", "Suomi", "data/common/flags/800px-Flag_of_Finland.svg.png");
         put("fra", "Français", "data/common/flags/Flag_of_La_Francophonie.svg.png",
                 "data/common/flags/800px-Flag_of_France.svg.png");
