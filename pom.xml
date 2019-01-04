@@ -17,7 +17,7 @@
 		<url>https://github.com/schwabdidier/GazePlay</url>
 		<connection>scm:git:ssh://git@github.com/schwabdidier/GazePlay.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/schwabdidier/GazePlay.git</developerConnection>
-		<tag>GazePlay-1.4.1</tag>
+		<tag>GazePlay-1.4.2-SNAPSHOT</tag>
 	</scm>
 
 
