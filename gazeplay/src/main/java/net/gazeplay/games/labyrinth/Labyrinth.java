@@ -48,7 +48,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         fixationlength = config.getFixationLength();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        log.info("dimension2D = {}", dimension2D);
+        log.debug("dimension2D = {}", dimension2D);
 
         entiereRecX = dimension2D.getWidth() * 0.25;
         entiereRecY = dimension2D.getHeight() * 0.15;

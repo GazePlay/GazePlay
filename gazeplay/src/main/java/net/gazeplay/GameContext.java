@@ -220,7 +220,7 @@ public class GameContext extends GraphicalContext<Pane> {
         double mainHeight = gazePlay.getPrimaryStage().getHeight();
 
         final double newY = mainHeight - configPane.getHeight() - 30;
-        log.info("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
+        log.debug("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
         configPane.setTranslateY(newY);
     }
 

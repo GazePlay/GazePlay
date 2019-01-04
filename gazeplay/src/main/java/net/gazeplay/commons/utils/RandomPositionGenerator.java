@@ -41,12 +41,12 @@ public abstract class RandomPositionGenerator {
         double maxX = (dimension2D.getWidth() * ratioXRight) - radius;
         double maxY = (dimension2D.getHeight() * ratioYTop) - radius;
 
-        log.info("the width is ={}", dimension2D.getWidth());
-        log.info("the height is ={}", dimension2D.getHeight());
-        log.info("the minX is ={}", minX);
-        log.info("the minY is ={}", minY);
-        log.info("the maxX is ={}", maxX);
-        log.info("the maxY is ={}", maxY);
+        log.debug("the width is ={}", dimension2D.getWidth());
+        log.debug("the height is ={}", dimension2D.getHeight());
+        log.debug("the minX is ={}", minX);
+        log.debug("the minY is ={}", minY);
+        log.debug("the maxX is ={}", maxX);
+        log.debug("the maxY is ={}", maxY);
 
         return createPosition(minX, minY, maxX, maxY);
     }
@@ -55,8 +55,8 @@ public abstract class RandomPositionGenerator {
         if (maxX > 0 && maxY > 0) {
             double positionX = random.nextInt((int) (maxX - minX)) + minX;
             double positionY = random.nextInt((int) (maxY - minY)) + minY;
-            log.info("the posX is ={}", positionX);
-            log.info("the posY is ={}", positionY);
+            log.debug("the posX is ={}", positionX);
+            log.debug("the posY is ={}", positionY);
 
             return new Position((int) positionX, (int) positionY);
         } else {

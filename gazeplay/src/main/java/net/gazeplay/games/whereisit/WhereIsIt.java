@@ -150,16 +150,16 @@ public class WhereIsIt implements GameLifeCycle {
 
             double pictoSize = screenWidth / (nbPicto + 1);
 
-            log.info("screenWidth/(nbPicto) : {}", pictoSize);
+            log.debug("screenWidth/(nbPicto) : {}", pictoSize);
 
             pictoSize = Math.min(pictoSize, MAXSIZEPICTO);
 
-            log.info("Picto Size: {}", pictoSize);
+            log.debug("Picto Size: {}", pictoSize);
 
             int i = 0;
             double shift = screenWidth / 2 - ((nbPicto / 2) * pictoSize * 1.1);
 
-            log.info("shift Size: {}", shift);
+            log.debug("shift Size: {}", shift);
 
             for (Image I : Pictos) {
 
@@ -187,11 +187,11 @@ public class WhereIsIt implements GameLifeCycle {
 
                 gameContext.getChildren().removeAll(pictogramesList);
 
-                log.info("Adding {} pictures", currentRoundDetails.pictureCardList.size());
+                log.debug("Adding {} pictures", currentRoundDetails.pictureCardList.size());
                 gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
 
                 for (PictureCard p : currentRoundDetails.pictureCardList) {
-                    log.info("p = {}", p);
+                    log.debug("p = {}", p);
                     p.toFront();
                     p.setOpacity(1);
                 }
@@ -210,11 +210,11 @@ public class WhereIsIt implements GameLifeCycle {
     private void playQuestionSound() {
 
         try {
-            log.info("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
+            log.debug("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
 
             Utils.playSound(currentRoundDetails.questionSoundPath);
         } catch (Exception e) {
-            log.info("Can't play sound: no associated sound : " + e.toString());
+            log.debug("Can't play sound: no associated sound : " + e.toString());
         }
     }
 
@@ -269,7 +269,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         final File[] imagesFolders = imagesDirectory.listFiles();
 
-        log.info("imagesFolders " + imagesFolders);
+        log.debug("imagesFolders " + imagesFolders);
 
         final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
 
@@ -280,7 +280,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         final int randomFolderIndex = random.nextInt(filesCount);
-        log.info("randomFolderIndex " + randomFolderIndex);
+        log.debug("randomFolderIndex " + randomFolderIndex);
 
         int step = 1;
 
@@ -289,7 +289,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree)
                 .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
-        log.info("gameSizing = {}", gameSizing);
+        log.debug("gameSizing = {}", gameSizing);
 
         final List<PictureCard> pictureCardList = new ArrayList<>();
         String questionSoundPath = null;
@@ -302,7 +302,7 @@ public class WhereIsIt implements GameLifeCycle {
 
             final File folder = imagesFolders[(index) % filesCount];
 
-            log.info("folder = {}", folder);
+            log.debug("folder = {}", folder);
 
             if (!folder.isDirectory())
                 continue;
@@ -310,16 +310,16 @@ public class WhereIsIt implements GameLifeCycle {
             // final File[] files = folder.listFiles();
             final File[] files = getFiles(folder);
 
-            log.info("files = {}", files);
+            log.debug("files = {}", (Object[]) files);
 
             final int numFile = random.nextInt(files.length);
 
             final File randomImageFile = files[numFile];
-            log.info("randomImageFile = {}", randomImageFile);
+            log.debug("randomImageFile = {}", randomImageFile);
 
             if (winnerImageIndexAmongDisplayedImages == i) {
 
-                log.info("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
+                log.debug("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
 
                 questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
 
@@ -327,9 +327,9 @@ public class WhereIsIt implements GameLifeCycle {
 
                 pictograms = getPictogramms(imagesFolders[(index) % filesCount].getName());
 
-                log.info("pathSound = {}", questionSoundPath);
+                log.debug("pathSound = {}", questionSoundPath);
 
-                log.info("question = {}", question);
+                log.debug("question = {}", question);
             }
 
             PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
@@ -338,8 +338,8 @@ public class WhereIsIt implements GameLifeCycle {
 
             pictureCardList.add(pictureCard);
 
-            log.info("posX " + posX);
-            log.info("posY " + posY);
+            log.debug("posX " + posX);
+            log.debug("posY " + posY);
 
             if ((i + 1) % nbColumns != 0)
                 posX++;
@@ -363,7 +363,7 @@ public class WhereIsIt implements GameLifeCycle {
         int nbElementsToKeep = 0;
 
         for (File file : files) {
-            log.info("{}", file.getName());
+            log.debug("{}", file.getName());
             if (!file.getName().startsWith(".")) {
 
                 nbElementsToKeep++;
@@ -375,7 +375,7 @@ public class WhereIsIt implements GameLifeCycle {
         int i = 0;
 
         for (File file : files) {
-            log.info("{}", file.getName());
+            log.debug("{}", file.getName());
             if (!file.getName().startsWith(".")) {
 
                 list[i++] = file;
@@ -428,28 +428,28 @@ public class WhereIsIt implements GameLifeCycle {
 
             try {
 
-                log.info("CUSTOMIZED");
+                log.debug("CUSTOMIZED");
 
                 String path = config.getWhereIsItDir() + "sounds/";
                 File F = new File(path);
 
                 for (String file : F.list()) {
 
-                    log.info("file " + file);
-                    log.info("folder " + folder);
+                    log.debug("file " + file);
+                    log.debug("folder " + folder);
 
                     if (file.indexOf(folder) >= 0) {
 
                         File f = new File(path + file);
 
-                        log.info("file " + f.getAbsolutePath());
+                        log.debug("file " + f.getAbsolutePath());
 
                         return f.getAbsolutePath();
                     }
                 }
             } catch (Exception e) {
 
-                log.info("Problem with customized folder");
+                log.debug("Problem with customized folder");
                 error(config.getLanguage());
             }
 
@@ -461,7 +461,7 @@ public class WhereIsIt implements GameLifeCycle {
             return null;
         }
 
-        log.info("language is " + language);
+        log.debug("language is " + language);
 
         final String voice;
         if (Math.random() > 0.5) {
@@ -476,8 +476,8 @@ public class WhereIsIt implements GameLifeCycle {
 
     private String getQuestionText(final String folder, String language) {
 
-        log.info("folder: {}", folder);
-        log.info("language: {}", language);
+        log.debug("folder: {}", folder);
+        log.debug("language: {}", language);
 
         if (this.gameType == CUSTOMIZED) {
 
@@ -515,7 +515,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         String traduction = localMultilinguism.getTrad(folder, language);
 
-        log.info("traduction: {}", traduction);
+        log.debug("traduction: {}", traduction);
 
         StringTokenizer st = new StringTokenizer(traduction, ";");
 
@@ -526,16 +526,16 @@ public class WhereIsIt implements GameLifeCycle {
         while (st.hasMoreTokens()) {
 
             token = config.getWhereIsItDir() + "pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
-            log.info("token \"{}\"", token);
+            log.debug("token \"{}\"", token);
             File Ftoken = new File(token);
-            log.info("Exists {}", Ftoken.exists());
+            log.debug("Exists {}", Ftoken.exists());
             if (Ftoken.exists()) {
 
                 L.add(new Image(Ftoken.toURI().toString()));
             }
         }
 
-        log.info("L {}", L);
+        log.debug("L {}", L);
         return L;
     }
 

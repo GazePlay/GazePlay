@@ -65,7 +65,7 @@ public class GameSizingComputer {
         }
 
         GameSizing gameSizing = new GameSizing(width / nbColumns, height / nbLines, shift);
-        log.info("gameSizing = {}", gameSizing);
+        log.debug("gameSizing = {}", gameSizing);
         return gameSizing;
     }
 

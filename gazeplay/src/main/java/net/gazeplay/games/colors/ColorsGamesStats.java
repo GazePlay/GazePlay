@@ -25,7 +25,7 @@ public class ColorsGamesStats extends SelectionGamesStats {
 
         SavedStatsInfo statsInfo = super.saveStats();
 
-        log.info("Stats saved");
+        log.debug("Stats saved");
         return statsInfo;
     }
 }

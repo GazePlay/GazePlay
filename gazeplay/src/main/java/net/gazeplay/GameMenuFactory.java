@@ -234,7 +234,7 @@ public class GameMenuFactory {
                 Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
                 if (variants.size() > 1) {
-                    log.info("variants = {}", variants);
+                    log.debug("variants = {}", variants);
                     root.setEffect(new BoxBlur());
                     root.setDisable(true);
                     Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), gameSpec, root);

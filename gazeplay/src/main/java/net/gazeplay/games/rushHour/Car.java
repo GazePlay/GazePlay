@@ -92,7 +92,7 @@ public class Car extends Rectangle {
         this.x = x;
         this.y = y;
 
-        log.info("" + x + " " + y + " " + l + " " + h + " " + c);
+        log.debug("" + x + " " + y + " " + l + " " + h + " " + c);
 
         EventHandler<Event> enterEvent = new EventHandler<Event>() {
             @Override

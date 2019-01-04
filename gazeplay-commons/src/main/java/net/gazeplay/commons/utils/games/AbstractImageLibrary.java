@@ -52,7 +52,7 @@ public abstract class AbstractImageLibrary implements ImageLibrary {
 
     private Set<Image> collectRandom(int limit, int distinctImagesCount) {
         return IntStream.generate(() -> random.nextInt(distinctImagesCount)).distinct().limit(limit).boxed()
-                .peek(i -> log.info("Picking Image at random index {} in ImageLibrary", i)).map(this::loadImageAtIndex)
+                .peek(i -> log.debug("Picking Image at random index {} in ImageLibrary", i)).map(this::loadImageAtIndex)
                 .collect(Collectors.toSet());
     }
 

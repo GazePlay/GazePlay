@@ -104,16 +104,16 @@ public class MagicCards implements GameLifeCycle {
     private List<Card> createCards(int winnerCardIndex, Configuration config) {
         javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        log.info("Width{} ; height{}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
+        log.debug("Width {} ; height {}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
 
         final double cardHeight = computeCardHeight(gameDimension2D, nbLines);
         final double cardWidth = cardHeight * cardRatio;
 
-        log.info("cardWidth{} ; cardHeight{}", cardWidth, cardHeight);
+        log.debug("cardWidth {} ; cardHeight {}", cardWidth, cardHeight);
 
         double width = computeCardWidth(gameDimension2D, nbColumns) - cardWidth;
 
-        log.info("width{} ", width);
+        log.debug("width {} ", width);
 
         List<Card> result = new ArrayList<>();
 
@@ -138,7 +138,7 @@ public class MagicCards implements GameLifeCycle {
                 double positionX = width / 2 + (width + cardWidth) * currentColumnIndex;
                 double positionY = minHeight / 2 + (minHeight + cardHeight) * currentLineIndex;
 
-                log.info("positionX : {} ; positionY : {}", positionX, positionY);
+                log.debug("positionX : {} ; positionY : {}", positionX, positionY);
 
                 Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, gameContext,
                         stats, this, fixationlength);

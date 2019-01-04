@@ -87,7 +87,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    // log.info(e.getEventType());
+                    // log.debug(e.getEventType());
                     enter((Circle) e.getTarget());
                     stats.incNbGoals();
                     stats.notifyNewRoundReady();
@@ -239,7 +239,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private void moveCircle(Circle circle) {
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        log.info("dimension2D = {}", dimension2D);
+        log.debug("dimension2D = {}", dimension2D);
 
         double centerX = (dimension2D.getWidth() - maxRadius) * Math.random() + maxRadius;
         double centerY = dimension2D.getHeight();

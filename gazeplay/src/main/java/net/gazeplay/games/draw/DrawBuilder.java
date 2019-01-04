@@ -72,7 +72,7 @@ public class DrawBuilder {
 
             @Override
             public void handle(GazeEvent event) {
-                log.info("GAZE_MOVED : event = " + event);
+                log.debug("GAZE_MOVED : event = " + event);
                 int rateLimiterValue = rateLimiter.incrementAndGet();
                 if (rateLimiterValue == RATE_LIMIT) {
                     rateLimiter.set(0);

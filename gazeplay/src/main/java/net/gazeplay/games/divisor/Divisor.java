@@ -44,7 +44,7 @@ public class Divisor implements GameLifeCycle {
                 imageRectangle.setOpacity(1 - coef * 0.9);
 
             } catch (Exception e) {
-                log.info("File not found : {}", e.getMessage());
+                log.debug("File not found : {}", e.getMessage());
             }
             gameContext.getChildren().add(imageRectangle);
             this.gameContext.resetBordersToFront();

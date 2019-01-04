@@ -325,7 +325,7 @@ public class Mypet extends Pane {
 
                 Shape intersect = Shape.intersect(ph.hand, getBody());
                 if (!ph.getBaloonGone() && (intersect.getBoundsInLocal().getWidth() != -1)) {
-                    log.info("enter baloon");
+                    log.debug("enter baloon");
                     ph.setBaloonGone(true);
                     ph.rd.stop();
                     ImageView baloon = new ImageView("data/pet/images/ball.png");

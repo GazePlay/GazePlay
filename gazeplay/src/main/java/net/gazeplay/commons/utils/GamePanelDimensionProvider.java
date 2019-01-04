@@ -18,7 +18,7 @@ public class GamePanelDimensionProvider {
 
         Dimension2D result;
         result = new Dimension2D(pane.getWidth(), pane.getHeight());
-        log.info("result = {}", result);
+        log.debug("result = {}", result);
 
         // on the first round, the pane size may not be ready yet
         // in which case we get a width = 0 and heigth = 0

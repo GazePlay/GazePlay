@@ -57,7 +57,7 @@ public class Utils {
 
     public static void playSound(String ressource) {
 
-        log.info("Try to play " + ressource);
+        log.debug("Try to play " + ressource);
 
         URL url = ClassLoader.getSystemResource(ressource);
 
@@ -65,17 +65,17 @@ public class Utils {
 
         if (url == null) {
             final File file = new File(ressource);
-            log.info("using file");
+            log.debug("using file");
             if (!file.exists()) {
                 log.warn("file doesn't exist : {}", ressource);
             }
             path = file.toURI().toString();
         } else {
-            log.info("using url");
+            log.debug("using url");
             path = url.toString();
         }
 
-        log.info("path " + path);
+        log.debug("path " + path);
 
         try {
             Media media = new Media(path);
@@ -91,7 +91,7 @@ public class Utils {
 
     public static InputStream getInputStream(String ressource) {
 
-        log.info("Try to play " + ressource);
+        log.debug("Try to play " + ressource);
 
         return ClassLoader.getSystemResourceAsStream(ressource);
 

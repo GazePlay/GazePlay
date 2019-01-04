@@ -23,7 +23,7 @@ public class ProgressiveColorPicker implements ColorPicker {
         double g = currentColor.getGreen() * MAX_COLOR_VALUE;
         double b = currentColor.getBlue() * MAX_COLOR_VALUE;
 
-        log.info("color = {} {} {}", r, g, b);
+        log.debug("color = {} {} {}", r, g, b);
 
         r += INCREMENT;
         if (r > MAX_COLOR_VALUE) {
@@ -38,7 +38,7 @@ public class ProgressiveColorPicker implements ColorPicker {
             b = 0;
         }
         Color color = Color.rgb((int) r, (int) g, (int) b);
-        log.info("color = {}", color);
+        log.debug("color = {}", color);
         currentColor = color;
         return color;
     }

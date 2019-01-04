@@ -41,8 +41,8 @@ public class SecondScreen implements GazeMotionListener {
             screen2 = screens.get(1);
         }
 
-        log.info("screen1.getBounds() = " + screen1.getBounds());
-        log.info("screen2.getBounds() = " + screen2.getBounds());
+        log.debug("screen1.getBounds() = " + screen1.getBounds());
+        log.debug("screen2.getBounds() = " + screen2.getBounds());
 
         Stage stage2 = new Stage();
         stage2.setScene(new Scene(new Label("primary")));

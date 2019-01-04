@@ -132,8 +132,8 @@ public class Pictos extends Parent {
 
                 Rectangle target = (Rectangle) e.getTarget();
 
-                // log.info("Rectangle " + Target.getTranslateX());
-                // log.info(e.getEventType());
+                // log.debug("Rectangle " + Target.getTranslateX());
+                // log.debug(e.getEventType());
 
                 if (found) {
 
@@ -142,7 +142,7 @@ public class Pictos extends Parent {
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    // log.info("ENTRÉE");
+                    // log.debug("ENTRÉE");
                     entry = (new Date()).getTime();
 
                     int i;
@@ -154,13 +154,13 @@ public class Pictos extends Parent {
 
                 } else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
 
-                    // log.info("MOVE");
+                    // log.debug("MOVE");
 
                     long now = (new Date()).getTime();
 
                     if (entry != -1 && (now - entry) > min_time) {
 
-                        // log.info("GAGNÉ");
+                        // log.debug("GAGNÉ");
 
                         found = true;
 
@@ -202,7 +202,7 @@ public class Pictos extends Parent {
 
                         timeline.play();
 
-                        // log.info("DESSUS " + (now - entry));
+                        // log.debug("DESSUS " + (now - entry));
 
                     }
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
@@ -218,7 +218,7 @@ public class Pictos extends Parent {
 
                     timeline.play();
 
-                    // log.info("SORTIE");
+                    // log.debug("SORTIE");
                     entry = -1;
                 }
             }

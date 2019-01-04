@@ -51,7 +51,7 @@ public class Moles extends Parent implements GameLifeCycle {
         this.stats = stats;
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        log.info("dimension2D = {}", dimension2D);
+        log.debug("dimension2D = {}", dimension2D);
 
     }
 

@@ -62,13 +62,13 @@ public class ImageUtils {
     }
 
     public static List<File> listImageFiles(File directoryFile) {
-        log.info("Listing images in directory {}", directoryFile.getAbsolutePath());
+        log.debug("Listing images in directory {}", directoryFile.getAbsolutePath());
         File[] files = directoryFile.listFiles(ImageUtils::isImage);
         if (files == null) {
             files = new File[0];
         }
         List<File> result = Arrays.asList(files);
-        log.info("Found {} files in directory {}", files.length, directoryFile.getAbsolutePath());
+        log.debug("Found {} files in directory {}", files.length, directoryFile.getAbsolutePath());
         return result;
     }
 

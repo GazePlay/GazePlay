@@ -69,7 +69,7 @@ public class GazePlayLauncher {
                 File gazePlayFolder = new File(Utils.getGazePlayFolder());
                 if (!gazePlayFolder.exists()) {
                     boolean gazePlayFolderCreated = gazePlayFolder.mkdir();
-                    log.info("gazePlayFolderCreated = " + gazePlayFolderCreated);
+                    log.debug("gazePlayFolderCreated = " + gazePlayFolderCreated);
                 }
 
                 Runnable runnable = () -> Application.launch(GazePlay.class, args);

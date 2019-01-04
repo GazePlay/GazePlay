@@ -125,16 +125,16 @@ public class Memory implements GameLifeCycle {
     private List<MemoryCard> createCards(HashMap<Integer, Image> im, Configuration config) {
         javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        log.info("Width{} ; height{}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
+        log.debug("Width {} ; height {}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
 
         final double cardHeight = computeCardHeight(gameDimension2D, nbLines);
         final double cardWidth = cardHeight * cardRatio;
 
-        log.info("cardWidth{} ; cardHeight{}", cardWidth, cardHeight);
+        log.debug("cardWidth {} ; cardHeight {}", cardWidth, cardHeight);
 
         double width = computeCardWidth(gameDimension2D, nbColumns) - cardWidth;
 
-        log.info("width{} ", width);
+        log.debug("width {} ", width);
 
         List<MemoryCard> result = new ArrayList<>();
 
@@ -150,7 +150,7 @@ public class Memory implements GameLifeCycle {
                 double positionX = width / 2 + (width + cardWidth) * currentColumnIndex;
                 double positionY = minHeight / 2 + (minHeight + cardHeight) * currentLineIndex;
 
-                log.info("positionX : {} ; positionY : {}", positionX, positionY);
+                log.debug("positionX : {} ; positionY : {}", positionX, positionY);
 
                 int id = getRandomValue(indUsed);
 

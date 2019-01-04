@@ -245,7 +245,7 @@ public class RushHour extends Parent implements GameLifeCycle {
                     @Override
                     public void handle(ActionEvent actionEvent) {
 
-                        log.info("you won !");
+                        log.debug("you won !");
                         dispose();
                         launch();
                     }
@@ -285,7 +285,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         for (Car car2 : garage) {
             if (car2 != car) {
                 if (Shape.intersect(car, car2).getBoundsInLocal().getWidth() != -1) {
-                    log.info("intersect");
+                    log.debug("intersect");
                     car.setIntersect(true);
                     car.setSelected(false);
                 }
@@ -297,7 +297,7 @@ public class RushHour extends Parent implements GameLifeCycle {
                 || (Shape.intersect(car, down).getBoundsInLocal().getWidth() != -1)
                 || (Shape.intersect(car, left).getBoundsInLocal().getWidth() != -1)
                 || (Shape.intersect(car, right).getBoundsInLocal().getWidth() != -1)) {
-            log.info("intersect");
+            log.debug("intersect");
             car.setIntersect(true);
             car.setSelected(false);
         }

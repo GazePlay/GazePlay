@@ -286,7 +286,7 @@ public class ColorsGame implements GameLifeCycle {
 
         double ToolBoxWidth = toolBoxPane.getWidth();
         double x = width - ToolBoxWidth;
-        log.info("translated tool box to : {}, x toolBoxWidth : {}", x, ToolBoxWidth);
+        log.debug("translated tool box to : {}, x toolBoxWidth : {}", x, ToolBoxWidth);
         toolBoxPane.setTranslateX(x);
     }
 
@@ -303,7 +303,7 @@ public class ColorsGame implements GameLifeCycle {
         final PixelReader tmpPixelReader = image.getPixelReader();
 
         if (tmpPixelReader == null) {
-            log.info("Error in image loading : ");
+            log.error("Error in image loading : ");
             log.error("Colors : unable to read pixels from image");
             return;
         }

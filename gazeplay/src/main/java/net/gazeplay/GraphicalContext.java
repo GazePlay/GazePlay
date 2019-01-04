@@ -106,7 +106,7 @@ public abstract class GraphicalContext<T extends Parent> {
 
         updateMusicControler();
 
-        log.info("Finished setup stage with the game scene");
+        log.debug("Finished setup stage with the game scene");
     }
 
     public abstract ObservableList<Node> getChildren();
@@ -115,7 +115,7 @@ public abstract class GraphicalContext<T extends Parent> {
 
         getChildren().clear();
 
-        log.info("Nodes not removed: {}", getChildren().size());
+        log.warn("Nodes not removed: {}", getChildren().size());
     }
 
     public I18NButton createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {

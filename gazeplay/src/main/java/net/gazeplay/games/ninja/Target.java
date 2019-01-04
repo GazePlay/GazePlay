@@ -114,7 +114,7 @@ public class Target extends Portrait {
 
         final Position currentPosition = new Position((int) getCenterX(), (int) getCenterY());
         final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
-        log.info("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
+        log.debug("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
 
         TranslateTransition translation = new TranslateTransition(
                 new Duration(Configuration.getInstance().getSpeedEffects() * length), this);
@@ -179,7 +179,7 @@ public class Target extends Portrait {
         Position currentPositionWithTranslation = getCurrentPositionWithTranslation();
 
         Position pointerPosition = getPointerPosition(e);
-        log.info("pointerPosition = {}, currentPositionWithTranslation = {}", pointerPosition,
+        log.debug("pointerPosition = {}, currentPositionWithTranslation = {}", pointerPosition,
                 currentPositionWithTranslation);
 
         for (Portrait childMiniBall : miniBallsPortraits) {

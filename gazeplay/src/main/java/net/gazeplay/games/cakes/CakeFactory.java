@@ -98,7 +98,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     public CakeFactory(GameContext gameContext, Stats stats, int mode) {
         this.gameContext = gameContext;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        log.info("dimension2D = {}", dimension2D);
+        log.debug("dimension2D = {}", dimension2D);
         this.stats = stats;
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;
@@ -616,7 +616,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             EventHandler<Event> cakeVanisher = new EventHandler<Event>() {
                 @Override
                 public void handle(Event e) {
-                    log.info("cake is vanishing");
+                    log.debug("cake is vanishing");
                     ft = new FadeTransition(Duration.millis(500), randomCake);
                     ft.setDelay(Duration.millis(500));
                     ft.setFromValue(1);
@@ -635,7 +635,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             randomCake.addEventFilter(MouseEvent.MOUSE_ENTERED, cakeDisplay);
             randomCake.addEventFilter(MouseEvent.MOUSE_EXITED, cakeVanisher);
 
-            log.info("cake is vanishing");
+            log.debug("cake is vanishing");
             FadeTransition ft0 = new FadeTransition(Duration.millis(5000), randomCake);
             ft0.setDelay(Duration.millis(5000));
             ft0.setToValue(0);
