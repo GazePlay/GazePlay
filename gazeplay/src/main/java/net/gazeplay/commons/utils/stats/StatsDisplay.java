@@ -145,7 +145,9 @@ public class StatsDisplay {
         });
 
         heatMap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
-        heatMap.setEffect(new GaussianBlur());
+        GaussianBlur blur = new GaussianBlur();
+        blur.setRadius(10.0);
+        heatMap.setEffect(blur);
 
         EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, root);
         heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMapEvent);

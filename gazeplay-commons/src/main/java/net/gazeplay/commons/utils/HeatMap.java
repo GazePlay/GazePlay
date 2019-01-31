@@ -90,8 +90,8 @@ public class HeatMap {
      */
     private Color getColor(double value){
         double compValue = minValue + subdivisionValue;
-        int i = 0;
-        while(compValue < maxValue && value >= compValue){
+        int i = 0; //Once out of the loop, will be the index of the starting color of the interpolation
+        while(compValue < maxValue && value >= compValue){ //Finding the right subdivision, in order to get the colors between which the values is located
             i++;
             compValue += subdivisionValue;
         }
