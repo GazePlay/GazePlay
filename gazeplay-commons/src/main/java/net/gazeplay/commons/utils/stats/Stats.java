@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.games.Utils;
 import org.tc33.jheatchart.HeatChart;
 
@@ -204,15 +205,7 @@ public class Stats implements GazeMotionListener {
 
         log.info(String.format("Heatmap size: %3d X %3d", heatMap[0].length, heatMap.length));
 
-        // Step 1: Create our heat map chart using our data.
-        HeatChart map = new HeatChart(heatMap);
-
-        map.setHighValueColour(java.awt.Color.RED);
-        map.setLowValueColour(java.awt.Color.lightGray);
-
-        map.setShowXAxisValues(false);
-        map.setShowYAxisValues(false);
-        map.setChartMargin(0);
+        HeatMap map = new HeatMap(heatMap);
 
         try {
             map.saveToFile(outputPngFile);
