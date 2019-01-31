@@ -2,7 +2,6 @@ package net.gazeplay.commons.utils;
 
 import javafx.animation.Interpolator;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -18,25 +17,47 @@ import java.io.IOException;
 public class HeatMap {
 
     /**
-     * Max value in the data.
-     * Used for interpolation.
+     * Default colors, in case the default constructor is called
+     */
+    private static final Color[] defaultColors = {Color.DARKBLUE, Color.GREEN, Color.YELLOW, Color.RED};
+
+    /**
+     * Writable image used to create the heatmap image
+     */
+    private WritableImage image;
+    /**
+     * Array of the different colors used to interpolate
+     */
+    private Color[] colors;
+    /**
+     * Maximum value of the data
      */
     private double maxValue;
     /**
-     * Min value in the data.
-     * Used for interpolation.
+     * Minimum value of the data
      */
     private double minValue;
     /**
-     * Mid-point value in the data.
-     * Used for interpolation (3 colors).
+     * Value interval between each color
      */
-    private double midValue;
+    private double subdivisionValue;
 
-    private WritableImage image;
+    /**
+     * Default constructor, uses dark blue, green, yellow, and red as color variants.
+     * @param data monitor data
+     */
+    public HeatMap(double[][] data){
+        this(data, defaultColors);
+    }
 
-    public HeatMap(double[][] data) {
-        image = new WritableImage(data[0].length, data.length);
+    /**
+     * Custom colors constructor, builds a heatmap from the given data, by interpolating the values through the given colors.
+     * @param data monitor data
+     * @param colors custom colors for the heatmap, must be on order from minimum to maximum.
+     */
+    public HeatMap(double[][] data, Color[] colors) {
+        this.image = new WritableImage(data[0].length, data.length);
+        this.colors = colors;
 
         //Computing max and min values
         minValue = Double.MAX_VALUE;
@@ -51,29 +72,39 @@ public class HeatMap {
                 }
             }
         }
-        midValue = (minValue + maxValue) / 2.0;
+        subdivisionValue = (maxValue - minValue) / (this.colors.length - 1);
 
+        //Create heatmap pixel per pixel
         PixelWriter pxWriter = image.getPixelWriter();
-
         for(int x = 0; x < data.length; x++) {
             for (int y = 0; y < data[x].length; y++) {
                 pxWriter.setColor(y, x, getColor(data[x][y]));
             }
         }
-
-
     }
 
+    /**
+     * Computes the correct color of the value, by interpolating between the 2 colors in the right subdivision.
+     * @param value the value of the pixel (in data).
+     * @return the resulting color after interpolation.
+     */
     private Color getColor(double value){
-        if(value < maxValue * 0.1){
-            return Color.BLUE;
-        }else {
-            double red = value >= midValue ? 1.0 : Interpolator.LINEAR.interpolate(0.0, 1.0, value / midValue);
-            double green = value < midValue ? 1.0 : Interpolator.LINEAR.interpolate(0.0, 1.0, (value - midValue) / midValue);
-            return Color.color(red, green, 0.0);
+        double compValue = minValue + subdivisionValue;
+        int i = 0;
+        while(compValue < maxValue && value >= compValue){
+            i++;
+            compValue += subdivisionValue;
         }
+        double red = Interpolator.LINEAR.interpolate(colors[i].getRed(), colors[i+1].getRed(), (value % subdivisionValue)/subdivisionValue);
+        double green = Interpolator.LINEAR.interpolate(colors[i].getGreen(), colors[i+1].getGreen(), (value % subdivisionValue)/subdivisionValue);
+        double blue = Interpolator.LINEAR.interpolate(colors[i].getBlue(), colors[i+1].getBlue(), (value % subdivisionValue)/subdivisionValue);
+        return Color.color(red, green, blue);
     }
 
+    /**
+     * Saves the heatmap to a PNG file
+     * @param outputFile The output file (Must be open and writable)
+     */
     public void saveToFile(File outputFile){
         BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
         try {
