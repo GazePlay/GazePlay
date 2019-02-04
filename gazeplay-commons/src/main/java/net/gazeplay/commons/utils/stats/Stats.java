@@ -35,8 +35,9 @@ public class Stats implements GazeMotionListener {
     private final LifeCycle lifeCycle = new LifeCycle();
     private final RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
     protected String gameName;
+    private int nbShots = 0;
     @Getter
-    protected int nbGoals;
+    protected int nbGoals=0;
     @Setter
     private long accidentalShotPreventionPeriod = 0;
     @Getter
@@ -157,6 +158,24 @@ public class Stats implements GazeMotionListener {
             this.roundsDurationReport.addRoundDuration(currentRoundDuration);
         }
         currentRoundStartTime = currentRoundEndTime;
+    }
+
+
+    public int getShotRatio()
+    {
+        if(this.nbGoals == this.nbShots ||  this.nbShots == 0)
+        {
+            return 100;
+        }
+        else{
+            int ratioRate = (int)( (float) this.nbGoals / (float) this.nbShots *100.0) ;
+            return ratioRate;
+        }
+    }
+
+    public void incNbShots()
+    {
+        this.nbShots++;
     }
 
     public List<Long> getSortedDurationsBetweenGoals() {

@@ -536,7 +536,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         sp.setLayoutY(y);
         sp.centerX = x;
         sp.centerY = y;
-
+        stats.incNbShots();
         moveCircle(sp);
     }
 
