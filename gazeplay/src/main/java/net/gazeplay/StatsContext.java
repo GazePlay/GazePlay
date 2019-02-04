@@ -105,7 +105,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             final I18NText label;
             if (stats instanceof ShootGamesStats) {
                 label = new I18NText(translator, "ShotsRates", COLON);
-                Text value = new Text(String.valueOf(stats.getShotRatio() +"%"));
+                Text value = new Text(String.valueOf(stats.getShotRatio() + "%"));
                 if (!(stats instanceof ExplorationGamesStats)) {
                     addToGrid(grid, currentFormRow, label, value);
                 }
