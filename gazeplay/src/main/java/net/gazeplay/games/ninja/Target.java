@@ -17,7 +17,11 @@ import net.gazeplay.commons.utils.RandomPositionGenerator;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
+import sun.tools.jar.Main;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -74,8 +78,21 @@ public class Target extends Portrait {
     }
 
     private void playHitSound() {
-        Utils.playSound(audioClipResourceLocation);
-    }
+        try
+        {
+            try {
+                Clip clip = AudioSystem.getClip();
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(Main.class.getResourceAsStream("/data/ninja/sounds/2009.wav"));
+                clip.open(inputStream);
+                clip.start();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }    }
 
     private List<Portrait> generateMiniBallsPortraits(RandomPositionGenerator randomPositionGenerator,
             ImageLibrary imageLibrary, int count) {
