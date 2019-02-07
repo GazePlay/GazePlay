@@ -73,7 +73,7 @@ public class HeatMap {
                 if (data[x][y] > maxValue) {
                     maxValue = data[x][y];
                 }
-                if (data[x][y] < minValue) {
+                if (data[x][y] < minValue && data[x][y] != 0) {
                     minValue = data[x][y];
                 }
             }
@@ -97,20 +97,24 @@ public class HeatMap {
      * @return the resulting color after interpolation.
      */
     private Color getColor(double value) {
-        double compValue = minValue + subdivisionValue;
-        int i = 0; // Once out of the loop, will be the index of the starting color of the interpolation
-        while (compValue < maxValue && value >= compValue) { // Finding the right subdivision, in order to get the
-                                                             // colors between which the values is located
-            i++;
-            compValue += subdivisionValue;
+        if(value == 0){
+            return Color.TRANSPARENT;
+        }else {
+            double compValue = minValue + subdivisionValue;
+            int i = 0; // Once out of the loop, will be the index of the starting color of the interpolation
+            while (compValue < maxValue && value >= compValue) { // Finding the right subdivision, in order to get the
+                // colors between which the values is located
+                i++;
+                compValue += subdivisionValue;
+            }
+            double red = Interpolator.LINEAR.interpolate(colors[i].getRed(), colors[i + 1].getRed(),
+                    (value % subdivisionValue) / subdivisionValue);
+            double green = Interpolator.LINEAR.interpolate(colors[i].getGreen(), colors[i + 1].getGreen(),
+                    (value % subdivisionValue) / subdivisionValue);
+            double blue = Interpolator.LINEAR.interpolate(colors[i].getBlue(), colors[i + 1].getBlue(),
+                    (value % subdivisionValue) / subdivisionValue);
+            return Color.color(red, green, blue, 0.9);
         }
-        double red = Interpolator.LINEAR.interpolate(colors[i].getRed(), colors[i + 1].getRed(),
-                (value % subdivisionValue) / subdivisionValue);
-        double green = Interpolator.LINEAR.interpolate(colors[i].getGreen(), colors[i + 1].getGreen(),
-                (value % subdivisionValue) / subdivisionValue);
-        double blue = Interpolator.LINEAR.interpolate(colors[i].getBlue(), colors[i + 1].getBlue(),
-                (value % subdivisionValue) / subdivisionValue);
-        return Color.color(red, green, blue);
     }
 
     /**
