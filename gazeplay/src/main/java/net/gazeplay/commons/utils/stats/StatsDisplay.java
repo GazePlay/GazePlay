@@ -11,6 +11,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -144,6 +145,9 @@ public class StatsDisplay {
         });
 
         heatMap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
+        GaussianBlur blur = new GaussianBlur();
+        blur.setRadius(10.0);
+        heatMap.setEffect(blur);
 
         EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, root);
         heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMapEvent);
