@@ -158,6 +158,7 @@ public class Stats implements GazeMotionListener {
             this.roundsDurationReport.addRoundDuration(currentRoundDuration);
         }
         currentRoundStartTime = currentRoundEndTime;
+        System.out.println("The number of goals is "+ nbGoals +"and the number shots is "+ nbShots);
     }
 
     public int getShotRatio() {
