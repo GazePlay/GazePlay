@@ -94,11 +94,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 label = new I18NText(translator, "Score", COLON);
             }
             Text value;
-            if(stats instanceof BubblesGamesStats)
-            {
-                value = new Text(String.valueOf(stats.getNbGoals()/2));
+            if (stats instanceof BubblesGamesStats) {
+                value = new Text(String.valueOf(stats.getNbGoals() / 2));
 
-            }else{
+            } else {
                 value = new Text(String.valueOf(stats.getNbGoals()));
 
             }
@@ -110,7 +109,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
         {
             final I18NText label;
-            if (stats instanceof ShootGamesStats ||stats instanceof BubblesGamesStats) {
+            if (stats instanceof ShootGamesStats || stats instanceof BubblesGamesStats) {
                 label = new I18NText(translator, "ShotsRates", COLON);
                 Text value = new Text(String.valueOf(stats.getShotRatio() + "%"));
                 if (!(stats instanceof ExplorationGamesStats)) {
