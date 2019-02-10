@@ -35,6 +35,8 @@ import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.IOException;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
@@ -104,7 +106,7 @@ public class GameContext extends GraphicalContext<Pane> {
         root2.heightProperty().addListener((observable) -> {
             updateConfigPane(root2);
         });
-
+        
         EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
             double from = 0;
             double to = 1;
@@ -211,6 +213,8 @@ public class GameContext extends GraphicalContext<Pane> {
 
         button.setPrefHeight(buttonSize);
         button.setPrefWidth(buttonSize);
+        
+        System.out.println("hello world");
     }
 
     private static void updateConfigPane(final Pane configPane) {
@@ -301,7 +305,19 @@ public class GameContext extends GraphicalContext<Pane> {
         // rootBorderPane.setBottom(null);
         // rootBorderPane.setBottom(bottomPane);
     }
-
+    public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame){
+     EventHandler<Event> ShortcutEvent = (Event e) -> {
+            
+            QuitKeyPressed(stats, gazePlay, currentGame);
+          
+            
+        };
+     final Scene scene = gazePlay.getPrimaryScene() ;
+     scene.addEventHandler(KeyEvent.KEY_PRESSED,ShortcutEvent);
+     gamingRoot.getChildren().add(scene);
+     
+    }
+    
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
         menuHBox.getChildren().add(createMusicControlPane());
         menuHBox.getChildren().add(createEffectsVolumePane());
@@ -328,7 +344,32 @@ public class GameContext extends GraphicalContext<Pane> {
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
         return homeButton;
     }
+    private void QuitKeyPressed(@NonNull Stats stats, @NonNull GazePlay gazePlay,
+            @NonNull GameLifeCycle currentGame) {
+        currentGame.dispose();
+        stats.stop();
+        gazeDeviceManager.clear();
+        gazeDeviceManager.destroy();
+         Runnable asynchronousStatsPersistTask = () -> {
+            try {
+                stats.saveStats();
+            } catch (IOException e) {
+                log.error("Failed to save stats file", e);
+            }
+        };
 
+        if (runAsynchronousStatsPersist) {
+            AsyncUiTaskExecutor.getInstance().getExecutorService().execute(asynchronousStatsPersistTask);
+        } else {
+            asynchronousStatsPersistTask.run();
+        }
+
+        StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
+
+        this.clear();
+
+        gazePlay.onDisplayStats(statsContext);
+    }
     private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay,
             @NonNull GameLifeCycle currentGame) {
         currentGame.dispose();

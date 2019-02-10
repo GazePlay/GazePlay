@@ -9,6 +9,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -82,6 +84,17 @@ public class MemoryCard extends Parent {
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
+        
+        //Escape Key to end game
+        this.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+        public void handle(KeyEvent ke) {
+        if (ke.getCode() == KeyCode.SPACE) {
+            gameInstance.dispose();
+            gameContext.clear();
+            ke.consume(); 
+        }
+    }
+});
     }
 
     private ProgressIndicator createProgressIndicator(double width, double height) {
