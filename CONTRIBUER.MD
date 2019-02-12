@@ -116,6 +116,6 @@ En savoir plus https://docs.travis-ci.com/user/getting-started/
 
 Cette ligne de commande réalise l'ensemble des opérations vérifiées par Travis
 ```
-mvn clean install -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
+mvn clean install -T 1C -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
 ```
 
