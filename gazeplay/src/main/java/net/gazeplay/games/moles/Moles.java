@@ -160,6 +160,7 @@ public class Moles extends Parent implements GameLifeCycle {
         } while (!currentRoundDetails.molesList.get(indice).canGoOut);
         MolesChar m = currentRoundDetails.molesList.get(indice);
         m.getOut();
+        stats.incNbShots();
     }
 
     private double[][] CreationTableauPlacement(double width, double height, double distTrans) {

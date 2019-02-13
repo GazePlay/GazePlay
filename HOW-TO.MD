@@ -105,7 +105,7 @@ If you're happy with the change(s), then add the modified files to the git stagi
 
 Build again using maven
 ```
-mvn clean install -T 1C
+mvn clean install -T 1C -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
 ```
 then check ```git status``` if maven reformatted any code.
 If so, add the modified files again with ```git add -u```

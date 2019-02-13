@@ -106,7 +106,7 @@ public class GameContext extends GraphicalContext<Pane> {
         root2.heightProperty().addListener((observable) -> {
             updateConfigPane(root2);
         });
-        
+
         EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
             double from = 0;
             double to = 1;
@@ -213,7 +213,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
         button.setPrefHeight(buttonSize);
         button.setPrefWidth(buttonSize);
-        
+
         System.out.println("hello world");
     }
 
@@ -305,19 +305,19 @@ public class GameContext extends GraphicalContext<Pane> {
         // rootBorderPane.setBottom(null);
         // rootBorderPane.setBottom(bottomPane);
     }
-    public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame){
-     EventHandler<Event> ShortcutEvent = (Event e) -> {
-            
+
+    public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
+        EventHandler<Event> ShortcutEvent = (Event e) -> {
+
             QuitKeyPressed(stats, gazePlay, currentGame);
-          
-            
+
         };
-     final Scene scene = gazePlay.getPrimaryScene() ;
-     scene.addEventHandler(KeyEvent.KEY_PRESSED,ShortcutEvent);
-     gamingRoot.getChildren().add(scene);
-     
+        final Scene scene = gazePlay.getPrimaryScene();
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, ShortcutEvent);
+        // gamingRoot.getChildren().add(scene);
+
     }
-    
+
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
         menuHBox.getChildren().add(createMusicControlPane());
         menuHBox.getChildren().add(createEffectsVolumePane());
@@ -344,13 +344,13 @@ public class GameContext extends GraphicalContext<Pane> {
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
         return homeButton;
     }
-    private void QuitKeyPressed(@NonNull Stats stats, @NonNull GazePlay gazePlay,
-            @NonNull GameLifeCycle currentGame) {
+
+    private void QuitKeyPressed(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
         currentGame.dispose();
         stats.stop();
         gazeDeviceManager.clear();
         gazeDeviceManager.destroy();
-         Runnable asynchronousStatsPersistTask = () -> {
+        Runnable asynchronousStatsPersistTask = () -> {
             try {
                 stats.saveStats();
             } catch (IOException e) {
@@ -370,6 +370,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
         gazePlay.onDisplayStats(statsContext);
     }
+
     private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay,
             @NonNull GameLifeCycle currentGame) {
         currentGame.dispose();

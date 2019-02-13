@@ -116,5 +116,5 @@ For more information, visit https://docs.travis-ci.com/user/getting-started/
 
 This command line performs all the operations verified by Travis
 ```
-mvn clean install -Dfindbugs.skip=false -DskipFormatterFormatFormat=false -DskipFormatterValidate=false
+mvn clean install -T 1C -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
 ```
