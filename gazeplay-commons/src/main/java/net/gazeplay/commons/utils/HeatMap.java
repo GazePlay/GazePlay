@@ -97,9 +97,9 @@ public class HeatMap {
      * @return the resulting color after interpolation.
      */
     private Color getColor(double value) {
-        if(value == 0){
+        if (value == 0) {
             return Color.TRANSPARENT;
-        }else {
+        } else {
             double compValue = minValue + subdivisionValue;
             int i = 0; // Once out of the loop, will be the index of the starting color of the interpolation
             while (compValue < maxValue && value >= compValue) { // Finding the right subdivision, in order to get the
