@@ -25,7 +25,7 @@ public class Utils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
     public static final String LINESEPARATOR = System.getProperties().getProperty("line.separator");
-
+    private static MediaPlayer sxmp;
     private static final String tempFolder = "temp";
 
     public static MenuBar buildLicence() {
@@ -76,14 +76,15 @@ public class Utils {
         }
 
         log.debug("path " + path);
-
+        if (sxmp != null)
+            sxmp.stop();
         try {
             Media media = new Media(path);
-            MediaPlayer mp = new MediaPlayer(media);
+            sxmp = new MediaPlayer(media);
             final Configuration configuration = Configuration.getInstance();
-            mp.setVolume(configuration.getEffectsVolume());
-            mp.volumeProperty().bind(configuration.getEffectsVolumeProperty());
-            mp.play();
+            sxmp.setVolume(configuration.getEffectsVolume());
+            sxmp.volumeProperty().bind(configuration.getEffectsVolumeProperty());
+            sxmp.play();
         } catch (Exception e) {
             log.error("Exception", e);
         }
