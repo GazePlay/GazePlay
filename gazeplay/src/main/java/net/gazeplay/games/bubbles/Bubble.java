@@ -204,6 +204,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         target.removeEventFilter(GazeEvent.ANY, enterEvent);
 
         explose(Xcenter, Ycenter); // instead of C to avoid wrong position of the explosion
+        stats.incNbGoals();
     }
 
     private void newCircle() {
@@ -233,6 +234,8 @@ public class Bubble extends Parent implements GameLifeCycle {
             C.setFill(new Color(Math.random(), Math.random(), Math.random(), 0.9));
         else
             C.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
+        stats.incNbShots();
+        stats.incNbShots();
 
         return C;
     }
