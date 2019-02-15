@@ -51,7 +51,7 @@ public class Languages {
     private static final String DEFAULT_CODE = "fra";
 
     static {
-        put("alb","Shqip","data/common/flags/800px-Flag_of_Albania.svg.png");
+        put("alb", "Shqip", "data/common/flags/800px-Flag_of_Albania.svg.png");
         put("ara", "العَرَبِيَّة", "data/common/flags/800px-Flag_of_the_Arab_League.svg.png");
         put("chn", "漢語", "data/common/flags/800px-Flag_of_the_People's_Republic_of_China.svg.png");
         put("deu", "Deutsch", "data/common/flags/800px-Flag_of_Germany.svg.png",

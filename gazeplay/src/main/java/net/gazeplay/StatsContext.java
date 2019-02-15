@@ -192,8 +192,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         {
             // what i added ...
-//            StackPane stackPane = new StackPane();
-//            centerPane.getChildren().add(stackPane); // I'll add the ImageView for the heatmap and the grid on top of it.
+            // StackPane stackPane = new StackPane();
+            // centerPane.getChildren().add(stackPane); // I'll add the ImageView for the heatmap and the grid on top of
+            // it.
             //
 
             ImageView heatMap = StatsDisplay.buildHeatChart(stats, root);
@@ -212,11 +213,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             centerPane.getChildren().add(heatMap);
             {
                 // write code for TilePane and labels to add to the histogram picture
-                //TilePane gridForHistogram = new TilePane();
+                // TilePane gridForHistogram = new TilePane();
 
             }
 
-            //stackPane.getChildren().add(heatMap); // shows fine but it doesn't zoom the pic ...
+            // stackPane.getChildren().add(heatMap); // shows fine but it doesn't zoom the pic ...
         }
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
