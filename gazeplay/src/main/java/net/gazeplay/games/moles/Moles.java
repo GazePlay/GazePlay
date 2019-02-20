@@ -137,7 +137,7 @@ public class Moles extends Parent implements GameLifeCycle {
         minuteur.schedule(tache, 0, 500);
 
     }
-    
+
     @Override
     public void dispose() {
         if (currentRoundDetails != null) {

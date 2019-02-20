@@ -49,7 +49,7 @@ public class GameContext extends GraphicalContext<Pane> {
     private static final double BUTTON_MIN_HEIGHT = 64;
 
     public static GameContext newInstance(GazePlay gazePlay) {
-
+        
         Pane root = new Pane();
 
         final Stage primaryStage = gazePlay.getPrimaryStage();
@@ -70,7 +70,7 @@ public class GameContext extends GraphicalContext<Pane> {
         Configuration config = Configuration.getInstance();
         Color color = (config.isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
         gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
-
+         
         HBox controlPanel = createControlPanel();
         // Adapt the size and position of buttons to screen width
         controlPanel.maxWidthProperty().bind(root.widthProperty());
@@ -193,7 +193,7 @@ public class GameContext extends GraphicalContext<Pane> {
             }
         };
 
-        bt.addEventFilter(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
+        bt.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
 
         initialFd.play();
 

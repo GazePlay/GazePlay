@@ -190,7 +190,7 @@ public abstract class GraphicalContext<T extends Parent> {
         grid.add(musicName, 0, 0, 3, 1);
         grid.setMaxWidth(MUSIC_GRID_MAX_WIDTH);
         backgroundMusicManager.getIsMusicChanging().addListener((observable, oldValue, newValue) -> {
-            
+
             // If we receive a change event and the new value is fales, then it means
             // that the music has been changed (see changingProperty from Slider)
             if (!newValue) {
@@ -231,7 +231,7 @@ public abstract class GraphicalContext<T extends Parent> {
         pauseTrack.setOnAction((event) -> {
             backgroundMusicManager.pause();
         });
-      
+
         buttonImg = null;
         try {
             buttonImg = new Image(PLAY_ICON, ICON_SIZE, ICON_SIZE, false, true);

@@ -53,7 +53,7 @@ public class Configuration implements Cloneable {
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
-    // next thing to do 
+    // next thing to do
     // private static final String DEFAULT_EXIT_SHORTCUT_KEY = "SPACE";
     @Setter
     @Getter

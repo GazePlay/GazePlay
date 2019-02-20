@@ -84,17 +84,17 @@ public class MemoryCard extends Parent {
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
-        
-        //Escape Key to end game
+
+        // Escape Key to end game
         this.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-        public void handle(KeyEvent ke) {
-        if (ke.getCode() == KeyCode.SPACE) {
-            gameInstance.dispose();
-            gameContext.clear();
-            ke.consume(); 
-        }
-    }
-});
+            public void handle(KeyEvent ke) {
+                if (ke.getCode() == KeyCode.SPACE) {
+                    gameInstance.dispose();
+                    gameContext.clear();
+                    ke.consume();
+                }
+            }
+        });
     }
 
     private ProgressIndicator createProgressIndicator(double width, double height) {
