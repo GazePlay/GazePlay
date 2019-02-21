@@ -49,7 +49,7 @@ public class LifeCycle {
                 throw new LifeCycleControlException("cannot stop when never started");
             }
         } else {
-            throw new LifeCycleControlException("already stopped");
+            // throw new LifeCycleControlException("already stopped");
         }
     }
 
