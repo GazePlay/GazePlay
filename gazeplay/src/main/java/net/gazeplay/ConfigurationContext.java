@@ -342,7 +342,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * Fonction to use to permit to user to select between several theme
+     * Function to use to permit to user to select between several theme
      */
     private static ChoiceBox<BuiltInUiTheme> buildStyleThemeChooser(Configuration configuration,
             ConfigurationContext configurationContext) {

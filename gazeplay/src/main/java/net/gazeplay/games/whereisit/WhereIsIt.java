@@ -51,7 +51,8 @@ public class WhereIsIt implements GameLifeCycle {
 
     public enum WhereIsItGameType {
         ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
-                "where-is-the-color"), CUSTOMIZED("custumized", "custumized");
+                "where-is-the-color"), CUSTOMIZED("custumized", "custumized"),
+        FLAGS("find-flag","find-flag");
 
         @Getter
         private final String gameName;
@@ -67,20 +68,21 @@ public class WhereIsIt implements GameLifeCycle {
             this.resourcesDirectoryName = resourcesDirectoryName;
             this.languageResourceLocation = "data/" + resourcesDirectoryName + "/" + resourcesDirectoryName + ".csv";
         }
+
     }
 
     private Text questionText;
 
     private final WhereIsItGameType gameType;
+
     private final int nbLines;
     private final int nbColumns;
     private final boolean fourThree;
 
     private final GameContext gameContext;
-
     private final Stats stats;
-
     private RoundDetails currentRoundDetails;
+
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
             final GameContext gameContext, final Stats stats) {
