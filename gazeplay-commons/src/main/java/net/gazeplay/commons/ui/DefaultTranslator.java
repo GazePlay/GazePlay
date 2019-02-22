@@ -54,5 +54,8 @@ public class DefaultTranslator implements Translator {
             l.languageChanged();
         }
     }
+    public String currentLanguage(){
+        return config.getLanguage();
+    }
 
 }
