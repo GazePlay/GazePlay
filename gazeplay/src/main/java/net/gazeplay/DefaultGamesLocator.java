@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.biboulejump.BibouleJump;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
 import net.gazeplay.games.bubbles.Bubble;
@@ -692,6 +693,23 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
 
                 }));
+
+        result.add(new GameSpec(
+                new GameSummary("Biboule Jump", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/biboulejump.png"),
+                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "Biboule Jump");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                                                       GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new BibouleJump(gameContext, stats);
+                    }
+
+                }));
+
 
         log.info("Games found : {}", result.size());
 
