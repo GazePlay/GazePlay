@@ -2,7 +2,9 @@ package net.gazeplay.commons.utils;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.ConfigurationContext;
 
@@ -15,6 +17,12 @@ public class ConfigurationButton extends CustomButton {
 
     public static ConfigurationButton createConfigurationButton(ConfigurationContext configurationContext) {
         ConfigurationButton configurationButton = new ConfigurationButton();
+        /*
+         * configurationButton.addEventFilter(KeyEvent.KEY_PRESSED,new EventHandler<KeyEvent>() {
+         * 
+         * @Override public void handle(KeyEvent ke) { if (ke.getCode() == KeyCode.SPACE) {
+         * configurationContext.getGazePlay().onReturnToMenu(); } } });
+         */
         configurationButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
             configurationContext.getGazePlay().onDisplayConfigurationManagement(configurationContext);
         });

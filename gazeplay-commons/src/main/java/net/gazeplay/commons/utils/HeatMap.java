@@ -98,7 +98,7 @@ public class HeatMap {
      */
     private Color getColor(double value) {
         if (value == 0) {
-            return Color.TRANSPARENT;
+            return Color.BLACK;
         } else {
             double compValue = minValue + subdivisionValue;
             int i = 0; // Once out of the loop, will be the index of the starting color of the interpolation
@@ -113,7 +113,7 @@ public class HeatMap {
                     (value % subdivisionValue) / subdivisionValue);
             double blue = Interpolator.LINEAR.interpolate(colors[i].getBlue(), colors[i + 1].getBlue(),
                     (value % subdivisionValue) / subdivisionValue);
-            return Color.color(red, green, blue, 0.9);
+            return Color.color(red, green, blue);
         }
     }
 
