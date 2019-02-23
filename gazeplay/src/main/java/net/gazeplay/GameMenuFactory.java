@@ -334,7 +334,7 @@ public class GameMenuFactory {
         if (config.isHeatMapDisabled()) {
             log.info("HeatMap is disabled, skipping instanciation of the HeatMap Data model");
         } else {
-            gameContext.getGazeDeviceManager().addGazeMotionListener(stats);
+            // gameContext.getGazeDeviceManager().addGazeMotionListener(stats);
         }
 
         // gameContext.getGazeDeviceManager().addGazeMotionListener(secondScreen);
@@ -342,6 +342,8 @@ public class GameMenuFactory {
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
 
         gameContext.createControlPanel(gazePlay, stats, currentGame);
+
+        gameContext.createQuitShortcut(gazePlay, stats, currentGame);
 
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
 

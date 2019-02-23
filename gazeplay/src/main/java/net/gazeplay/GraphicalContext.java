@@ -189,7 +189,6 @@ public abstract class GraphicalContext<T extends Parent> {
         musicName = new MarqueeText(BackgroundMusicManager.getMusicTitle(currentMusic));
         grid.add(musicName, 0, 0, 3, 1);
         grid.setMaxWidth(MUSIC_GRID_MAX_WIDTH);
-
         backgroundMusicManager.getIsMusicChanging().addListener((observable, oldValue, newValue) -> {
 
             // If we receive a change event and the new value is fales, then it means

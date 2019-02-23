@@ -22,6 +22,9 @@ de leur formation :
 - en 2017-2018 : Rajaa BARHTAOUI (Univ.Grenoble Alpes), Amela FEJZA (Grenoble INP)
 - en 2018-2019 : Mélanie CARRIÈRE (Univ.Grenoble Alpes), Dumitru CORINI (Univ.Grenoble Alpes),
  Vincent GIVAUDAN (Univ.Grenoble Alpes), Thomas MEDARD (Univ.Grenoble Alpes), Sébastien RIOU (Univ.Grenoble Alpes)
+- en 2019-2020 : Sannara ek (Univ.Grenoble Alpes), Teo Blachère (Univ.Grenoble Alpes),
+Johana Marku (Univ.Grenoble Alpes), Peter Bardawil (Univ.Grenoble Alpes), Wafaa El Husseini (Univ.Grenoble Alpes),
+ TRUONG Hai Long (Univ.Grenoble Alpes)
 
 Merci également à la communauté open source pour son aide : Yann ROBERT, Anantaplex (Maven, logs, lombok,...)
 
@@ -40,9 +43,10 @@ Traductions/localisations :
 Français (auteurs des jeux)
 Anglais (auteurs des jeux)
 Allemand (anonyme)
+Albanais (Johana Marku)
 Espagnol (Nancy Rodriguez, Université de Montpellier)
 Portugais (Paulo Da Costa)
-Arabe (Riadh Benhassen et Fatma Ghorbel Hajjem)
+Arabe (Riadh Benhassen, Fatma Ghorbel Hajjem, El Husseini Wafaa)
 Chinese ()
 Croate (Kristina Marjanović)
 Grec (MK Prossopsis Ltd)
