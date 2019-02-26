@@ -213,8 +213,6 @@ public class GameContext extends GraphicalContext<Pane> {
 
         button.setPrefHeight(buttonSize);
         button.setPrefWidth(buttonSize);
-
-        System.out.println("hello world");
     }
 
     private static void updateConfigPane(final Pane configPane) {
