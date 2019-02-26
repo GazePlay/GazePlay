@@ -49,13 +49,15 @@ public class DefaultTranslator implements Translator {
         this.notifyAllListeners();
     }
 
+    @Override
+    public String currentLanguage() {
+        return config.getLanguage();
+    }
+
     private void notifyAllListeners() {
         for (LanguageChangeListener l : languageChangeListeners) {
             l.languageChanged();
         }
-    }
-    public String currentLanguage(){
-        return config.getLanguage();
     }
 
 }

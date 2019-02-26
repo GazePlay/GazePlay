@@ -71,26 +71,26 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         currentLanguage = translator.currentLanguage();
 
-        //Align right for Arabic Language
-        if(currentLanguage.equals("ara")){
+        // Align right for Arabic Language
+        if (currentLanguage.equals("ara")) {
             ALIGN_LEFT = false;
         }
 
-        //Bottom Pane
+        // Bottom Pane
         HomeButton homeButton = createHomeButtonInConfigurationManagementScreen(gazePlay);
 
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
         rightControlPane.setAlignment(Pos.CENTER_RIGHT);
-        if(ALIGN_LEFT) {
+        if (ALIGN_LEFT) {
             rightControlPane.getChildren().add(homeButton);
         }
 
         HBox leftControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.setAlignment(Pos.CENTER_LEFT);
-        //HomeButton on the Left for Arabic Language
-        if(!ALIGN_LEFT) {
+        // HomeButton on the Left for Arabic Language
+        if (!ALIGN_LEFT) {
             leftControlPane.getChildren().add(homeButton);
         }
 
@@ -100,21 +100,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         root.setBottom(bottomControlPane);
 
-
-        //Top Pane
+        // Top Pane
         I18NText configTitleText = new I18NText(translator, "ConfigTitle");
         // configTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20)); should be managed with css
         configTitleText.setId("title");
         configTitleText.setTextAlignment(TextAlignment.CENTER);
 
-        //Arabic title alignment
-        if(!ALIGN_LEFT) {
+        // Arabic title alignment
+        if (!ALIGN_LEFT) {
             root.setAlignment(configTitleText, Pos.BOTTOM_RIGHT);
         }
 
         root.setTop(configTitleText);
 
-        //Center Pane
+        // Center Pane
 
         GridPane gridPane = buildConfigGridPane(this, gazePlay);
 
@@ -127,10 +126,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         VBox centerCenterPane = new VBox();
         centerCenterPane.setSpacing(40);
         centerCenterPane.setAlignment(Pos.TOP_CENTER);
-        //Arabic title alignment
-        if(!ALIGN_LEFT) {
+        // Arabic title alignment
+        if (!ALIGN_LEFT) {
             gridPane.setAlignment(Pos.TOP_RIGHT);
-        }else{
+        } else {
             gridPane.setAlignment(Pos.TOP_LEFT);
         }
 
@@ -312,13 +311,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         label.setId("item");
         // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
 
-        if(ALIGN_LEFT) {
+        if (ALIGN_LEFT) {
             grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
             grid.add(input, COLUMN_INDEX_INPUT_LEFT, currentRowIndex);
 
             GridPane.setHalignment(label, HPos.LEFT);
             GridPane.setHalignment(input, HPos.LEFT);
-        }else {
+        } else {
 
             grid.add(input, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex);
             grid.add(label, COLUMN_INDEX_LABEL_RIGHT, currentRowIndex);
@@ -540,8 +539,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         final HBox pane = new HBox(5);
 
-        //Arabic Alignment
-        if(!ALIGN_LEFT) {
+        // Arabic Alignment
+        if (!ALIGN_LEFT) {
             pane.setAlignment(Pos.BASELINE_RIGHT);
         }
 
@@ -636,7 +635,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                         alert.setTitle("Language information");
                         alert.setHeaderText("Translations have been provided by MK Prossopsis Ltd.");
                         alert.show();
-                    } else if (!ALIGN_LEFT ||  (codeLanguage.equals("ara") && !currentLanguage.equals("ara")) ){
+                    } else if (!ALIGN_LEFT || (codeLanguage.equals("ara") && !currentLanguage.equals("ara"))) {
 
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Language information");
@@ -806,8 +805,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         final HBox pane = new HBox(5);
 
-        //Arabic Alignment
-        if(!ALIGN_LEFT) {
+        // Arabic Alignment
+        if (!ALIGN_LEFT) {
             pane.setAlignment(Pos.BASELINE_RIGHT);
         }
 
