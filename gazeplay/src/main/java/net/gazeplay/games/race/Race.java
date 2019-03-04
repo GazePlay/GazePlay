@@ -1,4 +1,4 @@
-package net.gazeplay.games.shooter;
+package net.gazeplay.games.race;
 
 import javafx.animation.*;
 import javafx.event.ActionEvent;
@@ -25,17 +25,21 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
-public class Shooter extends Parent implements GameLifeCycle {
+public class Race extends Parent implements GameLifeCycle {
 
     private static final int MAX_RADIUS = 70;
     private static final int MIN_RADIUS = 30;
 
     private static final int MAX_TIME_LENGTH = 7;
     private static final int MIN_TIME_LENGTH = 4;
+
+    private static final int MAX_RACE_TIME_LENGTH = 30;
+    private static final int MIN_RACE_TIME_LENGTH = 15;
 
     private final double centerX;
     private final double centerY;
@@ -48,6 +52,8 @@ public class Shooter extends Parent implements GameLifeCycle {
     private final Image orange;
     private final Image red;
     private final Image flash;
+    private final Image racer;
+
 
     private final String date;
     private Label text;
@@ -66,9 +72,10 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     private final EventHandler<Event> enterEvent;
     private final EventHandler<GazeEvent> handEventGaze;
+    private Dimension2D dimension2D;
 
     // done
-    public Shooter(GameContext gameContext, Stats stats, String type) {
+    public Race(GameContext gameContext, Stats stats, String type) {
         this.gameContext = gameContext;
         this.stats = stats;
         LocalDate localDate = LocalDate.now();
@@ -84,7 +91,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        System.out.println("The game is data/" + gameType + "/images/Background.jpg");
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
 
         int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
@@ -120,8 +126,8 @@ public class Shooter extends Parent implements GameLifeCycle {
         yellow = new Image("data/" + gameType + "/images/Yellow.png");
         orange = new Image("data/" + gameType + "/images/Orange.png");
         red = new Image("data/" + gameType + "/images/Red.png");
+        racer = new Image("data/" + gameType + "/images/Racer.png");
         flash = new Image("data/" + gameType + "/images/Flash.png");
-
         cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
 
         Point[] points = new Point[8];
@@ -233,7 +239,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         if ((rd == 1) || (rd == 2)) {
             // Move Left or Right
             double val;
-
             double cst;
             if (gameType.equals("biboule")) {
                 cst = 2.5;
@@ -338,7 +343,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         }
         sc.setText(cst);
         sc.setTextFill(Color.WHITE);
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         ImageView iv1 = new ImageView(new Image("data/" + gameType + "/images/hand.png"));
         ImageView iv2 = new ImageView(new Image("data/" + gameType + "/images/handShot.png"));
 
@@ -413,9 +418,13 @@ public class Shooter extends Parent implements GameLifeCycle {
             @Override
             public void handle(ActionEvent actionEvent) {
 
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 10; i++) {
                     newCircle();
                 }
+                makeRacers(0.6);
+                makeRacers(0.7);
+                makeRacers(0.8);
+                makeRacers(0.9);
 
                 magicCage();
             }
@@ -541,12 +550,89 @@ public class Shooter extends Parent implements GameLifeCycle {
         moveCircle(sp);
     }
 
+    private void makeRacers(double racerPosition) {
+
+        Target frogRacer = buildRacer();
+        frogRacer.toBack();
+        this.getChildren().add(frogRacer);
+//        gameContext.getGazeDeviceManager().addEventFilter(frogRacer);
+//        gameContext.getGamePanelDimensionProvider().getDimension2D();
+        double x =  0;
+        frogRacer.setLayoutX(x);
+        System.out.println("The min values of y is "+getBoundsInParent().getMinY() );
+        System.out.println("The max values of y is "+dimension2D.getHeight());
+
+        double y =  dimension2D.getHeight() * racerPosition;
+        frogRacer.setLayoutY(y);
+        frogRacer.centerX = x;
+        frogRacer.centerY = y;
+
+        double timebasic = ((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH) * 1000;
+        double timelength = Configuration.getInstance().getSpeedEffects() * timebasic;
+
+        TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
+        double min = Math.ceil(0);
+        double max = Math.floor(endPoints.length - 1);
+        int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
+        Point randomPoint = endPoints[r];
+        tt1.setToX( dimension2D.getWidth() - dimension2D.getWidth()*0.05);
+        frogRacer.destination = randomPoint;
+        System.out.println("Printing the layout dimension width: "+dimension2D.getWidth() + " width: "+dimension2D.getHeight());
+        ScaleTransition st = new ScaleTransition(new Duration(timelength), frogRacer);
+        st.setByX(1);
+        st.setByY(1);
+        ParallelTransition pt = new ParallelTransition();
+
+
+//        FadeTransition btog = new FadeTransition(new Duration(timelength / 4), frogRacer.getChildren().get(2));
+//        FadeTransition gtoy = new FadeTransition(new Duration(timelength / 4), frogRacer.getChildren().get(3));
+//        FadeTransition ytoo = new FadeTransition(new Duration(timelength / 4), frogRacer.getChildren().get(4));
+//        FadeTransition otor = new FadeTransition(new Duration(timelength / 4), frogRacer.getChildren().get(5));
+//
+//        btog.setFromValue(0);
+//        gtoy.setFromValue(0);
+//        ytoo.setFromValue(0);
+//        otor.setFromValue(0);
+//
+//        btog.setToValue(1);
+//        gtoy.setToValue(1);
+//        ytoo.setToValue(1);
+//        otor.setToValue(1);
+//
+//        SequentialTransition seqt = new SequentialTransition(btog);
+
+        pt.getChildren().addAll(tt1);
+        frogRacer.t = pt;
+
+        pt.play();
+    }
+
     private void resize(ImageView i) {
         double d = MIN_RADIUS;
         i.setFitHeight(d);
         i.setFitWidth(d * 5 / 4);
     }
+    private void resizeRacer(ImageView i) {
+        double d = 50;
+        i.setFitHeight(d);
+        i.setFitWidth(d * 5 / 4);
+    }
 
+
+    private Target buildRacer() {
+
+        Target sp = new Target();
+        ImageView race = new ImageView(racer);
+
+        resizeRacer(race);
+
+
+        sp.getChildren().addAll(race);
+
+
+
+        return sp;
+    }
 
     private Target buildCircle() {
 
@@ -558,21 +644,27 @@ public class Shooter extends Parent implements GameLifeCycle {
         ImageView b4 = new ImageView(orange);
         ImageView b5 = new ImageView(red);
         ImageView f = new ImageView(flash);
+        ImageView race = new ImageView(racer);
+
+
 
         resize(b1);
         resize(b2);
         resize(b3);
         resize(b4);
         resize(b5);
+        resize(race);
 
         resize(f);
 
-        sp.getChildren().addAll(f, b1, b2, b3, b4, b5);
+        sp.getChildren().addAll(f, b1, b2, b3, b4, b5,race);
         sp.getChildren().get(0).setOpacity(0);
         sp.getChildren().get(5).setOpacity(0);
         sp.getChildren().get(2).setOpacity(0);
         sp.getChildren().get(3).setOpacity(0);
         sp.getChildren().get(4).setOpacity(0);
+        sp.getChildren().get(6).setOpacity(0);
+
 
         return sp;
     }
@@ -587,7 +679,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         double max = Math.floor(endPoints.length - 1);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
         Point randomPoint = endPoints[r];
-        tt1.setToY(-sp.centerY + randomPoint.y);
+        tt1.setToY((-sp.centerY + randomPoint.y )/4);
         tt1.setToX(-sp.centerX + randomPoint.x);
         sp.destination = randomPoint;
 
@@ -600,8 +692,8 @@ public class Shooter extends Parent implements GameLifeCycle {
         }
 
         ScaleTransition st = new ScaleTransition(new Duration(timelength), sp);
-        st.setByX(10);
-        st.setByY(10);
+        st.setByX(1);
+        st.setByY(1);
         ParallelTransition pt = new ParallelTransition();
 
         FadeTransition btog = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(2));
@@ -619,10 +711,9 @@ public class Shooter extends Parent implements GameLifeCycle {
         ytoo.setToValue(1);
         otor.setToValue(1);
 
-        SequentialTransition seqt = new SequentialTransition(btog, gtoy, ytoo, otor);
+        SequentialTransition seqt = new SequentialTransition(btog);
 
         pt.getChildren().addAll(seqt, tt1, st);
-
         sp.t = pt;
 
         pt.play();
