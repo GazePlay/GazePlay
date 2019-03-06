@@ -305,17 +305,28 @@ public class GameContext extends GraphicalContext<Pane> {
     }
 
     public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        EventHandler<Event> ShortcutEvent = (Event e) -> {
-
+    
+        final Scene scene = gazePlay.getPrimaryScene();
+        
+        // gamingRoot.getChildren().add(scene);
+        EventHandler buttonHandler = new EventHandler<javafx.scene.input.KeyEvent>()
+        {
+            
+        public void handle(javafx.scene.input.KeyEvent event)
+            {
+            
             QuitKeyPressed(stats, gazePlay, currentGame);
+            scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+
+            }
+        
+
 
         };
-        final Scene scene = gazePlay.getPrimaryScene();
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, ShortcutEvent);
-        // gamingRoot.getChildren().add(scene);
-
-    }
-
+        
+        scene.addEventHandler(KeyEvent.KEY_PRESSED,buttonHandler);
+        
+                }
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
         menuHBox.getChildren().add(createMusicControlPane());
         menuHBox.getChildren().add(createEffectsVolumePane());
@@ -367,6 +378,7 @@ public class GameContext extends GraphicalContext<Pane> {
         this.clear();
 
         gazePlay.onDisplayStats(statsContext);
+        
     }
 
     private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay,
