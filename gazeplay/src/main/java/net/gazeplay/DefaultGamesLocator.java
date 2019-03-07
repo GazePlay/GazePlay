@@ -300,7 +300,7 @@ public class DefaultGamesLocator implements GamesLocator {
             }
 
             @Override
-            public GameLifeCycle createNewGame(GameContext gameContext, Stats stats) {
+            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats stats) {
                 return new WhereIsIt(WhereIsIt.WhereIsItGameType.FLAGS, 2,
                         2, false, gameContext, stats);
             }
