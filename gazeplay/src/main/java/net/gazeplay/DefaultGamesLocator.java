@@ -704,12 +704,11 @@ public class DefaultGamesLocator implements GamesLocator {
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext,
-                                                       GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                         return new BibouleJump(gameContext, stats);
                     }
 
                 }));
-
 
         log.info("Games found : {}", result.size());
 
