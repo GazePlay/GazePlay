@@ -3,6 +3,7 @@ package net.gazeplay;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.image.ImageView;
@@ -27,6 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class StatsContext extends GraphicalContext<BorderPane> {
 
     public static final String COLON = "Colon";
+    private static Boolean ALIGN_LEFT = true;
+    private static String currentLanguage;
 
     public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
         BorderPane root = new BorderPane();
@@ -38,8 +41,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
     private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, Text value) {
 
-        final int COLUMN_INDEX_LABEL = 0;
-        final int COLUMN_INDEX_VALUE = 1;
+        final int COLUMN_INDEX_LABEL_LEFT = 0;
+        final int COLUMN_INDEX_INPUT_LEFT = 1;
+        final int COLUMN_INDEX_LABEL_RIGHT = 1;
+        final int COLUMN_INDEX_INPUT_RIGHT = 0;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
@@ -48,17 +53,33 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         value.setId("item");
         // value.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); in CSS
+        if (ALIGN_LEFT) {
+            grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
+            grid.add(value, COLUMN_INDEX_INPUT_LEFT, currentRowIndex);
 
-        grid.add(label, COLUMN_INDEX_LABEL, currentRowIndex);
-        grid.add(value, COLUMN_INDEX_VALUE, currentRowIndex);
+            GridPane.setHalignment(label, HPos.LEFT);
+            GridPane.setHalignment(value, HPos.LEFT);
+        } else {
+            grid.add(value, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex);
+            grid.add(label, COLUMN_INDEX_LABEL_RIGHT, currentRowIndex);
 
-        GridPane.setHalignment(label, HPos.LEFT);
-        GridPane.setHalignment(value, HPos.LEFT);
+            GridPane.setHalignment(label, HPos.RIGHT);
+            GridPane.setHalignment(value, HPos.RIGHT);
+        }
     }
 
     private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) {
         super(gazePlay, root);
         this.stats = stats;
+
+        final Translator translator = gazePlay.getTranslator();
+
+        currentLanguage = translator.currentLanguage();
+
+        // Align right for Arabic Language
+        if (currentLanguage.equals("ara")) {
+            ALIGN_LEFT = false;
+        }
 
         Configuration config = Configuration.getInstance();
 
@@ -68,9 +89,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(100);
         grid.setVgap(50);
-        // grid.setPadding(new Insets(50, 50, 50, 50));
-
-        final Translator translator = gazePlay.getTranslator();
+        grid.setPadding(new Insets(50, 50, 50, 50));
 
         AtomicInteger currentFormRow = new AtomicInteger(1);
 
@@ -239,7 +258,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         topPane.getChildren().add(screenTitleText);
 
         root.setTop(topPane);
-        root.setLeft(grid);
+        if (ALIGN_LEFT) {
+            root.setLeft(grid);
+        } else { // Arabic alignment
+            root.setRight(grid);
+        }
         root.setCenter(centerStackPane);
         root.setBottom(controlButtonPane);
 
