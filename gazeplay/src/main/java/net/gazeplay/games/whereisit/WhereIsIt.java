@@ -51,8 +51,7 @@ public class WhereIsIt implements GameLifeCycle {
 
     public enum WhereIsItGameType {
         ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
-                "where-is-the-color"), CUSTOMIZED("custumized", "custumized"),
-        FLAGS("find-flag","find-flag");
+                "where-is-the-color"), CUSTOMIZED("custumized", "custumized"), FLAGS("find-flag", "find-flag");
 
         @Getter
         private final String gameName;
@@ -82,7 +81,6 @@ public class WhereIsIt implements GameLifeCycle {
     private final GameContext gameContext;
     private final Stats stats;
     private RoundDetails currentRoundDetails;
-
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
             final GameContext gameContext, final Stats stats) {
