@@ -61,7 +61,7 @@ public class GazePlay extends Application {
     public GazePlay() {
         instance = this;
     }
-
+   
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;

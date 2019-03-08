@@ -201,7 +201,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+        {
+            I18NText label = new I18NText(translator, "QuitKey", COLON);
 
+            Node input = buildQuitKeyChooser(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
         {
             I18NText label = new I18NText(translator, "FileDir", COLON);
 
@@ -886,5 +892,49 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             log.warn("IllegalArgumentException : unsupported GameButtonOrientation value : {}", configValue, e);
             return null;
         }
+    }
+
+    private Node buildQuitKeyChooser(Configuration configuration, ConfigurationContext configurationContext) {
+        final HBox pane = new HBox(5);
+        
+         // Arabic Alignment
+        if (!ALIGN_LEFT) {
+            pane.setAlignment(Pos.BASELINE_RIGHT);
+        }
+
+        final String QuitKeyButton = configuration.getQuitKey();
+        Button buttonLoad = new Button(QuitKeyButton);
+        buttonLoad.textProperty().bind(configuration.getQuitKeyProperty());
+
+        buttonLoad.setOnAction((ActionEvent arg0) -> {
+
+            //
+            //Have to do smth Here
+            //
+            final GazePlay gazePlay = GazePlay.getInstance();
+            final Scene scene = gazePlay.getPrimaryScene();
+            
+            /*File file = directoryChooser.showDialog(scene.getWindow());
+            if (file == null) {
+                return;
+            }
+            */
+            //String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
+             
+
+           // configuration.getQuitKeyProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        pane.getChildren().add(buttonLoad);
+
+        final I18NButton resetButton = new I18NButton(translator, "reset");
+        resetButton.setOnAction((event) -> {
+            configuration.getQuitKeyProperty().setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR);
+        });
+
+        pane.getChildren().add(resetButton);
+
+        return pane;
     }
 }
