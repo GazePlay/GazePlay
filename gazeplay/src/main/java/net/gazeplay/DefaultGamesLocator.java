@@ -289,6 +289,21 @@ public class DefaultGamesLocator implements GamesLocator {
                                 gameVariant.getHeight(), false, gameContext, stats);
                     }
                 }));
+        // add find the flag game
+        result.add(new GameSpec(
+                new GameSummary("Fun with Flags", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/flags.png"),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.FLAGS.getGameName());
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new WhereIsIt(WhereIsIt.WhereIsItGameType.FLAGS, 2, 2, false, gameContext, stats);
+                    }
+                }));
 
         result.add(new GameSpec(
                 new GameSummary("Biboules", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/biboules.png",
