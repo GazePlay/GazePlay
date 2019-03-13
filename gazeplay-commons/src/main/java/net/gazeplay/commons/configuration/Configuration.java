@@ -41,7 +41,7 @@ public class Configuration implements Cloneable {
     @Getter
     @Setter
     private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
-    private static final String DEFAULT_VALUE_QUIT_KEY = "A";
+    private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final boolean DEFAULT_VALUE_GAZEMODE = true;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
     private static final String DEFAULT_VALUE_LANGUAGE = "fra";
@@ -120,7 +120,7 @@ public class Configuration implements Cloneable {
 
     @Getter
     protected final StringProperty QuitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
-            DEFAULT_VALUE_QUIT_KEY);
+            DEFAULT_VALUE_QUIT_KEY.toString());
     @Getter
     protected final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE,
             DEFAULT_VALUE_GAZEMODE);
@@ -230,12 +230,11 @@ public class Configuration implements Cloneable {
     public void populateFromProperties(Properties prop) {
         String buffer;
 
-        
         buffer = prop.getProperty(PROPERTY_NAME_QUIT_KEY);
         if (buffer != null) {
             QuitKeyProperty.setValue(buffer);
         }
-        
+
         buffer = prop.getProperty(PROPERTY_NAME_GAZEMODE);
         if (buffer != null) {
             gazeModeProperty.setValue(Boolean.parseBoolean(buffer));
@@ -427,9 +426,10 @@ public class Configuration implements Cloneable {
     }
 
     public String getQuitKey() {
+        System.out.println(QuitKeyProperty.getValue());
         return QuitKeyProperty.getValue();
     }
-    
+
     public String getLanguage() {
         return languageProperty.getValue();
     }

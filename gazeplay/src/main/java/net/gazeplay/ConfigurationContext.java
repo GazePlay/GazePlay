@@ -201,10 +201,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+
         {
             I18NText label = new I18NText(translator, "QuitKey", COLON);
 
-            Node input = buildQuitKeyChooser(config, configurationContext);
+            ChoiceBox<String> input = buildQuitKeyChooser(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -894,47 +895,28 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private Node buildQuitKeyChooser(Configuration configuration, ConfigurationContext configurationContext) {
-        final HBox pane = new HBox(5);
-        
-         // Arabic Alignment
-        if (!ALIGN_LEFT) {
-            pane.setAlignment(Pos.BASELINE_RIGHT);
-        }
+    private ChoiceBox<String> buildQuitKeyChooser(Configuration configuration,
+            ConfigurationContext configurationContext) {
 
-        final String QuitKeyButton = configuration.getQuitKey();
-        Button buttonLoad = new Button(QuitKeyButton);
-        buttonLoad.textProperty().bind(configuration.getQuitKeyProperty());
+        ChoiceBox<String> KeyBox = new ChoiceBox<>();
+        KeyBox.getItems().addAll("Q", "W", "E", "R", "T", "Y");
 
-        buttonLoad.setOnAction((ActionEvent arg0) -> {
+        // GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
+        KeyBox.getSelectionModel().select("Q");
 
-            //
-            //Have to do smth Here
-            //
-            final GazePlay gazePlay = GazePlay.getInstance();
-            final Scene scene = gazePlay.getPrimaryScene();
-            
-            /*File file = directoryChooser.showDialog(scene.getWindow());
-            if (file == null) {
-                return;
+        KeyBox.setPrefWidth(PREF_WIDTH);
+        KeyBox.setPrefHeight(PREF_HEIGHT);
+
+        KeyBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                final String newPropertyValue = newValue;
+                configuration.getQuitKeyProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
             }
-            */
-            //String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
-             
-
-           // configuration.getQuitKeyProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
         });
 
-        pane.getChildren().add(buttonLoad);
+        return KeyBox;
 
-        final I18NButton resetButton = new I18NButton(translator, "reset");
-        resetButton.setOnAction((event) -> {
-            configuration.getQuitKeyProperty().setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR);
-        });
-
-        pane.getChildren().add(resetButton);
-
-        return pane;
     }
 }

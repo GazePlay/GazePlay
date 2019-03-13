@@ -305,7 +305,7 @@ public class GameContext extends GraphicalContext<Pane> {
     }
 
     public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-
+        Configuration config = Configuration.getInstance();
         final Scene scene = gazePlay.getPrimaryScene();
 
         // gamingRoot.getChildren().add(scene);
@@ -315,13 +315,18 @@ public class GameContext extends GraphicalContext<Pane> {
 
                 QuitKeyPressed(stats, gazePlay, currentGame);
                 scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
 
             }
 
         };
 
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, buttonHandler);
-
+        // scene.addEventHandler(KeyEvent.KEY_PRESSED, buttonHandler);
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            if (key.getCode() == KeyCode.Q) {
+                scene.addEventHandler(KeyEvent.KEY_RELEASED, buttonHandler);
+            }
+        });
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
