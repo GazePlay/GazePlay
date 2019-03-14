@@ -6,17 +6,25 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.ProgressButton;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -38,6 +46,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private final Group backgroundLayer;
     private final Group middleLayer;
     private final Group foregroundLayer;
+    private final Rectangle interactionOverlay;
 
     //private final ImageLibrary cloudImages;
     //private final ImageLibrary bibouleImages;
@@ -46,7 +55,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private Point2D velocity;
     private final double gravity = 0.005;
     private double terminalVelocity = 0.8;
-    private final double maxSpeed = 0.5;
+    private final double maxSpeed = 0.7;
 
     private final double platformWidth;
     private final double platformHeight;
@@ -57,10 +66,15 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     private Rectangle biboule;
     private Label onScreenText;
-    private Label scoreLabel;
+    private Text scoreText;
     private ArrayList<Rectangle> platforms;
 
     private long score;
+
+    private final Rectangle shade;
+    private final ProgressButton restartButton;
+    private Text finalScoreText;
+    private final int fixationLength;
 
     public BibouleJump(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
@@ -76,8 +90,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         //this.cloudImages = ImageUtils.createImageLibrary(new File("data/biboulejump/clouds"));
         //this.bibouleImages = ImageUtils.createImageLibrary(new File("data/biboulejump/biboules"));
 
-        velocity = Point2D.ZERO;
-
         this.platforms = new ArrayList();
         this.platformHeight = dimensions.getHeight()/15;
         this.platformWidth = dimensions.getWidth()/10;
@@ -86,10 +98,46 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         backgroundImage.setFill(Color.SKYBLUE);
         this.backgroundLayer.getChildren().add(backgroundImage);
 
-        biboule = new Rectangle(dimensions.getWidth() / 2.0, dimensions.getHeight() / 2.0, dimensions.getHeight() / 8,
-                dimensions.getHeight() / 8);
+        biboule = new Rectangle(dimensions.getHeight() / 8,dimensions.getHeight() / 8);
         this.middleLayer.getChildren().add(biboule);
 
+        onScreenText = new Label();
+        foregroundLayer.getChildren().add(onScreenText);
+
+        scoreText = new Text(0, 50, "0");
+        scoreText.setTextAlignment(TextAlignment.CENTER);
+        scoreText.setFont(new Font(50));
+        scoreText.setWrappingWidth(dimensions.getWidth());
+        foregroundLayer.getChildren().add(scoreText);
+
+        //Menu
+        fixationLength = Configuration.getInstance().getFixationLength();
+
+        shade = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+        shade.setFill(new Color(0, 0, 0, 0.75));
+
+        restartButton = new ProgressButton();
+        ImageView restartImage = new ImageView("data/biboulejump/menu/restart.png");
+        restartImage.setFitHeight(dimensions.getHeight()/6);
+        restartImage.setFitWidth(dimensions.getHeight()/6);
+        restartButton.setImage(restartImage);
+        restartButton.setLayoutX(dimensions.getWidth()/2 - dimensions.getHeight()/12);
+        restartButton.setLayoutY(dimensions.getHeight()/2 - dimensions.getHeight()/12);
+        restartButton.assignIndicator(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                launch();
+            }
+        }, fixationLength);
+
+        finalScoreText = new Text(0, dimensions.getHeight()/3, "");
+        finalScoreText.setFill(Color.WHITE);
+        finalScoreText.setTextAlignment(TextAlignment.CENTER);
+        finalScoreText.setFont(new Font(50));
+        finalScoreText.setWrappingWidth(dimensions.getWidth());
+        foregroundLayer.getChildren().addAll(shade, finalScoreText, restartButton);
+
+        //Interaction
         gazeTarget = new Point2D(dimensions.getWidth() / 2.0, dimensions.getHeight() / 2.0);
 
         EventHandler<Event> movementEvent = (Event event) -> {
@@ -100,19 +148,11 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
             }
         };
 
-        Rectangle interactionOverlay = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+        interactionOverlay = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         interactionOverlay.addEventFilter(MouseEvent.MOUSE_MOVED, movementEvent);
         interactionOverlay.addEventFilter(GazeEvent.GAZE_MOVED, movementEvent);
         interactionOverlay.setFill(Color.TRANSPARENT);
         foregroundLayer.getChildren().add(interactionOverlay);
-
-        onScreenText = new Label();
-        this.gameContext.getChildren().add(onScreenText);
-
-        scoreLabel = new Label();
-        this.gameContext.getChildren().add(scoreLabel);
-
-        bounce();
     }
 
     private void bounce(){
@@ -121,21 +161,38 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     @Override
     public void launch() {
+
+        //hide end game menu
+        shade.setOpacity(0);
+        restartButton.disable();
+        finalScoreText.setOpacity(0);
+
+        interactionOverlay.setDisable(false);
+
+        backgroundLayer.getChildren().removeAll(platforms);
+        platforms.clear();
         generatePlatforms(dimensions.getHeight());
 
+        biboule.setX(dimensions.getWidth()/2);
+        biboule.setY(dimensions.getHeight()/2);
         biboule.setFill(new ImagePattern(new Image("data/biboulejump/biboules/green.png")));
 
+        velocity = Point2D.ZERO;
         score = 0;
 
+        bounce();
         this.start();
     }
 
     @Override
     public void dispose() {
+        this.stop();
         //Show end menu (restart, quit, score)
-        ProgressButton restartButton = new ProgressButton();
-        foregroundLayer.getChildren().add(restartButton);
-
+        interactionOverlay.setDisable(true);
+        shade.setOpacity(1);
+        finalScoreText.setText("You scored " + score + " points");
+        finalScoreText.setOpacity(1);
+        restartButton.active();
     }
 
     private void generatePlatforms(double bottomLimit) {
@@ -159,11 +216,11 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         }
         double timeElapsed = ((double) now - (double) lastTickTime) / Math.pow(10.0, 6.0); // in ms
         lastTickTime = now;
-        String logs = "FPS: " + String.valueOf((int) (1000 / timeElapsed)) + "\n";
+        String logs = "FPS: " + (int) (1000 / timeElapsed) + "\n";
         if(1000/timeElapsed < minFPS){
             minFPS = 1000/(int)timeElapsed;
-            log.info("New min fps: " + minFPS);
         }
+        logs += "MinFPS: " + minFPS + "\n";
 
         //Movement
         //Gravity
@@ -172,6 +229,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
             velocity = new Point2D(velocity.getX(), terminalVelocity);
         }
 
+        //Lateral mouvement
         double distance = Math.abs(gazeTarget.getX() - (biboule.getX() + biboule.getWidth()/2));
         double direction = distance == 0 ? 1 : (gazeTarget.getX() - (biboule.getX() + biboule.getWidth()/2)) / distance;
         if(distance > maxSpeed){
@@ -195,11 +253,10 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
             }
         }
 
-
         //Scrolling
         if(biboule.getY() <= dimensions.getHeight()/3){
             double difference = dimensions.getHeight()/3 - biboule.getY();
-            score += difference;
+            updateScore(difference);
             for(Rectangle platform : platforms) {
                 platform.setY(platform.getY() + difference);
                 if(platform.getY() >= dimensions.getHeight()){
@@ -214,14 +271,21 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         if(highestPlatformY >= -dimensions.getHeight()/2)
             generatePlatforms(highestPlatformY);
 
-        if (biboule.getY() + biboule.getHeight() >= dimensions.getHeight()) {
+        //Fall out of screen
+        if (biboule.getY() >= dimensions.getHeight()) {
             dispose();
         }
 
-        logs += "Score: " + score;
-        logs += "nb platforms: " + platforms.size();
-        logs += "nbhighlatforms: " + highestPlatformY;
+        logs += "Score: " + score + "\n";
+        logs += "nb platforms: " + platforms.size() + "\n";
+        logs += "nbhighlatforms: " + highestPlatformY + "\n";
         onScreenText.setText(logs);
+    }
+
+    private void updateScore(double difference){
+        score += difference;
+        scoreText.setText(String.valueOf(score));
+        scoreText.setX(dimensions.getWidth()/2 - scoreText.getWrappingWidth()/2);
     }
 
     private boolean rectangleAndRectangleCollision(Rectangle rect1, Rectangle rect2){
@@ -231,7 +295,4 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                rect1.getY() + rect1.getHeight() > rect2.getY();
     }
 
-    private double clamp(double val, double min, double max) {
-        return Math.max(min, Math.min(max, val));
-    }
 }
