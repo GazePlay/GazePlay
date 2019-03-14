@@ -12,6 +12,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.HeatMap;
+import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.games.Utils;
 import org.tc33.jheatchart.HeatChart;
 
@@ -43,6 +44,8 @@ public class Stats implements GazeMotionListener {
     @Getter
     private int nbUnCountedShots;
     private double[][] heatMap;
+
+    private FixationSequence[][] sequence;
     @Getter
     private SavedStatsInfo savedStatsInfo;
     private Long currentRoundStartTime;
@@ -63,6 +66,7 @@ public class Stats implements GazeMotionListener {
         return new double[heatMapWidth][heatMapHeight];
     }
 
+
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
     }
@@ -76,7 +80,7 @@ public class Stats implements GazeMotionListener {
                 log.info("HeatMap is disabled, skipping instanciation of the HeatMap Data model");
             } else {
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
-
+                sequence = new FixationSequence[heatMap.length][heatMap[0].length];
                 recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
                 recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
 
@@ -235,6 +239,7 @@ public class Stats implements GazeMotionListener {
         int x = (int) (Y / heatMapPixelSize);
         int y = (int) (X / heatMapPixelSize);
 
+
         for (int i = -trail; i <= trail; i++)
             for (int j = -trail; j <= trail; j++) {
 
@@ -246,7 +251,11 @@ public class Stats implements GazeMotionListener {
     private void inc(int x, int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             // heatMap[heatMap[0].length - y][heatMap.length - x]++;
+            double initFixation = System.currentTimeMillis();
             heatMap[x][y]++;
+            //update the FixationSequence Matrix here !
+            sequence[x][y].setInitialFixation(initFixation); // retrieve time from system
+            sequence[x][y].setTotalTimeOfFixation();//store total time of fixation for that px
         }
     }
 
