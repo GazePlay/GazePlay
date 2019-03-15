@@ -203,6 +203,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
+            I18NText label = new I18NText(translator, "QuitKey", COLON);
+
+            ChoiceBox<String> input = buildQuitKeyChooser(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "FileDir", COLON);
 
             Node input = buildDirectoryChooser(config, configurationContext);
@@ -886,5 +893,30 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             log.warn("IllegalArgumentException : unsupported GameButtonOrientation value : {}", configValue, e);
             return null;
         }
+    }
+
+    private ChoiceBox<String> buildQuitKeyChooser(Configuration configuration,
+            ConfigurationContext configurationContext) {
+
+        ChoiceBox<String> KeyBox = new ChoiceBox<>();
+        KeyBox.getItems().addAll("Q", "W", "E", "R", "T", "Y");
+
+        // GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
+        KeyBox.getSelectionModel().select("Q");
+
+        KeyBox.setPrefWidth(PREF_WIDTH);
+        KeyBox.setPrefHeight(PREF_HEIGHT);
+
+        KeyBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                final String newPropertyValue = newValue;
+                configuration.getQuitKeyProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
+            }
+        });
+
+        return KeyBox;
+
     }
 }

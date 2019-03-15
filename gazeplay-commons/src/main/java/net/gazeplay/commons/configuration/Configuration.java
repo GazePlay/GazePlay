@@ -9,6 +9,7 @@ import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.*;
 import java.util.Properties;
+import javafx.scene.input.KeyCode;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
@@ -35,11 +36,12 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_SPEED_EFFECTS = "SPEED_EFFECTS";
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
+    private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
 
     @Getter
     @Setter
     private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
-
+    private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final boolean DEFAULT_VALUE_GAZEMODE = true;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
     private static final String DEFAULT_VALUE_LANGUAGE = "fra";
@@ -116,6 +118,9 @@ public class Configuration implements Cloneable {
     @Setter
     private static Configuration instance = Configuration.createFromPropertiesResource();
 
+    @Getter
+    protected final StringProperty QuitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
+            DEFAULT_VALUE_QUIT_KEY.toString());
     @Getter
     protected final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE,
             DEFAULT_VALUE_GAZEMODE);
@@ -224,6 +229,11 @@ public class Configuration implements Cloneable {
 
     public void populateFromProperties(Properties prop) {
         String buffer;
+
+        buffer = prop.getProperty(PROPERTY_NAME_QUIT_KEY);
+        if (buffer != null) {
+            QuitKeyProperty.setValue(buffer);
+        }
 
         buffer = prop.getProperty(PROPERTY_NAME_GAZEMODE);
         if (buffer != null) {
@@ -363,6 +373,7 @@ public class Configuration implements Cloneable {
 
         properties.setProperty(PROPERTY_NAME_EYETRACKER, this.eyetrackerProperty.getValue());
         properties.setProperty(PROPERTY_NAME_LANGUAGE, this.languageProperty.getValue());
+        properties.setProperty(PROPERTY_NAME_QUIT_KEY, this.QuitKeyProperty.getValue());
         properties.setProperty(PROPERTY_NAME_FILEDIR, this.filedirProperty.getValue());
         properties.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(this.fixationlengthProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_CSSFILE, this.cssfileProperty.getValue());
@@ -412,6 +423,11 @@ public class Configuration implements Cloneable {
 
     public String getEyeTracker() {
         return eyetrackerProperty.getValue();
+    }
+
+    public String getQuitKey() {
+        System.out.println(QuitKeyProperty.getValue());
+        return QuitKeyProperty.getValue();
     }
 
     public String getLanguage() {
