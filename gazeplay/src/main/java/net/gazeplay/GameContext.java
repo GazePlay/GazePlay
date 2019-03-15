@@ -323,7 +323,8 @@ public class GameContext extends GraphicalContext<Pane> {
 
         // scene.addEventHandler(KeyEvent.KEY_PRESSED, buttonHandler);
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
-            if (key.getCode() == KeyCode.Q) {
+            if (key.getCode().toString() == config.getQuitKey()) {
+                log.info("Key Value : {} ; quitkey: {}", key.getCode().toString(), config.getQuitKey());
                 scene.addEventHandler(KeyEvent.KEY_RELEASED, buttonHandler);
             }
         });
