@@ -48,6 +48,7 @@ public class Stats implements GazeMotionListener {
     private FixationSequence[][] sequence;
     @Getter
     private SavedStatsInfo savedStatsInfo;
+
     private Long currentRoundStartTime;
 
     public Stats(Scene gameContextScene) {
@@ -62,6 +63,7 @@ public class Stats implements GazeMotionListener {
     private static double[][] instanciateHeatMapData(Scene gameContextScene, double heatMapPixelSize) {
         int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
         int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
+
         log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
         return new double[heatMapWidth][heatMapHeight];
     }
@@ -113,15 +115,21 @@ public class Stats implements GazeMotionListener {
 
         File todayDirectory = getGameStatsOfTheDayDirectory();
         final String heatmapFilePrefix = Utils.now() + "-heatmap";
+        final String fixationPointsPrefix = Utils.now() + "-fixation";
+
         File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
 
-        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile);
+        File fixationPointsCsvFile = new File(todayDirectory,fixationPointsPrefix + ".csv");
+
+        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile,fixationPointsCsvFile);
+
         this.savedStatsInfo = savedStatsInfo;
 
         if (this.heatMap != null) {
             saveHeatMapAsPng(heatMapPngFile);
             saveHeatMapAsCsv(heatMapCsvFile);
+            saveFixationPointsAsCsv(fixationPointsCsvFile);
         }
 
         savedStatsInfo.notifyFilesReady();
@@ -219,6 +227,18 @@ public class Stats implements GazeMotionListener {
             }
         }
     }
+    private void saveFixationPointsAsCsv(File file) throws IOException {
+        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
+            for (int i = 0; i < heatMap.length; i++) {
+                for (int j = 0; j < heatMap[0].length - 1; j++) {
+                    out.print((int) sequence[i][j].getTotalTimeOfFixation());
+                    out.print(", ");
+                }
+                out.print((int) sequence[i][sequence[i].length - 1].getTotalTimeOfFixation());
+                out.println("");
+            }
+        }
+    }
 
     private void saveHeatMapAsPng(File outputPngFile) {
 
@@ -243,20 +263,25 @@ public class Stats implements GazeMotionListener {
         for (int i = -trail; i <= trail; i++)
             for (int j = -trail; j <= trail; j++) {
 
-                if (Math.sqrt(i * i + j * j) < trail)
-                    inc(x + i, y + j);
+                if (Math.sqrt(i * i + j * j) < trail){
+                    double initial = inc(x + i, y + j).getInitialFixation();
+                    sequence[x][y].setTotalTimeOfFixation(initial-System.currentTimeMillis());
+                }
             }
     }
 
-    private void inc(int x, int y) {
+    private FixationSequence inc(int x, int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             // heatMap[heatMap[0].length - y][heatMap.length - x]++;
             double initFixation = System.currentTimeMillis();
             heatMap[x][y]++;
             //update the FixationSequence Matrix here !
-            sequence[x][y].setInitialFixation(initFixation); // retrieve time from system
-            sequence[x][y].setTotalTimeOfFixation();//store total time of fixation for that px
+            sequence[x][y] = new FixationSequence(initFixation,0); // retrieve time from system
+
+            //sequence[x][y].setTotalTimeOfFixation(initFixation - System.currentTimeMillis());//store total time of fixation for that px
+            return sequence[x][y];
         }
+        else return new FixationSequence(0,0);
     }
 
     /**

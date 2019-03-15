@@ -19,7 +19,7 @@ public class FixationSequence {
     @Getter
     private double totalTimeOfFixation;
 
-    public FixationSequence(float firstG, float totalT){
+    public FixationSequence(double firstG, double totalT){
         this.initialFixation = firstG;
         this.totalTimeOfFixation = totalT;
     }
