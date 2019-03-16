@@ -68,7 +68,7 @@ public class DefaultGamesLocator implements GamesLocator {
         List<GameSpec> result = new ArrayList<>();
 
         result.add(
-                new GameSpec(new GameSummary("FrogsRace", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/robots.png"),
+                new GameSpec(new GameSummary("FrogsRace", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/frogsrace.png"),
                         new GameSpec.GameLauncher() {
                             @Override
                             public Stats createNewStats(Scene scene) {

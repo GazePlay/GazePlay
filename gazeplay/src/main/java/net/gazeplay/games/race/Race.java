@@ -35,7 +35,7 @@ import java.time.format.DateTimeFormatter;
 public class Race extends Parent implements GameLifeCycle {
 
     private static final int MAX_RADIUS = 70;
-    private static final int MIN_RADIUS = 30;
+    private static final int MIN_RADIUS = 40;
 
     private static final int MAX_TIME_LENGTH = 7;
     private static final int MIN_TIME_LENGTH = 4;
