@@ -56,7 +56,7 @@ public class Race extends Parent implements GameLifeCycle {
     private final Image flash;
     private final Image racer;
 
-    private int bugsAmount = 8;
+    private int bugsAmount = 14;
     private int movementPerBug = 2;
 
     private Target playerRacer;
@@ -398,7 +398,7 @@ public class Race extends Parent implements GameLifeCycle {
         double min = Math.ceil(1);
         double max = Math.floor(3);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
-        Utils.playSound("data/" + gameType + "/sounds/hand_sound" + r + ".mp3");
+        Utils.playSound("data/race/sounds/frog.WAV");
         t.getChildren().get(0).setOpacity(1);
 
         hand.getChildren().get(1).setOpacity(1);
@@ -493,7 +493,8 @@ public class Race extends Parent implements GameLifeCycle {
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
 
-        double x = (cage.getBoundsInParent().getMinX());
+        double x = (Math.random() %100) * dimension2D.getWidth();
+        System.out.println("The x coordinate is "+(Math.random() %100)  );
         sp.setLayoutX(x);
         double y = (cage.getBoundsInParent().getMinY() + cage.getBoundsInParent().getMaxY()) / 2;
         sp.setLayoutY(y);

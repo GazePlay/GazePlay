@@ -72,11 +72,6 @@ public class Target extends Portrait {
 
         stats.notifyNewRoundReady();
     }
-
-    private void playHitSound() {
-        Utils.playSound(audioClipResourceLocation);
-    }
-
     private List<Portrait> generateMiniBallsPortraits(RandomPositionGenerator randomPositionGenerator,
             ImageLibrary imageLibrary, int count) {
         List<Portrait> result = new ArrayList<>(count);
@@ -232,9 +227,7 @@ public class Target extends Portrait {
         });
 
         sequence.play();
-
-        playHitSound();
-
+        Utils.playSound(audioClipResourceLocation);
     }
 
     private Transition createTransition1() {
