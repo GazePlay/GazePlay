@@ -38,6 +38,8 @@ import net.gazeplay.games.order.OrderStats;
 import net.gazeplay.games.pet.PetHouse;
 import net.gazeplay.games.pet.PetStats;
 import net.gazeplay.games.pianosight.Piano;
+import net.gazeplay.games.race.Race;
+import net.gazeplay.games.race.RaceGamesStats;
 import net.gazeplay.games.room.Room;
 import net.gazeplay.games.room.RoomStats;
 import net.gazeplay.games.rushHour.RushHour;
@@ -64,6 +66,21 @@ public class DefaultGamesLocator implements GamesLocator {
     public List<GameSpec> listGames() {
 
         List<GameSpec> result = new ArrayList<>();
+
+        result.add(new GameSpec(
+                new GameSummary("FrogsRace", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/frogsrace.png"),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new RaceGamesStats(scene, "robot");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new Race(gameContext, stats, "race");
+                    }
+                }));
 
         result.add(
                 new GameSpec(new GameSummary("Creampie", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/creamPie.png"),
