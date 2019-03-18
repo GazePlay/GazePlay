@@ -442,19 +442,13 @@ public class Race extends Parent implements GameLifeCycle {
                 int i = getChildren().indexOf(t);
                 if (i != -1)
                     getChildren().remove(i);
-
                 if(!raceIsFinished)
                 newCircle();
-
-
             }
         });
-
-
         if(score % movementPerBug == 0){
             racerMovement++;
             movePlayer(playerRacer,racerMovement);
-
         }
         if(racerMovement == 18)
         {
@@ -494,7 +488,6 @@ public class Race extends Parent implements GameLifeCycle {
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
 
         double x = (Math.random() %100) * dimension2D.getWidth();
-        System.out.println("The x coordinate is "+(Math.random() %100)  );
         sp.setLayoutX(x);
         double y = (cage.getBoundsInParent().getMinY() + cage.getBoundsInParent().getMaxY()) / 2;
         sp.setLayoutY(y);
@@ -522,7 +515,6 @@ public class Race extends Parent implements GameLifeCycle {
     private void movePlayer(Target frogRacer,int iteration){
 
         double timelength = Configuration.getInstance().getSpeedEffects() * 1000;
-        System.out.println("The iteration is "+iteration);
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
         double movementDistance =  iteration * 0.05;
         tt1.setToX( dimension2D.getWidth() * movementDistance);

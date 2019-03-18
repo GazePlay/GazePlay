@@ -22,6 +22,7 @@ import net.gazeplay.commons.utils.games.Utils;
 /**
  * Created by schwab on 30/10/2016.
  */
+@SuppressWarnings("ALL")
 @Slf4j
 public class Bravo extends Rectangle {
 
@@ -90,6 +91,19 @@ public class Bravo extends Rectangle {
 
     public void playWinTransition(final Region root, long initialDelay,
             EventHandler<ActionEvent> onFinishedEventHandler) {
+        resetState(root);
+
+        fullTransition.setOnFinished(actionEvent -> {
+            log.debug("finished fullTransition");
+            onFinishedEventHandler.handle(actionEvent);
+            log.debug("finished onFinishedEventHandler");
+        });
+
+        delayedStart(initialDelay);
+    }
+
+    public void playLoseTransition(final Region root, long initialDelay,
+                                  EventHandler<ActionEvent> onFinishedEventHandler) {
         resetState(root);
 
         fullTransition.setOnFinished(actionEvent -> {
