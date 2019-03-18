@@ -102,18 +102,6 @@ public class Bravo extends Rectangle {
         delayedStart(initialDelay);
     }
 
-    public void playLoseTransition(final Region root, long initialDelay,
-                                  EventHandler<ActionEvent> onFinishedEventHandler) {
-        resetState(root);
-
-        fullTransition.setOnFinished(actionEvent -> {
-            log.debug("finished fullTransition");
-            onFinishedEventHandler.handle(actionEvent);
-            log.debug("finished onFinishedEventHandler");
-        });
-
-        delayedStart(initialDelay);
-    }
 
     public void setConfetiOnStart(GameContext gc) {
         Dimension2D dim = gc.getGamePanelDimensionProvider().getDimension2D();

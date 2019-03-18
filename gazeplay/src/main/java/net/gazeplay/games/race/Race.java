@@ -64,11 +64,10 @@ public class Race extends Parent implements GameLifeCycle {
     private int level = 1;
     private int racerMovement = 0;
 
-
     private final String date;
     private Label text;
     private int score;
-    private int scoreNeeded = 38; //38
+    private int scoreNeeded = 38; // 38
 
     private StackPane hand;
     private final ImageView cage;
@@ -85,7 +84,6 @@ public class Race extends Parent implements GameLifeCycle {
     private final EventHandler<GazeEvent> handEventGaze;
     private Dimension2D dimension2D;
     private Target[] racers;
-
 
     // done
     public Race(GameContext gameContext, Stats stats, String type) {
@@ -249,13 +247,13 @@ public class Race extends Parent implements GameLifeCycle {
     public void updateScore(Label sc, Label tc) {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-            sc.setFont(Font.font(dimension2D.getHeight() / 20));
-            sc.setLayoutX(dimension2D.getWidth() *0.8);
-            sc.setLayoutY(dimension2D.getHeight() * 0.5);
+        sc.setFont(Font.font(dimension2D.getHeight() / 20));
+        sc.setLayoutX(dimension2D.getWidth() * 0.8);
+        sc.setLayoutY(dimension2D.getHeight() * 0.5);
 
-//            tc.setFont(Font.font(dimension2D.getHeight() / 20));
-            tc.setLayoutX(dimension2D.getWidth() * 0.8);
-            tc.setLayoutY(dimension2D.getHeight() *0.4);
+        // tc.setFont(Font.font(dimension2D.getHeight() / 20));
+        tc.setLayoutX(dimension2D.getWidth() * 0.8);
+        tc.setLayoutY(dimension2D.getHeight() * 0.4);
 
     }
 
@@ -289,13 +287,11 @@ public class Race extends Parent implements GameLifeCycle {
         iv.setLayoutY(0);
         iv.setLayoutX(3 * (dimension2D.getWidth() / 7));
 
-
         iv.setLayoutY(dimension2D.getHeight() / 2);
 
         this.getChildren().add(iv);
         hand = (StackPane) this.getChildren().get(this.getChildren().indexOf(iv));
         hand.toFront();
-
 
         tc.setFont(Font.font(dimension2D.getHeight() / 20));
         sc.setFont(Font.font(dimension2D.getHeight() / 20));
@@ -311,7 +307,6 @@ public class Race extends Parent implements GameLifeCycle {
 
         this.gameContext.resetBordersToFront();
         iv.setMouseTransparent(true);
-
 
         updateCage();
 
@@ -335,17 +330,16 @@ public class Race extends Parent implements GameLifeCycle {
         waitbeforestart.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                if(!raceIsFinished)
-                {
+                if (!raceIsFinished) {
                     for (int i = 0; i < bugsAmount; i++) {
                         newCircle();
                     }
                 }
 
                 makePlayer(0.6);
-                racers[0] =makeRacers(0.7);
-                racers[1] =makeRacers(0.8);
-                racers[2] =makeRacers(0.9);
+                racers[0] = makeRacers(0.7);
+                racers[1] = makeRacers(0.8);
+                racers[2] = makeRacers(0.9);
             }
 
         });
@@ -388,9 +382,9 @@ public class Race extends Parent implements GameLifeCycle {
         t.t.stop();
 
         String cst;
-//        if (gameType.equals("biboule")) {
-//            cst = date + "\n\t" + "Score:" + score;
-//        } else {// equals robot
+        // if (gameType.equals("biboule")) {
+        // cst = date + "\n\t" + "Score:" + score;
+        // } else {// equals robot
         cst = "" + ++score;
 
         text.setText(cst);
@@ -442,16 +436,15 @@ public class Race extends Parent implements GameLifeCycle {
                 int i = getChildren().indexOf(t);
                 if (i != -1)
                     getChildren().remove(i);
-                if(!raceIsFinished)
-                newCircle();
+                if (!raceIsFinished)
+                    newCircle();
             }
         });
-        if(score % movementPerBug == 0){
+        if (score % movementPerBug == 0) {
             racerMovement++;
-            movePlayer(playerRacer,racerMovement);
+            movePlayer(playerRacer, racerMovement);
         }
-        if(racerMovement == 18)
-        {
+        if (racerMovement == 18) {
             racerMovement = 0;
             raceIsFinished = true;
 
@@ -459,21 +452,20 @@ public class Race extends Parent implements GameLifeCycle {
                 @Override
                 public void handle(ActionEvent actionEvent) {
 
-                    movementPerBug ++;
+                    movementPerBug++;
                     raceFinished();
                     gameContext.endWinTransition();
                     raceIsFinished = false;
                     makePlayer(0.6);
-                    racers[0] =makeRacers(0.7);
-                    racers[1] =makeRacers(0.8);
-                    racers[2] =makeRacers(0.9);
+                    racers[0] = makeRacers(0.7);
+                    racers[1] = makeRacers(0.8);
+                    racers[2] = makeRacers(0.9);
                     for (int i = 0; i < bugsAmount; i++) {
                         newCircle();
                     }
                 }
             });
         }
-
 
     }
 
@@ -487,7 +479,7 @@ public class Race extends Parent implements GameLifeCycle {
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
 
-        double x = (Math.random() %100) * dimension2D.getWidth();
+        double x = (Math.random() % 100) * dimension2D.getWidth();
         sp.setLayoutX(x);
         double y = (cage.getBoundsInParent().getMinY() + cage.getBoundsInParent().getMaxY()) / 2;
         sp.setLayoutY(y);
@@ -497,27 +489,26 @@ public class Race extends Parent implements GameLifeCycle {
         moveCircle(sp);
     }
 
-
     private void makePlayer(double racerPosition) {
 
         playerRacer = buildRacer(100);
         playerRacer.toBack();
         this.getChildren().add(playerRacer);
-        double x =  0;
+        double x = 0;
         playerRacer.setLayoutX(x);
-        double y =  dimension2D.getHeight() * racerPosition;
+        double y = dimension2D.getHeight() * racerPosition;
         playerRacer.setLayoutY(y);
         playerRacer.centerX = x;
         playerRacer.centerY = y;
 
-
     }
-    private void movePlayer(Target frogRacer,int iteration){
+
+    private void movePlayer(Target frogRacer, int iteration) {
 
         double timelength = Configuration.getInstance().getSpeedEffects() * 1000;
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
-        double movementDistance =  iteration * 0.05;
-        tt1.setToX( dimension2D.getWidth() * movementDistance);
+        double movementDistance = iteration * 0.05;
+        tt1.setToX(dimension2D.getWidth() * movementDistance);
         ScaleTransition st = new ScaleTransition(new Duration(timelength), frogRacer);
         st.setByX(1);
         st.setByY(1);
@@ -528,11 +519,10 @@ public class Race extends Parent implements GameLifeCycle {
 
         pt.play();
     }
-    private void raceFinished()
-    {
-        for(int i =0; i<3 ; i++)
-        {
-                getChildren().remove(racers[i]);
+
+    private void raceFinished() {
+        for (int i = 0; i < 3; i++) {
+            getChildren().remove(racers[i]);
         }
         getChildren().remove(playerRacer);
         int index = (getChildren().indexOf(racers[0]));
@@ -548,16 +538,17 @@ public class Race extends Parent implements GameLifeCycle {
         this.getChildren().add(frogRacer);
         frogRacer.setLayoutX(0);
 
-        double y =  dimension2D.getHeight() * racerPosition;
+        double y = dimension2D.getHeight() * racerPosition;
         frogRacer.setLayoutY(y);
         frogRacer.centerX = 0;
         frogRacer.centerY = y;
 
-        double timebasic = ((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH) * 1000;
+        double timebasic = ((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH)
+                * 1000;
         double timelength = Configuration.getInstance().getSpeedEffects() * timebasic;
 
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
-        tt1.setToX( dimension2D.getWidth() - dimension2D.getWidth()*0.1);
+        tt1.setToX(dimension2D.getWidth() - dimension2D.getWidth() * 0.1);
         ScaleTransition st = new ScaleTransition(new Duration(timelength), frogRacer);
         st.setByX(1);
         st.setByY(1);
@@ -579,17 +570,17 @@ public class Race extends Parent implements GameLifeCycle {
         i.setFitHeight(d);
         i.setFitWidth(d * 5 / 4);
     }
+
     private void resizeRacer(ImageView i, double size) {
         i.setFitHeight(size);
         i.setFitWidth(size * 5 / 4);
     }
 
-
     private Target buildRacer(double racerSize) {
 
         Target sp = new Target();
         ImageView race = new ImageView(racer);
-        resizeRacer(race,racerSize);
+        resizeRacer(race, racerSize);
         sp.getChildren().addAll(race);
         return sp;
     }
@@ -605,8 +596,6 @@ public class Race extends Parent implements GameLifeCycle {
         ImageView f = new ImageView(flash);
         ImageView race = new ImageView(racer);
 
-
-
         resize(b1);
         resize(b2);
         resize(b3);
@@ -616,14 +605,13 @@ public class Race extends Parent implements GameLifeCycle {
 
         resize(f);
 
-        sp.getChildren().addAll(f, b1, b2, b3, b4, b5,race);
+        sp.getChildren().addAll(f, b1, b2, b3, b4, b5, race);
         sp.getChildren().get(0).setOpacity(0);
         sp.getChildren().get(5).setOpacity(0);
         sp.getChildren().get(2).setOpacity(0);
         sp.getChildren().get(3).setOpacity(0);
         sp.getChildren().get(4).setOpacity(0);
         sp.getChildren().get(6).setOpacity(0);
-
 
         return sp;
     }
@@ -638,7 +626,7 @@ public class Race extends Parent implements GameLifeCycle {
         double max = Math.floor(endPoints.length - 1);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
         Point randomPoint = endPoints[r];
-        tt1.setToY((-sp.centerY + randomPoint.y )/4);
+        tt1.setToY((-sp.centerY + randomPoint.y) / 4);
         tt1.setToX(-sp.centerX + randomPoint.x);
         sp.destination = randomPoint;
 
@@ -683,8 +671,8 @@ public class Race extends Parent implements GameLifeCycle {
                 int index = (getChildren().indexOf(sp));
                 if (index != -1) {
                     getChildren().remove(index);
-                    if(!raceIsFinished)
-                    newCircle();
+                    if (!raceIsFinished)
+                        newCircle();
                 }
             }
         });

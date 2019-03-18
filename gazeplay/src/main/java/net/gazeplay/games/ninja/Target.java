@@ -72,6 +72,7 @@ public class Target extends Portrait {
 
         stats.notifyNewRoundReady();
     }
+
     private List<Portrait> generateMiniBallsPortraits(RandomPositionGenerator randomPositionGenerator,
             ImageLibrary imageLibrary, int count) {
         List<Portrait> result = new ArrayList<>(count);

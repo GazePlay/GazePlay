@@ -420,11 +420,9 @@ public class GameContext extends GraphicalContext<Pane> {
         bravo.playWinTransition(root, delay, onFinishedEventHandler);
     }
 
-    public void endWinTransition()
-    {
+    public void endWinTransition() {
         getChildren().remove(bravo);
     }
-
 
     @Override
     public ObservableList<Node> getChildren() {

@@ -547,7 +547,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         i.setFitWidth(d * 5 / 4);
     }
 
-
     private Target buildCircle() {
 
         Target sp = new Target();
