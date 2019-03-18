@@ -102,7 +102,6 @@ public class Bravo extends Rectangle {
         delayedStart(initialDelay);
     }
 
-
     public void setConfetiOnStart(GameContext gc) {
         Dimension2D dim = gc.getGamePanelDimensionProvider().getDimension2D();
 
