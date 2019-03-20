@@ -240,7 +240,7 @@ public class GameMenuFactory {
                     Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), gameSpec, root);
 
                     String dialogTitle = gameName + " : "
-                            + multilinguism.getTrad("Choose Game Variante", config.getLanguage());
+                            + multilinguism.getTrad("Choose Game Variant", config.getLanguage());
                     dialog.setTitle(dialogTitle);
                     dialog.show();
 
@@ -332,7 +332,7 @@ public class GameMenuFactory {
         final Stats stats = gameLauncher.createNewStats(scene);
 
         if (config.isHeatMapDisabled()) {
-            log.info("HeatMap is disabled, skipping instanciation of the HeatMap Data model");
+            log.info("HeatMap is disabled, skipping instantiation of the HeatMap Data model");
         } else {
             // gameContext.getGazeDeviceManager().addGazeMotionListener(stats);
         }

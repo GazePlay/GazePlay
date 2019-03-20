@@ -8,6 +8,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -15,9 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -39,6 +38,7 @@ import net.gazeplay.commons.utils.multilinguism.Languages;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -54,6 +54,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static Translator translator;
 
+    private static Boolean ALIGN_LEFT = true;
+
+    private static String currentLanguage;
+
     public static ConfigurationContext newInstance(GazePlay gazePlay) {
         BorderPane root = new BorderPane();
 
@@ -65,16 +69,30 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         translator = gazePlay.getTranslator();
 
+        currentLanguage = translator.currentLanguage();
+
+        // Align right for Arabic Language
+        if (currentLanguage.equals("ara")) {
+            ALIGN_LEFT = false;
+        }
+
+        // Bottom Pane
         HomeButton homeButton = createHomeButtonInConfigurationManagementScreen(gazePlay);
 
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
         rightControlPane.setAlignment(Pos.CENTER_RIGHT);
-        rightControlPane.getChildren().add(homeButton);
+        if (ALIGN_LEFT) {
+            rightControlPane.getChildren().add(homeButton);
+        }
 
         HBox leftControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.setAlignment(Pos.CENTER_LEFT);
+        // HomeButton on the Left for Arabic Language
+        if (!ALIGN_LEFT) {
+            leftControlPane.getChildren().add(homeButton);
+        }
 
         BorderPane bottomControlPane = new BorderPane();
         bottomControlPane.setLeft(leftControlPane);
@@ -82,18 +100,43 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         root.setBottom(bottomControlPane);
 
+        // Top Pane
         I18NText configTitleText = new I18NText(translator, "ConfigTitle");
         // configTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20)); should be managed with css
         configTitleText.setId("title");
         configTitleText.setTextAlignment(TextAlignment.CENTER);
 
+        // Arabic title alignment
+        if (!ALIGN_LEFT) {
+            root.setAlignment(configTitleText, Pos.BOTTOM_RIGHT);
+        }
+
         root.setTop(configTitleText);
+
+        // Center Pane
 
         GridPane gridPane = buildConfigGridPane(this, gazePlay);
 
         ScrollPane settingsPanelScroller = new ScrollPane(gridPane);
 
-        root.setCenter(settingsPanelScroller);
+        settingsPanelScroller.setFitToWidth(true);
+        settingsPanelScroller.setFitToHeight(true);
+
+        gridPane.setAlignment(Pos.CENTER);
+        VBox centerCenterPane = new VBox();
+        centerCenterPane.setSpacing(40);
+        centerCenterPane.setAlignment(Pos.TOP_CENTER);
+        // Arabic title alignment
+        if (!ALIGN_LEFT) {
+            gridPane.setAlignment(Pos.TOP_RIGHT);
+        } else {
+            gridPane.setAlignment(Pos.TOP_LEFT);
+        }
+
+        gridPane.setPadding(new Insets(20));
+        centerCenterPane.getChildren().add(settingsPanelScroller);
+
+        root.setCenter(centerCenterPane);
 
         root.setStyle(
                 "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
@@ -159,6 +202,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        {
+            I18NText label = new I18NText(translator, "QuitKey", COLON);
+
+            ChoiceBox<String> input = buildQuitKeyChooser(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
         {
             I18NText label = new I18NText(translator, "FileDir", COLON);
 
@@ -258,19 +308,30 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
 
-        final int COLUMN_INDEX_LABEL = 0;
-        final int COLUMN_INDEX_INPUT = 1;
+        final int COLUMN_INDEX_LABEL_LEFT = 0;
+        final int COLUMN_INDEX_INPUT_LEFT = 1;
+        final int COLUMN_INDEX_LABEL_RIGHT = 1;
+        final int COLUMN_INDEX_INPUT_RIGHT = 0;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
         label.setId("item");
         // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
 
-        grid.add(label, COLUMN_INDEX_LABEL, currentRowIndex);
-        grid.add(input, COLUMN_INDEX_INPUT, currentRowIndex);
+        if (ALIGN_LEFT) {
+            grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
+            grid.add(input, COLUMN_INDEX_INPUT_LEFT, currentRowIndex);
 
-        GridPane.setHalignment(label, HPos.LEFT);
-        GridPane.setHalignment(input, HPos.LEFT);
+            GridPane.setHalignment(label, HPos.LEFT);
+            GridPane.setHalignment(input, HPos.LEFT);
+        } else {
+
+            grid.add(input, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex);
+            grid.add(label, COLUMN_INDEX_LABEL_RIGHT, currentRowIndex);
+
+            GridPane.setHalignment(label, HPos.RIGHT);
+            GridPane.setHalignment(input, HPos.RIGHT);
+        }
     }
 
     private static ChoiceBox<Double> buildFixLengthChooserMenu(Configuration configuration,
@@ -342,7 +403,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * Fonction to use to permit to user to select between several theme
+     * Function to use to permit to user to select between several theme
      */
     private static ChoiceBox<BuiltInUiTheme> buildStyleThemeChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
@@ -485,6 +546,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         final HBox pane = new HBox(5);
 
+        // Arabic Alignment
+        if (!ALIGN_LEFT) {
+            pane.setAlignment(Pos.BASELINE_RIGHT);
+        }
+
         final String whereIsItDir = configuration.getWhereIsItDir();
         Button buttonLoad = new Button(whereIsItDir);
         buttonLoad.textProperty().bind(configuration.getWhereIsItDirProperty());
@@ -575,6 +641,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Language information");
                         alert.setHeaderText("Translations have been provided by MK Prossopsis Ltd.");
+                        alert.show();
+                    } else if (!ALIGN_LEFT || (codeLanguage.equals("ara") && !currentLanguage.equals("ara"))) {
+
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Language information");
+                        alert.setHeaderText(
+                                "Alignment settings have just changed for your language, please restart the game for the new changes to take effect. \n\n If you believe there are problems with the translations in your language, please contact us to propose better ones (gazeplay.net) and they will be in the next version.");
                         alert.show();
                     } else if (!codeLanguage.equals("fra") && !codeLanguage.equals("eng")
                             && !codeLanguage.equals("deu")) {
@@ -738,6 +811,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         changeMusicFolder(config.getMusicFolder(), config);
 
         final HBox pane = new HBox(5);
+
+        // Arabic Alignment
+        if (!ALIGN_LEFT) {
+            pane.setAlignment(Pos.BASELINE_RIGHT);
+        }
+
         final String musicFolder = config.getMusicFolder();
         Button buttonLoad = new Button(musicFolder);
 
@@ -814,5 +893,30 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             log.warn("IllegalArgumentException : unsupported GameButtonOrientation value : {}", configValue, e);
             return null;
         }
+    }
+
+    private ChoiceBox<String> buildQuitKeyChooser(Configuration configuration,
+            ConfigurationContext configurationContext) {
+
+        ChoiceBox<String> KeyBox = new ChoiceBox<>();
+        KeyBox.getItems().addAll("Q", "W", "E", "R", "T", "Y");
+
+        // GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
+        KeyBox.getSelectionModel().select("Q");
+
+        KeyBox.setPrefWidth(PREF_WIDTH);
+        KeyBox.setPrefHeight(PREF_HEIGHT);
+
+        KeyBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                final String newPropertyValue = newValue;
+                configuration.getQuitKeyProperty().setValue(newPropertyValue);
+                configuration.saveConfigIgnoringExceptions();
+            }
+        });
+
+        return KeyBox;
+
     }
 }

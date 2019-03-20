@@ -10,4 +10,6 @@ target
 gazeplay/*.log.*
 cache
 gazeplay/nbactions.xml
-
+*.DS_Store
+gazeplay.log.*
+.DS_Store
