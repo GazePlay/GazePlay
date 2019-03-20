@@ -213,8 +213,6 @@ public class GameContext extends GraphicalContext<Pane> {
 
         button.setPrefHeight(buttonSize);
         button.setPrefWidth(buttonSize);
-
-        System.out.println("hello world");
     }
 
     private static void updateConfigPane(final Pane configPane) {
@@ -307,15 +305,29 @@ public class GameContext extends GraphicalContext<Pane> {
     }
 
     public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        EventHandler<Event> ShortcutEvent = (Event e) -> {
+        Configuration config = Configuration.getInstance();
+        final Scene scene = gazePlay.getPrimaryScene();
 
-            QuitKeyPressed(stats, gazePlay, currentGame);
+        // gamingRoot.getChildren().add(scene);
+        EventHandler buttonHandler = new EventHandler<javafx.scene.input.KeyEvent>() {
+
+            public void handle(javafx.scene.input.KeyEvent event) {
+
+                QuitKeyPressed(stats, gazePlay, currentGame);
+                scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
+
+            }
 
         };
-        final Scene scene = gazePlay.getPrimaryScene();
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, ShortcutEvent);
-        // gamingRoot.getChildren().add(scene);
 
+        // scene.addEventHandler(KeyEvent.KEY_PRESSED, buttonHandler);
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            if (key.getCode().toString() == config.getQuitKey()) {
+                log.info("Key Value : {} ; quitkey: {}", key.getCode().toString(), config.getQuitKey());
+                scene.addEventHandler(KeyEvent.KEY_RELEASED, buttonHandler);
+            }
+        });
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
@@ -369,6 +381,7 @@ public class GameContext extends GraphicalContext<Pane> {
         this.clear();
 
         gazePlay.onDisplayStats(statsContext);
+
     }
 
     private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay,
@@ -405,6 +418,10 @@ public class GameContext extends GraphicalContext<Pane> {
         bravo.toFront();
         bravo.setConfetiOnStart(this);
         bravo.playWinTransition(root, delay, onFinishedEventHandler);
+    }
+
+    public void endWinTransition() {
+        getChildren().remove(bravo);
     }
 
     @Override

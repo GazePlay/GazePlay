@@ -172,7 +172,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
             stats.incNbGoals();
             stats.notifyNewRoundReady();
             cheese.moveCheese();
-            System.out.println("bestScore : " + bestScore + "\nyour score : " + mouse.nbMove + "\n difference "
+            log.debug("bestScore : " + bestScore + "\nyour score : " + mouse.nbMove + "\n difference "
                     + (mouse.nbMove - bestScore));
             mouse.nbMove = 0;
         }

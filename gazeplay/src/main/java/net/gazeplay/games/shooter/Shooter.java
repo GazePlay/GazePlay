@@ -84,6 +84,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
+        System.out.println("The game is data/" + gameType + "/images/Background.jpg");
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
 
         int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
