@@ -23,6 +23,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.ProgressButton;
 import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         shade.setFill(new Color(0, 0, 0, 0.75));
 
         restartButton = new ProgressButton();
-        ImageView restartImage = new ImageView("data/biboulejump/menu/restart.png");
+        ImageView restartImage = new ImageView(DATA_PATH+"/menu/restart.png");
         restartImage.setFitHeight(dimensions.getHeight() / 6);
         restartImage.setFitWidth(dimensions.getHeight() / 6);
         restartButton.setImage(restartImage);
@@ -150,6 +151,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     private void bounce() {
         velocity = new Point2D(velocity.getX(), -terminalVelocity * 3);
+        Utils.playSound(DATA_PATH+"/sounds/bounce.wav");
     }
 
     @Override
@@ -171,7 +173,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         biboule = new Rectangle(dimensions.getWidth() / 2, dimensions.getHeight() / 2, dimensions.getHeight() / 8,
                 dimensions.getHeight() / 8);
         this.middleLayer.getChildren().add(biboule);
-        biboule.setFill(new ImagePattern(new Image("data/biboulejump/biboules/green.png")));
+        biboule.setFill(new ImagePattern(new Image(DATA_PATH+"/biboules/green.png")));
 
         velocity = Point2D.ZERO;
         score = 0;
