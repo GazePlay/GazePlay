@@ -45,7 +45,7 @@ public class Stats implements GazeMotionListener {
     private int nbUnCountedShots;
     private double[][] heatMap;
 
-    private FixationSequence[][] sequence;
+    //private FixationSequence[][] sequence;
     @Getter
     private SavedStatsInfo savedStatsInfo;
 
@@ -82,7 +82,7 @@ public class Stats implements GazeMotionListener {
                 log.info("HeatMap is disabled, skipping instanciation of the HeatMap Data model");
             } else {
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
-                sequence = new FixationSequence[heatMap.length][heatMap[0].length];
+                //sequence = new FixationSequence[heatMap.length][heatMap[0].length];
                 recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
                 recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
 
@@ -115,22 +115,22 @@ public class Stats implements GazeMotionListener {
 
         File todayDirectory = getGameStatsOfTheDayDirectory();
         final String heatmapFilePrefix = Utils.now() + "-heatmap";
-        final String fixationPointsPrefix = Utils.now() + "-fixation";
+        //final String fixationPointsPrefix = Utils.now() + "-fixation";
 
         File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
 
-        File fixationPointsCsvFile = new File(todayDirectory,fixationPointsPrefix + ".csv");
+        //File fixationPointsCsvFile = new File(todayDirectory,fixationPointsPrefix + ".csv");
 
-        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile,fixationPointsCsvFile);
+        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile);//,fixationPointsCsvFile);
 
         this.savedStatsInfo = savedStatsInfo;
 
         if (this.heatMap != null) {
             saveHeatMapAsPng(heatMapPngFile);
             saveHeatMapAsCsv(heatMapCsvFile);
-            saveFixationPointsAsCsv(fixationPointsCsvFile);
-            log.debug("Johanaaaaaa");
+            //saveFixationPointsAsCsv(fixationPointsCsvFile);
+            //log.debug("Johanaaaaaa");
 
         }
 
@@ -242,18 +242,18 @@ public class Stats implements GazeMotionListener {
             log.error("Exception", e);
         }
     }
-    private void saveFixationPointsAsCsv(File file) throws IOException {
-        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
-            for (int i = 0; i < sequence.length; i++) {
-                for (int j = 0; j < sequence[0].length - 1; j++) {
-                    out.print(sequence[i][j].getTotalTimeOfFixation());
-                    out.print(", ");
-                }
-                out.print( sequence[i][sequence[i].length - 1].getTotalTimeOfFixation());
-                out.println("");
-            }
-        }
-    }
+//    private void saveFixationPointsAsCsv(File file) throws IOException {
+//        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
+//            for (int i = 0; i < sequence.length; i++) {
+//                for (int j = 0; j < sequence[0].length - 1; j++) {
+//                    out.print(sequence[i][j].getTotalTimeOfFixation());
+//                    out.print(", ");
+//                }
+//                out.print( sequence[i][sequence[i].length - 1].getTotalTimeOfFixation());
+//                out.println("");
+//            }
+//        }
+//    }
 
 
     private void incHeatMap(int X, int Y) {
@@ -267,24 +267,24 @@ public class Stats implements GazeMotionListener {
             for (int j = -trail; j <= trail; j++) {
 
                 if (Math.sqrt(i * i + j * j) < trail){
-                    double initial = inc(x + i, y + j).getInitialFixation();
-                    sequence[x][y].setTotalTimeOfFixation(initial-System.currentTimeMillis());
+                    /*double initial = */inc(x + i, y + j);/*.getInitialFixation();*/
+                    //sequence[x][y].setTotalTimeOfFixation(initial-System.currentTimeMillis());
                 }
             }
     }
 
-    private FixationSequence inc(int x, int y) {
+    private void/*FixationSequence*/ inc(int x, int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             // heatMap[heatMap[0].length - y][heatMap.length - x]++;
-            double initFixation = System.currentTimeMillis();
+            //double initFixation = System.currentTimeMillis();
             heatMap[x][y]++;
             //update the FixationSequence Matrix here !
-            sequence[x][y] = new FixationSequence(initFixation,0); // retrieve time from system
+            //sequence[x][y] = new FixationSequence(initFixation,0); // retrieve time from system
 
             //sequence[x][y].setTotalTimeOfFixation(initFixation - System.currentTimeMillis());//store total time of fixation for that px
-            return sequence[x][y];
+            //return sequence[x][y];
         }
-        else return new FixationSequence(0,0);
+        //else return new FixationSequence(0,0);
     }
 
     /**
