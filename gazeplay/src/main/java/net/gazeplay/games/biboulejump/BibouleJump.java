@@ -203,9 +203,10 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         restartButton.active();
     }
 
-    private void createBouncepad(double platformX, double platformY){
-        Rectangle b = new Rectangle(platformX + randomGenerator.nextInt((int)(platformWidth*4/5)) - platformWidth/2, platformY - platformHeight/3, platformWidth/5,
-                platformHeight/3);
+    private void createBouncepad(double platformX, double platformY) {
+        Rectangle b = new Rectangle(
+                platformX + randomGenerator.nextInt((int) (platformWidth * 4 / 5)) - platformWidth / 2,
+                platformY - platformHeight / 3, platformWidth / 5, platformHeight / 3);
         b.setFill(new ImagePattern(new Image(DATA_PATH + "/bouncepad.png")));
         backgroundLayer.getChildren().add(b);
         bouncepads.add(b);
@@ -216,7 +217,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                 platformHeight);
         highestPlatform = r;
         platforms.add(r);
-        r.setFill(new ImagePattern(new Image("data/biboulejump/clouds/cloud.png")));
+        r.setFill(new ImagePattern(new Image(DATA_PATH + "/clouds/cloud.png")));
         backgroundLayer.getChildren().add(r);
     }
 
@@ -226,20 +227,21 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         while (bottom > top) {
             double newPlatX;
             double newPlatY;
-            do{
-                newPlatX = randomGenerator.nextInt((int) (dimensions.getWidth() - platformWidth/2)) + platformWidth/2;
-                newPlatY = bottom - randomGenerator.nextInt((int) (dimensions.getHeight()/4));
-            }while(Math.abs(newPlatX - highestPlatform.getX()) >= dimensions.getWidth()/3);
+            do {
+                newPlatX = randomGenerator.nextInt((int) (dimensions.getWidth() - platformWidth / 2))
+                        + platformWidth / 2;
+                newPlatY = bottom - randomGenerator.nextInt((int) (dimensions.getHeight() / 4));
+            } while (Math.abs(newPlatX - highestPlatform.getX()) >= dimensions.getWidth() / 3);
             createPlatform(newPlatX, newPlatY);
-            if(randomGenerator.nextInt(1) == 0){
+            if (randomGenerator.nextInt(1) == 0) {
                 createBouncepad(newPlatX, newPlatY);
             }
 
-            bottom = newPlatY - 2*platformHeight;
+            bottom = newPlatY - 2 * platformHeight;
         }
     }
 
-    private void scrollList(ArrayList<Rectangle> rects, double difference){
+    private void scrollList(ArrayList<Rectangle> rects, double difference) {
         Iterator<Rectangle> rectIter = rects.iterator();
         while (rectIter.hasNext()) {
             Rectangle rect = rectIter.next();
@@ -251,7 +253,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         }
     }
 
-    private void collisionList(ArrayList<Rectangle> rects, Rectangle bibouleCollider, double intensity){
+    private void collisionList(ArrayList<Rectangle> rects, Rectangle bibouleCollider, double intensity) {
         for (Rectangle platform : rects) {
             Rectangle platformCollider = new Rectangle(platform.getX(), platform.getY() + platform.getHeight() / 2,
                     platform.getWidth(), platform.getHeight() / 2);
@@ -310,7 +312,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
             scrollList(platforms, difference);
             scrollList(bouncepads, difference);
             biboule.setY(biboule.getY() + difference);
-            //highestPlatformY += difference;
+            // highestPlatformY += difference;
         }
 
         if (highestPlatform.getY() >= -dimensions.getHeight() / 2)
