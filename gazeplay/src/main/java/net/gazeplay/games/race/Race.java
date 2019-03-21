@@ -1,4 +1,4 @@
-package net.gazeplay.games.shooter;
+package net.gazeplay.games.race;
 
 import javafx.animation.*;
 import javafx.event.ActionEvent;
@@ -22,20 +22,26 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@SuppressWarnings("ALL")
 @Slf4j
-public class Shooter extends Parent implements GameLifeCycle {
+public class Race extends Parent implements GameLifeCycle {
 
     private static final int MAX_RADIUS = 70;
-    private static final int MIN_RADIUS = 30;
+    private static final int MIN_RADIUS = 40;
 
     private static final int MAX_TIME_LENGTH = 7;
     private static final int MIN_TIME_LENGTH = 4;
+
+    private static final int MAX_RACE_TIME_LENGTH = 30;
+    private static final int MIN_RACE_TIME_LENGTH = 15;
 
     private final double centerX;
     private final double centerY;
@@ -48,10 +54,20 @@ public class Shooter extends Parent implements GameLifeCycle {
     private final Image orange;
     private final Image red;
     private final Image flash;
+    private final Image racer;
+
+    private int bugsAmount = 14;
+    private int movementPerBug = 2;
+
+    private Target playerRacer;
+    private boolean raceIsFinished = false;
+    private int level = 1;
+    private int racerMovement = 0;
 
     private final String date;
     private Label text;
     private int score;
+    private int scoreNeeded = 38; // 38
 
     private StackPane hand;
     private final ImageView cage;
@@ -66,9 +82,11 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     private final EventHandler<Event> enterEvent;
     private final EventHandler<GazeEvent> handEventGaze;
+    private Dimension2D dimension2D;
+    private Target[] racers;
 
     // done
-    public Shooter(GameContext gameContext, Stats stats, String type) {
+    public Race(GameContext gameContext, Stats stats, String type) {
         this.gameContext = gameContext;
         this.stats = stats;
         LocalDate localDate = LocalDate.now();
@@ -84,7 +102,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        System.out.println("The game is data/" + gameType + "/images/Background.jpg");
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
 
         int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
@@ -104,6 +121,8 @@ public class Shooter extends Parent implements GameLifeCycle {
             }
         };
 
+        racers = new Target[3];
+
         handEventGaze = new EventHandler<GazeEvent>() {
             @Override
             public void handle(GazeEvent e) {
@@ -120,8 +139,8 @@ public class Shooter extends Parent implements GameLifeCycle {
         yellow = new Image("data/" + gameType + "/images/Yellow.png");
         orange = new Image("data/" + gameType + "/images/Orange.png");
         red = new Image("data/" + gameType + "/images/Red.png");
+        racer = new Image("data/" + gameType + "/images/frogJump.gif");
         flash = new Image("data/" + gameType + "/images/Flash.png");
-
         cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
 
         Point[] points = new Point[8];
@@ -146,7 +165,7 @@ public class Shooter extends Parent implements GameLifeCycle {
             public void handle(Event e) {
                 if (e.getTarget() instanceof Target) {
                     if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                        if (!((Target) e.getTarget()).done) {
+                        if (!((Target) e.getTarget()).done && !raceIsFinished) {
                             ((Target) e.getTarget()).done = true;
                             enter((Target) e.getTarget());
                             stats.incNbGoals();
@@ -191,85 +210,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         return angle;
     }
 
-    public void magicCage() {
-        Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(8000)));
-
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                if (moveCage(left)) {
-                    left = !left;
-                }
-                magicCage();
-            }
-        });
-        timeline.play();
-
-    }
-
-    public boolean moveCage(Boolean leftside) {
-
-        double min = Math.ceil(0);
-        double max = Math.floor(2);
-        int rd = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
-
-        boolean leftorright = false;
-
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        double x = cage.getBoundsInParent().getMinY();
-        double y = cage.getBoundsInParent().getMinX();
-
-        Timeline timeline = new Timeline();
-        Timeline timeline2 = new Timeline();
-        Timeline timeline3 = new Timeline();
-
-        if ((rd == 2) || (rd == 0)) {
-            // Move UP
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                    new KeyValue(cage.layoutYProperty(), x - (dimension2D.getHeight() / 5), Interpolator.EASE_OUT)));
-        }
-
-        if ((rd == 1) || (rd == 2)) {
-            // Move Left or Right
-            double val;
-
-            double cst;
-            if (gameType.equals("biboule")) {
-                cst = 2.5;
-            } else {// equals robot
-                cst = 3;
-            }
-
-            if (leftside) {
-                val = y + (dimension2D.getWidth() / cst);
-            } else {
-                val = y - (dimension2D.getWidth() / cst);
-            }
-
-            timeline3.getKeyFrames().add(
-                    new KeyFrame(new Duration(3000), new KeyValue(cage.layoutXProperty(), val, Interpolator.EASE_OUT)));
-            leftorright = true;
-        }
-
-        if ((rd == 2) || (rd == 0)) {
-            // Move DOWN
-            timeline2.getKeyFrames().add(
-                    new KeyFrame(new Duration(500), new KeyValue(cage.layoutYProperty(), x, Interpolator.EASE_OUT)));
-        }
-        SequentialTransition st = new SequentialTransition();
-        st.getChildren().addAll(timeline, timeline3, timeline2);
-        st.play();
-
-        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
-            st.stop();
-            updateCage();
-            left = true;
-        });
-
-        return leftorright;
-    }
-
     public void updateHand() {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double x = dimension2D.getHeight();
@@ -306,19 +246,15 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     public void updateScore(Label sc, Label tc) {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        if (gameType.equals("biboule")) {
-            sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight() / 18));
-            sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
-            sc.setLayoutY(1.8 * dimension2D.getHeight() / 21);
-        } else {
-            sc.setFont(Font.font(dimension2D.getHeight() / 20));
-            sc.setLayoutX(16 * dimension2D.getWidth() / 29.7);
-            sc.setLayoutY(15.2 * dimension2D.getHeight() / 21);
 
-            tc.setFont(Font.font(dimension2D.getHeight() / 20));
-            tc.setLayoutX(15 * dimension2D.getWidth() / 29.7);
-            tc.setLayoutY(14 * dimension2D.getHeight() / 21);
-        }
+        sc.setFont(Font.font(dimension2D.getHeight() / 20));
+        sc.setLayoutX(dimension2D.getWidth() * 0.8);
+        sc.setLayoutY(dimension2D.getHeight() * 0.5);
+
+        // tc.setFont(Font.font(dimension2D.getHeight() / 20));
+        tc.setLayoutX(dimension2D.getWidth() * 0.8);
+        tc.setLayoutY(dimension2D.getHeight() * 0.4);
+
     }
 
     @Override
@@ -328,17 +264,14 @@ public class Shooter extends Parent implements GameLifeCycle {
         Label tc = new Label();
 
         String cst;
-        if (gameType.equals("biboule")) {
-            cst = date + "\n\t" + "Score:" + score;
-        } else {// equals robot
-            tc.setText("Score:");
-            tc.setTextFill(Color.WHITE);
-            cst = "" + score;
 
-        }
+        tc.setText("Score:");
+        tc.setTextFill(Color.WHITE);
+        cst = "" + score;
+
         sc.setText(cst);
         sc.setTextFill(Color.WHITE);
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         ImageView iv1 = new ImageView(new Image("data/" + gameType + "/images/hand.png"));
         ImageView iv2 = new ImageView(new Image("data/" + gameType + "/images/handShot.png"));
 
@@ -354,35 +287,20 @@ public class Shooter extends Parent implements GameLifeCycle {
         iv.setLayoutY(0);
         iv.setLayoutX(3 * (dimension2D.getWidth() / 7));
 
-        double cst2;
-        if (gameType.equals("biboule")) {
-            cst2 = 2;
-        } else {// equals robot
-            cst2 = 1.7;
-        }
-        iv.setLayoutY(dimension2D.getHeight() / cst2);
+        iv.setLayoutY(dimension2D.getHeight() / 2);
 
         this.getChildren().add(iv);
         hand = (StackPane) this.getChildren().get(this.getChildren().indexOf(iv));
         hand.toFront();
 
-        if (gameType.equals("biboule")) {
-            sc.setFont(Font.font("AR BLANCA", dimension2D.getHeight() / 18));
-            sc.setLayoutX(8.9 * dimension2D.getWidth() / 29.7);
-            sc.setLayoutY(1.8 * dimension2D.getHeight() / 21);
-        } else {
-            sc.setFont(Font.font(dimension2D.getHeight() / 20));
-            sc.setLineSpacing(10);
-            sc.setLayoutX(16 * dimension2D.getWidth() / 29.7);
-            sc.setLayoutY(15.2 * dimension2D.getHeight() / 21);
+        tc.setFont(Font.font(dimension2D.getHeight() / 20));
+        sc.setFont(Font.font(dimension2D.getHeight() / 20));
+        tc.setLineSpacing(10);
+        tc.setLayoutX(15 * dimension2D.getWidth() / 29.7);
+        tc.setLayoutY(14 * dimension2D.getHeight() / 21);
 
-            tc.setFont(Font.font(dimension2D.getHeight() / 20));
-            tc.setLineSpacing(10);
-            tc.setLayoutX(15 * dimension2D.getWidth() / 29.7);
-            tc.setLayoutY(14 * dimension2D.getHeight() / 21);
+        this.getChildren().add(tc);
 
-            this.getChildren().add(tc);
-        }
         text = sc;
 
         this.getChildren().add(sc);
@@ -412,12 +330,16 @@ public class Shooter extends Parent implements GameLifeCycle {
         waitbeforestart.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-
-                for (int i = 0; i < 5; i++) {
-                    newCircle();
+                if (!raceIsFinished) {
+                    for (int i = 0; i < bugsAmount; i++) {
+                        newCircle();
+                    }
                 }
 
-                magicCage();
+                makePlayer(0.6);
+                racers[0] = makeRacers(0.7);
+                racers[1] = makeRacers(0.8);
+                racers[2] = makeRacers(0.9);
             }
 
         });
@@ -460,18 +382,17 @@ public class Shooter extends Parent implements GameLifeCycle {
         t.t.stop();
 
         String cst;
-        if (gameType.equals("biboule")) {
-            cst = date + "\n\t" + "Score:" + score++;
-        } else {// equals robot
-            cst = "" + score++;
-        }
+        // if (gameType.equals("biboule")) {
+        // cst = date + "\n\t" + "Score:" + score;
+        // } else {// equals robot
+        cst = "" + ++score;
 
         text.setText(cst);
 
         double min = Math.ceil(1);
         double max = Math.floor(3);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
-        Utils.playSound("data/" + gameType + "/sounds/hand_sound" + r + ".mp3");
+        Utils.playSound("data/race/sounds/frog.WAV");
         t.getChildren().get(0).setOpacity(1);
 
         hand.getChildren().get(1).setOpacity(1);
@@ -515,9 +436,36 @@ public class Shooter extends Parent implements GameLifeCycle {
                 int i = getChildren().indexOf(t);
                 if (i != -1)
                     getChildren().remove(i);
-                newCircle();
+                if (!raceIsFinished)
+                    newCircle();
             }
         });
+        if (score % movementPerBug == 0) {
+            racerMovement++;
+            movePlayer(playerRacer, racerMovement);
+        }
+        if (racerMovement == 18) {
+            racerMovement = 0;
+            raceIsFinished = true;
+
+            gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+
+                    movementPerBug++;
+                    raceFinished();
+                    gameContext.endWinTransition();
+                    raceIsFinished = false;
+                    makePlayer(0.6);
+                    racers[0] = makeRacers(0.7);
+                    racers[1] = makeRacers(0.8);
+                    racers[2] = makeRacers(0.9);
+                    for (int i = 0; i < bugsAmount; i++) {
+                        newCircle();
+                    }
+                }
+            });
+        }
 
     }
 
@@ -531,7 +479,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
 
-        double x = (cage.getBoundsInParent().getMinX());
+        double x = (Math.random() % 100) * dimension2D.getWidth();
         sp.setLayoutX(x);
         double y = (cage.getBoundsInParent().getMinY() + cage.getBoundsInParent().getMaxY()) / 2;
         sp.setLayoutY(y);
@@ -541,37 +489,129 @@ public class Shooter extends Parent implements GameLifeCycle {
         moveCircle(sp);
     }
 
+    private void makePlayer(double racerPosition) {
+
+        playerRacer = buildRacer(100);
+        playerRacer.toBack();
+        this.getChildren().add(playerRacer);
+        double x = 0;
+        playerRacer.setLayoutX(x);
+        double y = dimension2D.getHeight() * racerPosition;
+        playerRacer.setLayoutY(y);
+        playerRacer.centerX = x;
+        playerRacer.centerY = y;
+
+    }
+
+    private void movePlayer(Target frogRacer, int iteration) {
+
+        double timelength = Configuration.getInstance().getSpeedEffects() * 1000;
+        TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
+        double movementDistance = iteration * 0.05;
+        tt1.setToX(dimension2D.getWidth() * movementDistance);
+        ScaleTransition st = new ScaleTransition(new Duration(timelength), frogRacer);
+        st.setByX(1);
+        st.setByY(1);
+        ParallelTransition pt = new ParallelTransition();
+
+        pt.getChildren().addAll(tt1);
+        frogRacer.t = pt;
+
+        pt.play();
+    }
+
+    private void raceFinished() {
+        for (int i = 0; i < 3; i++) {
+            getChildren().remove(racers[i]);
+        }
+        getChildren().remove(playerRacer);
+        int index = (getChildren().indexOf(racers[0]));
+        if (index != -1) {
+            getChildren().remove(index);
+        }
+    }
+
+    private Target makeRacers(double racerPosition) {
+
+        Target frogRacer = buildRacer(70);
+        frogRacer.toBack();
+        this.getChildren().add(frogRacer);
+        frogRacer.setLayoutX(0);
+
+        double y = dimension2D.getHeight() * racerPosition;
+        frogRacer.setLayoutY(y);
+        frogRacer.centerX = 0;
+        frogRacer.centerY = y;
+
+        double timebasic = ((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH)
+                * 1000;
+        double timelength = Configuration.getInstance().getSpeedEffects() * timebasic;
+
+        TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
+        tt1.setToX(dimension2D.getWidth() - dimension2D.getWidth() * 0.1);
+        ScaleTransition st = new ScaleTransition(new Duration(timelength), frogRacer);
+        st.setByX(1);
+        st.setByY(1);
+        ParallelTransition pt = new ParallelTransition();
+
+        pt.getChildren().addAll(tt1);
+        frogRacer.t = pt;
+        pt.setOnFinished(event -> {
+
+        });
+
+        pt.play();
+
+        return frogRacer;
+    }
+
     private void resize(ImageView i) {
         double d = MIN_RADIUS;
         i.setFitHeight(d);
         i.setFitWidth(d * 5 / 4);
     }
 
+    private void resizeRacer(ImageView i, double size) {
+        i.setFitHeight(size);
+        i.setFitWidth(size * 5 / 4);
+    }
+
+    private Target buildRacer(double racerSize) {
+
+        Target sp = new Target();
+        ImageView race = new ImageView(racer);
+        resizeRacer(race, racerSize);
+        sp.getChildren().addAll(race);
+        return sp;
+    }
+
     private Target buildCircle() {
 
         Target sp = new Target();
-
         ImageView b1 = new ImageView(blue);
         ImageView b2 = new ImageView(green);
         ImageView b3 = new ImageView(yellow);
         ImageView b4 = new ImageView(orange);
         ImageView b5 = new ImageView(red);
         ImageView f = new ImageView(flash);
+        ImageView race = new ImageView(racer);
 
         resize(b1);
         resize(b2);
         resize(b3);
         resize(b4);
         resize(b5);
+        resize(race);
 
         resize(f);
 
-        sp.getChildren().addAll(f, b1, b2, b3, b4, b5);
+        sp.getChildren().addAll(f, b1, b2, b3, b4, b5, race);
         sp.getChildren().get(0).setOpacity(0);
         sp.getChildren().get(5).setOpacity(0);
         sp.getChildren().get(2).setOpacity(0);
         sp.getChildren().get(3).setOpacity(0);
         sp.getChildren().get(4).setOpacity(0);
+        sp.getChildren().get(6).setOpacity(0);
 
         return sp;
     }
@@ -586,7 +626,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         double max = Math.floor(endPoints.length - 1);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
         Point randomPoint = endPoints[r];
-        tt1.setToY(-sp.centerY + randomPoint.y);
+        tt1.setToY((-sp.centerY + randomPoint.y) / 4);
         tt1.setToX(-sp.centerX + randomPoint.x);
         sp.destination = randomPoint;
 
@@ -599,8 +639,8 @@ public class Shooter extends Parent implements GameLifeCycle {
         }
 
         ScaleTransition st = new ScaleTransition(new Duration(timelength), sp);
-        st.setByX(10);
-        st.setByY(10);
+        st.setByX(1);
+        st.setByY(1);
         ParallelTransition pt = new ParallelTransition();
 
         FadeTransition btog = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(2));
@@ -618,10 +658,9 @@ public class Shooter extends Parent implements GameLifeCycle {
         ytoo.setToValue(1);
         otor.setToValue(1);
 
-        SequentialTransition seqt = new SequentialTransition(btog, gtoy, ytoo, otor);
+        SequentialTransition seqt = new SequentialTransition(btog);
 
         pt.getChildren().addAll(seqt, tt1, st);
-
         sp.t = pt;
 
         pt.play();
@@ -632,30 +671,12 @@ public class Shooter extends Parent implements GameLifeCycle {
                 int index = (getChildren().indexOf(sp));
                 if (index != -1) {
                     getChildren().remove(index);
-                    newCircle();
+                    if (!raceIsFinished)
+                        newCircle();
                 }
             }
         });
 
     }
 
-    public void restart(Target sp) {
-        Transition pt = restartTransition(sp);
-        sp.addEventFilter(MouseEvent.ANY, enterEvent);
-        sp.addEventHandler(GazeEvent.ANY, enterEvent);
-        pt.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                sp.getChildren().get(2).setOpacity(0);
-                sp.getChildren().get(3).setOpacity(0);
-                sp.getChildren().get(4).setOpacity(0);
-                sp.getChildren().get(5).setOpacity(0);
-
-                sp.getChildren().get(0).setOpacity(0);
-                moveCircle(sp);
-            }
-        });
-        pt.play();
-
-    }
 }
