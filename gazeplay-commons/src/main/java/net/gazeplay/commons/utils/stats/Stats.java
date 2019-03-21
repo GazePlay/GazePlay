@@ -65,7 +65,6 @@ public class Stats implements GazeMotionListener {
         return new double[heatMapWidth][heatMapHeight];
     }
 
-
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
     }
@@ -240,16 +239,16 @@ public class Stats implements GazeMotionListener {
         int x = (int) (Y / heatMapPixelSize);
         int y = (int) (X / heatMapPixelSize);
 
-
         for (int i = -trail; i <= trail; i++)
             for (int j = -trail; j <= trail; j++) {
 
-                if (Math.sqrt(i * i + j * j) < trail){
+                if (Math.sqrt(i * i + j * j) < trail) {
                     inc(x + i, y + j);
 
                 }
             }
     }
+
     private void inc(int x, int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             // heatMap[heatMap[0].length - y][heatMap.length - x]++;
