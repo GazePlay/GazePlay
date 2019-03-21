@@ -25,6 +25,7 @@ import net.gazeplay.commons.utils.ProgressButton;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
+import org.w3c.dom.css.Rect;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,7 +57,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     private final double platformWidth;
     private final double platformHeight;
-    private double highestPlatformY;
+    private Rectangle highestPlatform;
 
     private long lastTickTime = 0;
     private long minFPS = 1000;
@@ -65,6 +66,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private Label onScreenText;
     private Text scoreText;
     private ArrayList<Rectangle> platforms;
+    private ArrayList<Rectangle> bouncepads;
 
     private long score;
 
@@ -88,8 +90,10 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         // this.bibouleImages = ImageUtils.createImageLibrary(new File("data/biboulejump/biboules"));
 
         this.platforms = new ArrayList();
-        this.platformHeight = dimensions.getHeight() / 15;
-        this.platformWidth = dimensions.getWidth() / 10;
+        this.platformHeight = dimensions.getHeight() / 10;
+        this.platformWidth = dimensions.getWidth() / 7;
+
+        this.bouncepads = new ArrayList();
 
         Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         backgroundImage.setFill(Color.SKYBLUE);
@@ -111,7 +115,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         shade.setFill(new Color(0, 0, 0, 0.75));
 
         restartButton = new ProgressButton();
-        ImageView restartImage = new ImageView(DATA_PATH+"/menu/restart.png");
+        ImageView restartImage = new ImageView(DATA_PATH + "/menu/restart.png");
         restartImage.setFitHeight(dimensions.getHeight() / 6);
         restartImage.setFitWidth(dimensions.getHeight() / 6);
         restartButton.setImage(restartImage);
@@ -149,9 +153,9 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         foregroundLayer.getChildren().add(interactionOverlay);
     }
 
-    private void bounce() {
-        velocity = new Point2D(velocity.getX(), -terminalVelocity * 3);
-        Utils.playSound(DATA_PATH+"/sounds/bounce.wav");
+    private void bounce(double intensity) {
+        velocity = new Point2D(velocity.getX(), -terminalVelocity * intensity);
+        Utils.playSound(DATA_PATH + "/sounds/bounce.wav");
     }
 
     @Override
@@ -164,16 +168,14 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
         interactionOverlay.setDisable(false);
 
-        highestPlatformY = Double.POSITIVE_INFINITY;
         backgroundLayer.getChildren().removeAll(platforms);
         platforms.clear();
-        generatePlatforms(dimensions.getHeight());
 
         this.middleLayer.getChildren().clear();
-        biboule = new Rectangle(dimensions.getWidth() / 2, dimensions.getHeight() / 2, dimensions.getHeight() / 8,
-                dimensions.getHeight() / 8);
+        biboule = new Rectangle(dimensions.getWidth() / 2, dimensions.getHeight() / 2, dimensions.getHeight() / 6,
+                dimensions.getHeight() / 6);
         this.middleLayer.getChildren().add(biboule);
-        biboule.setFill(new ImagePattern(new Image(DATA_PATH+"/biboules/green.png")));
+        biboule.setFill(new ImagePattern(new Image(DATA_PATH + "/biboules/green.png")));
 
         velocity = Point2D.ZERO;
         score = 0;
@@ -181,8 +183,9 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         gazeTarget = new Point2D(dimensions.getWidth() / 2, 0);
         createPlatform(biboule.getX() + biboule.getWidth() / 2, biboule.getY() + biboule.getHeight() + platformHeight);
 
+        generatePlatforms(dimensions.getHeight());
+
         this.start();
-        bounce();
     }
 
     @Override
@@ -200,23 +203,62 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         restartButton.active();
     }
 
+    private void createBouncepad(double platformX, double platformY){
+        Rectangle b = new Rectangle(platformX + randomGenerator.nextInt((int)(platformWidth*4/5)) - platformWidth/2, platformY - platformHeight/3, platformWidth/5,
+                platformHeight/3);
+        b.setFill(new ImagePattern(new Image(DATA_PATH + "/bouncepad.png")));
+        backgroundLayer.getChildren().add(b);
+        bouncepads.add(b);
+    }
+
     private void createPlatform(double centerX, double centerY) {
         Rectangle r = new Rectangle(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth,
                 platformHeight);
-        if (r.getY() < highestPlatformY)
-            highestPlatformY = r.getY();
+        highestPlatform = r;
         platforms.add(r);
         r.setFill(new ImagePattern(new Image("data/biboulejump/clouds/cloud.png")));
         backgroundLayer.getChildren().add(r);
     }
 
     private void generatePlatforms(double bottomLimit) {
-        double topLimit = -dimensions.getHeight();
-        int nbPlatforms = (int) (bottomLimit - topLimit) / 100;
-        log.info("Generating " + nbPlatforms + " platforms");
-        for (int i = 0; i < nbPlatforms; i++) {
-            createPlatform(randomGenerator.nextInt((int) (dimensions.getWidth() - platformWidth)),
-                    randomGenerator.nextInt((int) (bottomLimit - topLimit)) + topLimit);
+        double top = -dimensions.getHeight();
+        double bottom = bottomLimit;
+        while (bottom > top) {
+            double newPlatX;
+            double newPlatY;
+            do{
+                newPlatX = randomGenerator.nextInt((int) (dimensions.getWidth() - platformWidth/2)) + platformWidth/2;
+                newPlatY = bottom - randomGenerator.nextInt((int) (dimensions.getHeight()/4));
+            }while(Math.abs(newPlatX - highestPlatform.getX()) >= dimensions.getWidth()/3);
+            createPlatform(newPlatX, newPlatY);
+            if(randomGenerator.nextInt(1) == 0){
+                createBouncepad(newPlatX, newPlatY);
+            }
+
+            bottom = newPlatY - 2*platformHeight;
+        }
+    }
+
+    private void scrollList(ArrayList<Rectangle> rects, double difference){
+        Iterator<Rectangle> rectIter = rects.iterator();
+        while (rectIter.hasNext()) {
+            Rectangle rect = rectIter.next();
+            rect.setY(rect.getY() + difference);
+            if (rect.getY() >= dimensions.getHeight()) {
+                backgroundLayer.getChildren().remove(rect);
+                rectIter.remove();
+            }
+        }
+    }
+
+    private void collisionList(ArrayList<Rectangle> rects, Rectangle bibouleCollider, double intensity){
+        for (Rectangle platform : rects) {
+            Rectangle platformCollider = new Rectangle(platform.getX(), platform.getY() + platform.getHeight() / 2,
+                    platform.getWidth(), platform.getHeight() / 2);
+            if (rectangleAndRectangleCollision(bibouleCollider, platformCollider)) {
+                bounce(intensity);
+                break;
+            }
         }
     }
 
@@ -257,35 +299,22 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         if (velocity.getY() > 0) { // The biboule is falling
             Rectangle bibouleCollider = new Rectangle(biboule.getX() + biboule.getWidth() / 4,
                     biboule.getY() + biboule.getHeight() * 2 / 3, biboule.getWidth() / 2, biboule.getHeight() / 3);
-            for (Rectangle platform : platforms) {
-                Rectangle platformCollider = new Rectangle(platform.getX(), platform.getY() + platformHeight / 2,
-                        platformWidth, platformHeight / 2);
-                if (rectangleAndRectangleCollision(bibouleCollider, platformCollider)) {
-                    bounce();
-                    break;
-                }
-            }
+            collisionList(platforms, bibouleCollider, 3);
+            collisionList(bouncepads, bibouleCollider, 6);
         }
 
         // Scrolling
         if (biboule.getY() <= dimensions.getHeight() / 3) {
             double difference = dimensions.getHeight() / 3 - biboule.getY();
             updateScore(difference);
-            Iterator<Rectangle> platformIter = platforms.iterator();
-            while (platformIter.hasNext()) {
-                Rectangle platform = platformIter.next();
-                platform.setY(platform.getY() + difference);
-                if (platform.getY() >= dimensions.getHeight()) {
-                    backgroundLayer.getChildren().remove(platform);
-                    platformIter.remove();
-                }
-            }
+            scrollList(platforms, difference);
+            scrollList(bouncepads, difference);
             biboule.setY(biboule.getY() + difference);
-            highestPlatformY += difference;
+            //highestPlatformY += difference;
         }
 
-        if (highestPlatformY >= -dimensions.getHeight() / 2)
-            generatePlatforms(highestPlatformY);
+        if (highestPlatform.getY() >= -dimensions.getHeight() / 2)
+            generatePlatforms(highestPlatform.getY());
 
         // Fall out of screen
         if (biboule.getY() >= dimensions.getHeight()) {
@@ -294,7 +323,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
         logs += "Score: " + score + "\n";
         logs += "nb platforms: " + platforms.size() + "\n";
-        logs += "nbhighlatforms: " + highestPlatformY + "\n";
         onScreenText.setText(logs);
     }
 
