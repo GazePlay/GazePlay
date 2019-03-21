@@ -130,6 +130,8 @@ public class Stats implements GazeMotionListener {
             saveHeatMapAsPng(heatMapPngFile);
             saveHeatMapAsCsv(heatMapCsvFile);
             saveFixationPointsAsCsv(fixationPointsCsvFile);
+            log.debug("Johanaaaaaa");
+
         }
 
         savedStatsInfo.notifyFilesReady();
@@ -227,18 +229,6 @@ public class Stats implements GazeMotionListener {
             }
         }
     }
-    private void saveFixationPointsAsCsv(File file) throws IOException {
-        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
-            for (int i = 0; i < heatMap.length; i++) {
-                for (int j = 0; j < heatMap[0].length - 1; j++) {
-                    out.print((int) sequence[i][j].getTotalTimeOfFixation());
-                    out.print(", ");
-                }
-                out.print((int) sequence[i][sequence[i].length - 1].getTotalTimeOfFixation());
-                out.println("");
-            }
-        }
-    }
 
     private void saveHeatMapAsPng(File outputPngFile) {
 
@@ -252,6 +242,19 @@ public class Stats implements GazeMotionListener {
             log.error("Exception", e);
         }
     }
+    private void saveFixationPointsAsCsv(File file) throws IOException {
+        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
+            for (int i = 0; i < sequence.length; i++) {
+                for (int j = 0; j < sequence[0].length - 1; j++) {
+                    out.print(sequence[i][j].getTotalTimeOfFixation());
+                    out.print(", ");
+                }
+                out.print( sequence[i][sequence[i].length - 1].getTotalTimeOfFixation());
+                out.println("");
+            }
+        }
+    }
+
 
     private void incHeatMap(int X, int Y) {
 
