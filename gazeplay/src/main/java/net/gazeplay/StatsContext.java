@@ -164,20 +164,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGrid(grid, currentFormRow, label, value);
             }
         }
-        {
-            final I18NText label;
-
-            if (stats instanceof RaceGamesStats) {
-                label = new I18NText(translator, "ShotmedianLength", COLON);
-            } else {
-                label = new I18NText(translator, "MedianLength", COLON);
-            }
-
-            Text value = new Text(StatsDisplay.convert(stats.computeRoundsDurationMedianDuration()));
-            if (!(stats instanceof ExplorationGamesStats)) {
-                addToGrid(grid, currentFormRow, label, value);
-            }
-        }
 
         {
             final I18NText label;
