@@ -75,6 +75,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     public Stats createNewStats(Scene scene) {
                         return new RaceGamesStats(scene, "race");
                     }
+
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
                             Stats stats) {

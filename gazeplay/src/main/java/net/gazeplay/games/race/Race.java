@@ -478,8 +478,8 @@ public class Race extends Parent implements GameLifeCycle {
 
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
-        double yMinRange  = dimension2D.getHeight() * 0.1;
-        double yMaxRange  = dimension2D.getHeight() * 0.25;
+        double yMinRange = dimension2D.getHeight() * 0.1;
+        double yMaxRange = dimension2D.getHeight() * 0.25;
 
         double x = (Math.random() % 100) * dimension2D.getWidth();
         sp.setLayoutX(x);
