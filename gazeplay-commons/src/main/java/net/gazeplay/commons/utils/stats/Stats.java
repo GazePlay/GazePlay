@@ -192,7 +192,6 @@ public class Stats implements GazeMotionListener {
         File statsDirectory = new File(Utils.getUserStatsFolder(Configuration.getInstance().getUserName()));
         File gameDirectory = new File(statsDirectory, gameName);
         File todayDirectory = new File(gameDirectory, Utils.today());
-        System.out.println("Hello nara "+gameName);
         boolean outputDirectoryCreated = todayDirectory.mkdirs();
         log.info("outputDirectoryCreated = {}", outputDirectoryCreated);
 
