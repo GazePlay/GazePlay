@@ -10,6 +10,8 @@ public class SavedStatsInfo extends Observable {
     private final File heatMapPngFile;
     private final File heatMapCsvFile;
 
+    private final File fixationPointsCsvFile;
+
     public void notifyFilesReady() {
         this.notifyObservers();
     }

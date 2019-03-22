@@ -210,7 +210,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            // what i added ...
             // StackPane stackPane = new StackPane();
             // centerPane.getChildren().add(stackPane); // I'll add the ImageView for the heatmap and the grid on top of
             // it.

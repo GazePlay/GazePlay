@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import net.gazeplay.commons.utils.FixationPoint;
 
 /**
  * Created by schwab on 16/08/2017.
@@ -43,6 +44,7 @@ public class Stats implements GazeMotionListener {
     private int nbUnCountedShots;
     private double[][] heatMap;
 
+    private FixationPoint fixationSequence[][]; // store the time a user gazed on a px
     @Getter
     private SavedStatsInfo savedStatsInfo;
 
@@ -64,7 +66,14 @@ public class Stats implements GazeMotionListener {
         log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
         return new double[heatMapWidth][heatMapHeight];
     }
-
+    private void instantiateFixationSequence(int rows, int columns){
+        fixationSequence = new FixationPoint[rows][columns];
+        for(int i = 0 ; i < fixationSequence.length; i ++){
+            for(int j = 0 ; j < fixationSequence[0].length; j ++){
+                fixationSequence[i][j]= new FixationPoint();
+            }
+        }
+    }
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
     }
@@ -75,9 +84,10 @@ public class Stats implements GazeMotionListener {
 
         lifeCycle.start(() -> {
             if (config.isHeatMapDisabled()) {
-                log.info("HeatMap is disabled, skipping instanciation of the HeatMap Data model");
+                log.info("HeatMap is disabled, skipping instantiation of the HeatMap Data model");
             } else {
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
+                instantiateFixationSequence(heatMap.length, heatMap[0].length);
 
                 recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
                 recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
@@ -111,17 +121,21 @@ public class Stats implements GazeMotionListener {
 
         File todayDirectory = getGameStatsOfTheDayDirectory();
         final String heatmapFilePrefix = Utils.now() + "-heatmap";
+        final String fixationPointsFilePrefix = Utils.now() + "-fixationPoints";
 
         File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
 
-        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile);
+        File fixationPointsCsvFile = new File(todayDirectory, fixationPointsFilePrefix + ".csv");
+
+        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile, fixationPointsCsvFile);
 
         this.savedStatsInfo = savedStatsInfo;
 
         if (this.heatMap != null) {
             saveHeatMapAsPng(heatMapPngFile);
             saveHeatMapAsCsv(heatMapCsvFile);
+            saveFixationPointsAsCsv(fixationPointsCsvFile);
         }
 
         savedStatsInfo.notifyFilesReady();
@@ -215,6 +229,19 @@ public class Stats implements GazeMotionListener {
                     out.print(", ");
                 }
                 out.print((int) heatMap[i][heatMap[i].length - 1]);
+                out.println("");
+            }
+        }
+    }
+    // save the time the gaze first went !
+    private void saveFixationPointsAsCsv(File file) throws IOException {
+        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
+            for (int i = 0; i < fixationSequence.length; i++) {
+                for (int j = 0; j < fixationSequence[0].length - 1; j++) {
+                    out.print(fixationSequence[i][j].getFirstGaze());
+                    out.print(", ");
+                }
+                out.print(fixationSequence[i][fixationSequence[i].length - 1].getFirstGaze());
                 out.println("");
             }
         }
