@@ -51,7 +51,6 @@ public class HeatMap {
     public HeatMap(double[][] data) {
         this(data, defaultColors);
 
-        // FixationSequence sequence[][] = new FixationSequence[data.length][data[0].length];
     }
 
     /**
@@ -65,7 +64,6 @@ public class HeatMap {
      */
     public HeatMap(double[][] data, Color[] colors) {
 
-        // FixationSequence sequence[][] = new FixationSequence[data.length][data[0].length];
 
         this.image = new WritableImage(data[0].length, data.length);
         this.colors = colors;
