@@ -185,16 +185,16 @@ public class Race extends Parent implements GameLifeCycle {
         endPoints[2].x = rectangle.getWidth() / 2;
         endPoints[2].y = rectangle.getHeight();
 
-        endPoints[3].x = rectangle.getWidth();
+        endPoints[3].x = rectangle.getWidth() * 0.96;
 
-        endPoints[4].x = rectangle.getWidth();
+        endPoints[4].x = rectangle.getWidth() * 0.96;
         endPoints[4].y = rectangle.getHeight() / 2;
 
         endPoints[5].y = rectangle.getHeight() / 2;
 
         endPoints[6].x = rectangle.getWidth() / 2;
 
-        endPoints[7].x = rectangle.getWidth();
+        endPoints[7].x = rectangle.getWidth() * 0.96;
         endPoints[7].y = rectangle.getHeight();
     }
 
@@ -478,10 +478,12 @@ public class Race extends Parent implements GameLifeCycle {
 
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
+        double yMinRange = dimension2D.getHeight() * 0.1;
+        double yMaxRange = dimension2D.getHeight() * 0.25;
 
         double x = (Math.random() % 100) * dimension2D.getWidth();
         sp.setLayoutX(x);
-        double y = (cage.getBoundsInParent().getMinY() + cage.getBoundsInParent().getMaxY()) / 2;
+        double y = Math.random() * yMaxRange + yMinRange;
         sp.setLayoutY(y);
         sp.centerX = x;
         sp.centerY = y;
