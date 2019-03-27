@@ -481,7 +481,7 @@ public class Race extends Parent implements GameLifeCycle {
         double yMinRange = dimension2D.getHeight() * 0.1;
         double yMaxRange = dimension2D.getHeight() * 0.25;
 
-        double x = (Math.random() *  (dimension2D.getWidth() *0.9));
+        double x = (Math.random() * (dimension2D.getWidth() * 0.9));
         sp.setLayoutX(x);
         double y = Math.random() * yMaxRange + yMinRange;
         sp.setLayoutY(y);
