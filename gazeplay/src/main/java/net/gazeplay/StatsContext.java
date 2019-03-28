@@ -20,6 +20,7 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
+import net.gazeplay.games.race.RaceGamesStats;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
