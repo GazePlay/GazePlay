@@ -286,7 +286,10 @@ public class GameMenuFactory {
         final Configuration config = Configuration.getInstance();
 
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
-            Button button = new Button(variant.getLabel());
+
+
+            //Button button = new Button(variant.getLabel());
+            Button button = new Button(new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
             button.getStyleClass().add("gameChooserButton");
             button.getStyleClass().add("gameVariation");
             button.getStyleClass().add("button");

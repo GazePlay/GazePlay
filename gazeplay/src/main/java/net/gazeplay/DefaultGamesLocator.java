@@ -5,6 +5,8 @@ import com.google.common.collect.Sets;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.ui.I18NText;
+//import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.games.biboulejump.BibouleJump;
 import net.gazeplay.games.blocs.Blocs;
 import net.gazeplay.games.blocs.BlocsGamesStats;
@@ -63,6 +65,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
     public static final String DEFAULT_MEMORIZATION_GAME_THUMBNAIL = "data/common/images/skillsThumbnails/male-brain.png";
 
+    //public static final Translator translator = this.getTranslator();
     @Override
     public List<GameSpec> listGames() {
 
@@ -307,7 +310,7 @@ public class DefaultGamesLocator implements GamesLocator {
                                 gameVariant.getHeight(), false, gameContext, stats);
                     }
                 }));
-        // add find the flag game
+
         result.add(new GameSpec(
                 new GameSummary("Fun with Flags", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/flags.png"),
                 new GameSpec.GameLauncher() {
