@@ -106,8 +106,17 @@ Select the mouse then look at the destination box to move,Selekto miun pastaj sh
 free,Lehtë,,,,,Free,,Facile,,,Facile,,,,,,,Fácil,
 normal,Normal,,,,,Normal,,Normal,,,Normale,,,,,,,Normal,
 extreme,Ekstrem,,,,,Extreme,,Extrême,,,Estremo,,,,,,,Extremo,
+<<<<<<< HEAD
 Err:510,,,,,,,,,,,,,,,,,,,
 Biboule Jump,,,,,,Biboule Jump,,Biboule Jump,,,,,,,,,,,
 Score,,,,,,Score,,Score,,,,,,,,,,,
 Highscore,,,,,,Highscore,,Meilleur score,,,,,,,,,,,
 New highscore!,,,,,,New highscore!,,Nouveau meilleur score!,,,,,,,,,,,
+=======
+Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump
+Score,Pikët,,,,,Score,,Score,,,,,,,,,,,
+Highscore,Rekord !,,,,,Highscore,,Meilleur score,,,,,,,,,,,
+New highscore!,Rekord i ri !,,,,,New highscore!,,Nouveau meilleur score!,,,,,,,,,,,
+targets, shënjestra,,,,,  targets,, objectifs,,, bersagli,,,,,,,,
+cups, tasa,,,,, cups,, tasses,,, tazze,,,,,,,,
+>>>>>>> translations
