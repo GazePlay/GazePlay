@@ -288,34 +288,36 @@ public class GameMenuFactory {
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             Button button;
 
-            if(variant instanceof GameSpec.DimensionGameVariant)
+            if (variant instanceof GameSpec.DimensionGameVariant)
                 button = new Button(variant.getLabel());
 
-            else if(variant instanceof GameSpec.CupsGameVariant)
-                button = new Button(((GameSpec.CupsGameVariant) variant).getNoCups()+ new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
-            else if(variant instanceof GameSpec.TargetsGameVariant)
-                button = new Button(((GameSpec.TargetsGameVariant) variant).getNoTargets()+ new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
+            else if (variant instanceof GameSpec.CupsGameVariant)
+                button = new Button(((GameSpec.CupsGameVariant) variant).getNoCups()
+                        + new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
+            else if (variant instanceof GameSpec.TargetsGameVariant)
+                button = new Button(((GameSpec.TargetsGameVariant) variant).getNoTargets()
+                        + new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
             else
                 button = new Button(new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
 
-                button.getStyleClass().add("gameChooserButton");
-                button.getStyleClass().add("gameVariation");
-                button.getStyleClass().add("button");
-                button.setMinHeight(primaryStage.getHeight() / 10);
-                button.setMinWidth(primaryStage.getWidth() / 10);
-                choicePane.getChildren().add(button);
+            button.getStyleClass().add("gameChooserButton");
+            button.getStyleClass().add("gameVariation");
+            button.getStyleClass().add("button");
+            button.setMinHeight(primaryStage.getHeight() / 10);
+            button.setMinWidth(primaryStage.getWidth() / 10);
+            choicePane.getChildren().add(button);
 
-                EventHandler<Event> event = new EventHandler<Event>() {
-                    @Override
-                    public void handle(Event mouseEvent) {
-                        dialog.close();
-                        root.setDisable(false);
-                        chooseGame(gazePlay, gameSpec, variant, config);
-                    }
-                };
-                button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
+            EventHandler<Event> event = new EventHandler<Event>() {
+                @Override
+                public void handle(Event mouseEvent) {
+                    dialog.close();
+                    root.setDisable(false);
+                    chooseGame(gazePlay, gameSpec, variant, config);
+                }
+            };
+            button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
 
-        }//end for
+        } // end for
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 

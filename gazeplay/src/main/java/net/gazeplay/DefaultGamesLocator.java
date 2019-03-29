@@ -516,16 +516,16 @@ public class DefaultGamesLocator implements GamesLocator {
                                 Lists.newArrayList(new GameSpec.CupsGameVariant(3), new GameSpec.CupsGameVariant(5)));
                     }
                 }, new GameSpec.GameLauncher<Stats, GameSpec.CupsGameVariant>() {
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new CupsAndBallsStats(scene);
-            }
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new CupsAndBallsStats(scene);
+                    }
 
-            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.CupsGameVariant gameVariant,
-                                               Stats stats) {
-                return new CupsAndBalls(gameContext, stats, gameVariant.getNoCups(), 3);
-            }
-        }));
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.CupsGameVariant gameVariant,
+                            Stats stats) {
+                        return new CupsAndBalls(gameContext, stats, gameVariant.getNoCups(), 3);
+                    }
+                }));
 
         result.add(
                 new GameSpec(new GameSummary("Order", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/ordre.png"),
@@ -534,8 +534,8 @@ public class DefaultGamesLocator implements GamesLocator {
                             public Set<GameSpec.GameVariant> getVariants() {
                                 return Sets.newLinkedHashSet(Lists.newArrayList(
 
-                                        new GameSpec.TargetsGameVariant(3), new GameSpec.TargetsGameVariant(5), new GameSpec.TargetsGameVariant(7)
-                                ));
+                                        new GameSpec.TargetsGameVariant(3), new GameSpec.TargetsGameVariant(5),
+                                        new GameSpec.TargetsGameVariant(7)));
                             }
                         }, new GameSpec.GameLauncher<Stats, GameSpec.TargetsGameVariant>() {
                             @Override
@@ -565,7 +565,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        //cups and balls was here
+        // cups and balls was here
 
         result.add(new GameSpec(
                 new GameSummary("Piano", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/pianosight.png"),
