@@ -93,6 +93,7 @@ AlreadyUsed,Ky përdorues ekziston,اسم المستخدم غير متوفر,,Di
 MediaPlayer,Media Player,مشغل الوسائط,,Media Player,Media Player,Media Player,media player,Media Player,Media Player,Pemain media,Media Player,,Odtwarzacz multimedialny,Media Player,Pemain media,Media Player,Медиа плеер,Media Player,Media Player
 RushHour,Ora e pikut,ساعة الذروة,,Rush Hour,Ώρα αιχμής,Rush Hour,Rush hour ; ruuhka-aika,Rush Hour,Rush Hour,Masa yang sibuk,Rush Hour,,Godziny szczytu,Rush Hour,Masa yang sibuk,Rush Hour,Час пик,Rush Hour,*Giờ cao điểm
 QuitKey,Tasti për të dalë,,,,,Quit Key,,Bouton pour quitter,,,Tasto per uscire,,,,,,,,
+<<<<<<< HEAD
 Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny
 Caminandes 2: Gran Dillama - Blender Animated Short,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama
 Caminandes 3: Llamigos - Funny 3D Animated Short,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos
@@ -107,3 +108,10 @@ Select the mouse then look at the destination box to move,Selekto miun pastaj sh
 free,Lehtë,,,,,Free,,Facile,,,Facile,,,,,,,Fácil,
 normal,Normal,,,,,Normal,,Normal,,,Normale,,,,,,,Normal,
 extreme,Ekstrem,,,,,Extreme,,Extrême,,,Estremo,,,,,,,Extremo,
+=======
+Biboule Jump,,,,,,Biboule Jump,,Biboule Jump,,,,,,,,,,,
+Score,,,,,,Score,,Score,,,,,,,,,,,
+Highscore,,,,,,Highscore,,Meilleur score,,,,,,,,,,,
+New highscore!,,,,,,New highscore!,,Nouveau meilleur score!,,,,,,,,,,,
+>>>>>>> 987dafd79b65147ae43508940d3e59cc86aa6709
+>>>>>>> b3b531f5834999616fea215220b9ab4477e43e78
