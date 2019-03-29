@@ -50,6 +50,7 @@ public class HeatMap {
      */
     public HeatMap(double[][] data) {
         this(data, defaultColors);
+
     }
 
     /**
@@ -62,6 +63,7 @@ public class HeatMap {
      *            custom colors for the heatmap, must be on order from minimum to maximum.
      */
     public HeatMap(double[][] data, Color[] colors) {
+
         this.image = new WritableImage(data[0].length, data.length);
         this.colors = colors;
 

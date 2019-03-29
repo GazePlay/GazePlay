@@ -68,11 +68,23 @@ public class GameSpec {
 
     @Data
     public static class CupsGameVariant implements GameVariant {
+        @Getter
         private final int noCups;
 
         @Override
         public String getLabel() {
-            return noCups + " cups";
+            return "cups";
+        }
+    }
+
+    @Data
+    public static class TargetsGameVariant implements GameVariant {
+
+        private final int noTargets;
+
+        @Override
+        public String getLabel() {
+            return "targets";
         }
     }
 

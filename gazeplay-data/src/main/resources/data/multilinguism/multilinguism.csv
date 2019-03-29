@@ -1,7 +1,7 @@
 ,alb,ara,chn,deu,ell,eng,fin,fra,hrv,ind,ita,jpn,pol,por,zsm,nld,rus,spa,vnm
 Colon,:,:,:,: ,:,: ,:, : ,:,:,:,:,:,:,:,:,:,:,:
 Creampie,Tartë me krem,فطائر كريمة,奶油派,Sahnetorte,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Cream pies,kermatorttu,Tartes à la crème,Krempita ,Pai krim,Torte alla crema,クリームパイ,Torty kremowe,Pastéis de nata,Pai krim,Taarten,Кремовый пирог,Tarta de crema,Bánh kem
-FrogsRace,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,La course des grenouilles,La course des grenouilles!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Frog Runner!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!
+FrogsRace,Vrapo bretkosë!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,La course des grenouilles,La course des grenouilles!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Frog Runner!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!
 Ninja,Ninxha,النينجا,忍者 ！,Ninja !,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Ninja !,Ninja,Ninja !,Ninja,Ninja!,Ninja!,にんじゃ !,Ninja!,Ninja,Ninja!,Ninja !,Ниндзя,Ninja,Ninja !
 MagicCards,Karta magjike,اوراق سحرية,魔幻卡,Zauberkarten,Επιτυχημένες αποκαλύψεις,Magic cards,Taikakortit,Cartes magiques,Čarobne kartice,Kad sihir,Carte magiche,マジックカード,Magiczne karty,Cartas mágicas,Kad sihir,Magische kaarten,Магические карты,Tarjetas mágicas,Những quân bài ma thuật
 Blocks,Blloqe,مكعبات,,Blocks,Επιτυχημένες αποκαλύψεις,Blocks,kappaleet,Blocs,Blokovi,Blok,Blocchi,ブロック,Bloki,Bloco,Blok,Blokken,Блоки,Bloques,Các hình khối
@@ -91,9 +91,24 @@ Image,Imazh ,صورة,,Bild,Εικόνα,Image,kuva,Image,Slika,Gambar,Immagine,
 AlreadyUsed,Ky përdorues ekziston,اسم المستخدم غير متوفر,,Dieser Benutzername existiert bereits,Αυτό το όνομα χρήστη υπάρχει ήδη,This user name exists already,käytössä,Ce nom d'utilisateur existe déjà,Ime korisnika već postoji,Nama pengguna ini sudah wujud,Questo nome utente è già utilizzato,,Ta nazwa użytkownika już istnieje,*Este nome de usuário já existe,Nama pengguna ini sudah wujud,Deze gebruikersnaam bestaat reeds,Пользователь с таким именем уже существует,Este nombre de usario ya existe,Tên người dùng này đã tồn tại
 MediaPlayer,Media Player,مشغل الوسائط,,Media Player,Media Player,Media Player,media player,Media Player,Media Player,Pemain media,Media Player,,Odtwarzacz multimedialny,Media Player,Pemain media,Media Player,Медиа плеер,Media Player,Media Player
 RushHour,Ora e pikut,ساعة الذروة,,Rush Hour,Ώρα αιχμής,Rush Hour,Rush hour ; ruuhka-aika,Rush Hour,Rush Hour,Masa yang sibuk,Rush Hour,,Godziny szczytu,Rush Hour,Masa yang sibuk,Rush Hour,Час пик,Rush Hour,*Giờ cao điểm
-QuitKey,Tasti për të dalë,,,,,Quit Key,,Bouton pour quitter,,,Tasto per uscire,,,,,,,,
-Biboule Jump,,,,,,Biboule Jump,,Biboule Jump,,,,,,,,,,,
-Score,,,,,,Score,,Score,,,,,,,,,,,
-Highscore,,,,,,Highscore,,Meilleur score,,,,,,,,,,,
-New highscore!,,,,,,New highscore!,,Nouveau meilleur score!,,,,,,,,,,,
->>>>>>> 987dafd79b65147ae43508940d3e59cc86aa6709
+QuitKey,Tasti për të dalë,,,,,Quit Key,,Bouton pour quitter,,,Tasto per uscire,,,,,,,Tecla para salir,
+Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny
+Caminandes 2: Gran Dillama - Blender Animated Short,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama
+Caminandes 3: Llamigos - Funny 3D Animated Short,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos
+1H de Petit Ours Brun,Aventurat e arushit të vogël kaf,,,,,,,1H de Petit Ours Brun,,,Le avventure del piccolo orsacchiotto marrone,,,,,,,Las aventuras del osito pardo,
+Zou s'amuse,Zou argëtohet,,,,,Zou’s having fun,,Zou s'amuse,,,Zou si diverte,,,,,,,Zou se divierte,
+Tchoupi et ses amis,Çupi dhe shokët e tij,,,,,Tchoupi and his friends,,Tchoupi et ses amis,,,Tchoupi e i suoi amici,,,,,,,Tchoupi y sus amigos,
+Princesse sofia rencontre Belle,Princesha Sofia takon Belën ,,,,,Princess Sofia meets Belle,,Princesse sofia rencontre Belle,,,La principessa Sofia incontra Bella,,,,,,,La princesa Sofía se encuentra con Belle,
+Look at the destination box to move,Për të lëvizur shiko kutinë ku do të mbërrish,,,,,Look at the destination box to move,,Regarde la boîte de destination pour bouger,,,Guarda la cassetta destinazione per muoverti,,,,,,,Mira el cuadro de destino para moverte,
+Look the movement arrows around the mouse to move,Për të lëvizur shiko shigjetat përqark miut ,,,,,Look the movement arrows around the mouse to move,,Regarde les flèches de mouvement autour de la souris pour bouger,,,Guarda le frecce di movimento intorno al topo per muoverti,,,,,,,Mira las flechas de movimiento alrededor del ratón para moverte,
+Look the movement arrows around the labyrinth to move,Për të lëvizur shiko shigjetat përqark labirintit,,,,,Look the movement arrows around the labyrinth to move,,Regarde les flèches de mouvement autour du labyrinthe pour bouger,,,Guarda le frecce di movimento intorno al labirinto per muoverti,,,,,,,Mira las flechas de movimiento alrededor del laberinto para moverte,
+Select the mouse then look at the destination box to move,Selekto miun pastaj shiko kutinë ku do të mbërrish,,,,,Select the mouse then look at the destination box to move,,Selectionne la souris et après regarde la boîte de destination pour bouger,,,Selezziona il topo poi guarda la cassetta di destinazione per muoverti,,,,,,,Selecciona el ratón y luego mira el cuadro de destino para moverte,
+free,Lehtë,,,,,Free,,Facile,,,Facile,,,,,,,Fácil,
+normal,Normal,,,,,Normal,,Normal,,,Normale,,,,,,,Normal,
+extreme,Ekstrem,,,,,Extreme,,Extrême,,,Estremo,,,,,,,Extremo,
+Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump
+Score,Pikët,,,,,Score,,Score,,,Punteggio,,,,,,,Puntuación,
+Highscore,Rekord ,,,,,Highscore,,Meilleur score,,,Record !,,,,,,,Récord,
+New highscore!,Rekord i ri !,,,,,New highscore!,,Nouveau meilleur score!,,,Nuovo record !,,,,,,,Niuevo récord !,
+targets, shënjestra,,,,,  targets,, objectifs,,, bersagli,,,,,,, objetivos,
+cups, tasa,,,,, cups,, tasses,,, tazze,,,,,,, tazas,
