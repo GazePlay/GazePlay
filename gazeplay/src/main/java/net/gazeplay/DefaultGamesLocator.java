@@ -65,7 +65,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
     public static final String DEFAULT_MEMORIZATION_GAME_THUMBNAIL = "data/common/images/skillsThumbnails/male-brain.png";
 
-    //public static final Translator translator = this.getTranslator();
+    // public static final Translator translator = this.getTranslator();
     @Override
     public List<GameSpec> listGames() {
 

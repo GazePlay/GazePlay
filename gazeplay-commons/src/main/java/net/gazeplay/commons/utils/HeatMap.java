@@ -64,7 +64,6 @@ public class HeatMap {
      */
     public HeatMap(double[][] data, Color[] colors) {
 
-
         this.image = new WritableImage(data[0].length, data.length);
         this.colors = colors;
 

@@ -56,7 +56,6 @@ public class GameSpec {
     @Data
     public static class StringGameVariant implements GameVariant {
 
-
         private final String label;
 
         private final String value;
