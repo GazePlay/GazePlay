@@ -297,68 +297,66 @@ public class WhereIsIt implements GameLifeCycle {
         String questionSoundPath = null;
         String question = null;
         List<Image> pictograms = null;
-     
-        if (this.getGameType().gameName == "find-the-odd-one-out"){
+
+        if (this.getGameType().gameName == "find-the-odd-one-out") {
             int index = (randomFolderIndex + step * 2) % filesCount;
-            for (int i = 0; i < numberOfImagesToDisplayPerRound-1; i++) {
+            for (int i = 0; i < numberOfImagesToDisplayPerRound - 1; i++) {
 
-            
-            log.info("index = {}", index);
-            final File folder = imagesFolders[(index) % filesCount];
+                log.info("index = {}", index);
+                final File folder = imagesFolders[(index) % filesCount];
 
-            log.debug("folder = {}", folder);
+                log.debug("folder = {}", folder);
 
-            if (!folder.isDirectory())
-                continue;
+                if (!folder.isDirectory())
+                    continue;
 
-            // final File[] files = folder.listFiles();
-            final File[] files = getFiles(folder);
+                // final File[] files = folder.listFiles();
+                final File[] files = getFiles(folder);
 
-            log.debug("files = {}", (Object[]) files);
+                log.debug("files = {}", (Object[]) files);
 
-            final int numFile = random.nextInt(files.length);
+                final int numFile = random.nextInt(files.length);
 
-            final File randomImageFile = files[numFile];
-            log.debug("randomImageFile = {}", randomImageFile);
+                final File randomImageFile = files[numFile];
+                log.debug("randomImageFile = {}", randomImageFile);
 
-            if (winnerImageIndexAmongDisplayedImages == i) {
+                if (winnerImageIndexAmongDisplayedImages == i) {
 
-                log.debug("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
+                    log.debug("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
 
-                questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
+                    questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
 
-                question = getQuestionText(imagesFolders[(index) % filesCount].getName(), language);
+                    question = getQuestionText(imagesFolders[(index) % filesCount].getName(), language);
 
-                pictograms = getPictogramms(imagesFolders[(index) % filesCount].getName());
+                    pictograms = getPictogramms(imagesFolders[(index) % filesCount].getName());
 
-                log.debug("pathSound = {}", questionSoundPath);
+                    log.debug("pathSound = {}", questionSoundPath);
 
-                log.info("question = {}", question);
+                    log.info("question = {}", question);
+                }
+
+                PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
+                        winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+
+                pictureCardList.add(pictureCard);
+
+                log.debug("posX " + posX);
+                log.debug("posY " + posY);
+
+                if ((i + 1) % nbColumns != 0)
+                    posX++;
+                else {
+                    posY++;
+                    posX = 0;
+                }
             }
-
-            PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
-
-            pictureCardList.add(pictureCard);
-
-            log.debug("posX " + posX);
-            log.debug("posY " + posY);
-
-            if ((i + 1) % nbColumns != 0)
-                posX++;
-            else {
-                posY++;
-                posX = 0;
-            }
-        }
             index++;
             log.info("index = {}", index);
             final File folder = imagesFolders[(index) % filesCount];
 
             log.debug("folder = {}", folder);
 
-
             // final File[] files = folder.listFiles();
             final File[] files = getFiles(folder);
 
@@ -369,7 +367,7 @@ public class WhereIsIt implements GameLifeCycle {
             final File randomImageFile = files[numFile];
             log.debug("randomImageFile = {}", randomImageFile);
 
-            if (winnerImageIndexAmongDisplayedImages == numberOfImagesToDisplayPerRound-1) {
+            if (winnerImageIndexAmongDisplayedImages == numberOfImagesToDisplayPerRound - 1) {
 
                 log.debug("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
 
@@ -386,74 +384,74 @@ public class WhereIsIt implements GameLifeCycle {
 
             PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == numberOfImagesToDisplayPerRound-1, randomImageFile + "", stats, this);
+                    winnerImageIndexAmongDisplayedImages == numberOfImagesToDisplayPerRound - 1, randomImageFile + "",
+                    stats, this);
 
             pictureCardList.add(pictureCard);
 
             log.debug("posX " + posX);
             log.debug("posY " + posY);
 
-            if ((numberOfImagesToDisplayPerRound-1 + 1) % nbColumns != 0)
+            if ((numberOfImagesToDisplayPerRound - 1 + 1) % nbColumns != 0)
                 posX++;
             else {
                 posY++;
                 posX = 0;
             }
-        }
-        else {
-            
-        for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
+        } else {
 
-            final int index = (randomFolderIndex + step * i) % filesCount;
-            log.info("index = {}", index);
-            final File folder = imagesFolders[(index) % filesCount];
+            for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
-            log.debug("folder = {}", folder);
+                final int index = (randomFolderIndex + step * i) % filesCount;
+                log.info("index = {}", index);
+                final File folder = imagesFolders[(index) % filesCount];
 
-            if (!folder.isDirectory())
-                continue;
+                log.debug("folder = {}", folder);
 
-            // final File[] files = folder.listFiles();
-            final File[] files = getFiles(folder);
+                if (!folder.isDirectory())
+                    continue;
 
-            log.debug("files = {}", (Object[]) files);
+                // final File[] files = folder.listFiles();
+                final File[] files = getFiles(folder);
 
-            final int numFile = random.nextInt(files.length);
+                log.debug("files = {}", (Object[]) files);
 
-            final File randomImageFile = files[numFile];
-            log.debug("randomImageFile = {}", randomImageFile);
+                final int numFile = random.nextInt(files.length);
 
-            if (winnerImageIndexAmongDisplayedImages == i) {
+                final File randomImageFile = files[numFile];
+                log.debug("randomImageFile = {}", randomImageFile);
 
-                log.debug("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
+                if (winnerImageIndexAmongDisplayedImages == i) {
 
-                questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
+                    log.debug("randomImageFile.getAbsolutePath() " + randomImageFile.getAbsolutePath());
 
-                question = getQuestionText(imagesFolders[(index) % filesCount].getName(), language);
+                    questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
 
-                pictograms = getPictogramms(imagesFolders[(index) % filesCount].getName());
+                    question = getQuestionText(imagesFolders[(index) % filesCount].getName(), language);
 
-                log.debug("pathSound = {}", questionSoundPath);
+                    pictograms = getPictogramms(imagesFolders[(index) % filesCount].getName());
 
-                log.info("question = {}", question);
+                    log.debug("pathSound = {}", questionSoundPath);
+
+                    log.info("question = {}", question);
+                }
+
+                PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
+                        winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+
+                pictureCardList.add(pictureCard);
+
+                log.debug("posX " + posX);
+                log.debug("posY " + posY);
+
+                if ((i + 1) % nbColumns != 0)
+                    posX++;
+                else {
+                    posY++;
+                    posX = 0;
+                }
             }
-
-            PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
-
-            pictureCardList.add(pictureCard);
-
-            log.debug("posX " + posX);
-            log.debug("posY " + posY);
-
-            if ((i + 1) % nbColumns != 0)
-                posX++;
-            else {
-                posY++;
-                posX = 0;
-            }
-        }
         }
 
         return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question,
