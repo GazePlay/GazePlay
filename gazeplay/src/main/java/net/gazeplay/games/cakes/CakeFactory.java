@@ -37,54 +37,40 @@ import java.util.List;
 @Slf4j
 public class CakeFactory extends Parent implements GameLifeCycle {
 
-    @Getter
-    private final GameContext gameContext;
-
-    private final Stats stats;
-
-    @Getter
-    private double buttonSize;
-
-    private double centerX;
-    private double centerY;
-
-    @Getter
-    private int fixationLength;
-
-    @Getter
-    @Setter
-    private int currentCake;
-
-    @Getter
-    @Setter
-    private int maxCake;
-
-    @Getter
-    @Setter
-    private int mode;
-
-    @Getter
-    @Setter
-    private boolean nappage;
-
     final int NB_BASES = 4;
     final int NB_NAPPAGES = 5;
     final int NB_BONBONS = 3;
     final int NB_DECORS = 2;
-
+    @Getter
+    private final GameContext gameContext;
+    private final Stats stats;
     public FadeTransition ft;
-
-    Color[] col = { Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL };
     @Getter
     public Rectangle r;
-
+    Color[] col = { Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL };
+    int[][] layers = new int[3][4];
+    int[][] model = new int[3][4];
+    @Getter
+    private double buttonSize;
+    private double centerX;
+    private double centerY;
+    @Getter
+    private int fixationLength;
+    @Getter
+    @Setter
+    private int currentCake;
+    @Getter
+    @Setter
+    private int maxCake;
+    @Getter
+    @Setter
+    private int mode;
+    @Getter
+    @Setter
+    private boolean nappage;
     @Getter
     @Setter
     private List<ProgressButton>[] p;
-
-    int[][] layers = new int[3][4];
-    int[][] model = new int[3][4];
-
     @Getter
     @Setter
     private StackPane[] cake;
@@ -407,7 +393,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
         SequentialTransition sq = new SequentialTransition();
         sq.getChildren().addAll(pt, pt2);
-        Utils.playSound("data/cake/sounds/spray.mp3");
+
+        try {
+            Utils.playSound("data/cake/sounds/spray.mp3");
+        } catch (Exception e) {
+            log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
+
         sq.play();
 
         sq.setOnFinished(new EventHandler<ActionEvent>() {
@@ -569,7 +561,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
             }
         });
-        Utils.playSound("data/cake/sounds/grabcoming.mp3");
+
+        try {
+            Utils.playSound("data/cake/sounds/grabcoming.mp3");
+        } catch (Exception e) {
+            log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
+
         sq.play();
     }
 

@@ -25,7 +25,7 @@ public class Utils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
     public static final String LINESEPARATOR = System.getProperties().getProperty("line.separator");
-    private static MediaPlayer sxmp;
+    private static MediaPlayer soundPlayer;
     private static final String tempFolder = "temp";
 
     public static MenuBar buildLicence() {
@@ -55,7 +55,7 @@ public class Utils {
         }
     }
 
-    public static void playSound(String ressource) {
+    public static void playSound(String ressource) throws Exception {
 
         log.debug("Try to play " + ressource);
 
@@ -76,18 +76,14 @@ public class Utils {
         }
 
         log.debug("path " + path);
-        if (sxmp != null)
-            sxmp.stop();
-        try {
-            Media media = new Media(path);
-            sxmp = new MediaPlayer(media);
-            final Configuration configuration = Configuration.getInstance();
-            sxmp.setVolume(configuration.getEffectsVolume());
-            sxmp.volumeProperty().bind(configuration.getEffectsVolumeProperty());
-            sxmp.play();
-        } catch (Exception e) {
-            log.error("Exception", e);
-        }
+        if (soundPlayer != null)
+            soundPlayer.stop();
+        Media media = new Media(path);
+        soundPlayer = new MediaPlayer(media);
+        final Configuration configuration = Configuration.getInstance();
+        soundPlayer.setVolume(configuration.getEffectsVolume());
+        soundPlayer.volumeProperty().bind(configuration.getEffectsVolumeProperty());
+        soundPlayer.play();
     }
 
     public static InputStream getInputStream(String ressource) {

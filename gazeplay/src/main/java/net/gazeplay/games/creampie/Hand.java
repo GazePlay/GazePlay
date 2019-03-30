@@ -6,11 +6,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.games.Utils;
 
 /**
  * Created by schwab on 17/08/2016.
  */
+@Slf4j
 public class Hand extends Parent {
 
     private static final int size = 40;
@@ -62,7 +64,13 @@ public class Hand extends Parent {
     public void onTargetHit(Target target) {
         Animation animation = createAnimation(target);
         animation.play();
-        Utils.playSound("data/creampie/sounds/missile.mp3");
+
+        try {
+            Utils.playSound("data/creampie/sounds/missile.mp3");
+        } catch (Exception e) {
+            log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
+
     }
 
     private Animation createAnimation(Target target) {

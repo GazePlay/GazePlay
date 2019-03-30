@@ -181,10 +181,15 @@ public class Bubble extends Parent implements GameLifeCycle {
             }
         });
 
-        if (Math.random() > 0.5)
-            Utils.playSound("data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3");
-        else
-            Utils.playSound("data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3");
+        try {
+            if (Math.random() > 0.5)
+                Utils.playSound("data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3");
+            else
+                Utils.playSound("data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3");
+
+        } catch (Exception e) {
+            log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
     }
 
     private void enter(Circle target) {

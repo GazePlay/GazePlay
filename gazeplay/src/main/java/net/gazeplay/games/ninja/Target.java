@@ -228,7 +228,12 @@ public class Target extends Portrait {
         });
 
         sequence.play();
-        Utils.playSound(audioClipResourceLocation);
+
+        try {
+            Utils.playSound(audioClipResourceLocation);
+        } catch (Exception exp) {
+            log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
     }
 
     private Transition createTransition1() {

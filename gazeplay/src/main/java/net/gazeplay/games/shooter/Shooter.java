@@ -471,7 +471,13 @@ public class Shooter extends Parent implements GameLifeCycle {
         double min = Math.ceil(1);
         double max = Math.floor(3);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
-        Utils.playSound("data/" + gameType + "/sounds/hand_sound" + r + ".mp3");
+
+        try {
+            Utils.playSound("data/" + gameType + "/sounds/hand_sound" + r + ".mp3");
+        } catch (Exception e) {
+            log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
+
         t.getChildren().get(0).setOpacity(1);
 
         hand.getChildren().get(1).setOpacity(1);
