@@ -112,7 +112,7 @@ public class Utils {
 
     /**
      * @return images directory for GazePlay : by default in the default directory of GazePlay, in a folder called files
-     *         but can be configured through interface and/or GazePlay.properties file
+     * but can be configured through interface and/or GazePlay.properties file
      */
 
     private static String getFilesFolder() {

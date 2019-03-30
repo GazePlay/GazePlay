@@ -229,10 +229,12 @@ public class Target extends Portrait {
 
         sequence.play();
 
-        try {
+        try{
             Utils.playSound(audioClipResourceLocation);
         } catch (Exception exp) {
-            log.warn("Can't play sound: no associated sound : " + e.toString());
+
+            log.warn("file doesn't exist : {}", audioClipResourceLocation);
+            log.warn(exp.getMessage());
         }
     }
 

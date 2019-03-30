@@ -147,11 +147,12 @@ public class Bravo extends Rectangle {
 
             if (this.enableRewardSound) {
                 log.debug("Playing sound animation ...");
-
                 try {
                     Utils.playSound(soundResource);
                 } catch (Exception e) {
-                    log.warn("Can't play sound: no associated sound : " + e.toString());
+
+                    log.warn("file doesn't exist : {}", soundResource);
+                    log.warn(e.getMessage());
                 }
             }
 

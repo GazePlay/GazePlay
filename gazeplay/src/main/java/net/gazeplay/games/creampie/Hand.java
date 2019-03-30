@@ -12,6 +12,7 @@ import net.gazeplay.commons.utils.games.Utils;
 /**
  * Created by schwab on 17/08/2016.
  */
+
 @Slf4j
 public class Hand extends Parent {
 
