@@ -229,7 +229,7 @@ public class Target extends Portrait {
 
         sequence.play();
 
-        try{
+        try {
             Utils.playSound(audioClipResourceLocation);
         } catch (Exception exp) {
 

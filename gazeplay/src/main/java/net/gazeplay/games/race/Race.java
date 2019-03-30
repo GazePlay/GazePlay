@@ -393,8 +393,9 @@ public class Race extends Parent implements GameLifeCycle {
         double max = Math.floor(3);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
 
+        String soundResource = "data/race/sounds/frog.WAV";
         try {
-            Utils.playSound("data/race/sounds/frog.WAV");
+            Utils.playSound(soundResource);
         } catch (Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
         }

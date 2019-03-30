@@ -394,12 +394,15 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         SequentialTransition sq = new SequentialTransition();
         sq.getChildren().addAll(pt, pt2);
 
-        try {
-            Utils.playSound("data/cake/sounds/spray.mp3");
-        } catch (Exception e) {
-            log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
+        String soundResource = "data/cake/sounds/spray.mp3";
 
+        try {
+            Utils.playSound(soundResource);
+        } catch (Exception e) {
+
+            log.warn("file doesn't exist : {}", soundResource);
+            log.warn(e.getMessage());
+        }
         sq.play();
 
         sq.setOnFinished(new EventHandler<ActionEvent>() {
@@ -562,10 +565,14 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             }
         });
 
+        String soundResource = "data/cake/sounds/grabcoming.mp3";
+
         try {
-            Utils.playSound("data/cake/sounds/grabcoming.mp3");
+            Utils.playSound(soundResource);
         } catch (Exception e) {
-            log.warn("Can't play sound: no associated sound : " + e.toString());
+
+            log.warn("file doesn't exist : {}", soundResource);
+            log.warn(e.getMessage());
         }
 
         sq.play();

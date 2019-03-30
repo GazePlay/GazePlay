@@ -66,8 +66,10 @@ public class Hand extends Parent {
         Animation animation = createAnimation(target);
         animation.play();
 
+        String soundResource = "data/creampie/sounds/missile.mp3";
+
         try {
-            Utils.playSound("data/creampie/sounds/missile.mp3");
+            Utils.playSound(soundResource);
         } catch (Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
         }

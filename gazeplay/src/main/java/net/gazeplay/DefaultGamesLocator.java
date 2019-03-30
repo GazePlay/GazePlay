@@ -72,21 +72,6 @@ public class DefaultGamesLocator implements GamesLocator {
 
         List<GameSpec> result = new ArrayList<>();
 
-        result.add(new GameSpec(
-                new GameSummary("FrogsRace", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/frogsrace.png"),
-                new GameSpec.GameLauncher() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new RaceGamesStats(scene, "race");
-                    }
-
-                    @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-                            Stats stats) {
-                        return new Race(gameContext, stats, "race");
-                    }
-                }));
-
         result.add(
                 new GameSpec(new GameSummary("Creampie", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/creamPie.png"),
                         new GameSpec.GameLauncher() {
@@ -312,6 +297,52 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
+        result.add(new GameSpec(new GameSummary("WhereIsTheLetter", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+                "data/Thumbnails/Where-is-the-Letter.jpg"), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.DimensionGameVariant(2, 2),
+
+                                new GameSpec.DimensionGameVariant(2, 3),
+
+                                new GameSpec.DimensionGameVariant(3, 2),
+
+                                new GameSpec.DimensionGameVariant(3, 3)
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.LETTERNAME.getGameName());
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new WhereIsIt(WhereIsIt.WhereIsItGameType.LETTERNAME, gameVariant.getWidth(),
+                                gameVariant.getHeight(), false, gameContext, stats);
+                    }
+
+                }));
+
+        result.add(new GameSpec(
+                new GameSummary("Fun with Flags", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/flags.png"),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.FLAGS.getGameName());
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new WhereIsIt(WhereIsIt.WhereIsItGameType.FLAGS, 2, 2, false, gameContext, stats);
+                    }
+                }));
+
         result.add(new GameSpec(
                 new GameSummary("WhereIsIt", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/whereisit.png"),
                 new GameSpec.GameVariantGenerator() {
@@ -340,21 +371,6 @@ public class DefaultGamesLocator implements GamesLocator {
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                         return new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, gameVariant.getWidth(),
                                 gameVariant.getHeight(), false, gameContext, stats);
-                    }
-                }));
-
-        result.add(new GameSpec(
-                new GameSummary("Fun with Flags", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/flags.png"),
-                new GameSpec.GameLauncher() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.FLAGS.getGameName());
-                    }
-
-                    @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-                            Stats stats) {
-                        return new WhereIsIt(WhereIsIt.WhereIsItGameType.FLAGS, 2, 2, false, gameContext, stats);
                     }
                 }));
 
@@ -756,6 +772,21 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Labyrinth(gameContext, stats, gameVariant.getNumber());
                     }
 
+                }));
+
+        result.add(new GameSpec(
+                new GameSummary("FrogsRace", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/frogsrace.png"),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new RaceGamesStats(scene, "race");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new Race(gameContext, stats, "race");
+                    }
                 }));
 
         result.add(new GameSpec(
