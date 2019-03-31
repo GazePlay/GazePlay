@@ -534,7 +534,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(new GameSummary("OpenMemoryLetter", DEFAULT_SEARCHING_GAME_THUMBNAIL,
-                "data/Thumbnails/openMemoyLetters.jpg"), new GameSpec.GameVariantGenerator() {
+                "data/Thumbnails/openMemoryLetters.jpg"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
