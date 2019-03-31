@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.commons.ui.I18NText;
 //import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.games.biboulejump.BibouleJump;
 import net.gazeplay.games.biboulejump.BibouleJumpStats;
@@ -464,7 +463,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new Memory(Memory.MemoryGameType.LETTER, gameContext, gameVariant.getWidth(),
+                        return new Memory(Memory.MemoryGameType.LETTERS, gameContext, gameVariant.getWidth(),
                                 gameVariant.getHeight(), stats);
                     }
                 }));

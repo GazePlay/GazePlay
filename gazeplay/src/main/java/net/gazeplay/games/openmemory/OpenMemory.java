@@ -70,7 +70,7 @@ public class OpenMemory implements GameLifeCycle {
 
         if (gameType == OpenMemoryGameType.LETTER) {
 
-            log.info("LETTER GAME");
+            log.info("LETTERS GAME");
             this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
         } else
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),

@@ -13,7 +13,6 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.io.File;
 import java.util.*;
 
 @Slf4j
@@ -25,7 +24,7 @@ public class Memory implements GameLifeCycle {
 
     public enum MemoryGameType {
 
-        LETTER, DEFAULT
+        LETTERS, NUMBERS, DEFAULT
     };
 
     @Data
@@ -67,9 +66,9 @@ public class Memory implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        if (gameType == MemoryGameType.LETTER) {
+        if (gameType == MemoryGameType.LETTERS) {
 
-            log.info("LETTER GAME");
+            log.info("LETTERS GAME");
             this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
         } else
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
