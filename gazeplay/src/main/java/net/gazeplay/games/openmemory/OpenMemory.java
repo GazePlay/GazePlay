@@ -12,6 +12,7 @@ import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.memory.Memory;
 
 import java.util.*;
 
@@ -21,6 +22,11 @@ public class OpenMemory implements GameLifeCycle {
     private static final float cardRatio = 0.75f;
 
     private static final int minHeight = 30;
+
+    public enum OpenMemoryGameType {
+
+        LETTER, DEFAULT
+    };
 
     @Data
     @AllArgsConstructor
@@ -48,7 +54,8 @@ public class OpenMemory implements GameLifeCycle {
 
     public int nbTurnedCards;
 
-    public OpenMemory(GameContext gameContext, int nbLines, int nbColumns, Stats stats) {
+    public OpenMemory(final OpenMemoryGameType gameType, GameContext gameContext, int nbLines, int nbColumns,
+            Stats stats) {
         super();
         int cardsCount = nbLines * nbColumns;
         if ((cardsCount & 1) != 0) {
@@ -61,8 +68,13 @@ public class OpenMemory implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
-                Utils.getImagesSubDirectory("default"));
+        if (gameType == OpenMemoryGameType.LETTER) {
+
+            log.info("LETTER GAME");
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
+        } else
+            this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
+                    Utils.getImagesSubDirectory("default"));
 
     }
 

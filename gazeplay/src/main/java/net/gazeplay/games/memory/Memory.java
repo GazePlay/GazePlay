@@ -13,6 +13,7 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.io.File;
 import java.util.*;
 
 @Slf4j
@@ -21,6 +22,11 @@ public class Memory implements GameLifeCycle {
     private static final float cardRatio = 0.75f;
 
     private static final int minHeight = 30;
+
+    public enum MemoryGameType {
+
+        LETTER, DEFAULT
+    };
 
     @Data
     @AllArgsConstructor
@@ -48,7 +54,7 @@ public class Memory implements GameLifeCycle {
 
     public int nbTurnedCards;
 
-    public Memory(GameContext gameContext, int nbLines, int nbColumns, Stats stats) {
+    public Memory(final MemoryGameType gameType, GameContext gameContext, int nbLines, int nbColumns, Stats stats) {
         super();
         int cardsCount = nbLines * nbColumns;
         if ((cardsCount & 1) != 0) {
@@ -61,8 +67,13 @@ public class Memory implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
-                Utils.getImagesSubDirectory("default"));
+        if (gameType == MemoryGameType.LETTER) {
+
+            log.info("LETTER GAME");
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
+        } else
+            this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
+                    Utils.getImagesSubDirectory("default"));
     }
 
     private HashMap<Integer, Image> selectionAleaImages() {
