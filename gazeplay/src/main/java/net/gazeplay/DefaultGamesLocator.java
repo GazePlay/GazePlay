@@ -468,6 +468,38 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
+        result.add(new GameSpec(new GameSummary("MemoryNumber", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+                "data/Thumbnails/Memory-Letter.jpg"), new GameSpec.GameVariantGenerator() {
+            @Override
+            public Set<GameSpec.GameVariant> getVariants() {
+                return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                        new GameSpec.DimensionGameVariant(2, 2),
+
+                        new GameSpec.DimensionGameVariant(2, 3),
+
+                        new GameSpec.DimensionGameVariant(3, 2),
+
+                        new GameSpec.DimensionGameVariant(3, 4),
+
+                        new GameSpec.DimensionGameVariant(4, 3)
+
+                ));
+            }
+        }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new MagicCardsGamesStats(scene);
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext,
+                                               GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                return new Memory(Memory.MemoryGameType.NUMBERS, gameContext, gameVariant.getWidth(),
+                        gameVariant.getHeight(), stats);
+            }
+        }));
+
         result.add(new GameSpec(
                 new GameSummary("OpenMemory", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/openMemory.png"),
                 new GameSpec.GameVariantGenerator() {
