@@ -547,7 +547,9 @@ public class DefaultGamesLocator implements GamesLocator {
 
                                 new GameSpec.DimensionGameVariant(3, 4),
 
-                                new GameSpec.DimensionGameVariant(4, 3)
+                                new GameSpec.DimensionGameVariant(4, 3),
+
+                                new GameSpec.DimensionGameVariant(4, 4)
 
                 ));
                     }
