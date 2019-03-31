@@ -25,8 +25,7 @@ public class Memory implements GameLifeCycle {
 
     public enum MemoryGameType {
 
-        LETTER,
-        DEFAULT
+        LETTER, DEFAULT
     };
 
     @Data
@@ -68,14 +67,13 @@ public class Memory implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        if(gameType == MemoryGameType.LETTER) {
+        if (gameType == MemoryGameType.LETTER) {
 
             log.info("LETTER GAME");
             this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
-        }
-        else
+        } else
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
-                Utils.getImagesSubDirectory("default"));
+                    Utils.getImagesSubDirectory("default"));
     }
 
     private HashMap<Integer, Image> selectionAleaImages() {

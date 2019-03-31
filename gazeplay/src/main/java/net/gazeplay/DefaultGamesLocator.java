@@ -463,7 +463,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
+                        return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(),
+                                gameVariant.getHeight(), stats);
                     }
                 }));
 
@@ -484,20 +485,21 @@ public class DefaultGamesLocator implements GamesLocator {
 
                                 new GameSpec.DimensionGameVariant(4, 3)
 
-                        ));
+                ));
                     }
                 }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new MagicCardsGamesStats(scene);
-            }
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new MagicCardsGamesStats(scene);
+                    }
 
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext,
-                                               GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                return new Memory(Memory.MemoryGameType.LETTER, gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
-            }
-        }));
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new Memory(Memory.MemoryGameType.LETTER, gameContext, gameVariant.getWidth(),
+                                gameVariant.getHeight(), stats);
+                    }
+                }));
 
         result.add(new GameSpec(
                 new GameSummary("OpenMemory", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/openMemory.png"),
