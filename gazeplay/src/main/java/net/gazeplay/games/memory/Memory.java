@@ -69,12 +69,10 @@ public class Memory implements GameLifeCycle {
         if (gameType == MemoryGameType.LETTERS) {
 
             this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
-        }
-        else if (gameType == MemoryGameType.NUMBERS) {
+        } else if (gameType == MemoryGameType.NUMBERS) {
 
             this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers");
-        }
-        else
+        } else
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
                     Utils.getImagesSubDirectory("default"));
     }
