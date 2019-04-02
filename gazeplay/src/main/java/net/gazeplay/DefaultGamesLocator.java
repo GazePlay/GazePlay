@@ -284,13 +284,44 @@ public class DefaultGamesLocator implements GamesLocator {
                 }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.LETTERNAME.getGameName());
+                        return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.LETTERS.getGameName());
                     }
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new WhereIsIt(WhereIsIt.WhereIsItGameType.LETTERNAME, gameVariant.getWidth(),
+                        return new WhereIsIt(WhereIsIt.WhereIsItGameType.LETTERS, gameVariant.getWidth(),
+                                gameVariant.getHeight(), false, gameContext, stats);
+                    }
+
+                }));
+
+        result.add(new GameSpec(new GameSummary("WhereIsTheNumber", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+                "data/Thumbnails/Where-is-the-Letter.jpg"), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.DimensionGameVariant(2, 2),
+
+                                new GameSpec.DimensionGameVariant(2, 3),
+
+                                new GameSpec.DimensionGameVariant(3, 2),
+
+                                new GameSpec.DimensionGameVariant(3, 3)
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.NUMBERS.getGameName());
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new WhereIsIt(WhereIsIt.WhereIsItGameType.NUMBERS, gameVariant.getWidth(),
                                 gameVariant.getHeight(), false, gameContext, stats);
                     }
 
@@ -436,7 +467,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("MemoryLetter", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+        result.add(new GameSpec(new GameSummary("MemoryLetters", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
                 "data/Thumbnails/Memory-Letter.jpg"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -468,7 +499,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("MemoryNumber", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+        result.add(new GameSpec(new GameSummary("MemoryNumbers", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
                 "data/Thumbnails/Memory-Letter.jpg"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -533,7 +564,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("OpenMemoryLetter", DEFAULT_SEARCHING_GAME_THUMBNAIL,
+        result.add(new GameSpec(new GameSummary("OpenMemoryLetters", DEFAULT_SEARCHING_GAME_THUMBNAIL,
                 "data/Thumbnails/openMemoryLetters.jpg"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
