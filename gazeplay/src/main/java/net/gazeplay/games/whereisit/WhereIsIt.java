@@ -38,8 +38,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 
-import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZED;
-import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.LETTERNAME;
+import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.*;
 
 /**
  * Created by Didier Schwab on the 18/11/2017
@@ -52,8 +51,9 @@ public class WhereIsIt implements GameLifeCycle {
 
     public enum WhereIsItGameType {
         ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
-                "where-is-the-color"), LETTERNAME("where-is-the-letter",
-                        "where-is-the-letter"), CUSTOMIZED("custumized", "custumized"), FLAGS("find-flag", "find-flag");
+                "where-is-the-color"), LETTERS("where-is-the-letter", "where-is-the-letter"), NUMBERS(
+                        "where-is-the-number",
+                        "where-is-the-number"), FLAGS("find-flag", "find-flag"), CUSTOMIZED("custumized", "custumized");
 
         @Getter
         private final String gameName;
@@ -458,7 +458,7 @@ public class WhereIsIt implements GameLifeCycle {
             return "";
         }
 
-        if (gameType == LETTERNAME) {// no sound for now
+        if (gameType == LETTERS || gameType == NUMBERS || gameType == FLAGS) {// no sound for now
 
             // erase when translation is complete
             return null;
