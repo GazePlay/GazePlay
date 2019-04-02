@@ -125,30 +125,37 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                 launch();
             }
         }, fixationLength);
-
+        
         finalScoreText = new Text(0, dimensions.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);
         finalScoreText.setTextAlignment(TextAlignment.CENTER);
         finalScoreText.setFont(new Font(50));
         finalScoreText.setWrappingWidth(dimensions.getWidth());
         foregroundLayer.getChildren().addAll(shade, finalScoreText, restartButton);
+        
+        gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
         // Interaction
         gazeTarget = new Point2D(dimensions.getWidth() / 2.0, dimensions.getHeight() / 2.0);
 
+        interactionOverlay = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+        
         EventHandler<Event> movementEvent = (Event event) -> {
             if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
                 gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
             } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
-                gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
+                gazeTarget = interactionOverlay.screenToLocal(  ((GazeEvent) event).getX() ,((GazeEvent) event).getY() );
             }
         };
 
-        interactionOverlay = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         interactionOverlay.addEventFilter(MouseEvent.MOUSE_MOVED, movementEvent);
         interactionOverlay.addEventFilter(GazeEvent.GAZE_MOVED, movementEvent);
         interactionOverlay.setFill(Color.TRANSPARENT);
         foregroundLayer.getChildren().add(interactionOverlay);
+        
+        gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
+        
+        
     }
 
     private void bounce(double intensity, String soundName) {
