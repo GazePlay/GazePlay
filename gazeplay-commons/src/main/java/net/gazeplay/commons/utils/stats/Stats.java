@@ -13,7 +13,6 @@ import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.games.Utils;
-import org.tc33.jheatchart.HeatChart;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,8 +42,10 @@ public class Stats implements GazeMotionListener {
     @Getter
     private int nbUnCountedShots;
     private double[][] heatMap;
+
     @Getter
     private SavedStatsInfo savedStatsInfo;
+
     private Long currentRoundStartTime;
 
     public Stats(Scene gameContextScene) {
@@ -59,6 +60,7 @@ public class Stats implements GazeMotionListener {
     private static double[][] instanciateHeatMapData(Scene gameContextScene, double heatMapPixelSize) {
         int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
         int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
+
         log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
         return new double[heatMapWidth][heatMapHeight];
     }
@@ -109,10 +111,12 @@ public class Stats implements GazeMotionListener {
 
         File todayDirectory = getGameStatsOfTheDayDirectory();
         final String heatmapFilePrefix = Utils.now() + "-heatmap";
+
         File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
 
         SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile);
+
         this.savedStatsInfo = savedStatsInfo;
 
         if (this.heatMap != null) {
@@ -192,7 +196,6 @@ public class Stats implements GazeMotionListener {
         File statsDirectory = new File(Utils.getUserStatsFolder(Configuration.getInstance().getUserName()));
         File gameDirectory = new File(statsDirectory, gameName);
         File todayDirectory = new File(gameDirectory, Utils.today());
-
         boolean outputDirectoryCreated = todayDirectory.mkdirs();
         log.info("outputDirectoryCreated = {}", outputDirectoryCreated);
 
@@ -238,14 +241,17 @@ public class Stats implements GazeMotionListener {
         for (int i = -trail; i <= trail; i++)
             for (int j = -trail; j <= trail; j++) {
 
-                if (Math.sqrt(i * i + j * j) < trail)
+                if (Math.sqrt(i * i + j * j) < trail) {
                     inc(x + i, y + j);
+
+                }
             }
     }
 
     private void inc(int x, int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             // heatMap[heatMap[0].length - y][heatMap.length - x]++;
+
             heatMap[x][y]++;
         }
     }

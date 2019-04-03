@@ -634,7 +634,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
                     LanguageBox.setText(Languages.getLanguage(codeLanguage));
 
-                    LanguageBox.setGraphic(imageView);
+                    ImageView newImage = new ImageView(image);
+                    newImage.setPreserveRatio(true);
+                    newImage.setFitHeight(25);
+                    LanguageBox.setGraphic(newImage);
 
                     if (codeLanguage.equals("ell")) {
 
