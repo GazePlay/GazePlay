@@ -12,7 +12,6 @@ import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.memory.Memory;
 
 import java.util.*;
 
@@ -25,7 +24,7 @@ public class OpenMemory implements GameLifeCycle {
 
     public enum OpenMemoryGameType {
 
-        LETTER, DEFAULT
+        LETTERS, NUMBERS, DEFAULT
     };
 
     @Data
@@ -68,10 +67,12 @@ public class OpenMemory implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        if (gameType == OpenMemoryGameType.LETTER) {
+        if (gameType == OpenMemoryGameType.LETTERS) {
 
-            log.info("LETTERS GAME");
             this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
+        } else if (gameType == OpenMemoryGameType.NUMBERS) {
+
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers");
         } else
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
                     Utils.getImagesSubDirectory("default"));
