@@ -593,44 +593,44 @@ public class DefaultGamesLocator implements GamesLocator {
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new OpenMemory(OpenMemory.OpenMemoryGameType.LETTERS, gameContext, gameVariant.getWidth(),
-                                gameVariant.getHeight(), stats);
+                        return new OpenMemory(OpenMemory.OpenMemoryGameType.LETTERS, gameContext,
+                                gameVariant.getWidth(), gameVariant.getHeight(), stats);
                     }
                 }));
 
         result.add(new GameSpec(new GameSummary("OpenMemoryNumbers", DEFAULT_SEARCHING_GAME_THUMBNAIL,
-                "data/Thumbnails/openMemoryLetters.jpg"), new GameSpec.GameVariantGenerator() {
-            @Override
-            public Set<GameSpec.GameVariant> getVariants() {
-                return Sets.newLinkedHashSet(Lists.newArrayList(
+                "data/Thumbnails/openMemoryNumbers.jpg"), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
 
-                        new GameSpec.DimensionGameVariant(2, 2),
+                                new GameSpec.DimensionGameVariant(2, 2),
 
-                        new GameSpec.DimensionGameVariant(2, 3),
+                                new GameSpec.DimensionGameVariant(2, 3),
 
-                        new GameSpec.DimensionGameVariant(3, 2),
+                                new GameSpec.DimensionGameVariant(3, 2),
 
-                        new GameSpec.DimensionGameVariant(3, 4),
+                                new GameSpec.DimensionGameVariant(3, 4),
 
-                        new GameSpec.DimensionGameVariant(4, 3),
+                                new GameSpec.DimensionGameVariant(4, 3),
 
-                        new GameSpec.DimensionGameVariant(4, 4)
+                                new GameSpec.DimensionGameVariant(4, 4)
 
                 ));
-            }
-        }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new MagicCardsGamesStats(scene);
-            }
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new MagicCardsGamesStats(scene);
+                    }
 
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext,
-                                               GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                return new OpenMemory(OpenMemory.OpenMemoryGameType.NUMBERS, gameContext, gameVariant.getWidth(),
-                        gameVariant.getHeight(), stats);
-            }
-        }));
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new OpenMemory(OpenMemory.OpenMemoryGameType.NUMBERS, gameContext,
+                                gameVariant.getWidth(), gameVariant.getHeight(), stats);
+                    }
+                }));
 
         result.add(new GameSpec(new GameSummary("Video Player with Feedback", DEFAULT_SEARCHING_GAME_THUMBNAIL,
                 "data/Thumbnails/youtube.png"), new GameSpec.GameVariantGenerator() {
