@@ -286,7 +286,6 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.FINDODD.getGameName());
                     }
 
-<<<<<<< HEAD
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
@@ -294,13 +293,10 @@ public class DefaultGamesLocator implements GamesLocator {
                                 gameVariant.getHeight(), false, gameContext, stats);
                     }
                 }));
-        result.add(new GameSpec(
-                new GameSummary("WhereIsIt", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/whereisit.png"),
-                new GameSpec.GameVariantGenerator() {
-=======
+
         result.add(new GameSpec(new GameSummary("WhereIsTheLetter", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
                 "data/Thumbnails/Where-is-the-Letter.jpg"), new GameSpec.GameVariantGenerator() {
->>>>>>> e29c19b95f1ffc75c64def57689b26871841955c
+
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(

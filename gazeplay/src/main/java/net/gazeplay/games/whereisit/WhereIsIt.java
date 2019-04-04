@@ -51,14 +51,10 @@ public class WhereIsIt implements GameLifeCycle {
 
     public enum WhereIsItGameType {
         ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
-<<<<<<< HEAD
-                "where-is-the-color"), CUSTOMIZED("custumized", "custumized"), FLAGS("find-flag",
-                        "find-flag"), FINDODD("find-the-odd-one-out", "find-the-odd-one-out");
-=======
-                "where-is-the-color"), LETTERS("where-is-the-letter", "where-is-the-letter"), NUMBERS(
-                        "where-is-the-number",
-                        "where-is-the-number"), FLAGS("find-flag", "find-flag"), CUSTOMIZED("custumized", "custumized");
->>>>>>> e29c19b95f1ffc75c64def57689b26871841955c
+
+                "where-is-the-color"), CUSTOMIZED("custumized", "custumized"), FLAGS("find-flag", "find-flag"), FINDODD(
+                        "find-the-odd-one-out", "find-the-odd-one-out"), LETTERS("where-is-the-letter",
+                                "where-is-the-letter"), NUMBERS("where-is-the-number", "where-is-the-number");
 
         @Getter
         private final String gameName;
