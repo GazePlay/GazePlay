@@ -286,7 +286,20 @@ public class GameMenuFactory {
         final Configuration config = Configuration.getInstance();
 
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
-            Button button = new Button(variant.getLabel());
+            Button button;
+
+            if (variant instanceof GameSpec.DimensionGameVariant)
+                button = new Button(variant.getLabel());
+
+            else if (variant instanceof GameSpec.CupsGameVariant)
+                button = new Button(((GameSpec.CupsGameVariant) variant).getNoCups()
+                        + new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
+            else if (variant instanceof GameSpec.TargetsGameVariant)
+                button = new Button(((GameSpec.TargetsGameVariant) variant).getNoTargets()
+                        + new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
+            else
+                button = new Button(new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
+
             button.getStyleClass().add("gameChooserButton");
             button.getStyleClass().add("gameVariation");
             button.getStyleClass().add("button");
@@ -302,9 +315,9 @@ public class GameMenuFactory {
                     chooseGame(gazePlay, gameSpec, variant, config);
                 }
             };
-
             button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
-        }
+
+        } // end for
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 

@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 
-import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.CUSTOMIZED;
+import static net.gazeplay.games.whereisit.WhereIsIt.WhereIsItGameType.*;
 
 /**
  * Created by Didier Schwab on the 18/11/2017
@@ -51,8 +51,14 @@ public class WhereIsIt implements GameLifeCycle {
 
     public enum WhereIsItGameType {
         ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
+<<<<<<< HEAD
                 "where-is-the-color"), CUSTOMIZED("custumized", "custumized"), FLAGS("find-flag",
                         "find-flag"), FINDODD("find-the-odd-one-out", "find-the-odd-one-out");
+=======
+                "where-is-the-color"), LETTERS("where-is-the-letter", "where-is-the-letter"), NUMBERS(
+                        "where-is-the-number",
+                        "where-is-the-number"), FLAGS("find-flag", "find-flag"), CUSTOMIZED("custumized", "custumized");
+>>>>>>> e29c19b95f1ffc75c64def57689b26871841955c
 
         @Getter
         private final String gameName;
@@ -216,7 +222,7 @@ public class WhereIsIt implements GameLifeCycle {
 
             Utils.playSound(currentRoundDetails.questionSoundPath);
         } catch (Exception e) {
-            log.debug("Can't play sound: no associated sound : " + e.toString());
+            log.warn("Can't play sound: no associated sound : " + e.toString());
         }
     }
 
@@ -561,7 +567,14 @@ public class WhereIsIt implements GameLifeCycle {
             return "";
         }
 
-        if (!(language.equals("fra") || language.equals("eng"))) {
+        if (gameType == LETTERS || gameType == NUMBERS || gameType == FLAGS) {// no sound for now
+
+            // erase when translation is complete
+            return null;
+        }
+
+        if (!(language.equals("fra") || language.equals("eng"))) {// sound is only for English and French for animals
+                                                                  // and colors
             // erase when translation is complete
             return null;
         }

@@ -19,12 +19,12 @@ de rencontrer plus ou moins informelles.
 
 Plusieurs étudiants ont contribué au développement des jeux et/ou aux idées dans le cadre
 de leur formation :
-- en 2017-2018 : Rajaa BARHTAOUI (Univ.Grenoble Alpes), Amela FEJZA (Grenoble INP)
-- en 2018-2019 : Mélanie CARRIÈRE (Univ.Grenoble Alpes), Dumitru CORINI (Univ.Grenoble Alpes),
- Vincent GIVAUDAN (Univ.Grenoble Alpes), Thomas MEDARD (Univ.Grenoble Alpes), Sébastien RIOU (Univ.Grenoble Alpes)
-- en 2019-2020 : Sannara ek (Univ.Grenoble Alpes), Teo Blachère (Univ.Grenoble Alpes),
-Johana Marku (Univ.Grenoble Alpes), Peter Bardawil (Univ.Grenoble Alpes), Wafaa El Husseini (Univ.Grenoble Alpes),
- TRUONG Hai Long (Univ.Grenoble Alpes)
+- en 2017-2018 : Rajaa BARHTAOUI (Univ. Grenoble Alpes), Amela FEJZA (Grenoble INP)
+- en 2018-2019 : Mélanie CARRIÈRE (Univ. Grenoble Alpes), Dumitru CORINI (Univ. Grenoble Alpes),
+ Vincent GIVAUDAN (Univ.Grenoble Alpes), Thomas MEDARD (Univ. Grenoble Alpes), Sébastien RIOU (Univ. Grenoble Alpes)
+- en 2019-2020 : Sannara ek (Univ. Grenoble Alpes), Teo Blachère (Univ. Grenoble Alpes),
+Johana Marku (Grenoble INP), Peter Bardawil (Grenoble INP), Wafaa El Husseini (Grenoble INP),
+ TRUONG Hai Long (Univ. Grenoble Alpes)
 
 Merci également à la communauté open source pour son aide : Yann ROBERT, Anantaplex (Maven, logs, lombok,...)
 

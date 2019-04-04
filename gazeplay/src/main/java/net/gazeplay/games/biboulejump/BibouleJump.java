@@ -133,27 +133,38 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         finalScoreText.setWrappingWidth(dimensions.getWidth());
         foregroundLayer.getChildren().addAll(shade, finalScoreText, restartButton);
 
+        this.gameContext.getGazeDeviceManager().addEventFilter(restartButton);
+
         // Interaction
         gazeTarget = new Point2D(dimensions.getWidth() / 2.0, dimensions.getHeight() / 2.0);
+
+        interactionOverlay = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
 
         EventHandler<Event> movementEvent = (Event event) -> {
             if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
                 gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
             } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
-                gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
+                gazeTarget = interactionOverlay.screenToLocal(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
             }
         };
 
-        interactionOverlay = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         interactionOverlay.addEventFilter(MouseEvent.MOUSE_MOVED, movementEvent);
         interactionOverlay.addEventFilter(GazeEvent.GAZE_MOVED, movementEvent);
         interactionOverlay.setFill(Color.TRANSPARENT);
         foregroundLayer.getChildren().add(interactionOverlay);
+
+        this.gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
+
     }
 
     private void bounce(double intensity, String soundName) {
         velocity = new Point2D(velocity.getX(), -terminalVelocity * intensity);
-        Utils.playSound(DATA_PATH + "/sounds/" + soundName);
+
+        try {
+            Utils.playSound(DATA_PATH + "/sounds/" + soundName);
+        } catch (Exception e) {
+            log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
     }
 
     @Override
@@ -193,6 +204,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     }
 
     private int getsetHighscore(int score) {
+
         File f = new File(Utils.getUserStatsFolder(config.getUserName()) + "/Biboule Jump/highscores.dat");
         try {
             ArrayList<Integer> highscores = new ArrayList();
@@ -219,6 +231,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
         return score;
     }
 

@@ -181,10 +181,26 @@ public class Bubble extends Parent implements GameLifeCycle {
             }
         });
 
-        if (Math.random() > 0.5)
-            Utils.playSound("data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3");
-        else
-            Utils.playSound("data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3");
+        if (Math.random() > 0.5) {
+            String soundResource = "data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3";
+            try {
+                Utils.playSound(soundResource);
+            } catch (Exception e) {
+
+                log.warn("file doesn't exist : {}", soundResource);
+                log.warn(e.getMessage());
+            }
+        } else {
+            String soundResource = "data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3";
+            try {
+                Utils.playSound(soundResource);
+            } catch (Exception e) {
+
+                log.warn("file doesn't exist : {}", soundResource);
+                log.warn(e.getMessage());
+            }
+        }
+
     }
 
     private void enter(Circle target) {

@@ -22,6 +22,11 @@ public class OpenMemory implements GameLifeCycle {
 
     private static final int minHeight = 30;
 
+    public enum OpenMemoryGameType {
+
+        LETTERS, NUMBERS, DEFAULT
+    };
+
     @Data
     @AllArgsConstructor
     public class RoundDetails {
@@ -48,7 +53,8 @@ public class OpenMemory implements GameLifeCycle {
 
     public int nbTurnedCards;
 
-    public OpenMemory(GameContext gameContext, int nbLines, int nbColumns, Stats stats) {
+    public OpenMemory(final OpenMemoryGameType gameType, GameContext gameContext, int nbLines, int nbColumns,
+            Stats stats) {
         super();
         int cardsCount = nbLines * nbColumns;
         if ((cardsCount & 1) != 0) {
@@ -61,8 +67,15 @@ public class OpenMemory implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
-                Utils.getImagesSubDirectory("default"));
+        if (gameType == OpenMemoryGameType.LETTERS) {
+
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
+        } else if (gameType == OpenMemoryGameType.NUMBERS) {
+
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers");
+        } else
+            this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
+                    Utils.getImagesSubDirectory("default"));
 
     }
 
