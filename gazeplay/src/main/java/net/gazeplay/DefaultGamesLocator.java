@@ -925,16 +925,27 @@ public class DefaultGamesLocator implements GamesLocator {
 
         result.add(new GameSpec(
                 new GameSummary("Biboule Jump", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/biboulejump.png"),
-                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.IntGameVariant(0, "With moving platforms"),
+
+                                new GameSpec.IntGameVariant(1, "Without moving platforms")
+
+                        ));
+                    }},
+                new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new BibouleJumpStats(scene);
                     }
 
                     @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext,
-                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new BibouleJump(gameContext, stats);
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                                                       Stats stats) {
+                        return new BibouleJump(gameContext, stats, gameVariant.getNumber());
                     }
 
                 }));

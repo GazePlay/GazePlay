@@ -3,8 +3,6 @@ package net.gazeplay.games.biboulejump;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.util.Duration;
 
 public class MovingPlatform extends Platform {
@@ -37,6 +35,6 @@ public class MovingPlatform extends Platform {
         leftMovement.setOnFinished(event -> rightMovement.playFromStart());
         rightMovement.setOnFinished(event -> leftMovement.playFromStart());
 
-        leftMovement.playFrom(Duration.seconds(animationTime * (x - leftLimit)/mouvementArea/2));
+        leftMovement.playFrom(Duration.seconds((rightLimit % 5) * animationTime / 5));
     }
 }
