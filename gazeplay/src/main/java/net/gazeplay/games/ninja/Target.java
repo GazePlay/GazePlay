@@ -228,7 +228,14 @@ public class Target extends Portrait {
         });
 
         sequence.play();
-        Utils.playSound(audioClipResourceLocation);
+
+        try {
+            Utils.playSound(audioClipResourceLocation);
+        } catch (Exception exp) {
+
+            log.warn("file doesn't exist : {}", audioClipResourceLocation);
+            log.warn(exp.getMessage());
+        }
     }
 
     private Transition createTransition1() {

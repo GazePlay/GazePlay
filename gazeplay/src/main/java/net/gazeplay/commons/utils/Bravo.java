@@ -147,7 +147,13 @@ public class Bravo extends Rectangle {
 
             if (this.enableRewardSound) {
                 log.debug("Playing sound animation ...");
-                Utils.playSound(soundResource);
+                try {
+                    Utils.playSound(soundResource);
+                } catch (Exception e) {
+
+                    log.warn("file doesn't exist : {}", soundResource);
+                    log.warn(e.getMessage());
+                }
             }
 
             log.debug("Finished JavaFX task");
