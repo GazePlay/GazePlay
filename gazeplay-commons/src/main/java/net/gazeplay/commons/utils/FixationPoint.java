@@ -12,11 +12,12 @@ public class FixationPoint {
     @Getter
     private int gazeDuration;
 
-    public FixationPoint(){
+    public FixationPoint() {
         firstGaze = 0;
         gazeDuration = 0;
     }
-    public FixationPoint(int fG,int gD){
+
+    public FixationPoint(int fG, int gD) {
         firstGaze = fG;
         gazeDuration = gD;
     }

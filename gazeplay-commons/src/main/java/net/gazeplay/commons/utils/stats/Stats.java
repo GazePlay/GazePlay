@@ -66,14 +66,16 @@ public class Stats implements GazeMotionListener {
         log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
         return new double[heatMapWidth][heatMapHeight];
     }
-    private void instantiateFixationSequence(int rows, int columns){
+
+    private void instantiateFixationSequence(int rows, int columns) {
         fixationSequence = new FixationPoint[rows][columns];
-        for(int i = 0 ; i < fixationSequence.length; i ++){
-            for(int j = 0 ; j < fixationSequence[0].length; j ++){
-                fixationSequence[i][j]= new FixationPoint();
+        for (int i = 0; i < fixationSequence.length; i++) {
+            for (int j = 0; j < fixationSequence[0].length; j++) {
+                fixationSequence[i][j] = new FixationPoint();
             }
         }
     }
+
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
     }
@@ -232,6 +234,7 @@ public class Stats implements GazeMotionListener {
             }
         }
     }
+
     // save the time the gaze first went !
     private void saveFixationPointsAsCsv(File file) throws IOException {
         try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
