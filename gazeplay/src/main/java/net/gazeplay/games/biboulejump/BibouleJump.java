@@ -190,13 +190,15 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         biboule = new Rectangle(dimensions.getWidth() / 2, dimensions.getHeight() / 2, dimensions.getHeight() / 6,
                 dimensions.getHeight() / 6);
         this.middleLayer.getChildren().add(biboule);
-        biboule.setFill(new ImagePattern(new Image(DATA_PATH + "/biboules/" + getRandomFileNameFromFileList(bibouleImages))));
+        biboule.setFill(
+                new ImagePattern(new Image(DATA_PATH + "/biboules/" + getRandomFileNameFromFileList(bibouleImages))));
 
         velocity = Point2D.ZERO;
         score = 0;
         lastTickTime = 0;
         gazeTarget = new Point2D(dimensions.getWidth() / 2, 0);
-        createPlatform(biboule.getX() + biboule.getWidth() / 2, biboule.getY() + biboule.getHeight() + platformHeight, false);
+        createPlatform(biboule.getX() + biboule.getWidth() / 2, biboule.getY() + biboule.getHeight() + platformHeight,
+                false);
 
         generatePlatforms(dimensions.getHeight());
 
@@ -209,7 +211,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     }
 
-    private String getRandomFileNameFromFileList(File[] fileList){
+    private String getRandomFileNameFromFileList(File[] fileList) {
         return fileList[randomGenerator.nextInt(fileList.length)].getName();
     }
 
@@ -274,10 +276,10 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     private void createPlatform(double centerX, double centerY, boolean moving) {
         Platform p;
-        if(!moving) {
-            p = new Platform(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth,
-                    platformHeight, "bounce.wav", 3, 0.5, 0, 0, 0);
-        }else{
+        if (!moving) {
+            p = new Platform(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth, platformHeight,
+                    "bounce.wav", 3, 0.5, 0, 0, 0);
+        } else {
             p = new MovingPlatform(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth,
                     platformHeight, "bounce.wav", 3, dimensions.getWidth(), 0.5, 0, 0, 0);
         }
@@ -286,7 +288,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         p.setFill(new ImagePattern(new Image(DATA_PATH + "/clouds/" + getRandomFileNameFromFileList(cloudImages))));
         backgroundLayer.getChildren().add(p);
     }
-
 
     private void generatePlatforms(double bottomLimit) {
         double top = -dimensions.getHeight();
@@ -299,9 +300,9 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                         + platformWidth / 2;
                 newPlatY = bottom - randomGenerator.nextInt((int) (dimensions.getHeight() / 4));
             } while (Math.abs(newPlatX - highestPlatform.getX()) >= dimensions.getWidth() / 3);
-            if(version == 0 && randomGenerator.nextInt(4) == 0){
+            if (version == 0 && randomGenerator.nextInt(4) == 0) {
                 createPlatform(newPlatX, newPlatY, true);
-            }else {
+            } else {
                 createPlatform(newPlatX, newPlatY, false);
                 if (randomGenerator.nextInt(5) == 0) {
                     createBouncepad(newPlatX, newPlatY);
@@ -364,8 +365,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         if (velocity.getY() > 0) { // The biboule is falling
             Rectangle bibouleCollider = new Rectangle(biboule.getX() + biboule.getWidth() / 4,
                     biboule.getY() + biboule.getHeight() * 2 / 3, biboule.getWidth() / 2, biboule.getHeight() / 3);
-            for(Platform p: platforms){
-                if(p.isColliding(bibouleCollider)){
+            for (Platform p : platforms) {
+                if (p.isColliding(bibouleCollider)) {
                     bounce(p.getBounceFactor(), p.getSoundFileLocation());
                 }
             }

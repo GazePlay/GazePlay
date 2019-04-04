@@ -934,9 +934,9 @@ public class DefaultGamesLocator implements GamesLocator {
 
                                 new GameSpec.IntGameVariant(1, "Without moving platforms")
 
-                        ));
-                    }},
-                new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new BibouleJumpStats(scene);
@@ -944,7 +944,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
-                                                       Stats stats) {
+                            Stats stats) {
                         return new BibouleJump(gameContext, stats, gameVariant.getNumber());
                     }
 
