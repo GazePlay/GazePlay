@@ -5,12 +5,12 @@
 	<groupId>com.github.schwabdidier</groupId>
 	<artifactId>gazeplay-dist</artifactId>
 	<packaging>pom</packaging>
-	<version>1.5.1-SNAPSHOT</version>
+	<version>1.5.2-SNAPSHOT</version>
 
 	<parent>
 		<groupId>com.github.schwabdidier</groupId>
 		<artifactId>gazeplay-project</artifactId>
-		<version>1.5.1-SNAPSHOT</version>
+		<version>1.5.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>com.github.schwabdidier</groupId>
 			<artifactId>gazeplay</artifactId>
-			<version>1.5.1-SNAPSHOT</version>
+			<version>1.5.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
