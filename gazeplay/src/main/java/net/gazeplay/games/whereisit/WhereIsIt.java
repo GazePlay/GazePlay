@@ -266,9 +266,7 @@ public class WhereIsIt implements GameLifeCycle {
     private RoundDetails pickAndBuildRandomPictures(final Configuration config,
             final int numberOfImagesToDisplayPerRound, final Random random,
             final int winnerImageIndexAmongDisplayedImages) {
- 
-        
-        
+
         final File imagesDirectory = locateImagesDirectory(config);
 
         final String language = config.getLanguage();
@@ -286,7 +284,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         final int position = random.nextInt(numberOfImagesToDisplayPerRound);
-        
+
         final int randomFolderIndex = random.nextInt(filesCount);
         log.info("randomFolderIndex " + randomFolderIndex);
 
@@ -305,10 +303,10 @@ public class WhereIsIt implements GameLifeCycle {
         List<Image> pictograms = null;
 
         if (this.getGameType().gameName == "find-the-odd-one-out") {
-            int index = ((randomFolderIndex + step ) % filesCount)+1;
-            
+            int index = ((randomFolderIndex + step) % filesCount) + 1;
+
             for (int i = 0; i < position; i++) {
-                
+
                 log.info("index = {}", index);
                 final File folder = imagesFolders[(index) % filesCount];
 
@@ -343,8 +341,8 @@ public class WhereIsIt implements GameLifeCycle {
                 }
 
                 PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                        false, randomImageFile + "", stats, this);
+                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, false,
+                        randomImageFile + "", stats, this);
 
                 pictureCardList.add(pictureCard);
 
@@ -358,9 +356,9 @@ public class WhereIsIt implements GameLifeCycle {
                     posX = 0;
                 }
             }
-            
-            int index2=(index+1)%filesCount;
-            
+
+            int index2 = (index + 1) % filesCount;
+
             log.info("index2 = {}", index2);
             final File folder = imagesFolders[(index2) % filesCount];
 
@@ -392,9 +390,8 @@ public class WhereIsIt implements GameLifeCycle {
             }
 
             PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    true, randomImageFile + "",
-                    stats, this);
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, true,
+                    randomImageFile + "", stats, this);
 
             pictureCardList.add(pictureCard);
 
@@ -407,10 +404,9 @@ public class WhereIsIt implements GameLifeCycle {
                 posY++;
                 posX = 0;
             }
-            //last part
-            for (int i = position+1; i < numberOfImagesToDisplayPerRound; i++) {
-                
-            
+            // last part
+            for (int i = position + 1; i < numberOfImagesToDisplayPerRound; i++) {
+
                 final File folder2 = imagesFolders[(index) % filesCount];
 
                 log.debug("folder = {}", folder2);
@@ -444,8 +440,8 @@ public class WhereIsIt implements GameLifeCycle {
                 }
 
                 PictureCard pictureCard2 = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                        false, randomImageFile2 + "", stats, this);
+                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, false,
+                        randomImageFile2 + "", stats, this);
 
                 pictureCardList.add(pictureCard2);
 
@@ -458,9 +454,8 @@ public class WhereIsIt implements GameLifeCycle {
                     posY++;
                     posX = 0;
                 }
-        } 
-        }
-        else {
+            }
+        } else {
 
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
