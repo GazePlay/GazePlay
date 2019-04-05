@@ -7,10 +7,10 @@ public class FixationPoint {
 
     @Setter
     @Getter
-    private int firstGaze;
+    private long firstGaze;
     @Setter
     @Getter
-    private int gazeDuration;
+    private long gazeDuration;
 
     public FixationPoint() {
         firstGaze = 0;

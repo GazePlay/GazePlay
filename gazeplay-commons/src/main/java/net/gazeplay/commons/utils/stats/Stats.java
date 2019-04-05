@@ -44,6 +44,16 @@ public class Stats implements GazeMotionListener {
     private int nbUnCountedShots;
     private double[][] heatMap;
 
+
+    private boolean isFirstGaze = true;
+    private long firstGazeVal;
+    @Getter
+    @Setter
+    private long currentGazeTime;
+    @Getter
+    @Setter
+    private long lastGazeTime;
+
     private FixationPoint fixationSequence[][]; // store the time a user gazed on a px
     @Getter
     private SavedStatsInfo savedStatsInfo;
@@ -91,8 +101,14 @@ public class Stats implements GazeMotionListener {
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
                 instantiateFixationSequence(heatMap.length, heatMap[0].length);
 
-                recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
-                recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
+                recordGazeMovements = e -> {
+
+                    incHeatMap((int) e.getX(), (int) e.getY());
+                };
+                recordMouseMovements = e -> {
+
+                    incHeatMap((int) e.getX(), (int) e.getY());
+                };
 
                 gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
                 gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
@@ -264,14 +280,27 @@ public class Stats implements GazeMotionListener {
 
     private void incHeatMap(int X, int Y) {
 
+        currentGazeTime = System.currentTimeMillis();
         // in heatChart, x and y are opposed
         int x = (int) (Y / heatMapPixelSize);
         int y = (int) (X / heatMapPixelSize);
+
+
+        if(!isFirstGaze){
+            lastGazeTime = (currentGazeTime - lastGazeTime);
+            firstGazeVal = lastGazeTime;
+        }
+        else{
+            firstGazeVal = 1000;
+            lastGazeTime = currentGazeTime;
+            isFirstGaze = false;
+        }
 
         for (int i = -trail; i <= trail; i++)
             for (int j = -trail; j <= trail; j++) {
 
                 if (Math.sqrt(i * i + j * j) < trail) {
+
                     inc(x + i, y + j);
 
                 }
@@ -281,6 +310,9 @@ public class Stats implements GazeMotionListener {
     private void inc(int x, int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             // heatMap[heatMap[0].length - y][heatMap.length - x]++;
+            //currentGazeTime = System.currentTimeMillis();
+
+            fixationSequence[x][y].setFirstGaze(firstGazeVal/1000);
 
             heatMap[x][y]++;
         }
