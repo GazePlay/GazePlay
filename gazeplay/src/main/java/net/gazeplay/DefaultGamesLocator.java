@@ -264,9 +264,40 @@ public class DefaultGamesLocator implements GamesLocator {
                                 gameVariant.getHeight(), false, gameContext, stats);
                     }
                 }));
+        result.add(new GameSpec(new GameSummary("FindTheOddOneOut", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+                "data/Thumbnails/findtheodd.jpg"), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.DimensionGameVariant(2, 2),
+
+                                new GameSpec.DimensionGameVariant(2, 3),
+
+                                new GameSpec.DimensionGameVariant(3, 2),
+
+                                new GameSpec.DimensionGameVariant(3, 3)
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.FINDODD.getGameName());
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new WhereIsIt(WhereIsIt.WhereIsItGameType.FINDODD, gameVariant.getWidth(),
+                                gameVariant.getHeight(), false, gameContext, stats);
+                    }
+                }));
 
         result.add(new GameSpec(new GameSummary("WhereIsTheLetter", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+
                 "data/Thumbnails/Where-is-the-Letter.png"), new GameSpec.GameVariantGenerator() {
+
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
