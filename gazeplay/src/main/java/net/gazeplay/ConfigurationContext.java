@@ -905,8 +905,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         KeyBox.getItems().addAll("Q", "W", "E", "R", "T", "Y");
 
         // GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
-        KeyBox.getSelectionModel().select(configuration.getQuitKey());
-        configuration.getQuitKeyProperty().setValue(configuration.getQuitKey());
+        KeyBox.getSelectionModel().select("Q");
+
         KeyBox.setPrefWidth(PREF_WIDTH);
         KeyBox.setPrefHeight(PREF_HEIGHT);
 
