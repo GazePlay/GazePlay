@@ -264,8 +264,9 @@ public class Math101 implements GameLifeCycle {
                 if (currentCardIndex == winnerCardIndex) {
                     isWinnerCard = true;
                     currentValue = correctAnswer;
-                    image = new Image("data/math101/images/correct.png", (cardWidth * 0.85), (cardHeight * 0.85), true,
-                            true);
+//                    image = new Image("data/math101/images/correct.png", (cardWidth * 0.5), (cardHeight * 0.5), true,
+//                            true);
+                    image = new Image("data/math101/images/correct2.png");
 
                 } else {
                     Random r = new Random();
@@ -286,10 +287,6 @@ public class Math101 implements GameLifeCycle {
                 double positionX = width / 2 + (width + cardWidth) * currentColumnIndex;
                 double positionY = minHeight / 2 + (minHeight + cardHeight) * currentLineIndex;
 
-                log.debug("WAFAA positionX : {} ; positionY : {}", positionX, positionY);
-
-                System.out.println("WAFAA -- Okay so Test X: " + positionX);
-                System.out.println("WAFAA -- Okay so Test Y: " + positionY);
 
                 Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue,
                         gameContext, stats, this, fixationlength);
