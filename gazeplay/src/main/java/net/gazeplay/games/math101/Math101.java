@@ -44,20 +44,19 @@ public class Math101 implements GameLifeCycle {
     }
 
     public enum Math101GameType {
-        ADDITION("math-101-addition"), SUBTRACTIONPOS("math-101-subtraction-pos"),
-        SUBTRACTIONNEG("math-101-subtraction-neg"), MULTIPLICATION("math-101-multiplication"),
-        DIVISION("math-101-division"), ADDSUB("math-101-addition-subtraction"),
-        MULTDIV("math-101-multiplication-division"), MATHALL("math-101-all");
+        ADDITION("math-101-addition"), SUBTRACTIONPOS("math-101-subtraction-pos"), SUBTRACTIONNEG(
+                "math-101-subtraction-neg"), MULTIPLICATION("math-101-multiplication"), DIVISION(
+                        "math-101-division"), ADDSUB("math-101-addition-subtraction"), MULTDIV(
+                                "math-101-multiplication-division"), MATHALL("math-101-all");
 
         @Getter
         private final String gameName;
 
-        Math101GameType(String gameName){
+        Math101GameType(String gameName) {
             this.gameName = gameName;
         }
 
     }
-
 
     private static final float cardRatio = 0.8f;
     private static final float zoom_factor = 1.16f;
