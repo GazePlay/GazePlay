@@ -97,7 +97,6 @@ public class Math101 implements GameLifeCycle {
     @Override
     public void launch() {
         final Configuration config = Configuration.getInstance();
-        // Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         // Setup the question parameters
         final int cardsCount = 3;
