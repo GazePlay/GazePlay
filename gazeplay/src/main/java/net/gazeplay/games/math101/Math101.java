@@ -14,6 +14,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
@@ -41,6 +42,22 @@ public class Math101 implements GameLifeCycle {
         private final List<Card> cardList;
         private final int winnerImageIndexAmongDisplayedImages;
     }
+
+    public enum Math101GameType {
+        ADDITION("math-101-addition"), SUBTRACTIONPOS("math-101-subtraction-pos"),
+        SUBTRACTIONNEG("math-101-subtraction-neg"), MULTIPLICATION("math-101-multiplication"),
+        DIVISION("math-101-division"), ADDSUB("math-101-addition-subtraction"),
+        MULTDIV("math-101-multiplication-division"), MATHALL("math-101-all");
+
+        @Getter
+        private final String gameName;
+
+        Math101GameType(String gameName){
+            this.gameName = gameName;
+        }
+
+    }
+
 
     private static final float cardRatio = 0.8f;
     private static final float zoom_factor = 1.16f;
