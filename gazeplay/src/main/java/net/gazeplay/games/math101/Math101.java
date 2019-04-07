@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by EL-Husseini Wafaa on 14/03/2019.
+ * Created by EL HUSSEINI Wafaa on 14/03/2019.
  */
 
 @Slf4j
@@ -42,7 +42,8 @@ public class Math101 implements GameLifeCycle {
         private final int winnerImageIndexAmongDisplayedImages;
     }
 
-    private static final float cardRatio = 0.75f;
+    private static final float cardRatio = 0.8f;
+    private static final float zoom_factor = 1.16f;
 
     private static final int minHeight = 30;
 
@@ -138,8 +139,6 @@ public class Math101 implements GameLifeCycle {
         // question.setfill(Color.WHITE);
         new Scene(new Group(question));
         question.applyCss();
-        // make it white??
-        // System.out.println("HEREEEEWAFAA: "+question.getLayoutBounds().getWidth());
 
         // Background Color
         Rectangle imageRectangle = new Rectangle(0, 0, gameDimension2D.getWidth(), gameDimension2D.getHeight());
@@ -152,49 +151,32 @@ public class Math101 implements GameLifeCycle {
         gameContext.getChildren().add(imageRectangle);
 
         // Add biboule pictures
-        double bibouleWidth = 370;
-        double bibouleHeight = 280;// gameDimension2D.getHeight() - 50;
+        double bibouleWidth = gameDimension2D.getHeight() / 2 + 50; // 370;
+        double bibouleHeight = gameDimension2D.getHeight() / 2 - 50; // 280??
         double bibouleX = gameDimension2D.getWidth() - 50 - bibouleWidth;
         double bibouleY = 50;// gameDimension2D.getHeight() - 50;
-
         Rectangle bibouleRectangle = new Rectangle(bibouleX, bibouleY, bibouleWidth, bibouleHeight);
         bibouleRectangle.setFill(new ImagePattern(new Image("data/math101/images/biboule_hand.png"), 0, 0, 1, 1, true));
-
         gameContext.getChildren().add(bibouleRectangle);
 
         // Stack of blackboard
         StackPane stack = new StackPane();
         double boardWidth = gameDimension2D.getWidth() * 0.9 / 2;
-        // System.out.println("boardWidth: "+boardWidth);
-        // System.out.println("question.getWrappingWidth(): "+question.getWrappingWidth());
 
         if ((boardWidth - 50) < question.getLayoutBounds().getWidth()) {
-
             boardWidth = question.getLayoutBounds().getWidth() + 50;
         }
-
-        // System.out.println("boardWidth updated: "+boardWidth);
-        // System.out.println("question.getWrappingWidth() updated: "+question.getWrappingWidth());
-
-        double boardHeight = gameDimension2D.getHeight() * 0.9 / 2;
+        double boardHeight = gameDimension2D.getHeight() * 0.9 / 2 - 50;
         double boardX = (bibouleX - boardWidth) / 2;
         double boardY = gameDimension2D.getHeight() * 0.1 / 2;
-
         stack.setLayoutX(boardX);
         stack.setLayoutY(boardY);
         Rectangle boardRectangle = new Rectangle(boardX, boardY, boardWidth, boardHeight);
         boardRectangle.setFill(new ImagePattern(new Image("data/math101/images/blackboard.png"), 0, 0, 1, 1, true));
 
-        // log.debug("WAFAA width {} ", correctAnswer);
-        // System.out.println("WAFAA -- Okay so Test: "+correctAnswer);
+        // Creating the cards
         List<Card> cardList = createCards(winnerCardIndex, correctAnswer, config);
-
         currentRoundDetails = new Math101.RoundDetails(cardList, winnerCardIndex);
-
-        // javafx.scene.text.Font.getFontNames();
-        // Arrays.deepToString(javafx.scene.text.Font.getFontNames());
-
-        // System.out.println("FONT NAMES "+Arrays.deepToString(javafx.scene.text.Font.getFontNames().toArray()));
 
         gameContext.getChildren().addAll(cardList);
 
@@ -236,16 +218,11 @@ public class Math101 implements GameLifeCycle {
 
     private List<Card> createCards(int winnerCardIndex, int correctAnswer, Configuration config) {
 
-        log.debug("WAFAA Width {} ; height {}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
+        final double boxHeight = computeCardBoxHeight(gameDimension2D, nbLines);
+        final double boxWidth = computeCardBoxWidth(gameDimension2D, nbColumns);
 
-        final double cardHeight = computeCardHeight(gameDimension2D, nbLines);
-        final double cardWidth = cardHeight * cardRatio;
-
-        log.debug("WAFAA cardWidth {} ; cardHeight {}", cardWidth, cardHeight);
-
-        double width = computeCardWidth(gameDimension2D, nbColumns) - cardWidth;
-
-        log.debug("WAFAA width {} ", width);
+        final double cardHeight = computeCardHeight(boxHeight);
+        final double cardWidth = computeCardWidth(cardHeight);
 
         List<Card> result = new ArrayList<>();
         List<Integer> resultInt = new ArrayList<>();
@@ -264,8 +241,6 @@ public class Math101 implements GameLifeCycle {
                 if (currentCardIndex == winnerCardIndex) {
                     isWinnerCard = true;
                     currentValue = correctAnswer;
-//                    image = new Image("data/math101/images/correct.png", (cardWidth * 0.5), (cardHeight * 0.5), true,
-//                            true);
                     image = new Image("data/math101/images/correct2.png");
 
                 } else {
@@ -284,9 +259,8 @@ public class Math101 implements GameLifeCycle {
                     image = new Image("data/common/images/error.png");
                 }
 
-                double positionX = width / 2 + (width + cardWidth) * currentColumnIndex;
-                double positionY = minHeight / 2 + (minHeight + cardHeight) * currentLineIndex;
-
+                double positionX = computePositionX(boxWidth, cardWidth, currentColumnIndex);
+                double positionY = computePositionY(boxHeight, cardHeight, currentLineIndex);
 
                 Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue,
                         gameContext, stats, this, fixationlength);
@@ -303,12 +277,28 @@ public class Math101 implements GameLifeCycle {
         return new Text(number1 + " " + operator + " " + number2 + " = ? ");
     }
 
-    private static double computeCardHeight(Dimension2D gameDimension2D, int nbLines) {
-        return gameDimension2D.getHeight() * 0.9 / nbLines;
+    private static double computeCardBoxHeight(Dimension2D gameDimension2D, int nbLines) {
+        return gameDimension2D.getHeight() / nbLines;
     }
 
-    private static double computeCardWidth(Dimension2D gameDimension2D, int nbColumns) {
+    private static double computeCardBoxWidth(Dimension2D gameDimension2D, int nbColumns) {
         return gameDimension2D.getWidth() / nbColumns;
+    }
+
+    private static double computeCardHeight(double boxHeight) {
+        return boxHeight / zoom_factor;
+    }
+
+    private static double computeCardWidth(double cardHeight) {
+        return cardHeight * cardRatio;
+    }
+
+    private static double computePositionX(double cardBoxWidth, double cardWidth, int colIndex) {
+        return ((cardBoxWidth - cardWidth) / 2) + (colIndex * cardBoxWidth);
+    }
+
+    private static double computePositionY(double cardboxHeight, double cardHeight, int rowIndex) {
+        return (cardboxHeight - cardHeight) / 2 + (rowIndex * cardboxHeight) / zoom_factor;
     }
 
 }

@@ -25,7 +25,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 public class Card extends Parent {
 
-    private static final float zoom_factor = 1.1f;
+    private static final float zoom_factor = 1.05f;
 
     private final double fixationlength;
 
@@ -130,9 +130,6 @@ public class Card extends Parent {
         // Prevent null pointer exception
         currentTimeline = new Timeline();
 
-        System.out.println("WAFAA-CARD stack x:" + stack.getLayoutX() + ", y:" + stack.getLayoutY());
-
-        System.out.println("WAFAA-CARD positionX:" + positionX + ", positionX:" + positionY);
     }
 
     private ProgressIndicator createProgressIndicator(double width, double height) {
@@ -160,13 +157,6 @@ public class Card extends Parent {
 
         currentTimeline.stop();
         currentTimeline = new Timeline();
-        // currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(card.opacityProperty(),
-        // 0)));
-
-        System.out.println("dimension2D.getWidth(): " + dimension2D.getWidth());
-        System.out.println("card.getWidth() : " + (card.getWidth()));
-        System.out.println(
-                "dimension2D.getWidth()/2 - card.getWidth() : " + (dimension2D.getWidth() / 2 - card.getWidth()));
 
         currentTimeline.getKeyFrames().add(
                 new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth() * final_zoom)));
@@ -256,7 +246,7 @@ public class Card extends Parent {
 
                             turned = true;
 
-                            card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+                            card.setFill(new ImagePattern(image, 0, 100, 1, 1, true));
 
                             card.removeEventFilter(MouseEvent.ANY, enterEvent);
                             card.removeEventFilter(GazeEvent.ANY, enterEvent);
