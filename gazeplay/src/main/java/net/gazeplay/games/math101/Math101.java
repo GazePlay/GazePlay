@@ -119,7 +119,8 @@ public class Math101 implements GameLifeCycle {
         } else {
             // operator is "-"
             operatorStr = "-";
-            if (number2 > number1) { // To make sure we only have positive answers
+            if (number2 > number1) {
+                // To make sure we only have positive answers
                 int temp = number2;
                 number2 = number1;
                 number1 = temp;

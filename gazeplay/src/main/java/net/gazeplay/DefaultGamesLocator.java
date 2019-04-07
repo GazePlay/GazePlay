@@ -930,19 +930,19 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
 
                 }));
-//728
+        // 728
         result.add(new GameSpec(
                 new GameSummary("Math101", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/math101.png"),
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return null; //new RaceGamesStats(scene, "robot");
-                    }//Need to make customized stats
+                        return null; // new RaceGamesStats(scene, "robot");
+                    }// Need to make customized stats
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-                                                       Stats stats) {
-                        return new Math101(gameContext,0, stats);
+                            Stats stats) {
+                        return new Math101(gameContext, 0, stats);
                     }
                 }));
 
