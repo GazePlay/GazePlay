@@ -31,7 +31,6 @@ import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.math101.Math101;
 import net.gazeplay.games.math101.MathGamesStats;
-
 import net.gazeplay.games.mediaPlayer.GazeMediaPlayer;
 import net.gazeplay.games.memory.Memory;
 import net.gazeplay.games.moles.MoleStats;
