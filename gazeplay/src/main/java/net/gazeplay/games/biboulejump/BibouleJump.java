@@ -35,7 +35,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private static String DATA_PATH = "data/biboulejump";
 
     private final GameContext gameContext;
-    private final Stats stats;
+    private final BibouleJumpStats stats;
     private final Dimension2D dimensions;
     private final Random randomGenerator;
     private final Configuration config;
@@ -78,7 +78,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     public BibouleJump(GameContext gameContext, Stats stats, int version) {
         this.gameContext = gameContext;
-        this.stats = stats;
+        this.stats = (BibouleJumpStats)stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.randomGenerator = new Random();
         this.config = Configuration.getInstance();
@@ -263,6 +263,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         finalScoreText.setText(sb.toString());
         finalScoreText.setOpacity(1);
         restartButton.active();
+        stats.addRoundDuration();
     }
 
     private void createBouncepad(double platformX, double platformY) {
@@ -393,7 +394,9 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     }
 
     private void updateScore(double difference) {
-        score += difference / dimensions.getHeight() * 100;
+        int inc = (int)(difference / dimensions.getHeight() * 100);
+        score += inc;
+        stats.incNbGoals(inc);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimensions.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
     }
