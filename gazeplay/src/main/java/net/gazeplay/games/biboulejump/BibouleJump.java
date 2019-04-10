@@ -39,6 +39,10 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private final Dimension2D dimensions;
     private final Random randomGenerator;
     private final Configuration config;
+    private final int version;
+
+    private final File[] bibouleImages;
+    private final File[] cloudImages;
 
     private final Group backgroundLayer;
     private final Group middleLayer;
@@ -47,9 +51,9 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     private Point2D gazeTarget;
     private Point2D velocity;
-    private double gravity = 0.005;
-    private double terminalVelocity = 0.8;
-    private double maxSpeed = 0.7;
+    private final double gravity = 0.005;
+    private final double terminalVelocity = 0.8;
+    private final double maxSpeed = 0.7;
 
     private final double platformWidth;
     private final double platformHeight;
@@ -61,8 +65,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private Rectangle biboule;
     private Label onScreenText;
     private Text scoreText;
-    private ArrayList<Rectangle> platforms;
-    private ArrayList<Rectangle> bouncepads;
+    private ArrayList<Platform> platforms;
 
     private int score;
 
@@ -73,12 +76,17 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     private final Multilinguism translate;
 
-    public BibouleJump(GameContext gameContext, Stats stats) {
+    public BibouleJump(GameContext gameContext, Stats stats, int version) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.randomGenerator = new Random();
         this.config = Configuration.getInstance();
+        this.version = version;
+
+        String datapathAbs = BibouleJump.class.getClassLoader().getResource(DATA_PATH).getPath().toString();
+        this.bibouleImages = new File(datapathAbs + "/biboules").listFiles();
+        this.cloudImages = new File(datapathAbs + "/clouds").listFiles();
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
@@ -88,8 +96,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.platforms = new ArrayList();
         this.platformHeight = dimensions.getHeight() / 10;
         this.platformWidth = dimensions.getWidth() / 7;
-
-        this.bouncepads = new ArrayList();
 
         this.translate = Multilinguism.getSingleton();
 
@@ -184,13 +190,15 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         biboule = new Rectangle(dimensions.getWidth() / 2, dimensions.getHeight() / 2, dimensions.getHeight() / 6,
                 dimensions.getHeight() / 6);
         this.middleLayer.getChildren().add(biboule);
-        biboule.setFill(new ImagePattern(new Image(DATA_PATH + "/biboules/green.png")));
+        biboule.setFill(
+                new ImagePattern(new Image(DATA_PATH + "/biboules/" + getRandomFileNameFromFileList(bibouleImages))));
 
         velocity = Point2D.ZERO;
         score = 0;
         lastTickTime = 0;
         gazeTarget = new Point2D(dimensions.getWidth() / 2, 0);
-        createPlatform(biboule.getX() + biboule.getWidth() / 2, biboule.getY() + biboule.getHeight() + platformHeight);
+        createPlatform(biboule.getX() + biboule.getWidth() / 2, biboule.getY() + biboule.getHeight() + platformHeight,
+                false);
 
         generatePlatforms(dimensions.getHeight());
 
@@ -201,6 +209,10 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     @Override
     public void dispose() {
 
+    }
+
+    private String getRandomFileNameFromFileList(File[] fileList) {
+        return fileList[randomGenerator.nextInt(fileList.length)].getName();
     }
 
     private int getsetHighscore(int score) {
@@ -254,21 +266,27 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     }
 
     private void createBouncepad(double platformX, double platformY) {
-        Rectangle b = new Rectangle(
+        Platform b = new Platform(
                 platformX + randomGenerator.nextInt((int) (platformWidth * 4 / 5)) - platformWidth / 2,
-                platformY - platformHeight / 3, platformWidth / 5, platformHeight / 3);
+                platformY - platformHeight / 3, platformWidth / 5, platformHeight / 3, "boing.wav", 6);
         b.setFill(new ImagePattern(new Image(DATA_PATH + "/bouncepad.png")));
         backgroundLayer.getChildren().add(b);
-        bouncepads.add(b);
+        platforms.add(b);
     }
 
-    private void createPlatform(double centerX, double centerY) {
-        Rectangle r = new Rectangle(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth,
-                platformHeight);
-        highestPlatform = r;
-        platforms.add(r);
-        r.setFill(new ImagePattern(new Image(DATA_PATH + "/clouds/cloud.png")));
-        backgroundLayer.getChildren().add(r);
+    private void createPlatform(double centerX, double centerY, boolean moving) {
+        Platform p;
+        if (!moving) {
+            p = new Platform(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth, platformHeight,
+                    "bounce.wav", 3, 0.5, 0, 0, 0);
+        } else {
+            p = new MovingPlatform(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth,
+                    platformHeight, "bounce.wav", 3, dimensions.getWidth(), 0.5, 0, 0, 0);
+        }
+        highestPlatform = p;
+        platforms.add(p);
+        p.setFill(new ImagePattern(new Image(DATA_PATH + "/clouds/" + getRandomFileNameFromFileList(cloudImages))));
+        backgroundLayer.getChildren().add(p);
     }
 
     private void generatePlatforms(double bottomLimit) {
@@ -282,34 +300,27 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                         + platformWidth / 2;
                 newPlatY = bottom - randomGenerator.nextInt((int) (dimensions.getHeight() / 4));
             } while (Math.abs(newPlatX - highestPlatform.getX()) >= dimensions.getWidth() / 3);
-            createPlatform(newPlatX, newPlatY);
-            if (randomGenerator.nextInt(15) == 0) {
-                createBouncepad(newPlatX, newPlatY);
+            if (version == 0 && randomGenerator.nextInt(4) == 0) {
+                createPlatform(newPlatX, newPlatY, true);
+            } else {
+                createPlatform(newPlatX, newPlatY, false);
+                if (randomGenerator.nextInt(5) == 0) {
+                    createBouncepad(newPlatX, newPlatY);
+                }
             }
 
             bottom = newPlatY - 2 * platformHeight;
         }
     }
 
-    private void scrollList(ArrayList<Rectangle> rects, double difference) {
-        Iterator<Rectangle> rectIter = rects.iterator();
+    private void scrollList(ArrayList<Platform> rects, double difference) {
+        Iterator<Platform> rectIter = rects.iterator();
         while (rectIter.hasNext()) {
-            Rectangle rect = rectIter.next();
-            rect.setY(rect.getY() + difference);
-            if (rect.getY() >= dimensions.getHeight()) {
-                backgroundLayer.getChildren().remove(rect);
+            Platform p = rectIter.next();
+            p.scroll(difference);
+            if (p.getY() >= dimensions.getHeight()) {
+                backgroundLayer.getChildren().remove(p);
                 rectIter.remove();
-            }
-        }
-    }
-
-    private void collisionList(ArrayList<Rectangle> rects, Rectangle bibouleCollider, double intensity, String sound) {
-        for (Rectangle platform : rects) {
-            Rectangle platformCollider = new Rectangle(platform.getX(), platform.getY() + platform.getHeight() / 2,
-                    platform.getWidth(), platform.getHeight() / 2);
-            if (rectangleAndRectangleCollision(bibouleCollider, platformCollider)) {
-                bounce(intensity, sound);
-                break;
             }
         }
     }
@@ -354,8 +365,12 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         if (velocity.getY() > 0) { // The biboule is falling
             Rectangle bibouleCollider = new Rectangle(biboule.getX() + biboule.getWidth() / 4,
                     biboule.getY() + biboule.getHeight() * 2 / 3, biboule.getWidth() / 2, biboule.getHeight() / 3);
-            collisionList(platforms, bibouleCollider, 3, "bounce.wav");
-            collisionList(bouncepads, bibouleCollider, 6, "boing.wav");
+            for (Platform p : platforms) {
+                if (p.isColliding(bibouleCollider)) {
+                    bounce(p.getBounceFactor(), p.getSoundFileLocation());
+                }
+            }
+
         }
 
         // Scrolling
@@ -363,7 +378,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
             double difference = dimensions.getHeight() / 3 - biboule.getY();
             updateScore(difference);
             scrollList(platforms, difference);
-            scrollList(bouncepads, difference);
             biboule.setY(biboule.getY() + difference);
         }
 
@@ -375,8 +389,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
             death();
         }
 
-        logs += "Score: " + score + "\n";
-        logs += "nb platforms: " + platforms.size() + "\n";
         // onScreenText.setText(logs);
     }
 
@@ -384,11 +396,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         score += difference / dimensions.getHeight() * 100;
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimensions.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
-    }
-
-    private boolean rectangleAndRectangleCollision(Rectangle rect1, Rectangle rect2) {
-        return rect1.getX() < rect2.getX() + rect2.getWidth() && rect1.getX() + rect1.getWidth() > rect2.getX()
-                && rect1.getY() < rect2.getY() + rect2.getHeight() && rect1.getY() + rect1.getHeight() > rect2.getY();
     }
 
 }
