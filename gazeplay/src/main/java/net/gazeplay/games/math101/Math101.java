@@ -157,7 +157,7 @@ public class Math101 implements GameLifeCycle {
                 // both cannot be 0
                 number1 = r.nextInt(maxValue + 1);
                 number2 = r.nextInt(maxValue + 1);
-                
+
                 if (number2 > number1) {
                     int temp = number2;
                     number2 = number1;
