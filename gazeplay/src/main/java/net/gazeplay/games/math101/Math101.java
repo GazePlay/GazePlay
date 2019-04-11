@@ -43,20 +43,37 @@ public class Math101 implements GameLifeCycle {
         private final int winnerImageIndexAmongDisplayedImages;
     }
 
+    private static Color pastelRed = Color.rgb(255, 227, 227);
+    private static Color light_pastelRed = Color.rgb(255, 245, 245);
+    private static Color pastelGreen = Color.rgb(227, 255, 227);
+    private static Color pastelBlue = Color.rgb(227, 227, 255);
+
     public enum Math101GameType {
-        ADDITION("math-101-addition"), SUBTRACTIONPOS("math-101-subtraction-pos"), SUBTRACTIONNEG(
-                "math-101-subtraction-neg"), MULTIPLICATION("math-101-multiplication"), DIVISION(
-                        "math-101-division"), ADDSUB("math-101-addition-subtraction"), MULTDIV(
-                                "math-101-multiplication-division"), MATHALL("math-101-all");
+        ADDITION("math-101-addition", pastelBlue, "+", new int[] { 8, 12, 20 }), SUBTRACTIONPOS(
+                "math-101-subtraction-pos", pastelBlue, "-", new int[] { 8, 12, 20 }), MULTIPLICATION(
+                        "math-101-multiplication", pastelGreen, "*", new int[] { 3, 5, 7, 9, 11, 12 }), DIVISION(
+                                "math-101-division", pastelGreen, "/", new int[] { 10, 15, 20, 30 }), ADDSUB(
+                                        "math-101-addition-subtraction", light_pastelRed, "+,-",
+                                        new int[] { 8, 12, 20 }), MULTDIV("math-101-multiplication-division", pastelRed,
+                                                "*,/", new int[] { 5, 10, 15, 20, 30 }), MATHALL("math-101-all",
+                                                        pastelRed, "+,-,/,*", new int[] { 5, 10, 15, 20 });
 
         @Getter
         private final String gameName;
+        private final Color backgroundColor;
+        private final String operators[];
+        private final int variations[];
 
-        Math101GameType(String gameName) {
+        Math101GameType(String gameName, Color coulour, String operators, int variations[]) {
             this.gameName = gameName;
+            this.backgroundColor = coulour;
+            this.operators = operators.split(",");
+            this.variations = variations;
         }
 
     }
+
+    private final Math101GameType gameType;
 
     private static final float cardRatio = 0.8f;
     private static final float zoom_factor = 1.16f;
@@ -68,40 +85,37 @@ public class Math101 implements GameLifeCycle {
     private final int nbLines;
     private final int nbColumns;
     private final int maxValue;
-    private final int maxVariant0 = 8;
-    private final int maxVariant1 = 12;
-    private final int maxVariant2 = 20;
+    private final int maxVariant[];// = {8,12,20};
+
+    private final String[] operators;
+
+    // Setup the question parameters
+    final int cardsCount = 3;
 
     private final Stats stats;
-
-    // private final ImageLibrary imageLibrary;//needed???
 
     private Math101.RoundDetails currentRoundDetails;
 
     javafx.geometry.Dimension2D gameDimension2D;
 
-    public Math101(GameContext gameContext, int maxValue, Stats stats) {
+    public Math101(final Math101GameType gameType, GameContext gameContext, int maxValue, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.nbLines = 2;
         this.nbColumns = 3;
         this.stats = stats;
+        this.gameType = gameType;
 
-        if (maxValue == 0) {
-            this.maxValue = maxVariant0;
-        } else if (maxValue == 1) {
-            this.maxValue = maxVariant1;
-        } else {
-            this.maxValue = maxVariant2;
-        }
+        this.operators = this.gameType.operators;
+        this.maxVariant = this.gameType.variations;
 
+        this.maxValue = maxVariant[maxValue];
         gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         Rectangle imageRectangle = new Rectangle(0, 0, gameDimension2D.getWidth(), gameDimension2D.getHeight());
         imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        imageRectangle.setFill(Color.rgb(227, 255, 227));
+        imageRectangle.setFill(this.gameType.backgroundColor);// Color.rgb(227, 255, 227));
 
         int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
         imageRectangle.setOpacity(1 - coef * 0.9);
@@ -114,35 +128,66 @@ public class Math101 implements GameLifeCycle {
     public void launch() {
         final Configuration config = Configuration.getInstance();
 
-        // Setup the question parameters
-        final int cardsCount = 3;
-
         Random r = new Random();
         final int winnerCardIndex = r.nextInt(cardsCount); // index in the list between 0 and 2
 
+        // choose numbers
         int number1 = r.nextInt(maxValue + 1);
         int number2 = r.nextInt(maxValue + 1);
 
-        int operator = r.nextInt(2);
+        final String operatorStr;
+        // choose operator
+        if (operators.length == 1) {
+            // operator is operators[0]
+            operatorStr = operators[0];
+        } else {
+            int operatorRand = r.nextInt(operators.length);
+            operatorStr = operators[operatorRand];
+        }
 
         final int correctAnswer;
-        final String operatorStr;
-
-        if (operator == 0) {
-            // operator is "+"
-            operatorStr = "+";
+        if (operatorStr.equals("+")) {
+            // operator is +
             correctAnswer = number1 + number2;
-        } else {
-            // operator is "-"
-            operatorStr = "-";
+        } else if (operatorStr.equals("*")) {
+            // operator is *
+            correctAnswer = number1 * number2;
+        } else if (operatorStr.equals("-")) {
+            // operator is -
             if (number2 > number1) {
                 // To make sure we only have positive answers
                 int temp = number2;
                 number2 = number1;
                 number1 = temp;
             }
-
             correctAnswer = number1 - number2;
+        } else {
+            // operator is /
+            while (number2 == 0 && number1 == 0 || (number1 % number2 != 0)) {
+                // both cannot be 0
+                number1 = r.nextInt(maxValue + 1);
+                number2 = r.nextInt(maxValue + 1);
+                // }
+
+                // while(number1%number2 != 0){
+                // number1+= (number1-(number1%number2));
+                // number1 = r.nextInt(maxValue + 1);
+                // number2 = r.nextInt(maxValue + 1);
+
+                if (number2 > number1) {
+                    int temp = number2;
+                    number2 = number1;
+                    number1 = temp;
+                }
+
+                if (number2 == 0) {
+                    int temp = number2;
+                    number2 = number1;
+                    number1 = temp;
+                }
+
+            }
+            correctAnswer = number1 / number2;
         }
 
         // Create Question
@@ -160,7 +205,7 @@ public class Math101 implements GameLifeCycle {
         Rectangle imageRectangle = new Rectangle(0, 0, gameDimension2D.getWidth(), gameDimension2D.getHeight());
         imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        imageRectangle.setFill(Color.rgb(227, 255, 227));
+        imageRectangle.setFill(gameType.backgroundColor);
 
         int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
         imageRectangle.setOpacity(1 - coef * 0.9);
@@ -191,7 +236,7 @@ public class Math101 implements GameLifeCycle {
         boardRectangle.setFill(new ImagePattern(new Image("data/math101/images/blackboard.png"), 0, 0, 1, 1, true));
 
         // Creating the cards
-        List<Card> cardList = createCards(winnerCardIndex, correctAnswer, config);
+        List<Card> cardList = createCards(winnerCardIndex, correctAnswer, config, operatorStr);
         currentRoundDetails = new Math101.RoundDetails(cardList, winnerCardIndex);
 
         gameContext.getChildren().addAll(cardList);
@@ -232,7 +277,7 @@ public class Math101 implements GameLifeCycle {
         gameContext.getChildren().removeAll(cardsToHide);
     }
 
-    private List<Card> createCards(int winnerCardIndex, int correctAnswer, Configuration config) {
+    private List<Card> createCards(int winnerCardIndex, int correctAnswer, Configuration config, String operator) {
 
         final double boxHeight = computeCardBoxHeight(gameDimension2D, nbLines);
         final double boxWidth = computeCardBoxWidth(gameDimension2D, nbColumns);
@@ -265,7 +310,11 @@ public class Math101 implements GameLifeCycle {
                     int tempCurrent = correctAnswer;
 
                     while (tempCurrent == correctAnswer || resultInt.contains(tempCurrent)) {
-                        tempCurrent = r.nextInt(2 * maxValue);
+                        if ((operator.equals("*") || operator.equals("/")) && (correctAnswer > maxValue)) {
+                            tempCurrent = r.nextInt(2 * correctAnswer);
+                        } else {
+                            tempCurrent = r.nextInt(2 * maxValue);
+                        }
                     }
                     resultInt.add(tempCurrent);
 
@@ -302,7 +351,11 @@ public class Math101 implements GameLifeCycle {
     }
 
     private static double computeCardHeight(double boxHeight) {
-        return boxHeight / zoom_factor;
+        if ((boxHeight / zoom_factor) < minHeight) {
+            return minHeight;
+        } else {
+            return boxHeight / zoom_factor;
+        }
     }
 
     private static double computeCardWidth(double cardHeight) {

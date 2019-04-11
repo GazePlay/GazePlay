@@ -74,7 +74,7 @@ public class DefaultGamesLocator implements GamesLocator {
         List<GameSpec> result = new ArrayList<>();
 
         result.add(new GameSpec(new GameSummary("Math101", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
-                "data/Thumbnails/math101.png", null, "MathDesc"), new GameSpec.GameVariantGenerator() {
+                "data/Thumbnails/math101.png", null, "MathDescAdd"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 8"),
@@ -89,7 +89,96 @@ public class DefaultGamesLocator implements GamesLocator {
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
                             Stats stats) {
-                        return new Math101(gameContext, gameVariant.getNumber(), stats);
+                        return new Math101(Math101.Math101GameType.ADDITION, gameContext, gameVariant.getNumber(),
+                                stats);
+                    }
+                }));
+
+        result.add(new GameSpec(new GameSummary("Math102", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+                "data/Thumbnails/math101.png", null, "MathDescSub"), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 8"),
+                                new GameSpec.IntGameVariant(1, "0 to 12"), new GameSpec.IntGameVariant(2, "0 to 20")));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new MathGamesStats(scene);
+                    }// Need to make customized stats
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
+                        return new Math101(Math101.Math101GameType.SUBTRACTIONPOS, gameContext, gameVariant.getNumber(),
+                                stats);
+                    }
+                }));
+
+        result.add(new GameSpec(new GameSummary("Math103", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+                "data/Thumbnails/math101.png", null, "MathDescMult"), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 3"),
+                                new GameSpec.IntGameVariant(1, "0 to 5"), new GameSpec.IntGameVariant(2, "0 to 7"),
+                                new GameSpec.IntGameVariant(3, "0 to 9"), new GameSpec.IntGameVariant(4, "0 to 11"),
+                                new GameSpec.IntGameVariant(5, "0 to 12")));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new MathGamesStats(scene);
+                    }// Need to make customized stats
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
+                        return new Math101(Math101.Math101GameType.MULTIPLICATION, gameContext, gameVariant.getNumber(),
+                                stats);
+                    }
+                }));
+
+        result.add(new GameSpec(new GameSummary("Math104", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+                "data/Thumbnails/math101.png", null, "MathDescDiv"), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 10"),
+                                new GameSpec.IntGameVariant(1, "0 to 15"), new GameSpec.IntGameVariant(2, "0 to 20"),
+                                new GameSpec.IntGameVariant(3, "0 to 30")));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new MathGamesStats(scene);
+                    }// Need to make customized stats
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
+                        return new Math101(Math101.Math101GameType.DIVISION, gameContext, gameVariant.getNumber(),
+                                stats);
+                    }
+                }));
+
+        result.add(new GameSpec(new GameSummary("Math201", DEFAULT_MEMORIZATION_GAME_THUMBNAIL,
+                "data/Thumbnails/math101.png", null, "MathDesc"), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 5"),
+                                new GameSpec.IntGameVariant(1, "0 to 10"), new GameSpec.IntGameVariant(2, "0 to 15"),
+                                new GameSpec.IntGameVariant(3, "0 to 20")));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new MathGamesStats(scene);
+                    }// Need to make customized stats
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
+                        return new Math101(Math101.Math101GameType.MATHALL, gameContext, gameVariant.getNumber(),
+                                stats);
                     }
                 }));
 
@@ -929,21 +1018,6 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Labyrinth(gameContext, stats, gameVariant.getNumber());
                     }
 
-                }));
-        // 728
-        result.add(new GameSpec(
-                new GameSummary("Math101", DEFAULT_MEMORIZATION_GAME_THUMBNAIL, "data/Thumbnails/math101.png"),
-                new GameSpec.GameLauncher() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return null; // new RaceGamesStats(scene, "robot");
-                    }// Need to make customized stats
-
-                    @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-                            Stats stats) {
-                        return new Math101(gameContext, 0, stats);
-                    }
                 }));
 
         result.add(new GameSpec(
