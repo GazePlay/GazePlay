@@ -211,6 +211,11 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     }
 
+    private double getGameSpeed(){
+        double speed = config.getSpeedEffects();
+        return speed <= 1.0? 1.0 : speed;
+    }
+
     private String getRandomFileNameFromFileList(File[] fileList) {
         return fileList[randomGenerator.nextInt(fileList.length)].getName();
     }
@@ -333,7 +338,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         }
         double timeElapsed = ((double) now - (double) lastTickTime) / Math.pow(10.0, 6.0); // in ms
         lastTickTime = now;
-        timeElapsed /= config.getSpeedEffects();
+        timeElapsed /= getGameSpeed();
+        log.info(getGameSpeed()+"");
 
         String logs = "FPS: " + (int) (1000 / timeElapsed) + "\n";
         if (1000 / timeElapsed < minFPS) {
