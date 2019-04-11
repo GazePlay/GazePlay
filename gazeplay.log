@@ -1,0 +1,195 @@
+2019-04-11 16:32:33,832 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt$PictureCard - FINISHED
+2019-04-11 16:32:33,832 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt$PictureCard - WINNER
+2019-04-11 16:32:33,832 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.stats.Stats - The number of goals is 10and the number shots is 0
+2019-04-11 16:32:33,833 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.GamePanelDimensionProvider - result = Dimension2D [width = 1280.0, height = 800.0]
+2019-04-11 16:32:33,834 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt$PictureCard - gamePanelDimension2D = Dimension2D [width = 1280.0, height = 800.0]
+2019-04-11 16:32:34,850 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.GamePanelDimensionProvider - result = Dimension2D [width = 1280.0, height = 800.0]
+2019-04-11 16:32:35,394 [AsyncUi-Worker-Thread-3]      DEBUG net.gazeplay.commons.utils.Bravo - Adding task to JavaFX thread queue ...
+2019-04-11 16:32:35,395 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.Bravo - Playing graphic animation ...
+2019-04-11 16:32:35,395 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.Bravo - Playing sound animation ...
+2019-04-11 16:32:35,395 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.games.Utils - Try to play data/common/sounds/applause.mp3
+2019-04-11 16:32:35,395 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.games.Utils - using url
+2019-04-11 16:32:35,395 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.games.Utils - path jar:file:/Users/admin/.m2/repository/com/github/schwabdidier/gazeplay-data/1.5.2-SNAPSHOT/gazeplay-data-1.5.2-SNAPSHOT.jar!/data/common/sounds/applause.mp3
+2019-04-11 16:32:35,421 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.Bravo - Finished JavaFX task
+2019-04-11 16:32:35,901 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.Bravo - finished delayBetweenSoundStartAndAnimationStartTransition
+2019-04-11 16:32:36,818 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.Bravo - finished fadeInTransition
+2019-04-11 16:32:41,404 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.Bravo - finished scaleTransition
+2019-04-11 16:32:41,404 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.Bravo - finished animationTransition
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.Bravo - finished delayAfterAnimationEndsBeforeStartingNextRoundTransition
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.Bravo - finished fullTransition
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    WARN  net.gazeplay.GraphicalContext - Nodes not removed: 0
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - numberOfImagesToDisplayPerRound = 6
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - winnerImageIndexAmongDisplayedImages = 5
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    INFO  net.gazeplay.commons.utils.games.ImageDirectoryLocator - locateImagesDirectoryInUnpackedDistDirectory : parentImagesPackageResourceLocation = data/find-the-odd-one-out/images/
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    INFO  net.gazeplay.commons.utils.games.ImageDirectoryLocator - locateImagesDirectoryInUnpackedDistDirectory : workingDirectory = /Users/admin/GazePlay/.
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    INFO  net.gazeplay.commons.utils.games.ImageDirectoryLocator - locateImagesDirectoryInUnpackedDistDirectory : workingDirectoryName = GazePlay
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    INFO  net.gazeplay.commons.utils.games.ImageDirectoryLocator - locateImagesDirectoryInUnpackedDistDirectory : parentImagesPackageResourceLocation = data/find-the-odd-one-out/images/
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    INFO  net.gazeplay.commons.utils.games.ImageDirectoryLocator - locateImagesDirectoryInUnpackedDistDirectory : imagesDirectory = /Users/admin/GazePlay/./data/find-the-odd-one-out/images
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    WARN  net.gazeplay.commons.utils.games.ImageDirectoryLocator - Directory does not exist : /Users/admin/GazePlay/./data/find-the-odd-one-out/images
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - imagesFolders [Ljava.io.File;@6d061a64
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - randomFolderIndex 6
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.GamePanelDimensionProvider - result = Dimension2D [width = 1280.0, height = 800.0]
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.GameSizingComputer - 16/9 or 16/10 screen ? = 0.0
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.GameSizingComputer - gameSizing = GameSizing(width=426.6666666666667, height=360.0, shift=0.0)
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - gameSizing = GameSizing(width=426.6666666666667, height=360.0, shift=0.0)
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - index = 1
+2019-04-11 16:32:42,405 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - folder = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees
+2019-04-11 16:32:42,406 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-3097419_1280.jpg
+2019-04-11 16:32:42,406 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,406 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - cyprus-1990939_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - branches-238379_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - green-1072828_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-99852_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - forest-3392077_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-838667_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - sunset-850873_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-3097419_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - cyprus-1990939_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - branches-238379_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - green-1072828_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-99852_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - forest-3392077_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-838667_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - sunset-850873_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - files = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/tree-3097419_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - randomImageFile = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/sunset-850873_1280.jpg
+2019-04-11 16:32:42,407 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt$PictureCard - imagePath = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/sunset-850873_1280.jpg
+2019-04-11 16:32:42,432 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posX 0
+2019-04-11 16:32:42,432 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posY 0
+2019-04-11 16:32:42,432 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - index = 1
+2019-04-11 16:32:42,432 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - folder = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-3097419_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - cyprus-1990939_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - branches-238379_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - green-1072828_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-99852_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - forest-3392077_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-838667_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - sunset-850873_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-3097419_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - cyprus-1990939_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - branches-238379_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - green-1072828_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-99852_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - forest-3392077_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-838667_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - sunset-850873_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - files = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/tree-3097419_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - randomImageFile = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/forest-3392077_1280.jpg
+2019-04-11 16:32:42,433 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt$PictureCard - imagePath = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/forest-3392077_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posX 1
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posY 0
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - index = 1
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - folder = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-3097419_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - cyprus-1990939_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - branches-238379_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - green-1072828_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-99852_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - forest-3392077_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-838667_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - sunset-850873_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-3097419_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - cyprus-1990939_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - branches-238379_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - green-1072828_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-99852_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - forest-3392077_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-838667_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - sunset-850873_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - files = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/tree-3097419_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - randomImageFile = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/forest-3392077_1280.jpg
+2019-04-11 16:32:42,459 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt$PictureCard - imagePath = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/forest-3392077_1280.jpg
+2019-04-11 16:32:42,489 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posX 2
+2019-04-11 16:32:42,489 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posY 0
+2019-04-11 16:32:42,489 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - index2 = 2
+2019-04-11 16:32:42,489 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - folder = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/furniture
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - living-room-2155353_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - room-1336497_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - brick-wall-1834784_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - bed-1839184_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - furniture-731449_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - dining-room-3108037_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - living-room-2569325_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - kitchen-2400367_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - living-room-2155353_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - room-1336497_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - brick-wall-1834784_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - bed-1839184_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - furniture-731449_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - dining-room-3108037_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - living-room-2569325_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - kitchen-2400367_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - files = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/furniture/living-room-2155353_1280.jpg
+2019-04-11 16:32:42,490 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - randomImageFile = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/furniture/furniture-731449_1280.jpg
+2019-04-11 16:32:42,491 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - randomImageFile.getAbsolutePath() /Users/admin/GazePlay/./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/furniture/furniture-731449_1280.jpg
+2019-04-11 16:32:42,491 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - pathSound = null
+2019-04-11 16:32:42,491 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - question = Find the Odd one Out
+2019-04-11 16:32:42,491 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt$PictureCard - imagePath = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/furniture/furniture-731449_1280.jpg
+2019-04-11 16:32:42,515 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posX 0
+2019-04-11 16:32:42,515 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posY 1
+2019-04-11 16:32:42,515 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - folder = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-3097419_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - cyprus-1990939_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - branches-238379_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - green-1072828_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-99852_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - forest-3392077_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-838667_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - sunset-850873_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-3097419_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - cyprus-1990939_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - branches-238379_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - green-1072828_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-99852_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - forest-3392077_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-838667_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - sunset-850873_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - files2 = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/tree-3097419_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - randomImageFile2 = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/green-1072828_1280.jpg
+2019-04-11 16:32:42,516 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt$PictureCard - imagePath = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/green-1072828_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posX 1
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posY 1
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - folder = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-3097419_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - cyprus-1990939_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - branches-238379_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - green-1072828_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-99852_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - forest-3392077_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-838667_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - sunset-850873_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-3097419_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - .DS_Store
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - cyprus-1990939_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - branches-238379_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - green-1072828_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-99852_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - forest-3392077_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - tree-838667_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - sunset-850873_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - files2 = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/tree-3097419_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - randomImageFile2 = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/tree-838667_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - randomImageFile.getAbsolutePath() /Users/admin/GazePlay/./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/tree-838667_1280.jpg
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    DEBUG net.gazeplay.games.whereisit.WhereIsIt - pathSound = null
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - question = Find the Odd one Out
+2019-04-11 16:32:42,543 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt$PictureCard - imagePath = ./gazeplay-data/src/main/resources/data/find-the-odd-one-out/images/trees/tree-838667_1280.jpg
+2019-04-11 16:32:42,567 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posX 2
+2019-04-11 16:32:42,567 [JavaFX Application Thread]    INFO  net.gazeplay.games.whereisit.WhereIsIt - posY 1
+2019-04-11 16:32:42,567 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.GamePanelDimensionProvider - result = Dimension2D [width = 1280.0, height = 800.0]
+2019-04-11 16:32:42,567 [JavaFX Application Thread]    DEBUG net.gazeplay.commons.utils.Bravo - finished onFinishedEventHandler
+2019-04-11 16:32:42,914 [JavaFX Application Thread]    DEBUG net.gazeplay.GameContext - translated config pane to y : 488.0, height : 197.0
+2019-04-11 16:32:42,915 [JavaFX Application Thread]    DEBUG net.gazeplay.GameContext - translated config pane to y : 557.0, height : 128.0
+2019-04-11 16:32:42,974 [JavaFX Application Thread]    DEBUG net.gazeplay.GameContext - translated config pane to y : 563.0, height : 122.0
+2019-04-11 16:32:43,562 [JavaFX Application Thread]    INFO  net.gazeplay.commons.configuration.Configuration - E
+2019-04-11 16:32:43,562 [JavaFX Application Thread]    INFO  net.gazeplay.commons.configuration.Configuration - E
