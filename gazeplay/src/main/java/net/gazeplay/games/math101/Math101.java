@@ -85,7 +85,7 @@ public class Math101 implements GameLifeCycle {
     private final int nbLines;
     private final int nbColumns;
     private final int maxValue;
-    private final int maxVariant[];// = {8,12,20};
+    private final int maxVariant[];
 
     private final String[] operators;
 
@@ -96,7 +96,7 @@ public class Math101 implements GameLifeCycle {
 
     private Math101.RoundDetails currentRoundDetails;
 
-    javafx.geometry.Dimension2D gameDimension2D;
+    private javafx.geometry.Dimension2D gameDimension2D;
 
     public Math101(final Math101GameType gameType, GameContext gameContext, int maxValue, Stats stats) {
         super();
@@ -110,17 +110,7 @@ public class Math101 implements GameLifeCycle {
         this.maxVariant = this.gameType.variations;
 
         this.maxValue = maxVariant[maxValue];
-        gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        Rectangle imageRectangle = new Rectangle(0, 0, gameDimension2D.getWidth(), gameDimension2D.getHeight());
-        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
-        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        imageRectangle.setFill(this.gameType.backgroundColor);// Color.rgb(227, 255, 227));
-
-        int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
-        imageRectangle.setOpacity(1 - coef * 0.9);
-
-        gameContext.getChildren().add(imageRectangle);
+        this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
     }
 
@@ -163,17 +153,11 @@ public class Math101 implements GameLifeCycle {
             correctAnswer = number1 - number2;
         } else {
             // operator is /
-            while (number2 == 0 && number1 == 0 || (number1 % number2 != 0)) {
+            while ((number2 == 0 && number1 == 0) || (number1 % number2 != 0)) {
                 // both cannot be 0
                 number1 = r.nextInt(maxValue + 1);
                 number2 = r.nextInt(maxValue + 1);
-                // }
-
-                // while(number1%number2 != 0){
-                // number1+= (number1-(number1%number2));
-                // number1 = r.nextInt(maxValue + 1);
-                // number2 = r.nextInt(maxValue + 1);
-
+                
                 if (number2 > number1) {
                     int temp = number2;
                     number2 = number1;
