@@ -4,6 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
+import jdk.nashorn.internal.runtime.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.LinkedList;
 import net.gazeplay.commons.utils.FixationPoint;
 
 /**
@@ -43,18 +45,14 @@ public class Stats implements GazeMotionListener {
     @Getter
     private int nbUnCountedShots;
     private double[][] heatMap;
-
-
-    private boolean isFirstGaze = true;
-    private long firstGazeVal;
     @Getter
     @Setter
     private long currentGazeTime;
     @Getter
     @Setter
     private long lastGazeTime;
-
-    private FixationPoint fixationSequence[][]; // store the time a user gazed on a px
+    @Getter
+    private LinkedList<FixationPoint> fixationSequence;
     @Getter
     private SavedStatsInfo savedStatsInfo;
 
@@ -77,14 +75,14 @@ public class Stats implements GazeMotionListener {
         return new double[heatMapWidth][heatMapHeight];
     }
 
-    private void instantiateFixationSequence(int rows, int columns) {
-        fixationSequence = new FixationPoint[rows][columns];
-        for (int i = 0; i < fixationSequence.length; i++) {
-            for (int j = 0; j < fixationSequence[0].length; j++) {
-                fixationSequence[i][j] = new FixationPoint();
-            }
-        }
-    }
+//    private void instantiateFixationSequence(int rows, int columns) {
+//        fixationSequence = new FixationPoint[rows][columns];
+//        for (int i = 0; i < fixationSequence.length; i++) {
+//            for (int j = 0; j < fixationSequence[0].length; j++) {
+//                fixationSequence[i][j] = new FixationPoint();
+//            }
+//        }
+//    }
 
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
@@ -99,15 +97,16 @@ public class Stats implements GazeMotionListener {
                 log.info("HeatMap is disabled, skipping instantiation of the HeatMap Data model");
             } else {
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
-                instantiateFixationSequence(heatMap.length, heatMap[0].length);
-
+                fixationSequence = new LinkedList(); // do this if checkmark for fixation sequence is checked
                 recordGazeMovements = e -> {
 
                     incHeatMap((int) e.getX(), (int) e.getY());
+                    incFixationSequence((int) e.getX(), (int) e.getY());
                 };
                 recordMouseMovements = e -> {
 
                     incHeatMap((int) e.getX(), (int) e.getY());
+                    incFixationSequence((int) e.getX(), (int) e.getY());
                 };
 
                 gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
@@ -133,27 +132,27 @@ public class Stats implements GazeMotionListener {
         final int positionX = (int) position.getX();
         final int positionY = (int) position.getY();
         incHeatMap(positionX, positionY);
+        incFixationSequence(positionX,positionY); //check if good
     }
 
     public SavedStatsInfo saveStats() throws IOException {
 
         File todayDirectory = getGameStatsOfTheDayDirectory();
         final String heatmapFilePrefix = Utils.now() + "-heatmap";
-        final String fixationPointsFilePrefix = Utils.now() + "-fixationPoints";
+        final String fixationSequenceFilePrefix = Utils.now() + "-fixationSequence";
 
         File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
 
-        File fixationPointsCsvFile = new File(todayDirectory, fixationPointsFilePrefix + ".csv");
+        File fixationSequencePngFile = new File(todayDirectory, fixationSequenceFilePrefix + ".png");
 
-        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile, fixationPointsCsvFile);
+        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile, fixationSequencePngFile);
 
         this.savedStatsInfo = savedStatsInfo;
 
         if (this.heatMap != null) {
             saveHeatMapAsPng(heatMapPngFile);
             saveHeatMapAsCsv(heatMapCsvFile);
-            saveFixationPointsAsCsv(fixationPointsCsvFile);
         }
 
         savedStatsInfo.notifyFilesReady();
@@ -251,19 +250,19 @@ public class Stats implements GazeMotionListener {
         }
     }
 
-    // save the time the gaze first went !
-    private void saveFixationPointsAsCsv(File file) throws IOException {
-        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
-            for (int i = 0; i < fixationSequence.length; i++) {
-                for (int j = 0; j < fixationSequence[0].length - 1; j++) {
-                    out.print(fixationSequence[i][j].getFirstGaze());
-                    out.print(", ");
-                }
-                out.print(fixationSequence[i][fixationSequence[i].length - 1].getFirstGaze());
-                out.println("");
-            }
-        }
-    }
+
+//    private void saveFixationPointsAsCsv(File file) throws IOException {
+//        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
+//            for (int i = 0; i < fixationSequence.length; i++) {
+//                for (int j = 0; j < fixationSequence[0].length - 1; j++) {
+//                    out.print(fixationSequence[i][j].getFirstGaze());
+//                    out.print(", ");
+//                }
+//                out.print(fixationSequence[i][fixationSequence[i].length - 1].getFirstGaze());
+//                out.println("");
+//            }
+//        }
+//    }
 
     private void saveHeatMapAsPng(File outputPngFile) {
 
@@ -277,6 +276,24 @@ public class Stats implements GazeMotionListener {
             log.error("Exception", e);
         }
     }
+    private void incFixationSequence(int X, int Y){
+        long previousGaze ;
+        long gazeDuration ;
+
+        int x = (int) (Y / heatMapPixelSize);
+        int y = (int) (X / heatMapPixelSize);
+        if(fixationSequence.size()==0){
+            previousGaze = 0;
+        }
+        else{
+            previousGaze = (fixationSequence.get(fixationSequence.size()-1)).getFirstGaze();
+        }
+        FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(),0,x,y);
+        gazeDuration = previousGaze - newGazePoint.getFirstGaze();
+        newGazePoint.setGazeDuration(gazeDuration);
+        fixationSequence.add(newGazePoint);
+
+    }
 
     private void incHeatMap(int X, int Y) {
 
@@ -286,15 +303,15 @@ public class Stats implements GazeMotionListener {
         int y = (int) (X / heatMapPixelSize);
 
 
-        if(!isFirstGaze){
-            lastGazeTime = (currentGazeTime - lastGazeTime);
-            firstGazeVal = lastGazeTime;
-        }
-        else{
-            firstGazeVal = 1000;
-            lastGazeTime = currentGazeTime;
-            isFirstGaze = false;
-        }
+//        if(!isFirstGaze){
+//            lastGazeTime = (currentGazeTime - lastGazeTime);
+//            firstGazeVal = lastGazeTime;
+//        }
+//        else{
+//            firstGazeVal = 1000;
+//            lastGazeTime = currentGazeTime;
+//            isFirstGaze = false;
+//        }
 
         for (int i = -trail; i <= trail; i++)
             for (int j = -trail; j <= trail; j++) {
@@ -302,7 +319,6 @@ public class Stats implements GazeMotionListener {
                 if (Math.sqrt(i * i + j * j) < trail) {
 
                     inc(x + i, y + j);
-
                 }
             }
     }
@@ -312,12 +328,10 @@ public class Stats implements GazeMotionListener {
             // heatMap[heatMap[0].length - y][heatMap.length - x]++;
             //currentGazeTime = System.currentTimeMillis();
 
-            fixationSequence[x][y].setFirstGaze(firstGazeVal/1000);
-
+            //fixationSequence[x][y].setFirstGaze(firstGazeVal/1000);
             heatMap[x][y]++;
         }
     }
-
     /**
      * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px) if maximum memory is more
      *         than 1Gb, only 200
