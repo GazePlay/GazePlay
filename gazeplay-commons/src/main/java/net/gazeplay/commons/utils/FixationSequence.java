@@ -21,17 +21,24 @@ public class FixationSequence {
      */
     private WritableImage image;
 
+
+
+    public FixationSequence(File heatmapPNG, LinkedList<FixationPoint> fixSeq) throws IOException {
+
+        BufferedImage bimg = ImageIO.read(heatmapPNG);
+        int width          = bimg.getWidth();
+        int height         = bimg.getHeight();
+
+        
+
+    }
+
     /**
      * Saves the fixation Sequence to a PNG file
      *
      * @param outputFile
      *            The output file (Must be open and writable)
      */
-
-    public FixationSequence(LinkedList<FixationPoint> fixSeq){
-
-    }
-
     public void saveToFile(File outputFile) { // changeeeeeeee
         BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
         try {
