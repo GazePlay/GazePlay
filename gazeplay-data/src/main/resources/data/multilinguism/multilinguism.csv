@@ -10,8 +10,8 @@ ColoredBubbles,Flluska me ngjyra,فقاعات ملونة,多彩泡泡,Farbige bl
 PortraitBubbles,Flluska me portrete,فقاعات,肥皂泡,Porträt Blasen,Φυσαλίδες με πορτρέτα,Portrait Bubbles,muotokuvakuplat,Bulles portrait,Mjehurići s portretom,Potret Bubbles,Bolle con ritratto,しょうぞうのあわ,Portret Bąbelki ???,Bulha retrato,Potret Bubbles,Foto Bubbels,Пузырьки с картинками,Burbujas retrato,Bong bóng có chân dung
 WhereIsTheAnimal,Ku është kafsha?,اين هذا الحيوان؟,这个动物在哪？,Wo ist dieses Tier?,Επιτυχημένες αποκαλύψεις,Where is this animal?,missä on eläin,Où est cet animal ?,Gdje je ova životinja?,Di manakah haiwan ini?,Dov'è questo animale?,このせいぶつはドコ？,Gdzie jest to zwierzę?,Onde està essa animal ?,Di manakah haiwan ini?,Waar is dit dier?,Где это животное?,Donde está este animal?,Con vật này ở đâu?
 WhereIsTheColor,Ku është ngjyra?,اين هذا اللون؟,这个颜色在哪？,Wo ist die Farbe?,Επιτυχημένες αποκαλύψεις,Where is this color?,missä on väri,Où est cette couleur ?,Gdje je ova boja?,Di manakah warna ini?,Dov'è questo colore?,このいろはドコ？,Gdzie jest ten kolor?,Onde està essa côr ?,Di manakah warna ini?,Waar is deze kleur?,Где этот цвет?,Donde ves este color?,Màu này ở đâu?
-WhereIsTheLetter,,اين هذا الحرف؟,,,,Where is the letter?,,Où est cette lettre ?,,,,,,,,,,,
-WhereIsTheNumber,,اين هذا الرقم؟,,,,Where is the number?,,Où est ce nombre ?,,,,,,,,,,,
+WhereIsTheLetter,Ku është shkronja?,اين هذا الحرف؟,,,,Where is the letter?,,Où est cette lettre ?,,,,,,,,,,,
+WhereIsTheNumber,Ku është numri?,اين هذا الرقم؟,,,,Where is the number?,,Où est ce nombre ?,,,,,,,,,,,
 WhereIsIt,Ku është?,اين هذا؟,它在哪？,Wo ist es?,Επιτυχημένες αποκαλύψεις,Where is it ?,missä se on,Où est-ce ?,Gdje je?,Di mana ia?,Dov'è?,これはドコ？,Gdzie to jest ?,Onde é ?,Di mana ia?,Waar is het?,Где это находится?,Donde está?,Nó ở đâu?
 Fun with Flags,Luajmë me Flamujt,اين هذا العلم؟,,,,Fun with Flags,,Trouve les drapeaux,,,Trova la bandiera,,,Scopri la bandiera,,,,,
 StatsTitle,Statistika,احصائيات,统计,Statistiken,Στατιστικά,Statistics,otsikko,Statistiques,Statistika,Statistik,Statistiche,統計,Statystyka,Estatística,Statistik,Statistieken,Статистика,Estadísticas,Số liệu thống kê
@@ -35,8 +35,8 @@ EyeTracker,Eye Tracker,تعقب العين,眼球跟踪,Eyetracker,Συσκευ�
 FileDir,Direktoria,دليل الملف,文件夹,Dateiverzeichnis,Κατάλογος αρχείων,Files Directory ,tallennuspaikka,Répertoire des fichiers,Datoteka,Direktori Fail,Cartella,,Katalog plików,Diretório de Arquivos,Direktori Fail,Bestands locatie,Директоия файлов,Directorio,Thư mục
 FixationLength,Koha e fiksimit (sekonda),مدة التثبيت (بالثواني),注视时长（秒）,Dauer der Fixierung  (Sekunden),Μήκος σταθεροποίησης (δευτερόλεπτα),Fixation Length (seconds),kiinnittämisen pituus,Durée de la fixation (secondes),Dužina fiksiranog pogleda (u sekundama),Panjang Penekanan (saat),Durata fissazione (secondi),,Czas poprawki (sekundy),Duracaõ de fixação,Panjang Penekanan (saat),Fixatietijd (seconden),Длина фиксации (в секундах),Duración de la fijación,Độ dài cố định (giây)
 LayoutFile,Stilet,ملف نموذجي,,Style Sheets,Φύλλα στυλ,Style Sheets,asettelutiedosto,Fichier de style,Raspored datoteka,Helaian Gaya,Fogli di stile,,Arkusze stylów,Diretório do jogo « Onde é »,Helaian Gaya,Stijlen,Таблица стилей,Hojas de estilo,Tập tin Định dạng
-WhereIsItDirectory,Direktoria “Ku është?”, دليل اللعبة اين هذا؟,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? >,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco "Dov'è?"""artella",, Gdzie to jest?  Katalog gier,Duracaõ de afichagem das perguntas,« Di mana? » Arahan permainan,Waar is het Spel bestandslocatie,Где это? директория Игры,"Directorio del juego "¿Donde está?"""irectorio del",Thư mục game
-WII-error,Verifikim i direktorisë “Ku është?”,تثبت من دليل اللعبة اين هذا؟,查找《它在哪》游戏目录,Überprüfen Spielverzeichnis « Wo ist es? »,Ελέγξτε «Πού είναι; ,Check « Where is it? » Game directory,Tarkista «Missä se on? » Pelihakemisto,Vérifiez le répertoire du jeu « Où est-ce ? ».,Provjeri ,Semak « Di mana? » Arahan permainan,"Controllo cartella di gioco "Dov'è?"""ontroll",,Sprawdź «Gdzie to jest? » Katalog gier,*Verifique «Onde está? ,Semak «Di mana? » Arahan permainan,verifiëer ,Проверка ,"Verifica el directorio del juego "¿Donde está?"""erifica el di",Kiểm tra Thư mục game
+WhereIsItDirectory,Direktoria “Ku është?”, دليل اللعبة اين هذا؟,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? >,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco ""Dov'è?""""artella",, Gdzie to jest?  Katalog gier,Duracaõ de afichagem das perguntas,« Di mana? » Arahan permainan,Waar is het Spel bestandslocatie,Где это? директория Игры,"Directorio del juego ""¿Donde está?""""irectorio del",Thư mục game
+WII-error,Verifikim i direktorisë “Ku është?”,تثبت من دليل اللعبة اين هذا؟,查找《它在哪》游戏目录,Überprüfen Spielverzeichnis « Wo ist es? »,Ελέγξτε «Πού είναι; ,Check « Where is it? » Game directory,Tarkista «Missä se on? » Pelihakemisto,Vérifiez le répertoire du jeu « Où est-ce ? ».,Provjeri ,Semak « Di mana? » Arahan permainan,"Controllo cartella di gioco ""Dov'è?""""ontroll",,Sprawdź «Gdzie to jest? » Katalog gier,*Verifique «Onde está? ,Semak «Di mana? » Arahan permainan,verifiëer ,Проверка ,"Verifica el directorio del juego ""¿Donde está?""""erifica el di",Kiểm tra Thư mục game
 QuestionLength,Kohëzgjatja e pyetjeve,مدة ظهور الاسئلة,,Dauer der Veröffentlichung von Fragen,Μήκος εμφάνισης ερωτήματος,Question Display Length,kysymys,Durée d’affichage des question,Dužina prikazivanja pitanja,Panjang Paparan Soalan,Durata esposizione della domanda,,Długość wyświetlania pytania,*Pergunta Display Length,Panjang Paparan Soalan,Hoe lang de vraag tonen?,Длина дисплея вопроса,Duración de visualización de las preguntas,Thời gian hiển thị câu hỏi
 Cups and Balls,Tasa dhe topa,كؤوس وكرات,杯子和球,Bechertrick,Επιτυχημένες αποκαλύψεις,Cups and Balls,kupit ja pallot,Gobelets Pass Pass,Šalice i lopte,Piala dan Balls,Tazze e palle,,Puchary i kule,*Copos e Bolas,Piala dan Balls,Bekers en Ballen,Чашки и шарики,Tazas y bolas,Chiếc cốc và Quả bóng
 Biboules,Biboules,كويرات,垒球,Biboles,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Biballs,biboules,Biboules,Biboules,Biballs,Biballs,,Biballs,Biboules,Biballs,Vliegjes,Безделушки,Biboules,Bóng Bi
@@ -118,9 +118,26 @@ Highscore,Rekord ,أعلى نتيجة,,,,Highscore,,Meilleur score,,,Record !,,,
 New highscore!,Rekord i ri !,نتيجة عالية جديدة,,,,New highscore!,,Nouveau meilleur score!,,,Nuovo record !,,,,,,,Niuevo récord !,
 targets, shënjestra,أهداف,,,,  targets,, objectifs,,, bersagli,,,,,,, objetivos,
 cups, tasa,كؤوس,,,, cups,, tasses,,, tazze,,,,,,, tazas,
-Math101,,,,,,Math 101,, Math 101,,,,,,,,,,,
-MathDesc,,,,,,Addition and Subtraction,,Additions et Soustractions,,,,,,,,,,,
+Math101,,,,,,Math 101: Addition,, Math 101: Addition,,,,,,,,,,,
+Math102,,,,,,Math 102: Subtraction,, Math 102: Soustraction,,,,,,,,,,,
+Math103,,,,,,Math 103: Multiplication,, Math 103: Multiplication,,,,,,,,,,,
+Math104,,,,,,Math 104: Division,, Math 104: Division,,,,,,,,,,,
+Math201,,,,,,Math 201,, Math 201,,,,,,,,,,,
+MathDesc,,,,,,Addition & Subtraction Multiplication & Division,,Addition & Soustraction Multiplication & Division,,,,,,,,,,,
+MathDescAdd,,,,,,Add two numbers!,,Addition de deux nombres!,,,,,,,,,,,
+MathDescSub,,,,,,Subtract two numbers!,,Soustraction de deux nombres!,,,,,,,,,,,
+MathDescMult,,,,,,Multiply two numbers!,,Multiplication de deux nombres!,,,,,,,,,,,
+MathDescDiv,,,,,,Divide two numbers!,,Division de deux nombres!,,,,,,,,,,,
+0 to 3,,,,,,0 to 3,,De 0 à 3,,,,,,,,,,,
+0 to 5,,,,,,0 to 5,,De 0 à 5,,,,,,,,,,,
+0 to 7,,,,,,0 to 7,,De 0 à 7,,,,,,,,,,,
 0 to 8,,,,,,0 to 8,,De 0 à 8,,,,,,,,,,,
+0 to 9,,,,,,0 to 9,,De 0 à 9,,,,,,,,,,,
+0 to 10,,,,,,0 to 10,,De 0 à 10,,,,,,,,,,,
+0 to 11,,,,,,0 to 11,,De 0 à 11,,,,,,,,,,,
 0 to 12,,,,,,0 to 12,,De 0 à 12,,,,,,,,,,,
+0 to 15,,,,,,0 to 15,,De 0 à 15,,,,,,,,,,,
 0 to 20,,,,,,0 to 20,,De 0 à 20,,,,,,,,,,,
+0 to 30,,,,,,0 to 30,,De 0 à 30,,,,,,,,,,,
+findodd,,,,,,Find the Odd one out,,Trouvez l’intrus,,,Trova l’intruso,,,,,,,,
 Choose Game Variant,,,,,,Choose Game Variant,,Choisissez une variante de jeu,,,,,,,,,,,
