@@ -13,6 +13,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.HeatMap;
+import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.File;
@@ -20,7 +21,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.LinkedList;
-import net.gazeplay.commons.utils.FixationPoint;
+
 
 /**
  * Created by schwab on 16/08/2017.
@@ -153,6 +154,7 @@ public class Stats implements GazeMotionListener {
         if (this.heatMap != null) {
             saveHeatMapAsPng(heatMapPngFile);
             saveHeatMapAsCsv(heatMapCsvFile);
+            saveFixationSequenceAsPng(fixationSequencePngFile);
         }
 
         savedStatsInfo.notifyFilesReady();
@@ -263,7 +265,6 @@ public class Stats implements GazeMotionListener {
 //            }
 //        }
 //    }
-
     private void saveHeatMapAsPng(File outputPngFile) {
 
         log.info(String.format("Heatmap size: %3d X %3d", heatMap[0].length, heatMap.length));
@@ -276,6 +277,12 @@ public class Stats implements GazeMotionListener {
             log.error("Exception", e);
         }
     }
+    private void saveFixationSequenceAsPng(File outputPngFile){
+        //
+        // the function to draw in Fixation Sequence Class
+        //
+    }
+
     private void incFixationSequence(int X, int Y){
         long previousGaze ;
         long gazeDuration ;
@@ -301,17 +308,6 @@ public class Stats implements GazeMotionListener {
         // in heatChart, x and y are opposed
         int x = (int) (Y / heatMapPixelSize);
         int y = (int) (X / heatMapPixelSize);
-
-
-//        if(!isFirstGaze){
-//            lastGazeTime = (currentGazeTime - lastGazeTime);
-//            firstGazeVal = lastGazeTime;
-//        }
-//        else{
-//            firstGazeVal = 1000;
-//            lastGazeTime = currentGazeTime;
-//            isFirstGaze = false;
-//        }
 
         for (int i = -trail; i <= trail; i++)
             for (int j = -trail; j <= trail; j++) {
