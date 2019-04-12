@@ -22,14 +22,14 @@ public class FixationSequence {
     private WritableImage image;
 
 
+    // gets the height and width of heatmap buz I'll create a clear background image 
+    public FixationSequence(int width,int height, LinkedList<FixationPoint> fixSeq) throws IOException {
 
-    public FixationSequence(File heatmapPNG, LinkedList<FixationPoint> fixSeq) throws IOException {
+//        BufferedImage bimg = ImageIO.read(heatmapPNG);
+//        int width          = bimg.getWidth();
+//        int height         = bimg.getHeight();
 
-        BufferedImage bimg = ImageIO.read(heatmapPNG);
-        int width          = bimg.getWidth();
-        int height         = bimg.getHeight();
 
-        
 
     }
 
