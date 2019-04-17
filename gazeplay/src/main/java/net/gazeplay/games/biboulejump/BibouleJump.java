@@ -287,7 +287,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                     "bounce.wav", 3, 0.5, 0, 0, 0);
         } else {
             p = new MovingPlatform(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth,
-                    platformHeight, "bounce.wav", 3, dimensions.getWidth(), config.getSpeedEffects(), 0.5, 0, 0, 0);
+                    platformHeight, "bounce.wav", 3, dimensions.getWidth(), getGameSpeed(), 0.5, 0, 0, 0);
         }
         highestPlatform = p;
         platforms.add(p);
@@ -346,7 +346,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         }
         logs += "MinFPS: " + minFPS + "\n";
         logs += "Time elasped -- Real: " + timeElapsed;
-        timeElapsed /= config.getSpeedEffects();
+        timeElapsed /= getGameSpeed();
         logs += timeElapsed + "\n";
         logs += "Speed effect: " + config.getSpeedEffects() + "\n";
 
