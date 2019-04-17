@@ -211,6 +211,11 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     }
 
+    private double getGameSpeed(){
+        double speed = config.getSpeedEffects();
+        return speed <= 1.0? 1.0 : speed;
+    }
+
     private String getRandomFileNameFromFileList(File[] fileList) {
         return fileList[randomGenerator.nextInt(fileList.length)].getName();
     }
