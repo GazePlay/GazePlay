@@ -282,7 +282,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                     "bounce.wav", 3, 0.5, 0, 0, 0);
         } else {
             p = new MovingPlatform(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth,
-                    platformHeight, "bounce.wav", 3, dimensions.getWidth(), 0.5, 0, 0, 0);
+                    platformHeight, "bounce.wav", 3, dimensions.getWidth(), config.getSpeedEffects(), 0.5, 0, 0, 0);
         }
         highestPlatform = p;
         platforms.add(p);
@@ -334,13 +334,16 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         }
         double timeElapsed = ((double) now - (double) lastTickTime) / Math.pow(10.0, 6.0); // in ms
         lastTickTime = now;
-        timeElapsed /= config.getSpeedEffects();
 
         String logs = "FPS: " + (int) (1000 / timeElapsed) + "\n";
         if (1000 / timeElapsed < minFPS) {
             minFPS = 1000 / (int) timeElapsed;
         }
         logs += "MinFPS: " + minFPS + "\n";
+        logs += "Time elasped -- Real: " + timeElapsed;
+        timeElapsed /= config.getSpeedEffects();
+        logs += timeElapsed + "\n";
+        logs += "Speed effect: " + config.getSpeedEffects() + "\n";
 
         // Movement
         /// Gravity
@@ -390,7 +393,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
             death();
         }
 
-        // onScreenText.setText(logs);
+        onScreenText.setText(logs);
     }
 
     private void updateScore(double difference) {

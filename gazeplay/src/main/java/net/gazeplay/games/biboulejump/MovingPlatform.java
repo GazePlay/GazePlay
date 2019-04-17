@@ -4,20 +4,21 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MovingPlatform extends Platform {
 
-    private static double animationTime = 2;
     private Timeline leftMovement;
     private Timeline rightMovement;
 
     public MovingPlatform(double x, double y, double width, double height, String soundFileLocation, int bounceFactor,
-            double windowWidth) {
-        this(x, y, width, height, soundFileLocation, bounceFactor, windowWidth, 0, 0, 0, 0);
+            double windowWidth, double speed) {
+        this(x, y, width, height, soundFileLocation, bounceFactor, windowWidth, speed, 0, 0, 0, 0);
     }
 
     public MovingPlatform(double x, double y, double width, double height, String soundFileLocation, int bounceFactor,
-            double windowWidth, double colliderMarginUp, double colliderMarginRight, double colliderMarginDown,
+            double windowWidth, double speed, double colliderMarginUp, double colliderMarginRight, double colliderMarginDown,
             double colliderMarginLeft) {
         super(x, y, width, height, soundFileLocation, bounceFactor, colliderMarginUp, colliderMarginRight,
                 colliderMarginDown, colliderMarginLeft);
@@ -34,6 +35,7 @@ public class MovingPlatform extends Platform {
         collider.setX(leftLimit);
         setX(leftLimit);
 
+        double animationTime = speed *2;
         leftMovement = new Timeline(new KeyFrame(Duration.seconds(animationTime),
                 new KeyValue(this.xProperty(), rightLimit), new KeyValue(collider.xProperty(), rightLimit)));
         rightMovement = new Timeline(new KeyFrame(Duration.seconds(animationTime),
