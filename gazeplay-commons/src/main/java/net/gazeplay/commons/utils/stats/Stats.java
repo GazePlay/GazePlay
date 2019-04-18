@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.Utils;
@@ -278,6 +279,16 @@ public class Stats implements GazeMotionListener {
         }
     }
     private void saveFixationSequenceAsPng(File outputPngFile){
+
+        log.info(String.format("Fixation-Sequence size: %3d X %3d", heatMap[0].length, heatMap.length));
+
+        FixationSequence sequence = new FixationSequence(heatMap[0].length,heatMap.length,fixationSequence);
+
+        try {
+            sequence.saveToFile(outputPngFile);
+        } catch (Exception e) {
+            log.error("Exception", e);
+        }
         //
         // the function to draw in Fixation Sequence Class
         //
@@ -322,9 +333,6 @@ public class Stats implements GazeMotionListener {
     private void inc(int x, int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             // heatMap[heatMap[0].length - y][heatMap.length - x]++;
-            //currentGazeTime = System.currentTimeMillis();
-
-            //fixationSequence[x][y].setFirstGaze(firstGazeVal/1000);
             heatMap[x][y]++;
         }
     }
