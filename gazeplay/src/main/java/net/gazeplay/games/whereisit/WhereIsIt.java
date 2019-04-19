@@ -354,7 +354,7 @@ public class WhereIsIt implements GameLifeCycle {
                 }
             }
 
-            //int index2 = (index ) % filesCount;
+            // int index2 = (index ) % filesCount;
             int index2 = (int) (Math.random() * 6) + 1;
             log.info("index2 = {}", index2);
             final File folder = imagesFolders[(index2) % filesCount];
