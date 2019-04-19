@@ -21,8 +21,7 @@ public class FixationSequence {
      */
     private WritableImage image;
 
-
-    // gets the height and width of heatmap buz I'll create a clear background image
+    //creates a clear background image
     public FixationSequence(int width,int height, LinkedList<FixationPoint> fixSeq) {
 
         this.image = new WritableImage(width, height);

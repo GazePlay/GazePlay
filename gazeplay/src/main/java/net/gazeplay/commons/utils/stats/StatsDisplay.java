@@ -154,6 +154,21 @@ public class StatsDisplay {
 
         return heatMap;
     }
+    public static ImageView buildFSequenceChart(Stats stats, final Region root){
+        ImageView fix_sequence = new ImageView();
+        fix_sequence.setPreserveRatio(true);
+
+        SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+        savedStatsInfo.addObserver((o,arg)-> {
+            Platform.runLater(()-> fix_sequence.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString())));
+        });
+
+        fix_sequence.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
+
+        // add event handler to zoom on pic when clicked on
+
+        return fix_sequence;
+    }
 
     private static void resetToOriginalIndexInParent(Node node, int originalIndexInParent) {
         Parent parent = node.getParent();

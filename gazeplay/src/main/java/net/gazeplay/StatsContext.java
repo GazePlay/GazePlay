@@ -216,6 +216,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             //
 
             ImageView heatMap = StatsDisplay.buildHeatChart(stats, root);
+            //ImageView heatMap = StatsDisplay.buildFSequenceChart(stats, root);
+
             root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
                 heatMap.setFitWidth(newValue.doubleValue() * 0.35);
