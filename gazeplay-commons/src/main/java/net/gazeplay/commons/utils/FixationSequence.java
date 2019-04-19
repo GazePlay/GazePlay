@@ -32,16 +32,14 @@ public class FixationSequence {
         for(int i = 0 ; i < fixSeq.size(); i ++){
             pxWriter.setColor(fixSeq.get(i).getY(), fixSeq.get(i).getX(), Color.ORANGE);
         }
-
     }
-
     /**
      * Saves the fixation Sequence to a PNG file
      *
      * @param outputFile
      *            The output file (Must be open and writable)
      */
-    public void saveToFile(File outputFile) { // changeeeeeeee
+    public void saveToFile(File outputFile) {
         BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
         try {
             ImageIO.write(bImage, "png", outputFile);

@@ -77,15 +77,6 @@ public class Stats implements GazeMotionListener {
         return new double[heatMapWidth][heatMapHeight];
     }
 
-//    private void instantiateFixationSequence(int rows, int columns) {
-//        fixationSequence = new FixationPoint[rows][columns];
-//        for (int i = 0; i < fixationSequence.length; i++) {
-//            for (int j = 0; j < fixationSequence[0].length; j++) {
-//                fixationSequence[i][j] = new FixationPoint();
-//            }
-//        }
-//    }
-
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
     }
@@ -97,22 +88,66 @@ public class Stats implements GazeMotionListener {
         lifeCycle.start(() -> {
             if (config.isHeatMapDisabled()) {
                 log.info("HeatMap is disabled, skipping instantiation of the HeatMap Data model");
-            } else {
+                if(config.isFixationSequenceDisabled()) // neither HeatMap nor Fixation Sequence are enabled
+                    log.info("Fixation Sequence is disabled, skipping instantiation of the Sequence data");
+
+                else{ // only the Fixation Sequence is enabled
+                    fixationSequence = new LinkedList();
+
+                    recordGazeMovements = e -> {
+
+                        //incHeatMap((int) e.getX(), (int) e.getY());
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+                    recordMouseMovements = e -> {
+
+                        //incHeatMap((int) e.getX(), (int) e.getY());
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+
+                    gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                    gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                }
+            }
+
+            else {
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
-                fixationSequence = new LinkedList(); // do this if checkmark for fixation sequence is checked
-                recordGazeMovements = e -> {
 
-                    incHeatMap((int) e.getX(), (int) e.getY());
-                    incFixationSequence((int) e.getX(), (int) e.getY());
-                };
-                recordMouseMovements = e -> {
+                if(config.isFixationSequenceDisabled()){ // only the HeatMap is enabled
+                    log.info("Fixation Sequence is disabled, skipping instantiation of the Sequence data");
+                    recordGazeMovements = e -> {
 
-                    incHeatMap((int) e.getX(), (int) e.getY());
-                    incFixationSequence((int) e.getX(), (int) e.getY());
-                };
+                        incHeatMap((int) e.getX(), (int) e.getY());
+                        //incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+                    recordMouseMovements = e -> {
 
-                gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
-                gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                        incHeatMap((int) e.getX(), (int) e.getY());
+                        //incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+
+                    gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                    gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                }
+
+                else{ // both HeatMap & FixationSequence are enabled
+                    fixationSequence = new LinkedList();
+                    recordGazeMovements = e -> {
+
+                        incHeatMap((int) e.getX(), (int) e.getY());
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+                    recordMouseMovements = e -> {
+
+                        incHeatMap((int) e.getX(), (int) e.getY());
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+
+                    gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                    gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                }
+
+
             }
         });
         currentRoundStartTime = lifeCycle.getStartTime();
@@ -253,19 +288,6 @@ public class Stats implements GazeMotionListener {
         }
     }
 
-
-//    private void saveFixationPointsAsCsv(File file) throws IOException {
-//        try (PrintWriter out = new PrintWriter(file, "UTF-8")) {
-//            for (int i = 0; i < fixationSequence.length; i++) {
-//                for (int j = 0; j < fixationSequence[0].length - 1; j++) {
-//                    out.print(fixationSequence[i][j].getFirstGaze());
-//                    out.print(", ");
-//                }
-//                out.print(fixationSequence[i][fixationSequence[i].length - 1].getFirstGaze());
-//                out.println("");
-//            }
-//        }
-//    }
     private void saveHeatMapAsPng(File outputPngFile) {
 
         log.info(String.format("Heatmap size: %3d X %3d", heatMap[0].length, heatMap.length));
@@ -280,9 +302,9 @@ public class Stats implements GazeMotionListener {
     }
     private void saveFixationSequenceAsPng(File outputPngFile){
 
-        log.info(String.format("Fixation-Sequence size: %3d X %3d", heatMap[0].length, heatMap.length));
+        log.info(String.format("Fixation-Sequence size: %3d X %3d", (int)(gameContextScene.getHeight()/heatMapPixelSize), (int)(gameContextScene.getWidth()/heatMapPixelSize)));
 
-        FixationSequence sequence = new FixationSequence(heatMap[0].length,heatMap.length,fixationSequence);
+        FixationSequence sequence = new FixationSequence((int)(gameContextScene.getHeight()/heatMapPixelSize),(int)(gameContextScene.getWidth()/heatMapPixelSize),fixationSequence);
 
         try {
             sequence.saveToFile(outputPngFile);

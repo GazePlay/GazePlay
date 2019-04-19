@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -136,7 +137,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     addToGrid(grid, currentFormRow, label, value);
                 }
             }
-
         }
 
         {
@@ -209,7 +209,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             LineChart<String, Number> chart = StatsDisplay.buildLineChart(stats, root);
             centerPane.getChildren().add(chart);
         }
-
         {
             // StackPane stackPane = new StackPane();
             // centerPane.getChildren().add(stackPane); // I'll add the ImageView for the heatmap and the grid on top of
@@ -231,6 +230,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             centerPane.getChildren().add(heatMap);
             {
+//                StackPane fixSeq = new StackPane();
+//                ImageView fixationS = new ImageView();
+//                SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+//                fixationS.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
+//                fixSeq.getChildren().add(fixationS);
                 // write code for TilePane and labels to add to the histogram picture
                 // TilePane gridForHistogram = new TilePane();
 
