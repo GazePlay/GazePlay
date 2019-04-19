@@ -298,8 +298,10 @@ public class WhereIsIt implements GameLifeCycle {
         String question = null;
         List<Image> pictograms = null;
         if (this.gameType.getGameName() == "find-the-odd-one-out") {
-            int index = ((randomFolderIndex + step) % filesCount) + 1;
-
+            int index = (int) (Math.random() * 6) + 1;
+            log.info("randomFolderIndex = {}", randomFolderIndex);
+            log.info("step = {}", step);
+            log.info("filesCount = {}", filesCount);
             for (int i = 0; i < position; i++) {
 
                 log.info("index = {}", index);
@@ -352,8 +354,8 @@ public class WhereIsIt implements GameLifeCycle {
                 }
             }
 
-            int index2 = (index + 1) % filesCount;
-
+            //int index2 = (index ) % filesCount;
+            int index2 = (int) (Math.random() * 6) + 1;
             log.info("index2 = {}", index2);
             final File folder = imagesFolders[(index2) % filesCount];
 
@@ -478,7 +480,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                     questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
 
-                    question = getQuestionText(imagesFolders[(index) % filesCount].getName(), language);
+                    question = "Find the Odd one Out";
 
                     pictograms = getPictogramms(imagesFolders[(index) % filesCount].getName());
 
