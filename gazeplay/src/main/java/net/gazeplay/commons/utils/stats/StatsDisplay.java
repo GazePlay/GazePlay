@@ -163,9 +163,10 @@ public class StatsDisplay {
             Platform.runLater(()-> fix_sequence.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString())));
         });
 
-        fix_sequence.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
+        fix_sequence.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
 
-        // add event handler to zoom on pic when clicked on
+        EventHandler<Event> openFixationSeqEvent = createZoomInFixSequenceEventHandler(fix_sequence,root);
+        fix_sequence.addEventHandler(MouseEvent.MOUSE_CLICKED, openFixationSeqEvent);
 
         return fix_sequence;
     }
@@ -247,6 +248,36 @@ public class StatsDisplay {
 
                 heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED,
                         createZoomOutHeatMapEventHandler(heatMap, root, originalIndexInParent));
+            }
+        };
+    }
+    private static EventHandler<Event> createZoomOutFixSequenceEventHandler(ImageView fixSequence, final Region root,
+                                                                        int originalIndexInParent) {
+        return new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+                fixSequence.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+
+                zoomOutAndReset(fixSequence);
+
+                resetToOriginalIndexInParent(fixSequence, originalIndexInParent);
+
+                fixSequence.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInFixSequenceEventHandler(fixSequence, root));
+            }
+        };
+    }
+    private static EventHandler<Event> createZoomInFixSequenceEventHandler(ImageView fixSequence, final Region root) {
+        return new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+                fixSequence.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+
+                int originalIndexInParent = getOriginalIndexInParent(fixSequence);
+
+                zoomInAndCenter(fixSequence, fixSequence.getFitWidth(), fixSequence.getFitHeight(), true);
+
+                fixSequence.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        createZoomOutFixSequenceEventHandler(fixSequence, root, originalIndexInParent));
             }
         };
     }
