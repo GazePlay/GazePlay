@@ -149,7 +149,7 @@ public class StatsDisplay {
         blur.setRadius(10.0);
         heatMap.setEffect(blur);
 
-        EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, root);
+        EventHandler<Event> openHeatMapEvent = createZoomInImageViewEventHandler(heatMap, root);
         heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMapEvent);
 
         return heatMap;
@@ -165,7 +165,7 @@ public class StatsDisplay {
 
         fix_sequence.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
 
-        EventHandler<Event> openFixationSeqEvent = createZoomInFixSequenceEventHandler(fix_sequence,root);
+        EventHandler<Event> openFixationSeqEvent = createZoomInImageViewEventHandler(fix_sequence,root);
         fix_sequence.addEventHandler(MouseEvent.MOUSE_CLICKED, openFixationSeqEvent);
 
         return fix_sequence;
@@ -220,64 +220,34 @@ public class StatsDisplay {
         };
     }
 
-    private static EventHandler<Event> createZoomOutHeatMapEventHandler(ImageView heatMap, final Region root,
+    private static EventHandler<Event> createZoomOutImageViewEventHandler(ImageView i, final Region root,
             int originalIndexInParent) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+                i.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                zoomOutAndReset(heatMap);
+                zoomOutAndReset(i);
 
-                resetToOriginalIndexInParent(heatMap, originalIndexInParent);
+                resetToOriginalIndexInParent(i, originalIndexInParent);
 
-                heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInHeatMapEventHandler(heatMap, root));
+                i.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInImageViewEventHandler(i, root));
             }
         };
     }
 
-    private static EventHandler<Event> createZoomInHeatMapEventHandler(ImageView heatMap, final Region root) {
+    private static EventHandler<Event> createZoomInImageViewEventHandler(ImageView i, final Region root) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+                i.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                int originalIndexInParent = getOriginalIndexInParent(heatMap);
+                int originalIndexInParent = getOriginalIndexInParent(i);
 
-                zoomInAndCenter(heatMap, heatMap.getFitWidth(), heatMap.getFitHeight(), true);
+                zoomInAndCenter(i, i.getFitWidth(), i.getFitHeight(), true);
 
-                heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOutHeatMapEventHandler(heatMap, root, originalIndexInParent));
-            }
-        };
-    }
-    private static EventHandler<Event> createZoomOutFixSequenceEventHandler(ImageView fixSequence, final Region root,
-                                                                        int originalIndexInParent) {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                fixSequence.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
-
-                zoomOutAndReset(fixSequence);
-
-                resetToOriginalIndexInParent(fixSequence, originalIndexInParent);
-
-                fixSequence.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInFixSequenceEventHandler(fixSequence, root));
-            }
-        };
-    }
-    private static EventHandler<Event> createZoomInFixSequenceEventHandler(ImageView fixSequence, final Region root) {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                fixSequence.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
-
-                int originalIndexInParent = getOriginalIndexInParent(fixSequence);
-
-                zoomInAndCenter(fixSequence, fixSequence.getFitWidth(), fixSequence.getFitHeight(), true);
-
-                fixSequence.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOutFixSequenceEventHandler(fixSequence, root, originalIndexInParent));
+                i.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        createZoomOutImageViewEventHandler(i, root, originalIndexInParent));
             }
         };
     }

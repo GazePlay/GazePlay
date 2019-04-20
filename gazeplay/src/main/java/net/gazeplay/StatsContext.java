@@ -210,13 +210,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             centerPane.getChildren().add(chart);
         }
         {
-            // StackPane stackPane = new StackPane();
-            // centerPane.getChildren().add(stackPane); // I'll add the ImageView for the heatmap and the grid on top of
-            // it.
-            //
 
-            //ImageView heatMap = StatsDisplay.buildHeatChart(stats, root);
-            ImageView heatMap = StatsDisplay.buildFSequenceChart(stats, root);
+            ImageView heatMap = StatsDisplay.buildHeatChart(stats, root);
 
             root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -231,16 +226,27 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             heatMap.setFitHeight(root.getHeight() * 0.35);
 
             centerPane.getChildren().add(heatMap);
-            {
-//                StackPane fixSeq = new StackPane();
-//                ImageView fixationS = new ImageView();
-//                SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-//                fixationS.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
-//                fixSeq.getChildren().add(fixationS);
-                // write code for TilePane and labels to add to the histogram picture
-                // TilePane gridForHistogram = new TilePane();
 
-            }
+//            if(!config.isFixationSequenceDisabled()){
+//                StackPane stackPane = new StackPane();
+//                centerPane.getChildren().add(stackPane); // I'll add the ImageView for the heatmap and the grid on top of it.
+//
+//                ImageView fixSequence = StatsDisplay.buildFSequenceChart(stats, root);
+//
+//                root.widthProperty().addListener((observable, oldValue, newValue) -> {
+//
+//                    fixSequence.setFitWidth(newValue.doubleValue() * 0.35);
+//                });
+//                root.heightProperty().addListener((observable, oldValue, newValue) -> {
+//
+//                    fixSequence.setFitHeight(newValue.doubleValue() * 0.35);
+//                });
+//
+//                fixSequence.setFitWidth(root.getWidth() * 0.35);
+//                fixSequence.setFitHeight(root.getHeight() * 0.35);
+//
+//                stackPane.add(fixSequence);
+//            }
 
             // stackPane.getChildren().add(heatMap); // shows fine but it doesn't zoom the pic ...
         }
