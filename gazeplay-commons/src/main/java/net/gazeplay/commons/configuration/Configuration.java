@@ -478,12 +478,12 @@ public class Configuration implements Cloneable {
         return menuButtonsOrientationProperty.getValue();
     }
 
-    public Boolean isHeatMapDisabled() {
-        return heatMapDisabledProperty.getValue();
-    }
+    public Boolean isHeatMapDisabled() { return heatMapDisabledProperty.getValue(); }
+
     public Boolean isFixationSequenceDisabled() {
         return fixationSequenceDisabledProperty.getValue();
     }
+
     public Double getMusicVolume() {
         return musicVolumeProperty.getValue();
     }
