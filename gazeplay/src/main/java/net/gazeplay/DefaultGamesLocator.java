@@ -37,7 +37,6 @@ import net.gazeplay.games.moles.MoleStats;
 import net.gazeplay.games.moles.Moles;
 import net.gazeplay.games.ninja.Ninja;
 import net.gazeplay.games.ninja.NinjaStats;
-import net.gazeplay.games.openmemory.OpenMemory;
 import net.gazeplay.games.order.Order;
 import net.gazeplay.games.order.OrderStats;
 import net.gazeplay.games.pet.PetHouse;
@@ -603,7 +602,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                         return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(),
-                                gameVariant.getHeight(), stats);
+                                gameVariant.getHeight(), stats, false);
                     }
                 }));
 
@@ -635,7 +634,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                         return new Memory(Memory.MemoryGameType.LETTERS, gameContext, gameVariant.getWidth(),
-                                gameVariant.getHeight(), stats);
+                                gameVariant.getHeight(), stats, false);
                     }
                 }));
 
@@ -667,7 +666,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                         return new Memory(Memory.MemoryGameType.NUMBERS, gameContext, gameVariant.getWidth(),
-                                gameVariant.getHeight(), stats);
+                                gameVariant.getHeight(), stats, false);
                     }
                 }));
 
@@ -699,8 +698,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new OpenMemory(OpenMemory.OpenMemoryGameType.DEFAULT, gameContext,
-                                gameVariant.getWidth(), gameVariant.getHeight(), stats);
+                        return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(),
+                                gameVariant.getHeight(), stats, true);
                     }
                 }));
 
@@ -733,8 +732,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new OpenMemory(OpenMemory.OpenMemoryGameType.LETTERS, gameContext,
-                                gameVariant.getWidth(), gameVariant.getHeight(), stats);
+                        return new Memory(Memory.MemoryGameType.LETTERS, gameContext, gameVariant.getWidth(),
+                                gameVariant.getHeight(), stats, true);
                     }
                 }));
 
@@ -767,8 +766,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext,
                             GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new OpenMemory(OpenMemory.OpenMemoryGameType.NUMBERS, gameContext,
-                                gameVariant.getWidth(), gameVariant.getHeight(), stats);
+                        return new Memory(Memory.MemoryGameType.NUMBERS, gameContext, gameVariant.getWidth(),
+                                gameVariant.getHeight(), stats, true);
                     }
                 }));
 
