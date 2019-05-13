@@ -78,7 +78,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     public BibouleJump(GameContext gameContext, Stats stats, int version) {
         this.gameContext = gameContext;
-        this.stats = (BibouleJumpStats)stats;
+        this.stats = (BibouleJumpStats) stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.randomGenerator = new Random();
         this.config = Configuration.getInstance();
@@ -211,9 +211,9 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     }
 
-    private double getGameSpeed(){
+    private double getGameSpeed() {
         double speed = config.getSpeedEffects();
-        return speed <= 1.0? 1.0 : speed;
+        return speed <= 1.0 ? 1.0 : speed;
     }
 
     private String getRandomFileNameFromFileList(File[] fileList) {
@@ -398,11 +398,12 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
             death();
         }
 
-        onScreenText.setText(logs);
+        // Uncomment to show on screen logs
+        // onScreenText.setText(logs);
     }
 
     private void updateScore(double difference) {
-        int inc = (int)(difference / dimensions.getHeight() * 100);
+        int inc = (int) (difference / dimensions.getHeight() * 100);
         score += inc;
         stats.incNbGoals(inc);
         scoreText.setText(String.valueOf(score));

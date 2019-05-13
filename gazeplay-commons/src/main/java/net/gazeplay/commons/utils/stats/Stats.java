@@ -165,7 +165,7 @@ public class Stats implements GazeMotionListener {
         log.debug("The number of goals is " + nbGoals + "and the number shots is " + nbShots);
     }
 
-    public void addRoundDuration(){
+    public void addRoundDuration() {
         this.roundsDurationReport.addRoundDuration(System.currentTimeMillis() - currentRoundStartTime);
     }
 
