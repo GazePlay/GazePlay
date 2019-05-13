@@ -1,13 +1,18 @@
 package net.gazeplay;
 
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.image.Image;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import javafx.scene.image.ImageView;
+import javax.imageio.ImageIO;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import lombok.Data;
@@ -23,6 +28,8 @@ import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 import net.gazeplay.games.race.RaceGamesStats;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -33,7 +40,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     private static Boolean ALIGN_LEFT = true;
     private static String currentLanguage;
 
-    public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
+    public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats) throws IOException {
         BorderPane root = new BorderPane();
 
         return new StatsContext(gazePlay, root, stats);
@@ -70,7 +77,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) {
+    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) throws IOException {
         super(gazePlay, root);
         this.stats = stats;
 
@@ -209,47 +216,66 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             LineChart<String, Number> chart = StatsDisplay.buildLineChart(stats, root);
             centerPane.getChildren().add(chart);
         }
-        {
 
-            ImageView heatMap = StatsDisplay.buildHeatChart(stats, root);
 
-            root.widthProperty().addListener((observable, oldValue, newValue) -> {
+            if(config.isFixationSequenceDisabled() && !config.isHeatMapDisabled()) {
+                ImageView heatMap = StatsDisplay.buildHeatChart(stats, root);
 
-                heatMap.setFitWidth(newValue.doubleValue() * 0.35);
-            });
-            root.heightProperty().addListener((observable, oldValue, newValue) -> {
+                root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
-                heatMap.setFitHeight(newValue.doubleValue() * 0.35);
-            });
+                    heatMap.setFitWidth(newValue.doubleValue() * 0.35);
+                });
+                root.heightProperty().addListener((observable, oldValue, newValue) -> {
 
-            heatMap.setFitWidth(root.getWidth() * 0.35);
-            heatMap.setFitHeight(root.getHeight() * 0.35);
+                    heatMap.setFitHeight(newValue.doubleValue() * 0.35);
+                });
 
-            centerPane.getChildren().add(heatMap);
+                heatMap.setFitWidth(root.getWidth() * 0.35);
+                heatMap.setFitHeight(root.getHeight() * 0.35);
 
-//            if(!config.isFixationSequenceDisabled()){
+                centerPane.getChildren().add(heatMap);
+            }
+            else if(!config.isFixationSequenceDisabled() && config.isHeatMapDisabled()){
 //                StackPane stackPane = new StackPane();
 //                centerPane.getChildren().add(stackPane); // I'll add the ImageView for the heatmap and the grid on top of it.
 //
-//                ImageView fixSequence = StatsDisplay.buildFSequenceChart(stats, root);
-//
-//                root.widthProperty().addListener((observable, oldValue, newValue) -> {
-//
-//                    fixSequence.setFitWidth(newValue.doubleValue() * 0.35);
-//                });
-//                root.heightProperty().addListener((observable, oldValue, newValue) -> {
-//
-//                    fixSequence.setFitHeight(newValue.doubleValue() * 0.35);
-//                });
-//
-//                fixSequence.setFitWidth(root.getWidth() * 0.35);
-//                fixSequence.setFitHeight(root.getHeight() * 0.35);
-//
+                ImageView fixSequence = StatsDisplay.buildFSequenceChart(stats, root);
+
+                root.widthProperty().addListener((observable, oldValue, newValue) -> {
+
+                    fixSequence.setFitWidth(newValue.doubleValue() * 0.35);
+                });
+                root.heightProperty().addListener((observable, oldValue, newValue) -> {
+
+                    fixSequence.setFitHeight(newValue.doubleValue() * 0.35);
+                });
+
+                fixSequence.setFitWidth(root.getWidth() * 0.35);
+                fixSequence.setFitHeight(root.getHeight() * 0.35);
+
+                centerPane.getChildren().add(fixSequence);
 //                stackPane.add(fixSequence);
 //            }
+            }
+            else if(!config.isFixationSequenceDisabled() && !config.isHeatMapDisabled()){ // display both (fixation sequence on top of heatmap)
 
-            // stackPane.getChildren().add(heatMap); // shows fine but it doesn't zoom the pic ...
-        }
+                ImageView fixation_and_heatmap = StatsDisplay.buildFixSeq_and_HeatMap(stats, root);
+
+                root.widthProperty().addListener((observable, oldValue, newValue) -> {
+
+                    fixation_and_heatmap.setFitWidth(newValue.doubleValue() * 0.35);
+                });
+                root.heightProperty().addListener((observable, oldValue, newValue) -> {
+
+                    fixation_and_heatmap.setFitHeight(newValue.doubleValue() * 0.35);
+                });
+
+                fixation_and_heatmap.setFitWidth(root.getWidth() * 0.35);
+                fixation_and_heatmap.setFitHeight(root.getHeight() * 0.35);
+
+                centerPane.getChildren().add(fixation_and_heatmap);
+
+            }
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 

@@ -37,15 +37,16 @@ public class FixationSequence {
         for(int i = 0 ; i < fixSeq.size()-1; i++){
             gc.strokeLine(fixSeq.get(i).getY(),fixSeq.get(i).getX(),fixSeq.get(i+1).getY(),fixSeq.get(i+1).getX());
         }
+        gc.setStroke(Color.RED);
+        gc.setLineWidth(0.8);
+        for(int j = 0 ; j < fixSeq.size(); j=j+25){
+
+            gc.strokeOval(fixSeq.get(j).getY(),fixSeq.get(j).getX(),20,20);
+        }
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
         canvas.snapshot(params, image);
 
-//        PixelWriter pxWriter = image.getPixelWriter();
-//
-//        for(int i = 0 ; i < fixSeq.size(); i ++){
-//            pxWriter.setColor(fixSeq.get(i).getY(), fixSeq.get(i).getX(), Color.ORANGE);
-//        }
     }
     /**
      * Saves the fixation Sequence to a PNG file

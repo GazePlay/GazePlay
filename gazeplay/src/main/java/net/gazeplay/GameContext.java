@@ -313,7 +313,11 @@ public class GameContext extends GraphicalContext<Pane> {
 
             public void handle(javafx.scene.input.KeyEvent event) {
 
-                QuitKeyPressed(stats, gazePlay, currentGame);
+                try {
+                    QuitKeyPressed(stats, gazePlay, currentGame);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                 scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
 
@@ -347,7 +351,11 @@ public class GameContext extends GraphicalContext<Pane> {
 
         EventHandler<Event> homeEvent = e -> {
             root.setCursor(Cursor.WAIT); // Change cursor to wait style
-            homeButtonClicked(stats, gazePlay, currentGame);
+            try {
+                homeButtonClicked(stats, gazePlay, currentGame);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
             // BackgroundMusicManager.getInstance().pause();
             root.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
@@ -357,7 +365,7 @@ public class GameContext extends GraphicalContext<Pane> {
         return homeButton;
     }
 
-    private void QuitKeyPressed(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
+    private void QuitKeyPressed(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) throws IOException {
         currentGame.dispose();
         stats.stop();
         gazeDeviceManager.clear();
@@ -385,7 +393,7 @@ public class GameContext extends GraphicalContext<Pane> {
     }
 
     private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay,
-            @NonNull GameLifeCycle currentGame) {
+            @NonNull GameLifeCycle currentGame) throws IOException {
         currentGame.dispose();
 
         stats.stop();
