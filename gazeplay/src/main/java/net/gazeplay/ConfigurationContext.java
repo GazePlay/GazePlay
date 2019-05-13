@@ -742,8 +742,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return checkBox;
     }
+
     private static CheckBox buildDisableFixationSequenceCheckBox(Configuration configuration,
-                                                        ConfigurationContext configurationContext) {
+            ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
         checkBox.setSelected(configuration.isFixationSequenceDisabled());
@@ -756,6 +757,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return checkBox;
     }
+
     private CheckBox buildEnabledWhiteBackground(Configuration configuration,
             ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();

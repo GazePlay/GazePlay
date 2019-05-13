@@ -365,7 +365,8 @@ public class GameContext extends GraphicalContext<Pane> {
         return homeButton;
     }
 
-    private void QuitKeyPressed(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) throws IOException {
+    private void QuitKeyPressed(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
+            throws IOException {
         currentGame.dispose();
         stats.stop();
         gazeDeviceManager.clear();
@@ -392,8 +393,8 @@ public class GameContext extends GraphicalContext<Pane> {
 
     }
 
-    private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay,
-            @NonNull GameLifeCycle currentGame) throws IOException {
+    private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
+            throws IOException {
         currentGame.dispose();
 
         stats.stop();

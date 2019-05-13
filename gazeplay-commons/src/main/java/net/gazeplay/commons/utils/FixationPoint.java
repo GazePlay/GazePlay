@@ -21,11 +21,11 @@ public class FixationPoint {
     public FixationPoint() {
         firstGaze = 0;
         gazeDuration = 0;
-        x=-1;
-        y=-1;
+        x = -1;
+        y = -1;
     }
 
-    public FixationPoint(long fG, long gD,int X, int Y) {
+    public FixationPoint(long fG, long gD, int X, int Y) {
         firstGaze = fG;
         gazeDuration = gD;
         x = X;

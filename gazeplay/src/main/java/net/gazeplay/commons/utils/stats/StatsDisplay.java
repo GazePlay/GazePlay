@@ -162,18 +162,19 @@ public class StatsDisplay {
         return heatMap;
     }
 
-    public static ImageView buildFSequenceChart(Stats stats, final Region root){
+    public static ImageView buildFSequenceChart(Stats stats, final Region root) {
         ImageView fix_sequence = new ImageView();
         fix_sequence.setPreserveRatio(true);
 
         SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-        savedStatsInfo.addObserver((o,arg)-> {
-            Platform.runLater(()-> fix_sequence.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString())));
+        savedStatsInfo.addObserver((o, arg) -> {
+            Platform.runLater(() -> fix_sequence
+                    .setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString())));
         });
 
         fix_sequence.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
 
-        EventHandler<Event> openFixationSeqEvent = createZoomInImageViewEventHandler(fix_sequence,root);
+        EventHandler<Event> openFixationSeqEvent = createZoomInImageViewEventHandler(fix_sequence, root);
         fix_sequence.addEventHandler(MouseEvent.MOUSE_CLICKED, openFixationSeqEvent);
 
         return fix_sequence;
@@ -189,9 +190,8 @@ public class StatsDisplay {
         ImageView source = new ImageView();
         ImageView draw_on_top_of_source = new ImageView();
 
-        savedStatsInfo.addObserver((o,arg)-> {
-            Platform.runLater(()->
-            {
+        savedStatsInfo.addObserver((o, arg) -> {
+            Platform.runLater(() -> {
                 source.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
                 draw_on_top_of_source.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
             });
@@ -207,10 +207,10 @@ public class StatsDisplay {
         g.drawImage(drawOnTopB, 0, 0, null);
         g.dispose();
 
-        Image fixationsOnTopOfHeatmap = SwingFXUtils.toFXImage(sourceB, null );
+        Image fixationsOnTopOfHeatmap = SwingFXUtils.toFXImage(sourceB, null);
         both.setImage(fixationsOnTopOfHeatmap);
 
-        EventHandler<Event> openBothEvent = createZoomInImageViewEventHandler(both,root);
+        EventHandler<Event> openBothEvent = createZoomInImageViewEventHandler(both, root);
         both.addEventHandler(MouseEvent.MOUSE_CLICKED, openBothEvent);
 
         return both;

@@ -217,65 +217,60 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             centerPane.getChildren().add(chart);
         }
 
+        if (config.isFixationSequenceDisabled() && !config.isHeatMapDisabled()) {
+            ImageView heatMap = StatsDisplay.buildHeatChart(stats, root);
 
-            if(config.isFixationSequenceDisabled() && !config.isHeatMapDisabled()) {
-                ImageView heatMap = StatsDisplay.buildHeatChart(stats, root);
+            root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
-                root.widthProperty().addListener((observable, oldValue, newValue) -> {
+                heatMap.setFitWidth(newValue.doubleValue() * 0.35);
+            });
+            root.heightProperty().addListener((observable, oldValue, newValue) -> {
 
-                    heatMap.setFitWidth(newValue.doubleValue() * 0.35);
-                });
-                root.heightProperty().addListener((observable, oldValue, newValue) -> {
+                heatMap.setFitHeight(newValue.doubleValue() * 0.35);
+            });
 
-                    heatMap.setFitHeight(newValue.doubleValue() * 0.35);
-                });
+            heatMap.setFitWidth(root.getWidth() * 0.35);
+            heatMap.setFitHeight(root.getHeight() * 0.35);
 
-                heatMap.setFitWidth(root.getWidth() * 0.35);
-                heatMap.setFitHeight(root.getHeight() * 0.35);
+            centerPane.getChildren().add(heatMap);
+        } else if (!config.isFixationSequenceDisabled() && config.isHeatMapDisabled()) {
 
-                centerPane.getChildren().add(heatMap);
-            }
-            else if(!config.isFixationSequenceDisabled() && config.isHeatMapDisabled()){
-//                StackPane stackPane = new StackPane();
-//                centerPane.getChildren().add(stackPane); // I'll add the ImageView for the heatmap and the grid on top of it.
-//
-                ImageView fixSequence = StatsDisplay.buildFSequenceChart(stats, root);
+            ImageView fixSequence = StatsDisplay.buildFSequenceChart(stats, root);
 
-                root.widthProperty().addListener((observable, oldValue, newValue) -> {
+            root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
-                    fixSequence.setFitWidth(newValue.doubleValue() * 0.35);
-                });
-                root.heightProperty().addListener((observable, oldValue, newValue) -> {
+                fixSequence.setFitWidth(newValue.doubleValue() * 0.35);
+            });
+            root.heightProperty().addListener((observable, oldValue, newValue) -> {
 
-                    fixSequence.setFitHeight(newValue.doubleValue() * 0.35);
-                });
+                fixSequence.setFitHeight(newValue.doubleValue() * 0.35);
+            });
 
-                fixSequence.setFitWidth(root.getWidth() * 0.35);
-                fixSequence.setFitHeight(root.getHeight() * 0.35);
+            fixSequence.setFitWidth(root.getWidth() * 0.35);
+            fixSequence.setFitHeight(root.getHeight() * 0.35);
 
-                centerPane.getChildren().add(fixSequence);
-//                stackPane.add(fixSequence);
-//            }
-            }
-            else if(!config.isFixationSequenceDisabled() && !config.isHeatMapDisabled()){ // display both (fixation sequence on top of heatmap)
+            centerPane.getChildren().add(fixSequence);
 
-                ImageView fixation_and_heatmap = StatsDisplay.buildFixSeq_and_HeatMap(stats, root);
+        } else if (!config.isFixationSequenceDisabled() && !config.isHeatMapDisabled()) { // display both (fixation
+                                                                                          // sequence on top of heatmap)
 
-                root.widthProperty().addListener((observable, oldValue, newValue) -> {
+            ImageView fixation_and_heatmap = StatsDisplay.buildFixSeq_and_HeatMap(stats, root);
 
-                    fixation_and_heatmap.setFitWidth(newValue.doubleValue() * 0.35);
-                });
-                root.heightProperty().addListener((observable, oldValue, newValue) -> {
+            root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
-                    fixation_and_heatmap.setFitHeight(newValue.doubleValue() * 0.35);
-                });
+                fixation_and_heatmap.setFitWidth(newValue.doubleValue() * 0.35);
+            });
+            root.heightProperty().addListener((observable, oldValue, newValue) -> {
 
-                fixation_and_heatmap.setFitWidth(root.getWidth() * 0.35);
-                fixation_and_heatmap.setFitHeight(root.getHeight() * 0.35);
+                fixation_and_heatmap.setFitHeight(newValue.doubleValue() * 0.35);
+            });
 
-                centerPane.getChildren().add(fixation_and_heatmap);
+            fixation_and_heatmap.setFitWidth(root.getWidth() * 0.35);
+            fixation_and_heatmap.setFitHeight(root.getHeight() * 0.35);
 
-            }
+            centerPane.getChildren().add(fixation_and_heatmap);
+
+        }
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
