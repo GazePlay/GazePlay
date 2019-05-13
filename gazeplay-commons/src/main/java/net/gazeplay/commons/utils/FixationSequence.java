@@ -60,13 +60,16 @@ public class FixationSequence {
 
         for (int j = 0; j < fixSeq.size(); j = j + 25) {
             label_count++;
+
             gc.setStroke(Color.RED);
             int x = fixSeq.get(j).getY();
             int y = fixSeq.get(j).getX();
             int radius = 20;
             gc.strokeOval(x-radius/2, y-radius/2, radius, radius);
-            
-            gc.setFill(Color.WHITE);
+            gc.setFill(Color.rgb(255, 255, 0, 0.5));//yellow 50% transparency
+            gc.fillOval(x-radius/2, y-radius/2, radius, radius);
+
+            gc.setFill(Color.BLACK);
             gc.fillText(Integer.toString(label_count), fixSeq.get(j).getY(), fixSeq.get(j).getX(),40);
         }
         SnapshotParameters params = new SnapshotParameters();
