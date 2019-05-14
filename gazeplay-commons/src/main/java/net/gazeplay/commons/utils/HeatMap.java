@@ -5,6 +5,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -14,6 +15,7 @@ import java.io.IOException;
 /**
  * Creates a heatmap image from a given 2D array
  */
+@Slf4j
 public class HeatMap {
 
     /**
@@ -82,6 +84,10 @@ public class HeatMap {
         }
         subdivisionValue = (maxValue - minValue) / (this.colors.length - 1);
 
+        log.info(
+                "Creating new heatmap with the following values: minValue: {}, maxValue: {}, subdivisionValue: {}, # of colors: {}",
+                minValue, maxValue, subdivisionValue, colors.length);
+
         // Create heatmap pixel per pixel
         PixelWriter pxWriter = image.getPixelWriter();
         for (int x = 0; x < data.length; x++) {
@@ -104,7 +110,7 @@ public class HeatMap {
         } else {
             double compValue = minValue + subdivisionValue;
             int i = 0; // Once out of the loop, will be the index of the starting color of the interpolation
-            while (compValue < maxValue && value >= compValue) { // Finding the right subdivision, in order to get the
+            while (i < colors.length - 2 && value >= compValue) { // Finding the right subdivision, in order to get the
                 // colors between which the values is located
                 i++;
                 compValue += subdivisionValue;

@@ -228,6 +228,10 @@ public class Stats implements GazeMotionListener {
         log.debug("The number of goals is " + nbGoals + "and the number shots is " + nbShots);
     }
 
+    public void addRoundDuration() {
+        this.roundsDurationReport.addRoundDuration(System.currentTimeMillis() - currentRoundStartTime);
+    }
+
     public int getShotRatio() {
         if (this.nbGoals == this.nbShots || this.nbShots == 0) {
             return 100;

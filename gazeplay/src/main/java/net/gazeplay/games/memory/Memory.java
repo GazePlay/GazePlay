@@ -53,8 +53,12 @@ public class Memory implements GameLifeCycle {
 
     public int nbTurnedCards;
 
-    public Memory(final MemoryGameType gameType, GameContext gameContext, int nbLines, int nbColumns, Stats stats) {
+    private final boolean isOpen;
+
+    public Memory(final MemoryGameType gameType, GameContext gameContext, int nbLines, int nbColumns, Stats stats,
+            boolean isOpen) {
         super();
+        this.isOpen = isOpen;
         int cardsCount = nbLines * nbColumns;
         if ((cardsCount & 1) != 0) {
             // nbLines * nbColumns must be a multiple of 2
@@ -175,7 +179,7 @@ public class Memory implements GameLifeCycle {
                 Image image = images.get(id);
 
                 MemoryCard card = new MemoryCard(positionX, positionY, cardWidth, cardHeight, image, id, gameContext,
-                        stats, this, fixationlength);
+                        stats, this, fixationlength, isOpen);
 
                 result.add(card);
             }
