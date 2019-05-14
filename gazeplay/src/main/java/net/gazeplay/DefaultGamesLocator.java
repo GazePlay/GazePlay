@@ -50,6 +50,7 @@ import net.gazeplay.games.rushHour.RushHour;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.shooter.Shooter;
 import net.gazeplay.games.shooter.ShooterGamesStats;
+import net.gazeplay.games.spotthedifferences.SpotTheDifferences;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
 
@@ -1088,6 +1089,21 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new BibouleJump(gameContext, stats, gameVariant.getNumber());
                     }
 
+                }));
+
+        result.add(new GameSpec(
+                new GameSummary("Spot The Difference", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/frogsrace.png"),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "spotthedifference");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                                                       Stats stats) {
+                        return new SpotTheDifferences(gameContext, stats);
+                    }
                 }));
 
         log.info("Games found : {}", result.size());

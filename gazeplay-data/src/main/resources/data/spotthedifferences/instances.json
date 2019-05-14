@@ -1,0 +1,43 @@
+[{
+  "image1" : "img1.png",
+  "image2" : "img2.png",
+  "differences" : [{
+      "x" : 1353,
+      "y" : 588,
+      "radius" : 70
+    },{
+      "x" : 2900,
+      "y" : 740,
+      "radius" : 70
+    },{
+    "x" : 2190,
+    "y" : 400,
+    "radius" : 100
+    },{
+    "x" : 175,
+    "y" : 530,
+    "radius" : 70
+    }
+  ]
+},{
+  "image1" : "img1flip.png",
+  "image2" : "img2flip.png",
+  "differences" : [{
+    "y" : 1353,
+    "x" : 588,
+    "radius" : 70
+  },{
+    "y" : 2900,
+    "x" : 740,
+    "radius" : 70
+  },{
+    "y" : 2190,
+    "x" : 400,
+    "radius" : 100
+  },{
+    "y" : 175,
+    "x" : 530,
+    "radius" : 70
+  }
+  ]
+}]

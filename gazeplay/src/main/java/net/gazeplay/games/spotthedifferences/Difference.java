@@ -1,0 +1,59 @@
+package net.gazeplay.games.spotthedifferences;
+
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+
+import java.util.Date;
+
+@Slf4j
+public class Difference extends Circle {
+
+    private static final long GAZE_TIME = 500;
+
+    @Getter
+    @Setter
+    private Difference pair;
+    private long timer;
+    private SpotTheDifferences mainGame;
+
+    public Difference(GameContext gameContext, SpotTheDifferences mainGame, double centerX, double centerY, double radius) {
+        super(centerX, centerY, radius, Color.TRANSPARENT);
+        this.mainGame = mainGame;
+        setStrokeWidth(5);
+        setStroke(Color.RED);
+        timer = 0;
+        setOpacity(1);
+
+        EventHandler handler = (EventHandler<Event>) e -> {
+            if(getOpacity() == 0) {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    timer = System.currentTimeMillis();
+                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                    timer = 0;
+                } else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED) {
+                    long timeElapsed = System.currentTimeMillis() - timer;
+                    if (timer > 0 && timeElapsed > GAZE_TIME) {
+                        timer = 0;
+                        this.setOpacity(1);
+                        pair.setOpacity(1);
+                        mainGame.differenceFound();
+                    }
+                }
+            }
+        };
+
+        gameContext.getGazeDeviceManager().addEventFilter(this);
+        this.addEventFilter(MouseEvent.ANY, handler);
+        this.addEventFilter(GazeEvent.ANY, handler);
+
+        gameContext.getChildren().add(this);
+    }
+}
