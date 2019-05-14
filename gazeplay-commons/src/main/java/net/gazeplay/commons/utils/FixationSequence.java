@@ -52,7 +52,7 @@ public class FixationSequence {
         gc.setLineWidth(0.6);
 
         int label_count = 1;// for the labels of the fixation sequence
-        double alpha = -100.0; // angle between 2 lines
+        double alpha;
 
         gc.setStroke(Color.RED);
         int x = fixSeq.get(0).getY();
@@ -68,8 +68,11 @@ public class FixationSequence {
 
 //        double[] u = new double[2];
 //        double[] v = new double[2];
-        double m1; // slope of line between points j-1 and j
-        double m2; // slope of line between points j and j+1
+//        double m1;
+//        double m2;
+
+
+        double k1 , k2; // inclinations
 
         for (int j = 1; j < fixSeq.size()-1; j ++) {
 
@@ -77,17 +80,16 @@ public class FixationSequence {
             x = fixSeq.get(j).getY();
             y = fixSeq.get(j).getX();
 
-            if(x - fixSeq.get(j-1).getY() == 0)
-                m1 = (y - fixSeq.get(j-1).getX())/(0.0001);
-            else m1 = (y - fixSeq.get(j-1).getX())/(x - fixSeq.get(j-1).getY());
-
-            if(fixSeq.get(j+1).getY() - x == 0)
-                m2 = (fixSeq.get(j+1).getX() - y )/(0.0001);
-            else m2 = (fixSeq.get(j+1).getX() - y )/(fixSeq.get(j+1).getY() - x);
-
-            alpha = Math.atan(Math.abs((m2 - m1)/(1 + m2*m1)));
-
-
+//
+//            if(x - fixSeq.get(j-1).getY() == 0)
+//                m1 = (y - fixSeq.get(j-1).getX())/(0.0001);
+//            else m1 = (y - fixSeq.get(j-1).getX())/(x - fixSeq.get(j-1).getY());
+//
+//            if(fixSeq.get(j+1).getY() - x == 0)
+//                m2 = (fixSeq.get(j+1).getX() - y )/(0.0001);
+//            else m2 = (fixSeq.get(j+1).getX() - y )/( fixSeq.get(j+1).getY() - x );
+//
+//            alpha = Math.atan(Math.abs((m2 - m1)/(1 + m1 * m2))); // returns a value between -pi/2 to pi/2
             //ideja me cos alpha , kendi midis 2 vectoreve
 //            u[0] = ((x - fixSeq.get(j-1).getY()));
 //            u[1] = ((y - fixSeq.get(j-1).getX()));
@@ -101,21 +103,21 @@ public class FixationSequence {
 //            alpha = Math.acos((u[0] * v[0] + u[1] * v[1])/(lengthU * lengthV));
 
             // ideja me koeficient kendor
-//            if(x - fixSeq.get(j-1).getY() == 0)
-//                alpha = Math.atan(Math.PI/2);
-//            else
-//                alpha = Math.atan((y - fixSeq.get(j+1).getX())/(x - fixSeq.get(j-1).getY()));
-//
-//            if(fixSeq.get(j+1).getY() - x == 0)
-//                alpha1 = Math.atan(Math.PI/2);
-//            else
-//                alpha1 = Math.atan((fixSeq.get(j+1).getX() - y)/(fixSeq.get(j+1).getY() - x));
+            if(x - fixSeq.get(j-1).getY() == 0)
+                k1 = (y - fixSeq.get(j+1).getX())/(0.0001);
+            else
+                k1 = (y - fixSeq.get(j+1).getX())/(x - fixSeq.get(j-1).getY());
 
+            if(fixSeq.get(j+1).getY() - x == 0)
+                k2 = ((fixSeq.get(j+1).getX() - y)/(0.0001));
+            else
+                k2 = ((fixSeq.get(j+1).getX() - y)/(fixSeq.get(j+1).getY() - x));
 
             radius = 20; // radius depends on time spent on a position .
             // if alpha < 120 degrees
             //if(alpha < Math.acos((2*Math.PI)/3)  && alpha > Math.acos(0)/*&& alpha1 <  Math.abs(alpha-Math.acos((2*Math.PI)/3))*/ ){
-            if(alpha < Math.atan(Math.PI/2)){
+
+            if(Math.abs(k2) < Math.abs(k1) + 5  && Math.abs(k2) > Math.abs(Math.abs(k1) - 5 )){
                 label_count++;
                 gc.strokeOval(x-radius/2, y-radius/2, radius, radius);
                 gc.setFill(Color.rgb(255, 255, 0, 0.5));//yellow 50% transparency
