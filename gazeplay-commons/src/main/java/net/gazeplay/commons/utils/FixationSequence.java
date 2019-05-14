@@ -17,9 +17,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.Vector;
 import java.lang.Math;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class FixationSequence {
 
     /**
@@ -85,15 +86,17 @@ public class FixationSequence {
             //r2 = Math.sqrt(Math.pow(fixSeq.get(j+1).getY() - x ,2) + Math.pow(fixSeq.get(j+1).getX() - y,2) );
             if (r2== 0)
                 continue;
-//            else if(Math.abs(r1-r2) < 3)
-//                continue;
             else
                 //theta2 = Math.acos((fixSeq.get(j+1).getY() - x)/r2) * Math.signum(fixSeq.get(j+1).getX() - y);
                 theta2 = Math.acos((x - fixSeq.get(j+1).getY())/r2) * Math.signum(fixSeq.get(j+1).getX() - y);
             theta_tolerance = Math.sqrt(Math.pow(theta2 - theta1, 2));
 
 
-            radius = 20; // radius depends on time spent on a position .
+            radius = Math.toIntExact( 20 +
+                  /* Math.abs(fixSeq.get(j + 1).getGazeDuration()/10)+ */
+                    Math.abs(fixSeq.get(j).getGazeDuration()/10)+
+                    Math.abs(fixSeq.get(j - 1).getGazeDuration())/10); // radius depends on time spent on a position .
+            log.info("radius = {}", radius);
 
             if(theta_tolerance > Math.PI/9 ){
                 label_count++;
@@ -102,6 +105,7 @@ public class FixationSequence {
                 gc.fillOval(x-radius/2, y-radius/2, radius, radius);
                 gc.setFill(Color.BLACK);
                 gc.fillText(Integer.toString(label_count), x, y,40);
+
             }
             else
                 continue;

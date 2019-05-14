@@ -24,7 +24,6 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
 import javafx.embed.swing.SwingFXUtils;
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
