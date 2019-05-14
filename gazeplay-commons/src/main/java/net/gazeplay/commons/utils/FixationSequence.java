@@ -46,10 +46,8 @@ public class FixationSequence {
                     fixSeq.get(i + 1).getX());
         }
         gc.setFont(sanSerifFont);
-
-        //final FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(sanSerifFont);
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.TOP);
+        gc.setTextBaseline(VPos.CENTER);
 
 
         //draw the circles with the labels on top
