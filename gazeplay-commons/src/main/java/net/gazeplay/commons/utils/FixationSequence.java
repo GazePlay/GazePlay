@@ -52,13 +52,12 @@ public class FixationSequence {
         gc.setLineWidth(0.6);
 
         int label_count = 1;// for the labels of the fixation sequence
-        double alpha;
 
         gc.setStroke(Color.RED);
         int x = fixSeq.get(0).getY();
         int y = fixSeq.get(0).getX();
 
-        int radius = 20;
+        int radius = 20; //central fixation bias . Read more about it at  https://imotions.com/blog/7-terms-metrics-eye-tracking/
 
         gc.strokeOval(x-radius/2, y-radius/2, radius, radius);
         gc.setFill(Color.rgb(255, 255, 0, 0.5));//yellow 50% transparency
@@ -66,13 +65,7 @@ public class FixationSequence {
         gc.setFill(Color.BLACK);
         gc.fillText(Integer.toString(label_count), x, y,40);
 
-//        double[] u = new double[2];
-//        double[] v = new double[2];
-//        double m1;
-//        double m2;
-
-
-        double k1 , k2; // inclinations
+        double r , theta1 , theta2 , theta_tolerance;
 
         for (int j = 1; j < fixSeq.size()-1; j ++) {
 
@@ -80,54 +73,27 @@ public class FixationSequence {
             x = fixSeq.get(j).getY();
             y = fixSeq.get(j).getX();
 
-//
-//            if(x - fixSeq.get(j-1).getY() == 0)
-//                m1 = (y - fixSeq.get(j-1).getX())/(0.0001);
-//            else m1 = (y - fixSeq.get(j-1).getX())/(x - fixSeq.get(j-1).getY());
-//
-//            if(fixSeq.get(j+1).getY() - x == 0)
-//                m2 = (fixSeq.get(j+1).getX() - y )/(0.0001);
-//            else m2 = (fixSeq.get(j+1).getX() - y )/( fixSeq.get(j+1).getY() - x );
-//
-//            alpha = Math.atan(Math.abs((m2 - m1)/(1 + m1 * m2))); // returns a value between -pi/2 to pi/2
-            //ideja me cos alpha , kendi midis 2 vectoreve
-//            u[0] = ((x - fixSeq.get(j-1).getY()));
-//            u[1] = ((y - fixSeq.get(j-1).getX()));
-//
-//            v[0] = ((fixSeq.get(j+1).getY() - x));
-//            v[1] = ((fixSeq.get(j+1).getX() - y));
-//
-//            double lengthU = Math.sqrt(Math.pow(u[0],2) + Math.pow(u[1],2));
-//            double lengthV = Math.sqrt(Math.pow(v[0],2) + Math.pow(v[1],2));
-//
-//            alpha = Math.acos((u[0] * v[0] + u[1] * v[1])/(lengthU * lengthV));
+            r = Math.sqrt(Math.pow(x - fixSeq.get(j-1).getY(),2) + Math.pow(y - fixSeq.get(j-1).getX(),2) );
+            theta1 = Math.acos((x - fixSeq.get(j-1).getY())/r) * Math.signum(y - fixSeq.get(j-1).getX());
 
-            // ideja me koeficient kendor
-            if(x - fixSeq.get(j-1).getY() == 0)
-                k1 = (y - fixSeq.get(j+1).getX())/(0.0001);
-            else
-                k1 = (y - fixSeq.get(j+1).getX())/(x - fixSeq.get(j-1).getY());
+            r = Math.sqrt(Math.pow(fixSeq.get(j+1).getY() - x ,2) + Math.pow(fixSeq.get(j+1).getX() - y,2) );
+            theta2 = Math.acos((fixSeq.get(j+1).getY() - x)/r) * Math.signum(fixSeq.get(j+1).getX() - y);
 
-            if(fixSeq.get(j+1).getY() - x == 0)
-                k2 = ((fixSeq.get(j+1).getX() - y)/(0.0001));
-            else
-                k2 = ((fixSeq.get(j+1).getX() - y)/(fixSeq.get(j+1).getY() - x));
+            theta_tolerance = Math.sqrt(Math.pow(theta2 - theta1, 2));
+
 
             radius = 20; // radius depends on time spent on a position .
-            // if alpha < 120 degrees
-            //if(alpha < Math.acos((2*Math.PI)/3)  && alpha > Math.acos(0)/*&& alpha1 <  Math.abs(alpha-Math.acos((2*Math.PI)/3))*/ ){
 
-            if(Math.abs(k2) < Math.abs(k1) + 5  && Math.abs(k2) > Math.abs(Math.abs(k1) - 5 )){
+            if(theta_tolerance > Math.PI/9 ){
                 label_count++;
                 gc.strokeOval(x-radius/2, y-radius/2, radius, radius);
                 gc.setFill(Color.rgb(255, 255, 0, 0.5));//yellow 50% transparency
                 gc.fillOval(x-radius/2, y-radius/2, radius, radius);
                 gc.setFill(Color.BLACK);
-                gc.fillText(Integer.toString(label_count), fixSeq.get(j).getY(), fixSeq.get(j).getX(),40);
+                gc.fillText(Integer.toString(label_count), x, y,40);
             }
             else
                 continue;
-
 
         }
         SnapshotParameters params = new SnapshotParameters();
