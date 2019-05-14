@@ -65,7 +65,7 @@ public class FixationSequence {
         gc.setFill(Color.BLACK);
         gc.fillText(Integer.toString(label_count), x, y,40);
 
-        double r , theta1 , theta2 , theta_tolerance;
+        double r1, r2 , theta1 , theta2 , theta_tolerance;
 
         for (int j = 1; j < fixSeq.size()-1; j ++) {
 
@@ -73,12 +73,23 @@ public class FixationSequence {
             x = fixSeq.get(j).getY();
             y = fixSeq.get(j).getX();
 
-            r = Math.sqrt(Math.pow(x - fixSeq.get(j-1).getY(),2) + Math.pow(y - fixSeq.get(j-1).getX(),2) );
-            theta1 = Math.acos((x - fixSeq.get(j-1).getY())/r) * Math.signum(y - fixSeq.get(j-1).getX());
+            r1 = Math.sqrt(Math.pow(fixSeq.get(j-1).getY() - x,2) + Math.pow(fixSeq.get(j-1).getX() - y,2) );
+            //r1 = Math.sqrt(Math.pow(x - fixSeq.get(j-1).getY(),2) + Math.pow(y - fixSeq.get(j-1).getX(),2) );
+            if (r1 == 0)
+                continue;
+            else
+                //theta1 = Math.acos((x - fixSeq.get(j-1).getY())/r1) * Math.signum(y - fixSeq.get(j-1).getX());
+                theta1 = Math.acos((fixSeq.get(j-1).getY() - x)/r1) * Math.signum(y - fixSeq.get(j-1).getX());
 
-            r = Math.sqrt(Math.pow(fixSeq.get(j+1).getY() - x ,2) + Math.pow(fixSeq.get(j+1).getX() - y,2) );
-            theta2 = Math.acos((fixSeq.get(j+1).getY() - x)/r) * Math.signum(fixSeq.get(j+1).getX() - y);
-
+            r2 = Math.sqrt(Math.pow(x - fixSeq.get(j+1).getY()  ,2) + Math.pow(y - fixSeq.get(j+1).getX(),2) );
+            //r2 = Math.sqrt(Math.pow(fixSeq.get(j+1).getY() - x ,2) + Math.pow(fixSeq.get(j+1).getX() - y,2) );
+            if (r2== 0)
+                continue;
+//            else if(Math.abs(r1-r2) < 3)
+//                continue;
+            else
+                //theta2 = Math.acos((fixSeq.get(j+1).getY() - x)/r2) * Math.signum(fixSeq.get(j+1).getX() - y);
+                theta2 = Math.acos((x - fixSeq.get(j+1).getY())/r2) * Math.signum(fixSeq.get(j+1).getX() - y);
             theta_tolerance = Math.sqrt(Math.pow(theta2 - theta1, 2));
 
 
@@ -94,12 +105,10 @@ public class FixationSequence {
             }
             else
                 continue;
-
         }
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
         canvas.snapshot(params, image);
-
     }
 
     /**
