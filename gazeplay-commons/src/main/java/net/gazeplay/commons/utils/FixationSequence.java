@@ -97,6 +97,7 @@ public class FixationSequence {
                     Math.abs(fixSeq.get(j).getGazeDuration() / 10)
                     + Math.abs(fixSeq.get(j - 1).getGazeDuration()) / 10); // radius depends on time spent on a position
                                                                            // .
+            log.info("radius = {}", radius);
 
             if (theta_tolerance > Math.PI / 9) {
                 label_count++;
