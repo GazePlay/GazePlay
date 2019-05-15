@@ -24,7 +24,8 @@ public class Difference extends Circle {
     private long timer;
     private SpotTheDifferences mainGame;
 
-    public Difference(GameContext gameContext, SpotTheDifferences mainGame, double centerX, double centerY, double radius) {
+    public Difference(GameContext gameContext, SpotTheDifferences mainGame, double centerX, double centerY,
+            double radius) {
         super(centerX, centerY, radius, Color.TRANSPARENT);
         this.mainGame = mainGame;
         setStrokeWidth(5);
@@ -33,7 +34,7 @@ public class Difference extends Circle {
         setOpacity(0);
 
         EventHandler handler = (EventHandler<Event>) e -> {
-            if(getOpacity() == 0) {
+            if (getOpacity() == 0) {
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
                     timer = System.currentTimeMillis();
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
