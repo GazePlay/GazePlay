@@ -98,7 +98,6 @@ public class FixationSequence {
                     + Math.abs(fixSeq.get(j - 1).getGazeDuration()) / 10); // radius depends on time spent on a position
                                                                            // .
 
-
             if (theta_tolerance > Math.PI / 9) {
                 label_count++;
                 gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
