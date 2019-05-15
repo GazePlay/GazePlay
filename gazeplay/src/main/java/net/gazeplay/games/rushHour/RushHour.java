@@ -216,7 +216,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(3, 1, 1, 3, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(3, 1, 1, 3, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -262,7 +262,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 2, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 2, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -274,9 +274,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(3, 5, 3, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(3, 5, 3, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
     }
 
@@ -320,9 +320,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car yellow = new Car(2, 0, 1, 3, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(2, 0, 1, 3, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
     }
 
@@ -366,7 +366,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(0, 3, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(0, 3, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -378,9 +378,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(5, 3, 1, 3, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(5, 3, 1, 3, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
     }
 
@@ -424,7 +424,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(2, 0, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(2, 0, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -436,9 +436,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(2, 2, 1, 2, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(2, 2, 1, 2, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(3, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -493,7 +493,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(5, 0, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(5, 0, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -505,9 +505,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(1, 3, 2, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(1, 3, 2, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -567,7 +567,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 1, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 1, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -579,9 +579,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(3, 3, 2, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(3, 3, 2, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(5, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -637,7 +637,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(2, 1, 1, 3, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(2, 1, 1, 3, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -649,9 +649,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(4, 3, 2, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(4, 3, 2, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -707,7 +707,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 1, 1, 3, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 1, 1, 3, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -719,9 +719,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(3, 4, 2, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(3, 4, 2, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -769,7 +769,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 0, 2, 1, Color.ORANGE, true, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 0, 2, 1, Color.DARKORANGE, true, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -781,9 +781,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(2, 4, 1, 2, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(2, 4, 1, 2, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -835,7 +835,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(2, 1, 1, 3, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(2, 1, 1, 3, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -847,9 +847,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(2, 4, 3, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(2, 4, 3, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -901,7 +901,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(5, 2, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(5, 2, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -913,9 +913,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(3, 3, 1, 2, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(3, 3, 1, 2, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -971,7 +971,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 0, 1, 3, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 0, 1, 3, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -983,9 +983,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(1, 3, 1, 2, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(1, 3, 1, 2, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(2, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1037,7 +1037,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(5, 1, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(5, 1, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1049,9 +1049,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(0, 4, 3, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(0, 4, 3, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1103,7 +1103,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 0, 2, 1, Color.ORANGE, true, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 0, 2, 1, Color.DARKORANGE, true, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1115,9 +1115,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(3, 3, 2, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(3, 3, 2, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1181,7 +1181,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 0, 1, 3, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 0, 1, 3, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1193,9 +1193,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(1, 2, 1, 3, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(1, 2, 1, 3, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1259,7 +1259,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(5, 2, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(5, 2, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1271,9 +1271,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(2, 4, 1, 2, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(2, 4, 1, 2, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1325,7 +1325,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 1, 2, 1, Color.ORANGE, true, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 1, 2, 1, Color.DARKORANGE, true, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1337,9 +1337,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(4, 2, 1, 3, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(4, 2, 1, 3, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(1, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1391,7 +1391,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(3, 0, 2, 1, Color.ORANGE, true, size.getValue(), pi, gameContext);
+        Car orange = new Car(3, 0, 2, 1, Color.DARKORANGE, true, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1403,9 +1403,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(0, 4, 3, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(0, 4, 3, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(4, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1461,7 +1461,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(3, 0, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(3, 0, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1473,9 +1473,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(3, 2, 1, 2, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(3, 2, 1, 2, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1547,7 +1547,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(3, 1, 2, 1, Color.ORANGE, true, size.getValue(), pi, gameContext);
+        Car orange = new Car(3, 1, 2, 1, Color.DARKORANGE, true, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1559,9 +1559,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(5, 2, 1, 3, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(5, 2, 1, 3, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1613,7 +1613,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(0, 3, 1, 3, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(0, 3, 1, 3, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1625,9 +1625,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(2, 4, 2, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(2, 4, 2, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1687,7 +1687,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 0, 2, 1, Color.ORANGE, true, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 0, 2, 1, Color.DARKORANGE, true, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1699,9 +1699,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(0, 4, 3, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(0, 4, 3, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1757,7 +1757,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 1, 1, 3, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 1, 1, 3, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1769,9 +1769,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(0, 5, 2, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(0, 5, 2, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1827,7 +1827,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(3, 2, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(3, 2, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1839,9 +1839,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(0, 4, 2, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(0, 4, 2, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(2, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1897,7 +1897,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 0, 1, 3, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 0, 1, 3, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1909,9 +1909,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(0, 5, 3, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(0, 5, 3, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -1963,7 +1963,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(0, 3, 2, 1, Color.ORANGE, true, size.getValue(), pi, gameContext);
+        Car orange = new Car(0, 3, 2, 1, Color.DARKORANGE, true, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -1975,9 +1975,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(3, 5, 3, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(3, 5, 3, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(2, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -2029,7 +2029,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(3, 0, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(3, 0, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -2041,9 +2041,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(3, 5, 3, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(3, 5, 3, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -2091,7 +2091,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(3, 0, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(3, 0, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -2103,9 +2103,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(0, 3, 3, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(0, 3, 3, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -2165,7 +2165,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(5, 0, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(5, 0, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -2177,9 +2177,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(1, 3, 2, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(1, 3, 2, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -2239,7 +2239,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 1, 1, 3, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 1, 1, 3, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -2251,9 +2251,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(0, 5, 2, 1, Color.YELLOW, true, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(0, 5, 2, 1, Color.BLACK, true, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -2309,7 +2309,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(4, 0, 2, 1, Color.ORANGE, true, size.getValue(), pi, gameContext);
+        Car orange = new Car(4, 0, 2, 1, Color.DARKORANGE, true, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -2321,9 +2321,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(5, 1, 1, 3, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(5, 1, 1, 3, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(brown);
@@ -2387,7 +2387,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(purple);
         p.getChildren().add(purple);
 
-        Car orange = new Car(2, 1, 1, 2, Color.ORANGE, false, size.getValue(), pi, gameContext);
+        Car orange = new Car(2, 1, 1, 2, Color.DARKORANGE, false, size.getValue(), pi, gameContext);
         garage.add(orange);
         p.getChildren().add(orange);
 
@@ -2399,9 +2399,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         garage.add(lightGreen);
         p.getChildren().add(lightGreen);
 
-        Car yellow = new Car(5, 2, 1, 2, Color.YELLOW, false, size.getValue(), pi, gameContext);
-        garage.add(yellow);
-        p.getChildren().add(yellow);
+        Car black = new Car(5, 2, 1, 2, Color.BLACK, false, size.getValue(), pi, gameContext);
+        garage.add(black);
+        p.getChildren().add(black);
 
         Car brown = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(brown);

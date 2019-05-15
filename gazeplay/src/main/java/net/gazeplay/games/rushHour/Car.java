@@ -46,6 +46,7 @@ public class Car extends Rectangle {
     private int y;
     private int l;
     private int h;
+
     @Setter
     private boolean intersect = false;
     private Timeline timelineProgressBar;
@@ -74,6 +75,7 @@ public class Car extends Rectangle {
         } else {
             this.setFill(new ImagePattern(new Image("data/rushHour/carV.png")));
         }
+
         Lighting lighting = new Lighting();
         lighting.setDiffuseConstant(100.0);
         lighting.setSpecularConstant(0.0);
@@ -235,10 +237,13 @@ public class Car extends Rectangle {
 
     public void setSelected(boolean b) {
         selected = b;
+
         if (selected) {
             this.setOpacity(1);
+
         } else {
             this.setOpacity(0.7);
+
         }
     }
 
