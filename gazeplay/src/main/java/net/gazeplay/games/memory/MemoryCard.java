@@ -50,12 +50,21 @@ public class MemoryCard extends Parent {
 
     final EventHandler<Event> enterEvent;
 
+    final boolean isOpen;
+
     public MemoryCard(double positionX, double positionY, double width, double height, Image image, int idc,
-            GameContext gameContext, Stats stats, Memory gameInstance, int fixationlength) {
+            GameContext gameContext, Stats stats, Memory gameInstance, int fixationlength, boolean isOpen) {
+
+        this.isOpen = isOpen;
 
         this.card = new Rectangle(positionX, positionY, width, height);
 
-        this.card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
+        if (isOpen) {
+            this.card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+        } else {
+            this.card
+                    .setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
+        }
 
         this.image = image;
 
@@ -159,8 +168,10 @@ public class MemoryCard extends Parent {
             if (gameInstance.currentRoundDetails.cardList.get(i).turned == true) {
                 gameInstance.currentRoundDetails.cardList.get(i).turned = false;
                 gameInstance.currentRoundDetails.cardList.get(i).progressIndicator.setOpacity(0);
-                gameInstance.currentRoundDetails.cardList.get(i).card.setFill(
-                        new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
+                if (!isOpen) {
+                    gameInstance.currentRoundDetails.cardList.get(i).card.setFill(
+                            new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
+                }
             }
             gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = -1;
         }
@@ -199,13 +210,15 @@ public class MemoryCard extends Parent {
                             public void handle(ActionEvent actionEvent) {
                                 gameInstance.nbTurnedCards = gameInstance.nbTurnedCards + 1;
                                 turned = true;
-                                card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+                                if (!isOpen) {
+                                    card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+                                }
 
                                 /* Update the cardAlreadyTurned for all other cards */
                                 for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
                                     gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = id;
                                 }
-                                progressIndicator.setOpacity(0);
+                                progressIndicator.setOpacity(isOpen ? 1 : 0);
 
                             }
                         });
@@ -227,31 +240,40 @@ public class MemoryCard extends Parent {
 
                                 gameInstance.nbTurnedCards = gameInstance.nbTurnedCards + 1;
                                 turned = true;
-                                card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+                                if (!isOpen) {
+                                    card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+                                }
                                 progressIndicator.setOpacity(0);
 
-                                /* Timeline : To see the 2nd card */
-                                Timeline timelineCard = new Timeline();
-
-                                timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1000)));
-
-                                timelineCard.play();
-
-                                timelineCard.setOnFinished(new EventHandler<ActionEvent>() {
-                                    @Override
-                                    public void handle(ActionEvent actionEvent) {
-
-                                        if (timelineCard != null)
-                                            timelineCard.stop();
-
-                                        if (id == cardAlreadyTurned) {
-                                            onCorrectCardSelected();
-                                        } else {
-                                            onWrongCardSelected();
-                                        }
+                                if (isOpen) {
+                                    if (id == cardAlreadyTurned) {
+                                        onCorrectCardSelected();
+                                    } else {
+                                        onWrongCardSelected();
                                     }
-                                });
+                                } else {
+                                    /* Timeline : To see the 2nd card */
+                                    Timeline timelineCard = new Timeline();
 
+                                    timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1000)));
+
+                                    timelineCard.play();
+
+                                    timelineCard.setOnFinished(new EventHandler<ActionEvent>() {
+                                        @Override
+                                        public void handle(ActionEvent actionEvent) {
+
+                                            if (timelineCard != null)
+                                                timelineCard.stop();
+
+                                            if (id == cardAlreadyTurned) {
+                                                onCorrectCardSelected();
+                                            } else {
+                                                onWrongCardSelected();
+                                            }
+                                        }
+                                    });
+                                }
                             }
                         });
                     }

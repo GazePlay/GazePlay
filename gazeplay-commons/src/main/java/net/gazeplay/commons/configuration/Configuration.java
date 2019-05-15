@@ -27,6 +27,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
+    private static final String PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED = "FIXATIONSEQUENCE_DISABLED";
     private static final String PROPERTY_NAME_MUSIC_VOLUME = "MUSIC_VOLUME";
     private static final String PROPERTY_NAME_MUSIC_FOLDER = "MUSIC_FOLDER";
     private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
@@ -52,6 +53,7 @@ public class Configuration implements Cloneable {
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
+    private static final boolean DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED = false;
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
@@ -169,6 +171,9 @@ public class Configuration implements Cloneable {
     protected final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
 
+    @Getter
+    protected final BooleanProperty fixationSequenceDisabledProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED);
     @Getter
     protected final BooleanProperty gazeMouseProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MOUSE,
             DEFAULT_VALUE_GAZE_MOUSE);
@@ -300,6 +305,11 @@ public class Configuration implements Cloneable {
             heatMapDisabledProperty.setValue(Boolean.parseBoolean(buffer));
         }
 
+        buffer = prop.getProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED);
+        if (buffer != null) {
+            fixationSequenceDisabledProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+
         buffer = prop.getProperty(PROPERTY_NAME_MUSIC_VOLUME);
         if (buffer != null) {
             musicVolumeProperty.setValue(Double.parseDouble(buffer));
@@ -384,6 +394,8 @@ public class Configuration implements Cloneable {
         properties.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, this.menuButtonsOrientationProperty.getValue());
         properties.setProperty(PROPERTY_NAME_HEATMAP_DISABLED,
                 Boolean.toString(this.heatMapDisabledProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED,
+                Boolean.toString(this.fixationSequenceDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MUSIC_VOLUME, Double.toString(this.musicVolumeProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MUSIC_FOLDER, this.musicFolderProperty.getValue());
         properties.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, Double.toString(effectsVolumeProperty.getValue()));
@@ -468,6 +480,10 @@ public class Configuration implements Cloneable {
 
     public Boolean isHeatMapDisabled() {
         return heatMapDisabledProperty.getValue();
+    }
+
+    public Boolean isFixationSequenceDisabled() {
+        return fixationSequenceDisabledProperty.getValue();
     }
 
     public Double getMusicVolume() {

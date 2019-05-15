@@ -4,6 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
+import jdk.nashorn.internal.runtime.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
+import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.Utils;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
@@ -22,6 +25,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Created by schwab on 16/08/2017.
@@ -52,7 +56,14 @@ public class Stats implements GazeMotionListener {
     @Getter
     private int nbUnCountedShots;
     private double[][] heatMap;
-
+    @Getter
+    @Setter
+    private long currentGazeTime;
+    @Getter
+    @Setter
+    private long lastGazeTime;
+    @Getter
+    private LinkedList<FixationPoint> fixationSequence;
     @Getter
     private SavedStatsInfo savedStatsInfo;
 
@@ -87,48 +98,74 @@ public class Stats implements GazeMotionListener {
 
         lifeCycle.start(() -> {
             if (config.isHeatMapDisabled()) {
-                log.info("HeatMap is disabled, skipping instanciation of the HeatMap Data model");
+                log.info("HeatMap is disabled, skipping instantiation of the HeatMap Data model");
+                if (config.isFixationSequenceDisabled()) {// neither HeatMap nor Fixation Sequence are enabled
+                    log.info("Fixation Sequence is disabled, skipping instantiation of the Sequence data");
+                } else { // only the Fixation Sequence is enabled
+                    fixationSequence = new LinkedList();
+
+                    recordGazeMovements = e -> {
+
+                        // incHeatMap((int) e.getX(), (int) e.getY());
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+                    recordMouseMovements = e -> {
+
+                        // incHeatMap((int) e.getX(), (int) e.getY());
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+
+                    gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                    gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                }
             } else {
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
-                //heapmap[width][height]
-                Date date = new Date();
-//                Timestamp time = new Timestamp(date.getTime());
-                Long startTime = System.currentTimeMillis();
-                long start = System.nanoTime();
-                recordGazeMovements = e ->
-                {
-                    incHeatMap((int) e.getX(), (int) e.getY());
-                    System.out.println("Hello, The gaze has been moved");
-                };
-                recordMouseMovements = e ->
-                {
-                    int getX = (int) e.getX();
-                    int getY = (int) e.getY();
-                    incHeatMap(getX, getY);
-                    if(getX != previousX || getY != previousY && counter == 0)
+
+
+                if (config.isFixationSequenceDisabled()) { // only the HeatMap is enabled
+                    log.info("Fixation Sequence is disabled, skipping instantiation of the Sequence data");
+                    long startTime = System.currentTimeMillis();
+                    recordGazeMovements = e ->
                     {
-                        long timeElapsedMillis = System.currentTimeMillis() - startTime;
-//                        long timeElapsed = (System.nanoTime() - start);
-//                        System.out.println(timeElapsedMillis + " Milli");
-//                        System.out.println(timeElapsed + " nano");
+                        incHeatMap((int) e.getX(), (int) e.getY());
+                    };
+                    recordMouseMovements = e ->
+                    {
+                        int getX = (int) e.getX();
+                        int getY = (int) e.getY();
+                        incHeatMap(getX, getY);
+                        if(getX != previousX || getY != previousY && counter == 0)
+                        {
+                            long timeElapsedMillis = System.currentTimeMillis() - startTime;
+                            previousX = getX;
+                            previousY = getY;
+                            long timeInterval = (timeElapsedMillis - previousTime);
+                            System.out.println("The time interval is "+timeInterval);
+                            movementHistory.add(new CoordinatesTracker(getX,getY,timeElapsedMillis,timeInterval));
+                            previousTime = timeElapsedMillis;
+                            counter++;
+                            if(counter == 2)
+                                counter= 0;
+                        }
+                    };
+                    gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                    gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                } else { // both HeatMap & FixationSequence are enabled
+                    fixationSequence = new LinkedList();
+                    recordGazeMovements = e -> {
 
+                        incHeatMap((int) e.getX(), (int) e.getY());
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+                    recordMouseMovements = e -> {
 
-//                        System.out.println("Finished time "+timeElapsed );
-                        previousX = getX;
-                        previousY = getY;
-                        long timeInterval = (timeElapsedMillis - previousTime);
-                        System.out.println("The time interval is "+timeInterval);
-                        movementHistory.add(new CoordinatesTracker(getX,getY,timeElapsedMillis,timeInterval));
-                        previousTime = timeElapsedMillis;
-                        counter++;
-                        if(counter == 2)
-                            counter= 0;
-//                        System.out.println("The mouse is at X :"+ (int) e.getX() + " Y: "+ (int) e.getY() + " Time:" + timeElapsed );
-                    }
-                };
-                gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
-                gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                        incHeatMap((int) e.getX(), (int) e.getY());
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
 
+                    gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                    gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                }
             }
         });
     }
@@ -165,22 +202,31 @@ public class Stats implements GazeMotionListener {
         final int positionX = (int) position.getX();
         final int positionY = (int) position.getY();
         incHeatMap(positionX, positionY);
+        incFixationSequence(positionX, positionY); // check if good
     }
 
     public SavedStatsInfo saveStats() throws IOException {
 
         File todayDirectory = getGameStatsOfTheDayDirectory();
         final String heatmapFilePrefix = Utils.now() + "-heatmap";
+        final String fixationSequenceFilePrefix = Utils.now() + "-fixationSequence";
 
         File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
-        System.out.println("The heat map is called "+ heatmapFilePrefix);
-//        SavedStatsInfo savedStatsInfo2 = new SavedStatsInfo(heatMapPngFile,heatMapCsvFile);
-        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile);
+
+
+        File fixationSequencePngFile = new File(todayDirectory, fixationSequenceFilePrefix + ".png");
+
+        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile, fixationSequencePngFile);
+
         this.savedStatsInfo = savedStatsInfo;
         if (this.heatMap != null) {
             saveHeatMapAsPng(heatMapPngFile);
             saveHeatMapAsCsv(heatMapCsvFile);
+        }
+
+        if (this.fixationSequence != null) {
+            saveFixationSequenceAsPng(fixationSequencePngFile);
         }
         savedStatsInfo.notifyFilesReady();
         return savedStatsInfo;
@@ -221,6 +267,10 @@ public class Stats implements GazeMotionListener {
         }
         currentRoundStartTime = currentRoundEndTime;
         log.debug("The number of goals is " + nbGoals + "and the number shots is " + nbShots);
+    }
+
+    public void addRoundDuration() {
+        this.roundsDurationReport.addRoundDuration(System.currentTimeMillis() - currentRoundStartTime);
     }
 
     public int getShotRatio() {
@@ -290,8 +340,46 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    private void saveFixationSequenceAsPng(File outputPngFile) {
+
+        log.info(String.format("Fixation-Sequence size: %3d X %3d",
+                (int) (gameContextScene.getWidth() / heatMapPixelSize),
+                (int) (gameContextScene.getHeight() / heatMapPixelSize)));
+
+        FixationSequence sequence = new FixationSequence((int) (gameContextScene.getWidth() / heatMapPixelSize),
+                (int) (gameContextScene.getHeight() / heatMapPixelSize), fixationSequence);
+
+        try {
+            sequence.saveToFile(outputPngFile);
+        } catch (Exception e) {
+            log.error("Exception", e);
+        }
+        //
+        // the function to draw in Fixation Sequence Class
+        //
+    }
+
+    private void incFixationSequence(int X, int Y) {
+        long previousGaze;
+        long gazeDuration;
+
+        int x = (int) (Y / heatMapPixelSize);
+        int y = (int) (X / heatMapPixelSize);
+        if (fixationSequence.size() == 0) {
+            previousGaze = 0;
+        } else {
+            previousGaze = (fixationSequence.get(fixationSequence.size() - 1)).getFirstGaze();
+        }
+        FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(), 0, x, y);
+        gazeDuration = previousGaze - newGazePoint.getFirstGaze();
+        newGazePoint.setGazeDuration(gazeDuration);
+        fixationSequence.add(newGazePoint);
+
+    }
+
     private void incHeatMap(int X, int Y) {
 
+        currentGazeTime = System.currentTimeMillis();
         // in heatChart, x and y are opposed
         int x = (int) (Y / heatMapPixelSize);
         int y = (int) (X / heatMapPixelSize);
