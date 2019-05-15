@@ -82,7 +82,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
                     }
                 },
                 movementHistory.get(index).getIntervalTime()
-
         );
     }
 
@@ -97,10 +96,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
         Text screenTitleText = new Text(multilinguism.getTrad("AreaOfInterest", config.getLanguage()));
-        // screenTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         screenTitleText.setId("title");
-        // screenTitleText.setTextAlignment(TextAlignment.CENTER);
-
         StackPane topPane = new StackPane();
         topPane.getChildren().add(screenTitleText);
 
@@ -108,7 +104,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         centerPane.setAlignment(Pos.CENTER);
         Pane graphicsPane = new Pane();
         movementHistory = stats.getMovementHistoryWithTime();
-        System.out.println("The size of the array  list is "+movementHistory.size());
         VBox pane = new VBox(1);
 
         timeLabel = new Label();
@@ -127,15 +122,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
             clock.play();
 
         });
-
-
         pane.getChildren().add(button1);
         pane.getChildren().add(timeLabel);
         graphicsPane.setStyle("-fx-background-color: #aaaaaa");
         pane.setStyle("-fx-background-color: #224488");
-
-
-
         root.setCenter(graphicsPane);
         root.setTop(topPane);
         root.setBottom(pane);
