@@ -30,7 +30,7 @@ public class Difference extends Circle {
         setStrokeWidth(5);
         setStroke(Color.RED);
         timer = 0;
-        setOpacity(1);
+        setOpacity(0);
 
         EventHandler handler = (EventHandler<Event>) e -> {
             if(getOpacity() == 0) {

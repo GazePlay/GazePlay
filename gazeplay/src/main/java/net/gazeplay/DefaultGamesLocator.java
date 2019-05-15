@@ -1092,7 +1092,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Spot The Difference", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/frogsrace.png"),
+                new GameSummary("Spot The Difference", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/spotthedifference.png"),
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
