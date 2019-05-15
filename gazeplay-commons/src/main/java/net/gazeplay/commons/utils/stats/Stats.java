@@ -13,10 +13,14 @@ import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.games.Utils;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,6 +38,12 @@ public class Stats implements GazeMotionListener {
     private final LifeCycle lifeCycle = new LifeCycle();
     private final RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
     protected String gameName;
+    private Instant starts;
+    private int counter= 0;
+    private List<CoordinatesTracker> movementHistory = new ArrayList<>();
+    private long previousTime = 0;
+    private int previousX = 0;
+    private int previousY = 0;
     private int nbShots = 0;
     @Getter
     protected int nbGoals = 0;
@@ -45,6 +55,8 @@ public class Stats implements GazeMotionListener {
 
     @Getter
     private SavedStatsInfo savedStatsInfo;
+
+
 
     private Long currentRoundStartTime;
 
@@ -78,18 +90,66 @@ public class Stats implements GazeMotionListener {
                 log.info("HeatMap is disabled, skipping instanciation of the HeatMap Data model");
             } else {
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
+                //heapmap[width][height]
+                Date date = new Date();
+//                Timestamp time = new Timestamp(date.getTime());
+                Long startTime = System.currentTimeMillis();
+                long start = System.nanoTime();
+                recordGazeMovements = e ->
+                {
+                    incHeatMap((int) e.getX(), (int) e.getY());
+                    System.out.println("Hello, The gaze has been moved");
+                };
+                recordMouseMovements = e ->
+                {
+                    int getX = (int) e.getX();
+                    int getY = (int) e.getY();
+                    incHeatMap(getX, getY);
+                    if(getX != previousX || getY != previousY && counter == 0)
+                    {
+                        long timeElapsedMillis = System.currentTimeMillis() - startTime;
+//                        long timeElapsed = (System.nanoTime() - start);
+//                        System.out.println(timeElapsedMillis + " Milli");
+//                        System.out.println(timeElapsed + " nano");
 
-                recordGazeMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
-                recordMouseMovements = e -> incHeatMap((int) e.getX(), (int) e.getY());
 
+//                        System.out.println("Finished time "+timeElapsed );
+                        previousX = getX;
+                        previousY = getY;
+                        long timeInterval = (timeElapsedMillis - previousTime);
+                        System.out.println("The time interval is "+timeInterval);
+                        movementHistory.add(new CoordinatesTracker(getX,getY,timeElapsedMillis,timeInterval));
+                        previousTime = timeElapsedMillis;
+                        counter++;
+                        if(counter == 2)
+                            counter= 0;
+//                        System.out.println("The mouse is at X :"+ (int) e.getX() + " Y: "+ (int) e.getY() + " Time:" + timeElapsed );
+                    }
+                };
                 gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
                 gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+
             }
         });
-        currentRoundStartTime = lifeCycle.getStartTime();
+    }
+
+
+
+//    private void recordMovementWithTime(int x, int y, long time )
+//    {
+//        movementHistory.add(new CoordinatesTracker(x,y,time));
+//
+//    }
+    public List<CoordinatesTracker> getMovementHistoryWithTime()
+    {
+        return this.movementHistory;
     }
 
     public void stop() {
+//        System.out.println("I am out, And the array size is "+movementHistory.size());
+//        for (CoordinatesTracker coordinatesTracker : movementHistory) {
+//            System.out.println("The mouse is at X :" + coordinatesTracker.getxValue() + " Y: " + coordinatesTracker.getyValue() + " Time:" + coordinatesTracker.getTimeValue());
+//        }
         lifeCycle.stop(() -> {
             if (recordGazeMovements != null) {
                 gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
@@ -114,16 +174,14 @@ public class Stats implements GazeMotionListener {
 
         File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
-
+        System.out.println("The heat map is called "+ heatmapFilePrefix);
+//        SavedStatsInfo savedStatsInfo2 = new SavedStatsInfo(heatMapPngFile,heatMapCsvFile);
         SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile);
-
         this.savedStatsInfo = savedStatsInfo;
-
         if (this.heatMap != null) {
             saveHeatMapAsPng(heatMapPngFile);
             saveHeatMapAsCsv(heatMapCsvFile);
         }
-
         savedStatsInfo.notifyFilesReady();
         return savedStatsInfo;
     }
@@ -237,13 +295,10 @@ public class Stats implements GazeMotionListener {
         // in heatChart, x and y are opposed
         int x = (int) (Y / heatMapPixelSize);
         int y = (int) (X / heatMapPixelSize);
-
         for (int i = -trail; i <= trail; i++)
             for (int j = -trail; j <= trail; j++) {
-
                 if (Math.sqrt(i * i + j * j) < trail) {
                     inc(x + i, y + j);
-
                 }
             }
     }
@@ -251,7 +306,6 @@ public class Stats implements GazeMotionListener {
     private void inc(int x, int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             // heatMap[heatMap[0].length - y][heatMap.length - x]++;
-
             heatMap[x][y]++;
         }
     }
@@ -273,5 +327,4 @@ public class Stats implements GazeMotionListener {
         log.info("computeHeatMapPixelSize() : result = {}", result);
         return result;
     }
-
 }

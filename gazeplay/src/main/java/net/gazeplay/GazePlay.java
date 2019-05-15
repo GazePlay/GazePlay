@@ -157,6 +157,11 @@ public class GazePlay extends Application {
         statsContext.setUpOnStage(primaryScene);
     }
 
+    public void onDisplayAOI(AreaOfInterest areaOfInterest)
+    {
+        areaOfInterest.setUpOnStage(primaryScene);
+    }
+
     public void onDisplayConfigurationManagement(ConfigurationContext configurationContext) {
         configurationContext.setUpOnStage(primaryScene);
     }
@@ -164,6 +169,7 @@ public class GazePlay extends Application {
     public void loading() {
         lds.setUpOnStage(primaryScene);
         primaryStage.show();
+
     }
 
     public void goToUserPage() {
