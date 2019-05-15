@@ -344,11 +344,11 @@ public class GameMenuFactory {
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);
 
-        if (config.isHeatMapDisabled()) {
-            log.info("HeatMap is disabled, skipping instantiation of the HeatMap Data model");
-        } else {
-            // gameContext.getGazeDeviceManager().addGazeMotionListener(stats);
-        }
+//        if (config.isHeatMapDisabled()) {
+//            log.info("HeatMap is disabled, skipping instantiation of the HeatMap Data model");
+//        } else {
+//            // gameContext.getGazeDeviceManager().addGazeMotionListener(stats);
+//        }
 
         // gameContext.getGazeDeviceManager().addGazeMotionListener(secondScreen);
 

@@ -28,7 +28,7 @@ public class FixationSequence {
      */
     private WritableImage image;
 
-    private static Font sanSerifFont = new Font("SanSerif",10);
+    private static Font sanSerifFont = new Font("SanSerif", 10);
 
     public FixationSequence(int width, int height, LinkedList<FixationPoint> fixSeq) {
 
@@ -37,7 +37,7 @@ public class FixationSequence {
         Canvas canvas = new Canvas(width, height);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        //draw the line of the sequence
+        // draw the line of the sequence
         gc.setStroke(Color.ORANGE);
         gc.setLineWidth(3);
         for (int i = 0; i < fixSeq.size() - 1; i++) {
@@ -48,7 +48,7 @@ public class FixationSequence {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
 
-        //draw the circles with the labels on top
+        // draw the circles with the labels on top
         gc.setStroke(Color.RED);
         gc.setLineWidth(0.6);
 
@@ -58,56 +58,56 @@ public class FixationSequence {
         int x = fixSeq.get(0).getY();
         int y = fixSeq.get(0).getX();
 
-        int radius = 20; //central fixation bias . Read more about it at  https://imotions.com/blog/7-terms-metrics-eye-tracking/
+        int radius = 20; // central fixation bias . Read more about it at
+                         // https://imotions.com/blog/7-terms-metrics-eye-tracking/
 
-        gc.strokeOval(x-radius/2, y-radius/2, radius, radius);
-        gc.setFill(Color.rgb(255, 255, 0, 0.5));//yellow 50% transparency
-        gc.fillOval(x-radius/2, y-radius/2, radius, radius);
+        gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
+        gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
+        gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
         gc.setFill(Color.BLACK);
-        gc.fillText(Integer.toString(label_count), x, y,40);
+        gc.fillText(Integer.toString(label_count), x, y, 40);
 
-        double r1, r2 , theta1 , theta2 , theta_tolerance;
+        double r1, r2, theta1, theta2, theta_tolerance;
 
-        for (int j = 1; j < fixSeq.size()-1; j ++) {
+        for (int j = 1; j < fixSeq.size() - 1; j++) {
 
             gc.setStroke(Color.RED);
             x = fixSeq.get(j).getY();
             y = fixSeq.get(j).getX();
 
-            r1 = Math.sqrt(Math.pow(fixSeq.get(j-1).getY() - x,2) + Math.pow(fixSeq.get(j-1).getX() - y,2) );
-            //r1 = Math.sqrt(Math.pow(x - fixSeq.get(j-1).getY(),2) + Math.pow(y - fixSeq.get(j-1).getX(),2) );
+            r1 = Math.sqrt(Math.pow(fixSeq.get(j - 1).getY() - x, 2) + Math.pow(fixSeq.get(j - 1).getX() - y, 2));
+            // r1 = Math.sqrt(Math.pow(x - fixSeq.get(j-1).getY(),2) + Math.pow(y - fixSeq.get(j-1).getX(),2) );
             if (r1 == 0)
                 continue;
             else
-                //theta1 = Math.acos((x - fixSeq.get(j-1).getY())/r1) * Math.signum(y - fixSeq.get(j-1).getX());
-                theta1 = Math.acos((fixSeq.get(j-1).getY() - x)/r1) * Math.signum(y - fixSeq.get(j-1).getX());
+                // theta1 = Math.acos((x - fixSeq.get(j-1).getY())/r1) * Math.signum(y - fixSeq.get(j-1).getX());
+                theta1 = Math.acos((fixSeq.get(j - 1).getY() - x) / r1) * Math.signum(y - fixSeq.get(j - 1).getX());
 
-            r2 = Math.sqrt(Math.pow(x - fixSeq.get(j+1).getY()  ,2) + Math.pow(y - fixSeq.get(j+1).getX(),2) );
-            //r2 = Math.sqrt(Math.pow(fixSeq.get(j+1).getY() - x ,2) + Math.pow(fixSeq.get(j+1).getX() - y,2) );
-            if (r2== 0)
+            r2 = Math.sqrt(Math.pow(x - fixSeq.get(j + 1).getY(), 2) + Math.pow(y - fixSeq.get(j + 1).getX(), 2));
+            // r2 = Math.sqrt(Math.pow(fixSeq.get(j+1).getY() - x ,2) + Math.pow(fixSeq.get(j+1).getX() - y,2) );
+            if (r2 == 0)
                 continue;
             else
-                //theta2 = Math.acos((fixSeq.get(j+1).getY() - x)/r2) * Math.signum(fixSeq.get(j+1).getX() - y);
-                theta2 = Math.acos((x - fixSeq.get(j+1).getY())/r2) * Math.signum(fixSeq.get(j+1).getX() - y);
+                // theta2 = Math.acos((fixSeq.get(j+1).getY() - x)/r2) * Math.signum(fixSeq.get(j+1).getX() - y);
+                theta2 = Math.acos((x - fixSeq.get(j + 1).getY()) / r2) * Math.signum(fixSeq.get(j + 1).getX() - y);
             theta_tolerance = Math.sqrt(Math.pow(theta2 - theta1, 2));
 
+            radius = Math.toIntExact(20 +
+            /* Math.abs(fixSeq.get(j + 1).getGazeDuration()/10)+ */
+                    Math.abs(fixSeq.get(j).getGazeDuration() / 10)
+                    + Math.abs(fixSeq.get(j - 1).getGazeDuration()) / 10); // radius depends on time spent on a position
+                                                                           // .
 
-            radius = Math.toIntExact( 20 +
-                  /* Math.abs(fixSeq.get(j + 1).getGazeDuration()/10)+ */
-                    Math.abs(fixSeq.get(j).getGazeDuration()/10)+
-                    Math.abs(fixSeq.get(j - 1).getGazeDuration())/10); // radius depends on time spent on a position .
-            log.info("radius = {}", radius);
 
-            if(theta_tolerance > Math.PI/9 ){
+            if (theta_tolerance > Math.PI / 9) {
                 label_count++;
-                gc.strokeOval(x-radius/2, y-radius/2, radius, radius);
-                gc.setFill(Color.rgb(255, 255, 0, 0.5));//yellow 50% transparency
-                gc.fillOval(x-radius/2, y-radius/2, radius, radius);
+                gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
+                gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
+                gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
                 gc.setFill(Color.BLACK);
-                gc.fillText(Integer.toString(label_count), x, y,40);
+                gc.fillText(Integer.toString(label_count), x, y, 40);
 
-            }
-            else
+            } else
                 continue;
         }
         SnapshotParameters params = new SnapshotParameters();
