@@ -269,7 +269,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+        {
+            I18NText label = new I18NText(translator, "DisableSequence", COLON);
+            CheckBox input = buildDisableFixationSequenceCheckBox(config, configurationContext);
 
+            addToGrid(grid, currentFormRow, label, input);
+        }
         {
             I18NText label = new I18NText(translator, "WhiteBackground", COLON);
             CheckBox input = buildEnabledWhiteBackground(config, configurationContext);
@@ -732,6 +737,21 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         checkBox.selectedProperty().addListener((o) -> {
 
             configuration.getHeatMapDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildDisableFixationSequenceCheckBox(Configuration configuration,
+            ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isFixationSequenceDisabled());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getFixationSequenceDisabledProperty().setValue(checkBox.isSelected());
             configuration.saveConfigIgnoringExceptions();
         });
 
