@@ -23,6 +23,12 @@ import net.gazeplay.StatsContext;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
+import javafx.embed.swing.SwingFXUtils;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.File;
+import java.nio.Buffer;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -149,10 +155,65 @@ public class StatsDisplay {
         blur.setRadius(10.0);
         heatMap.setEffect(blur);
 
-        EventHandler<Event> openHeatMapEvent = createZoomInHeatMapEventHandler(heatMap, root);
+        EventHandler<Event> openHeatMapEvent = createZoomInImageViewEventHandler(heatMap, root);
         heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMapEvent);
 
         return heatMap;
+    }
+
+    public static ImageView buildFSequenceChart(Stats stats, final Region root) {
+        ImageView fix_sequence = new ImageView();
+        fix_sequence.setPreserveRatio(true);
+
+        SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+        savedStatsInfo.addObserver((o, arg) -> {
+            Platform.runLater(() -> fix_sequence
+                    .setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString())));
+        });
+
+        fix_sequence.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
+
+        EventHandler<Event> openFixationSeqEvent = createZoomInImageViewEventHandler(fix_sequence, root);
+        fix_sequence.addEventHandler(MouseEvent.MOUSE_CLICKED, openFixationSeqEvent);
+
+        return fix_sequence;
+    }
+
+    public static ImageView buildFixSeq_and_HeatMap(Stats stats, final Region root) throws IOException {
+
+        ImageView both = new ImageView();
+        both.setPreserveRatio(true);
+
+        SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+
+        ImageView source = new ImageView();
+        ImageView draw_on_top_of_source = new ImageView();
+
+        savedStatsInfo.addObserver((o, arg) -> {
+            Platform.runLater(() -> {
+                source.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
+                draw_on_top_of_source.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
+            });
+        });
+
+        source.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
+        draw_on_top_of_source.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
+
+        BufferedImage sourceB = SwingFXUtils.fromFXImage(source.getImage(), null);
+        BufferedImage drawOnTopB = SwingFXUtils.fromFXImage(draw_on_top_of_source.getImage(), null);
+
+        Graphics g = sourceB.getGraphics();
+        g.drawImage(drawOnTopB, 0, 0, null);
+        g.dispose();
+
+        Image fixationsOnTopOfHeatmap = SwingFXUtils.toFXImage(sourceB, null);
+        both.setImage(fixationsOnTopOfHeatmap);
+
+        EventHandler<Event> openBothEvent = createZoomInImageViewEventHandler(both, root);
+        both.addEventHandler(MouseEvent.MOUSE_CLICKED, openBothEvent);
+
+        return both;
+
     }
 
     private static void resetToOriginalIndexInParent(Node node, int originalIndexInParent) {
@@ -204,34 +265,34 @@ public class StatsDisplay {
         };
     }
 
-    private static EventHandler<Event> createZoomOutHeatMapEventHandler(ImageView heatMap, final Region root,
+    private static EventHandler<Event> createZoomOutImageViewEventHandler(ImageView i, final Region root,
             int originalIndexInParent) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+                i.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                zoomOutAndReset(heatMap);
+                zoomOutAndReset(i);
 
-                resetToOriginalIndexInParent(heatMap, originalIndexInParent);
+                resetToOriginalIndexInParent(i, originalIndexInParent);
 
-                heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInHeatMapEventHandler(heatMap, root));
+                i.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInImageViewEventHandler(i, root));
             }
         };
     }
 
-    private static EventHandler<Event> createZoomInHeatMapEventHandler(ImageView heatMap, final Region root) {
+    private static EventHandler<Event> createZoomInImageViewEventHandler(ImageView i, final Region root) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                heatMap.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+                i.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                int originalIndexInParent = getOriginalIndexInParent(heatMap);
+                int originalIndexInParent = getOriginalIndexInParent(i);
 
-                zoomInAndCenter(heatMap, heatMap.getFitWidth(), heatMap.getFitHeight(), true);
+                zoomInAndCenter(i, i.getFitWidth(), i.getFitHeight(), true);
 
-                heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOutHeatMapEventHandler(heatMap, root, originalIndexInParent));
+                i.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        createZoomOutImageViewEventHandler(i, root, originalIndexInParent));
             }
         };
     }

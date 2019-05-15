@@ -42,17 +42,18 @@ Cups and Balls,Tasa dhe topa,كؤوس وكرات,杯子和球,Bechertrick,Επι
 Biboules,Biboules,كويرات,垒球,Biboles,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Biballs,biboules,Biboules,Biboules,Biballs,Biballs,,Biballs,Biboules,Biballs,Vliegjes,Безделушки,Biboules,Bóng Bi
 Robots,Robota,روبوتات,机器人,Roboters,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Robots,ropotit,Robots,Roboti,Robot,Robot,,Roboty,Robots,Robot,Robotten,Роботы,Robot,Rô-bốt
 Memory,Memorizo,ذاكرة,记忆,Memory,Επιτυχημένες αποκαλύψεις,Memory,muisti,Memory,Memory,Memori,Memory,,Pamięć,Memoria,Memori,Memory,Память,Memory,Bộ nhớ
-MemoryLetters,,ذاكرة (الأحرف),,,,Memory (Letters),,Memory (lettres),,,,,,,,,,,
-MemoryNumbers,,ذاكرة (أرقام),,,,Memory (Numbers),,Memory (nombres),,,,,,,,,,,
+MemoryLetters,Memorizo Shkronjat,ذاكرة (الأحرف),,,,Memory (Letters),,Memory (lettres),,,,,,,,,,,
+MemoryNumbers,Memorizo Numrat,ذاكرة (أرقام),,,,Memory (Numbers),,Memory (nombres),,,,,,,,,,,
 EnableRewardSound,Aktivizo audion për shpërblimet,تفعيل الصوت (احسنت),打开奖励音效,Aktiviere den Sound Bravo,Ενεργοποίηση ήχου ανταμοιβής,Enable Reward sound,sallia palkkioääni,Activer le son « bravo »,Aktiviraj zvuk za ,Dayakan bunyi Ganjaran,Attiva suono ricompensa,,Włącz dźwięk nagrody,Activar o som a « Bravo »,Dayakan bunyi Ganjaran,Activeer beloningsgeluid,Включить звук вознаграждения,Activar el sonido Bravo,Bật tiếng
 DisableHeatMap,Çaktivizo Heat Map,الغاء خريطة الحرارة,关闭热量地图,Deaktivieren Sie die Heat Map,Απενεργοποιήστε το χάρτη θερμότητας,Disable Heat Map,estää lämpökartta,Désactiver la Heat Map,Deaktiviraj mapu za toplinu,Lumpuhkan Peta Haba,Disattiva mappa di calore,,Wyłącz mapę ciepła,Desactivar heatmap,Lumpuhkan Peta Haba,Deactiveer Heat Map,Отключить тепловую карту,Desactivar mapa de calor,Tắt
+DisableSequence,Çaktivizo Sequencën e Fiksimit,,,,,Disable the Fixation Sequence,,Désactiver la Séquence de fixation,,,Disattive la sequenza di fissazione,,,Desactivar la secuencia de fijación,,,,,
 EnableGazeMenu,Aktivizo Menunë Gaze (Beta),تفعيل النظر ,,Aktivieren Sie das Blickmenü (Beta),Ενεργοποίηση του μενού Gaze (Beta),Enable the Gaze Menu (Beta),sallia gaze-menu,Activer le menu regard (Beta),Aktiviraj meni za pogled (Beta),Dayakan Menu Gila (Beta),Attiva il menù di vista (beta),,Włącz menu Gaze (Beta),Activar o menu regard (Beta),Dayakan Menu Gila (Beta),Activeer menu blikrichting (Beta),Включить меню Гейз (бета),Activar el menú de mirada (Beta),Bật Menu Gaze
 MenuOrientation,Orientimi i menusë (nevojitet rinisja e lojës),إتجاه القائمة,,Menüorientierung (erfordert Neustart des Spiels),Μενού προσανατολισμού (επανεκκίνηση του παιχνιδιού για να τεθεί σε ισχύ),Menu Orientation (restart game to take effect),valikon suunta,Orientation du menu (nécessite de relancer le jeu),Orjentacijski meni (restartiraj igru za aktivaciju),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Orientazione del menù (è richiesto il riavvio del gioco),,Orientacja menu (uruchom ponownie grę),orientacaõ domens,Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Richting menu (herstart nodig voor activering),Управление через Меню (перезапустите игру для ввода в дйствие),Orientación del menú (requiere reiniciar el juego),Phương ngang/dọc của menu (Khởi động lại để có hiệu lực)
 Music,Muzika,موسيقى ,音乐,Musik,Μουσική,Music,musiikki,Musique,Muzika,Muzik,Musica,,Muzyka,Música,Muzik,Muziek,Музыка,Musica,Âm nhạc
 Volume,Volumi,صوت,,Volume,Ενταση Ήχου,Volume,äänenvoimakkuus,Volume,Glasnoća,Jumlah dagangan,Volume,,Tom,Volume,Jumlah dagangan,Volume,Громкость,Volumen,Âm lượng
 OpenMemory,Memorizo (hapur),ذاكرة مفتوحة,,OpenMemory,Επιτυχημένες αποκαλύψεις,OpenMemory,avoin muisti,Memory ouvert,Otvori memoriju,OpenMemory,Memory aperto,,Otwarta pamiec,Memoria Aberta,OpenMemory,Open Memory,Доступная память,Memory abierto,Bộ nhớ Mở rộng
-OpenMemoryLetters,,ذاكرة مفتوحة (الأحرف),,,,Open Memory (Letters),,Memory ouvert (lettres),,,,,,,,,,,
-OpenMemoryNumbers,,ذاكرة مفتوحة (أرقام),,,,Open Memory (Numbers),,Memory ouvert (nombres),,,,,,,,,,,
+OpenMemoryLetters,Memorizo Shkronjat (hapur),ذاكرة مفتوحة (الأحرف),,,,Open Memory (Letters),,Memory ouvert (lettres),,,,,,,,,,,
+OpenMemoryNumbers,Memorizo Numrat (hapur),ذاكرة مفتوحة (أرقام),,,,Open Memory (Numbers),,Memory ouvert (nombres),,,,,,,,,,,
 Video Player with Feedback,Video player me reagim,تشغيل الفيديو مع العودة,,Video Player mit Feedback,Βίντεο με Ανατροφοδότηση,Video Player with Feedback,video player palautteella,Lecteur Video avec retour,Video player sa povratnom informacijom,Pemain Video dengan Maklum Balas,Lettore video con feedback,,Odtwarzacz wideo z komentarzem,Leitore video com feedback,Pemain Video dengan Maklum Balas,Video speler met feedback,Видеоплеер с Обратной связью,Reproductor de video con comentarios,Trình chơi nhạc có Phản hồi
 Choose Game Variante,Zgjidh një variant,اختيار البديل,,Wählen Sie Variante,Επιλέξτε εναλλακτική λύση,Choose Variante,valitse peli -muunnos,Choisi une variante,Izaberi varijantu igre,Pilih Variante,Scegli una variante,,Wybierz wariant,Escolhe jogo variante,Pilih Variante,Kies een variant,Выбрать вариант игры,Elija Variante,Chọn loại bạn muốn
 Enter FullScreen,Aktivizo Ekranin e plotë,إدخال كامل الشاشة,,Vollbild,Κατάσταση πλήρους οθόνης,Enter FullScreen,valitse täysi näyttö,Mettre en plein écran,Povećaj ekran,Masukkan Fullscreen,Attiva modalità schermo intero,,Wlacz pelny ekran,Entrar ao modo pleino ecrà,Masukkan Fullscreen,Toon op volledig scherm,Войти в режим Полного экрана,Pantalla completa,Chuyển sang
@@ -139,7 +140,7 @@ MathDescDiv,,,,,,Divide two numbers!,,Division de deux nombres!,,,,,,,,,,,
 0 to 15,,,,,,0 to 15,,De 0 à 15,,,,,,,,,,,
 0 to 20,,,,,,0 to 20,,De 0 à 20,,,,,,,,,,,
 0 to 30,,,,,,0 to 30,,De 0 à 30,,,,,,,,,,,
-findodd,,,,,,Find the Odd one out,,Trouvez l’intrus,,,Trova l’intruso,,,,,,,,
-Choose Game Variant,,,,,,Choose Game Variant,,Choisissez une variante de jeu,,,,,,,,,,,
+findodd,Çfarë nuk shkon ?,,,,,Find the Odd one out,,Trouvez l’intrus,,,Trova l’intruso,,,,,,,,
+Choose Game Variant,Zgjidh variantin a lojës,,,,,Choose Game Variant,,Choisissez une variante de jeu,,,,,,,,,,,
 With moving platforms,,,,,,With moving platforms,,Avec les platformes animées,,,,,,,,,,,
 Without moving platforms,,,,,,Without moving platforms,,Sans les platformes animées,,,,,,,,,,,
