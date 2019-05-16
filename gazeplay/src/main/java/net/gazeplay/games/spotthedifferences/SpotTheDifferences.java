@@ -20,10 +20,10 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.ProgressButton;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.*;
-import java.util.Random;
 
 @Slf4j
 public class SpotTheDifferences implements GameLifeCycle {
@@ -31,7 +31,6 @@ public class SpotTheDifferences implements GameLifeCycle {
     private final Stats stats;
     private final GameContext gameContext;
     private final Dimension2D dimensions;
-    private final Configuration config;
 
     private ImageView leftImage;
     private double leftGap;
@@ -46,19 +45,18 @@ public class SpotTheDifferences implements GameLifeCycle {
     private int totalNumberDiff;
 
     private JsonArray instances;
-    private JsonParser parser;
 
-    private Random random;
     private int currentInstance;
 
     public SpotTheDifferences(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.config = Configuration.getInstance();
+        Configuration config = Configuration.getInstance();
         this.currentInstance = 0;
 
-        random = new Random();
+        Multilinguism translate = Multilinguism.getSingleton();
+        String language = config.getLanguage();
 
         borderPane = new BorderPane();
         gridPane = new GridPane();
@@ -84,32 +82,33 @@ public class SpotTheDifferences implements GameLifeCycle {
         scoreText.setFont(new Font(70));
         scoreText.setWrappingWidth(dimensions.getWidth());
 
-        Text findText = new Text(0, 50, "Spot all the differences");
+        Text findText = new Text(0, 50, translate.getTrad("Spot all the differences", language));
         findText.setTextAlignment(TextAlignment.CENTER);
         findText.setFill(Color.WHITE);
         findText.setFont(new Font(50));
         findText.setWrappingWidth(dimensions.getWidth());
 
-        Text foundText = new Text(0, 50, "Differences found:");
+        Text foundText = new Text(0, 50,
+                translate.getTrad("Differences found", language) + translate.getTrad("Colon", language));
         foundText.setTextAlignment(TextAlignment.CENTER);
         foundText.setFill(Color.WHITE);
         foundText.setFont(new Font(50));
         foundText.setWrappingWidth(dimensions.getWidth());
 
+        texts.getChildren().addAll(findText, foundText, scoreText);
+
         nextButton = new ProgressButton();
         ImageView nextImage = new ImageView("data/spotthedifferences/next.png");
         nextImage.setFitHeight(dimensions.getHeight() / 8);
         nextImage.setFitWidth(dimensions.getHeight() / 8);
-        nextImage.maxWidth(dimensions.getHeight() / 8);
+        nextButton.setLayoutX(dimensions.getWidth() / 2 - nextImage.getFitWidth() / 2);
+        nextButton.setLayoutY(dimensions.getHeight() - 1.1 * nextImage.getFitHeight());
         nextButton.setImage(nextImage);
-        nextButton.maxWidth(dimensions.getHeight() / 8);
         nextButton.assignIndicator(event -> launch(), config.getFixationLength());
         this.gameContext.getGazeDeviceManager().addEventFilter(nextButton);
         nextButton.active();
 
-        texts.getChildren().addAll(findText, foundText, scoreText, nextButton);
-
-        parser = new JsonParser();
+        JsonParser parser = new JsonParser();
         try {
             instances = (JsonArray) parser.parse(new InputStreamReader(new FileInputStream(
                     SpotTheDifferences.class.getClassLoader().getResource("data/spotthedifferences").getPath()
@@ -127,7 +126,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         d2.setPair(d1);
     }
 
-    public void differenceFound() {
+    void differenceFound() {
         numberDiffFound++;
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
         if (numberDiffFound == totalNumberDiff) {
@@ -139,12 +138,13 @@ public class SpotTheDifferences implements GameLifeCycle {
                 }
             });
         }
+        stats.incNbGoals();
     }
 
     @Override
     public void launch() {
         gameContext.clear();
-        gameContext.getChildren().add(borderPane);
+        gameContext.getChildren().addAll(borderPane, nextButton);
 
         JsonObject instance = (JsonObject) instances.get(currentInstance);// random.nextInt(instances.size()));
         currentInstance = (currentInstance + 1) % instances.size();
@@ -174,6 +174,8 @@ public class SpotTheDifferences implements GameLifeCycle {
         numberDiffFound = 0;
         totalNumberDiff = diffs.size();
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
+
+        stats.notifyNewRoundReady();
     }
 
     @Override

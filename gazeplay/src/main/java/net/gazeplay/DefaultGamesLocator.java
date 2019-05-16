@@ -1091,11 +1091,11 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        result.add(new GameSpec(new GameSummary("Spot The Difference", DEFAULT_AIMING_GAME_THUMBNAIL,
+        result.add(new GameSpec(new GameSummary("Spot the differences", DEFAULT_AIMING_GAME_THUMBNAIL,
                 "data/Thumbnails/spotthedifference.png"), new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "spotthedifference");
+                        return new Stats(scene, "spotthedifferences");
                     }
 
                     @Override
