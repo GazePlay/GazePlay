@@ -63,7 +63,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
                             circle = new Circle(coordinatesTracker.getxValue(),coordinatesTracker.getyValue(),4);
                             circle.setStroke(Color.GREEN);
                         }
-                      System.out.println(movementHistory.getr(index).getIntervalTime());
+//                      System.out.println(movementHistory.get(index).getIntervalTime());
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
