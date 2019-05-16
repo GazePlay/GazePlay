@@ -50,7 +50,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         return new StatsContext(gazePlay, root, stats);
     }
 
-    public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats, CustomButton continueButton) throws IOException {
+    public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats,
+            CustomButton continueButton) throws IOException {
         BorderPane root = new BorderPane();
 
         return new StatsContext(gazePlay, root, stats, continueButton);
@@ -91,7 +92,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         this(gazePlay, root, stats, null);
     }
 
-    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) throws IOException {
+    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton)
+            throws IOException {
         super(gazePlay, root);
         this.stats = stats;
 
@@ -293,7 +295,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
         controlButtonPane.getChildren().add(homeButton);
 
-        if(continueButton != null){
+        if (continueButton != null) {
             controlButtonPane.getChildren().add(continueButton);
         }
 

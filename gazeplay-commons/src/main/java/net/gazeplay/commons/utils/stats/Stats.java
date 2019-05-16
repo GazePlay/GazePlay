@@ -145,7 +145,7 @@ public class Stats implements GazeMotionListener {
         currentRoundStartTime = lifeCycle.getStartTime();
     }
 
-    public void reset(){
+    public void reset() {
         nbShots = 0;
         nbGoals = 0;
         accidentalShotPreventionPeriod = 0;
