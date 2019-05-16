@@ -35,8 +35,8 @@ public class Stats implements GazeMotionListener {
     private EventHandler<MouseEvent> recordMouseMovements;
     private EventHandler<GazeEvent> recordGazeMovements;
     private final Scene gameContextScene;
-    private final LifeCycle lifeCycle = new LifeCycle();
-    private final RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
+    private LifeCycle lifeCycle = new LifeCycle();
+    private RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
     protected String gameName;
     private int nbShots = 0;
     @Getter
@@ -143,6 +143,17 @@ public class Stats implements GazeMotionListener {
             }
         });
         currentRoundStartTime = lifeCycle.getStartTime();
+    }
+
+    public void reset(){
+        nbShots = 0;
+        nbGoals = 0;
+        accidentalShotPreventionPeriod = 0;
+
+        roundsDurationReport = new RoundsDurationReport();
+        lifeCycle = new LifeCycle();
+
+        start();
     }
 
     public void stop() {

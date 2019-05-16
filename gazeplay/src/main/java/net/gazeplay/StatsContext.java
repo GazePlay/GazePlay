@@ -2,6 +2,7 @@ package net.gazeplay;
 
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
@@ -13,6 +14,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import javafx.scene.image.ImageView;
 import javax.imageio.ImageIO;
+
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import lombok.Data;
@@ -22,6 +25,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
+import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
@@ -44,6 +48,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         BorderPane root = new BorderPane();
 
         return new StatsContext(gazePlay, root, stats);
+    }
+
+    public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats, CustomButton continueButton) throws IOException {
+        BorderPane root = new BorderPane();
+
+        return new StatsContext(gazePlay, root, stats, continueButton);
     }
 
     private final Stats stats;
@@ -78,6 +88,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) throws IOException {
+        this(gazePlay, root, stats, null);
+    }
+
+    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) throws IOException {
         super(gazePlay, root);
         this.stats = stats;
 
@@ -278,6 +292,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
         controlButtonPane.getChildren().add(homeButton);
+
+        if(continueButton != null){
+            controlButtonPane.getChildren().add(continueButton);
+        }
 
         StackPane centerStackPane = new StackPane();
         centerStackPane.getChildren().add(centerPane);

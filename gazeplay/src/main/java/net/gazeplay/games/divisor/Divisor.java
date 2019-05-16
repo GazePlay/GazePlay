@@ -13,6 +13,8 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.io.IOException;
+
 /**
  * Created by givaudan on 15/02/2018.
  */
@@ -62,7 +64,11 @@ public class Divisor implements GameLifeCycle {
 
     public void restart() {
         this.dispose();
-        this.launch();
+        try {
+            gameContext.showRoundStats(stats, this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

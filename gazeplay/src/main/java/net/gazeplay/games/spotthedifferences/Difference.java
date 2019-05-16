@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
-import java.util.Date;
-
 @Slf4j
 public class Difference extends Circle {
 
