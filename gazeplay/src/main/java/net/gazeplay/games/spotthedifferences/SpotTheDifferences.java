@@ -4,17 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import javafx.application.Platform;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -105,7 +100,9 @@ public class SpotTheDifferences implements GameLifeCycle {
         ImageView nextImage = new ImageView("data/spotthedifferences/next.png");
         nextImage.setFitHeight(dimensions.getHeight() / 8);
         nextImage.setFitWidth(dimensions.getHeight() / 8);
+        nextImage.maxWidth(dimensions.getHeight() / 8);
         nextButton.setImage(nextImage);
+        nextButton.maxWidth(dimensions.getHeight() / 8);
         nextButton.assignIndicator(event -> launch(), config.getFixationLength());
         this.gameContext.getGazeDeviceManager().addEventFilter(nextButton);
         nextButton.active();
@@ -118,9 +115,7 @@ public class SpotTheDifferences implements GameLifeCycle {
                     SpotTheDifferences.class.getClassLoader().getResource("data/spotthedifferences").getPath()
                             + "/instances.json"),
                     "utf-8"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
@@ -136,10 +131,12 @@ public class SpotTheDifferences implements GameLifeCycle {
         numberDiffFound++;
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
         if (numberDiffFound == totalNumberDiff) {
-            gameContext.playWinTransition(500, actionEvent -> {
-                launch();
-                stats.notifyNewRoundReady();
-                gameContext.onGameStarted();
+            gameContext.playWinTransition(200, actionEvent -> {
+                try {
+                    gameContext.showRoundStats(stats, this);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             });
         }
     }
