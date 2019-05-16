@@ -15,6 +15,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.FixationPoint;
+import net.gazeplay.commons.utils.SceneCaptureUtility;
 import net.gazeplay.commons.utils.games.Utils;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
@@ -93,7 +94,6 @@ public class Stats implements GazeMotionListener {
     }
 
     public void start() {
-
         final Configuration config = Configuration.getInstance();
 
         lifeCycle.start(() -> {
@@ -140,7 +140,7 @@ public class Stats implements GazeMotionListener {
                             previousX = getX;
                             previousY = getY;
                             long timeInterval = (timeElapsedMillis - previousTime);
-                            System.out.println("The time interval is "+timeInterval);
+//                            System.out.println("The time interval is "+timeInterval);
                             movementHistory.add(new CoordinatesTracker(getX,getY,timeElapsedMillis,timeInterval));
                             previousTime = timeElapsedMillis;
                             counter++;

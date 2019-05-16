@@ -46,6 +46,7 @@ public class GameContext extends GraphicalContext<Pane> {
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
 
+    SceneCaptureUtility sceneCaptureUtility;
     private static final double BUTTON_MIN_HEIGHT = 64;
 
     public static GameContext newInstance(GazePlay gazePlay) {
@@ -163,6 +164,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
         GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
+
         return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
                 randomPositionGenerator, gazeDeviceManager, root2);
     }
@@ -276,6 +278,10 @@ public class GameContext extends GraphicalContext<Pane> {
         this.gazeDeviceManager = gazeDeviceManager;
         this.configPane = configPane;
 
+
+//        sceneCaptureUtility = new SceneCaptureUtility(gazePlay.getPrimaryScene(),root,1,false
+//        );
+//        sceneCaptureUtility.startRecorder();
         /*
          * double initW = gazePlay.getPrimaryStage().getWidth(); double initH = gazePlay.getPrimaryStage().getHeight();
          * gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> { if (root instanceof Pane) {
@@ -367,6 +373,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private void QuitKeyPressed(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
             throws IOException {
+//        sceneCaptureUtility.stopRecorder();
         currentGame.dispose();
         stats.stop();
         gazeDeviceManager.clear();

@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -22,6 +23,8 @@ import net.gazeplay.commons.utils.stats.CoordinatesTracker;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import javax.swing.*;
+import javax.swing.text.html.ImageView;
+import java.awt.*;
 import java.util.List;
 import java.util.Timer;
 
@@ -51,8 +54,16 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
                     @Override
                     public void run() {
                         CoordinatesTracker coordinatesTracker = movementHistory.get(index);
-                        Circle circle = new Circle(coordinatesTracker.getxValue(),coordinatesTracker.getyValue(),3);
-                        circle.setStroke(Color.GREEN);
+                        Circle circle;
+                        if(movementHistory.get(index).getIntervalTime() > 10)
+                        {
+                            circle = new Circle(coordinatesTracker.getxValue(),coordinatesTracker.getyValue(),8);
+                            circle.setStroke(Color.RED);
+                        }else{
+                            circle = new Circle(coordinatesTracker.getxValue(),coordinatesTracker.getyValue(),4);
+                            circle.setStroke(Color.GREEN);
+                        }
+                      System.out.println(movementHistory.getr(index).getIntervalTime());
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
@@ -89,6 +100,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         super(gazePlay, root);
         Configuration config = Configuration.getInstance();
         GridPane grid = new GridPane();
+        StackPane stackPane = new StackPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(100);
         grid.setVgap(50);
@@ -122,9 +134,12 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
             clock.play();
 
         });
+//        Image image = new Image("flower.png");
+
+//        ImageView backgroundImage = new ImageView("st");
         pane.getChildren().add(button1);
         pane.getChildren().add(timeLabel);
-        graphicsPane.setStyle("-fx-background-color: #aaaaaa");
+        graphicsPane.setStyle("-fx-background-color: transparent;");
         pane.setStyle("-fx-background-color: #224488");
         root.setCenter(graphicsPane);
         root.setTop(topPane);
