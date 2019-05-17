@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
@@ -296,5 +297,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         });
 
         return logoView;
+    }
+
+    private static CheckBox buildGameCategoryCheckBox(GameCategories.Category category, Configuration configuration,
+                                                  ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox(category.getGameCategory());
+
+        checkBox.setSelected(false);
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+
+        });
+
+        return checkBox;
     }
 }
