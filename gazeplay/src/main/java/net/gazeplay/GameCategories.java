@@ -1,0 +1,33 @@
+package net.gazeplay;
+
+import lombok.*;
+
+public class GameCategories {
+
+
+//    FIXATION_GAME = "";
+//     LOGIC_GAME = "";
+
+
+    public enum Category {
+        TARGET ("Target games", "data/common/images/categoriesThumbnails/target.png"),
+        MEMORIZATION("Memorization game","data/common/images/categoriesThumbnails/male-brain.png"),
+        SEARCHING("Searching game","data/common/images/categoriesThumbnails/searching-magnifying-glass.png"),
+        NONCATEGORIZED("No category", "data/common/images/categoriesThumbnails/no_category.png");
+
+        @NonNull
+        @Getter
+        private final String gameCategory;
+
+        @Getter
+        @NonNull
+        private final String thumbnail;
+
+        Category(String category , String thumbnailResource){
+            this.gameCategory = category;
+            this.thumbnail = thumbnailResource;
+        }
+    }
+
+
+}
