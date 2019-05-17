@@ -113,6 +113,9 @@ public class slidingpuzzle implements GameLifeCycle {
 
         List<slidingpuzzlecard> result = new ArrayList<>();
         int counter=1;
+        //Initialize KingPos
+        double kingPosX = computePositionX(boxWidth, cardWidth, 3);
+        double kingPosY = computePositionY(boxHeight, cardHeight, 3);
         for (int i = 1; i <= 3; i++) {
             for (int j = 1; j <= 3; j++) {
                 
@@ -123,7 +126,7 @@ public class slidingpuzzle implements GameLifeCycle {
                 log.info("position y" + positionY);
                 log.info("width" + cardWidth);
                 log.info("height" + cardHeight);
-                slidingpuzzlecard card = new slidingpuzzlecard(counter, positionX, positionY, cardWidth, cardHeight,"data/tiles/tile1.png", fixationlength, gameContext, this, stats);
+                slidingpuzzlecard card = new slidingpuzzlecard(counter, positionX, positionY, cardWidth, cardHeight,"data/tiles/tile" +counter +".png", fixationlength, gameContext, this, stats,kingPosX,kingPosY);
                 counter++;
                 result.add(card);
 
