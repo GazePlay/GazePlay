@@ -276,10 +276,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             @Override
             public void handle(javafx.event.Event e) {
 
-                System.out.println("hello");
                 AreaOfInterest areaOfInterest = AreaOfInterest.newInstance(gazePlay,stats);
                 gazePlay.onDisplayAOI(areaOfInterest);
-
 //                statsContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
 
 //                gazePlay.onReturnToMenu();

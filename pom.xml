@@ -119,6 +119,14 @@
 				<scope>provided</scope>
 			</dependency>
 
+
+
+			<dependency>
+				<groupId>com.github.agomezmoron</groupId>
+				<artifactId>screen-recorder</artifactId>
+				<version>0.0.3</version>
+			</dependency>
+=
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
@@ -332,7 +340,14 @@
 		</pluginManagement>
 	</build>
 
+
+
 	<repositories>
+		<repository>
+			<id>screen-recorder</id>
+			<name>Java screen recorder library by agomezmoron</name>
+			<url>https://raw.github.com/agomezmoron/screen-recorder/mvn-repo</url>
+		</repository>
 		<repository>
 			<id>bintray</id>
 			<name>bintray</name>

@@ -1,5 +1,7 @@
 package net.gazeplay;
 
+import com.github.agomezmoron.multimedia.recorder.VideoRecorder;
+import com.github.agomezmoron.multimedia.recorder.configuration.VideoRecorderConfiguration;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -46,7 +48,6 @@ public class GameContext extends GraphicalContext<Pane> {
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
 
-    SceneCaptureUtility sceneCaptureUtility;
     private static final double BUTTON_MIN_HEIGHT = 64;
 
     public static GameContext newInstance(GazePlay gazePlay) {
@@ -279,21 +280,6 @@ public class GameContext extends GraphicalContext<Pane> {
         this.configPane = configPane;
 
 
-//        sceneCaptureUtility = new SceneCaptureUtility(gazePlay.getPrimaryScene(),root,1,false
-//        );
-//        sceneCaptureUtility.startRecorder();
-        /*
-         * double initW = gazePlay.getPrimaryStage().getWidth(); double initH = gazePlay.getPrimaryStage().getHeight();
-         * gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> { if (root instanceof Pane) {
-         * log.info(""+newVal.doubleValue()+"-"+initW+"/2= "+ (newVal.doubleValue()-initW)/2);
-         * ((Pane)root).setLayoutX((newVal.doubleValue()-initW)/2); ((Pane)root).setScaleX(newVal.doubleValue()/initW);
-         * } });
-         * 
-         * gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> { if (root instanceof Pane)
-         * { log.info(""+newVal.doubleValue()+"-"+initH+"/2= "+ (newVal.doubleValue()-initH)/2);
-         * ((Pane)root).setLayoutY((newVal.doubleValue()-initH)/2); ((Pane)root).setScaleY(newVal.doubleValue()/initH);
-         * } });
-         */
     }
 
     @Override
@@ -373,7 +359,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private void QuitKeyPressed(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
             throws IOException {
-//        sceneCaptureUtility.stopRecorder();
+
         currentGame.dispose();
         stats.stop();
         gazeDeviceManager.clear();

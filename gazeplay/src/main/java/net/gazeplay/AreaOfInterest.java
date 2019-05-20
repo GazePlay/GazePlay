@@ -5,13 +5,14 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingNode;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -22,9 +23,6 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.CoordinatesTracker;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import javax.swing.*;
-import javax.swing.text.html.ImageView;
-import java.awt.*;
 import java.util.List;
 import java.util.Timer;
 
@@ -35,6 +33,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
     Stats stats;
     Label timeLabel;
     Timeline clock;
+    MediaPlayer player;
 
     @Override
     public ObservableList<Node> getChildren() {
@@ -118,30 +117,37 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         movementHistory = stats.getMovementHistoryWithTime();
         VBox pane = new VBox(1);
 
+//        System.out.println("Going to read "+stats.getDirectoryOfVideo());
+//        Media media = new Media(stats.getDirectoryOfVideo());
+        Media media = new Media(stats.getDirectoryOfVideo());
+
+        player = new MediaPlayer(media);
+        MediaView mediaView = new MediaView(player);
         timeLabel = new Label();
         timeLabel.setTextFill(Color.web("#FFFFFF"));
         Button button1 = new Button("Play");
         button1.setOnAction(e -> {
+            player.play();
             plotMovement(0,graphicsPane);
             long startTime = System.currentTimeMillis();
             clock = new Timeline(new KeyFrame(Duration.ZERO, f -> {
                 long theTime = System.currentTimeMillis() - startTime;
                 timeLabel.setText(theTime+"");
             }),
-                    new KeyFrame(Duration.millis(1))
+                    new KeyFrame(Duration.millis(100))
             );
             clock.setCycleCount(Animation.INDEFINITE);
             clock.play();
 
         });
-//        Image image = new Image("flower.png");
+        stackPane.getChildren().add(mediaView);
+        stackPane.getChildren().add(graphicsPane);
 
-//        ImageView backgroundImage = new ImageView("st");
-        pane.getChildren().add(button1);
-        pane.getChildren().add(timeLabel);
+        topPane.getChildren().add(button1);
+        topPane.getChildren().add(timeLabel);
         graphicsPane.setStyle("-fx-background-color: transparent;");
         pane.setStyle("-fx-background-color: #224488");
-        root.setCenter(graphicsPane);
+        root.setCenter(stackPane);
         root.setTop(topPane);
         root.setBottom(pane);
         root.setStyle(
