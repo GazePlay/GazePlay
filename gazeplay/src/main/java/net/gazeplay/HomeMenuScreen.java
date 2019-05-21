@@ -30,6 +30,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NButton;
+import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
@@ -102,6 +103,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         StackPane topLogoPane = new StackPane();
         topLogoPane.getChildren().add(logo);
 
+
+
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
@@ -118,7 +121,20 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         VBox leftPanel = new VBox();
         leftPanel.getChildren().add(menuBar);
 
+        // filters for games based on their category
+        
+        CheckBox targetGames = buildCategoryCheckBox(GameCategories.Category.TARGET, configurationContext);
+        CheckBox memoGames = buildCategoryCheckBox(GameCategories.Category.MEMORIZATION, configurationContext);
+        CheckBox searchGames = buildCategoryCheckBox(GameCategories.Category.SEARCHING, configurationContext);
+        CheckBox noCatGames = buildCategoryCheckBox(GameCategories.Category.NONCATEGORIZED, configurationContext);
+
+        HBox categoryFilters = new HBox(10);
+        categoryFilters.setAlignment(Pos.CENTER);
+        categoryFilters.setPadding(new Insets(15, 12, 15, 12));
+        categoryFilters.getChildren().addAll(targetGames,memoGames,searchGames,noCatGames);
+
         BorderPane centerPanel = new BorderPane();
+        centerPanel.setTop(categoryFilters);
         centerPanel.setCenter(centerCenterPane);
         centerPanel.setLeft(leftPanel);
 
@@ -299,17 +315,24 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return logoView;
     }
 
-    private static CheckBox buildGameCategoryCheckBox(GameCategories.Category category, Configuration configuration,
-                                                  ConfigurationContext configurationContext) {
-        CheckBox checkBox = new CheckBox(category.getGameCategory());
+    private static CheckBox buildCategoryCheckBox(GameCategories.Category category, ConfigurationContext confContext) {
 
-        checkBox.setSelected(false);
+        I18NText label = new I18NText(confContext.getGazePlay().getTranslator(), category.getGameCategory());
+        CheckBox categoryCheckbox = new CheckBox(label.getText());
+        categoryCheckbox.setSelected(false);
 
-        checkBox.selectedProperty().addListener((o) -> {
+        categoryCheckbox.selectedProperty().addListener((o) -> {
 
 
         });
 
-        return checkBox;
+        return categoryCheckbox;
     }
 }
+
+//{
+//        I18NText label = new I18NText(translator, "DisableSequence", COLON);
+//        CheckBox input = buildDisableFixationSequenceCheckBox(config, configurationContext);
+//
+//        addToGrid(grid, currentFormRow, label, input);
+//        }
