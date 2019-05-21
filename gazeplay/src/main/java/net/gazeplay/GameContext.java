@@ -415,6 +415,37 @@ public class GameContext extends GraphicalContext<Pane> {
         gazePlay.onDisplayStats(statsContext);
     }
 
+    public void showRoundStats(Stats stats, GameLifeCycle currentGame) throws IOException {
+        stats.stop();
+
+        Runnable asynchronousStatsPersistTask = () -> {
+            try {
+                stats.saveStats();
+            } catch (IOException e) {
+                log.error("Failed to save stats file", e);
+            }
+        };
+
+        if (runAsynchronousStatsPersist) {
+            AsyncUiTaskExecutor.getInstance().getExecutorService().execute(asynchronousStatsPersistTask);
+        } else {
+            asynchronousStatsPersistTask.run();
+        }
+
+        CustomButton continueButton = new CustomButton("data/common/images/continue.png");
+        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            getGazePlay().onGameLaunch(this);
+            currentGame.launch();
+        });
+
+        StatsContext statsContext = StatsContext.newInstance(getGazePlay(), stats, continueButton);
+
+        this.clear();
+        getGazePlay().onDisplayStats(statsContext);
+
+        stats.reset();
+    }
+
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
         getChildren().add(bravo);
         bravo.toFront();

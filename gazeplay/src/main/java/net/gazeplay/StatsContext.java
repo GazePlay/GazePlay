@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
@@ -17,6 +18,8 @@ import java.awt.image.BufferedImage;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javax.imageio.ImageIO;
+
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import lombok.Data;
@@ -51,6 +54,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         return new StatsContext(gazePlay, root, stats);
     }
 
+    public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats,
+            CustomButton continueButton) throws IOException {
+        BorderPane root = new BorderPane();
+
+        return new StatsContext(gazePlay, root, stats, continueButton);
+    }
+
     private final Stats stats;
 
     private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, Text value) {
@@ -83,6 +93,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) throws IOException {
+        this(gazePlay, root, stats, null);
+    }
+
+    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton)
+            throws IOException {
         super(gazePlay, root);
         this.stats = stats;
 
@@ -298,6 +313,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         if(config.isAreaOfInterestIsEnabled())
         controlButtonPane.getChildren().add(aoiButton);
         controlButtonPane.getChildren().add(homeButton);
+
+        if (continueButton != null) {
+            controlButtonPane.getChildren().add(continueButton);
+        }
+
         StackPane centerStackPane = new StackPane();
         centerStackPane.getChildren().add(centerPane);
 
