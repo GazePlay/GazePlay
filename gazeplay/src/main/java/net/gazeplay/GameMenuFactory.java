@@ -259,7 +259,6 @@ public class GameMenuFactory {
 
         gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, gameCard.getEventhandler());
         pausedEvents.add(gameCard);
-        gameCard.setGameCategory(gameSpec.getGameSummary().getCategory());
         return gameCard;
     }
 

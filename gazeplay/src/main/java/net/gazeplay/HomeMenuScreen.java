@@ -5,6 +5,8 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -12,10 +14,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -37,6 +36,7 @@ import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.games.race.Target;
 
 import java.util.List;
 
@@ -49,14 +49,39 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
         GamesLocator gamesLocator = new DefaultGamesLocator();
-        List<GameSpec> games = gamesLocator.listGames();
+        List<GameSpec> games;
+
+        if(!config.noCategory() && !config.searchingCategory() && !config.memorizationCategory() && !config.targetCategory())
+            games = gamesLocator.listGames();
+        else {
+            for( GameSpec g : gamesLocator.listGames())
+                if(config.targetCategory()){
+                    if(g.getGameSummary().getCategory() == GameCategories.Category.TARGET)
+                        games.add(g);
+                }
+                else if(config.memorizationCategory()){
+                    if(g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
+                        games.add(g);
+                }
+                else if(config.searchingCategory()){
+                    if(g.getGameSummary().getCategory() == GameCategories.Category.SEARCHING)
+                        games.add(g);
+                }
+                else if(config.noCategory()){
+                    if(g.getGameSummary().getCategory() == GameCategories.Category.NONCATEGORIZED)
+                        games.add(g);
+                }
+
+        }
 
         BorderPane root = new BorderPane();
+        HomeMenuScreen hm = new HomeMenuScreen(gazePlay, games, root, config);
+        //return new HomeMenuScreen(gazePlay, games, root, config);
 
-        return new HomeMenuScreen(gazePlay, games, root, config);
+        return  hm;
     }
 
-    private final List<GameSpec> games;
+    private List<GameSpec> games;
 
     private GameLifeCycle currentGame;
 
@@ -110,7 +135,49 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().addAll(logoutButton, exitButton);
 
+        // filters for games based on their category
+        DefaultGamesLocator gloc = new DefaultGamesLocator();
+
+        ToggleGroup
+
+        CheckBox targetGames = buildCategoryCheckBox(GameCategories.Category.TARGET,config ,configurationContext);
+//        targetGames.selectedProperty().addListener(new ChangeListener<Boolean>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//                if(targetGames.isSelected()){
+//                    if(games.isEmpty()){
+//                        for (GameSpec game : gloc.listGames()){
+//                            if(game.getGameSummary().getCategory() == GameCategories.Category.TARGET){
+//                                //games.removeAll(games);
+//                                games.add(game);
+//                            }
+//
+//                        }
+//                    }
+//                    else{
+//
+//                    }
+//
+//                }
+//                if(!targetGames.isSelected()){
+//
+//                }
+//            }
+//        });
+
+        CheckBox memoGames = buildCategoryCheckBox(GameCategories.Category.MEMORIZATION,config ,configurationContext);
+        CheckBox searchGames = buildCategoryCheckBox(GameCategories.Category.SEARCHING,config ,configurationContext);
+        CheckBox noCatGames = buildCategoryCheckBox(GameCategories.Category.NONCATEGORIZED, config,configurationContext);
+
+        HBox categoryFilters = new HBox(10);
+        categoryFilters.setAlignment(Pos.CENTER);
+        categoryFilters.setPadding(new Insets(15, 12, 15, 12));
+        categoryFilters.getChildren().addAll(targetGames,memoGames,searchGames,noCatGames);
+
+        //==============================================================================================================
+
         ProgressIndicator indicator = new ProgressIndicator(0);
+        // change the list of games accordingly to the categories !
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
 
         VBox centerCenterPane = new VBox();
@@ -120,18 +187,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         VBox leftPanel = new VBox();
         leftPanel.getChildren().add(menuBar);
-
-        // filters for games based on their category
-
-        CheckBox targetGames = buildCategoryCheckBox(GameCategories.Category.TARGET,config ,configurationContext);
-        CheckBox memoGames = buildCategoryCheckBox(GameCategories.Category.MEMORIZATION,config ,configurationContext);
-        CheckBox searchGames = buildCategoryCheckBox(GameCategories.Category.SEARCHING,config ,configurationContext);
-        CheckBox noCatGames = buildCategoryCheckBox(GameCategories.Category.NONCATEGORIZED, config,configurationContext);
-
-        HBox categoryFilters = new HBox(10);
-        categoryFilters.setAlignment(Pos.CENTER);
-        categoryFilters.setPadding(new Insets(15, 12, 15, 12));
-        categoryFilters.getChildren().addAll(targetGames,memoGames,searchGames,noCatGames);
 
         BorderPane centerPanel = new BorderPane();
         centerPanel.setTop(categoryFilters);
@@ -204,37 +259,23 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
                     translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
 
-            if(config.targetCategory() && !config.memorizationCategory() && !config.searchingCategory() && !config.noCategory()){
-                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.TARGET)
-                    choicePanel.getChildren().add(gameCard);
-            }
-            else if(!config.targetCategory() && config.memorizationCategory() && !config.searchingCategory() && !config.noCategory()){
-                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
-                    choicePanel.getChildren().add(gameCard);
-            }
-            else if(!config.targetCategory() && !config.memorizationCategory() && config.searchingCategory() && !config.noCategory()){
-                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.SEARCHING)
-                    choicePanel.getChildren().add(gameCard);
-            }
-            else if(!config.targetCategory() && !config.memorizationCategory() && !config.searchingCategory() && config.noCategory()){
-                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.NONCATEGORIZED)
-                    choicePanel.getChildren().add(gameCard);
-            }
-            else choicePanel.getChildren().add(gameCard);
-//            if(config.targetCategory() && gameCard.getGameCategory() == GameCategories.Category.TARGET){
-//                choicePanel.getChildren().add(gameCard);
+//            if(config.targetCategory() && !config.memorizationCategory() && !config.searchingCategory() && !config.noCategory()){
+//                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.TARGET)
+//                    choicePanel.getChildren().add(gameCard);
 //            }
-//            else if(config.searchingCategory() && gameCard.getGameCategory() == GameCategories.Category.SEARCHING){
-//                choicePanel.getChildren().add(gameCard);
+//            else if(!config.targetCategory() && config.memorizationCategory() && !config.searchingCategory() && !config.noCategory()){
+//                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
+//                    choicePanel.getChildren().add(gameCard);
 //            }
-//            else if(config.memorizationCategory() && gameCard.getGameCategory() == GameCategories.Category.MEMORIZATION){
-//                choicePanel.getChildren().add(gameCard);
+//            else if(!config.targetCategory() && !config.memorizationCategory() && config.searchingCategory() && !config.noCategory()){
+//                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.SEARCHING)
+//                    choicePanel.getChildren().add(gameCard);
 //            }
-//            else if(config.noCategory() && gameCard.getGameCategory() == GameCategories.Category.NONCATEGORIZED){
-//                choicePanel.getChildren().add(gameCard);
+//            else if(!config.targetCategory() && !config.memorizationCategory() && !config.searchingCategory() && config.noCategory()){
+//                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.NONCATEGORIZED)
+//                    choicePanel.getChildren().add(gameCard);
 //            }
-//            else
-               
+//            else choicePanel.getChildren().add(gameCard);
 
             gameCard.setEnterhandler(new EventHandler<Event>() {
                 @Override

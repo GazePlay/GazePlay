@@ -29,8 +29,5 @@ public class GameButtonPane extends BorderPane {
     @Setter
     private boolean active = false;
 
-    @Getter
-    @Setter
-    private GameCategories.Category gameCategory;
 
 }
