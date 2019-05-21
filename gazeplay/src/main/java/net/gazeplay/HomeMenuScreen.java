@@ -122,11 +122,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         leftPanel.getChildren().add(menuBar);
 
         // filters for games based on their category
-        
-        CheckBox targetGames = buildCategoryCheckBox(GameCategories.Category.TARGET, configurationContext);
-        CheckBox memoGames = buildCategoryCheckBox(GameCategories.Category.MEMORIZATION, configurationContext);
-        CheckBox searchGames = buildCategoryCheckBox(GameCategories.Category.SEARCHING, configurationContext);
-        CheckBox noCatGames = buildCategoryCheckBox(GameCategories.Category.NONCATEGORIZED, configurationContext);
+
+        CheckBox targetGames = buildCategoryCheckBox(GameCategories.Category.TARGET,config ,configurationContext);
+        CheckBox memoGames = buildCategoryCheckBox(GameCategories.Category.MEMORIZATION,config ,configurationContext);
+        CheckBox searchGames = buildCategoryCheckBox(GameCategories.Category.SEARCHING,config ,configurationContext);
+        CheckBox noCatGames = buildCategoryCheckBox(GameCategories.Category.NONCATEGORIZED, config,configurationContext);
 
         HBox categoryFilters = new HBox(10);
         categoryFilters.setAlignment(Pos.CENTER);
@@ -200,9 +200,41 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         gameSelected.setValue(false);
 
         for (GameSpec gameSpec : games) {
+
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
                     translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
-            choicePanel.getChildren().add(gameCard);
+
+            if(config.targetCategory() && !config.memorizationCategory() && !config.searchingCategory() && !config.noCategory()){
+                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.TARGET)
+                    choicePanel.getChildren().add(gameCard);
+            }
+            else if(!config.targetCategory() && config.memorizationCategory() && !config.searchingCategory() && !config.noCategory()){
+                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
+                    choicePanel.getChildren().add(gameCard);
+            }
+            else if(!config.targetCategory() && !config.memorizationCategory() && config.searchingCategory() && !config.noCategory()){
+                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.SEARCHING)
+                    choicePanel.getChildren().add(gameCard);
+            }
+            else if(!config.targetCategory() && !config.memorizationCategory() && !config.searchingCategory() && config.noCategory()){
+                if(gameSpec.getGameSummary().getCategory() == GameCategories.Category.NONCATEGORIZED)
+                    choicePanel.getChildren().add(gameCard);
+            }
+            else choicePanel.getChildren().add(gameCard);
+//            if(config.targetCategory() && gameCard.getGameCategory() == GameCategories.Category.TARGET){
+//                choicePanel.getChildren().add(gameCard);
+//            }
+//            else if(config.searchingCategory() && gameCard.getGameCategory() == GameCategories.Category.SEARCHING){
+//                choicePanel.getChildren().add(gameCard);
+//            }
+//            else if(config.memorizationCategory() && gameCard.getGameCategory() == GameCategories.Category.MEMORIZATION){
+//                choicePanel.getChildren().add(gameCard);
+//            }
+//            else if(config.noCategory() && gameCard.getGameCategory() == GameCategories.Category.NONCATEGORIZED){
+//                choicePanel.getChildren().add(gameCard);
+//            }
+//            else
+               
 
             gameCard.setEnterhandler(new EventHandler<Event>() {
                 @Override
@@ -315,24 +347,42 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return logoView;
     }
 
-    private static CheckBox buildCategoryCheckBox(GameCategories.Category category, ConfigurationContext confContext) {
+    private static CheckBox buildCategoryCheckBox(GameCategories.Category category,Configuration config, ConfigurationContext confContext) {
 
         I18NText label = new I18NText(confContext.getGazePlay().getTranslator(), category.getGameCategory());
         CheckBox categoryCheckbox = new CheckBox(label.getText());
-        categoryCheckbox.setSelected(false);
 
-        categoryCheckbox.selectedProperty().addListener((o) -> {
-
-
-        });
+        switch (category){
+            case TARGET:
+                categoryCheckbox.setSelected(config.targetCategory());
+                categoryCheckbox.selectedProperty().addListener((o)->{
+                    config.getTargetCategoryProperty().setValue(categoryCheckbox.isSelected());
+                    config.saveConfigIgnoringExceptions();
+                        });
+                break;
+            case MEMORIZATION:
+                categoryCheckbox.setSelected(config.memorizationCategory());
+                categoryCheckbox.selectedProperty().addListener((o)->{
+                    config.getMemorizationCategoryProperty().setValue(categoryCheckbox.isSelected());
+                    config.saveConfigIgnoringExceptions();
+                });
+                break;
+            case SEARCHING:
+                categoryCheckbox.setSelected(config.searchingCategory());
+                categoryCheckbox.selectedProperty().addListener((o)->{
+                    config.getSearchingCategoryProperty().setValue(categoryCheckbox.isSelected());
+                    config.saveConfigIgnoringExceptions();
+                });
+                break;
+            case NONCATEGORIZED:
+                categoryCheckbox.setSelected(config.noCategory());
+                categoryCheckbox.selectedProperty().addListener((o)->{
+                    config.getNoCategoryProperty().setValue(categoryCheckbox.isSelected());
+                    config.saveConfigIgnoringExceptions();
+                });
+                break;
+        }
 
         return categoryCheckbox;
     }
 }
-
-//{
-//        I18NText label = new I18NText(translator, "DisableSequence", COLON);
-//        CheckBox input = buildDisableFixationSequenceCheckBox(config, configurationContext);
-//
-//        addToGrid(grid, currentFormRow, label, input);
-//        }
