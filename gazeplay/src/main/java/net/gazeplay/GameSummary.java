@@ -22,20 +22,20 @@ public class GameSummary {
     private final String description;
 
     public GameSummary(String nameCode, String gameThumbnail) {
-        this(nameCode,gameThumbnail, GameCategories.Category.NONCATEGORIZED);
+        this(nameCode, gameThumbnail, GameCategories.Category.NONCATEGORIZED);
     }
 
-    public GameSummary(String nameCode,String gameThumbnail,  GameCategories.Category category) {
-        this(nameCode,gameThumbnail, category, null);
+    public GameSummary(String nameCode, String gameThumbnail, GameCategories.Category category) {
+        this(nameCode, gameThumbnail, category, null);
     }
 
-    public GameSummary(String nameCode,String gameThumbnail, GameCategories.Category category,
-                       final String backgroundMusicUrl) {
-        this(nameCode,gameThumbnail, category, backgroundMusicUrl,null);
+    public GameSummary(String nameCode, String gameThumbnail, GameCategories.Category category,
+            final String backgroundMusicUrl) {
+        this(nameCode, gameThumbnail, category, backgroundMusicUrl, null);
     }
 
-    public GameSummary(String nameCode,String gameThumbnail, GameCategories.Category category,
-                       String backgroundMusicUrl, final String description) {
+    public GameSummary(String nameCode, String gameThumbnail, GameCategories.Category category,
+            String backgroundMusicUrl, final String description) {
         this.nameCode = nameCode;
         this.gameThumbnail = gameThumbnail;
         this.category = category;

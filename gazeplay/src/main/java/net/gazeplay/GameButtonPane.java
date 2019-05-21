@@ -29,5 +29,4 @@ public class GameButtonPane extends BorderPane {
     @Setter
     private boolean active = false;
 
-
 }
