@@ -9,7 +9,6 @@ import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.*;
-import java.util.List;
 import java.util.Properties;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
