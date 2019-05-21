@@ -44,7 +44,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     public void addGazeMotionListener(GazeMotionListener listener) {
         this.gazeMotionListeners.add(listener);
     }
-
     @Override
     public void removeGazeMotionListener(GazeMotionListener listener) {
         this.gazeMotionListeners.remove(listener);
@@ -135,9 +134,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         // notifyAllGazeMotionListeners(gazePositionOnScreen);
         final double positionX = gazePositionOnScreen.getX();
         final double positionY = gazePositionOnScreen.getY();
-//        System.out.println("Hello nara it is updating"+positionX +"and"+positionY );
-
-
         add();
         delete();
 
@@ -167,6 +163,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                     // log.info("child : "+child+" added !");
                     addEventFilter(child);
                 }
+                ;
                 // log.info("child : "+child+" fired !");
                 GazeInfos gi = shapesEventFilter.get(new IdentityKey<>(child));
                 if (gi != null) {
@@ -179,11 +176,10 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     }
 
     public void EventFire(double positionX, double positionY, GazeInfos gi, Node node) {
-        // log.info("GazeInfo: " + gi);
+         log.info("GazeInfo: " + gi);
         if (!node.isDisable()) {
 
             Point2D localPosition = node.screenToLocal(positionX, positionY);
-
             if (localPosition != null && node.contains(localPosition)) {
                 if (gi.isOn()) {
                     Platform.runLater(() -> node
