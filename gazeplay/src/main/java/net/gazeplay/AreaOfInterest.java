@@ -62,7 +62,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
                             circle = new Circle(coordinatesTracker.getxValue(),coordinatesTracker.getyValue(),4);
                             circle.setStroke(Color.GREEN);
                         }
-//                      System.out.println(movementHistory.get(index).getIntervalTime());
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
@@ -110,7 +109,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         screenTitleText.setId("title");
         StackPane topPane = new StackPane();
         topPane.getChildren().add(screenTitleText);
-
         VBox centerPane = new VBox();
         centerPane.setAlignment(Pos.CENTER);
         Pane graphicsPane = new Pane();
@@ -119,15 +117,14 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
 
 //        System.out.println("Going to read "+stats.getDirectoryOfVideo());
 //        Media media = new Media(stats.getDirectoryOfVideo());
-        Media media = new Media(stats.getDirectoryOfVideo());
 
-        player = new MediaPlayer(media);
-        MediaView mediaView = new MediaView(player);
         timeLabel = new Label();
         timeLabel.setTextFill(Color.web("#FFFFFF"));
-        Button button1 = new Button("Play");
-        button1.setOnAction(e -> {
-            player.play();
+        Button playBtn = new Button("Play");
+        playBtn.setAlignment(Pos.CENTER_RIGHT);
+        playBtn.setOnAction(e -> {
+            if(config.isVideoRecordingEnabled())
+                player.play();
             plotMovement(0,graphicsPane);
             long startTime = System.currentTimeMillis();
             clock = new Timeline(new KeyFrame(Duration.ZERO, f -> {
@@ -140,10 +137,17 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
             clock.play();
 
         });
-        stackPane.getChildren().add(mediaView);
+        if(config.isVideoRecordingEnabled())
+        {
+            Media media = new Media(stats.getDirectoryOfVideo());
+            player = new MediaPlayer(media);
+            MediaView mediaView = new MediaView(player);
+            stackPane.getChildren().add(mediaView);
+        }
         stackPane.getChildren().add(graphicsPane);
 
-        topPane.getChildren().add(button1);
+        playBtn.setStyle("-fx-alignment: baseline-right;");
+        topPane.getChildren().add(playBtn);
         topPane.getChildren().add(timeLabel);
         graphicsPane.setStyle("-fx-background-color: transparent;");
         pane.setStyle("-fx-background-color: #224488");

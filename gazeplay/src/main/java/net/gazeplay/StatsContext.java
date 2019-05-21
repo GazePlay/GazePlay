@@ -287,17 +287,17 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
         };
 
-        HomeButton homeButton2 = new HomeButton();
-        homeButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+        HomeButton aoiButton = new HomeButton("data/common/images/aoibtn.png");
+        aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
         //end here
 
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
+        if(config.isAreaOfInterestIsEnabled())
+        controlButtonPane.getChildren().add(aoiButton);
         controlButtonPane.getChildren().add(homeButton);
-        controlButtonPane.getChildren().add(homeButton2);
-
         StackPane centerStackPane = new StackPane();
         centerStackPane.getChildren().add(centerPane);
 

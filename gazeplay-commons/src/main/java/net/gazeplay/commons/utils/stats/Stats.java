@@ -19,8 +19,6 @@ import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.Utils;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-import sun.nio.ch.sctp.SctpNet;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +37,7 @@ import java.util.LinkedList;
 @ToString
 public class Stats implements GazeMotionListener {
 
+    private Configuration config;
     private static final int trail = 10;
     private final double heatMapPixelSize = computeHeatMapPixelSize();
     private EventHandler<MouseEvent> recordMouseMovements;
@@ -104,31 +103,36 @@ public class Stats implements GazeMotionListener {
     }
 
     public void start() {
-        final Configuration config = Configuration.getInstance();
-        nameOfVideo = Utils.now() + "video";
-        directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
-        VideoRecorder.start(nameOfVideo);
-        VideoRecorderConfiguration.setVideoDirectory(getGameStatsOfTheDayDirectory());
-        VideoRecorderConfiguration.setCaptureInterval(1);
-        VideoRecorderEventListener videoRecorderEventListener = new VideoRecorderEventListener() {
-            @Override
-            public void frameAdded(VideoRecorderEventObject args) {
-                sceneCounter++;
+        config = Configuration.getInstance();
+        if(config.isVideoRecordingEnabled())
+        {
+            nameOfVideo = Utils.now() + "video";
+            directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
+            VideoRecorder.start(nameOfVideo);
+            VideoRecorderConfiguration.setVideoDirectory(getGameStatsOfTheDayDirectory());
+            VideoRecorderConfiguration.setCaptureInterval(1);
+            VideoRecorderEventListener videoRecorderEventListener = new VideoRecorderEventListener() {
+                @Override
+                public void frameAdded(VideoRecorderEventObject args) {
+                    sceneCounter++;
 
-                System.out.println("The amount of scene is : "+ sceneCounter);
-                System.out.println("The time is at "+lifeCycle.computeTotalElapsedDuration());
+                    System.out.println("The amount of scene is : "+ sceneCounter);
+                    System.out.println("The time is at "+lifeCycle.computeTotalElapsedDuration());
 
-            }
-        };
-        VideoRecorder.addVideoRecorderEventListener(videoRecorderEventListener);
+                }
+            };
+            VideoRecorder.addVideoRecorderEventListener(videoRecorderEventListener);
+        }
 
-//        System.out.println("The directory of the video is "+ VideoRecorderConfiguration.getVideoDirectory().toURI());
-        System.out.println("The name of the file is "+Utils.now() + "-video");
+
 
         lifeCycle.start(() -> {
+            System.out.println("Head map"+ config.isHeatMapDisabled());
+            System.out.println("Fixation"+ config.isFixationSequenceDisabled());
+            System.out.println("AOI"+ config.isAreaOfInterestIsEnabled());
+
             if(!config.isHeatMapDisabled())
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
-            log.info("Fixation Sequence is disabled, skipping instantiation of the Sequence data");
             long startTime = System.currentTimeMillis();
             recordGazeMovements = e ->
             {
@@ -137,8 +141,11 @@ public class Stats implements GazeMotionListener {
                 if(!config.isHeatMapDisabled())
                     incHeatMap(getX, getY);
                 if(!config.isFixationSequenceDisabled())
+                {
+                    fixationSequence = new LinkedList();
                     incFixationSequence(getX, getY);
-                if(!config.isAreaOfInterestIsDisabled())
+                }
+                if(config.isAreaOfInterestIsEnabled())
                 {
                     if(getX != previousX || getY != previousY && counter == 0)
                     {
@@ -161,8 +168,11 @@ public class Stats implements GazeMotionListener {
                 if(!config.isHeatMapDisabled())
                     incHeatMap(getX, getY);
                 if(!config.isFixationSequenceDisabled())
+                {
+                    fixationSequence = new LinkedList();
                     incFixationSequence(getX, getY);
-                if(!config.isAreaOfInterestIsDisabled())
+                }
+                if(config.isAreaOfInterestIsEnabled())
                 {
                     if(getX != previousX || getY != previousY && counter == 0)
                     {
@@ -195,11 +205,14 @@ public class Stats implements GazeMotionListener {
 //        for (CoordinatesTracker coordinatesTracker : movementHistory) {
 //            System.out.println("The mouse is at X :" + coordinatesTracker.getxValue() + " Y: " + coordinatesTracker.getyValue() + " Time:" + coordinatesTracker.getTimeValue());
 //        }
-        try {
-            VideoRecorder.stop();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            System.out.println("Video couldn't stop");
+        if(config.isVideoRecordingEnabled())
+        {
+            try {
+                VideoRecorder.stop();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                System.out.println("Video couldn't stop");
+            }
         }
         lifeCycle.stop(() -> {
             if (recordGazeMovements != null) {

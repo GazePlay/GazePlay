@@ -758,7 +758,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                                                         ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
-        checkBox.setSelected(configuration.isAreaOfInterestIsDisabled());
+        checkBox.setSelected(configuration.isAreaOfInterestIsEnabled());
 
         checkBox.selectedProperty().addListener((o) -> {
 
@@ -772,7 +772,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                                                 ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
-        checkBox.setSelected(configuration.isVideoRecordingDisabled());
+        checkBox.setSelected(configuration.isVideoRecordingEnabled());
 
         checkBox.selectedProperty().addListener((o) -> {
             configuration.getVideoRecordingDisabledProperty().setValue(checkBox.isSelected());

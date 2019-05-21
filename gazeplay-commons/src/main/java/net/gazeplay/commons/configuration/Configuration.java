@@ -505,10 +505,10 @@ public class Configuration implements Cloneable {
     public Boolean isHeatMapDisabled() {
         return heatMapDisabledProperty.getValue();
     }
-    public Boolean isAreaOfInterestIsDisabled(){
+    public Boolean isAreaOfInterestIsEnabled(){
         return areaOfInterestDisabledProperty.getValue();
     }
-    public Boolean isVideoRecordingDisabled(){
+    public Boolean isVideoRecordingEnabled(){
         return videoRecordingDisabledProperty.getValue();
     }
     public Boolean isFixationSequenceDisabled() {

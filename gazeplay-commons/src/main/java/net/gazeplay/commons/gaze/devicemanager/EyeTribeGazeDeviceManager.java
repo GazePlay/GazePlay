@@ -20,6 +20,7 @@ class EyeTribeGazeDeviceManager extends AbstractGazeDeviceManager implements IGa
     public void init() {
         gazeManager = GazeManager.getInstance();
         gazeManager.activate();
+        System.out.println("It works!");
         gazeManager.addGazeListener(this);
     }
 
