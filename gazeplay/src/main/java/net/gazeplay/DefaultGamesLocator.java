@@ -21,6 +21,7 @@ import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
 import net.gazeplay.games.cups.CupsAndBalls;
 import net.gazeplay.games.cups.utils.CupsAndBallsStats;
+import net.gazeplay.games.dice.Dice;
 import net.gazeplay.games.divisor.Divisor;
 import net.gazeplay.games.divisor.DivisorStats;
 import net.gazeplay.games.draw.DrawApplication;
@@ -1104,6 +1105,20 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new SpotTheDifferences(gameContext, stats);
                     }
                 }));
+
+        result.add(new GameSpec(new GameSummary("Dice", DEFAULT_AIMING_GAME_THUMBNAIL,
+                "data/Thumbnails/spotthedifference.png"), new GameSpec.GameLauncher() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new Stats(scene, "dice");
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                                               Stats stats) {
+                return new Dice(gameContext, stats);
+            }
+        }));
 
         log.info("Games found : {}", result.size());
 
