@@ -9,6 +9,7 @@ import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.*;
+import java.util.List;
 import java.util.Properties;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
@@ -64,10 +65,10 @@ public class Configuration implements Cloneable {
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
-    private static final boolean DEFAULT_VALUE_TARGET_GAMES = false;
-    private static final boolean DEFAULT_VALUE_MEMORIZATION_GAMES = false;
-    private static final boolean DEFAULT_VALUE_SEARCHING_GAMES = false;
-    private static final boolean DEFAULT_VALUE_NO_CATEGORY_GAMES = false;
+    private static final boolean DEFAULT_VALUE_TARGET_GAMES = true;
+    private static final boolean DEFAULT_VALUE_MEMORIZATION_GAMES = true;
+    private static final boolean DEFAULT_VALUE_SEARCHING_GAMES = true;
+    private static final boolean DEFAULT_VALUE_NO_CATEGORY_GAMES = true;
     // next thing to do
     // private static final String DEFAULT_EXIT_SHORTCUT_KEY = "SPACE";
     @Setter
@@ -98,7 +99,6 @@ public class Configuration implements Cloneable {
             return properties;
         }
     }
-
     public static Configuration createFromPropertiesResource() {
         Properties properties;
         try {
@@ -410,7 +410,7 @@ public class Configuration implements Cloneable {
 
     }
 
-    private Properties toProperties() {
+    public Properties toProperties() {
         Properties properties = new Properties() {
 
             @Override
