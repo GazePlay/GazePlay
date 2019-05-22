@@ -9,8 +9,8 @@ public class GameCategories {
 
     public enum Category {
         TARGET("Target games", "data/common/images/categoriesThumbnails/target.png"), MEMORIZATION("Memorization games",
-                "data/common/images/categoriesThumbnails/male-brain.png"),
-        SEARCHING("Searching games", "data/common/images/categoriesThumbnails/searching-magnifying-glass.png");
+                "data/common/images/categoriesThumbnails/male-brain.png"), SEARCHING("Searching games",
+                        "data/common/images/categoriesThumbnails/searching-magnifying-glass.png");
 
         @NonNull
         @Getter

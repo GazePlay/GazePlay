@@ -195,7 +195,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config,
-                                                  ProgressIndicator indicator) {
+            ProgressIndicator indicator) {
 
         final int flowpaneGap = 20;
         choicePanel = new FlowPane();
@@ -252,12 +252,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                             indicator.setOpacity(1);
                             indicator.toFront();
                             switch (gameButtonOrientation) {
-                                case HORIZONTAL:
-                                    ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(indicator);
-                                    break;
-                                case VERTICAL:
-                                    ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(indicator);
-                                    break;
+                            case HORIZONTAL:
+                                ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(indicator);
+                                break;
+                            case VERTICAL:
+                                ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(indicator);
+                                break;
                             }
                             ((GameButtonPane) e.getSource()).setTimelineProgressBar(new Timeline());
 
@@ -297,12 +297,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                             ((GameButtonPane) e.getSource()).getTimelineProgressBar().stop();
                             indicator.setOpacity(0);
                             switch (gameButtonOrientation) {
-                                case HORIZONTAL:
-                                    ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(null);
-                                    break;
-                                case VERTICAL:
-                                    ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(null);
-                                    break;
+                            case HORIZONTAL:
+                                ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(null);
+                                break;
+                            case VERTICAL:
+                                ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(null);
+                                break;
                             }
                         }
                     }
@@ -355,34 +355,34 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildCategoryCheckBox(GameCategories.Category category, Configuration config,
-                                                  ConfigurationContext confContext) {
+            ConfigurationContext confContext) {
 
         I18NText label = new I18NText(confContext.getGazePlay().getTranslator(), category.getGameCategory());
         CheckBox categoryCheckbox = new CheckBox(label.getText());
 
         switch (category) {
-            case TARGET:
-                categoryCheckbox.setSelected(config.targetCategory());
-                categoryCheckbox.selectedProperty().addListener((o) -> {
-                    config.getTargetCategoryProperty().setValue(categoryCheckbox.isSelected());
-                    config.saveConfigIgnoringExceptions();
-                });
-                break;
-            case MEMORIZATION:
-                categoryCheckbox.setSelected(config.memorizationCategory());
-                categoryCheckbox.selectedProperty().addListener((o) -> {
-                    config.getMemorizationCategoryProperty().setValue(categoryCheckbox.isSelected());
-                    config.saveConfigIgnoringExceptions();
-                });
-                break;
-            case SEARCHING:
-                categoryCheckbox.setSelected(config.searchingCategory());
-                categoryCheckbox.selectedProperty().addListener((o) -> {
-                    config.getSearchingCategoryProperty().setValue(categoryCheckbox.isSelected());
-                    config.saveConfigIgnoringExceptions();
+        case TARGET:
+            categoryCheckbox.setSelected(config.targetCategory());
+            categoryCheckbox.selectedProperty().addListener((o) -> {
+                config.getTargetCategoryProperty().setValue(categoryCheckbox.isSelected());
+                config.saveConfigIgnoringExceptions();
+            });
+            break;
+        case MEMORIZATION:
+            categoryCheckbox.setSelected(config.memorizationCategory());
+            categoryCheckbox.selectedProperty().addListener((o) -> {
+                config.getMemorizationCategoryProperty().setValue(categoryCheckbox.isSelected());
+                config.saveConfigIgnoringExceptions();
+            });
+            break;
+        case SEARCHING:
+            categoryCheckbox.setSelected(config.searchingCategory());
+            categoryCheckbox.selectedProperty().addListener((o) -> {
+                config.getSearchingCategoryProperty().setValue(categoryCheckbox.isSelected());
+                config.saveConfigIgnoringExceptions();
 
-                });
-                break;
+            });
+            break;
         }
 
         return categoryCheckbox;
