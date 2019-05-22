@@ -106,15 +106,15 @@ public class DiceRoll extends GridPane {
             rotates.get(1).setAngle(0);
 
             // Between 5 and 10 turns plus 1 partial turn
-            double angleX = (5 + random.nextInt(5)) * 360 + random.nextInt(360);
-            double angleY = (5 + random.nextInt(5)) * 360 + random.nextInt(360);
+            int angleX = (5 + random.nextInt(5)) * 360 + random.nextInt(360);
+            int angleY = (5 + random.nextInt(5)) * 360 + random.nextInt(360);
 
             Timeline rollTimeline = new Timeline(new KeyFrame(Duration.seconds(3),
                     new KeyValue(rotates.get(0).angleProperty(), angleX, Interpolator.EASE_OUT),
                     new KeyValue(rotates.get(1).angleProperty(), angleY, Interpolator.EASE_OUT)));
 
-            double modX = angleX % 90;
-            double modY = angleY % 90;
+            int modX = angleX % 90;
+            int modY = angleY % 90;
             angleX = angleX - modX + (modX > 45 ? 1 : 0) * 90;
             angleY = angleY - modY + (modY > 45 ? 1 : 0) * 90;
 
@@ -131,8 +131,8 @@ public class DiceRoll extends GridPane {
             }
 
             // Compute outcome of roll
-            double finalX = angleX % 360;
-            double finalY = angleY % 360;
+            int finalX = angleX % 360;
+            int finalY = angleY % 360;
 
             if (finalX == 90) {
                 outcomes[i] = 3;
