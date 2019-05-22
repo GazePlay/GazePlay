@@ -20,6 +20,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -40,20 +42,22 @@ public class slidingpuzzlecard extends Parent {
         this.card = new Rectangle(positionX, positionY, width, height);
         this.card.setFill(new ImagePattern(new Image(fileName), 0, 0, 1, 1, true));
         this.gameContext = gameContext;
-        this.initWidth = width;
-        this.initHeight = height;
-        this.initX = positionX;
-        this.initY = positionY;
+        this.initWidth = (int)width;
+        this.initHeight = (int)height;
+        this.initX = (int)positionX;
+        this.initY = (int)positionY;
         this.gameInstance = gameInstance;
         this.stats = stats;
         this.progressIndicator = createProgressIndicator(width, height);
         this.getChildren().add(this.progressIndicator);
         this.getChildren().add(this.card);
-        this.kingPosX = kingPosX;
-        this.kingPosY = kingPosY;
-        this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-         this.enterEvent = buildEvent();
-
+        this.isKing = false;
+        this.kingPosX = (int)kingPosX;
+        this.kingPosY = (int)kingPosY;
+        if(id!=9){
+        this.enterEvent = buildEvent();}
+        else
+        {this.enterEvent = buildEvent2();}
         gameContext.getGazeDeviceManager().addEventFilter(card);
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
@@ -69,19 +73,26 @@ public class slidingpuzzlecard extends Parent {
 
     private final Rectangle card;
 
+    @Getter
     private final int CardId;
-    
-    private static javafx.geometry.Dimension2D dimension2D;
 
     private final GameContext gameContext;
 
-    private final double initWidth;
-    private final double initHeight;
-
-    private final double initX;
-    private final double initY;
-
-    private double kingPosX , kingPosY;
+    private final int initWidth;
+    private final int initHeight;
+    
+    @Getter @Setter
+    private  int initX;
+    
+    @Getter @Setter
+    private  int initY;
+    
+    @Getter @Setter
+    private int kingPosX , kingPosY;
+    
+    @Getter @Setter
+    private boolean isKing;
+    
     private final slidingpuzzle gameInstance;
 
     private final ProgressIndicator progressIndicator;
@@ -99,30 +110,19 @@ public class slidingpuzzlecard extends Parent {
 
     private ProgressIndicator createProgressIndicator(double width, double height) {
         ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(card.getX() + width * 0.05);
-        indicator.setTranslateY(card.getY() + height * 0.2);
-        indicator.setMinWidth(width * 0.9);
-        indicator.setMinHeight(width * 0.9);
+        indicator.setTranslateX(card.getX() );
+        indicator.setTranslateY(card.getY() );
+        indicator.setMinWidth(width * 0.1);
+        indicator.setMinHeight(width * 0.1);
         indicator.setOpacity(0);
         return indicator;
     }
-    private static double computeCardBoxHeight(int nbLines) {
-        return dimension2D.getHeight() / nbLines;
-    }
-
-    private static double computeCardBoxWidth(int nbColumns) {
-        
-        return dimension2D.getWidth() / nbColumns;
-    }
     
     private Boolean checkIfNeighbor(){
-        log.info("index = " + this.CardId);
-        log.info("initX = " + this.initX);
-        log.info("initY = " + this.initY);
-        log.info("KingPosX = " + this.kingPosX);
-        log.info("KingPosY = " + this.kingPosY);
-        log.info("BoxWidth = " + computeCardBoxWidth(3));
-        log.info("BoxHeight = " + computeCardBoxHeight(3));
+    log.info("initX= "+initX);
+    log.info("initY= "+initY);
+    log.info("KingPosX= "+kingPosX);
+    log.info("KingPosY= "+kingPosY);
     if (this.initX==kingPosX && ((this.initY==kingPosY + 200)  || (this.initY==kingPosY - 200)))
         return true;
     else if (this.initY==kingPosY && ((this.initX==kingPosX + 200)  || (this.initX==kingPosX - 200)))
@@ -133,7 +133,7 @@ public class slidingpuzzlecard extends Parent {
     
     private void isMyNeighborEvent() {
         
-    progressIndicator.setOpacity(0);
+    progressIndicator.setOpacity(1);
     currentTimeline.stop();
     currentTimeline = new Timeline();
     KeyValue xValue  = new KeyValue(card.xProperty(), kingPosX); 
@@ -143,6 +143,56 @@ public class slidingpuzzlecard extends Parent {
     currentTimeline.play();
         
 }
+    public void isKingCardEvent(double x,double y){
+    progressIndicator.setOpacity(0);
+    currentTimeline.stop();
+    currentTimeline = new Timeline();
+    KeyValue xValue  = new KeyValue(card.xProperty(), x); 
+    KeyValue yValue  = new KeyValue(card.yProperty(), y);
+    KeyFrame keyFrame  = new KeyFrame(Duration.millis(200), xValue, yValue);
+    currentTimeline.getKeyFrames().add(keyFrame);
+    currentTimeline.play();
+    }
+    
+    private void onGameOver() {
+
+        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        stats.incNbGoals();
+
+
+        progressIndicator.setOpacity(0);
+
+
+        currentTimeline.stop();
+        currentTimeline = new Timeline();
+
+
+        currentTimeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        gameInstance.dispose();
+
+                        gameContext.clear();
+
+                        gameInstance.launch();
+
+                        stats.notifyNewRoundReady();
+
+                        gameContext.onGameStarted();
+                    }
+                });
+            }
+        });
+
+        currentTimeline.play();
+    }
+    
     private EventHandler<Event> buildEvent() {
 
         return new EventHandler<Event>() {
@@ -157,14 +207,6 @@ public class slidingpuzzlecard extends Parent {
 
                     currentTimeline.stop();
                     currentTimeline = new Timeline();
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(card.xProperty(), card.getX() - (initWidth * zoom_factor - initWidth) / 2)));
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(card.yProperty(), card.getY() - (initHeight * zoom_factor - initHeight) / 2)));
-                    currentTimeline.getKeyFrames().add(
-                            new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth * zoom_factor)));
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(card.heightProperty(), initHeight * zoom_factor)));
 
                     timelineProgressBar = new Timeline();
 
@@ -179,36 +221,34 @@ public class slidingpuzzlecard extends Parent {
 
                         @Override
                         public void handle(ActionEvent actionEvent) {
-
+                            
                             log.info("Check if Neighbor = " + checkIfNeighbor().toString());
                             if (checkIfNeighbor()) {
-                               
+                                log.info("Card that will be changed with index 9 is : " + CardId);
+                                gameInstance.showCards();
+                                //log.info("Card x is : " + initX);
+                                //log.info("Card y is : " + initY);
+                                gameInstance.replaceCards(fixationlength,initX,initY,CardId);
+                                //slidingpuzzlecard card = new slidingpuzzlecard(9,initX, initY, 200, 200,"data/tiles/tile9.png", fixationlength , gameContext, gameInstance, stats,initX,initY);
+                                
+                                //gameContext.getChildren().add(card);
                                 isMyNeighborEvent();
+                                
+                                    
+                                log.info("After Pressing");
+                                gameInstance.fixCoord(CardId,initX,initY,kingPosX,kingPosY);
+                                //log.info("New Card x is : " + initX);
+                                //log.info("New Card y is : " + initY);
+                                gameInstance.showCards();
+                                
+                                if(gameInstance.isGameOver())
+                                    onGameOver();
                             }
+                            
+                            
                         }
                     });
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                    currentTimeline.stop();
-                    currentTimeline = new Timeline();
-
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(card.xProperty(), card.getX() + (initWidth * zoom_factor - initWidth) / 2)));
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(card.yProperty(), card.getY() + (initHeight * zoom_factor - initHeight) / 2)));
-                    currentTimeline.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth)));
-                    currentTimeline.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight)));
-
-                    // Be sure that the card is properly positionned at the end
-                    currentTimeline.setOnFinished((event) -> {
-                        card.setX(initX);
-                        card.setY(initY);
-                    });
-
-                    currentTimeline.play();
-
                     timelineProgressBar.stop();
 
                     progressIndicator.setOpacity(0);
@@ -217,5 +257,11 @@ public class slidingpuzzlecard extends Parent {
             }
         };
     }
-     
+     private EventHandler<Event> buildEvent2() {
+
+        return new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {}
+        };
+    }
 }

@@ -25,7 +25,6 @@
 			<artifactId>gazeplay-data</artifactId>
 			<version>1.5.2-SNAPSHOT</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
