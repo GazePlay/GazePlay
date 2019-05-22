@@ -40,7 +40,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
     /*
-     *   Game Categories Properties
+     * Game Categories Properties
      */
     private static final String PROPERTY_NAME_TARGET_GAMES = "Target games";
     private static final String PROPERTY_NAME_SEARCHING_GAMES = "Searching games";
@@ -99,6 +99,7 @@ public class Configuration implements Cloneable {
             return properties;
         }
     }
+
     public static Configuration createFromPropertiesResource() {
         Properties properties;
         try {
@@ -221,17 +222,16 @@ public class Configuration implements Cloneable {
             DEFAULT_VALUE_TARGET_GAMES);
 
     @Getter
-    protected final BooleanProperty memorizationCategoryProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_MEMORIZATION_GAMES,
-            DEFAULT_VALUE_MEMORIZATION_GAMES);
+    protected final BooleanProperty memorizationCategoryProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_MEMORIZATION_GAMES, DEFAULT_VALUE_MEMORIZATION_GAMES);
 
     @Getter
-    protected final BooleanProperty searchingCategoryProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_SEARCHING_GAMES,
-            DEFAULT_VALUE_SEARCHING_GAMES);
+    protected final BooleanProperty searchingCategoryProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_SEARCHING_GAMES, DEFAULT_VALUE_SEARCHING_GAMES);
 
     @Getter
-    protected final BooleanProperty noCategoryProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_NO_CATEGORY_GAMES,
-            DEFAULT_VALUE_NO_CATEGORY_GAMES);
-
+    protected final BooleanProperty noCategoryProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_NO_CATEGORY_GAMES, DEFAULT_VALUE_NO_CATEGORY_GAMES);
 
     protected Configuration() {
 
@@ -391,22 +391,21 @@ public class Configuration implements Cloneable {
             userPictureProperty.setValue(buffer);
         }
         buffer = prop.getProperty(PROPERTY_NAME_TARGET_GAMES);
-        if (buffer != null){
+        if (buffer != null) {
             targetCategoryProperty.setValue(Boolean.parseBoolean(buffer));
         }
         buffer = prop.getProperty(PROPERTY_NAME_SEARCHING_GAMES);
-        if (buffer != null){
+        if (buffer != null) {
             searchingCategoryProperty.setValue(Boolean.parseBoolean(buffer));
         }
         buffer = prop.getProperty(PROPERTY_NAME_MEMORIZATION_GAMES);
-        if (buffer != null){
+        if (buffer != null) {
             memorizationCategoryProperty.setValue(Boolean.parseBoolean(buffer));
         }
         buffer = prop.getProperty(PROPERTY_NAME_NO_CATEGORY_GAMES);
-        if (buffer != null){
+        if (buffer != null) {
             noCategoryProperty.setValue(Boolean.parseBoolean(buffer));
         }
-
 
     }
 
@@ -452,7 +451,8 @@ public class Configuration implements Cloneable {
          * properties.setProperty(PROPERTY_NAME_GAZE_MENU, Boolean.toString(this.gazeMenuProperty.getValue()));
          */
         properties.setProperty(PROPERTY_NAME_TARGET_GAMES, Boolean.toString(targetCategoryProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_MEMORIZATION_GAMES, Boolean.toString(memorizationCategoryProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_MEMORIZATION_GAMES,
+                Boolean.toString(memorizationCategoryProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_SEARCHING_GAMES, Boolean.toString(searchingCategoryProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_NO_CATEGORY_GAMES, Boolean.toString(noCategoryProperty.getValue()));
         return properties;
@@ -584,17 +584,20 @@ public class Configuration implements Cloneable {
         userPictureProperty.setValue(newPicture);
     }
 
-    public Boolean targetCategory(){
-        return  targetCategoryProperty.getValue();
+    public Boolean targetCategory() {
+        return targetCategoryProperty.getValue();
     }
-    public Boolean memorizationCategory(){
-        return  memorizationCategoryProperty.getValue();
+
+    public Boolean memorizationCategory() {
+        return memorizationCategoryProperty.getValue();
     }
-    public Boolean searchingCategory(){
-        return  searchingCategoryProperty.getValue();
+
+    public Boolean searchingCategory() {
+        return searchingCategoryProperty.getValue();
     }
-    public Boolean noCategory(){
-        return  noCategoryProperty.getValue();
+
+    public Boolean noCategory() {
+        return noCategoryProperty.getValue();
     }
 
 }
