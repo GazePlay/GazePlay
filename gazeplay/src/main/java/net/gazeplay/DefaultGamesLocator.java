@@ -27,6 +27,8 @@ import net.gazeplay.games.draw.DrawApplication;
 import net.gazeplay.games.drawonvideo.VideoPlayerWithLiveFeedbackApp;
 import net.gazeplay.games.labyrinth.Labyrinth;
 import net.gazeplay.games.labyrinth.LabyrinthStats;
+import net.gazeplay.games.literacy.Letters;
+import net.gazeplay.games.literacy.LettersGamesStats;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.math101.Math101;
@@ -267,6 +269,34 @@ public class DefaultGamesLocator implements GamesLocator {
                                     GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                                 return new Blocs(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), true, 1,
                                         false, stats);
+                            }
+                        }));
+
+        result.add(
+                new GameSpec(new GameSummary("Letters", DEFAULT_SEARCHING_GAME_THUMBNAIL, "data/Thumbnails/block.png"),
+                        new GameSpec.GameVariantGenerator() {
+                            @Override
+                            public Set<GameSpec.GameVariant> getVariants() {
+                                return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                        new GameSpec.DimensionGameVariant(2, 2),
+
+                                        new GameSpec.DimensionGameVariant(2, 3),
+
+                                        new GameSpec.DimensionGameVariant(3, 3)
+
+                        ));
+                            }
+                        }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new LettersGamesStats(scene);
+                            }
+
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                                return new Letters(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
                             }
                         }));
 

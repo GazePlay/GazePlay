@@ -42,6 +42,7 @@ import javafx.scene.input.KeyEvent;
 public class GameContext extends GraphicalContext<Pane> {
 
     public static boolean menuOpen = false;
+    public static String currentLanguage;
 
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
@@ -49,6 +50,8 @@ public class GameContext extends GraphicalContext<Pane> {
     private static final double BUTTON_MIN_HEIGHT = 64;
 
     public static GameContext newInstance(GazePlay gazePlay) {
+
+        currentLanguage = gazePlay.getTranslator().currentLanguage();
 
         Pane root = new Pane();
 
@@ -162,6 +165,8 @@ public class GameContext extends GraphicalContext<Pane> {
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
         GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
+
+        currentLanguage = gazePlay.getTranslator().currentLanguage();
 
         return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
                 randomPositionGenerator, gazeDeviceManager, root2);
