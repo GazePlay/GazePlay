@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.Data;
+import lombok.Getter;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
@@ -31,7 +32,8 @@ public class Letters implements GameLifeCycle {
     private final int initCount;
     private final Stats stats;
 
-    private final String currentLanguage;
+    @Getter
+    final String currentLanguage;
 
     private final ImageLibrary imageLibrary;
 

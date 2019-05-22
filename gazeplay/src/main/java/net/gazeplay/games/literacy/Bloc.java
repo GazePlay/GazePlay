@@ -15,8 +15,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 public class Bloc extends Parent {// Rectangle {
@@ -114,6 +116,8 @@ public class Bloc extends Parent {// Rectangle {
             gameInstance.removeBloc(this);
         }
 
+        playSound("" + this.gameInstance.currentLanguage, this.letterStr);
+
         currentTimeline.stop();
         currentTimeline = new Timeline();
 
@@ -151,6 +155,24 @@ public class Bloc extends Parent {// Rectangle {
         }
 
         currentTimeline.play();
+    }
+
+    private String createSoundPath(String currentLanguage, String currentLetter) {
+        return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/" + currentLanguage.toLowerCase() + "_"
+                + currentLetter.toUpperCase() + ".mp3";
+
+    }
+
+    private void playSound(String currentLanguage, String currentLetter) {
+        String path = "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/" + currentLanguage.toLowerCase()
+                + "_" + currentLetter.toUpperCase() + ".mp3";
+        try {
+            // log.debug("Letter sound path {}", path);
+            Utils.playSound(path);
+        } catch (Exception e) {
+            // log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
+
     }
 
     private void onWrongBlocSelected() {
