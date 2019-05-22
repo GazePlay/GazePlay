@@ -20,15 +20,15 @@ import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.Utils;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.LinkedList;
-
+import java.util.List;
 /**
  * Created by schwab on 16/08/2017.
  */
@@ -53,6 +53,7 @@ public class Stats implements GazeMotionListener {
     private int previousX = 0;
     private int previousY = 0;
     private int nbShots = 0;
+    long startTime;
     int sceneCounter = 0;
     @Getter
     protected int nbGoals = 0;
@@ -68,16 +69,13 @@ public class Stats implements GazeMotionListener {
     @Setter
     private long lastGazeTime;
     @Getter
-    private LinkedList<FixationPoint> fixationSequence;
+    private java.util.LinkedList<net.gazeplay.commons.utils.FixationPoint> fixationSequence;
     @Getter
     private SavedStatsInfo savedStatsInfo;
 
     private String directoryOfVideo;
 
     private String nameOfVideo;
-
-
-
 
     private Long currentRoundStartTime;
 
@@ -123,9 +121,6 @@ public class Stats implements GazeMotionListener {
             };
             VideoRecorder.addVideoRecorderEventListener(videoRecorderEventListener);
         }
-
-
-
         lifeCycle.start(() -> {
             System.out.println("Head map"+ config.isHeatMapDisabled());
             System.out.println("Fixation"+ config.isFixationSequenceDisabled());
@@ -133,7 +128,8 @@ public class Stats implements GazeMotionListener {
 
             if(!config.isHeatMapDisabled())
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
-            long startTime = System.currentTimeMillis();
+            startTime = System.currentTimeMillis();
+            fixationSequence = new LinkedList<FixationPoint>();
             recordGazeMovements = e ->
             {
                 int getX = (int) e.getX();
@@ -142,7 +138,6 @@ public class Stats implements GazeMotionListener {
                     incHeatMap(getX, getY);
                 if(!config.isFixationSequenceDisabled())
                 {
-                    fixationSequence = new LinkedList();
                     incFixationSequence(getX, getY);
                 }
                 if(config.isAreaOfInterestIsEnabled())
@@ -154,6 +149,7 @@ public class Stats implements GazeMotionListener {
                         previousY = getY;
                         long timeInterval = (timeElapsedMillis - previousTime);
                         movementHistory.add(new CoordinatesTracker(getX,getY,timeElapsedMillis,timeInterval));
+
                         previousTime = timeElapsedMillis;
                         counter++;
                         if(counter == 2)
@@ -169,7 +165,6 @@ public class Stats implements GazeMotionListener {
                     incHeatMap(getX, getY);
                 if(!config.isFixationSequenceDisabled())
                 {
-                    fixationSequence = new LinkedList();
                     incFixationSequence(getX, getY);
                 }
                 if(config.isAreaOfInterestIsEnabled())
@@ -191,8 +186,9 @@ public class Stats implements GazeMotionListener {
             };
             gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
             gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
-
         });
+        currentRoundStartTime = lifeCycle.getStartTime();
+
     }
 
     public List<CoordinatesTracker> getMovementHistoryWithTime()
@@ -272,6 +268,10 @@ public class Stats implements GazeMotionListener {
 
     public long computeRoundsDurationAverageDuration() {
         return roundsDurationReport.computeAverageLength();
+    }
+
+    public long getStartTime(){
+        return this.startTime;
     }
 
     public long computeRoundsDurationMedianDuration() {
@@ -423,7 +423,6 @@ public class Stats implements GazeMotionListener {
         gazeDuration = previousGaze - newGazePoint.getFirstGaze();
         newGazePoint.setGazeDuration(gazeDuration);
         fixationSequence.add(newGazePoint);
-
     }
 
     private void incHeatMap(int X, int Y) {

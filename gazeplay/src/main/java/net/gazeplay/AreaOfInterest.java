@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -16,24 +17,28 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.stats.AreaOfInterestProps;
 import net.gazeplay.commons.utils.stats.CoordinatesTracker;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.List;
-import java.util.Timer;
+import java.util.*;
 
 public class AreaOfInterest extends GraphicalContext<BorderPane>{
 
 
-    List<CoordinatesTracker> movementHistory;
-    Stats stats;
-    Label timeLabel;
-    Timeline clock;
-    MediaPlayer player;
+    private List<CoordinatesTracker> movementHistory;
+    private Label timeLabel;
+    private Timeline clock;
+    private MediaPlayer player;
+    private List<AreaOfInterestProps> allAOIList ;
+    private ArrayList<CoordinatesTracker> areaOfInterestList;
+    private Color colors[];
+
 
     @Override
     public ObservableList<Node> getChildren() {
@@ -62,29 +67,22 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
                             circle = new Circle(coordinatesTracker.getxValue(),coordinatesTracker.getyValue(),4);
                             circle.setStroke(Color.GREEN);
                         }
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                graphicsPane.getChildren().add(circle);
-                                new java.util.Timer().schedule(
-                                        new java.util.TimerTask() {
-                                            @Override
-                                            public void run() {
-                                                Platform.runLater(new Runnable() {
-                                                    @Override public void run() {
-                                                        graphicsPane.getChildren().remove(circle);
-                                                    }
-                                                });
-                                            }
-                                        },
-                                        2000
-                                );
-                                if(index != movementHistory.size()-1)
-                                {
-                                    plotMovement(index+1,graphicsPane);
-                                }else {
-                                    clock.stop();
-                                }
+                        Platform.runLater(() -> {
+                            graphicsPane.getChildren().add(circle);
+//                            new Timer().schedule(
+//                                    new java.util.TimerTask() {
+//                                        @Override
+//                                        public void run() {
+//                                            Platform.runLater(() -> graphicsPane.getChildren().remove(circle));
+//                                        }
+//                                    },
+//                                    2000
+//                            );
+                            if(index != movementHistory.size()-1)
+                            {
+                                plotMovement(index+1,graphicsPane);
+                            }else {
+                                clock.stop();
                             }
                         });
 
@@ -94,8 +92,107 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         );
     }
 
+    private void calculateAreaOfInterest( int index, long startTime)
+    {
+        if(index != 0)
+        {
+            double x1 = movementHistory.get(index).getxValue();
+            double y1 = movementHistory.get(index).getyValue();
+            double x2 = movementHistory.get(index-1).getxValue();
+            double y2 = movementHistory.get(index-1).getyValue();
+            double eDistance = Math.sqrt(Math.pow(x2 - x1,2) + Math.pow(y2-y1,2));
+            if(eDistance < 40 & movementHistory.get(index).getIntervalTime() > 10)
+            {
+
+                if(index == 1)
+                    areaOfInterestList.add(movementHistory.get(0));
+                areaOfInterestList.add(movementHistory.get(index));
+            }else  if(areaOfInterestList.size() != 0) {
+                if (areaOfInterestList.size() > 2) {
+                    System.out.println("End of AOE");
+                    long AreaStartTime = areaOfInterestList.get(0).getTimeValue();
+                    long AreaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
+                    long TTFF = AreaStartTime - startTime;
+                    long timeSpent = AreaEndTime - AreaStartTime;
+                    int centerX = 0;
+                    int centerY = 0;
+                    Point2D[] point2DS = new Point2D[areaOfInterestList.size()];
+                    for(int i = 0 ; i< areaOfInterestList.size() ; i++)
+                    {
+                        centerX += areaOfInterestList.get(i).getxValue();
+                        centerY += areaOfInterestList.get(i).getyValue();
+                        point2DS[i] = new Point2D(areaOfInterestList.get(i).getxValue(),areaOfInterestList.get(i).getyValue());
+                    }
+
+                    Double[] convexHullPoints = convexHull(point2DS,areaOfInterestList.size());
+
+                    centerX = centerX / areaOfInterestList.size();
+                    centerY = centerY / areaOfInterestList.size();
+                    AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(TTFF, timeSpent, areaOfInterestList, centerX, centerY,convexHullPoints);
+                    allAOIList.add(areaOfInterestProps);
+                    areaOfInterestList = new ArrayList<>();
+                }else{
+//                    areaOfInterestList = new ArrayList<>();
+
+                    System.out.println("Not enough points to make a convex hull" + areaOfInterestList.size());
+                }
+            }
+            System.out.println("The distance is "+eDistance  );
+        }
+        if(index != movementHistory.size()-1)
+            calculateAreaOfInterest(index+1,startTime);
+    }
+
+    private int orientation(Point2D p1, Point2D p2, Point2D p3)
+    {
+
+        int val = (int) ((p2.getY() - p1.getY()) * (p3.getX() - p2.getX()) -
+                        (p2.getX() - p1.getX()) * (p3.getY() - p2.getY()));
+
+        if (val == 0) return 0;
+
+        return (val > 0)? 1: 2;
+    }
+
+    private Double[] convexHull(Point2D[] points, int n)
+    {
+        ArrayList<Point2D> ConvexHullPoints = new ArrayList<>();
+        ArrayList<Double> convexHullPoints = new ArrayList<>();
+        Vector<Point2D> hull = new Vector<Point2D>();
+        int l = 0;
+        for (int i = 1; i < n; i++)
+            if (points[i].getX() < points[l].getX())
+                l = i;
+        int p = l, q;
+        do
+        {
+            hull.add(points[p]);
+            q = (p + 1) % n;
+            for (int i = 0; i < n; i++)
+            {
+                if (orientation(points[p], points[i], points[q])
+                        == 2)
+                    q = i;
+            }
+            p = q;
+        } while (p != l);
+        for (Point2D temp : hull)
+        {
+            convexHullPoints.add(temp.getX());
+            convexHullPoints.add(temp.getY());
+        }
+        Double[] pointsToReturn = new Double[convexHullPoints.size()];
+
+        for(int i = 0; i< convexHullPoints.size(); i++)
+        {
+            pointsToReturn[i] = convexHullPoints.get(i);
+        }
+        return pointsToReturn;
+    }
+
     private AreaOfInterest(GazePlay gazePlay,BorderPane root,Stats stats){
         super(gazePlay, root);
+        colors = new Color[]{Color.PURPLE, Color.WHITE, Color.PINK, Color.ORANGE, Color.BLUE};
         Configuration config = Configuration.getInstance();
         GridPane grid = new GridPane();
         StackPane stackPane = new StackPane();
@@ -103,7 +200,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         grid.setHgap(100);
         grid.setVgap(50);
         grid.setPadding(new Insets(50, 50, 50, 50));
-
+        allAOIList = new ArrayList<>();
         Multilinguism multilinguism = Multilinguism.getSingleton();
         Text screenTitleText = new Text(multilinguism.getTrad("AreaOfInterest", config.getLanguage()));
         screenTitleText.setId("title");
@@ -112,16 +209,42 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         VBox centerPane = new VBox();
         centerPane.setAlignment(Pos.CENTER);
         Pane graphicsPane = new Pane();
+        areaOfInterestList = new ArrayList<>();
         movementHistory = stats.getMovementHistoryWithTime();
+        calculateAreaOfInterest(0,stats.getStartTime());
+        System.out.println("The amount of AOIs is "+allAOIList.size());
+
+
+//        Circle circle;
+//        for(int i = 0; i < allAOIList.size() ; i++)
+//        {
+//            circle = new Circle(allAOIList.get(i).getCenterX(),allAOIList.get(i).getCenterY(),15);
+//            circle.setRadius(15);
+//            int times = i % 5;
+//            circle.setStroke(colors[times]);
+//            graphicsPane.getChildren().add(circle);
+//        }
+
+        for (int i= 0 ; i < allAOIList.size() ; i++)
+        {
+            Polygon polygon = new Polygon();
+            int times = i % 5;
+            polygon.setStroke(colors[times]);
+            Double[] convexHullPoints = allAOIList.get(i).getConvexPoints();
+            polygon.getPoints().addAll(convexHullPoints);
+            graphicsPane.getChildren().add(polygon);
+        }
+
+
+
+
         VBox pane = new VBox(1);
-
-//        System.out.println("Going to read "+stats.getDirectoryOfVideo());
-//        Media media = new Media(stats.getDirectoryOfVideo());
-
         timeLabel = new Label();
         timeLabel.setTextFill(Color.web("#FFFFFF"));
         Button playBtn = new Button("Play");
         playBtn.setAlignment(Pos.CENTER_RIGHT);
+
+
         playBtn.setOnAction(e -> {
             if(config.isVideoRecordingEnabled())
                 player.play();
