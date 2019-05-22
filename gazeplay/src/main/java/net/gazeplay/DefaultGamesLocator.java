@@ -1106,8 +1106,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(
-                new GameSummary("Dice", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/dice.png"),
+        result.add(new GameSpec(new GameSummary("Dice", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/dice.png"),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -1125,21 +1124,21 @@ public class DefaultGamesLocator implements GamesLocator {
 
                                 new GameSpec.IntGameVariant(6, "6 dice")
 
-                        ));
+                ));
                     }
                 }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new Stats(scene, "dice");
-            }
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "dice");
+                    }
 
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
-                                               Stats stats) {
-                return new Dice(gameContext, stats, gameVariant.getNumber());
-            }
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
+                        return new Dice(gameContext, stats, gameVariant.getNumber());
+                    }
 
-        }));
+                }));
 
         log.info("Games found : {}", result.size());
 

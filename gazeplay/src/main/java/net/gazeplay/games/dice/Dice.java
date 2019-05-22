@@ -23,7 +23,6 @@ import net.gazeplay.commons.utils.DiceRoll;
 import net.gazeplay.commons.utils.ProgressButton;
 import net.gazeplay.commons.utils.stats.Stats;
 
-
 @Slf4j
 public class Dice implements GameLifeCycle {
 
@@ -53,7 +52,7 @@ public class Dice implements GameLifeCycle {
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * nextImage.getFitHeight());
         rollButton.setImage(nextImage);
         rollButton.assignIndicator(event -> {
-            if(active) {
+            if (active) {
                 active = false;
                 totalText.setOpacity(0);
                 rolls = diceRoll.roll(action -> addUp());
@@ -62,23 +61,21 @@ public class Dice implements GameLifeCycle {
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
-        totalText = new Text(0, dimensions.getHeight()/5, "");
+        totalText = new Text(0, dimensions.getHeight() / 5, "");
         totalText.setTextAlignment(TextAlignment.CENTER);
         totalText.setFill(Color.WHITE);
-        totalText.setFont(new Font(dimensions.getHeight()/4));
+        totalText.setFont(new Font(dimensions.getHeight() / 4));
         totalText.setWrappingWidth(dimensions.getWidth());
     }
 
-    private void addUp(){
+    private void addUp() {
         int total = 0;
-        for(int roll : rolls){
+        for (int roll : rolls) {
             total += roll;
         }
-        totalText.setText(""+total);
+        totalText.setText("" + total);
         Timeline showTotal = new Timeline(
-                new KeyFrame(Duration.seconds(2),
-                        new KeyValue(totalText.opacityProperty(), 1))
-        );
+                new KeyFrame(Duration.seconds(2), new KeyValue(totalText.opacityProperty(), 1)));
         showTotal.play();
         showTotal.setOnFinished(e -> active = true);
     }
