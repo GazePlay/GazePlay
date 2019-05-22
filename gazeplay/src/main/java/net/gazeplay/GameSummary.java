@@ -21,9 +21,6 @@ public class GameSummary {
     @Getter
     private final String description;
 
-    public GameSummary(String nameCode, String gameThumbnail) {
-        this(nameCode,gameThumbnail, GameCategories.Category.NONCATEGORIZED);
-    }
 
     public GameSummary(String nameCode,String gameThumbnail,  GameCategories.Category category) {
         this(nameCode,gameThumbnail, category, null);

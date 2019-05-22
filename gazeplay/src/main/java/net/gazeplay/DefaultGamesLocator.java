@@ -869,7 +869,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Room","data/Thumbnails/home.png"),
+        result.add(new GameSpec(new GameSummary("Room","data/Thumbnails/home.png", GameCategories.Category.SEARCHING),
                 new GameSpec.GameLauncher() {
 
                     @Override
