@@ -77,7 +77,7 @@ public class Dice implements GameLifeCycle {
         Timeline showTotal = new Timeline(
                 new KeyFrame(Duration.seconds(2), new KeyValue(totalText.opacityProperty(), 1)));
         showTotal.play();
-        showTotal.setOnFinished(e -> active = true);
+        active = true;
     }
 
     @Override

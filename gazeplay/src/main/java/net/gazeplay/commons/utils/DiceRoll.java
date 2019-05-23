@@ -7,14 +7,11 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.RotateEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
@@ -22,7 +19,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -30,16 +26,11 @@ import java.util.Random;
 @Slf4j
 public class DiceRoll extends GridPane {
 
-    private static final int NBFACES = 6;
-    private GameContext gc;
-    private int nbDice;
-    Random random;
-    HashMap<MeshView, ArrayList<Rotate>> rotations;
+    private Random random;
+    private HashMap<MeshView, ArrayList<Rotate>> rotations;
 
     public DiceRoll(GameContext gc, int nbDice) {
         super();
-        this.gc = gc;
-        this.nbDice = nbDice;
         random = new Random();
         rotations = new HashMap<>();
 
@@ -56,14 +47,14 @@ public class DiceRoll extends GridPane {
 
         for (int i = 0; i < nbDice; i++) {
             TriangleMesh mesh = new TriangleMesh();
-            float points[] = { -dieWidth, dieWidth, -dieWidth, dieWidth, dieWidth, -dieWidth, dieWidth, -dieWidth,
+            float[] points = {-dieWidth, dieWidth, -dieWidth, dieWidth, dieWidth, -dieWidth, dieWidth, -dieWidth,
                     -dieWidth, -dieWidth, -dieWidth, -dieWidth, -dieWidth, dieWidth, dieWidth, dieWidth, dieWidth,
-                    dieWidth, dieWidth, -dieWidth, dieWidth, -dieWidth, -dieWidth, dieWidth };
+                    dieWidth, dieWidth, -dieWidth, dieWidth, -dieWidth, -dieWidth, dieWidth};
             mesh.getPoints().addAll(points);
-            float texCoords[] = { 0.333f, 0, 0.666f, 0, 0, 0.333f, 0.333f, 0.333f, 0.666f, 0.333f, 1, 0.333f, 0, 0.666f,
-                    0.333f, 0.666f, 0.666f, 0.666f, 1, 0.666f, 0.333f, 1, 0.666f, 1, 1, 1 };
+            float[] texCoords = {0.333f, 0, 0.666f, 0, 0, 0.333f, 0.333f, 0.333f, 0.666f, 0.333f, 1, 0.333f, 0, 0.666f,
+                    0.333f, 0.666f, 0.666f, 0.666f, 1, 0.666f, 0.333f, 1, 0.666f, 1, 1, 1};
             mesh.getTexCoords().addAll(texCoords);
-            int faces[] = {
+            int[] faces = {
                     // front
                     0, 3, 1, 4, 2, 8, 0, 3, 2, 8, 3, 7,
                     // right
