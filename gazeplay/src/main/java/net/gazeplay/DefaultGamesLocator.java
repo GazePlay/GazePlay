@@ -212,7 +212,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Ninja(gameContext, stats);
                     }
                 }));
-        result.add(new GameSpec(new GameSummary("SlidingPuzzle", "data/Thumbnails/slidingpuzzle.png",
+        result.add(new GameSpec(new GameSummary("Sliding Puzzle", "data/Thumbnails/slidingpuzzle.png",
                 GameCategories.Category.SEARCHING), new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
