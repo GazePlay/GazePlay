@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.Parent;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -21,9 +22,11 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.Random;
+
 public class Bloc extends Parent {// Rectangle {
 
-    private static final float zoom_factor = 1.05f;
+    private static final float zoom_factor = 1.0f;
     private final double fixationlength;
 
     private final String letterStr;
@@ -42,6 +45,8 @@ public class Bloc extends Parent {// Rectangle {
     final StackPane stack;
 
     private final Letters gameInstance;
+
+    private final ProgressIndicator progressIndicator;
 
     private Timeline timelineProgressBar;
 
@@ -83,6 +88,9 @@ public class Bloc extends Parent {// Rectangle {
 
         this.getChildren().add(stack);
 
+        this.progressIndicator = createProgressIndicator((width), (height));
+        this.getChildren().add(this.progressIndicator);
+
         this.enterEvent = buildEvent();
 
         gameContext.getGazeDeviceManager().addEventFilter(bloc);
@@ -94,16 +102,26 @@ public class Bloc extends Parent {// Rectangle {
 
     }
 
+    private ProgressIndicator createProgressIndicator(double width, double height) {
+        ProgressIndicator indicator = new ProgressIndicator(0);
+        indicator.setTranslateX(bloc.getX() + width * 0.25);
+        indicator.setTranslateY(bloc.getY() + height * 0.2);
+        indicator.setMinWidth(width * 0.5);
+        indicator.setMinHeight(width * 0.5);
+        indicator.setOpacity(0);
+        return indicator;
+    }
+
     private void onCorrectBlocSelected() {
-        System.out.println("WAFAAAA onCorrectBlocSelected");
+        // System.out.println("WAFAAAA onCorrectBlocSelected");
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         stats.incNbGoals();
 
-        double final_zoom = 1.15;
+        double final_zoom = 1.0;
 
-        // progressIndicator.setOpacity(0);
+        progressIndicator.setOpacity(0);
         letter.setOpacity(0);
         // NEED TO PLAY AUDIO SOMEWHERE HERE!
 
@@ -116,7 +134,9 @@ public class Bloc extends Parent {// Rectangle {
             gameInstance.removeBloc(this);
         }
 
-        playSound("" + this.gameInstance.currentLanguage, this.letterStr);
+        // playSound(createQuestionSoundPath(this.gameInstance.currentLanguage,"question"));
+
+        playSound(createLetterSoundPath("" + this.gameInstance.currentLanguage, this.letterStr));
 
         currentTimeline.stop();
         currentTimeline = new Timeline();
@@ -157,15 +177,26 @@ public class Bloc extends Parent {// Rectangle {
         currentTimeline.play();
     }
 
-    private String createSoundPath(String currentLanguage, String currentLetter) {
-        return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/" + currentLanguage.toLowerCase() + "_"
-                + currentLetter.toUpperCase() + ".mp3";
+    private String createLetterSoundPath(String currentLanguage, String currentLetter) {
+        Random r = new Random();
+        if (r.nextBoolean()) {
+            return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/letter/" + currentLetter.toUpperCase()
+                    + ".mp3";
+        }
+
+        return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/m/letter/" + currentLetter.toUpperCase()
+                + ".mp3";
 
     }
 
-    private void playSound(String currentLanguage, String currentLetter) {
-        String path = "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/" + currentLanguage.toLowerCase()
-                + "_" + currentLetter.toUpperCase() + ".mp3";
+    private String createQuestionSoundPath(String currentLanguage, String currentQuestion) {
+        return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/" + currentQuestion.toLowerCase() + ".mp3";
+
+    }
+
+    private void playSound(String path) {
+        // String path = "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/" + currentLanguage.toLowerCase()
+        // + "_" + currentLetter.toUpperCase() + ".mp3";
         try {
             // log.debug("Letter sound path {}", path);
             Utils.playSound(path);
@@ -183,6 +214,7 @@ public class Bloc extends Parent {// Rectangle {
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(bloc.opacityProperty(), 0.9)));
 
         currentTimeline.play();
+        progressIndicator.setOpacity(0);
 
     }
 
@@ -194,8 +226,8 @@ public class Bloc extends Parent {// Rectangle {
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    // progressIndicator.setOpacity(1);
-                    // progressIndicator.setProgress(0);
+                    progressIndicator.setOpacity(1);
+                    progressIndicator.setProgress(0);
 
                     currentTimeline.stop();
                     currentTimeline = new Timeline();
@@ -211,8 +243,8 @@ public class Bloc extends Parent {// Rectangle {
 
                     timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames()
-                            .add(new KeyFrame(new Duration(fixationlength), new KeyValue(bloc.widthProperty(), width)));
+                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                            new KeyValue(progressIndicator.progressProperty(), 1)));
 
                     currentTimeline.play();
 
@@ -263,8 +295,8 @@ public class Bloc extends Parent {// Rectangle {
 
                     timelineProgressBar.stop();
 
-                    // progressIndicator.setOpacity(0);
-                    // progressIndicator.setProgress(0);
+                    progressIndicator.setOpacity(0);
+                    progressIndicator.setProgress(0);
                 }
             }
         };
