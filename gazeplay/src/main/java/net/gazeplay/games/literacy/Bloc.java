@@ -189,10 +189,7 @@ public class Bloc extends Parent {// Rectangle {
 
     }
 
-    private String createQuestionSoundPath(String currentLanguage, String currentQuestion) {
-        return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/" + currentQuestion.toLowerCase() + ".mp3";
 
-    }
 
     private void playSound(String path) {
         // String path = "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/" + currentLanguage.toLowerCase()

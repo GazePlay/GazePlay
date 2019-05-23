@@ -8,6 +8,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import lombok.Data;
 import lombok.Getter;
 import net.gazeplay.GameContext;
@@ -96,22 +98,40 @@ public class Letters implements GameLifeCycle {
     @Override
     public void launch() {
 
+
         final Configuration config = Configuration.getInstance();
 
         this.currentRoundDetails = new CurrentRoundDetails(nbLines, nbColomns);
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        setHiddenPicture(gameContext);
-
-        double width = dimension2D.getWidth() / nbColomns;
-        double height = dimension2D.getHeight() / nbLines;
-
         Random r = new Random();
         String alphabet[] = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r",
                 "s", "t", "u", "v", "w", "x", "y", "z" };
 
         final String mainLetter = alphabet[(r.nextInt(alphabet.length))];
+
+        Text questionText;
+        if(currentLanguage.equals("fra")){
+            questionText = new Text("Choisissez la lettre: "+mainLetter.toUpperCase());
+        }else{
+            questionText = new Text("Choose the Lettre: "+mainLetter.toUpperCase());
+        }
+
+
+        double positionX = dimension2D.getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
+        double positionY = dimension2D.getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
+        questionText.setX(positionX);
+        questionText.setY(positionY);
+        questionText.setTextAlignment(TextAlignment.CENTER);
+
+
+        setHiddenPicture(gameContext);
+
+        double width = dimension2D.getWidth() / nbColomns;
+        double height = dimension2D.getHeight() / nbLines;
+
+
 
         Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
         this.currentRoundDetails.remainingCount = correctCount;
@@ -221,6 +241,15 @@ public class Letters implements GameLifeCycle {
         toRemove.setTranslateX(-10000);
         toRemove.setOpacity(0);
         // currentRoundDetails.remainingCount--;
+    }
+
+    private String createQuestionSoundPath(String currentLanguage, String currentLetter) {
+        Random r = new Random();
+        if (r.nextBoolean()) {
+
+            return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/quest/" + currentLetter.toUpperCase()+ ".mp3";
+        }
+        return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/m/quest/" + currentLetter.toUpperCase()+ ".mp3";
     }
 
 }
