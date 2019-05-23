@@ -26,8 +26,10 @@ import net.gazeplay.commons.utils.stats.AreaOfInterestProps;
 import net.gazeplay.commons.utils.stats.ConvexHullProps;
 import net.gazeplay.commons.utils.stats.CoordinatesTracker;
 import net.gazeplay.commons.utils.stats.Stats;
+import org.apache.commons.lang.ArrayUtils;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class AreaOfInterest extends GraphicalContext<BorderPane>{
 
@@ -126,11 +128,11 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
                         centerY += areaOfInterestList.get(i).getyValue();
                         point2DS[i] = new Point2D(areaOfInterestList.get(i).getxValue(),areaOfInterestList.get(i).getyValue());
                     }
-                    Double[] convexHullPoints = convexHull(point2DS,areaOfInterestList.size());
-
+                    // can do this later after combination of convex hulls;
+                    Double[] convexHullPoints = calculateConvexHull(point2DS,areaOfInterestList.size());
                     centerX = centerX / areaOfInterestList.size();
                     centerY = centerY / areaOfInterestList.size();
-                    AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(TTFF, timeSpent, areaOfInterestList, centerX, centerY,convexHullPoints);
+                    AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(TTFF, timeSpent, areaOfInterestList, centerX, centerY,convexHullPoints,point2DS);
                     allAOIList.add(areaOfInterestProps);
                 }else{
                     System.out.println("Not enough points to make a convex hull" + areaOfInterestList.size());
@@ -142,9 +144,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         }
         if(index != movementHistory.size()-1)
             calculateAreaOfInterest(index+1,startTime);
-    }
-    private double calculateEuclidianD(double x1, double y1, double x2 , double y2){
-        return Math.sqrt(Math.pow(x2 - x1,2) + Math.pow(y2-y1,2));
     }
 
     private int orientation(Point2D p1, Point2D p2, Point2D p3)
@@ -158,9 +157,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         return (val > 0)? 1: 2;
     }
 
-    private Double[] convexHull(Point2D[] points, int n)
+    private Double[] calculateConvexHull(Point2D[] points, int n)
     {
-        ArrayList<Point2D> ConvexHullPoints = new ArrayList<>();
         ArrayList<Double> convexHullPoints = new ArrayList<>();
         Vector<Point2D> hull = new Vector<Point2D>();
         int l = 0;
@@ -208,7 +206,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         Multilinguism multilinguism = Multilinguism.getSingleton();
         Text screenTitleText = new Text(multilinguism.getTrad("AreaOfInterest", config.getLanguage()));
         screenTitleText.setId("title");
-        StackPane topPane = new StackPane();
+        HBox topPane = new HBox();
         topPane.getChildren().add(screenTitleText);
         VBox centerPane = new VBox();
         centerPane.setAlignment(Pos.CENTER);
@@ -222,6 +220,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
 //        Circle circle;
 //        for(int i = 0; i < allAOIList.size() ; i++)
 //        {
+        //center of AOI
 //            circle = new Circle(allAOIList.get(i).getCenterX(),allAOIList.get(i).getCenterY(),15);
 //            circle.setRadius(15);
 //            int times = i % 5;
@@ -229,6 +228,45 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
 //            graphicsPane.getChildren().add(circle);
 //        }
 
+        ArrayList<Double[]> combinedPointsList;
+        ArrayList<Point2D[]> listOfPoints;
+        for (int i= 0 ; i < allAOIList.size() ; i++)
+        {
+            listOfPoints = new ArrayList<>();
+            listOfPoints.add(allAOIList.get(i).getAllPoint2DOfConvex());
+            for(int j=0; j< allAOIList.size() ; j++)
+            {
+                if (i!=j){
+                    double euclideanDistance = Math.sqrt(Math.pow(allAOIList.get(i).getCenterX() - allAOIList.get(j).getCenterX(),2) + Math.pow(allAOIList.get(i).getCenterY()-allAOIList.get(j).getCenterY(),2));
+                    if(euclideanDistance < 160)
+                        listOfPoints.add(allAOIList.get(j).getAllPoint2DOfConvex());
+                    System.out.println("The distance of convex " + i + " to "+ j + " is: "+euclideanDistance);
+
+                }
+            }
+            System.out.println("The size of the combined convex hull is "+ listOfPoints.size());
+        }
+
+        //calculating and concat AOI
+//            for(int i = 0 ; i< listOfPolygons.size() ; i++)
+//        {
+//            combinedPointsList = new ArrayList<>();
+//            combinedPointsList.add(listOfPolygons.get(i).getConvextPoint());
+//            for(int j = 0 ; j< listOfPolygons.size() ; j++)
+//            {
+//                if (i!=j)
+//                {
+//                    double euclideanDistance = Math.sqrt(Math.pow(listOfPolygons.get(i).getCenterX() - listOfPolygons.get(j).getCenterX(),2) + Math.pow(listOfPolygons.get(i).getCenterY()-listOfPolygons.get(j).getCenterY(),2));
+//                    if(euclideanDistance < 160)
+//                        combinedPointsList.add(listOfPolygons.get(j).getConvextPoint());
+//                    System.out.println("The distance of convex " + i + " to "+ j + " is: "+euclideanDistance);
+//                }
+//            }
+//            Double[] combinedPoints = combinedPointsList.stream().flatMap(Arrays::stream).toArray(Double[]::new);
+//
+//        }
+
+        //drawing all AOI
         listOfPolygons = new ArrayList<ConvexHullProps>();
         for (int i= 0 ; i < allAOIList.size() ; i++)
         {
@@ -239,19 +277,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
             Double[] convexHullPoints = allAOIList.get(i).getConvexPoints();
             polygon.getPoints().addAll(convexHullPoints);
             graphicsPane.getChildren().add(polygon);
-            listOfPolygons.add(new ConvexHullProps(allAOIList.get(i).getCenterX(),allAOIList.get(i).getCenterY(),polygon));
+            listOfPolygons.add(new ConvexHullProps(allAOIList.get(i).getCenterX(),allAOIList.get(i).getCenterY(),polygon,allAOIList.get(i).getConvexPoints()));
         }
-        for(int i = 0 ; i< listOfPolygons.size() ; i++)
-        {
-            for(int j = 0 ; j< listOfPolygons.size() ; j++)
-            {
-                if (i!=j)
-                {
-                    double euclideanDistance = Math.sqrt(Math.pow(listOfPolygons.get(i).getCenterX() - listOfPolygons.get(j).getCenterX(),2) + Math.pow(listOfPolygons.get(i).getCenterY()-listOfPolygons.get(j).getCenterY(),2));
-                    System.out.println("The distance of convex " + i + " to "+ j + " is: "+euclideanDistance);
-                }
-            }
-        }
+
+
 
 
 
@@ -284,7 +313,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
             stackPane.getChildren().add(mediaView);
         }
         stackPane.getChildren().add(graphicsPane);
-
         playBtn.setStyle("-fx-alignment: baseline-right;");
         topPane.getChildren().add(playBtn);
         topPane.getChildren().add(timeLabel);

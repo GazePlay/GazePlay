@@ -13,9 +13,10 @@ public class AreaOfInterestProps {
     private final int centerX;
     private final int centerY;
     private final Double[] convexPoints;
+    private final Point2D[] allPoint2DOfConvex;
 
 
-    public AreaOfInterestProps(long TTFF, long timeSpent, ArrayList listOfPoints, int centerX , int centerY, Double[] convexPoints)
+    public AreaOfInterestProps(long TTFF, long timeSpent, ArrayList listOfPoints, int centerX , int centerY, Double[] convexPoints, Point2D[] allPoint2DOfConvex)
     {
         this.TTFF = TTFF;
         this.listOfPoints = listOfPoints;
@@ -24,6 +25,7 @@ public class AreaOfInterestProps {
         this.centerX = centerX;
         this.centerY = centerY;
         this.convexPoints = convexPoints;
+        this.allPoint2DOfConvex = allPoint2DOfConvex;
     }
     public Double[] getConvexPoints(){
         return this.convexPoints;
@@ -43,5 +45,6 @@ public class AreaOfInterestProps {
     public long getTTFF(){
         return this.TTFF;
     }
+    public Point2D[] getAllPoint2DOfConvex(){return this.allPoint2DOfConvex;}
 
 }
