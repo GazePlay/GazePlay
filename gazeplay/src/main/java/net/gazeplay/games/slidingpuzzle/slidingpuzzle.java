@@ -243,7 +243,7 @@ public class slidingpuzzle implements GameLifeCycle {
 
         double tempX = 0;
         double tempY = 0;
-        List<slidingpuzzlecard> cardsToHide = new ArrayList<>();
+        // List<slidingpuzzlecard> cardsToHide = new ArrayList<>();
         for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
             log.info("**** Card id = " + pictureCard.getCardId());
             if (pictureCard.getCardId() == 9) {
