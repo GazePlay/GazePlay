@@ -212,9 +212,8 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Ninja(gameContext, stats);
                     }
                 }));
-        result.add(new GameSpec(
-                new GameSummary("SlidingPuzzle", "data/Thumbnails/slidingpuzzle.png", GameCategories.Category.SEARCHING),
-                new GameSpec.GameLauncher() {
+        result.add(new GameSpec(new GameSummary("SlidingPuzzle", "data/Thumbnails/slidingpuzzle.png",
+                GameCategories.Category.SEARCHING), new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new slidingpuzzlestats(scene);
@@ -286,7 +285,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         }));
 
         result.add(
-                new GameSpec(new GameSummary("Letters", "data/Thumbnails/block.png",GameCategories.Category.SEARCHING),
+                new GameSpec(new GameSummary("Letters", "data/Thumbnails/block.png", GameCategories.Category.SEARCHING),
                         new GameSpec.GameVariantGenerator() {
                             @Override
                             public Set<GameSpec.GameVariant> getVariants() {
@@ -1138,7 +1137,6 @@ public class DefaultGamesLocator implements GamesLocator {
         result.add(new GameSpec(new GameSummary("Spot The Difference", "data/Thumbnails/spotthedifference.png",
                 GameCategories.Category.TARGET), new GameSpec.GameLauncher() {
 
-
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new Stats(scene, "spotthedifferences");
@@ -1151,7 +1149,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Dice", "data/Thumbnails/dice.png",GameCategories.Category.TARGET),
+        result.add(new GameSpec(new GameSummary("Dice", "data/Thumbnails/dice.png", GameCategories.Category.TARGET),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
