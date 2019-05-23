@@ -46,7 +46,7 @@ public class Dice implements GameLifeCycle {
 
         Configuration config = Configuration.getInstance();
 
-        //Roll button is used to roll all the dice at once
+        // Roll button is used to roll all the dice at once
         rollButton = new ProgressButton();
         ImageView nextImage = new ImageView("data/dice/roll.png");
         nextImage.setFitHeight(dimensions.getHeight() / 6);
@@ -58,8 +58,8 @@ public class Dice implements GameLifeCycle {
             if (active) {
                 active = false;
                 totalText.setOpacity(0);
-                for(int i = 0; i < diceRollers.size(); i++){
-                    rolls[i] = diceRollers.get(i).roll(i == 0 ? action -> addUp():null);
+                for (int i = 0; i < diceRollers.size(); i++) {
+                    rolls[i] = diceRollers.get(i).roll(i == 0 ? action -> addUp() : null);
                 }
             }
         }, config.getFixationLength());
@@ -82,14 +82,14 @@ public class Dice implements GameLifeCycle {
         if (dieWidth > dimensions.getHeight() / 4) {
             dieWidth = (float) (dimensions.getHeight() / 4);
         }
-        for(int i = 0; i < nbDice; i++){
+        for (int i = 0; i < nbDice; i++) {
             DiceRoller dr = new DiceRoller(dieWidth);
             diceRollers.add(dr);
 
-            //init rolls to 1s
+            // init rolls to 1s
             rolls[i] = 1;
 
-            //DiceRoller in a ProgressPane, so the dice can be rolled individually when gazed at
+            // DiceRoller in a ProgressPane, so the dice can be rolled individually when gazed at
             ProgressPane pp = new ProgressPane();
             pp.button.setCenter(dr);
             gridpane.add(pp, i, 0);
@@ -102,7 +102,7 @@ public class Dice implements GameLifeCycle {
 
     private void addUp() {
         int total = 0;
-        for(int i = 0; i < rolls.length; i++) {
+        for (int i = 0; i < rolls.length; i++) {
             total += rolls[i];
         }
         totalText.setText("" + total);

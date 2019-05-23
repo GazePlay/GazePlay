@@ -34,12 +34,12 @@ public class DiceRoller extends MeshView {
         rotations = new ArrayList<>();
 
         TriangleMesh mesh = new TriangleMesh();
-        float[] points = {-dieWidth, dieWidth, -dieWidth, dieWidth, dieWidth, -dieWidth, dieWidth, -dieWidth,
-                -dieWidth, -dieWidth, -dieWidth, -dieWidth, -dieWidth, dieWidth, dieWidth, dieWidth, dieWidth,
-                dieWidth, dieWidth, -dieWidth, dieWidth, -dieWidth, -dieWidth, dieWidth};
+        float[] points = { -dieWidth, dieWidth, -dieWidth, dieWidth, dieWidth, -dieWidth, dieWidth, -dieWidth,
+                -dieWidth, -dieWidth, -dieWidth, -dieWidth, -dieWidth, dieWidth, dieWidth, dieWidth, dieWidth, dieWidth,
+                dieWidth, -dieWidth, dieWidth, -dieWidth, -dieWidth, dieWidth };
         mesh.getPoints().addAll(points);
-        float[] texCoords = {0.333f, 0, 0.666f, 0, 0, 0.333f, 0.333f, 0.333f, 0.666f, 0.333f, 1, 0.333f, 0, 0.666f,
-                0.333f, 0.666f, 0.666f, 0.666f, 1, 0.666f, 0.333f, 1, 0.666f, 1, 1, 1};
+        float[] texCoords = { 0.333f, 0, 0.666f, 0, 0, 0.333f, 0.333f, 0.333f, 0.666f, 0.333f, 1, 0.333f, 0, 0.666f,
+                0.333f, 0.666f, 0.666f, 0.666f, 1, 0.666f, 0.333f, 1, 0.666f, 1, 1, 1 };
         mesh.getTexCoords().addAll(texCoords);
         int[] faces = {
                 // front
@@ -95,7 +95,7 @@ public class DiceRoller extends MeshView {
             squareUpTimeline.play();
         });
 
-        if(onFinishedEventHandler != null) {
+        if (onFinishedEventHandler != null) {
             squareUpTimeline.setOnFinished(onFinishedEventHandler);
         }
 
