@@ -21,6 +21,7 @@ import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
 import net.gazeplay.games.cups.CupsAndBalls;
 import net.gazeplay.games.cups.utils.CupsAndBallsStats;
+import net.gazeplay.games.dice.Dice;
 import net.gazeplay.games.divisor.Divisor;
 import net.gazeplay.games.divisor.DivisorStats;
 import net.gazeplay.games.draw.DrawApplication;
@@ -1091,11 +1092,11 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        result.add(new GameSpec(new GameSummary("Spot The Difference", DEFAULT_AIMING_GAME_THUMBNAIL,
+        result.add(new GameSpec(new GameSummary("Spot the differences", DEFAULT_AIMING_GAME_THUMBNAIL,
                 "data/Thumbnails/spotthedifference.png"), new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "spotthedifference");
+                        return new Stats(scene, "spotthedifferences");
                     }
 
                     @Override
@@ -1103,6 +1104,40 @@ public class DefaultGamesLocator implements GamesLocator {
                             Stats stats) {
                         return new SpotTheDifferences(gameContext, stats);
                     }
+                }));
+
+        result.add(new GameSpec(new GameSummary("Dice", DEFAULT_AIMING_GAME_THUMBNAIL, "data/Thumbnails/dice.png"),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.IntGameVariant(1, "1 die"),
+
+                                new GameSpec.IntGameVariant(2, "2 dice"),
+
+                                new GameSpec.IntGameVariant(3, "3 dice"),
+
+                                new GameSpec.IntGameVariant(4, "4 dice"),
+
+                                new GameSpec.IntGameVariant(5, "5 dice"),
+
+                                new GameSpec.IntGameVariant(6, "6 dice")
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "dice");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
+                        return new Dice(gameContext, stats, gameVariant.getNumber());
+                    }
+
                 }));
 
         log.info("Games found : {}", result.size());

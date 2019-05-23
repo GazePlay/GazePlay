@@ -1,72 +1,116 @@
-[{
-  "image1" : "img1.png",
-  "image2" : "img2.png",
-  "differences" : [{
-      "x" : 1353,
-      "y" : 588,
-      "radius" : 70
-    },{
-      "x" : 2900,
-      "y" : 740,
-      "radius" : 70
-    },{
-    "x" : 2190,
-    "y" : 400,
-    "radius" : 100
-    },{
-    "x" : 175,
-    "y" : 530,
-    "radius" : 70
-    }
-  ]
-},{
-  "image1" : "house1.png",
-  "image2" : "house2.png",
-  "differences" : [{
-    "x" : 400,
-    "y" : 275,
-    "radius" : 70
-  },{
-    "x" : 1165,
-    "y" : 175,
-    "radius" : 70
-  },{
-    "x" : 1500,
-    "y" : 480,
-    "radius" : 100
-  },{
-    "x" : 560,
-    "y" : 980,
-    "radius" : 70
+[
+  {
+    "image1": "img1.png",
+    "image2": "img2.png",
+    "differences": [
+      {
+        "x": 1353,
+        "y": 588,
+        "radius": 70
+      },
+      {
+        "x": 2900,
+        "y": 740,
+        "radius": 70
+      },
+      {
+        "x": 2190,
+        "y": 400,
+        "radius": 100
+      },
+      {
+        "x": 175,
+        "y": 530,
+        "radius": 70
+      }
+    ]
+  },
+  {
+    "image1": "house1.png",
+    "image2": "house2.png",
+    "differences": [
+      {
+        "x": 400,
+        "y": 275,
+        "radius": 70
+      },
+      {
+        "x": 1165,
+        "y": 175,
+        "radius": 70
+      },
+      {
+        "x": 1500,
+        "y": 480,
+        "radius": 100
+      },
+      {
+        "x": 560,
+        "y": 980,
+        "radius": 70
+      }
+    ]
+  },
+  {
+    "image1": "camp1.png",
+    "image2": "camp2.png",
+    "differences": [
+      {
+        "x": 140,
+        "y": 290,
+        "radius": 70
+      },
+      {
+        "x": 980,
+        "y": 165,
+        "radius": 70
+      },
+      {
+        "x": 790,
+        "y": 510,
+        "radius": 90
+      },
+      {
+        "x": 225,
+        "y": 1090,
+        "radius": 200
+      },
+      {
+        "x": 1025,
+        "y": 1250,
+        "radius": 70
+      },
+      {
+        "x": 1180,
+        "y": 990,
+        "radius": 200
+      }
+    ]
+  },
+  {
+    "image1": "sea1.png",
+    "image2": "sea2.png",
+    "differences": [
+      {
+        "x": 355,
+        "y": 190,
+        "radius": 70
+      },
+      {
+        "x": 1420,
+        "y": 375,
+        "radius": 70
+      },
+      {
+        "x": 230,
+        "y": 615,
+        "radius": 70
+      },
+      {
+        "x": 1500,
+        "y": 1450,
+        "radius": 100
+      }
+    ]
   }
-  ]
-},{
-  "image1" : "camp1.png",
-  "image2" : "camp2.png",
-  "differences" : [{
-    "x" : 140,
-    "y" : 290,
-    "radius" : 70
-  },{
-    "x" : 980,
-    "y" : 165,
-    "radius" : 70
-  },{
-    "x" : 790,
-    "y" : 510,
-    "radius" : 90
-  },{
-    "x" : 225,
-    "y" : 1090,
-    "radius" : 200
-  },{
-    "x" : 1025,
-    "y" : 1250,
-    "radius" : 70
-  },{
-    "x" : 1180,
-    "y" : 990,
-    "radius" : 200
-  }
-  ]
-}]
+]
