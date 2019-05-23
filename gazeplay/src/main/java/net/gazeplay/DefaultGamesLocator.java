@@ -22,12 +22,15 @@ import net.gazeplay.games.creampie.CreamPie;
 import net.gazeplay.games.creampie.CreampieStats;
 import net.gazeplay.games.cups.CupsAndBalls;
 import net.gazeplay.games.cups.utils.CupsAndBallsStats;
+import net.gazeplay.games.dice.Dice;
 import net.gazeplay.games.divisor.Divisor;
 import net.gazeplay.games.divisor.DivisorStats;
 import net.gazeplay.games.draw.DrawApplication;
 import net.gazeplay.games.drawonvideo.VideoPlayerWithLiveFeedbackApp;
 import net.gazeplay.games.labyrinth.Labyrinth;
 import net.gazeplay.games.labyrinth.LabyrinthStats;
+import net.gazeplay.games.literacy.Letters;
+import net.gazeplay.games.literacy.LettersGamesStats;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.math101.Math101;
@@ -60,6 +63,8 @@ import org.apache.commons.lang.ObjectUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import net.gazeplay.games.slidingpuzzle.slidingpuzzle;
+import net.gazeplay.games.slidingpuzzle.slidingpuzzlestats;
 
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
@@ -207,7 +212,20 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new Ninja(gameContext, stats);
                     }
                 }));
+        result.add(new GameSpec(
+                new GameSummary("SlidingPuzzle", "data/Thumbnails/slidingpuzzle.png", GameCategories.Category.SEARCHING),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new slidingpuzzlestats(scene);
+                    }
 
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new slidingpuzzle(stats, gameContext, 3, 3);
+                    }
+                }));
         result.add(new GameSpec(
                 new GameSummary("MagicCards", "data/Thumbnails/magicCard.png", GameCategories.Category.SEARCHING),
                 new GameSpec.GameVariantGenerator() {
@@ -264,6 +282,34 @@ public class DefaultGamesLocator implements GamesLocator {
                                     GameSpec.DimensionGameVariant gameVariant, Stats stats) {
                                 return new Blocs(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), true, 1,
                                         false, stats);
+                            }
+                        }));
+
+        result.add(
+                new GameSpec(new GameSummary("Letters", "data/Thumbnails/block.png",GameCategories.Category.SEARCHING),
+                        new GameSpec.GameVariantGenerator() {
+                            @Override
+                            public Set<GameSpec.GameVariant> getVariants() {
+                                return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                        new GameSpec.DimensionGameVariant(2, 2),
+
+                                        new GameSpec.DimensionGameVariant(2, 3),
+
+                                        new GameSpec.DimensionGameVariant(3, 3)
+
+                        ));
+                            }
+                        }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new LettersGamesStats(scene);
+                            }
+
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                                return new Letters(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
                             }
                         }));
 
@@ -1091,9 +1137,11 @@ public class DefaultGamesLocator implements GamesLocator {
 
         result.add(new GameSpec(new GameSummary("Spot The Difference", "data/Thumbnails/spotthedifference.png",
                 GameCategories.Category.TARGET), new GameSpec.GameLauncher() {
+
+
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "spotthedifference");
+                        return new Stats(scene, "spotthedifferences");
                     }
 
                     @Override
@@ -1101,6 +1149,40 @@ public class DefaultGamesLocator implements GamesLocator {
                             Stats stats) {
                         return new SpotTheDifferences(gameContext, stats);
                     }
+                }));
+
+        result.add(new GameSpec(new GameSummary("Dice", "data/Thumbnails/dice.png",GameCategories.Category.TARGET),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.IntGameVariant(1, "1 die"),
+
+                                new GameSpec.IntGameVariant(2, "2 dice"),
+
+                                new GameSpec.IntGameVariant(3, "3 dice"),
+
+                                new GameSpec.IntGameVariant(4, "4 dice"),
+
+                                new GameSpec.IntGameVariant(5, "5 dice"),
+
+                                new GameSpec.IntGameVariant(6, "6 dice")
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "dice");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
+                        return new Dice(gameContext, stats, gameVariant.getNumber());
+                    }
+
                 }));
 
         log.info("Games found : {}", result.size());
