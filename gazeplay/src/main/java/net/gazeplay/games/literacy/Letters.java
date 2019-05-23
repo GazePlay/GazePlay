@@ -155,7 +155,7 @@ public class Letters implements GameLifeCycle {
                         currentLetter = temp;
                     }
 
-                    Bloc bloc = new Bloc(i * width, j * height, width + 1, height + 1, i, j, currentLetter,
+                    Bloc bloc = new Bloc(j * width, i * height, width + 1, height + 1, i, j, currentLetter,
                             isMainLetter, this, stats, gameContext, fixationlength);
 
                     // result.add(bloc);
