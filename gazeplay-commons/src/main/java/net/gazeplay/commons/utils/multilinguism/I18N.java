@@ -56,7 +56,7 @@ public class I18N {
                         String key = data[0];
                         for (int i = 1; i < data.length; i++) {
 
-                            log.info(key + ", " + languages[i] + ", " + data[i]);
+                            // log.info(key + ", " + languages[i] + ", " + data[i]);
                             traductions.put(new Entry(key, languages[i]), data[i]);
                         }
                     }
