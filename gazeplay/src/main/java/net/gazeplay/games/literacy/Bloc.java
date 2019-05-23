@@ -192,8 +192,6 @@ public class Bloc extends Parent {// Rectangle {
 
 
     private void playSound(String path) {
-        // String path = "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/" + currentLanguage.toLowerCase()
-        // + "_" + currentLetter.toUpperCase() + ".mp3";
         try {
             // log.debug("Letter sound path {}", path);
             Utils.playSound(path);

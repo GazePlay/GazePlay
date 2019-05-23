@@ -251,5 +251,14 @@ public class Letters implements GameLifeCycle {
         }
         return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/m/quest/" + currentLetter.toUpperCase()+ ".mp3";
     }
+    private void playSound(String path) {
+        try {
+            // log.debug("Letter sound path {}", path);
+            Utils.playSound(path);
+        } catch (Exception e) {
+            // log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
+
+    }
 
 }
