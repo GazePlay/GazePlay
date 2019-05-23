@@ -114,7 +114,6 @@ public class Card extends Parent {
         stack.setLayoutX(positionX);
         stack.setLayoutY(positionY);
 
-        // this.getChildren().add(card);
         this.getChildren().add(stack);
 
         this.progressIndicator = createProgressIndicator(width, height);

@@ -44,6 +44,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private final static String LOGO_PATH = "data/common/images/gazeplay.png";
 
+    // private static String currentLanguage;
+
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
         GamesLocator gamesLocator = new DefaultGamesLocator();
