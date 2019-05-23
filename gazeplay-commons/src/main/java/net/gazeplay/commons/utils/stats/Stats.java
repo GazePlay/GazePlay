@@ -324,9 +324,7 @@ public class Stats implements GazeMotionListener {
         } catch (Exception e) {
             log.error("Exception", e);
         }
-        //
-        // the function to draw in Fixation Sequence Class
-        //
+
     }
 
     private void incFixationSequence(int X, int Y) {

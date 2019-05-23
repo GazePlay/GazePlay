@@ -64,6 +64,7 @@ public class Card extends Parent {
     /**
      * Use a comme Timeline object so we can stop the current animation to prevent overlapses.
      */
+
     private Timeline currentTimeline;
 
     public Card(double positionX, double positionY, double width, double height, Image image, boolean winner, int value,
@@ -114,7 +115,6 @@ public class Card extends Parent {
         stack.setLayoutX(positionX);
         stack.setLayoutY(positionY);
 
-        // this.getChildren().add(card);
         this.getChildren().add(stack);
 
         this.progressIndicator = createProgressIndicator(width, height);
