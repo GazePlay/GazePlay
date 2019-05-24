@@ -1,15 +1,22 @@
 package net.gazeplay.games.literacy;
 
+import javafx.animation.TranslateTransition;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 import lombok.Data;
 import lombok.Getter;
 import net.gazeplay.GameContext;
@@ -21,6 +28,7 @@ import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.whereisit.WhereIsIt;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,12 +119,16 @@ public class Letters implements GameLifeCycle {
 
         final String mainLetter = alphabet[(r.nextInt(alphabet.length))];
 
+        /*TEST CODE*/
+
         Text questionText;
         if(currentLanguage.equals("fra")){
-            questionText = new Text("Choisissez la lettre: "+mainLetter.toUpperCase());
+            questionText = new Text("Choisissez la lettre: "+mainLetter.toUpperCase()+"!");
         }else{
-            questionText = new Text("Choose the Lettre: "+mainLetter.toUpperCase());
+            questionText = new Text("Choose the Letter: "+mainLetter.toUpperCase()+"!");
         }
+        questionText.setTranslateY(0);
+        playSound(createQuestionSoundPath(currentLanguage,mainLetter));
 
 
         double positionX = dimension2D.getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
@@ -124,21 +136,81 @@ public class Letters implements GameLifeCycle {
         questionText.setX(positionX);
         questionText.setY(positionY);
         questionText.setTextAlignment(TextAlignment.CENTER);
+        StackPane.setAlignment(questionText, Pos.CENTER);
+        questionText.setFill(Color.WHITE);
+        questionText.setFont(new Font("Tsukushi A Round Gothic Bold", 60));
+        gameContext.getChildren().add(questionText);
 
 
-        setHiddenPicture(gameContext);
+        TranslateTransition fullAnimation = new TranslateTransition(
+                Duration.millis(Configuration.getInstance().getQuestionLength() / 2), questionText);
+        fullAnimation.setDelay(Duration.millis(Configuration.getInstance().getQuestionLength()));
+        double bottomCenter = (0.9 * dimension2D.getHeight()) - questionText.getY()
+                + questionText.getBoundsInParent().getHeight() * 3;
+        fullAnimation.setToY(bottomCenter);
 
-        double width = dimension2D.getWidth() / nbColomns;
-        double height = dimension2D.getHeight() / nbLines;
+
+
+        fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                // gameContext.getChildren().remove(questionText);
+
+//                gameContext.getChildren().removeAll(pictogramesList);
+
+//                log.debug("Adding {} pictures", currentRoundDetails.pictureCardList.size());
+//                gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
+//
+//                for (WhereIsIt.PictureCard p : currentRoundDetails.pictureCardList) {
+//                    log.debug("p = {}", p);
+//                    p.toFront();
+//                    p.setOpacity(1);
+//                }
+
+                questionText.toFront();
+                questionText.setOpacity(0);
+
+                setHiddenPicture(gameContext);
+
+                double width = dimension2D.getWidth() / nbColomns;
+                double height = dimension2D.getHeight() / nbLines;
 
 
 
-        Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
-        this.currentRoundDetails.remainingCount = correctCount;
+                Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
+                currentRoundDetails.remainingCount = correctCount;
 
-        // gameContext.getChildren().addAll(blocksList);
+                // gameContext.getChildren().addAll(blocksList);
 
-        stats.notifyNewRoundReady();
+                stats.notifyNewRoundReady();
+
+
+                stats.notifyNewRoundReady();
+
+                gameContext.onGameStarted();
+            }
+        });
+
+        fullAnimation.play();
+
+
+
+        /*TEST CODE ENDS */
+
+//        setHiddenPicture(gameContext);
+//
+//        double width = dimension2D.getWidth() / nbColomns;
+//        double height = dimension2D.getHeight() / nbLines;
+//
+//
+//
+//        Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
+//        this.currentRoundDetails.remainingCount = correctCount;
+//
+//        // gameContext.getChildren().addAll(blocksList);
+//
+//        stats.notifyNewRoundReady();
+
     }
 
     private Bloc[][] createCards(String mainLetter, Random r, String alphabet[], double width, double height,
