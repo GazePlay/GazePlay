@@ -43,6 +43,7 @@ public class FixationSequence {
         for (int i = 0; i < fixSeq.size() - 1; i++) {
             gc.strokeLine(fixSeq.get(i).getY(), fixSeq.get(i).getX(), fixSeq.get(i + 1).getY(),
                     fixSeq.get(i + 1).getX());
+            log.info("Point nb :" + i + ", firstGaze = "+ fixSeq.get(i).getFirstGaze()+ ", gazeDuration = " + fixSeq.get(i).getGazeDuration());
         }
         gc.setFont(sanSerifFont);
         gc.setTextAlign(TextAlignment.CENTER);

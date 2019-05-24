@@ -339,7 +339,7 @@ public class Stats implements GazeMotionListener {
             previousGaze = (fixationSequence.get(fixationSequence.size() - 1)).getFirstGaze();
         }
         FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(), 0, x, y);
-        gazeDuration = previousGaze - newGazePoint.getFirstGaze();
+        gazeDuration = Math.abs(previousGaze - newGazePoint.getFirstGaze());
         newGazePoint.setGazeDuration(gazeDuration);
         fixationSequence.add(newGazePoint);
 
