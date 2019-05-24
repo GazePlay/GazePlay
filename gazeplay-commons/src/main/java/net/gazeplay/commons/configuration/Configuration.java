@@ -1,6 +1,7 @@
 package net.gazeplay.commons.configuration;
 
 import javafx.beans.property.*;
+import javafx.scene.input.KeyCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,6 @@ import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.*;
 import java.util.Properties;
-import javafx.scene.input.KeyCode;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
@@ -38,6 +38,13 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
+    /*
+     * Game Categories Properties
+     */
+    private static final String PROPERTY_NAME_TARGET_GAMES = "Target games";
+    private static final String PROPERTY_NAME_SEARCHING_GAMES = "Searching games";
+    private static final String PROPERTY_NAME_MEMORIZATION_GAMES = "Memorization games";
+    private static final String PROPERTY_NAME_NO_CATEGORY_GAMES = "No category games";
 
     @Getter
     @Setter
@@ -57,6 +64,10 @@ public class Configuration implements Cloneable {
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
+    private static final boolean DEFAULT_VALUE_TARGET_GAMES = true;
+    private static final boolean DEFAULT_VALUE_MEMORIZATION_GAMES = true;
+    private static final boolean DEFAULT_VALUE_SEARCHING_GAMES = true;
+    private static final boolean DEFAULT_VALUE_NO_CATEGORY_GAMES = true;
     // next thing to do
     // private static final String DEFAULT_EXIT_SHORTCUT_KEY = "SPACE";
     @Setter
@@ -204,6 +215,22 @@ public class Configuration implements Cloneable {
     @Getter
     protected final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE,
             DEFAULT_VALUE_USER_PICTURE);
+
+    @Getter
+    protected final BooleanProperty targetCategoryProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_TARGET_GAMES,
+            DEFAULT_VALUE_TARGET_GAMES);
+
+    @Getter
+    protected final BooleanProperty memorizationCategoryProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_MEMORIZATION_GAMES, DEFAULT_VALUE_MEMORIZATION_GAMES);
+
+    @Getter
+    protected final BooleanProperty searchingCategoryProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_SEARCHING_GAMES, DEFAULT_VALUE_SEARCHING_GAMES);
+
+    @Getter
+    protected final BooleanProperty noCategoryProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_NO_CATEGORY_GAMES, DEFAULT_VALUE_NO_CATEGORY_GAMES);
 
     protected Configuration() {
 
@@ -362,10 +389,26 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             userPictureProperty.setValue(buffer);
         }
+        buffer = prop.getProperty(PROPERTY_NAME_TARGET_GAMES);
+        if (buffer != null) {
+            targetCategoryProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+        buffer = prop.getProperty(PROPERTY_NAME_SEARCHING_GAMES);
+        if (buffer != null) {
+            searchingCategoryProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+        buffer = prop.getProperty(PROPERTY_NAME_MEMORIZATION_GAMES);
+        if (buffer != null) {
+            memorizationCategoryProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+        buffer = prop.getProperty(PROPERTY_NAME_NO_CATEGORY_GAMES);
+        if (buffer != null) {
+            noCategoryProperty.setValue(Boolean.parseBoolean(buffer));
+        }
 
     }
 
-    private Properties toProperties() {
+    public Properties toProperties() {
         Properties properties = new Properties() {
 
             @Override
@@ -406,7 +449,11 @@ public class Configuration implements Cloneable {
         /*
          * properties.setProperty(PROPERTY_NAME_GAZE_MENU, Boolean.toString(this.gazeMenuProperty.getValue()));
          */
-
+        properties.setProperty(PROPERTY_NAME_TARGET_GAMES, Boolean.toString(targetCategoryProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_MEMORIZATION_GAMES,
+                Boolean.toString(memorizationCategoryProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_SEARCHING_GAMES, Boolean.toString(searchingCategoryProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_NO_CATEGORY_GAMES, Boolean.toString(noCategoryProperty.getValue()));
         return properties;
     }
 
@@ -534,6 +581,22 @@ public class Configuration implements Cloneable {
 
     public void setUserPicture(String newPicture) {
         userPictureProperty.setValue(newPicture);
+    }
+
+    public Boolean targetCategory() {
+        return targetCategoryProperty.getValue();
+    }
+
+    public Boolean memorizationCategory() {
+        return memorizationCategoryProperty.getValue();
+    }
+
+    public Boolean searchingCategory() {
+        return searchingCategoryProperty.getValue();
+    }
+
+    public Boolean noCategory() {
+        return noCategoryProperty.getValue();
     }
 
 }

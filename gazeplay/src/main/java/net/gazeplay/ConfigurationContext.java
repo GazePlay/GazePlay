@@ -465,7 +465,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * Fonction to use to permit to user to choose his/her own css file
+     * Function to use to permit to user to choose his/her own css file
      */
     private static Button buildStyleFileChooser(Configuration configuration,
             ConfigurationContext configurationContext) {

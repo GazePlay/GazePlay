@@ -22,7 +22,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
@@ -98,8 +97,8 @@ public class GameMenuFactory {
                     .setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
-        if (gameSummary.getThumbnailLocation() != null) {
-            Image buttonGraphics = new Image(gameSummary.getThumbnailLocation());
+        if (gameSummary.getGameThumbnail() != null) {
+            Image buttonGraphics = new Image(gameSummary.getGameThumbnail());
             ImageView imageView = new ImageView(buttonGraphics);
             imageView.getStyleClass().add("gameChooserButtonThumbnail");
             imageView.setPreserveRatio(true);
@@ -132,8 +131,8 @@ public class GameMenuFactory {
 
         }
 
-        if (gameSummary.getGameTypeIndicatorImageLocation() != null) {
-            Image buttonGraphics = new Image(gameSummary.getGameTypeIndicatorImageLocation());
+        if (gameSummary.getCategory().getThumbnail() != null) {
+            Image buttonGraphics = new Image(gameSummary.getCategory().getThumbnail());
             ImageView imageView = new ImageView(buttonGraphics);
             imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
             imageView.setPreserveRatio(true);
