@@ -128,12 +128,14 @@ public class Bloc extends Parent {// Rectangle {
         progressIndicator.setOpacity(0);
         letter.setOpacity(0);
 
+        gameInstance.removeBloc(this);
+
         if (gameInstance.currentRoundDetails.remainingCount == 1) {
             // REMOVE ALL CARDS AND REVEAL THE IMAGE
             gameInstance.removeAllBlocs();
             gameInstance.currentRoundDetails.remainingCount = 0;
         } else {
-            gameInstance.removeBloc(this);
+
             gameInstance.currentRoundDetails.remainingCount--;
         }
 
