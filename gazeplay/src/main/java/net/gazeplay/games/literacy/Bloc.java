@@ -189,8 +189,6 @@ public class Bloc extends Parent {// Rectangle {
 
     }
 
-
-
     private void playSound(String path) {
         try {
             // log.debug("Letter sound path {}", path);

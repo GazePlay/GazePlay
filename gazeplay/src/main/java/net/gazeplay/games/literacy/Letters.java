@@ -82,7 +82,7 @@ public class Letters implements GameLifeCycle {
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("blocs"));
 
-        String language = gameContext.getCurrentLanguage(); //gameContext.currentLanguage;
+        String language = gameContext.getCurrentLanguage(); // gameContext.currentLanguage;
 
         translator = gameContext.getTranslator();
 
@@ -111,7 +111,6 @@ public class Letters implements GameLifeCycle {
     @Override
     public void launch() {
 
-
         final Configuration config = Configuration.getInstance();
 
         this.currentRoundDetails = new CurrentRoundDetails(nbLines, nbColomns);
@@ -124,22 +123,21 @@ public class Letters implements GameLifeCycle {
 
         final String mainLetter = alphabet[(r.nextInt(alphabet.length))];
 
-        /*TEST CODE*/
+        /* TEST CODE */
 
         Text questionText;
-//        if(currentLanguage.equals("fra")){
-//            questionText = new Text("Choisissez la lettre: "+mainLetter.toUpperCase()+"!");
-//        }else{
-//            questionText = new Text("Choose the Letter: "+mainLetter.toUpperCase()+"!");
-//        }
+        // if(currentLanguage.equals("fra")){
+        // questionText = new Text("Choisissez la lettre: "+mainLetter.toUpperCase()+"!");
+        // }else{
+        // questionText = new Text("Choose the Letter: "+mainLetter.toUpperCase()+"!");
+        // }
 
         questionText = new I18NText(this.translator, "Choose the Letter");
 
-        questionText.setText(questionText.getText()+": "+mainLetter.toUpperCase());
+        questionText.setText(questionText.getText() + ": " + mainLetter.toUpperCase());
 
         questionText.setTranslateY(0);
-        playSound(createQuestionSoundPath(currentLanguage,mainLetter));
-
+        playSound(createQuestionSoundPath(currentLanguage, mainLetter));
 
         double positionX = dimension2D.getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
         double positionY = dimension2D.getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
@@ -151,7 +149,6 @@ public class Letters implements GameLifeCycle {
         questionText.setFont(new Font("Tsukushi A Round Gothic Bold", 60));
         gameContext.getChildren().add(questionText);
 
-
         TranslateTransition fullAnimation = new TranslateTransition(
                 Duration.millis(Configuration.getInstance().getQuestionLength() / 2), questionText);
         fullAnimation.setDelay(Duration.millis(Configuration.getInstance().getQuestionLength()));
@@ -159,23 +156,21 @@ public class Letters implements GameLifeCycle {
                 + questionText.getBoundsInParent().getHeight() * 3;
         fullAnimation.setToY(bottomCenter);
 
-
-
         fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 // gameContext.getChildren().remove(questionText);
 
-//                gameContext.getChildren().removeAll(pictogramesList);
+                // gameContext.getChildren().removeAll(pictogramesList);
 
-//                log.debug("Adding {} pictures", currentRoundDetails.pictureCardList.size());
-//                gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
-//
-//                for (WhereIsIt.PictureCard p : currentRoundDetails.pictureCardList) {
-//                    log.debug("p = {}", p);
-//                    p.toFront();
-//                    p.setOpacity(1);
-//                }
+                // log.debug("Adding {} pictures", currentRoundDetails.pictureCardList.size());
+                // gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
+                //
+                // for (WhereIsIt.PictureCard p : currentRoundDetails.pictureCardList) {
+                // log.debug("p = {}", p);
+                // p.toFront();
+                // p.setOpacity(1);
+                // }
 
                 questionText.toFront();
                 questionText.setOpacity(0);
@@ -185,15 +180,12 @@ public class Letters implements GameLifeCycle {
                 double width = dimension2D.getWidth() / nbColomns;
                 double height = dimension2D.getHeight() / nbLines;
 
-
-
                 Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
                 currentRoundDetails.remainingCount = correctCount;
 
                 // gameContext.getChildren().addAll(blocksList);
 
                 stats.notifyNewRoundReady();
-
 
                 stats.notifyNewRoundReady();
 
@@ -203,23 +195,21 @@ public class Letters implements GameLifeCycle {
 
         fullAnimation.play();
 
+        /* TEST CODE ENDS */
 
-
-        /*TEST CODE ENDS */
-
-//        setHiddenPicture(gameContext);
-//
-//        double width = dimension2D.getWidth() / nbColomns;
-//        double height = dimension2D.getHeight() / nbLines;
-//
-//
-//
-//        Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
-//        this.currentRoundDetails.remainingCount = correctCount;
-//
-//        // gameContext.getChildren().addAll(blocksList);
-//
-//        stats.notifyNewRoundReady();
+        // setHiddenPicture(gameContext);
+        //
+        // double width = dimension2D.getWidth() / nbColomns;
+        // double height = dimension2D.getHeight() / nbLines;
+        //
+        //
+        //
+        // Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
+        // this.currentRoundDetails.remainingCount = correctCount;
+        //
+        // // gameContext.getChildren().addAll(blocksList);
+        //
+        // stats.notifyNewRoundReady();
 
     }
 
@@ -329,10 +319,13 @@ public class Letters implements GameLifeCycle {
         Random r = new Random();
         if (r.nextBoolean()) {
 
-            return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/quest/" + currentLetter.toUpperCase()+ ".mp3";
+            return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/quest/" + currentLetter.toUpperCase()
+                    + ".mp3";
         }
-        return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/m/quest/" + currentLetter.toUpperCase()+ ".mp3";
+        return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/m/quest/" + currentLetter.toUpperCase()
+                + ".mp3";
     }
+
     private void playSound(String path) {
         try {
             // log.debug("Letter sound path {}", path);
