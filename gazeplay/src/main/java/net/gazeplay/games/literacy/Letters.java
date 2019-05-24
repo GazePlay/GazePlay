@@ -286,7 +286,7 @@ public class Letters implements GameLifeCycle {
         toRemove.removeEventFilter(MouseEvent.ANY, toRemove.enterEvent);
         toRemove.removeEventFilter(GazeEvent.ANY, toRemove.enterEvent);
         gameContext.getGazeDeviceManager().removeEventFilter(toRemove);
-        //gameContext.getChildren().remove(toRemove);
+        // gameContext.getChildren().remove(toRemove);
         toRemove.setTranslateX(-10000);
         toRemove.setOpacity(0);
     }
