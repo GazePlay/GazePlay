@@ -113,7 +113,6 @@ public class Bloc extends Parent {// Rectangle {
     }
 
     private void onCorrectBlocSelected() {
-        // System.out.println("WAFAAAA onCorrectBlocSelected");
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -123,18 +122,15 @@ public class Bloc extends Parent {// Rectangle {
 
         progressIndicator.setOpacity(0);
         letter.setOpacity(0);
-        // NEED TO PLAY AUDIO SOMEWHERE HERE!
 
-        gameInstance.currentRoundDetails.remainingCount--;
-
-        if (gameInstance.currentRoundDetails.remainingCount == 0) {
+        if (gameInstance.currentRoundDetails.remainingCount == 1) {
             // REMOVE ALL CARDS AND REVEAL THE IMAGE
             gameInstance.removeAllBlocs();
+            gameInstance.currentRoundDetails.remainingCount--;
         } else {
             gameInstance.removeBloc(this);
+            gameInstance.currentRoundDetails.remainingCount--;
         }
-
-        // playSound(createQuestionSoundPath(this.gameInstance.currentLanguage,"question"));
 
         playSound(createLetterSoundPath("" + this.gameInstance.currentLanguage, this.letterStr));
 
@@ -243,16 +239,10 @@ public class Bloc extends Parent {// Rectangle {
 
                     timelineProgressBar.play();
 
-                    // System.out.println("WAFAAAA timelineProgressBar");
-
                     timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent actionEvent) {
-                            // System.out.println("WAFAAAA timelineProgressBar.setOnFinished");
-                            // turned = true;
-                            //
-                            // card.setFill(new ImagePattern(image, 0, 100, 1, 1, true));
 
                             bloc.removeEventFilter(MouseEvent.ANY, enterEvent);
                             bloc.removeEventFilter(GazeEvent.ANY, enterEvent);

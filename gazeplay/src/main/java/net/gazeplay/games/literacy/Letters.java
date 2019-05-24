@@ -52,14 +52,12 @@ public class Letters implements GameLifeCycle {
     CurrentRoundDetails currentRoundDetails;
 
     private int correctCount;
-    Translator translator;
+    private final Translator translator;
 
     @Data
     public static class CurrentRoundDetails {
 
         int remainingCount;
-
-        // private boolean finished;
 
         private final Bloc[][] blocs;
 
