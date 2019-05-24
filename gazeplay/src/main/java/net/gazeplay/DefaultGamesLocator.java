@@ -285,7 +285,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         }));
 
         result.add(
-                new GameSpec(new GameSummary("Identify The Letters", "data/Thumbnails/block.png", GameCategories.Category.SEARCHING),
+                new GameSpec(new GameSummary("Identify The Letters", "data/Thumbnails/letters.png", GameCategories.Category.SEARCHING),
                         new GameSpec.GameVariantGenerator() {
                             @Override
                             public Set<GameSpec.GameVariant> getVariants() {
