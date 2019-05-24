@@ -313,6 +313,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
+            I18NText label = new I18NText(translator, "EnableConvexHull", COLON);
+            CheckBox input = buildDisableConvexHull(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
             CheckBox input = buildVideoRecording(config, configurationContext);
 
@@ -476,7 +482,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     /**
-     * Fonction to use to permit to user to choose his/her own css file
+     * Function to use to permit to user to choose his/her own css file
      */
     private static Button buildStyleFileChooser(Configuration configuration,
             ConfigurationContext configurationContext) {
@@ -758,11 +764,25 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                                                         ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
-        checkBox.setSelected(configuration.isAreaOfInterestIsEnabled());
+        checkBox.setSelected(configuration.isAreaOfInterestEnabled());
 
         checkBox.selectedProperty().addListener((o) -> {
 
             configuration.getAreaOfInterestDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+    private static CheckBox buildDisableConvexHull(Configuration configuration,
+                                                       ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isConvexHullEnabled());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getConvexHullDisabledProperty().setValue(checkBox.isSelected());
             configuration.saveConfigIgnoringExceptions();
         });
 

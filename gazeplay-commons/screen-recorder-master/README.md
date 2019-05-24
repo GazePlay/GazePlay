@@ -74,7 +74,7 @@ For TestNG you have a configuration class called *VideoRecorderTestNGConfigurati
  
  - VideoRecorderTestNGConfiguration.wantToRecordTest(true/false); // if you want to record your tests or not. By default is true.
  - VideoRecorderTestNGConfiguration.wantToKeepVideoOnSuccess(true/false); // if you want to keep the video once the test finished successfully. By default is false.
- - VideoRecorderTestNGConfiguration.wantToKeepVideoOnFailure(true/false); // if you want to keep the video once the test  failed. By default is true.
+ - VideoRecorderTestNGConfiguration.wantToKeep`VideoOnFailure(true/false); // if you want to keep the video once the test  failed. By default is true.
  
 To enable the recordin you only have to add the listener like:
 

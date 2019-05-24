@@ -1,6 +1,9 @@
 ,alb,ara,chn,deu,ell,eng,fin,fra,hrv,ind,ita,jpn,pol,por,zsm,nld,rus,spa,vnm
 Colon,:,:,:,: ,:,: ,:, : ,:,:,:,:,:,:,:,:,:,:,:
 Creampie,Tartë me krem,فطائر كريمة,奶油派,Sahnetorte,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Cream pies,kermatorttu,Tartes à la crème,Krempita ,Pai krim,Torte alla crema,クリームパイ,Torty kremowe,Pastéis de nata,Pai krim,Taarten,Кремовый пирог,Tarta de crema,Bánh kem
+EnableAreaOfInterest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest
+EnableConvexHull,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI
+EnableVideoRecording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording
 FrogsRace,Vrapo bretkosë!,سباق الضفادع!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,La course des grenouilles,La course des grenouilles!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Frog Runner!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!
 AreaOfInterest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest
 Ninja,Ninxha,النينجا,忍者 ！,Ninja !,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Ninja !,Ninja,Ninja !,Ninja,Ninja!,Ninja!,にんじゃ !,Ninja!,Ninja,Ninja!,Ninja !,Ниндзя,Ninja,Ninja !
@@ -143,5 +146,18 @@ MathDescDiv,,,,,,Divide two numbers!,,Division de deux nombres!,,,,,,,,,,,
 0 to 30,,,,,,0 to 30,,De 0 à 30,,,,,,,,,,,
 findodd,Çfarë nuk shkon ?,,,,,Find the Odd one out,,Trouvez l’intrus,,,Trova l’intruso,,,,,,,,
 Choose Game Variant,Zgjidh variantin a lojës,,,,,Choose Game Variant,,Choisissez une variante de jeu,,,,,,,,,,,
-With moving platforms,,,,,,With moving platforms,,Avec les platformes animées,,,,,,,,,,,
-Without moving platforms,,,,,,Without moving platforms,,Sans les platformes animées,,,,,,,,,,,
+With moving platforms,Me platforma lëvizëse ,,,,,With moving platforms,,Avec les platformes animées,,,,,,,,,,,
+Without moving platforms,Pa platforma lëvizëse,,,,,Without moving platforms,,Sans les platformes animées,,,,,,,,,,,
+Target games,,,,,,Target games,,,,,,,,,,,,,
+Memorization games,,,,,,Memorization games,,,,,,,,,,,,,
+Searching games,,,,,,Searching games,,,,,,,,,,,,,
+Spot the differences,,,,,,Spot the differences,,Trouvez les différences,,,,,,,,,,,
+Spot all the differences,,,,,,Spot all the differences,,Trouvez toutes les différences,,,,,,,,,,,
+Differences found,,,,,,Differences found,,Différences trouvées,,,,,,,,,,,
+Dice,,,,,,Dice,,Dés,,,,,,,,,,,
+1 die,,,,,,1 die,,1 dé,,,,,,,,,,,
+2 dice,,,,,,2 dice,,2 dés,,,,,,,,,,,
+3 dice,,,,,,3 dice,,3 dés,,,,,,,,,,,
+4 dice,,,,,,4 dice,,4 dés,,,,,,,,,,,
+5 dice,,,,,,5 dice,,5 dés,,,,,,,,,,,
+6 dice,,,,,,6 dice,,6 dés,,,,,,,,,,,

@@ -20,7 +20,6 @@ import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.Utils;
 
-import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -53,6 +52,7 @@ public class Stats implements GazeMotionListener {
     private int previousX = 0;
     private int previousY = 0;
     private int nbShots = 0;
+    private boolean convexHULL = true;
     long startTime;
     int sceneCounter = 0;
     @Getter
@@ -91,7 +91,6 @@ public class Stats implements GazeMotionListener {
     private static double[][] instanciateHeatMapData(Scene gameContextScene, double heatMapPixelSize) {
         int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
         int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
-
         log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
         return new double[heatMapWidth][heatMapHeight];
     }
@@ -113,10 +112,8 @@ public class Stats implements GazeMotionListener {
                 @Override
                 public void frameAdded(VideoRecorderEventObject args) {
                     sceneCounter++;
-
                     System.out.println("The amount of scene is : "+ sceneCounter);
                     System.out.println("The time is at "+lifeCycle.computeTotalElapsedDuration());
-
                 }
             };
             VideoRecorder.addVideoRecorderEventListener(videoRecorderEventListener);
@@ -124,11 +121,12 @@ public class Stats implements GazeMotionListener {
         lifeCycle.start(() -> {
             System.out.println("Head map"+ config.isHeatMapDisabled());
             System.out.println("Fixation"+ config.isFixationSequenceDisabled());
-            System.out.println("AOI"+ config.isAreaOfInterestIsEnabled());
+            System.out.println("AOI"+ config.isAreaOfInterestEnabled());
 
             if(!config.isHeatMapDisabled())
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
             startTime = System.currentTimeMillis();
+            if(!config.isFixationSequenceDisabled())
             fixationSequence = new LinkedList<FixationPoint>();
             recordGazeMovements = e ->
             {
@@ -140,7 +138,7 @@ public class Stats implements GazeMotionListener {
                 {
                     incFixationSequence(getX, getY);
                 }
-                if(config.isAreaOfInterestIsEnabled())
+                if(config.isAreaOfInterestEnabled())
                 {
                     if(getX != previousX || getY != previousY && counter == 0)
                     {
@@ -167,7 +165,7 @@ public class Stats implements GazeMotionListener {
                 {
                     incFixationSequence(getX, getY);
                 }
-                if(config.isAreaOfInterestIsEnabled())
+                if(config.isAreaOfInterestEnabled())
                 {
                     if(getX != previousX || getY != previousY && counter == 0)
                     {
@@ -182,7 +180,6 @@ public class Stats implements GazeMotionListener {
                             counter= 0;
                     }
                 }
-
             };
             gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
             gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
@@ -208,10 +205,6 @@ public class Stats implements GazeMotionListener {
     }
 
     public void stop() {
-//        System.out.println("I am out, And the array size is "+movementHistory.size());
-//        for (CoordinatesTracker coordinatesTracker : movementHistory) {
-//            System.out.println("The mouse is at X :" + coordinatesTracker.getxValue() + " Y: " + coordinatesTracker.getyValue() + " Time:" + coordinatesTracker.getTimeValue());
-//        }
         if(config.isVideoRecordingEnabled())
         {
             try {
@@ -248,11 +241,9 @@ public class Stats implements GazeMotionListener {
         File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
 
-
         File fixationSequencePngFile = new File(todayDirectory, fixationSequenceFilePrefix + ".png");
 
         SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile, fixationSequencePngFile);
-
         this.savedStatsInfo = savedStatsInfo;
         if (this.heatMap != null) {
             saveHeatMapAsPng(heatMapPngFile);
@@ -319,7 +310,6 @@ public class Stats implements GazeMotionListener {
             return ratioRate;
         }
     }
-
     public void incNbShots() {
         this.nbShots++;
     }
@@ -426,7 +416,6 @@ public class Stats implements GazeMotionListener {
     }
 
     private void incHeatMap(int X, int Y) {
-
         currentGazeTime = System.currentTimeMillis();
         // in heatChart, x and y are opposed
         int x = (int) (Y / heatMapPixelSize);
@@ -438,7 +427,6 @@ public class Stats implements GazeMotionListener {
                 }
             }
     }
-
     private void inc(int x, int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             // heatMap[heatMap[0].length - y][heatMap.length - x]++;

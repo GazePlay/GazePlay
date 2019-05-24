@@ -160,7 +160,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         foregroundLayer.getChildren().add(interactionOverlay);
 
         this.gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
-
     }
 
     private void bounce(double intensity, String soundName) {

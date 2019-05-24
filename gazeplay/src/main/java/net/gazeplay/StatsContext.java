@@ -3,23 +3,15 @@ package net.gazeplay;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
-import javafx.scene.image.Image;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javax.imageio.ImageIO;
 
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import lombok.Data;
@@ -34,9 +26,7 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
-import net.gazeplay.games.race.RaceGamesStats;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -310,7 +300,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
-        if(config.isAreaOfInterestIsEnabled())
+        if(config.isAreaOfInterestEnabled())
         controlButtonPane.getChildren().add(aoiButton);
         controlButtonPane.getChildren().add(homeButton);
 

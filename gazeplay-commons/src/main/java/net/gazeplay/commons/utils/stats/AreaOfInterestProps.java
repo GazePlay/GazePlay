@@ -2,11 +2,12 @@ package net.gazeplay.commons.utils.stats;
 
 import javafx.geometry.Point2D;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class AreaOfInterestProps {
     private final long TTFF;
-    private final ArrayList listOfPoints;
+    private final ArrayList<CoordinatesTracker> listOfPoints;
 //    private final int revisits;
     private final long timeSpent;
     private final int fixations;
@@ -14,9 +15,12 @@ public class AreaOfInterestProps {
     private final int centerY;
     private final Double[] convexPoints;
     private final Point2D[] allPoint2DOfConvex;
+    private final int startingIndex;
+    private final int endingIndex;
+    private final javafx.scene.shape.Polygon areaOfInterest;
 
 
-    public AreaOfInterestProps(long TTFF, long timeSpent, ArrayList listOfPoints, int centerX , int centerY, Double[] convexPoints, Point2D[] allPoint2DOfConvex)
+    public AreaOfInterestProps(long TTFF, long timeSpent, ArrayList<CoordinatesTracker> listOfPoints, int centerX , int centerY, Double[] convexPoints, Point2D[] allPoint2DOfConvex, int startingIndex, int endingIndex, javafx.scene.shape.Polygon areaOfInterest)
     {
         this.TTFF = TTFF;
         this.listOfPoints = listOfPoints;
@@ -26,6 +30,9 @@ public class AreaOfInterestProps {
         this.centerY = centerY;
         this.convexPoints = convexPoints;
         this.allPoint2DOfConvex = allPoint2DOfConvex;
+        this.startingIndex = startingIndex;
+        this.endingIndex = endingIndex;
+        this.areaOfInterest = areaOfInterest;
     }
     public Double[] getConvexPoints(){
         return this.convexPoints;
@@ -46,5 +53,8 @@ public class AreaOfInterestProps {
         return this.TTFF;
     }
     public Point2D[] getAllPoint2DOfConvex(){return this.allPoint2DOfConvex;}
+    public int getStartingIndex(){ return this.startingIndex;}
+    public int getEndingIndex(){ return this.endingIndex;}
+    public javafx.scene.shape.Polygon getAreaOfInterest(){ return this.areaOfInterest;}
 
 }

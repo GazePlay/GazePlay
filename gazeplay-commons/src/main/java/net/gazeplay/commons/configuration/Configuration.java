@@ -2,6 +2,7 @@ package net.gazeplay.commons.configuration;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.property.*;
+import javafx.scene.input.KeyCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,6 @@ import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.*;
 import java.util.Properties;
-import javafx.scene.input.KeyCode;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
@@ -29,6 +29,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
     private static final String PROPERTY_NAME_AREA_OF_INTEREST_DISABLED = "AREA_OF_INTEREST_DISABLED";
+    private static final String PROPERTY_NAME_CONVEX_HULL_DISABLED = "CONVEX_HULL_DISABLED";
     private static final String PROPERTY_NAME_VIDEO_RECORDING_DISABLED = "VIDEO_RECORDING_DISABLED";
     private static final String PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED = "FIXATIONSEQUENCE_DISABLED";
     private static final String PROPERTY_NAME_MUSIC_VOLUME = "MUSIC_VOLUME";
@@ -41,6 +42,13 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
+    /*
+     * Game Categories Properties
+     */
+    private static final String PROPERTY_NAME_TARGET_GAMES = "Target games";
+    private static final String PROPERTY_NAME_SEARCHING_GAMES = "Searching games";
+    private static final String PROPERTY_NAME_MEMORIZATION_GAMES = "Memorization games";
+    private static final String PROPERTY_NAME_NO_CATEGORY_GAMES = "No category games";
 
     @Getter
     @Setter
@@ -57,11 +65,16 @@ public class Configuration implements Cloneable {
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
     private static final boolean DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED = false;
+    private static final boolean DEFAULT_VALUE_CONVEX_HULL_DISABLED = false;
     private static final boolean DEFAULT_VALUE_VIDEO_RECORDING = false;
     private static final boolean DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED = false;
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
+    private static final boolean DEFAULT_VALUE_TARGET_GAMES = true;
+    private static final boolean DEFAULT_VALUE_MEMORIZATION_GAMES = true;
+    private static final boolean DEFAULT_VALUE_SEARCHING_GAMES = true;
+    private static final boolean DEFAULT_VALUE_NO_CATEGORY_GAMES = true;
     // next thing to do
     // private static final String DEFAULT_EXIT_SHORTCUT_KEY = "SPACE";
     @Setter
@@ -178,11 +191,12 @@ public class Configuration implements Cloneable {
     @Getter
     protected final BooleanProperty areaOfInterestDisabledProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
-
+    @Getter
+    protected final BooleanProperty convexHullDisabledProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED);
     @Getter
     protected final BooleanProperty videoRecordingDisabledProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_VIDEO_RECORDING_DISABLED, DEFAULT_VALUE_VIDEO_RECORDING);
-
     @Getter
     protected final BooleanProperty fixationSequenceDisabledProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED);
@@ -216,6 +230,22 @@ public class Configuration implements Cloneable {
     @Getter
     protected final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE,
             DEFAULT_VALUE_USER_PICTURE);
+
+    @Getter
+    protected final BooleanProperty targetCategoryProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_TARGET_GAMES,
+            DEFAULT_VALUE_TARGET_GAMES);
+
+    @Getter
+    protected final BooleanProperty memorizationCategoryProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_MEMORIZATION_GAMES, DEFAULT_VALUE_MEMORIZATION_GAMES);
+
+    @Getter
+    protected final BooleanProperty searchingCategoryProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_SEARCHING_GAMES, DEFAULT_VALUE_SEARCHING_GAMES);
+
+    @Getter
+    protected final BooleanProperty noCategoryProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_NO_CATEGORY_GAMES, DEFAULT_VALUE_NO_CATEGORY_GAMES);
 
     protected Configuration() {
 
@@ -320,6 +350,10 @@ public class Configuration implements Cloneable {
         if( buffer != null){
             areaOfInterestDisabledProperty.setValue(Boolean.parseBoolean(buffer));
         }
+        buffer = prop.getProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED);
+        if( buffer != null){
+            convexHullDisabledProperty.setValue(Boolean.parseBoolean(buffer));
+        }
         buffer = prop.getProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED);
         if( buffer != null){
             videoRecordingDisabledProperty.setValue(Boolean.parseBoolean(buffer));
@@ -382,10 +416,26 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             userPictureProperty.setValue(buffer);
         }
+        buffer = prop.getProperty(PROPERTY_NAME_TARGET_GAMES);
+        if (buffer != null) {
+            targetCategoryProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+        buffer = prop.getProperty(PROPERTY_NAME_SEARCHING_GAMES);
+        if (buffer != null) {
+            searchingCategoryProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+        buffer = prop.getProperty(PROPERTY_NAME_MEMORIZATION_GAMES);
+        if (buffer != null) {
+            memorizationCategoryProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+        buffer = prop.getProperty(PROPERTY_NAME_NO_CATEGORY_GAMES);
+        if (buffer != null) {
+            noCategoryProperty.setValue(Boolean.parseBoolean(buffer));
+        }
 
     }
 
-    private Properties toProperties() {
+    public Properties toProperties() {
         Properties properties = new Properties() {
 
             @Override
@@ -416,6 +466,8 @@ public class Configuration implements Cloneable {
                 Boolean.toString(this.heatMapDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED,
                 Boolean.toString(this.areaOfInterestDisabledProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED,
+                Boolean.toString(this.convexHullDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED,
                 Boolean.toString(this.videoRecordingDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED,
@@ -430,7 +482,11 @@ public class Configuration implements Cloneable {
         /*
          * properties.setProperty(PROPERTY_NAME_GAZE_MENU, Boolean.toString(this.gazeMenuProperty.getValue()));
          */
-
+        properties.setProperty(PROPERTY_NAME_TARGET_GAMES, Boolean.toString(targetCategoryProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_MEMORIZATION_GAMES,
+                Boolean.toString(memorizationCategoryProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_SEARCHING_GAMES, Boolean.toString(searchingCategoryProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_NO_CATEGORY_GAMES, Boolean.toString(noCategoryProperty.getValue()));
         return properties;
     }
 
@@ -505,8 +561,11 @@ public class Configuration implements Cloneable {
     public Boolean isHeatMapDisabled() {
         return heatMapDisabledProperty.getValue();
     }
-    public Boolean isAreaOfInterestIsEnabled(){
+    public Boolean isAreaOfInterestEnabled(){
         return areaOfInterestDisabledProperty.getValue();
+    }
+    public Boolean isConvexHullEnabled(){
+        return convexHullDisabledProperty.getValue();
     }
     public Boolean isVideoRecordingEnabled(){
         return videoRecordingDisabledProperty.getValue();
@@ -563,6 +622,22 @@ public class Configuration implements Cloneable {
 
     public void setUserPicture(String newPicture) {
         userPictureProperty.setValue(newPicture);
+    }
+
+    public Boolean targetCategory() {
+        return targetCategoryProperty.getValue();
+    }
+
+    public Boolean memorizationCategory() {
+        return memorizationCategoryProperty.getValue();
+    }
+
+    public Boolean searchingCategory() {
+        return searchingCategoryProperty.getValue();
+    }
+
+    public Boolean noCategory() {
+        return noCategoryProperty.getValue();
     }
 
 }
