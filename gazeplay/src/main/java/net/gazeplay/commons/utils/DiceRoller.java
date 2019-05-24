@@ -18,6 +18,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,7 +87,7 @@ public class DiceRoller extends MeshView {
         int modX = angleX % 90;
         int modY = angleY % 90;
         angleX = angleX - modX + (modX > 45 ? 1 : 0) * 90;
-        angleY = angleY - modY + (modY > 45 ? 1 : 0) * 90;
+        angleY = angleY - modY + (modY > 45 ? 1 : 0) * 90;  
 
         Timeline squareUpTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.EASE_OUT),
@@ -105,6 +106,11 @@ public class DiceRoller extends MeshView {
         int finalY = angleY % 360;
 
         rollTimeline.play();
+        try {
+            Utils.playSound("data/common/sounds/diceRollSound.wav");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (finalX == 90) {
             return 3;
