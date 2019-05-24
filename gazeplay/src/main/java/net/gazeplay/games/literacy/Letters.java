@@ -41,7 +41,6 @@ public class Letters implements GameLifeCycle {
     private final GameContext gameContext;
     private final int nbLines;
     private final int nbColomns;
-    private final int initCount;
     private final Stats stats;
 
     @Getter
@@ -64,7 +63,6 @@ public class Letters implements GameLifeCycle {
         public CurrentRoundDetails(int nbLines, int nbColumns) {
             int initCount = nbColumns * nbLines;
             this.remainingCount = initCount;
-            // this.finished = false;
             this.blocs = new Bloc[nbLines][nbColumns];
         }
 
@@ -74,13 +72,12 @@ public class Letters implements GameLifeCycle {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColomns = nbColumns;
-        this.initCount = nbColumns * nbLines;
 
         this.stats = stats;
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("blocs"));
 
-        String language = gameContext.getCurrentLanguage(); // gameContext.currentLanguage;
+        String language = gameContext.getCurrentLanguage();
 
         translator = gameContext.getTranslator();
 
@@ -116,12 +113,12 @@ public class Letters implements GameLifeCycle {
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         Random r = new Random();
+
+        // Latin Letters!
         String alphabet[] = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r",
                 "s", "t", "u", "v", "w", "x", "y", "z" };
 
         final String mainLetter = alphabet[(r.nextInt(alphabet.length))];
-
-        /* TEST CODE */
 
         Text questionText;
         // if(currentLanguage.equals("fra")){
@@ -157,18 +154,6 @@ public class Letters implements GameLifeCycle {
         fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                // gameContext.getChildren().remove(questionText);
-
-                // gameContext.getChildren().removeAll(pictogramesList);
-
-                // log.debug("Adding {} pictures", currentRoundDetails.pictureCardList.size());
-                // gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
-                //
-                // for (WhereIsIt.PictureCard p : currentRoundDetails.pictureCardList) {
-                // log.debug("p = {}", p);
-                // p.toFront();
-                // p.setOpacity(1);
-                // }
 
                 questionText.toFront();
                 questionText.setOpacity(0);
@@ -181,8 +166,6 @@ public class Letters implements GameLifeCycle {
                 Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
                 currentRoundDetails.remainingCount = correctCount;
 
-                // gameContext.getChildren().addAll(blocksList);
-
                 stats.notifyNewRoundReady();
 
                 stats.notifyNewRoundReady();
@@ -193,20 +176,11 @@ public class Letters implements GameLifeCycle {
 
         fullAnimation.play();
 
-        /* TEST CODE ENDS */
-
         // setHiddenPicture(gameContext);
-        //
         // double width = dimension2D.getWidth() / nbColomns;
         // double height = dimension2D.getHeight() / nbLines;
-        //
-        //
-        //
         // Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
         // this.currentRoundDetails.remainingCount = correctCount;
-        //
-        // // gameContext.getChildren().addAll(blocksList);
-        //
         // stats.notifyNewRoundReady();
 
     }
@@ -214,7 +188,6 @@ public class Letters implements GameLifeCycle {
     private Bloc[][] createCards(String mainLetter, Random r, String alphabet[], double width, double height,
             Configuration config) {
         correctCount = 0;
-        // List<Bloc> result = new ArrayList<>();
         Bloc[][] blocs = new Bloc[nbLines][nbColomns];
 
         final int fixationlength = config.getFixationLength();
@@ -310,7 +283,6 @@ public class Letters implements GameLifeCycle {
         gameContext.getGazeDeviceManager().removeEventFilter(toRemove);
         toRemove.setTranslateX(-10000);
         toRemove.setOpacity(0);
-        // currentRoundDetails.remainingCount--;
     }
 
     private String createQuestionSoundPath(String currentLanguage, String currentLetter) {
