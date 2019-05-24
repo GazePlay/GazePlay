@@ -284,10 +284,33 @@ public class slidingpuzzle implements GameLifeCycle {
     boolean isGameOver() {
         int counter = 0;
         for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
+            log.info("index :" + pictureCard.getCardId());
+            log.info("x Coordinate :" + pictureCard.getInitX());
+            log.info("Y Coordinate :" + pictureCard.getInitY());
+            log.info("KX Coordinate :" + pictureCard.getKingPosX());
+            log.info("KY Coordinate :" + pictureCard.getKingPosY());
             slidingpuzzle.Coord c1 = new slidingpuzzle.Coord(pictureCard.getInitX(), pictureCard.getInitY());
-            if (pictureCard.getCardId() == CoordList.indexOf(c1))
+            log.info("index Vs indexOfList :" + pictureCard.getCardId() + " " + CoordList.indexOf(c1));
+            if (pictureCard.getCardId() == 1 && pictureCard.getInitX() == 342 && pictureCard.getInitY() == 200)
+                counter++;
+            else if (pictureCard.getCardId() == 2 && pictureCard.getInitX() == 542 && pictureCard.getInitY() == 200)
+                counter++;
+            else if (pictureCard.getCardId() == 3 && pictureCard.getInitX() == 742 && pictureCard.getInitY() == 200)
+                counter++;
+            else if (pictureCard.getCardId() == 4 && pictureCard.getInitX() == 342 && pictureCard.getInitY() == 400)
+                counter++;
+            else if (pictureCard.getCardId() == 5 && pictureCard.getInitX() == 542 && pictureCard.getInitY() == 400)
+                counter++;
+            else if (pictureCard.getCardId() == 6 && pictureCard.getInitX() == 742 && pictureCard.getInitY() == 400)
+                counter++;
+            else if (pictureCard.getCardId() == 7 && pictureCard.getInitX() == 342 && pictureCard.getInitY() == 600)
+                counter++;
+            else if (pictureCard.getCardId() == 8 && pictureCard.getInitX() == 542 && pictureCard.getInitY() == 600)
+                counter++;
+            else if (pictureCard.getCardId() == 9 && pictureCard.getInitX() == 742 && pictureCard.getInitY() == 600)
                 counter++;
         }
+        log.info("counter = " + counter);
         if (counter == 9)
             return true;
         else
