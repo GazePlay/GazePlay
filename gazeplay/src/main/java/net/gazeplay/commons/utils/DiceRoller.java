@@ -77,8 +77,8 @@ public class DiceRoller extends MeshView {
         rotations.get(1).setAngle(0);
 
         // Between 2 and 3 turns plus 1 partial turn
-        int angleX = (2 + random.nextInt(2)) * 360 + random.nextInt(360);
-        int angleY = (2 + random.nextInt(2)) * 360 + random.nextInt(360);
+        int angleX = (2 + random.nextInt(1)) * 360 + random.nextInt(360);
+        int angleY = (2 + random.nextInt(1)) * 360 + random.nextInt(360);
 
         Timeline rollTimeline = new Timeline(new KeyFrame(Duration.seconds(1),
                 new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.SPLINE(0.2, 0.6, 0.4, 0.9)),
@@ -87,7 +87,7 @@ public class DiceRoller extends MeshView {
         int modX = angleX % 90;
         int modY = angleY % 90;
         angleX = angleX - modX + (modX > 45 ? 1 : 0) * 90;
-        angleY = angleY - modY + (modY > 45 ? 1 : 0) * 90;  
+        angleY = angleY - modY + (modY > 45 ? 1 : 0) * 90;
 
         Timeline squareUpTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.EASE_OUT),
