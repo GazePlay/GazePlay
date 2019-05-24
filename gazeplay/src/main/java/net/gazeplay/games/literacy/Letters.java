@@ -23,6 +23,8 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.ui.I18NText;
+import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.AspectRatioImageRectangleUtil;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
@@ -50,6 +52,7 @@ public class Letters implements GameLifeCycle {
     CurrentRoundDetails currentRoundDetails;
 
     private int correctCount;
+    Translator translator;
 
     @Data
     public static class CurrentRoundDetails {
@@ -79,7 +82,9 @@ public class Letters implements GameLifeCycle {
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("blocs"));
 
-        String language = gameContext.currentLanguage;
+        String language = gameContext.getCurrentLanguage(); //gameContext.currentLanguage;
+
+        translator = gameContext.getTranslator();
 
         if (language.equalsIgnoreCase("fra")) {
             this.currentLanguage = "fra";
@@ -122,11 +127,16 @@ public class Letters implements GameLifeCycle {
         /*TEST CODE*/
 
         Text questionText;
-        if(currentLanguage.equals("fra")){
-            questionText = new Text("Choisissez la lettre: "+mainLetter.toUpperCase()+"!");
-        }else{
-            questionText = new Text("Choose the Letter: "+mainLetter.toUpperCase()+"!");
-        }
+//        if(currentLanguage.equals("fra")){
+//            questionText = new Text("Choisissez la lettre: "+mainLetter.toUpperCase()+"!");
+//        }else{
+//            questionText = new Text("Choose the Letter: "+mainLetter.toUpperCase()+"!");
+//        }
+
+        questionText = new I18NText(this.translator, "Choose the Letter");
+
+        questionText.setText(questionText.getText()+": "+mainLetter.toUpperCase());
+
         questionText.setTranslateY(0);
         playSound(createQuestionSoundPath(currentLanguage,mainLetter));
 
