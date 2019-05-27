@@ -1134,7 +1134,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(new GameSummary("Spot The Difference", "data/Thumbnails/spotthedifference.png",
-                GameCategories.Category.TARGET), new GameSpec.GameLauncher() {
+                GameCategories.Category.SEARCHING), new GameSpec.GameLauncher() {
 
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -1148,7 +1148,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Dice", "data/Thumbnails/dice.png", GameCategories.Category.TARGET),
+        result.add(new GameSpec(new GameSummary("Dice", "data/Thumbnails/dice.png", GameCategories.Category.MEMORIZATION),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
