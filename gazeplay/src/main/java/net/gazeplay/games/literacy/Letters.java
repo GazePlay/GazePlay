@@ -43,6 +43,10 @@ public class Letters implements GameLifeCycle {
     private final int nbColomns;
     private final Stats stats;
 
+    // Latin Letters!
+    private final String alphabet[] = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
+            "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+
     @Getter
     final String currentLanguage;
 
@@ -60,9 +64,12 @@ public class Letters implements GameLifeCycle {
 
         private final Bloc[][] blocs;
 
-        public CurrentRoundDetails(int nbLines, int nbColumns) {
+        final String mainLetter;
+
+        public CurrentRoundDetails(int nbLines, int nbColumns, String mainLetter) {
             int initCount = nbColumns * nbLines;
             this.remainingCount = initCount;
+            this.mainLetter = mainLetter;
             this.blocs = new Bloc[nbLines][nbColumns];
         }
 
@@ -108,17 +115,12 @@ public class Letters implements GameLifeCycle {
 
         final Configuration config = Configuration.getInstance();
 
-        this.currentRoundDetails = new CurrentRoundDetails(nbLines, nbColomns);
-
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         Random r = new Random();
 
-        // Latin Letters!
-        String alphabet[] = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r",
-                "s", "t", "u", "v", "w", "x", "y", "z" };
-
         final String mainLetter = alphabet[(r.nextInt(alphabet.length))];
+        this.currentRoundDetails = new CurrentRoundDetails(nbLines, nbColomns, mainLetter);
 
         Text questionText;
         // if(currentLanguage.equals("fra")){
@@ -192,42 +194,44 @@ public class Letters implements GameLifeCycle {
 
         final int fixationlength = config.getFixationLength();
 
-        while (correctCount == 0 || correctCount == (nbLines * nbColomns)) {
-            correctCount = 0;
-            for (int i = 0; i < nbLines; i++) {
-                for (int j = 0; j < nbColomns; j++) {
-                    String currentLetter;
+        final int rowTrue = r.nextInt(nbLines);
+        final int colTrue = r.nextInt(nbColomns);
 
-                    float f = r.nextFloat();
-                    Boolean isMainLetter;
+        System.out.println("YES HERE: " + rowTrue);
+        System.out.println("YES HERE: " + colTrue);
+        for (int i = 0; i < nbLines; i++) {
+            for (int j = 0; j < nbColomns; j++) {
+                String currentLetter;
 
-                    if (f < 0.65) {
-                        isMainLetter = true;
-                    } else {
-                        isMainLetter = false;
-                    }
+                float f = r.nextFloat();
+                Boolean isMainLetter;
 
-                    if (isMainLetter) {
-                        currentLetter = mainLetter;
-                        correctCount++;
-                    } else {
-                        String temp = alphabet[(r.nextInt(alphabet.length))];
-                        while (temp.equals(mainLetter)) {
-                            temp = alphabet[(r.nextInt(alphabet.length))];
-                        }
-                        currentLetter = temp;
-                    }
+                if (i == rowTrue && j == colTrue) {
+                    isMainLetter = true;
+                    currentLetter = mainLetter;
 
-                    Bloc bloc = new Bloc(j * width, i * height, width + 1, height + 1, i, j, currentLetter,
-                            isMainLetter, this, stats, gameContext, fixationlength);
+                } else if (f < (0.6 - (1 / (nbColomns * nbLines)))) {
+                    isMainLetter = true;
+                    currentLetter = mainLetter;
 
-                    // result.add(bloc);
-                    blocs[i][j] = bloc;
-                    this.currentRoundDetails.blocs[i][j] = bloc;
-                    this.gameContext.getChildren().add(bloc);
-                    bloc.toFront();
-
+                } else {
+                    isMainLetter = false;
+                    currentLetter = alphabet[(r.nextInt(alphabet.length))];
                 }
+
+                if (currentLetter.equals(mainLetter)) {
+                    correctCount++;
+                }
+
+                Bloc bloc = new Bloc(j * width, i * height, width + 1, height + 1, i, j, currentLetter, mainLetter,
+                        this, stats, gameContext, fixationlength);
+
+                blocs[i][j] = bloc;
+
+                this.currentRoundDetails.blocs[i][j] = bloc;
+                this.gameContext.getChildren().add(bloc);
+                bloc.toFront();
+
             }
         }
 
@@ -272,6 +276,7 @@ public class Letters implements GameLifeCycle {
             }
         };
         calculateService.start();
+
     }
 
     public void removeBloc(Bloc toRemove) {
@@ -281,6 +286,7 @@ public class Letters implements GameLifeCycle {
         toRemove.removeEventFilter(MouseEvent.ANY, toRemove.enterEvent);
         toRemove.removeEventFilter(GazeEvent.ANY, toRemove.enterEvent);
         gameContext.getGazeDeviceManager().removeEventFilter(toRemove);
+        // gameContext.getChildren().remove(toRemove);
         toRemove.setTranslateX(-10000);
         toRemove.setOpacity(0);
     }
