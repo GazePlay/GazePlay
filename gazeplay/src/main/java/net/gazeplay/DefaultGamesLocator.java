@@ -74,7 +74,22 @@ public class DefaultGamesLocator implements GamesLocator {
     public List<GameSpec> listGames() {
 
         List<GameSpec> result = new ArrayList<>();
+        /*
+        result.add(new GameSpec(new GameSummary("potions", "data/Thumbnails/.png",
+                GameCategories.Category.TARGET), new GameSpec.GameLauncher() {
 
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new Stats(scene, "magicPotions");
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                                               Stats stats) {
+               // return new SpotTheDifferences(gameContext, stats);
+            }
+        }));
+    */
         result.add(new GameSpec(new GameSummary("Math101", "data/Thumbnails/math101.png",
                 GameCategories.Category.MEMORIZATION, null, "MathDescAdd"), new GameSpec.GameVariantGenerator() {
                     @Override
