@@ -5,6 +5,9 @@
  */
 package net.gazeplay.games.slidingpuzzle;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -116,8 +119,8 @@ public class slidingpuzzlecard extends Parent {
 
     private ProgressIndicator createProgressIndicator(double width, double height) {
         ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(card.getX());
-        indicator.setTranslateY(card.getY());
+        indicator.setTranslateX(initX);
+        indicator.setTranslateY(initY);
         indicator.setMinWidth(width * 0.1);
         indicator.setMinHeight(width * 0.1);
         indicator.setOpacity(0);
@@ -187,6 +190,12 @@ public class slidingpuzzlecard extends Parent {
 
                         gameInstance.launch();
 
+                        try {
+                            stats.saveStats();
+                        } catch (IOException ex) {
+                            Logger.getLogger(slidingpuzzlecard.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
                         stats.notifyNewRoundReady();
 
                         gameContext.onGameStarted();
@@ -228,6 +237,8 @@ public class slidingpuzzlecard extends Parent {
 
                             log.info("Check if Neighbor = " + checkIfNeighbor().toString());
                             if (checkIfNeighbor()) {
+                                progressIndicator.setTranslateX(kingPosX);
+                                progressIndicator.setTranslateY(kingPosY);
                                 log.info("Card that will be changed with index 9 is : " + CardId);
                                 gameInstance.showCards();
                                 // log.info("Card x is : " + initX);

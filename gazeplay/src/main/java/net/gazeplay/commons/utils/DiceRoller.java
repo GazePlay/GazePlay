@@ -11,12 +11,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +62,7 @@ public class DiceRoller extends MeshView {
 
         PhongMaterial mat = new PhongMaterial();
         mat.setSelfIlluminationMap(new Image("data/common/images/dice.png"));
-        mat.setDiffuseMap(new Image("data/common/images/dice.png"));
+        mat.setDiffuseColor(Color.BLACK);
         mat.setSpecularMap(new Image("data/common/images/dice.png"));
         setMaterial(mat);
 
@@ -74,13 +76,13 @@ public class DiceRoller extends MeshView {
         rotations.get(0).setAngle(0);
         rotations.get(1).setAngle(0);
 
-        // Between 5 and 10 turns plus 1 partial turn
-        int angleX = (5 + random.nextInt(5)) * 360 + random.nextInt(360);
-        int angleY = (5 + random.nextInt(5)) * 360 + random.nextInt(360);
+        // Between 2 and 3 turns plus 1 partial turn
+        int angleX = (2 + random.nextInt(1)) * 360 + random.nextInt(360);
+        int angleY = (2 + random.nextInt(1)) * 360 + random.nextInt(360);
 
-        Timeline rollTimeline = new Timeline(new KeyFrame(Duration.seconds(3),
-                new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.EASE_OUT),
-                new KeyValue(rotations.get(1).angleProperty(), angleY, Interpolator.EASE_OUT)));
+        Timeline rollTimeline = new Timeline(new KeyFrame(Duration.seconds(1),
+                new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.SPLINE(0.2, 0.6, 0.4, 0.9)),
+                new KeyValue(rotations.get(1).angleProperty(), angleY, Interpolator.SPLINE(0.2, 0.6, 0.4, 0.9))));
 
         int modX = angleX % 90;
         int modY = angleY % 90;
@@ -104,6 +106,11 @@ public class DiceRoller extends MeshView {
         int finalY = angleY % 360;
 
         rollTimeline.play();
+        try {
+            Utils.playSound("data/common/sounds/diceRollSound.wav");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (finalX == 90) {
             return 3;

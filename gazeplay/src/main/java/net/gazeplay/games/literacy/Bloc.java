@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.Parent;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -21,9 +22,11 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.Random;
+
 public class Bloc extends Parent {// Rectangle {
 
-    private static final float zoom_factor = 1.05f;
+    private static final float zoom_factor = 1.0f;
     private final double fixationlength;
 
     private final String letterStr;
@@ -43,6 +46,8 @@ public class Bloc extends Parent {// Rectangle {
 
     private final Letters gameInstance;
 
+    private final ProgressIndicator progressIndicator;
+
     private Timeline timelineProgressBar;
 
     final EventHandler<Event> enterEvent;
@@ -52,7 +57,7 @@ public class Bloc extends Parent {// Rectangle {
     private Timeline currentTimeline;
 
     public Bloc(double x, double y, double width, double height, int posX, int posY, String currentLetter,
-            boolean isMainLetter, Letters gameInstance, Stats stats, GameContext gameContext, int fixationlength) {
+            String mainLetter, Letters gameInstance, Stats stats, GameContext gameContext, int fixationlength) {
 
         this.gameInstance = gameInstance;
         this.stats = stats;
@@ -68,7 +73,12 @@ public class Bloc extends Parent {// Rectangle {
         this.bloc = new Rectangle(x, y, width, height);
 
         this.letterStr = currentLetter;
-        this.isMainLetter = isMainLetter;
+
+        if (currentLetter.equals(mainLetter)) {
+            this.isMainLetter = true;
+        } else {
+            this.isMainLetter = false;
+        }
 
         this.letter = new Text("" + letterStr.toUpperCase());
         this.letter.setFont(new Font("Tsukushi A Round Gothic Bold", 250));
@@ -83,6 +93,9 @@ public class Bloc extends Parent {// Rectangle {
 
         this.getChildren().add(stack);
 
+        this.progressIndicator = createProgressIndicator((width), (height));
+        this.getChildren().add(this.progressIndicator);
+
         this.enterEvent = buildEvent();
 
         gameContext.getGazeDeviceManager().addEventFilter(bloc);
@@ -94,29 +107,39 @@ public class Bloc extends Parent {// Rectangle {
 
     }
 
+    private ProgressIndicator createProgressIndicator(double width, double height) {
+        ProgressIndicator indicator = new ProgressIndicator(0);
+        indicator.setTranslateX(bloc.getX() + width * 0.25);
+        indicator.setTranslateY(bloc.getY() + height * 0.2);
+        indicator.setMinWidth(width * 0.5);
+        indicator.setMinHeight(width * 0.5);
+        indicator.setOpacity(0);
+        return indicator;
+    }
+
     private void onCorrectBlocSelected() {
-        System.out.println("WAFAAAA onCorrectBlocSelected");
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         stats.incNbGoals();
 
-        double final_zoom = 1.15;
+        double final_zoom = 1.0;
 
-        // progressIndicator.setOpacity(0);
+        progressIndicator.setOpacity(0);
         letter.setOpacity(0);
-        // NEED TO PLAY AUDIO SOMEWHERE HERE!
 
-        gameInstance.currentRoundDetails.remainingCount--;
+        gameInstance.removeBloc(this);
 
-        if (gameInstance.currentRoundDetails.remainingCount == 0) {
+        if (gameInstance.currentRoundDetails.remainingCount == 1) {
             // REMOVE ALL CARDS AND REVEAL THE IMAGE
             gameInstance.removeAllBlocs();
+            gameInstance.currentRoundDetails.remainingCount = 0;
         } else {
-            gameInstance.removeBloc(this);
+
+            gameInstance.currentRoundDetails.remainingCount--;
         }
 
-        playSound("" + this.gameInstance.currentLanguage, this.letterStr);
+        playSound(createLetterSoundPath("" + this.gameInstance.currentLanguage, this.letterStr));
 
         currentTimeline.stop();
         currentTimeline = new Timeline();
@@ -157,15 +180,19 @@ public class Bloc extends Parent {// Rectangle {
         currentTimeline.play();
     }
 
-    private String createSoundPath(String currentLanguage, String currentLetter) {
-        return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/" + currentLanguage.toLowerCase() + "_"
-                + currentLetter.toUpperCase() + ".mp3";
+    private String createLetterSoundPath(String currentLanguage, String currentLetter) {
+        Random r = new Random();
+        if (r.nextBoolean()) {
+            return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/letter/" + currentLetter.toUpperCase()
+                    + ".mp3";
+        }
+
+        return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/m/letter/" + currentLetter.toUpperCase()
+                + ".mp3";
 
     }
 
-    private void playSound(String currentLanguage, String currentLetter) {
-        String path = "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/" + currentLanguage.toLowerCase()
-                + "_" + currentLetter.toUpperCase() + ".mp3";
+    private void playSound(String path) {
         try {
             // log.debug("Letter sound path {}", path);
             Utils.playSound(path);
@@ -183,6 +210,7 @@ public class Bloc extends Parent {// Rectangle {
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(bloc.opacityProperty(), 0.9)));
 
         currentTimeline.play();
+        progressIndicator.setOpacity(0);
 
     }
 
@@ -194,40 +222,38 @@ public class Bloc extends Parent {// Rectangle {
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    // progressIndicator.setOpacity(1);
-                    // progressIndicator.setProgress(0);
+                    progressIndicator.setOpacity(1);
+                    progressIndicator.setProgress(0);
 
                     currentTimeline.stop();
                     currentTimeline = new Timeline();
 
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(bloc.xProperty(), bloc.getX() - (width * zoom_factor - width) / 2)));
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(bloc.yProperty(), bloc.getY() - (height * zoom_factor - height) / 2)));
-                    currentTimeline.getKeyFrames().add(
-                            new KeyFrame(new Duration(1), new KeyValue(bloc.widthProperty(), width * zoom_factor)));
-                    currentTimeline.getKeyFrames().add(
-                            new KeyFrame(new Duration(1), new KeyValue(bloc.heightProperty(), height * zoom_factor)));
+                    // currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+                    // new KeyValue(bloc.xProperty(), bloc.getX() - (width * zoom_factor - width) / 2)));
+                    // currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+                    // new KeyValue(bloc.yProperty(), bloc.getY() - (height * zoom_factor - height) / 2)));
+                    // currentTimeline.getKeyFrames().add(
+                    // new KeyFrame(new Duration(1), new KeyValue(bloc.widthProperty(), width * zoom_factor)));
+                    // currentTimeline.getKeyFrames().add(
+                    // new KeyFrame(new Duration(1), new KeyValue(bloc.heightProperty(), height * zoom_factor)));
 
-                    timelineProgressBar = new Timeline();
+                    // timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames()
-                            .add(new KeyFrame(new Duration(fixationlength), new KeyValue(bloc.widthProperty(), width)));
+                    // timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                    // new KeyValue(progressIndicator.progressProperty(), 1)));
+
+                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                            new KeyValue(progressIndicator.progressProperty(), 1)));
 
                     currentTimeline.play();
 
-                    timelineProgressBar.play();
+                    // timelineProgressBar.play();
 
-                    // System.out.println("WAFAAAA timelineProgressBar");
-
-                    timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
+                    // timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
+                    currentTimeline.setOnFinished(new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent actionEvent) {
-                            // System.out.println("WAFAAAA timelineProgressBar.setOnFinished");
-                            // turned = true;
-                            //
-                            // card.setFill(new ImagePattern(image, 0, 100, 1, 1, true));
 
                             bloc.removeEventFilter(MouseEvent.ANY, enterEvent);
                             bloc.removeEventFilter(GazeEvent.ANY, enterEvent);
@@ -254,17 +280,17 @@ public class Bloc extends Parent {// Rectangle {
                             .add(new KeyFrame(new Duration(1), new KeyValue(bloc.heightProperty(), height)));
 
                     // Be sure that the card is properly positionned at the end
-                    currentTimeline.setOnFinished((event) -> {
-                        bloc.setX(posX);
-                        bloc.setY(posY);
-                    });
+                    // currentTimeline.setOnFinished((event) -> {
+                    // bloc.setX(posX);
+                    // bloc.setY(posY);
+                    // });
 
                     currentTimeline.play();
 
-                    timelineProgressBar.stop();
+                    // timelineProgressBar.stop();
 
-                    // progressIndicator.setOpacity(0);
-                    // progressIndicator.setProgress(0);
+                    progressIndicator.setOpacity(0);
+                    progressIndicator.setProgress(0);
                 }
             }
         };

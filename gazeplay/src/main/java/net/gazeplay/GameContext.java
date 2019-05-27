@@ -33,6 +33,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.I18NButton;
+import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -44,7 +45,12 @@ import javafx.scene.input.KeyEvent;
 public class GameContext extends GraphicalContext<Pane> {
 
     public static boolean menuOpen = false;
-    public static String currentLanguage;
+
+    @Getter
+    private static String currentLanguage;
+
+    @Getter
+    private static Translator translator;
 
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
@@ -52,7 +58,7 @@ public class GameContext extends GraphicalContext<Pane> {
     private static final double BUTTON_MIN_HEIGHT = 64;
 
     public static GameContext newInstance(GazePlay gazePlay) {
-
+        translator = gazePlay.getTranslator();
         currentLanguage = gazePlay.getTranslator().currentLanguage();
 
         Pane root = new Pane();
