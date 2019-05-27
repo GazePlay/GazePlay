@@ -1148,39 +1148,40 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Dice", "data/Thumbnails/dice.png", GameCategories.Category.MEMORIZATION),
-                new GameSpec.GameVariantGenerator() {
-                    @Override
-                    public Set<GameSpec.GameVariant> getVariants() {
-                        return Sets.newLinkedHashSet(Lists.newArrayList(
+        result.add(
+                new GameSpec(new GameSummary("Dice", "data/Thumbnails/dice.png", GameCategories.Category.MEMORIZATION),
+                        new GameSpec.GameVariantGenerator() {
+                            @Override
+                            public Set<GameSpec.GameVariant> getVariants() {
+                                return Sets.newLinkedHashSet(Lists.newArrayList(
 
-                                new GameSpec.IntGameVariant(1, "1 die"),
+                                        new GameSpec.IntGameVariant(1, "1 die"),
 
-                                new GameSpec.IntGameVariant(2, "2 dice"),
+                                        new GameSpec.IntGameVariant(2, "2 dice"),
 
-                                new GameSpec.IntGameVariant(3, "3 dice"),
+                                        new GameSpec.IntGameVariant(3, "3 dice"),
 
-                                new GameSpec.IntGameVariant(4, "4 dice"),
+                                        new GameSpec.IntGameVariant(4, "4 dice"),
 
-                                new GameSpec.IntGameVariant(5, "5 dice"),
+                                        new GameSpec.IntGameVariant(5, "5 dice"),
 
-                                new GameSpec.IntGameVariant(6, "6 dice")
+                                        new GameSpec.IntGameVariant(6, "6 dice")
 
-                ));
-                    }
-                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "dice");
-                    }
+                        ));
+                            }
+                        }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new Stats(scene, "dice");
+                            }
 
-                    @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
-                            Stats stats) {
-                        return new Dice(gameContext, stats, gameVariant.getNumber());
-                    }
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.IntGameVariant gameVariant, Stats stats) {
+                                return new Dice(gameContext, stats, gameVariant.getNumber());
+                            }
 
-                }));
+                        }));
 
         log.info("Games found : {}", result.size());
 
