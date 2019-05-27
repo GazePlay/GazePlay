@@ -132,9 +132,10 @@ public class slidingpuzzlecard extends Parent {
         log.info("initY= " + initY);
         log.info("KingPosX= " + kingPosX);
         log.info("KingPosY= " + kingPosY);
-        if (this.initX == kingPosX && ((this.initY == kingPosY + 200) || (this.initY == kingPosY - 200)))
+        if (this.initX == kingPosX && ((this.initY == kingPosY + initWidth) || (this.initY == kingPosY - initWidth)))
             return true;
-        else if (this.initY == kingPosY && ((this.initX == kingPosX + 200) || (this.initX == kingPosX - 200)))
+        else if (this.initY == kingPosY
+                && ((this.initX == kingPosX + initWidth) || (this.initX == kingPosX - initWidth)))
             return true;
 
         else
