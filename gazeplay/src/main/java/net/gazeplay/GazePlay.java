@@ -157,8 +157,7 @@ public class GazePlay extends Application {
         statsContext.setUpOnStage(primaryScene);
     }
 
-    public void onDisplayAOI(AreaOfInterest areaOfInterest)
-    {
+    public void onDisplayAOI(AreaOfInterest areaOfInterest) {
         areaOfInterest.setUpOnStage(primaryScene);
     }
 

@@ -276,18 +276,18 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
-        //starts from here
+        // starts from here
         EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
             @Override
             public void handle(javafx.event.Event e) {
 
-                AreaOfInterest areaOfInterest = AreaOfInterest.newInstance(gazePlay,stats);
+                AreaOfInterest areaOfInterest = AreaOfInterest.newInstance(gazePlay, stats);
                 gazePlay.onDisplayAOI(areaOfInterest);
-//                statsContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
+                // statsContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
 
-//                gazePlay.onReturnToMenu();
+                // gazePlay.onReturnToMenu();
 
-//                statsContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
+                // statsContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
                 // }
             }
         };
@@ -295,13 +295,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         HomeButton aoiButton = new HomeButton("data/common/images/aoibtn.png");
         aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
-        //end here
+        // end here
 
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
-        if(config.isAreaOfInterestEnabled())
-        controlButtonPane.getChildren().add(aoiButton);
+        if (config.isAreaOfInterestEnabled())
+            controlButtonPane.getChildren().add(aoiButton);
         controlButtonPane.getChildren().add(homeButton);
 
         if (continueButton != null) {

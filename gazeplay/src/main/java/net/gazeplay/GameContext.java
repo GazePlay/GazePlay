@@ -283,7 +283,6 @@ public class GameContext extends GraphicalContext<Pane> {
         this.gazeDeviceManager = gazeDeviceManager;
         this.configPane = configPane;
 
-
     }
 
     @Override

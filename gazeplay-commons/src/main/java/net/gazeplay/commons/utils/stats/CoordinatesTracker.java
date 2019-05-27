@@ -16,15 +16,23 @@ public class CoordinatesTracker {
 
     }
 
-    public int getxValue()
-    {
+    public int getxValue() {
         return this.xValue;
     }
-    public int getyValue()
-    {
+
+    public int getyValue() {
         return this.yValue;
     }
-    public long getTimeToFixation(){ return this.timeToFixation; }
-    public long getIntervalTime(){ return this.intervalTime;}
-    public long getTimeStarted(){return this.timeStarted;}
+
+    public long getTimeToFixation() {
+        return this.timeToFixation;
+    }
+
+    public long getIntervalTime() {
+        return this.intervalTime;
+    }
+
+    public long getTimeStarted() {
+        return this.timeStarted;
+    }
 }

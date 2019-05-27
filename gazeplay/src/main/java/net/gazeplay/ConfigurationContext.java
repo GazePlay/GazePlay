@@ -761,7 +761,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableAreaOfInterest(Configuration configuration,
-                                                        ConfigurationContext configurationContext) {
+            ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
         checkBox.setSelected(configuration.isAreaOfInterestEnabled());
@@ -774,8 +774,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return checkBox;
     }
+
     private static CheckBox buildDisableConvexHull(Configuration configuration,
-                                                       ConfigurationContext configurationContext) {
+            ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
         checkBox.setSelected(configuration.isConvexHullEnabled());
@@ -788,8 +789,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return checkBox;
     }
+
     private static CheckBox buildVideoRecording(Configuration configuration,
-                                                ConfigurationContext configurationContext) {
+            ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
         checkBox.setSelected(configuration.isVideoRecordingEnabled());

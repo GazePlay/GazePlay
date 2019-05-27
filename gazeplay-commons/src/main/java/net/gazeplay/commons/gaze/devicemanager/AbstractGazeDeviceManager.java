@@ -44,6 +44,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     public void addGazeMotionListener(GazeMotionListener listener) {
         this.gazeMotionListeners.add(listener);
     }
+
     @Override
     public void removeGazeMotionListener(GazeMotionListener listener) {
         this.gazeMotionListeners.remove(listener);
@@ -176,7 +177,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     }
 
     public void EventFire(double positionX, double positionY, GazeInfos gi, Node node) {
-//         log.info("GazeInfo: " + gi);
+        // log.info("GazeInfo: " + gi);
         if (!node.isDisable()) {
 
             Point2D localPosition = node.screenToLocal(positionX, positionY);

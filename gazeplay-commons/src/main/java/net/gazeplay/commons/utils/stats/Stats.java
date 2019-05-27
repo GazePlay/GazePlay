@@ -2,8 +2,8 @@ package net.gazeplay.commons.utils.stats;
 
 import com.github.agomezmoron.multimedia.recorder.VideoRecorder;
 import com.github.agomezmoron.multimedia.recorder.configuration.VideoRecorderConfiguration;
-import com.github.agomezmoron.multimedia.recorder.listener.VideoRecorderEventListener;
-import com.github.agomezmoron.multimedia.recorder.listener.VideoRecorderEventObject;
+
+import com.sun.javafx.PlatformUtil;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 /**
  * Created by schwab on 16/08/2017.
  */
@@ -46,7 +47,7 @@ public class Stats implements GazeMotionListener {
     private RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
     protected String gameName;
     private Instant starts;
-    private int counter= 0;
+    private int counter = 0;
     private List<CoordinatesTracker> movementHistory = new ArrayList<>();
     private long previousTime = 0;
     private int previousX = 0;
@@ -98,84 +99,70 @@ public class Stats implements GazeMotionListener {
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
     }
+
     public void start() {
         config = Configuration.getInstance();
-        if(config.isVideoRecordingEnabled())
-        {
+        if (config.isVideoRecordingEnabled()) {
             nameOfVideo = Utils.now() + "video";
             directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
             VideoRecorder.start(nameOfVideo);
             VideoRecorderConfiguration.setVideoDirectory(getGameStatsOfTheDayDirectory());
             VideoRecorderConfiguration.setCaptureInterval(1);
-            VideoRecorderEventListener videoRecorderEventListener = new VideoRecorderEventListener() {
-                @Override
-                public void frameAdded(VideoRecorderEventObject args) {
-                    sceneCounter++;
-                    System.out.println("The amount of scene is : "+ sceneCounter);
-                    System.out.println("The time is at "+lifeCycle.computeTotalElapsedDuration());
-                }
-            };
-            VideoRecorder.addVideoRecorderEventListener(videoRecorderEventListener);
+
         }
         lifeCycle.start(() -> {
-            System.out.println("Head map"+ config.isHeatMapDisabled());
-            System.out.println("Fixation"+ config.isFixationSequenceDisabled());
-            System.out.println("AOI"+ config.isAreaOfInterestEnabled());
+            System.out.println("Head map" + config.isHeatMapDisabled());
+            System.out.println("Fixation" + config.isFixationSequenceDisabled());
+            System.out.println("AOI" + config.isAreaOfInterestEnabled());
 
-            if(!config.isHeatMapDisabled())
+            if (!config.isHeatMapDisabled())
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
             startTime = System.currentTimeMillis();
-            if(!config.isFixationSequenceDisabled())
-            fixationSequence = new LinkedList<FixationPoint>();
-            recordGazeMovements = e ->
-            {
+            if (!config.isFixationSequenceDisabled())
+                fixationSequence = new LinkedList<FixationPoint>();
+            recordGazeMovements = e -> {
                 int getX = (int) e.getX();
                 int getY = (int) e.getY();
-                if(!config.isHeatMapDisabled())
+                if (!config.isHeatMapDisabled())
                     incHeatMap(getX, getY);
-                if(!config.isFixationSequenceDisabled())
-                {
+                if (!config.isFixationSequenceDisabled()) {
                     incFixationSequence(getX, getY);
                 }
-                if(config.isAreaOfInterestEnabled())
-                {
-                    if(getX != previousX || getY != previousY && counter == 0)
-                    {
+                if (config.isAreaOfInterestEnabled()) {
+                    if (getX != previousX || getY != previousY && counter == 0) {
                         long timeToFixation = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
                         long timeInterval = (timeToFixation - previousTime);
-                        movementHistory.add(new CoordinatesTracker(getX,getY,timeToFixation,timeInterval,System.currentTimeMillis()));
+                        movementHistory.add(new CoordinatesTracker(getX, getY, timeToFixation, timeInterval,
+                                System.currentTimeMillis()));
                         previousTime = timeToFixation;
                         counter++;
-                        if(counter == 2)
-                            counter= 0;
+                        if (counter == 2)
+                            counter = 0;
                     }
                 }
             };
-            recordMouseMovements = e ->
-            {
+            recordMouseMovements = e -> {
                 int getX = (int) e.getX();
                 int getY = (int) e.getY();
-                if(!config.isHeatMapDisabled())
+                if (!config.isHeatMapDisabled())
                     incHeatMap(getX, getY);
-                if(!config.isFixationSequenceDisabled())
-                {
+                if (!config.isFixationSequenceDisabled()) {
                     incFixationSequence(getX, getY);
                 }
-                if(config.isAreaOfInterestEnabled())
-                {
-                    if(getX != previousX || getY != previousY && counter == 0)
-                    {
+                if (config.isAreaOfInterestEnabled()) {
+                    if (getX != previousX || getY != previousY && counter == 0) {
                         long timeElapsedMillis = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
                         long timeInterval = (timeElapsedMillis - previousTime);
-                        movementHistory.add(new CoordinatesTracker(getX,getY,timeElapsedMillis,timeInterval,System.currentTimeMillis()));
+                        movementHistory.add(new CoordinatesTracker(getX, getY, timeElapsedMillis, timeInterval,
+                                System.currentTimeMillis()));
                         previousTime = timeElapsedMillis;
                         counter++;
-                        if(counter == 2)
-                            counter= 0;
+                        if (counter == 2)
+                            counter = 0;
                     }
                 }
             };
@@ -186,8 +173,7 @@ public class Stats implements GazeMotionListener {
 
     }
 
-    public List<CoordinatesTracker> getMovementHistoryWithTime()
-    {
+    public List<CoordinatesTracker> getMovementHistoryWithTime() {
         return this.movementHistory;
     }
 
@@ -203,8 +189,7 @@ public class Stats implements GazeMotionListener {
     }
 
     public void stop() {
-        if(config.isVideoRecordingEnabled())
-        {
+        if (config.isVideoRecordingEnabled()) {
             try {
                 VideoRecorder.stop();
             } catch (MalformedURLException e) {
@@ -259,7 +244,7 @@ public class Stats implements GazeMotionListener {
         return roundsDurationReport.computeAverageLength();
     }
 
-    public long getStartTime(){
+    public long getStartTime() {
         return this.startTime;
     }
 
@@ -308,6 +293,7 @@ public class Stats implements GazeMotionListener {
             return ratioRate;
         }
     }
+
     public void incNbShots() {
         this.nbShots++;
     }
@@ -320,14 +306,24 @@ public class Stats implements GazeMotionListener {
         return this.roundsDurationReport.getOriginalDurationsBetweenGoals();
     }
 
-    public String getDirectoryOfVideo()
-    {
+    public String getDirectoryOfVideo() {
         Runtime rt = Runtime.getRuntime();
-        try {
-            Process proc = rt.exec("mv "+ VideoRecorderConfiguration.getVideoDirectory() +"/" + this.nameOfVideo + ".mov "+ VideoRecorderConfiguration.getVideoDirectory() +"/" + this.nameOfVideo + ".mp4");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (PlatformUtil.isWindows()){
+            try {
+                Process proc = rt.exec("mv " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo
+                        + ".mov " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo + ".mp4");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            try {
+                Process proc = rt.exec("rename " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo
+                        + ".mov " +this.nameOfVideo + ".mp4");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
 
         return VideoRecorderConfiguration.getVideoDirectory().toURI() + this.nameOfVideo + ".mp4";
     }
@@ -336,7 +332,7 @@ public class Stats implements GazeMotionListener {
         File outputDirectory = getGameStatsOfTheDayDirectory();
 
         final String fileName = Utils.now() + "-info-game.csv";
-        System.out.println("The output directory is "+outputDirectory.toURI());
+        System.out.println("The output directory is " + outputDirectory.toURI());
         return new File(outputDirectory, fileName);
     }
 
@@ -425,6 +421,7 @@ public class Stats implements GazeMotionListener {
                 }
             }
     }
+
     private void inc(int x, int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             heatMap[x][y]++;

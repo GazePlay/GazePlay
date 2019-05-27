@@ -347,15 +347,15 @@ public class Configuration implements Cloneable {
             heatMapDisabledProperty.setValue(Boolean.parseBoolean(buffer));
         }
         buffer = prop.getProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED);
-        if( buffer != null){
+        if (buffer != null) {
             areaOfInterestDisabledProperty.setValue(Boolean.parseBoolean(buffer));
         }
         buffer = prop.getProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED);
-        if( buffer != null){
+        if (buffer != null) {
             convexHullDisabledProperty.setValue(Boolean.parseBoolean(buffer));
         }
         buffer = prop.getProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED);
-        if( buffer != null){
+        if (buffer != null) {
             videoRecordingDisabledProperty.setValue(Boolean.parseBoolean(buffer));
         }
 
@@ -561,15 +561,19 @@ public class Configuration implements Cloneable {
     public Boolean isHeatMapDisabled() {
         return heatMapDisabledProperty.getValue();
     }
-    public Boolean isAreaOfInterestEnabled(){
+
+    public Boolean isAreaOfInterestEnabled() {
         return areaOfInterestDisabledProperty.getValue();
     }
-    public Boolean isConvexHullEnabled(){
+
+    public Boolean isConvexHullEnabled() {
         return convexHullDisabledProperty.getValue();
     }
-    public Boolean isVideoRecordingEnabled(){
+
+    public Boolean isVideoRecordingEnabled() {
         return videoRecordingDisabledProperty.getValue();
     }
+
     public Boolean isFixationSequenceDisabled() {
         return fixationSequenceDisabledProperty.getValue();
     }
