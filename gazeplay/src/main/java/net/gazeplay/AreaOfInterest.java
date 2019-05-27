@@ -17,15 +17,14 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.util.Duration;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
-import net.gazeplay.commons.utils.stats.AreaOfInterestProps;
-import net.gazeplay.commons.utils.stats.ConvexHullProps;
-import net.gazeplay.commons.utils.stats.CoordinatesTracker;
-import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.*;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.util.*;
@@ -45,7 +44,11 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
 //    private ArrayList<Polygon> listOfPolygons;
     private int intereatorAOI;
     private Polygon currentAreaDisplay;
+    private GridPane currentInfoBox;
+    private Line currentLineToInfoBox;
     private int colorIterator;
+    private int bias = 10;
+    private Pane graphicsPane;
 
 
 
@@ -81,14 +84,21 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
                             {
                                 if(index == allAOIList.get(intereatorAOI).getStartingIndex())
                                 {
+                                    currentInfoBox = allAOIList.get(intereatorAOI).getInfoBox().getInfoBox();
                                     currentAreaDisplay = allAOIList.get(intereatorAOI).getAreaOfInterest();
+                                    currentLineToInfoBox  = allAOIList.get(intereatorAOI).getInfoBox().getLineToInfoBox();
                                     graphicsPane.getChildren().add(currentAreaDisplay);
+                                    graphicsPane.getChildren().add(currentInfoBox);
+                                    graphicsPane.getChildren().add(currentLineToInfoBox);
+
 //                                    System.out.println("add an AOI");
                                 }
                                 if(index == allAOIList.get(intereatorAOI).getEndingIndex())
                                 {
 //                                    System.out.println("Remove an AOI");
                                     graphicsPane.getChildren().remove(currentAreaDisplay);
+                                    graphicsPane.getChildren().remove(currentInfoBox);
+                                    graphicsPane.getChildren().remove(currentLineToInfoBox);
                                     intereatorAOI++;
                                 }
                             }
@@ -126,7 +136,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
             double x2 = movementHistory.get(index-1).getxValue();
             double y2 = movementHistory.get(index-1).getyValue();
             double eDistance =  Math.sqrt(Math.pow(x2 - x1,2) + Math.pow(y2-y1,2));
-            if(eDistance < 100 && movementHistory.get(index).getIntervalTime() > 10)
+            if(eDistance < 120 && movementHistory.get(index).getIntervalTime() > 10)
             {
                 if(index == 1)
                     areaOfInterestList.add(movementHistory.get(0));
@@ -136,8 +146,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
             }else  if(areaOfInterestList.size() != 0) {
                 if (areaOfInterestList.size() > 2) {
                     System.out.println("End of AOE");
-                    long AreaStartTime = areaOfInterestList.get(0).getTimeValue();
-                    long AreaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
+                    long AreaStartTime =  areaOfInterestList.get(0).getTimeStarted();
+                    long AreaEndTime =  areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted() + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
                     long TTFF = AreaStartTime - startTime;
                     long timeSpent = AreaEndTime - AreaStartTime;
                     int centerX = 0;
@@ -162,10 +172,16 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
                     Polygon areaOfInterest = new Polygon();
                     areaOfInterest.getPoints().addAll(polygonPoints);
                     areaOfInterest.setStroke(colors[colorIterator]);
-                    areaOfInterest.setFill(Color.rgb(0, 0, 255, 0.8));
+                    Double widthOfArea = (polygonPoints[2] - polygonPoints[0]) ;
+                    Double heightOfArea = (polygonPoints[1] -polygonPoints[7]);
+                    System.out.println("Width : " + polygonPoints[2] + " Minus "+polygonPoints[0] );
+                    System.out.println("height : " + polygonPoints[1] + " Minus "+polygonPoints[7] );
+
+                    areaOfInterest.setFill(Color.rgb(0, 0, 255, 0.2));
                     centerX = centerX / areaOfInterestList.size();
                     centerY = centerY / areaOfInterestList.size();
-                    AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(TTFF, timeSpent, areaOfInterestList, centerX, centerY,polygonPoints,point2DS,movementHistoryStartingIndex,movementHistoryEndingIndex,areaOfInterest);
+                    InfoBoxProps infoBox = calculateInfoBox("AOI number "+ (allAOIList.size()+1),TTFF+"",timeSpent+"",areaOfInterestList.size() + "",centerX,centerY,widthOfArea , heightOfArea ,polygonPoints);
+                    AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(TTFF, timeSpent, areaOfInterestList, centerX, centerY,polygonPoints,point2DS,movementHistoryStartingIndex,movementHistoryEndingIndex,areaOfInterest,infoBox);
                     allAOIList.add(areaOfInterestProps);
                 }else{
                     System.out.println("Not enough points to make a convex hull" + areaOfInterestList.size());
@@ -176,6 +192,58 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         }
         if(index != movementHistory.size()-1)
             calculateAreaOfInterest(index+1,startTime);
+    }
+    private InfoBoxProps calculateInfoBox(String aoiID,String TTFF, String TimeSpent, String Fixation, int centerX , int centerY, Double widthOfArea,Double heightOfArea, Double[] polygonPoint){
+        GridPane infoBox = new GridPane();
+        infoBox.setHgap(10);
+        infoBox.setVgap(10);
+        infoBox.setPadding(new Insets(10, 10, 10, 10));
+        Text boxID = new Text(aoiID);
+        Text TTFFLabel = new Text("TTFF:");
+        Text TTFFV = new Text(TTFF);
+        Text TimeSpentLabel = new Text("Time Spent:");
+        Text TimeSpentLabelV = new Text(TimeSpent);
+        Text Fixations = new Text("Fixations:");
+        Text FixationV = new Text(Fixation);
+        infoBox.add(boxID, 1 , 0);
+        infoBox.add(TTFFLabel , 0,2);
+        infoBox.add(TTFFV , 2,2);
+        infoBox.add(TimeSpentLabel , 0,3);
+        infoBox.add(TimeSpentLabelV , 2,3);
+        infoBox.add(Fixations , 0,4);
+        infoBox.add(FixationV , 2,4);
+        double screenWidthCenter = Screen.getPrimary().getBounds().getWidth() / 2;
+
+        Line line = new Line();
+        line.setStartY(centerY);
+        if(centerX > screenWidthCenter)
+        {
+            System.out.println("It is on the left");
+            infoBox.setLayoutX(centerX  - widthOfArea  - 400);
+            infoBox.setLayoutY(centerY);
+            line.setEndX(centerX  - widthOfArea - 400);
+            line.setEndY(centerY);
+            line.setStartX(polygonPoint[0]);
+            line.setStroke(Color.YELLOW);
+
+            // will display infobox on the left side
+        }
+        else{
+            System.out.println("It is on the right");
+            infoBox.setLayoutX(centerX  + widthOfArea + 100);
+            infoBox.setLayoutY(centerY);
+            line.setEndX(centerX + widthOfArea + 100);
+            line.setEndY(centerY);
+            line.setStartX(polygonPoint[2]);
+            line.setStroke(Color.GREEN);
+
+            // will display infobox on the right
+        }
+        System.out.println("The screen width is "+ screenWidthCenter +" and the center x is " + centerX);
+        infoBox.setStyle("-fx-background-color: #FFFF66");
+        System.out.println("The width of the area is "+ widthOfArea);
+
+        return new InfoBoxProps(infoBox,line);
     }
 
     private Double[] calculateSquarePoints(Point2D[] point2D)
@@ -196,14 +264,14 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
                 bottomPoint = point2D[i].getY();
         }
         Double[] squarePoints = new Double[8];
-        squarePoints[0] = leftPoint;
-        squarePoints[1] = topPoint;
-        squarePoints[2] = rightPoint;
-        squarePoints[3] = topPoint;
-        squarePoints[4] = rightPoint;
-        squarePoints[5] = bottomPoint;
-        squarePoints[6] = leftPoint;
-        squarePoints[7] = bottomPoint;
+        squarePoints[0] = leftPoint - bias;
+        squarePoints[1] = topPoint + bias;
+        squarePoints[2] = rightPoint + bias;
+        squarePoints[3] = topPoint + bias;
+        squarePoints[4] = rightPoint + bias;
+        squarePoints[5] = bottomPoint - bias;
+        squarePoints[6] = leftPoint - bias;
+        squarePoints[7] = bottomPoint - bias;
         return squarePoints;
     }
     private int orientation(Point2D p1, Point2D p2, Point2D p3)
@@ -269,11 +337,11 @@ public class AreaOfInterest extends GraphicalContext<BorderPane>{
         topPane.getChildren().add(screenTitleText);
         VBox centerPane = new VBox();
         centerPane.setAlignment(Pos.CENTER);
-        Pane graphicsPane = new Pane();
+        graphicsPane = new Pane();
         areaOfInterestList = new ArrayList<>();
         movementHistory = stats.getMovementHistoryWithTime();
+        System.out.println("The start time is "+ stats.getStartTime());
         calculateAreaOfInterest(0,stats.getStartTime());
-
         System.out.println("The amount of AOIs is "+allAOIList.size());
 
         //Drawing center points of each AOI

@@ -1,6 +1,7 @@
 package net.gazeplay.commons.utils.stats;
 
 import javafx.geometry.Point2D;
+import javafx.scene.layout.GridPane;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,9 +19,10 @@ public class AreaOfInterestProps {
     private final int startingIndex;
     private final int endingIndex;
     private final javafx.scene.shape.Polygon areaOfInterest;
+    private final InfoBoxProps infoBox;
 
 
-    public AreaOfInterestProps(long TTFF, long timeSpent, ArrayList<CoordinatesTracker> listOfPoints, int centerX , int centerY, Double[] convexPoints, Point2D[] allPoint2DOfConvex, int startingIndex, int endingIndex, javafx.scene.shape.Polygon areaOfInterest)
+    public AreaOfInterestProps(long TTFF, long timeSpent, ArrayList<CoordinatesTracker> listOfPoints, int centerX , int centerY, Double[] convexPoints, Point2D[] allPoint2DOfConvex, int startingIndex, int endingIndex, javafx.scene.shape.Polygon areaOfInterest, InfoBoxProps infoBox)
     {
         this.TTFF = TTFF;
         this.listOfPoints = listOfPoints;
@@ -33,6 +35,7 @@ public class AreaOfInterestProps {
         this.startingIndex = startingIndex;
         this.endingIndex = endingIndex;
         this.areaOfInterest = areaOfInterest;
+        this.infoBox = infoBox;
     }
     public Double[] getConvexPoints(){
         return this.convexPoints;
@@ -56,5 +59,6 @@ public class AreaOfInterestProps {
     public int getStartingIndex(){ return this.startingIndex;}
     public int getEndingIndex(){ return this.endingIndex;}
     public javafx.scene.shape.Polygon getAreaOfInterest(){ return this.areaOfInterest;}
+    public InfoBoxProps getInfoBox (){return this.infoBox;}
 
 }

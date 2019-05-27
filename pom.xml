@@ -126,7 +126,6 @@
 				<artifactId>screen-recorder</artifactId>
 				<version>0.0.3</version>
 			</dependency>
-=
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
@@ -150,7 +149,34 @@
 				<artifactId>findbugs</artifactId>
 				<version>3.0.1</version>
 			</dependency>
-
+			<dependency>
+				<groupId>com.roufid.tutorials</groupId>
+				<artifactId>example-app</artifactId>
+				<version>1.0</version>
+				<scope>system</scope>
+				<systemPath>${basedir}/lib/customizer.jar</systemPath>
+			</dependency>
+			<dependency>
+				<groupId>com.roufid.tutorials</groupId>
+				<artifactId>example-app</artifactId>
+				<version>1.0</version>
+				<scope>system</scope>
+				<systemPath>${basedir}/lib/jmf.jar</systemPath>
+			</dependency>
+			<dependency>
+				<groupId>com.roufid.tutorials</groupId>
+				<artifactId>example-app</artifactId>
+				<version>1.0</version>
+				<scope>system</scope>
+				<systemPath>${basedir}/lib/mediaplayer.jar</systemPath>
+			</dependency>
+			<dependency>
+				<groupId>com.roufid.tutorials</groupId>
+				<artifactId>example-app</artifactId>
+				<version>1.0</version>
+				<scope>system</scope>
+				<systemPath>${basedir}/lib/multiplayer.jar</systemPath>
+			</dependency>
 
 		</dependencies>
 	</dependencyManagement>
@@ -343,11 +369,6 @@
 
 
 	<repositories>
-		<repository>
-			<id>screen-recorder</id>
-			<name>Java screen recorder library by agomezmoron</name>
-			<url>https://raw.github.com/agomezmoron/screen-recorder/mvn-repo</url>
-		</repository>
 		<repository>
 			<id>bintray</id>
 			<name>bintray</name>

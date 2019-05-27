@@ -98,7 +98,6 @@ public class Stats implements GazeMotionListener {
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
     }
-
     public void start() {
         config = Configuration.getInstance();
         if(config.isVideoRecordingEnabled())
@@ -142,13 +141,12 @@ public class Stats implements GazeMotionListener {
                 {
                     if(getX != previousX || getY != previousY && counter == 0)
                     {
-                        long timeElapsedMillis = System.currentTimeMillis() - startTime;
+                        long timeToFixation = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
-                        long timeInterval = (timeElapsedMillis - previousTime);
-                        movementHistory.add(new CoordinatesTracker(getX,getY,timeElapsedMillis,timeInterval));
-
-                        previousTime = timeElapsedMillis;
+                        long timeInterval = (timeToFixation - previousTime);
+                        movementHistory.add(new CoordinatesTracker(getX,getY,timeToFixation,timeInterval,System.currentTimeMillis()));
+                        previousTime = timeToFixation;
                         counter++;
                         if(counter == 2)
                             counter= 0;
@@ -173,7 +171,7 @@ public class Stats implements GazeMotionListener {
                         previousX = getX;
                         previousY = getY;
                         long timeInterval = (timeElapsedMillis - previousTime);
-                        movementHistory.add(new CoordinatesTracker(getX,getY,timeElapsedMillis,timeInterval));
+                        movementHistory.add(new CoordinatesTracker(getX,getY,timeElapsedMillis,timeInterval,System.currentTimeMillis()));
                         previousTime = timeElapsedMillis;
                         counter++;
                         if(counter == 2)
@@ -429,7 +427,6 @@ public class Stats implements GazeMotionListener {
     }
     private void inc(int x, int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
-            // heatMap[heatMap[0].length - y][heatMap.length - x]++;
             heatMap[x][y]++;
         }
     }
