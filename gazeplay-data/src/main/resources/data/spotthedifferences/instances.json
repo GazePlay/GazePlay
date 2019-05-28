@@ -174,5 +174,31 @@
         "radius": 150
       }
     ]
+  },
+  {
+    "image1": "concert1.png",
+    "image2": "concert2.png",
+    "differences": [
+      {
+        "x": 1330,
+        "y": 215,
+        "radius": 150
+      },
+      {
+        "x": 1620,
+        "y": 500,
+        "radius": 150
+      },
+      {
+        "x": 1350,
+        "y": 1200,
+        "radius": 150
+      },
+      {
+        "x": 630,
+        "y": 550,
+        "radius": 150
+      }
+    ]
   }
 ]
