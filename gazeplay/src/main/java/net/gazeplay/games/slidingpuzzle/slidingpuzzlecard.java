@@ -128,10 +128,7 @@ public class slidingpuzzlecard extends Parent {
     }
 
     private Boolean checkIfNeighbor() {
-        log.info("initX= " + initX);
-        log.info("initY= " + initY);
-        log.info("KingPosX= " + kingPosX);
-        log.info("KingPosY= " + kingPosY);
+
         if (this.initX == kingPosX && ((this.initY == kingPosY + initWidth) || (this.initY == kingPosY - initWidth)))
             return true;
         else if (this.initY == kingPosY
@@ -236,21 +233,21 @@ public class slidingpuzzlecard extends Parent {
                         @Override
                         public void handle(ActionEvent actionEvent) {
 
-                            log.info("Check if Neighbor = " + checkIfNeighbor().toString());
+                            
                             if (checkIfNeighbor()) {
                                 progressIndicator.setTranslateX(kingPosX);
                                 progressIndicator.setTranslateY(kingPosY);
-                                log.info("Card that will be changed with index 9 is : " + CardId);
-                                gameInstance.showCards();
+                                
+                                //gameInstance.showCards();
 
                                 gameInstance.replaceCards(fixationlength, initX, initY, CardId);
 
                                 isMyNeighborEvent();
 
-                                log.info("After Pressing");
+                                
                                 gameInstance.fixCoord(CardId, initX, initY, kingPosX, kingPosY);
 
-                                gameInstance.showCards();
+                                //gameInstance.showCards();
 
                                 if (gameInstance.isGameOver())
                                     onGameOver();
