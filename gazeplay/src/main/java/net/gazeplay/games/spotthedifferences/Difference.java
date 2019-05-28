@@ -14,7 +14,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 @Slf4j
 public class Difference extends Circle {
 
-    private static final long GAZE_TIME = 500;
+    private static final long GAZE_TIME = 1000;
 
     @Getter
     @Setter

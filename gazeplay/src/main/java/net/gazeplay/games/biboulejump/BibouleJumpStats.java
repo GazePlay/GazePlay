@@ -7,7 +7,7 @@ public class BibouleJumpStats extends Stats {
 
     public BibouleJumpStats(Scene gameContextScene) {
         super(gameContextScene);
-        this.gameName = "Biboule Jump";
+        this.gameName = "biboule-jump";
     }
 
     public void incNbGoals(int increment) {
