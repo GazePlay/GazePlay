@@ -242,20 +242,14 @@ public class slidingpuzzlecard extends Parent {
                                 progressIndicator.setTranslateY(kingPosY);
                                 log.info("Card that will be changed with index 9 is : " + CardId);
                                 gameInstance.showCards();
-                                // log.info("Card x is : " + initX);
-                                // log.info("Card y is : " + initY);
-                                gameInstance.replaceCards(fixationlength, initX, initY, CardId);
-                                // slidingpuzzlecard card = new slidingpuzzlecard(9,initX, initY, 200,
-                                // 200,"data/tiles/tile9.png", fixationlength , gameContext, gameInstance,
-                                // stats,initX,initY);
 
-                                // gameContext.getChildren().add(card);
+                                gameInstance.replaceCards(fixationlength, initX, initY, CardId);
+
                                 isMyNeighborEvent();
 
                                 log.info("After Pressing");
                                 gameInstance.fixCoord(CardId, initX, initY, kingPosX, kingPosY);
-                                // log.info("New Card x is : " + initX);
-                                // log.info("New Card y is : " + initY);
+
                                 gameInstance.showCards();
 
                                 if (gameInstance.isGameOver())
