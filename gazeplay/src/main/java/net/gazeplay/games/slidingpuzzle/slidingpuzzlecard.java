@@ -233,21 +233,19 @@ public class slidingpuzzlecard extends Parent {
                         @Override
                         public void handle(ActionEvent actionEvent) {
 
-                            
                             if (checkIfNeighbor()) {
                                 progressIndicator.setTranslateX(kingPosX);
                                 progressIndicator.setTranslateY(kingPosY);
-                                
-                                //gameInstance.showCards();
+
+                                // gameInstance.showCards();
 
                                 gameInstance.replaceCards(fixationlength, initX, initY, CardId);
 
                                 isMyNeighborEvent();
 
-                                
                                 gameInstance.fixCoord(CardId, initX, initY, kingPosX, kingPosY);
 
-                                //gameInstance.showCards();
+                                // gameInstance.showCards();
 
                                 if (gameInstance.isGameOver())
                                     onGameOver();

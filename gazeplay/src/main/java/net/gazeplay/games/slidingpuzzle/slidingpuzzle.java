@@ -280,7 +280,7 @@ public class slidingpuzzle implements GameLifeCycle {
         for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
 
             slidingpuzzle.Coord c1 = new slidingpuzzle.Coord(pictureCard.getInitX(), pictureCard.getInitY());
-            
+
             if (pictureCard.getCardId() == 1 && pictureCard.getInitX() == (int) computePositionX(boxWidth, cardWidth, 1)
                     && pictureCard.getInitY() == (int) computePositionY(boxHeight, cardHeight, 1))
                 counter++;
@@ -334,6 +334,6 @@ public class slidingpuzzle implements GameLifeCycle {
     }
 
     private static double computePositionY(double cardboxHeight, double cardHeight, int rowIndex) {
-        return (rowIndex * cardHeight)-60;
+        return (rowIndex * cardHeight) - 60;
     }
 }
