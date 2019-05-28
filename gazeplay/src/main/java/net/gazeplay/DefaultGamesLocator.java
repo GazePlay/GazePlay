@@ -213,16 +213,22 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
         result.add(new GameSpec(new GameSummary("Sliding Puzzle", "data/Thumbnails/slidingpuzzle.png",
-                GameCategories.Category.SEARCHING), new GameSpec.GameLauncher() {
+                GameCategories.Category.SEARCHING), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(1, "Numbers"),
+                                new GameSpec.IntGameVariant(2, "Mona Lisa")));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new slidingpuzzlestats(scene);
                     }
 
                     @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
                             Stats stats) {
-                        return new slidingpuzzle(stats, gameContext, 3, 3);
+                        return new slidingpuzzle(stats, gameContext, 3, 3, gameVariant.getNumber());
                     }
                 }));
         result.add(new GameSpec(
