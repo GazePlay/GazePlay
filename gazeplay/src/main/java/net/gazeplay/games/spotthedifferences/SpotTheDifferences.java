@@ -20,6 +20,7 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.ProgressButton;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -139,6 +140,11 @@ public class SpotTheDifferences implements GameLifeCycle {
             });
         }
         stats.incNbGoals();
+        try {
+            Utils.playSound("data/spotthedifferences/ding.wav");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
