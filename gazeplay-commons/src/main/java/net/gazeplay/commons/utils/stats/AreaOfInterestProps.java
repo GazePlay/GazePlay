@@ -7,10 +7,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class AreaOfInterestProps {
-    private final long TTFF;
     private final ArrayList<CoordinatesTracker> listOfPoints;
     // private final int revisits;
-    private final long timeSpent;
     private final int fixations;
     private final int centerX;
     private final int centerY;
@@ -21,12 +19,10 @@ public class AreaOfInterestProps {
     private final javafx.scene.shape.Polygon areaOfInterest;
     private final InfoBoxProps infoBox;
 
-    public AreaOfInterestProps(long TTFF, long timeSpent, ArrayList<CoordinatesTracker> listOfPoints, int centerX,
+    public AreaOfInterestProps( ArrayList<CoordinatesTracker> listOfPoints, int centerX,
             int centerY, Double[] convexPoints, Point2D[] allPoint2DOfConvex, int startingIndex, int endingIndex,
             javafx.scene.shape.Polygon areaOfInterest, InfoBoxProps infoBox) {
-        this.TTFF = TTFF;
         this.listOfPoints = listOfPoints;
-        this.timeSpent = timeSpent;
         this.fixations = listOfPoints.size();
         this.centerX = centerX;
         this.centerY = centerY;
@@ -54,14 +50,6 @@ public class AreaOfInterestProps {
         return this.fixations;
     }
 
-    public long getTimeSpent() {
-        return this.timeSpent;
-    }
-
-    public long getTTFF() {
-        return this.TTFF;
-    }
-
     public Point2D[] getAllPoint2DOfConvex() {
         return this.allPoint2DOfConvex;
     }
@@ -78,7 +66,7 @@ public class AreaOfInterestProps {
         return this.areaOfInterest;
     }
 
-    public InfoBoxProps getInfoBox() {
+    public InfoBoxProps getInfoBoxProp() {
         return this.infoBox;
     }
 

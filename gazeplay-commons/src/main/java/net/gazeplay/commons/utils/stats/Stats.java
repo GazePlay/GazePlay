@@ -310,15 +310,15 @@ public class Stats implements GazeMotionListener {
         Runtime rt = Runtime.getRuntime();
         if (PlatformUtil.isWindows()){
             try {
-                Process proc = rt.exec("mv " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo
-                        + ".mov " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo + ".mp4");
+                Process proc = rt.exec("rename " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo
+                        + ".mov " +this.nameOfVideo + ".mp4");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }else{
             try {
-                Process proc = rt.exec("rename " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo
-                        + ".mov " +this.nameOfVideo + ".mp4");
+                Process proc = rt.exec("mv " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo
+                        + ".mov " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo + ".mp4");
             } catch (IOException e) {
                 e.printStackTrace();
             }
