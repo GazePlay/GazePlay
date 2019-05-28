@@ -1,7 +1,9 @@
 package net.gazeplay.commons.utils.stats;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import jdk.nashorn.internal.runtime.logging.Logger;
@@ -17,6 +19,8 @@ import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.Utils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -56,6 +60,7 @@ public class Stats implements GazeMotionListener {
     private LinkedList<FixationPoint> fixationSequence;
     @Getter
     private SavedStatsInfo savedStatsInfo;
+    private WritableImage gameScreenShot;
 
     private Long currentRoundStartTime;
 
@@ -78,6 +83,7 @@ public class Stats implements GazeMotionListener {
 
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
+        gameScreenShot = gameContextScene.snapshot(null);
     }
 
     public void start() {
@@ -141,6 +147,7 @@ public class Stats implements GazeMotionListener {
                     gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
                 }
             }
+            gameScreenShot = gameContextScene.snapshot(null);
         });
         currentRoundStartTime = lifeCycle.getStartTime();
     }
@@ -180,13 +187,23 @@ public class Stats implements GazeMotionListener {
         File todayDirectory = getGameStatsOfTheDayDirectory();
         final String heatmapFilePrefix = Utils.now() + "-heatmap";
         final String fixationSequenceFilePrefix = Utils.now() + "-fixationSequence";
+        final String screenshotPrefix = Utils.now() + "-screenshot";
 
         File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
 
         File fixationSequencePngFile = new File(todayDirectory, fixationSequenceFilePrefix + ".png");
 
-        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile, fixationSequencePngFile);
+        File screenshotFile = new File(todayDirectory, screenshotPrefix + ".png");
+        BufferedImage bImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
+        try {
+            ImageIO.write(bImage, "png", screenshotFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile, screenshotFile,
+                fixationSequencePngFile);
 
         this.savedStatsInfo = savedStatsInfo;
 
