@@ -235,7 +235,6 @@ public class Stats implements GazeMotionListener {
 
         File fixationSequencePngFile = new File(todayDirectory, fixationSequenceFilePrefix + ".png");
 
-
         File screenshotFile = new File(todayDirectory, screenshotPrefix + ".png");
         BufferedImage bImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
         try {
@@ -328,14 +327,14 @@ public class Stats implements GazeMotionListener {
 
     public String getDirectoryOfVideo() {
         Runtime rt = Runtime.getRuntime();
-        if (PlatformUtil.isWindows()){
+        if (PlatformUtil.isWindows()) {
             try {
-                Process proc = rt.exec("rename " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo
-                        + ".mov " +this.nameOfVideo + ".mp4");
+                Process proc = rt.exec("rename " + VideoRecorderConfiguration.getVideoDirectory() + "/"
+                        + this.nameOfVideo + ".mov " + this.nameOfVideo + ".mp4");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             try {
                 Process proc = rt.exec("mv " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo
                         + ".mov " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo + ".mp4");
@@ -343,7 +342,6 @@ public class Stats implements GazeMotionListener {
                 e.printStackTrace();
             }
         }
-
 
         return VideoRecorderConfiguration.getVideoDirectory().toURI() + this.nameOfVideo + ".mp4";
     }

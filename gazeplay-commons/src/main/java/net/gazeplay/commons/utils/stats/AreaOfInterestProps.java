@@ -19,8 +19,8 @@ public class AreaOfInterestProps {
     private final javafx.scene.shape.Polygon areaOfInterest;
     private final InfoBoxProps infoBox;
 
-    public AreaOfInterestProps( ArrayList<CoordinatesTracker> listOfPoints, int centerX,
-            int centerY, Double[] convexPoints, Point2D[] allPoint2DOfConvex, int startingIndex, int endingIndex,
+    public AreaOfInterestProps(ArrayList<CoordinatesTracker> listOfPoints, int centerX, int centerY,
+            Double[] convexPoints, Point2D[] allPoint2DOfConvex, int startingIndex, int endingIndex,
             javafx.scene.shape.Polygon areaOfInterest, InfoBoxProps infoBox) {
         this.listOfPoints = listOfPoints;
         this.fixations = listOfPoints.size();
