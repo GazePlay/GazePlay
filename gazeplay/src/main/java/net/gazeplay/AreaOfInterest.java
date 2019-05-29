@@ -572,7 +572,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     graphicsPane.getChildren().remove(currentInfoBox);
                     if(areaMap[finalI] == -1)
                     {
-                        finalTempPolygon.setFill(Color.rgb(18, 121, 131, 0.15Z));
+                        finalTempPolygon.setFill(Color.rgb(18, 121, 131, 0.15));
                     }else{
                         finalTempPolygon.setFill(Color.rgb(249, 166, 2, 0.15));
                     }
