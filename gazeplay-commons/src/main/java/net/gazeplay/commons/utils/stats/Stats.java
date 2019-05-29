@@ -405,7 +405,7 @@ public class Stats implements GazeMotionListener {
         return result;
     }
 
-    private void takeScreenShot(){
+    private void takeScreenShot() {
         gameScreenShot = gameContextScene.snapshot(null);
     }
 

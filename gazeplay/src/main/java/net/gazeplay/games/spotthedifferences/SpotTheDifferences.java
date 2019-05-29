@@ -111,9 +111,8 @@ public class SpotTheDifferences implements GameLifeCycle {
 
         JsonParser parser = new JsonParser();
         try {
-            instances = (JsonArray) parser.parse(new InputStreamReader(new FileInputStream(
-                    SpotTheDifferences.class.getClassLoader().getResource("data/spotthedifferences").getPath()
-                            + "/instances.json"),
+            instances = (JsonArray) parser.parse(new InputStreamReader(
+                    new FileInputStream("gazeplay-data/src/main/resources/data/spotthedifferences/instances.json"),
                     "utf-8"));
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
