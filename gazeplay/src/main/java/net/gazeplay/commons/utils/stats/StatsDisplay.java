@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
@@ -141,79 +142,36 @@ public class StatsDisplay {
         return lineChart;
     }
 
-    public static ImageView buildHeatChart(Stats stats, final Region root) {
-        ImageView heatMap = new ImageView();
-        heatMap.setPreserveRatio(true);
-
-        SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-        savedStatsInfo.addObserver((o, arg) -> {
-            Platform.runLater(() -> heatMap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString())));
-        });
-
-        heatMap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
-        GaussianBlur blur = new GaussianBlur();
-        blur.setRadius(10.0);
-        heatMap.setEffect(blur);
-
-        EventHandler<Event> openHeatMapEvent = createZoomInImageViewEventHandler(heatMap, root);
-        heatMap.addEventHandler(MouseEvent.MOUSE_CLICKED, openHeatMapEvent);
-
-        return heatMap;
-    }
-
-    public static ImageView buildFSequenceChart(Stats stats, final Region root) {
-        ImageView fix_sequence = new ImageView();
-        fix_sequence.setPreserveRatio(true);
-
-        SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-        savedStatsInfo.addObserver((o, arg) -> {
-            Platform.runLater(() -> fix_sequence
-                    .setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString())));
-        });
-
-        fix_sequence.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
-
-        EventHandler<Event> openFixationSeqEvent = createZoomInImageViewEventHandler(fix_sequence, root);
-        fix_sequence.addEventHandler(MouseEvent.MOUSE_CLICKED, openFixationSeqEvent);
-
-        return fix_sequence;
-    }
-
-    public static ImageView buildFixSeq_and_HeatMap(Stats stats, final Region root) throws IOException {
-
-        ImageView both = new ImageView();
-        both.setPreserveRatio(true);
+    public static StackPane buildGazeChart(Stats stats, final Region root, boolean showHeatmap,
+            boolean showFixationPoints) {
+        StackPane finalChart = new StackPane();
 
         SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
 
-        ImageView source = new ImageView();
-        ImageView draw_on_top_of_source = new ImageView();
+        ImageView screenshot = new ImageView();
+        screenshot.setPreserveRatio(true);
+        screenshot.setImage(new Image(savedStatsInfo.getScreenshotFile().toURI().toString()));
+        finalChart.getChildren().add(screenshot);
 
-        savedStatsInfo.addObserver((o, arg) -> {
-            Platform.runLater(() -> {
-                source.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
-                draw_on_top_of_source.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
-            });
-        });
+        if (showHeatmap) {
+            ImageView heatmap = new ImageView();
+            heatmap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
+            GaussianBlur blur = new GaussianBlur();
+            blur.setRadius(10.0);
+            heatmap.setEffect(blur);
+            finalChart.getChildren().add(heatmap);
+        }
 
-        source.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
-        draw_on_top_of_source.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
+        if (showFixationPoints) {
+            ImageView fixationPoints = new ImageView();
+            fixationPoints.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
+            finalChart.getChildren().add(fixationPoints);
+        }
 
-        BufferedImage sourceB = SwingFXUtils.fromFXImage(source.getImage(), null);
-        BufferedImage drawOnTopB = SwingFXUtils.fromFXImage(draw_on_top_of_source.getImage(), null);
+        EventHandler<Event> openChartEvent = createZoomInStackPaneEventHandler(finalChart, root);
+        finalChart.addEventHandler(MouseEvent.MOUSE_CLICKED, openChartEvent);
 
-        Graphics g = sourceB.getGraphics();
-        g.drawImage(drawOnTopB, 0, 0, null);
-        g.dispose();
-
-        Image fixationsOnTopOfHeatmap = SwingFXUtils.toFXImage(sourceB, null);
-        both.setImage(fixationsOnTopOfHeatmap);
-
-        EventHandler<Event> openBothEvent = createZoomInImageViewEventHandler(both, root);
-        both.addEventHandler(MouseEvent.MOUSE_CLICKED, openBothEvent);
-
-        return both;
-
+        return finalChart;
     }
 
     private static void resetToOriginalIndexInParent(Node node, int originalIndexInParent) {
@@ -265,7 +223,7 @@ public class StatsDisplay {
         };
     }
 
-    private static EventHandler<Event> createZoomOutImageViewEventHandler(ImageView i, final Region root,
+    private static EventHandler<Event> createZoomOutStackPaneEventHandler(StackPane i, final Region root,
             int originalIndexInParent) {
         return new EventHandler<Event>() {
             @Override
@@ -276,12 +234,12 @@ public class StatsDisplay {
 
                 resetToOriginalIndexInParent(i, originalIndexInParent);
 
-                i.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInImageViewEventHandler(i, root));
+                i.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInStackPaneEventHandler(i, root));
             }
         };
     }
 
-    private static EventHandler<Event> createZoomInImageViewEventHandler(ImageView i, final Region root) {
+    private static EventHandler<Event> createZoomInStackPaneEventHandler(StackPane i, final Region root) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -289,10 +247,11 @@ public class StatsDisplay {
 
                 int originalIndexInParent = getOriginalIndexInParent(i);
 
-                zoomInAndCenter(i, i.getFitWidth(), i.getFitHeight(), true);
+                ImageView image = (ImageView) i.getChildren().get(0);
+                zoomInAndCenter(i, image.getFitWidth(), image.getFitHeight(), true);
 
                 i.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOutImageViewEventHandler(i, root, originalIndexInParent));
+                        createZoomOutStackPaneEventHandler(i, root, originalIndexInParent));
             }
         };
     }
