@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.lang.Math;
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -39,7 +41,10 @@ public class FixationSequence {
 
         // draw the line of the sequence
         gc.setStroke(Color.ORANGE);
-        gc.setLineWidth(3);
+        gc.setLineWidth(2);
+
+        fixSeq = vertexReduction(fixSeq, 2.5);
+
         for (int i = 0; i < fixSeq.size() - 1; i++) {
             gc.strokeLine(fixSeq.get(i).getY(), fixSeq.get(i).getX(), fixSeq.get(i + 1).getY(),
                     fixSeq.get(i + 1).getX());
@@ -100,7 +105,7 @@ public class FixationSequence {
 //                    + Math.abs(fixSeq.get(j - 1).getGazeDuration()) / 10); // radius depends on time spent on a position
 //                                                                           // .
 
-            if (duration > 60) {
+            if (duration > 20) {
                 label_count++;
                 radius = 20 + (int)duration/100;
                 gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
@@ -131,5 +136,30 @@ public class FixationSequence {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public LinkedList<FixationPoint> vertexReduction (LinkedList<FixationPoint> allPoints, double tolerance){
+
+        int accepted = 0;
+
+        FixationPoint pivotVertex = allPoints.get(accepted);
+
+        LinkedList<FixationPoint> reducedPolyline = new LinkedList<FixationPoint>();
+        reducedPolyline.add(pivotVertex);
+
+        for(int i = 1 ; i < allPoints.size()-1; i ++){
+            double distance = Math.sqrt(Math.pow(pivotVertex.getY() - allPoints.get(i).getY(), 2 ) + Math.pow(pivotVertex.getX() - allPoints.get(i).getX(),2));
+
+            if(distance <= tolerance )
+                continue;
+            else{
+                reducedPolyline.add(allPoints.get(i));
+
+                accepted = i;
+
+                pivotVertex = allPoints.get(accepted);
+            }
+        }
+        return reducedPolyline;
     }
 }
