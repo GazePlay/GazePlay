@@ -76,7 +76,7 @@ public class FixationSequence {
         gc.setFill(Color.BLACK);
         gc.fillText(Integer.toString(label_count), x, y, 40);
 
-        double r1, r2, theta1, theta2, theta_tolerance, duration;
+        double duration;
 
         for (int j = 1; j < fixSeq.size() - 1; j++) {
 
