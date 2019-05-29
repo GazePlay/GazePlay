@@ -1,5 +1,6 @@
 package net.gazeplay.commons.utils.stats;
 
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -83,7 +84,7 @@ public class Stats implements GazeMotionListener {
 
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
-        gameScreenShot = gameContextScene.snapshot(null);
+        takeScreenShot();
     }
 
     public void start() {
@@ -145,7 +146,7 @@ public class Stats implements GazeMotionListener {
                     gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
                 }
             }
-            gameScreenShot = gameContextScene.snapshot(null);
+            takeScreenShot();
         });
         currentRoundStartTime = lifeCycle.getStartTime();
     }
@@ -410,6 +411,10 @@ public class Stats implements GazeMotionListener {
         }
         log.info("computeHeatMapPixelSize() : result = {}", result);
         return result;
+    }
+
+    private void takeScreenShot() {
+        gameScreenShot = gameContextScene.snapshot(null);
     }
 
 }
