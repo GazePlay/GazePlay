@@ -156,6 +156,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
                     gazePlay.onReturnToMenu();
 
+
                     root.setCursor(Cursor.DEFAULT); // Change cursor to default style
                 }
             }
