@@ -100,12 +100,10 @@ public class Stats implements GazeMotionListener {
 
                     recordGazeMovements = e -> {
 
-                        // incHeatMap((int) e.getX(), (int) e.getY());
                         incFixationSequence((int) e.getX(), (int) e.getY());
                     };
                     recordMouseMovements = e -> {
 
-                        // incHeatMap((int) e.getX(), (int) e.getY());
                         incFixationSequence((int) e.getX(), (int) e.getY());
                     };
 
@@ -120,12 +118,12 @@ public class Stats implements GazeMotionListener {
                     recordGazeMovements = e -> {
 
                         incHeatMap((int) e.getX(), (int) e.getY());
-                        // incFixationSequence((int) e.getX(), (int) e.getY());
+
                     };
                     recordMouseMovements = e -> {
 
                         incHeatMap((int) e.getX(), (int) e.getY());
-                        // incFixationSequence((int) e.getX(), (int) e.getY());
+
                     };
 
                     gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
