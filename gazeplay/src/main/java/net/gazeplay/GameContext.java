@@ -1,5 +1,7 @@
 package net.gazeplay;
 
+import com.github.agomezmoron.multimedia.recorder.VideoRecorder;
+import com.github.agomezmoron.multimedia.recorder.configuration.VideoRecorderConfiguration;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -287,18 +289,6 @@ public class GameContext extends GraphicalContext<Pane> {
         this.gazeDeviceManager = gazeDeviceManager;
         this.configPane = configPane;
 
-        /*
-         * double initW = gazePlay.getPrimaryStage().getWidth(); double initH = gazePlay.getPrimaryStage().getHeight();
-         * gazePlay.getPrimaryStage().widthProperty().addListener((obs, oldVal, newVal) -> { if (root instanceof Pane) {
-         * log.info(""+newVal.doubleValue()+"-"+initW+"/2= "+ (newVal.doubleValue()-initW)/2);
-         * ((Pane)root).setLayoutX((newVal.doubleValue()-initW)/2); ((Pane)root).setScaleX(newVal.doubleValue()/initW);
-         * } });
-         * 
-         * gazePlay.getPrimaryStage().heightProperty().addListener((obs, oldVal, newVal) -> { if (root instanceof Pane)
-         * { log.info(""+newVal.doubleValue()+"-"+initH+"/2= "+ (newVal.doubleValue()-initH)/2);
-         * ((Pane)root).setLayoutY((newVal.doubleValue()-initH)/2); ((Pane)root).setScaleY(newVal.doubleValue()/initH);
-         * } });
-         */
     }
 
     @Override
@@ -378,6 +368,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private void QuitKeyPressed(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
             throws IOException {
+
         currentGame.dispose();
         stats.stop();
         gazeDeviceManager.clear();

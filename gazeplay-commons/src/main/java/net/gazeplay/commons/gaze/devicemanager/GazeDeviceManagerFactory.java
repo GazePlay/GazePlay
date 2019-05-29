@@ -37,7 +37,6 @@ public class GazeDeviceManagerFactory {
             gazeDeviceManager = new AbstractGazeDeviceManager() {
                 @Override
                 public void init() {
-
                 }
 
                 @Override

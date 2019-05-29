@@ -1,21 +1,17 @@
 package net.gazeplay;
 
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
-import javafx.scene.image.Image;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import javafx.scene.image.ImageView;
-import javax.imageio.ImageIO;
-
 import javafx.scene.input.MouseEvent;
+
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import lombok.Data;
@@ -30,9 +26,7 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
-import net.gazeplay.games.race.RaceGamesStats;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -117,12 +111,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         grid.setPadding(new Insets(50, 50, 50, 50));
 
         AtomicInteger currentFormRow = new AtomicInteger(1);
-
         {
             I18NText label = new I18NText(translator, "TotalLength", COLON);
-
             Text value = new Text(StatsDisplay.convert(stats.computeTotalElapsedDuration()));
-
             addToGrid(grid, currentFormRow, label, value);
         }
 
@@ -143,13 +134,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             } else {
                 value = new Text(String.valueOf(stats.getNbGoals()));
-
             }
-
             if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value);
             }
-
         }
         {
             final I18NText label;
@@ -161,7 +149,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 }
             }
         }
-
         {
             I18NText label = new I18NText(translator, "Length", COLON);
 
@@ -171,7 +158,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGrid(grid, currentFormRow, label, value);
             }
         }
-
         {
             final I18NText label;
 
@@ -253,9 +239,32 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
+        // starts from here
+        EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
+            @Override
+            public void handle(javafx.event.Event e) {
+
+                AreaOfInterest areaOfInterest = AreaOfInterest.newInstance(gazePlay, stats);
+                gazePlay.onDisplayAOI(areaOfInterest);
+                // statsContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
+
+                // gazePlay.onReturnToMenu();
+
+                // statsContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
+                // }
+            }
+        };
+
+        HomeButton aoiButton = new HomeButton("data/common/images/aoibtn.png");
+        aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+
+        // end here
+
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
+        if (config.isAreaOfInterestEnabled())
+            controlButtonPane.getChildren().add(aoiButton);
         controlButtonPane.getChildren().add(homeButton);
 
         if (continueButton != null) {
@@ -281,10 +290,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
         root.setCenter(centerStackPane);
         root.setBottom(controlButtonPane);
-
         root.setStyle(
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
     }
 
     @Override
