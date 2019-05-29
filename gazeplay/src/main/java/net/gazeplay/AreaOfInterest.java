@@ -129,11 +129,11 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 if (index == 1)
                     areaOfInterestList.add(movementHistory.get(0));
                 areaOfInterestList.add(movementHistory.get(index));
-//                if (areaOfInterestList.size() == 1)
-//                    System.out.println("Start of AOE");
+                if (areaOfInterestList.size() == 1)
+                    System.out.println("Start of AOE");
             } else if (areaOfInterestList.size() != 0) {
-//                if (areaOfInterestList.size() > 2) {
-//                    System.out.println("End of AOE");
+                if (areaOfInterestList.size() > 2) {
+                    System.out.println("End of AOE");
                     long AreaStartTime = areaOfInterestList.get(0).getTimeStarted();
                     long AreaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
                             + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
