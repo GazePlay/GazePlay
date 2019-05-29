@@ -61,6 +61,8 @@ public class slidingpuzzle implements GameLifeCycle {
             this.PicPath = "data/sliding-puzzle/tiles/tile";
         else if (GameVariant == 2)
             this.PicPath = "data/sliding-puzzle/monalisa/p";
+        else if (GameVariant == 3)
+            this.PicPath = "data/sliding-puzzle/fish/p";
 
     }
 

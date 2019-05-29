@@ -217,7 +217,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(1, "Numbers"),
-                                new GameSpec.IntGameVariant(2, "Mona Lisa")));
+                                new GameSpec.IntGameVariant(2, "Mona Lisa"),new GameSpec.IntGameVariant(3, "Fish")));
                     }
                 }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
                     @Override
