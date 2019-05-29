@@ -55,7 +55,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private int progressRate = 1;
     private Double previousInfoBoxX;
     private Double previousInfoBoxY;
-    private ArrayList<InitialAreaOfInterestProps> combinedAreaList;
+    private ArrayList<InitialAreaOfInterestProps> combinedAreaList = new ArrayList<>();;
     private double combinationThreshHold = 0.70;
     int[] areaMap;
 
@@ -305,7 +305,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
         areaMap = new int[allAOIList.size()];
         Arrays.fill(areaMap, -1);
-        combinedAreaList = new ArrayList<>();
         combinedAreaList = computeConnectedArea();
         for (InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
