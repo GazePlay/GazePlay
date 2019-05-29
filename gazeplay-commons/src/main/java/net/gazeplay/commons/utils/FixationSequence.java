@@ -2,8 +2,8 @@ package net.gazeplay.commons.utils;
 
 import javafx.geometry.VPos;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.text.TextAlignment;
-import net.gazeplay.commons.utils.FixationPoint;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -11,14 +11,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.lang.Math;
-import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,16 +38,20 @@ public class FixationSequence {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // draw the line of the sequence
-        gc.setStroke(Color.ORANGE);
-        gc.setLineWidth(2);
+        GaussianBlur gaussianBlur = new GaussianBlur();
+        gaussianBlur.setRadius(2.5);
+        gc.setEffect(gaussianBlur);
+        gc.setStroke(Color.rgb(255,157,6,1));
+        gc.setLineWidth(2.5);
 
-        fixSeq = vertexReduction(fixSeq, 2.5);
+        fixSeq = vertexReduction(fixSeq, 15);
 
         for (int i = 0; i < fixSeq.size() - 1; i++) {
             gc.strokeLine(fixSeq.get(i).getY(), fixSeq.get(i).getX(), fixSeq.get(i + 1).getY(),
                     fixSeq.get(i + 1).getX());
-            log.info("Point nb :" + i + ", firstGaze = "+ fixSeq.get(i).getFirstGaze()+ ", gazeDuration = " + fixSeq.get(i).getGazeDuration());
+            log.info("Point nb :" + i + ", firstGaze = "+ fixSeq.get(i).getFirstGaze()+ ", gazeDuration = " + fixSeq.get(i).getGazeDuration()+", x = "+fixSeq.get(i).getY()+" , y = "+fixSeq.get(i).getX());
         }
+        gc.setEffect(null);
         gc.setFont(sanSerifFont);
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
@@ -65,7 +67,7 @@ public class FixationSequence {
         int y = fixSeq.get(0).getX();
 
         int radius = 20; // central fixation bias . Read more about it at
-                         // https://imotions.com/blog/7-terms-metrics-eye-tracking/
+        // https://imotions.com/blog/7-terms-metrics-eye-tracking/
 
         gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
         gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
@@ -137,18 +139,19 @@ public class FixationSequence {
             throw new RuntimeException(e);
         }
     }
-
+    // Vertex Cluster Reduction -- successive vertices that are clustered too closely are reduced to a single vertex
+    
     public LinkedList<FixationPoint> vertexReduction (LinkedList<FixationPoint> allPoints, double tolerance){
 
         int accepted = 0;
-
+        double distance = 0.0;
         FixationPoint pivotVertex = allPoints.get(accepted);
 
         LinkedList<FixationPoint> reducedPolyline = new LinkedList<FixationPoint>();
         reducedPolyline.add(pivotVertex);
 
         for(int i = 1 ; i < allPoints.size()-1; i ++){
-            double distance = Math.sqrt(Math.pow(pivotVertex.getY() - allPoints.get(i).getY(), 2 ) + Math.pow(pivotVertex.getX() - allPoints.get(i).getX(),2));
+            distance = Math.sqrt(Math.pow(pivotVertex.getY() - allPoints.get(i).getY(), 2 ) + Math.pow(pivotVertex.getX() - allPoints.get(i).getX(),2));
 
             if(distance <= tolerance )
                 continue;
