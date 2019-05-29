@@ -114,7 +114,6 @@ public class Stats implements GazeMotionListener {
             directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
             VideoRecorder.start(nameOfVideo);
             VideoRecorderConfiguration.setVideoDirectory(getGameStatsOfTheDayDirectory());
-            VideoRecorderConfiguration.setCaptureInterval(1);
 
         }
         lifeCycle.start(() -> {
@@ -176,7 +175,6 @@ public class Stats implements GazeMotionListener {
             gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
             gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
             takeScreenShot();
-
 
         });
         currentRoundStartTime = lifeCycle.getStartTime();
