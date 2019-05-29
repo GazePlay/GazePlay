@@ -58,8 +58,7 @@ public class FixationSequence {
         int x = fixSeq.get(0).getY();
         int y = fixSeq.get(0).getX();
 
-        int radius = 20; // central fixation bias . Read more about it at
-                         // https://imotions.com/blog/7-terms-metrics-eye-tracking/
+        int radius = 20;
 
         gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
         gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
