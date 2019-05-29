@@ -52,9 +52,7 @@ public class slidingpuzzle implements GameLifeCycle {
         this.boxWidth = computeCardBoxWidth(gameDimension2D, nbColumns);
         this.boxHeight = computeCardBoxHeight(gameDimension2D, nbLines);
         this.cardHeight = (int) computeCardHeight(boxHeight);
-        log.info("cardHeight = " + cardHeight);
         this.cardWidth = cardHeight;
-        log.info("cardWidth = " + cardWidth);
         this.stats = stats;
         this.gameContext = gameContext;
         this.nbLines = nbLines;
@@ -253,7 +251,7 @@ public class slidingpuzzle implements GameLifeCycle {
         }
 
         for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
-            log.info("**** Card id = " + pictureCard.getCardId());
+
             if (pictureCard.getCardId() == 9) {
 
                 pictureCard.isKingCardEvent(x, y);
@@ -280,13 +278,9 @@ public class slidingpuzzle implements GameLifeCycle {
     boolean isGameOver() {
         int counter = 0;
         for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
-            log.info("index :" + pictureCard.getCardId());
-            log.info("x Coordinate :" + pictureCard.getInitX());
-            log.info("Y Coordinate :" + pictureCard.getInitY());
-            log.info("KX Coordinate :" + pictureCard.getKingPosX());
-            log.info("KY Coordinate :" + pictureCard.getKingPosY());
+
             slidingpuzzle.Coord c1 = new slidingpuzzle.Coord(pictureCard.getInitX(), pictureCard.getInitY());
-            log.info("index Vs indexOfList :" + pictureCard.getCardId() + " " + CoordList.indexOf(c1));
+
             if (pictureCard.getCardId() == 1 && pictureCard.getInitX() == (int) computePositionX(boxWidth, cardWidth, 1)
                     && pictureCard.getInitY() == (int) computePositionY(boxHeight, cardHeight, 1))
                 counter++;
@@ -323,7 +317,7 @@ public class slidingpuzzle implements GameLifeCycle {
                     && pictureCard.getInitY() == (int) computePositionY(boxHeight, cardHeight, 3))
                 counter++;
         }
-        log.info("counter = " + counter);
+
         if (counter == 9)
             return true;
         else
@@ -340,6 +334,6 @@ public class slidingpuzzle implements GameLifeCycle {
     }
 
     private static double computePositionY(double cardboxHeight, double cardHeight, int rowIndex) {
-        return (rowIndex * cardHeight);
+        return (rowIndex * cardHeight) - 60;
     }
 }
