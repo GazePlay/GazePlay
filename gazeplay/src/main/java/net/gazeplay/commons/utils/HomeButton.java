@@ -6,4 +6,8 @@ public class HomeButton extends CustomButton {
         super("data/common/images/home-button.png");
     }
 
+    public HomeButton(String resource) {
+        super(resource);
+    }
+
 }

@@ -38,7 +38,6 @@ import net.gazeplay.commons.utils.multilinguism.Languages;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -305,6 +304,24 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 concatenateLabel = concatenateLabel + labels + "\n\t";
             }
             label.setText(concatenateLabel);
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "EnableAreaOfInterest", COLON);
+            CheckBox input = buildDisableAreaOfInterest(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "EnableConvexHull", COLON);
+            CheckBox input = buildDisableConvexHull(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
+            CheckBox input = buildVideoRecording(config, configurationContext);
+
             addToGrid(grid, currentFormRow, label, input);
         }
 
@@ -737,6 +754,50 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         checkBox.selectedProperty().addListener((o) -> {
 
             configuration.getHeatMapDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildDisableAreaOfInterest(Configuration configuration,
+            ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isAreaOfInterestEnabled());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getAreaOfInterestDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildDisableConvexHull(Configuration configuration,
+            ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isConvexHullEnabled());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getConvexHullDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildVideoRecording(Configuration configuration,
+            ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isVideoRecordingEnabled());
+
+        checkBox.selectedProperty().addListener((o) -> {
+            configuration.getVideoRecordingDisabledProperty().setValue(checkBox.isSelected());
             configuration.saveConfigIgnoringExceptions();
         });
 
