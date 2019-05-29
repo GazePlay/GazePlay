@@ -22,6 +22,8 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.ProgressButton;
+import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -41,8 +43,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private final Configuration config;
     private final int version;
 
-    private final File[] bibouleImages;
-    private final File[] cloudImages;
+    private final ImageLibrary bibouleImages;
+    private final ImageLibrary cloudImages;
 
     private final Group backgroundLayer;
     private final Group middleLayer;
@@ -84,9 +86,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.config = Configuration.getInstance();
         this.version = version;
 
-        String datapathAbs = BibouleJump.class.getClassLoader().getResource(DATA_PATH).getPath().toString();
-        this.bibouleImages = new File(datapathAbs + "/biboules").listFiles();
-        this.cloudImages = new File(datapathAbs + "/clouds").listFiles();
+        bibouleImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/biboules");
+        cloudImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/clouds");
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
@@ -189,8 +190,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         biboule = new Rectangle(dimensions.getWidth() / 2, dimensions.getHeight() / 2, dimensions.getHeight() / 6,
                 dimensions.getHeight() / 6);
         this.middleLayer.getChildren().add(biboule);
-        biboule.setFill(
-                new ImagePattern(new Image(DATA_PATH + "/biboules/" + getRandomFileNameFromFileList(bibouleImages))));
+        biboule.setFill(new ImagePattern(bibouleImages.pickRandomImage()));
 
         velocity = Point2D.ZERO;
         score = 0;
@@ -213,10 +213,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private double getGameSpeed() {
         double speed = config.getSpeedEffects();
         return speed <= 1.0 ? 1.0 : speed;
-    }
-
-    private String getRandomFileNameFromFileList(File[] fileList) {
-        return fileList[randomGenerator.nextInt(fileList.length)].getName();
     }
 
     private int getsetHighscore(int score) {
@@ -290,7 +286,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         }
         highestPlatform = p;
         platforms.add(p);
-        p.setFill(new ImagePattern(new Image(DATA_PATH + "/clouds/" + getRandomFileNameFromFileList(cloudImages))));
+        p.setFill(new ImagePattern(cloudImages.pickRandomImage()));
         backgroundLayer.getChildren().add(p);
     }
 
