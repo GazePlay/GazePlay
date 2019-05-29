@@ -359,13 +359,14 @@ public class Stats implements GazeMotionListener {
         FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(), 0, x, y);
         gazeDuration = Math.abs(previousGaze - newGazePoint.getFirstGaze());
 
-        //if the new points coordinates are the same as last one's in the list then update the last fixationPoint in the list
-        if(fixationSequence.size()> 1 &&
-                (newGazePoint.getX() == fixationSequence.get(fixationSequence.size()-1).getX())
-                && (newGazePoint.getY() == fixationSequence.get(fixationSequence.size()-1).getY())){
-            fixationSequence.get(fixationSequence.size()-1).setGazeDuration(gazeDuration);
-        }
-        else{ //else add the new point in the list
+        // if the new points coordinates are the same as last one's in the list then update the last fixationPoint in
+        // the list
+        // same coordinate points are a result of the eyetracker's frequency of sampling
+        if (fixationSequence.size() > 1
+                && (newGazePoint.getX() == fixationSequence.get(fixationSequence.size() - 1).getX())
+                && (newGazePoint.getY() == fixationSequence.get(fixationSequence.size() - 1).getY())) {
+            fixationSequence.get(fixationSequence.size() - 1).setGazeDuration(gazeDuration);
+        } else { // else add the new point in the list
             newGazePoint.setGazeDuration(gazeDuration);
             fixationSequence.add(newGazePoint);
         }
