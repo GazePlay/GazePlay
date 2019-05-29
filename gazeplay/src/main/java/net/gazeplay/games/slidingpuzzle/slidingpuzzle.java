@@ -47,18 +47,20 @@ public class slidingpuzzle implements GameLifeCycle {
         private final int y;
     }
 
-    public slidingpuzzle(Stats stats, GameContext gameContext, int nbLines, int nbColumns) {
+    public slidingpuzzle(Stats stats, GameContext gameContext, int nbLines, int nbColumns, int GameVariant) {
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.boxWidth = computeCardBoxWidth(gameDimension2D, nbColumns);
         this.boxHeight = computeCardBoxHeight(gameDimension2D, nbLines);
         this.cardHeight = (int) computeCardHeight(boxHeight);
-        log.info("cardHeight = " + cardHeight);
         this.cardWidth = cardHeight;
-        log.info("cardWidth = " + cardWidth);
         this.stats = stats;
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
+        if (GameVariant == 1)
+            this.PicPath = "data/sliding-puzzle/tiles/tile";
+        else if (GameVariant == 2)
+            this.PicPath = "data/sliding-puzzle/monalisa/p";
 
     }
 
@@ -83,6 +85,8 @@ public class slidingpuzzle implements GameLifeCycle {
 
     private final double cardHeight;
     private final double cardWidth;
+
+    private String PicPath;
 
     private slidingpuzzle.RoundDetails currentRoundDetails;
 
@@ -178,8 +182,6 @@ public class slidingpuzzle implements GameLifeCycle {
 
         randomGenerator = new Random();
 
-        // List<Coord> CoordList = new ArrayList<>();
-
         final int fixationlength = config.getFixationLength();
 
         List<slidingpuzzlecard> result = new ArrayList<>();
@@ -195,27 +197,20 @@ public class slidingpuzzle implements GameLifeCycle {
 
                 if (i == 3 && j == 3) {
                     slidingpuzzlecard card = new slidingpuzzlecard(counter, kingPosX, kingPosY, cardWidth, cardHeight,
-                            "data/tiles/tile" + counter + ".png", fixationlength, gameContext, this, stats, kingPosX,
-                            kingPosY);
+                            PicPath + counter + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY);
                     counter++;
                     card.setKing(true);
                     result.add(card);
                 } else {
 
                     index = randomGenerator.nextInt(CoordList.size());
-                    // double positionX = computePositionX(boxWidth, cardWidth, j);
-                    // double positionY = computePositionY(boxHeight, cardHeight, i);
+
                     double positionX = CoordList.get(index).getX();
                     double positionY = CoordList.get(index).getY();
                     CoordList.remove(index);
 
-                    /*
-                     * log.info("index" + counter); log.info("position x" + positionX); log.info("position y" +
-                     * positionY); log.info("width" + cardWidth); log.info("height" + cardHeight);
-                     */
                     slidingpuzzlecard card = new slidingpuzzlecard(counter, positionX, positionY, cardWidth, cardHeight,
-                            "data/tiles/tile" + counter + ".png", fixationlength, gameContext, this, stats, kingPosX,
-                            kingPosY);
+                            PicPath + counter + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY);
                     counter++;
 
                     result.add(card);
@@ -223,7 +218,7 @@ public class slidingpuzzle implements GameLifeCycle {
             }
 
         }
-        // Collections.shuffle(result);
+
         return result;
     }
 
@@ -250,38 +245,22 @@ public class slidingpuzzle implements GameLifeCycle {
     }
 
     void replaceCards(double fl, int x, int y, int id) {
-        final Configuration config = Configuration.getInstance();
-        final int fixationlength = config.getFixationLength();
+
         if (this.currentRoundDetails == null) {
             return;
         }
 
-        double tempX = 0;
-        double tempY = 0;
-        // List<slidingpuzzlecard> cardsToHide = new ArrayList<>();
         for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
-            log.info("**** Card id = " + pictureCard.getCardId());
+
             if (pictureCard.getCardId() == 9) {
-                /*
-                 * tempX=pictureCard.getInitX(); tempY=pictureCard.getInitY(); pictureCard.setInitX(x);
-                 * pictureCard.setInitX(y); pictureCard.setKingPosX(x); pictureCard.setKingPosX(x);
-                 */
-                // cardsToHide.add(pictureCard);
+
                 pictureCard.isKingCardEvent(x, y);
                 pictureCard.setKingPosX(x);
                 pictureCard.setKingPosY(y);
-                log.info("KCard x is : " + x);
-                log.info("KCard y is : " + y);
-                // slidingpuzzlecard card = new slidingpuzzlecard(9,x, y, 200, 200,"data/tiles/tile9.png",
-                // fixationlength , gameContext, this, stats,x,y);
-                // this.currentRoundDetails.cardList.add(9, card);
+
             }
-            /*
-             * if(pictureCard.getCardId()==id){ pictureCard.setInitX(tempX); pictureCard.setInitX(tempY);
-             * pictureCard.setKingPosX(x); pictureCard.setKingPosY(y);}
-             */
+
         }
-        // gameContext.getChildren().removeAll(cardsToHide);
 
     }
 
@@ -299,13 +278,9 @@ public class slidingpuzzle implements GameLifeCycle {
     boolean isGameOver() {
         int counter = 0;
         for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
-            log.info("index :" + pictureCard.getCardId());
-            log.info("x Coordinate :" + pictureCard.getInitX());
-            log.info("Y Coordinate :" + pictureCard.getInitY());
-            log.info("KX Coordinate :" + pictureCard.getKingPosX());
-            log.info("KY Coordinate :" + pictureCard.getKingPosY());
+
             slidingpuzzle.Coord c1 = new slidingpuzzle.Coord(pictureCard.getInitX(), pictureCard.getInitY());
-            log.info("index Vs indexOfList :" + pictureCard.getCardId() + " " + CoordList.indexOf(c1));
+
             if (pictureCard.getCardId() == 1 && pictureCard.getInitX() == (int) computePositionX(boxWidth, cardWidth, 1)
                     && pictureCard.getInitY() == (int) computePositionY(boxHeight, cardHeight, 1))
                 counter++;
@@ -342,7 +317,7 @@ public class slidingpuzzle implements GameLifeCycle {
                     && pictureCard.getInitY() == (int) computePositionY(boxHeight, cardHeight, 3))
                 counter++;
         }
-        log.info("counter = " + counter);
+
         if (counter == 9)
             return true;
         else
@@ -359,6 +334,6 @@ public class slidingpuzzle implements GameLifeCycle {
     }
 
     private static double computePositionY(double cardboxHeight, double cardHeight, int rowIndex) {
-        return (rowIndex * cardHeight);
+        return (rowIndex * cardHeight) - 60;
     }
 }
