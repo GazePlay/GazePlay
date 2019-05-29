@@ -144,34 +144,6 @@
 				<artifactId>findbugs</artifactId>
 				<version>3.0.1</version>
 			</dependency>
-			<dependency>
-				<groupId>com.roufid.tutorials</groupId>
-				<artifactId>example-app</artifactId>
-				<version>1.0</version>
-				<scope>system</scope>
-				<systemPath>${basedir}/lib/customizer.jar</systemPath>
-			</dependency>
-			<dependency>
-				<groupId>com.roufid.tutorials</groupId>
-				<artifactId>example-app</artifactId>
-				<version>1.0</version>
-				<scope>system</scope>
-				<systemPath>${basedir}/lib/jmf.jar</systemPath>
-			</dependency>
-			<dependency>
-				<groupId>com.roufid.tutorials</groupId>
-				<artifactId>example-app</artifactId>
-				<version>1.0</version>
-				<scope>system</scope>
-				<systemPath>${basedir}/lib/mediaplayer.jar</systemPath>
-			</dependency>
-			<dependency>
-				<groupId>com.roufid.tutorials</groupId>
-				<artifactId>example-app</artifactId>
-				<version>1.0</version>
-				<scope>system</scope>
-				<systemPath>${basedir}/lib/multiplayer.jar</systemPath>
-			</dependency>
 
 			<dependency>
 				<groupId>com.github.agomezmoron</groupId>
