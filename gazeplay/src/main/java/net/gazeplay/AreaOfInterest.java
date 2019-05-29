@@ -176,8 +176,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 areaOfInterestList = new ArrayList<>();
             }
         }
-        if (index != movementHistory.size() - 1)
-            calculateAreaOfInterest(index + 1, startTime);
+
     }
 
     private InfoBoxProps calculateInfoBox(String aoiID, long TTFF, long TimeSpent, long Fixation, int centerX,
@@ -300,7 +299,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         areaOfInterestList = new ArrayList<>();
         movementHistory = stats.getMovementHistoryWithTime();
         System.out.println("The start time is " + stats.getStartTime());
-        calculateAreaOfInterest(0, stats.getStartTime());
+        for(int i = 0 ; i < movementHistory.size();i++)
+        calculateAreaOfInterest(i, stats.getStartTime());
         System.out.println("The amount of AOIs is " + allAOIList.size());
 
         areaMap = new int[allAOIList.size()];
