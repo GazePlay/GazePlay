@@ -74,7 +74,7 @@ public class FixationSequence {
         gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
         gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
         gc.setFill(Color.BLACK);
-        gc.setFont(Font.font ("Verdana", 25));
+        gc.setFont(Font.font("Verdana", 25));
         gc.fillText(Integer.toString(label_count), x, y, 90);
 
         double duration;
