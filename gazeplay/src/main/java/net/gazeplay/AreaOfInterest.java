@@ -5,7 +5,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -26,14 +26,14 @@ import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
@@ -50,7 +50,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private GridPane currentInfoBox;
     private Line currentLineToInfoBox;
     private int colorIterator;
-    private int bias = 10;
+    private int bias = 15;
     private Pane graphicsPane;
     private int progressRate = 1;
     private Double previousInfoBoxX;
@@ -58,6 +58,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private ArrayList<InitialAreaOfInterestProps> combinedAreaList;;
     private double combinationThreshHold = 0.70;
     private int[] areaMap;
+    private boolean playing = false;
 
     @Override
     public ObservableList<Node> getChildren() {
@@ -76,10 +77,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 CoordinatesTracker coordinatesTracker = movementHistory.get(movementIndex);
                 Circle circle;
                 if (movementHistory.get(movementIndex).getIntervalTime() > 10) {
-                    circle = new Circle(coordinatesTracker.getxValue(), coordinatesTracker.getyValue(), 2);
+                    circle = new Circle(coordinatesTracker.getxValue(), coordinatesTracker.getyValue(), 4);
                     circle.setStroke(Color.RED);
                 } else {
-                    circle = new Circle(coordinatesTracker.getxValue(), coordinatesTracker.getyValue(), 4);
+                    circle = new Circle(coordinatesTracker.getxValue(), coordinatesTracker.getyValue(), 3);
                     circle.setStroke(Color.GREEN);
                 }
                 Platform.runLater(() -> {
@@ -109,9 +110,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     if (movementIndex != movementHistory.size() - 1) {
                         plotMovement(movementIndex + 1, graphicsPane);
                     } else {
-                        for (int i = 0; i < allAOIList.size(); i++)
-
-                            clock.stop();
+                        clock.stop();
+                        playing = false;
                     }
                 });
             }
@@ -316,8 +316,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         Button slowBtn8 = new Button("8X Slow ");
         Button slowBtn5 = new Button("5X Slow ");
         Button playBtn = new Button("Play ");
-        Button quitBtn = new Button("Leave");
-        quitBtn.setCancelButton(true);
+        // Button quitBtn = new Button("Leave");
+        // quitBtn.setCancelButton(true);
 
         playBtn.setPrefSize(100, 20);
         slowBtn5.setPrefSize(100, 20);
@@ -341,18 +341,18 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             progressRate = 10;
             playButtonPressed();
         });
-        quitBtn.setOnAction(event -> {
-            StatsContext statsContext = null;
-            try {
-                statsContext = StatsContext.newInstance(gazePlay, stats);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            this.clear();
-
-            gazePlay.onDisplayStats(statsContext);
-        });
+        // quitBtn.setOnAction(event -> {
+        // StatsContext statsContext = null;
+        // try {
+        // statsContext = StatsContext.newInstance(gazePlay, stats);
+        // } catch (IOException e) {
+        // e.printStackTrace();
+        // }
+        //
+        // this.clear();
+        //
+        // gazePlay.onDisplayStats(statsContext);
+        // });
 
         if (config.isVideoRecordingEnabled()) {
             Media media = new Media(stats.getDirectoryOfVideo());
@@ -369,14 +369,32 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
         Region region2 = new Region();
         HBox.setHgrow(region2, Priority.ALWAYS);
-        HBox buttonBox = new HBox(quitBtn, playBtn, slowBtn5, slowBtn8, slowBtn10);
+        HBox buttonBox = new HBox(playBtn, slowBtn5, slowBtn8, slowBtn10);
         buttonBox.setSpacing(10);
         buttonBox.setFillHeight(true);
         buttonBox.setPadding(new Insets(10, 10, 10, 10));
+
+        EventHandler<Event> AOIEvent = e -> {
+
+            StatsContext statsContext = null;
+            try {
+                statsContext = StatsContext.newInstance(gazePlay, stats);
+            } catch (IOException er) {
+                er.printStackTrace();
+            }
+            this.clear();
+            gazePlay.onDisplayStats(statsContext);
+        };
+
+        HomeButton aoiButton = new HomeButton("data/common/images/home-button.png");
+        aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
+        pane.getChildren().add(aoiButton);
+        pane.setAlignment(Pos.CENTER_RIGHT);
+
         topPane = new HBox(timeLabel, region1, screenTitleText, region2, buttonBox);
         topPane.setSpacing(10);
         graphicsPane.setStyle("-fx-background-color: transparent;");
-        pane.setStyle("-fx-background-color: #224488");
+        pane.setStyle("-fx-background-color: transparent");
         root.setCenter(stackPane);
         root.setTop(topPane);
         root.setBottom(pane);
@@ -385,21 +403,24 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     }
 
     private void playButtonPressed() {
-        for (InitialAreaOfInterestProps areaOfInterestProps : combinedAreaList) {
-            graphicsPane.getChildren().remove(areaOfInterestProps.getAreaOfInterest());
+        if (!playing) {
+            playing = true;
+            for (InitialAreaOfInterestProps areaOfInterestProps : combinedAreaList) {
+                graphicsPane.getChildren().remove(areaOfInterestProps.getAreaOfInterest());
+            }
+            graphicsPane.getChildren().remove(currentInfoBox);
+            if (config.isVideoRecordingEnabled())
+                player.play();
+            intereatorAOI = 0;
+            plotMovement(0, graphicsPane);
+            long startTime = System.currentTimeMillis();
+            clock = new Timeline(new KeyFrame(Duration.ZERO, f -> {
+                long theTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+                timeLabel.setText(theTime + "");
+            }), new KeyFrame(Duration.seconds(1)));
+            clock.setCycleCount(Animation.INDEFINITE);
+            clock.play();
         }
-        graphicsPane.getChildren().remove(currentInfoBox);
-        if (config.isVideoRecordingEnabled())
-            player.play();
-        intereatorAOI = 0;
-        plotMovement(0, graphicsPane);
-        long startTime = System.currentTimeMillis();
-        clock = new Timeline(new KeyFrame(Duration.ZERO, f -> {
-            long theTime = System.currentTimeMillis() - startTime;
-            timeLabel.setText(theTime + "");
-        }), new KeyFrame(Duration.millis(100)));
-        clock.setCycleCount(Animation.INDEFINITE);
-        clock.play();
     }
 
     private GridPane makeInfoBox(String aoiID, String TTFF, String TimeSpent, String Fixation, String ratioDouble,
