@@ -39,3 +39,9 @@ Spot the differences between two images by staring at them.
 Roll from 1 to 6 dice.
 
 ![Des](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/dice.png)
+
+## Ribbbit Race
+
+Capture biboules for your frog to move forward in a race against 3 other frogs!
+
+![race](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/frogsrace.png)
