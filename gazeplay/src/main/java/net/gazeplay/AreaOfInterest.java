@@ -316,8 +316,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         Button slowBtn8 = new Button("8X Slow ");
         Button slowBtn5 = new Button("5X Slow ");
         Button playBtn = new Button("Play ");
-        Button quitBtn = new Button("Leave");
-        quitBtn.setCancelButton(true);
+//        Button quitBtn = new Button("Leave");
+//        quitBtn.setCancelButton(true);
 
         playBtn.setPrefSize(100, 20);
         slowBtn5.setPrefSize(100, 20);
@@ -341,18 +341,18 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             progressRate = 10;
             playButtonPressed();
         });
-        quitBtn.setOnAction(event -> {
-            StatsContext statsContext = null;
-            try {
-                statsContext = StatsContext.newInstance(gazePlay, stats);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            this.clear();
-
-            gazePlay.onDisplayStats(statsContext);
-        });
+//        quitBtn.setOnAction(event -> {
+//            StatsContext statsContext = null;
+//            try {
+//                statsContext = StatsContext.newInstance(gazePlay, stats);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            this.clear();
+//
+//            gazePlay.onDisplayStats(statsContext);
+//        });
 
         if (config.isVideoRecordingEnabled()) {
             Media media = new Media(stats.getDirectoryOfVideo());
@@ -369,18 +369,24 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
         Region region2 = new Region();
         HBox.setHgrow(region2, Priority.ALWAYS);
-        HBox buttonBox = new HBox(quitBtn, playBtn, slowBtn5, slowBtn8, slowBtn10);
+        HBox buttonBox = new HBox(playBtn, slowBtn5, slowBtn8, slowBtn10);
         buttonBox.setSpacing(10);
         buttonBox.setFillHeight(true);
         buttonBox.setPadding(new Insets(10, 10, 10, 10));
 
         EventHandler<Event> AOIEvent = e -> {
 
-            AreaOfInterest areaOfInterest = AreaOfInterest.newInstance(gazePlay, stats);
-            gazePlay.onDisplayAOI(areaOfInterest);
+            StatsContext statsContext = null;
+            try {
+                statsContext = StatsContext.newInstance(gazePlay, stats);
+            } catch (IOException er) {
+                er.printStackTrace();
+            }
+            this.clear();
+            gazePlay.onDisplayStats(statsContext);
         };
 
-        HomeButton aoiButton = new HomeButton("data/common/images/aoibtn.png");
+        HomeButton aoiButton = new HomeButton("data/common/images/home-button.png");
         aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
         pane.getChildren().add(aoiButton);
         pane.setAlignment(Pos.CENTER_RIGHT);
