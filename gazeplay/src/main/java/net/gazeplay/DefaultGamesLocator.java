@@ -200,17 +200,25 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(new GameSummary("Ninja", "data/Thumbnails/ninja.png", GameCategories.Category.TARGET),
-                new GameSpec.GameLauncher() {
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(1, "Random"),
+                                new GameSpec.IntGameVariant(2, "Vertical"),
+                                new GameSpec.IntGameVariant(3, "Horizontal")));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new NinjaStats(scene);
                     }
 
                     @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
                             Stats stats) {
-                        return new Ninja(gameContext, stats);
+                        return new Ninja(gameContext, stats, gameVariant.getNumber());
                     }
+
                 }));
         result.add(new GameSpec(new GameSummary("Sliding Puzzle", "data/Thumbnails/slidingpuzzle.png",
                 GameCategories.Category.SEARCHING), new GameSpec.GameVariantGenerator() {

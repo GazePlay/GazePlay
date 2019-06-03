@@ -21,3 +21,21 @@ The player has to find the odd picture among all the pictures displayed.
 A sliding puzzle has to be solved by the player by looking at the piece of puzzle to be moved.
 
 ![Sliding-Puzzle](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/slidingpuzzle.png)
+
+## Biboule Jump
+
+Jump on clouds to reach the greatest height.
+
+![Biboule-Jump](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/biboulejump.png)
+
+## Spot the differences
+
+Spot the differences between two images by staring at them. 
+
+![Trouvez-les-differences](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/spotthedifference.png)
+
+## Dice
+
+Roll from 1 to 6 dice.
+
+![Des](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/dice.png)
