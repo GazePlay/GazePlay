@@ -474,8 +474,10 @@ public class Stats implements GazeMotionListener {
         long previousGaze;
         long gazeDuration;
 
-        int x = (int) (Y / heatMapPixelSize); //
-        int y = (int) (X / heatMapPixelSize);
+//        int x = (int) (Y / heatMapPixelSize); //
+//        int y = (int) (X / heatMapPixelSize);
+        int x = (int) (Y ); //
+        int y = (int) (X );
         if (fixationSequence.size() == 0) {
             previousGaze = 0;
         } else {
