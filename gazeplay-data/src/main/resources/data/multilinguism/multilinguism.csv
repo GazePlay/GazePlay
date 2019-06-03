@@ -1,11 +1,11 @@
 ,alb,ara,chn,deu,ell,eng,fin,fra,hrv,ind,ita,jpn,pol,por,zsm,nld,rus,spa,vnm
 Colon,:,:,:,: ,:,: ,:, : ,:,:,:,:,:,:,:,:,:,:,:
 Creampie,Tartë me krem,فطائر كريمة,奶油派,Sahnetorte,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Cream pies,kermatorttu,Tartes à la crème,Krempita ,Pai krim,Torte alla crema,クリームパイ,Torty kremowe,Pastéis de nata,Pai krim,Taarten,Кремовый пирог,Tarta de crema,Bánh kem
-EnableAreaOfInterest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest
+EnableAreaOfInterest,Aktivizo Zonën e Interesit,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest
 EnableConvexHull,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI
-EnableVideoRecording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording
+EnableVideoRecording,Aktivizo Video Regjistrimin për Lojën ,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording
 FrogsRace,Vrapo bretkosë!,سباق الضفادع!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,La course des grenouilles,La course des grenouilles!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Frog Runner!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!
-AreaOfInterest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest
+AreaOfInterest,Zona e Interesit,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,
 Ninja,Ninxha,النينجا,忍者 ！,Ninja !,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Ninja !,Ninja,Ninja !,Ninja,Ninja!,Ninja!,にんじゃ !,Ninja!,Ninja,Ninja!,Ninja !,Ниндзя,Ninja,Ninja !
 MagicCards,Karta magjike,اوراق سحرية,魔幻卡,Zauberkarten,Επιτυχημένες αποκαλύψεις,Magic cards,Taikakortit,Cartes magiques,Čarobne kartice,Kad sihir,Carte magiche,マジックカード,Magiczne karty,Cartas mágicas,Kad sihir,Magische kaarten,Магические карты,Tarjetas mágicas,Những quân bài ma thuật
 Blocks,Blloqe,مكعبات,,Blocks,Επιτυχημένες αποκαλύψεις,Blocks,kappaleet,Blocs,Blokovi,Blok,Blocchi,ブロック,Bloki,Bloco,Blok,Blokken,Блоки,Bloques,Các hình khối
@@ -14,8 +14,8 @@ ColoredBubbles,Flluska me ngjyra,فقاعات ملونة,多彩泡泡,Farbige bl
 PortraitBubbles,Flluska me portrete,فقاعات,肥皂泡,Porträt Blasen,Φυσαλίδες με πορτρέτα,Portrait Bubbles,muotokuvakuplat,Bulles portrait,Mjehurići s portretom,Potret Bubbles,Bolle con ritratto,しょうぞうのあわ,Portret Bąbelki ???,Bulha retrato,Potret Bubbles,Foto Bubbels,Пузырьки с картинками,Burbujas retrato,Bong bóng có chân dung
 WhereIsTheAnimal,Ku është kafsha?,اين هذا الحيوان؟,这个动物在哪？,Wo ist dieses Tier?,Επιτυχημένες αποκαλύψεις,Where is this animal?,missä on eläin,Où est cet animal ?,Gdje je ova životinja?,Di manakah haiwan ini?,Dov'è questo animale?,このせいぶつはドコ？,Gdzie jest to zwierzę?,Onde està essa animal ?,Di manakah haiwan ini?,Waar is dit dier?,Где это животное?,Donde está este animal?,Con vật này ở đâu?
 WhereIsTheColor,Ku është ngjyra?,اين هذا اللون؟,这个颜色在哪？,Wo ist die Farbe?,Επιτυχημένες αποκαλύψεις,Where is this color?,missä on väri,Où est cette couleur ?,Gdje je ova boja?,Di manakah warna ini?,Dov'è questo colore?,このいろはドコ？,Gdzie jest ten kolor?,Onde està essa côr ?,Di manakah warna ini?,Waar is deze kleur?,Где этот цвет?,Donde ves este color?,Màu này ở đâu?
-WhereIsTheLetter,Ku është shkronja?,اين هذا الحرف؟,,,,Where is the letter?,,Où est cette lettre ?,,,,,,,,,,,
-WhereIsTheNumber,Ku është numri?,اين هذا الرقم؟,,,,Where is the number?,,Où est ce nombre ?,,,,,,,,,,,
+WhereIsTheLetter,Ku është shkronja?,اين هذا الحرف؟,,,,Where is the letter?,,Où est cette lettre ?,,,Dov'è questa lettera?,,,,,,,,
+WhereIsTheNumber,Ku është numri?,اين هذا الرقم؟,,,,Where is the number?,,Où est ce nombre ?,,,Dov'è questo numero?,,,,,,,,
 WhereIsIt,Ku është?,اين هذا؟,它在哪？,Wo ist es?,Επιτυχημένες αποκαλύψεις,Where is it ?,missä se on,Où est-ce ?,Gdje je?,Di mana ia?,Dov'è?,これはドコ？,Gdzie to jest ?,Onde é ?,Di mana ia?,Waar is het?,Где это находится?,Donde está?,Nó ở đâu?
 Fun with Flags,Luajmë me Flamujt,اين هذا العلم؟,,,,Fun with Flags,,Trouve les drapeaux,,,Trova la bandiera,,,Scopri la bandiera,,,,,
 StatsTitle,Statistika,احصائيات,统计,Statistiken,Στατιστικά,Statistics,otsikko,Statistiques,Statistika,Statistik,Statistiche,統計,Statystyka,Estatística,Statistik,Statistieken,Статистика,Estadísticas,Số liệu thống kê
@@ -45,9 +45,9 @@ QuestionLength,Kohëzgjatja e pyetjeve,مدة ظهور الاسئلة,,Dauer der
 Cups and Balls,Tasa dhe topa,كؤوس وكرات,杯子和球,Bechertrick,Επιτυχημένες αποκαλύψεις,Cups and Balls,kupit ja pallot,Gobelets Pass Pass,Šalice i lopte,Piala dan Balls,Tazze e palle,,Puchary i kule,*Copos e Bolas,Piala dan Balls,Bekers en Ballen,Чашки и шарики,Tazas y bolas,Chiếc cốc và Quả bóng
 Biboules,Biboules,كويرات,垒球,Biboles,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Biballs,biboules,Biboules,Biboules,Biballs,Biballs,,Biballs,Biboules,Biballs,Vliegjes,Безделушки,Biboules,Bóng Bi
 Robots,Robota,روبوتات,机器人,Roboters,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Robots,ropotit,Robots,Roboti,Robot,Robot,,Roboty,Robots,Robot,Robotten,Роботы,Robot,Rô-bốt
-Memory,Memorizo,ذاكرة,记忆,Memory,Επιτυχημένες αποκαλύψεις,Memory,muisti,Memory,Memory,Memori,Memory,,Pamięć,Memoria,Memori,Memory,Память,Memory,Bộ nhớ
-MemoryLetters,Memorizo Shkronjat,ذاكرة (الأحرف),,,,Memory (Letters),,Memory (lettres),,,,,,,,,,,
-MemoryNumbers,Memorizo Numrat,ذاكرة (أرقام),,,,Memory (Numbers),,Memory (nombres),,,,,,,,,,,
+Memory,Memorizo,ذاكرة,记忆,Memory,Επιτυχημένες αποκαλύψεις,Memory,muisti,Memory,Memory,Memori,Memoria,,Pamięć,Memoria,Memori,Memory,Память,Memory,Bộ nhớ
+MemoryLetters,Memorizo Shkronjat,ذاكرة (الأحرف),,,,Memory (Letters),,Memory (lettres),,,Memoria(lettere),,,,,,,,
+MemoryNumbers,Memorizo Numrat,ذاكرة (أرقام),,,,Memory (Numbers),,Memory (nombres),,,Memoria(numeri),,,,,,,,
 EnableRewardSound,Aktivizo audion për shpërblimet,تفعيل الصوت (احسنت),打开奖励音效,Aktiviere den Sound Bravo,Ενεργοποίηση ήχου ανταμοιβής,Enable Reward sound,sallia palkkioääni,Activer le son « bravo »,Aktiviraj zvuk za ,Dayakan bunyi Ganjaran,Attiva suono ricompensa,,Włącz dźwięk nagrody,Activar o som a « Bravo »,Dayakan bunyi Ganjaran,Activeer beloningsgeluid,Включить звук вознаграждения,Activar el sonido Bravo,Bật tiếng
 DisableHeatMap,Çaktivizo Heat Map,الغاء خريطة الحرارة,关闭热量地图,Deaktivieren Sie die Heat Map,Απενεργοποιήστε το χάρτη θερμότητας,Disable Heat Map,estää lämpökartta,Désactiver la Heat Map,Deaktiviraj mapu za toplinu,Lumpuhkan Peta Haba,Disattiva mappa di calore,,Wyłącz mapę ciepła,Desactivar heatmap,Lumpuhkan Peta Haba,Deactiveer Heat Map,Отключить тепловую карту,Desactivar mapa de calor,Tắt
 DisableSequence,Çaktivizo Sequencën e Fiksimit,,,,,Disable the Fixation Sequence,,Désactiver la Séquence de fixation,,,Disattive la sequenza di fissazione,,,Desactivar la secuencia de fijación,,,,,
@@ -55,7 +55,7 @@ EnableGazeMenu,Aktivizo Menunë Gaze (Beta),تفعيل النظر ,,Aktivieren S
 MenuOrientation,Orientimi i menusë (nevojitet rinisja e lojës),إتجاه القائمة,,Menüorientierung (erfordert Neustart des Spiels),Μενού προσανατολισμού (επανεκκίνηση του παιχνιδιού για να τεθεί σε ισχύ),Menu Orientation (restart game to take effect),valikon suunta,Orientation du menu (nécessite de relancer le jeu),Orjentacijski meni (restartiraj igru za aktivaciju),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Orientazione del menù (è richiesto il riavvio del gioco),,Orientacja menu (uruchom ponownie grę),orientacaõ domens,Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Richting menu (herstart nodig voor activering),Управление через Меню (перезапустите игру для ввода в дйствие),Orientación del menú (requiere reiniciar el juego),Phương ngang/dọc của menu (Khởi động lại để có hiệu lực)
 Music,Muzika,موسيقى ,音乐,Musik,Μουσική,Music,musiikki,Musique,Muzika,Muzik,Musica,,Muzyka,Música,Muzik,Muziek,Музыка,Musica,Âm nhạc
 Volume,Volumi,صوت,,Volume,Ενταση Ήχου,Volume,äänenvoimakkuus,Volume,Glasnoća,Jumlah dagangan,Volume,,Tom,Volume,Jumlah dagangan,Volume,Громкость,Volumen,Âm lượng
-OpenMemory,Memorizo (hapur),ذاكرة مفتوحة,,OpenMemory,Επιτυχημένες αποκαλύψεις,OpenMemory,avoin muisti,Memory ouvert,Otvori memoriju,OpenMemory,Memory aperto,,Otwarta pamiec,Memoria Aberta,OpenMemory,Open Memory,Доступная память,Memory abierto,Bộ nhớ Mở rộng
+OpenMemory,Memorizo (hapur),ذاكرة مفتوحة,,OpenMemory,Επιτυχημένες αποκαλύψεις,OpenMemory,avoin muisti,Memory ouvert,Otvori memoriju,OpenMemory,Memoria aperta,,Otwarta pamiec,Memoria Aberta,OpenMemory,Open Memory,Доступная память,Memory abierto,Bộ nhớ Mở rộng
 OpenMemoryLetters,Memorizo Shkronjat (hapur),ذاكرة مفتوحة (الأحرف),,,,Open Memory (Letters),,Memory ouvert (lettres),,,,,,,,,,,
 OpenMemoryNumbers,Memorizo Numrat (hapur),ذاكرة مفتوحة (أرقام),,,,Open Memory (Numbers),,Memory ouvert (nombres),,,,,,,,,,,
 Video Player with Feedback,Video player me reagim,تشغيل الفيديو مع العودة,,Video Player mit Feedback,Βίντεο με Ανατροφοδότηση,Video Player with Feedback,video player palautteella,Lecteur Video avec retour,Video player sa povratnom informacijom,Pemain Video dengan Maklum Balas,Lettore video con feedback,,Odtwarzacz wideo z komentarzem,Leitore video com feedback,Pemain Video dengan Maklum Balas,Video speler met feedback,Видеоплеер с Обратной связью,Reproductor de video con comentarios,Trình chơi nhạc có Phản hồi
@@ -145,31 +145,32 @@ MathDescDiv,,,,,,Divide two numbers!,,Division de deux nombres!,,,,,,,,,,,
 0 to 20,,,,,,0 to 20,,De 0 à 20,,,,,,,,,,,
 0 to 30,,,,,,0 to 30,,De 0 à 30,,,,,,,,,,,
 findodd,Çfarë nuk shkon ?,,,,,Find the Odd one out,,Trouvez l’intrus,,,Trova l’intruso,,,,,,,,
-Choose Game Variant,Zgjidh variantin a lojës,,,,,Choose Game Variant,,Choisissez une variante de jeu,,,,,,,,,,,
-With moving platforms,Me platforma lëvizëse ,,,,,With moving platforms,,Avec les platformes animées,,,,,,,,,,,
-Without moving platforms,Pa platforma lëvizëse,,,,,Without moving platforms,,Sans les platformes animées,,,,,,,,,,,
-Target games,,,,,,Target games,,,,,,,,,,,,,
-Memorization games,,,,,,Memorization games,,,,,,,,,,,,,
-Searching games,,,,,,Searching games,,,,,,,,,,,,,
-Spot the differences,,,,,,Spot the differences,,Trouvez les différences,,,,,,,,,,,
-Spot The Difference,,,,,,Spot The Difference,,Trouvez les différences,,,,,,,,,,,
-Spot all the differences,,,,,,Spot all the differences,,Trouvez toutes les différences,,,,,,,,,,,
-Differences found,,,,,,Differences found,,Différences trouvées,,,,,,,,,,,
-Dice,,,,,,Dice,,Dés,,,,,,,,,,,
-1 die,,,,,,1 die,,1 dé,,,,,,,,,,,
-2 dice,,,,,,2 dice,,2 dés,,,,,,,,,,,
-3 dice,,,,,,3 dice,,3 dés,,,,,,,,,,,
-4 dice,,,,,,4 dice,,4 dés,,,,,,,,,,,
-5 dice,,,,,,5 dice,,5 dés,,,,,,,,,,,
-6 dice,,,,,,6 dice,,6 dés,,,,,,,,,,,
-Identify The Letters,,,,,,Identify The Letters,,Identifiez La Lettre,,,,,,,,,,,
-Sliding Puzzle,,,,,,Sliding Puzzle,,Puzzle Glissant,,,,,,,,,,,
-Target games,,,,,,Target games,,Jeux de Cible,,,,,,,,,,,
-Memorization games,,,,,,Memorization games,,Jeux de Mémoire,,,,,,,,,,,
-Searching games,,,,,,Searching games,,Jeux de Recherche,,,,,,,,,,,
-Choose the Letter,,,,,,Choose the Letter,,Choisissez la Lettre,,,,,,,,,,,
-Random,,,,,,Random,,Au hazard,,,,,,,,,,,
 Vertical,,,,,,Vertical,,Verticale,,,,,,,,,,,
 Horizontal,,,,,,Horizontal,,Horizontale,,,,,,,,,,,
 Diagonal from upper left to lower right,,,,,,Diagonal from upper left to lower right,,Diagonale d'en haut à gauche à en bas à droite,,,,,,,,,,,
 Diagonal from upper right to lower left,,,,,,Diagonal from upper right to lower left,,Diagonale d'en haut à droite à en bas à gauche,,,,,,,,,,,
+Random,,,,,,Random,,Au hazard,,,,,,,,,,,
+Choose Game Variant,Zgjidh variantin a lojës,,,,,Choose Game Variant,,Choisissez une variante de jeu,,,Scegli un variante di gioco,,,,,,,,
+With moving platforms,Me platforma lëvizëse ,,,,,With moving platforms,,Avec les platformes animées,,,Con piattaforme mobili,,,,,,,,
+Without moving platforms,Pa platforma lëvizëse,,,,,Without moving platforms,,Sans les platformes animées,,,Senza piattaforme mobili,,,,,,,,
+Target games,Lojëra me Objektiv,,,,,Target games,,Jeux Objectif,,,Giochi Obbiettivo,,,,,,,,
+Memorization games,Lojëra me Memorizim,,,,,Memorization games,,Jeux Mémorisation,,,Giochi Memorizzazione,,,,,,,,
+Searching games,Lojëra me Kërkim,,,,,Searching games,,Jeux Recherche,,,Giochi Ricerca,,,,,,,,
+Spot the differences,Gjej ndryshimet,,,,,Spot the differences,,Trouvez les différences,,,Trova le differenze,,,,,,,,
+Spot The Difference,Gjej Ndryshimin,,,,,Spot The Difference,,Trouvez les différences,,,,,,,,,,,
+Spot all the differences,Gjej gjithë ndryshimet,,,,,Spot all the differences,,Trouvez toutes les différences,,,Trova tutte le differenze,,,,,,,,
+Differences found,Ndryshimet e gjetura,,,,,Differences found,,Différences trouvées,,,Differenze trovate,,,,,,,,
+Dice,Zara,,,,,Dice,,Dés,,,Dadi ,,,,,,,,
+1 die,1 Zar,,,,,1 die,,1 dé,,,1 dado,,,,,,,,
+2 dice,2 Zar,,,,,2 dice,,2 dés,,,2 dadi,,,,,,,,
+3 dice,3 Zar,,,,,3 dice,,3 dés,,,3 dadi,,,,,,,,
+4 dice,4 Zar,,,,,4 dice,,4 dés,,,4 dadi,,,,,,,,
+5 dice,5 Zar,,,,,5 dice,,5 dés,,,5 dadi,,,,,,,,
+6 dice,6 Zar,,,,,6 dice,,6 dés,,,6 dadi,,,,,,,,
+Identify The Letters,Gjej shkronjat ,,,,,Identify The Letters,,Identifiez La Lettre,,,Trova la lettera,,,,,,,,
+Sliding Puzzle,,,,,,Sliding Puzzle,,Puzzle Glissant,,,Puzzle scorrevole,,,,,,,,
+Choose the Letter,Zgjidh shkronjën ,,,,,Choose the Letter,,Choisissez la Lettre,,,Scegli la lettera,,,,,,,,
+Numbers,Numra,,,,,Numbers,,Nombres,,,Numeri,,,,,,,,
+Mona Lisa,Mona Liza,,,,,Mona Lisa,,Mona Lisa,,,Mona Lisa,,,,,,,,
+Fish,Peshk,,,,,Fish,,Poisson,,,Pesce,,,,,,,,
+Biboule,Biboule,,,,,Biboule,,Biboule,,,Biball,,,,,,,,
