@@ -5,7 +5,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -31,8 +30,6 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -445,8 +442,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         infoBox.add(TimeSpentLabelV, 2, 3);
         infoBox.add(Fixations, 0, 4);
         infoBox.add(FixationV, 2, 4);
-        infoBox.add(Ratio, 0, 5);
-        infoBox.add(RatioV, 2, 5);
+//        infoBox.add(Ratio, 0, 5);
+//        infoBox.add(RatioV, 2, 5);
         if (revisit != 0) {
             Text Revisit = new Text("Revisits: ");
             Text RevisitV = new Text(revisit + "");
