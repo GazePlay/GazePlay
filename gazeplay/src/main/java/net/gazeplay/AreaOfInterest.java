@@ -316,8 +316,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         Button slowBtn8 = new Button("8X Slow ");
         Button slowBtn5 = new Button("5X Slow ");
         Button playBtn = new Button("Play ");
-//        Button quitBtn = new Button("Leave");
-//        quitBtn.setCancelButton(true);
+        // Button quitBtn = new Button("Leave");
+        // quitBtn.setCancelButton(true);
 
         playBtn.setPrefSize(100, 20);
         slowBtn5.setPrefSize(100, 20);
@@ -341,18 +341,18 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             progressRate = 10;
             playButtonPressed();
         });
-//        quitBtn.setOnAction(event -> {
-//            StatsContext statsContext = null;
-//            try {
-//                statsContext = StatsContext.newInstance(gazePlay, stats);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            this.clear();
-//
-//            gazePlay.onDisplayStats(statsContext);
-//        });
+        // quitBtn.setOnAction(event -> {
+        // StatsContext statsContext = null;
+        // try {
+        // statsContext = StatsContext.newInstance(gazePlay, stats);
+        // } catch (IOException e) {
+        // e.printStackTrace();
+        // }
+        //
+        // this.clear();
+        //
+        // gazePlay.onDisplayStats(statsContext);
+        // });
 
         if (config.isVideoRecordingEnabled()) {
             Media media = new Media(stats.getDirectoryOfVideo());
