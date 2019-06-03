@@ -117,6 +117,61 @@ public class Stats implements GazeMotionListener {
 
         }
         lifeCycle.start(() -> {
+
+            if (config.isHeatMapDisabled()) {
+                log.info("HeatMap is disabled, skipping instantiation of the HeatMap Data model");
+                if (config.isFixationSequenceDisabled()) {// neither HeatMap nor Fixation Sequence are enabled
+                    log.info("Fixation Sequence is disabled, skipping instantiation of the Sequence data");
+                } else { // only the Fixation Sequence is enabled
+                    fixationSequence = new LinkedList();
+
+                    recordGazeMovements = e -> {
+
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+                    recordMouseMovements = e -> {
+
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+
+                    gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                    gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                }
+            } else {
+                heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
+
+                if (config.isFixationSequenceDisabled()) { // only the HeatMap is enabled
+                    log.info("Fixation Sequence is disabled, skipping instantiation of the Sequence data");
+                    recordGazeMovements = e -> {
+
+                        incHeatMap((int) e.getX(), (int) e.getY());
+
+                    };
+                    recordMouseMovements = e -> {
+
+                        incHeatMap((int) e.getX(), (int) e.getY());
+
+                    };
+
+                    gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                    gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                } else { // both HeatMap & FixationSequence are enabled
+                    fixationSequence = new LinkedList();
+                    recordGazeMovements = e -> {
+
+                        incHeatMap((int) e.getX(), (int) e.getY());
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+                    recordMouseMovements = e -> {
+
+                        incHeatMap((int) e.getX(), (int) e.getY());
+                        incFixationSequence((int) e.getX(), (int) e.getY());
+                    };
+
+                    gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                    gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                }
+            }
             System.out.println("Head map" + config.isHeatMapDisabled());
             System.out.println("Fixation" + config.isFixationSequenceDisabled());
             System.out.println("AOI" + config.isAreaOfInterestEnabled());
@@ -421,10 +476,21 @@ public class Stats implements GazeMotionListener {
         } else {
             previousGaze = (fixationSequence.get(fixationSequence.size() - 1)).getFirstGaze();
         }
+
         FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(), 0, x, y);
-        gazeDuration = previousGaze - newGazePoint.getFirstGaze();
-        newGazePoint.setGazeDuration(gazeDuration);
-        fixationSequence.add(newGazePoint);
+        gazeDuration = Math.abs(previousGaze - newGazePoint.getFirstGaze());
+
+        // if the new points coordinates are the same as last one's in the list then update the last fixationPoint in
+        // the list
+        // same coordinate points are a result of the eyetracker's frequency of sampling
+        if (fixationSequence.size() > 1
+                && (newGazePoint.getX() == fixationSequence.get(fixationSequence.size() - 1).getX())
+                && (newGazePoint.getY() == fixationSequence.get(fixationSequence.size() - 1).getY())) {
+            fixationSequence.get(fixationSequence.size() - 1).setGazeDuration(gazeDuration);
+        } else { // else add the new point in the list
+            newGazePoint.setGazeDuration(gazeDuration);
+            fixationSequence.add(newGazePoint);
+        }
     }
 
     private void incHeatMap(int X, int Y) {
