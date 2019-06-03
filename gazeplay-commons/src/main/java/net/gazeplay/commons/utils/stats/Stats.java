@@ -275,7 +275,7 @@ public class Stats implements GazeMotionListener {
         final int positionX = (int) position.getX();
         final int positionY = (int) position.getY();
         incHeatMap(positionX, positionY);
-        incFixationSequence(positionX, positionY); // check if good
+        incFixationSequence(positionX, positionY);
     }
 
     public SavedStatsInfo saveStats() throws IOException {
@@ -451,12 +451,17 @@ public class Stats implements GazeMotionListener {
 
     private void saveFixationSequenceAsPng(File outputPngFile) {
 
+//        log.info(String.format("Fixation-Sequence size: %3d X %3d",
+//                (int) (gameContextScene.getWidth() / heatMapPixelSize),
+//                (int) (gameContextScene.getHeight() / heatMapPixelSize)));
         log.info(String.format("Fixation-Sequence size: %3d X %3d",
-                (int) (gameContextScene.getWidth() / heatMapPixelSize),
-                (int) (gameContextScene.getHeight() / heatMapPixelSize)));
+                (int)gameContextScene.getWidth(),
+                (int)gameContextScene.getHeight()));
 
-        FixationSequence sequence = new FixationSequence((int) (gameContextScene.getWidth() / heatMapPixelSize),
-                (int) (gameContextScene.getHeight() / heatMapPixelSize), fixationSequence);
+//        FixationSequence sequence = new FixationSequence((int) (gameContextScene.getWidth() / heatMapPixelSize),
+//                (int) (gameContextScene.getHeight() / heatMapPixelSize), fixationSequence);
+        FixationSequence sequence = new FixationSequence((int)gameContextScene.getWidth(),
+                (int)gameContextScene.getHeight(), fixationSequence);
 
         try {
             sequence.saveToFile(outputPngFile);
@@ -469,7 +474,7 @@ public class Stats implements GazeMotionListener {
         long previousGaze;
         long gazeDuration;
 
-        int x = (int) (Y / heatMapPixelSize);
+        int x = (int) (Y / heatMapPixelSize); //
         int y = (int) (X / heatMapPixelSize);
         if (fixationSequence.size() == 0) {
             previousGaze = 0;
