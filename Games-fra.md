@@ -2,7 +2,7 @@
 
 La cible suit des mouvements aléatoires et explose lorsque le joueur la regarde.
 
-![Ninja](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/old-website/images/ninja-1.jpg)
+![Ninja](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/ninja.png)
 
 ## Trouvez l'intrus
 
