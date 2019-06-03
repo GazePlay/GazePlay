@@ -51,6 +51,8 @@ public class Target extends Portrait {
 
     private final int gameVariant;
 
+    private Random randomGen;
+
     public Animation currentTranslation;
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
@@ -61,6 +63,7 @@ public class Target extends Portrait {
         this.stats = stats;
         this.imageLibrary = imageLibrary;
         this.gameVariant = gameVariant;
+        this.randomGen = new Random();
 
         this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, imageLibrary, nbBall);
         gameContext.getChildren().addAll(miniBallsPortraits);
@@ -143,12 +146,12 @@ public class Target extends Portrait {
     }
 
     private void createBackAndForthTranlations(Position pos1, Position pos2, int length) {
-        Timeline translation1 = new Timeline(new KeyFrame(
-                new Duration(Configuration.getInstance().getSpeedEffects() * length),
+        Duration animationLength = new Duration(Configuration.getInstance().getSpeedEffects() * length);
+
+        Timeline translation1 = new Timeline(new KeyFrame(animationLength,
                 new KeyValue(this.centerXProperty(), pos1.getX()), new KeyValue(this.centerYProperty(), pos1.getY())));
 
-        Timeline translation2 = new Timeline(new KeyFrame(
-                new Duration(Configuration.getInstance().getSpeedEffects() * length),
+        Timeline translation2 = new Timeline(new KeyFrame(animationLength,
                 new KeyValue(this.centerXProperty(), pos2.getX()), new KeyValue(this.centerYProperty(), pos2.getY())));
 
         translation1.setOnFinished(actionEvent -> {
@@ -165,17 +168,16 @@ public class Target extends Portrait {
             translation1.playFromStart();
         });
 
-        translation1.playFromStart();
+        setPosition(pos2);
+        translation1.playFrom(animationLength.multiply(randomGen.nextDouble()));
         currentTranslation = translation1;
     }
 
     private void move() {
-        Random r = new Random();
-        final int length = r.nextInt(2000) + 1000;// between 1 and 3 seconds
+        final int length = randomGen.nextInt(2000) + 1000;// between 1 and 3 seconds
 
         Dimension2D dimension2D = randomPositionGenerator.getDimension2D();
 
-        final Position newPosition;
         switch (gameVariant) {
         case 1: // random
             moveRandom(length);
@@ -187,6 +189,16 @@ public class Target extends Portrait {
         case 3: // horizontal
             createBackAndForthTranlations(new Position(getInitialRadius(), getCenterY()),
                     new Position(dimension2D.getWidth() - getInitialRadius(), getCenterY()), length * 2);
+            break;
+        case 4: // Diagonal \
+            createBackAndForthTranlations(new Position(getInitialRadius(), getInitialRadius()),
+                    new Position(dimension2D.getWidth() - getInitialRadius(),
+                            dimension2D.getHeight() - getInitialRadius()),
+                    length * 2);
+            break;
+        case 5: // Diagonal /
+            createBackAndForthTranlations(new Position(dimension2D.getWidth() - getInitialRadius(), getInitialRadius()),
+                    new Position(0, dimension2D.getHeight() - getInitialRadius()), length * 2);
             break;
         }
 
