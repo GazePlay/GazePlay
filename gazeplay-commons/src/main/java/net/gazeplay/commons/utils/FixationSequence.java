@@ -42,7 +42,7 @@ public class FixationSequence {
         gaussianBlur.setRadius(2.5);
         gc.setEffect(gaussianBlur);
         gc.setStroke(Color.rgb(255, 157, 6, 1));
-        gc.setLineWidth(2.5);
+        gc.setLineWidth(4);
 
         fixSeq = vertexReduction(fixSeq, 15);
 
@@ -59,7 +59,7 @@ public class FixationSequence {
 
         // draw the circles with the labels on top
         gc.setStroke(Color.RED);
-        gc.setLineWidth(0.6);
+        gc.setLineWidth(1);
 
         int label_count = 1;// for the labels of the fixation sequence
 
@@ -67,14 +67,15 @@ public class FixationSequence {
         int x = fixSeq.get(0).getY();
         int y = fixSeq.get(0).getX();
 
-        int radius = 20; // central fixation bias . Read more about it at
+        int radius = 45; // central fixation bias . Read more about it at
         // https://imotions.com/blog/7-terms-metrics-eye-tracking/
 
         gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
         gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
         gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
         gc.setFill(Color.BLACK);
-        gc.fillText(Integer.toString(label_count), x, y, 40);
+        gc.setFont(Font.font ("Verdana", 25));
+        gc.fillText(Integer.toString(label_count), x, y, 90);
 
         double duration;
 
@@ -87,12 +88,12 @@ public class FixationSequence {
 
             if (duration > 20) {
                 label_count++;
-                radius = 20 + (int) duration / 100;
+                radius = 45 + (int) duration / 100;
                 gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
                 gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
                 gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
                 gc.setFill(Color.BLACK);
-                gc.fillText(Integer.toString(label_count), x, y, 40);
+                gc.fillText(Integer.toString(label_count), x, y, 80);
 
             } else
                 continue;
