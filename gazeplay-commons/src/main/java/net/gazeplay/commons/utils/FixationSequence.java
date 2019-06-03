@@ -131,9 +131,13 @@ public class FixationSequence {
         for (int i = 1; i < allPoints.size() - 1; i++) {
             distance = Math.sqrt(Math.pow(pivotVertex.getY() - allPoints.get(i).getY(), 2)
                     + Math.pow(pivotVertex.getX() - allPoints.get(i).getX(), 2));
-
-            if (distance <= tolerance)
+            
+            if (distance <= tolerance){
+                // add to the accepted vertex the duration of the reduced vertices -- to adapt the radius
+                allPoints.get(accepted).setGazeDuration(allPoints.get(accepted).getGazeDuration() + allPoints.get(i).getGazeDuration());
                 continue;
+            }
+
             else {
                 reducedPolyline.add(allPoints.get(i));
 
