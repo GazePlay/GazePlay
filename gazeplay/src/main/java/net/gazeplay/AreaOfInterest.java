@@ -385,7 +385,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         pane.getChildren().add(aoiButton);
         pane.setAlignment(Pos.CENTER_RIGHT);
 
-
         topPane = new HBox(timeLabel, region1, screenTitleText, region2, buttonBox);
         topPane.setSpacing(10);
         graphicsPane.setStyle("-fx-background-color: transparent;");
@@ -398,8 +397,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     }
 
     private void playButtonPressed() {
-        if(!playing)
-        {
+        if (!playing) {
             playing = true;
             for (InitialAreaOfInterestProps areaOfInterestProps : combinedAreaList) {
                 graphicsPane.getChildren().remove(areaOfInterestProps.getAreaOfInterest());
@@ -442,8 +440,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         infoBox.add(TimeSpentLabelV, 2, 3);
         infoBox.add(Fixations, 0, 4);
         infoBox.add(FixationV, 2, 4);
-//        infoBox.add(Ratio, 0, 5);
-//        infoBox.add(RatioV, 2, 5);
+        infoBox.add(Ratio, 0, 5);
+        infoBox.add(RatioV, 2, 5);
         if (revisit != 0) {
             Text Revisit = new Text("Revisits: ");
             Text RevisitV = new Text(revisit + "");
