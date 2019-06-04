@@ -18,14 +18,14 @@ public class Biboule extends Rectangle {
     private Timeline leftMovement;
     private Timeline rightMovement;
 
-    public Biboule(double x, double y, double width, double height, String soundFileLocation,
-                          double windowWidth, double speed) {
+    public Biboule(double x, double y, double width, double height, String soundFileLocation, double windowWidth,
+            double speed) {
         this(x, y, width, height, soundFileLocation, windowWidth, speed, 0, 0, 0, 0);
     }
 
-    public Biboule(double x, double y, double width, double height, String soundFileLocation,
-                          double windowWidth, double speed, double colliderMarginUp, double colliderMarginRight,
-                          double colliderMarginDown, double colliderMarginLeft) {
+    public Biboule(double x, double y, double width, double height, String soundFileLocation, double windowWidth,
+            double speed, double colliderMarginUp, double colliderMarginRight, double colliderMarginDown,
+            double colliderMarginLeft) {
         super(x, y, width, height);
         this.soundFileLocation = soundFileLocation;
         this.collider = new Rectangle(x + colliderMarginLeft * width, y + colliderMarginUp * height,
@@ -34,11 +34,11 @@ public class Biboule extends Rectangle {
 
         double movementArea = windowWidth - width;
         double leftLimit = 0;
-            if (x > 3 * movementArea / 4) {
-                leftLimit = x - movementArea / 2;
-            } else if (x > movementArea / 4) {
-                leftLimit = x - movementArea / 4;
-            }
+        if (x > 3 * movementArea / 4) {
+            leftLimit = x - movementArea / 2;
+        } else if (x > movementArea / 4) {
+            leftLimit = x - movementArea / 4;
+        }
         double rightLimit = leftLimit + movementArea / 2;
 
         collider.setX(leftLimit);
