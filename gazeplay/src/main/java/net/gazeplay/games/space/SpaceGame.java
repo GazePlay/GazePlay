@@ -396,7 +396,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 //            if (random.nextInt(4) == 0) {
                 createBiboule(newBibX, newBibY, true);
 //            }
-
 //            bottom = newBibY - 2 * bibouleHeight;
     }
 }
