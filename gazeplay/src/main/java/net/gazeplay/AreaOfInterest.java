@@ -31,8 +31,13 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
+import org.monte.media.Registry;
+import ws.schild.jave.Encoder;
+import ws.schild.jave.EncodingAttributes;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.VideoAttributes;
 
-import javax.swing.text.html.ImageView;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -279,6 +284,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return pointsToReturn;
     }
 
+
     private AreaOfInterest(GazePlay gazePlay, BorderPane root, Stats stats) {
         super(gazePlay, root);
         colors = new Color[] { Color.PURPLE, Color.WHITE, Color.PINK, Color.ORANGE, Color.BLUE, Color.RED,
@@ -312,15 +318,12 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         for (InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
-        VBox pane = new VBox(1);
         timeLabel = new Label();
         timeLabel.setTextFill(Color.web("#FFFFFF"));
         Button slowBtn10 = new Button("10X Slow ");
         Button slowBtn8 = new Button("8X Slow ");
         Button slowBtn5 = new Button("5X Slow ");
         Button playBtn = new Button("Play ");
-        // Button quitBtn = new Button("Leave");
-        // quitBtn.setCancelButton(true);
 
         playBtn.setPrefSize(100, 20);
         slowBtn5.setPrefSize(100, 20);
@@ -344,25 +347,32 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             progressRate = 10;
             playButtonPressed();
         });
-        // quitBtn.setOnAction(event -> {
-        // StatsContext statsContext = null;
-        // try {
-        // statsContext = StatsContext.newInstance(gazePlay, stats);
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
-        //
-        // this.clear();
-        //
-        // gazePlay.onDisplayStats(statsContext);
-        // });
-
-
         if (config.isVideoRecordingEnabled()) {
-            Media media = new Media(stats.getDirectoryOfVideo());
-            player = new MediaPlayer(media);
-            MediaView mediaView = new MediaView(player);
-            stackPane.getChildren().add(mediaView);
+            File source;
+            File target;
+            try {
+                source = new File(stats.getDirectoryOfVideo()+".avi");
+                target = new File(stats.getDirectoryOfVideo()+".mp4");
+                System.out.println("Outfile name is:"+stats.getDirectoryOfVideo().replaceAll("%20+","-")+".mp4");
+                //Audio Attributes
+                VideoAttributes videoAttributes = new VideoAttributes();
+                videoAttributes.setCodec("mpeg4");
+                //Encoding attributes
+                EncodingAttributes attrs = new EncodingAttributes();
+                attrs.setFormat("mp4");
+                attrs.setVideoAttributes(videoAttributes);
+
+                //Encode
+                Encoder encoder = new Encoder();
+                encoder.encode(new MultimediaObject(source), target, attrs);
+                Media media = new Media(target.toURI().toString());
+                player = new MediaPlayer(media);
+                MediaView mediaView = new MediaView(player);
+                stackPane.getChildren().add(mediaView);
+                System.out.println("The conversion was succesfull!");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }else{
             SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
             javafx.scene.image.ImageView screenshot = new javafx.scene.image.ImageView();

@@ -1,7 +1,5 @@
 package net.gazeplay.commons.utils.stats;
 
-import com.github.agomezmoron.multimedia.recorder.VideoRecorder;
-import com.github.agomezmoron.multimedia.recorder.configuration.VideoRecorderConfiguration;
 
 import com.sun.javafx.PlatformUtil;
 import javafx.application.Platform;
@@ -22,15 +20,29 @@ import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.Utils;
+import org.monte.media.Format;
+import org.monte.media.FormatKeys;
+import org.monte.media.Registry;
+import org.monte.media.VideoFormatKeys;
+import org.monte.media.gui.Worker;
+import org.monte.media.math.Rational;
+import org.monte.screenrecorder.ScreenRecorder;
+import org.monte.screenrecorder.ScreenRecorderCompactMain;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,8 +69,10 @@ public class Stats implements GazeMotionListener {
     private long previousTime = 0;
     private int previousX = 0;
     private int previousY = 0;
+    private File movieFolder;
     private int nbShots = 0;
     private boolean convexHULL = true;
+    private ScreenRecorder screenRecorder;
     long startTime;
     int sceneCounter = 0;
     @Getter
@@ -110,10 +124,44 @@ public class Stats implements GazeMotionListener {
     public void start() {
         config = Configuration.getInstance();
         if (config.isVideoRecordingEnabled()) {
-            nameOfVideo = Utils.now() + "video";
             directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
-            VideoRecorder.start(nameOfVideo);
-            VideoRecorderConfiguration.setVideoDirectory(getGameStatsOfTheDayDirectory());
+            this.movieFolder = new File(directoryOfVideo);
+
+            float quality = 1.0F;
+            byte bitDepth = 24;
+
+            String mimeType;
+            String videoFormatName;
+            String compressorName;
+
+            mimeType = "video/avi";
+            videoFormatName = "tscc";
+            compressorName = "Techsmith Screen Capture";
+
+            ScreenRecorderCompactMain asi = null;
+
+            GraphicsConfiguration cfg = GraphicsEnvironment
+                    .getLocalGraphicsEnvironment()
+                    .getDefaultScreenDevice()
+                    .getDefaultConfiguration();
+            Rectangle areaRect = null;
+            Dimension outputDimension = null;
+            areaRect = cfg.getBounds();
+
+
+            outputDimension = areaRect.getSize();
+            byte screenRate;
+            screenRate = 20;
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 'at' HH.mm.ss");
+                nameOfVideo =this.movieFolder + "/ScreenRecording " + dateFormat.format(new Date());
+//                System.out.println("The movie name is 1 :" +this.movieFolder + "ScreenRecording " + dateFormat.format(new Date()).replaceAll(" ","%20"));
+                this.screenRecorder = new ScreenRecorder(cfg, areaRect, new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.FILE, VideoFormatKeys.MimeTypeKey, mimeType), new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.VIDEO, VideoFormatKeys.EncodingKey, videoFormatName, VideoFormatKeys.CompressorNameKey, compressorName, VideoFormatKeys.WidthKey, outputDimension.width, VideoFormatKeys.HeightKey, outputDimension.height, VideoFormatKeys.DepthKey, (int) bitDepth, VideoFormatKeys.FrameRateKey, Rational.valueOf((double)screenRate), VideoFormatKeys.QualityKey, quality, VideoFormatKeys.KeyFrameIntervalKey, screenRate * 60), null, null, this.movieFolder);
+                this.screenRecorder.start();
+            } catch (IOException | AWTException e) {
+                e.printStackTrace();
+            }
+            this.screenRecorder.setAudioMixer(null);
 
         }
         lifeCycle.start(() -> {
@@ -150,6 +198,7 @@ public class Stats implements GazeMotionListener {
                     }
                 }
             };
+
             recordMouseMovements = e -> {
                 int getX = (int) e.getX();
                 int getY = (int) e.getY();
@@ -199,12 +248,19 @@ public class Stats implements GazeMotionListener {
 
     public void stop() {
         if (config.isVideoRecordingEnabled()) {
-            try {
-                VideoRecorder.stop();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                System.out.println("Video couldn't stop");
-            }
+            final ScreenRecorder r = this.screenRecorder;
+            this.screenRecorder = null;
+            (new Worker() {
+                protected Object construct() throws Exception {
+                    r.stop();
+                    return null;
+                }
+
+                protected void finished() {
+                    ScreenRecorder.State state = r.getState();
+
+                }
+            }).start();
         }
         lifeCycle.stop(() -> {
             if (recordGazeMovements != null) {
@@ -327,25 +383,9 @@ public class Stats implements GazeMotionListener {
     }
 
     public String getDirectoryOfVideo() {
-        Runtime rt = Runtime.getRuntime();
-        if (PlatformUtil.isWindows()) {
-            try {
-                Process proc = rt.exec("rename " + VideoRecorderConfiguration.getVideoDirectory() + "/"
-                        + this.nameOfVideo + ".mov " + this.nameOfVideo + ".mp4");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                Process proc = rt.exec("mv " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo
-                        + ".mov " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo + ".mp4");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return VideoRecorderConfiguration.getVideoDirectory().toURI() + this.nameOfVideo + ".mp4";
+        return nameOfVideo;
     }
+
 
     File createInfoStatsFile() {
         File outputDirectory = getGameStatsOfTheDayDirectory();

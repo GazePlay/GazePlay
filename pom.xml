@@ -144,14 +144,6 @@
 				<artifactId>findbugs</artifactId>
 				<version>3.0.1</version>
 			</dependency>
-
-			<dependency>
-				<groupId>com.github.agomezmoron</groupId>
-				<artifactId>screen-recorder</artifactId>
-				<version>0.0.3</version>
-
-			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
@@ -369,11 +361,6 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
-		<repository>
-			<id>screen-recorder</id>
-			<name>Java screen recorder library by agomezmoron</name>
-			<url>https://raw.github.com/agomezmoron/screen-recorder/mvn-repo</url>
 		</repository>
 	</repositories>
 
