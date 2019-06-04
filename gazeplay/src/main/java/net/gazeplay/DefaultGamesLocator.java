@@ -1131,9 +1131,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
-
                                 new GameSpec.IntGameVariant(0, "With moving platforms"),
-
                                 new GameSpec.IntGameVariant(1, "Without moving platforms")
 
                 ));
