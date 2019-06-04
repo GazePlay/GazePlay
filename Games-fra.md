@@ -39,3 +39,15 @@ Il faut trouver les différences entre les deux images en les fixant du regard.
 Lancer de 1 à 6 dés.
 
 ![Des](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/dice.png)
+
+## Jeux de Mathématiques
+
+Résoudre les problèmes de maths: Addition, Soustraction, Multiplication et Division de deux nombres.
+
+![Math101](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/math101.png)
+
+## Identifiez La Lettre
+
+Selectionnez tos les blocs contenant la lettre mentionné.
+
+![Literacy](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/letters.png)
