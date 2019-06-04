@@ -118,8 +118,6 @@ public class Stats implements GazeMotionListener {
         }
         lifeCycle.start(() -> {
 
-
-
             if (!config.isHeatMapDisabled())
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
             startTime = System.currentTimeMillis();
@@ -399,9 +397,10 @@ public class Stats implements GazeMotionListener {
         // (int) (gameContextScene.getWidth() / heatMapPixelSize),
         // (int) (gameContextScene.getHeight() / heatMapPixelSize)));
 
-        FixationSequence sequence = new FixationSequence((int) (gameContextScene.getWidth() / heatMapPixelSize),
-                (int) (gameContextScene.getHeight() / heatMapPixelSize), fixationSequence);
-
+        // FixationSequence sequence = new FixationSequence((int) (gameContextScene.getWidth() / heatMapPixelSize),
+        // (int) (gameContextScene.getHeight() / heatMapPixelSize), fixationSequence);
+        FixationSequence sequence = new FixationSequence((int) gameContextScene.getWidth(),
+                (int) gameContextScene.getHeight(), fixationSequence);
         try {
             sequence.saveToFile(outputPngFile);
         } catch (Exception e) {
@@ -413,8 +412,10 @@ public class Stats implements GazeMotionListener {
         long previousGaze;
         long gazeDuration;
 
-        int x = (int) (Y / heatMapPixelSize); //
-        int y = (int) (X / heatMapPixelSize);
+        // int x = (int) (Y / heatMapPixelSize);
+        // int y = (int) (X / heatMapPixelSize);
+        int x = Y;
+        int y = X;
 
         if (fixationSequence.size() == 0) {
             previousGaze = 0;

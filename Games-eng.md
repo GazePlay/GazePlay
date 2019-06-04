@@ -8,7 +8,7 @@ Target perfoms a random walk and explode when player looks at it.
 
 After reading the contry name the target must look at the corresponding flag.
  
-![FunWithFlags](https://raw.githubusercontent.com/schwabdidier/GazePlay/gazeplay-data/src/main/resources/data/Thumbnails/flags.png)
+![FunWithFlags](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/flags.png)
 
 ## Find the odd one out
 
