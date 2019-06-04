@@ -10,9 +10,11 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
@@ -30,6 +32,7 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
 
+import javax.swing.text.html.ImageView;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -55,7 +58,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private int progressRate = 1;
     private Double previousInfoBoxX;
     private Double previousInfoBoxY;
-    private ArrayList<InitialAreaOfInterestProps> combinedAreaList;;
+    private ArrayList<InitialAreaOfInterestProps> combinedAreaList;
     private double combinationThreshHold = 0.70;
     private int[] areaMap;
     private boolean playing = false;
@@ -290,7 +293,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         grid.setPadding(new Insets(50, 50, 50, 50));
         allAOIList = new ArrayList<>();
         Multilinguism multilinguism = Multilinguism.getSingleton();
-        Text screenTitleText = new Text(multilinguism.getTrad("AreaOfInterest", config.getLanguage()));
+        Label screenTitleText = new Label(multilinguism.getTrad("AreaOfInterest", config.getLanguage()));
         screenTitleText.setId("title");
         HBox topPane;
         VBox centerPane = new VBox();
@@ -354,14 +357,22 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         // gazePlay.onDisplayStats(statsContext);
         // });
 
+
         if (config.isVideoRecordingEnabled()) {
             Media media = new Media(stats.getDirectoryOfVideo());
             player = new MediaPlayer(media);
             MediaView mediaView = new MediaView(player);
             stackPane.getChildren().add(mediaView);
+        }else{
+            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+            javafx.scene.image.ImageView screenshot = new javafx.scene.image.ImageView();
+            screenshot.setPreserveRatio(true);
+            screenshot.setImage(new Image(savedStatsInfo.getScreenshotFile().toURI().toString()));
+            stackPane.getChildren().add(screenshot);
         }
+
         timeLabel.setMinSize(100, 0);
-        stackPane.getChildren().add(graphicsPane);
+        timeLabel.setTextFill(Color.GREEN);
         // playBtn.setStyle("-fx-alignment: baseline-right;");
 
         Region region1 = new Region();
@@ -386,18 +397,24 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             gazePlay.onDisplayStats(statsContext);
         };
 
-        HomeButton aoiButton = new HomeButton("data/common/images/home-button.png");
-        aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
-        pane.getChildren().add(aoiButton);
-        pane.setAlignment(Pos.CENTER_RIGHT);
+        HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
 
-        topPane = new HBox(timeLabel, region1, screenTitleText, region2, buttonBox);
+        topPane = new HBox( timeLabel, region2, buttonBox);
+        topPane.setPadding(new Insets(15,15,0,15));
         topPane.setSpacing(10);
+        topPane.setStyle("-fx-background-color: transparent; -fx-max-height: 80px;");
+        HBox homebox = new HBox(homeButton);
+        homebox.setStyle("-fx-background-color: transparent; -fx-max-height: 100px; -fx-max-width: 100px;");
+        homebox.setPadding(new Insets(10,10,10,10));
+        stackPane.getChildren().add(graphicsPane);
+        stackPane.getChildren().add(topPane);
+        stackPane.getChildren().add(homebox);
+        StackPane.setAlignment(homebox,Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(topPane,Pos.TOP_CENTER);
+        graphicsPane.setPickOnBounds(false);
         graphicsPane.setStyle("-fx-background-color: transparent;");
-        pane.setStyle("-fx-background-color: transparent");
         root.setCenter(stackPane);
-        root.setTop(topPane);
-        root.setBottom(pane);
         root.setStyle(
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
@@ -531,11 +548,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     previousInfoBoxX = finalInfoBox.getLayoutX();
                     previousInfoBoxY = finalInfoBox.getLayoutY();
                     currentInfoBox = new GridPane();
-                    finalInfoBox.setLayoutY(Screen.getPrimary().getBounds().getHeight() - 250);
+                    finalInfoBox.setLayoutY(0);
                     finalInfoBox.setLayoutX(0);
                     finalInfoBox.setStyle("-fx-background-color: rgba(255,255,153, 0.4);");
                     currentInfoBox = finalInfoBox;
-
                     graphicsPane.getChildren().add(finalInfoBox);
                 });
                 tempPolygon.setOnMouseExited(event -> {
