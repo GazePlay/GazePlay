@@ -75,21 +75,42 @@ public class DefaultGamesLocator implements GamesLocator {
 
         List<GameSpec> result = new ArrayList<>();
         /*
-        result.add(new GameSpec(new GameSummary("potions", "data/Thumbnails/.png",
-                GameCategories.Category.TARGET), new GameSpec.GameLauncher() {
+         * result.add(new GameSpec(new GameSummary("potions", "data/Thumbnails/.png", GameCategories.Category.TARGET),
+         * new GameSpec.GameLauncher() {
+         * 
+         * @Override public Stats createNewStats(Scene scene) { return new Stats(scene, "magicPotions"); }
+         * 
+         * @Override public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant, Stats
+         * stats) { // return new SpotTheDifferences(gameContext, stats); } }));
+         */
+        result.add(new GameSpec(
+                new GameSummary("Potions", "data/Thumbnails/potions.png", GameCategories.Category.TARGET),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
 
+                                new GameSpec.IntGameVariant(0, "Secondary Colors"),
+
+                                new GameSpec.IntGameVariant(1, "more colors")
+
+                        ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
             @Override
             public Stats createNewStats(Scene scene) {
-                return new Stats(scene, "magicPotions");
+                return new CakeStats(scene);
             }
 
             @Override
-            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
                                                Stats stats) {
-               // return new SpotTheDifferences(gameContext, stats);
+                // change this 
+                return new CakeFactory(gameContext, stats, gameVariant.getNumber());
             }
         }));
-    */
+
+
         result.add(new GameSpec(new GameSummary("Math101", "data/Thumbnails/math101.png",
                 GameCategories.Category.MEMORIZATION, null, "MathDescAdd"), new GameSpec.GameVariantGenerator() {
                     @Override

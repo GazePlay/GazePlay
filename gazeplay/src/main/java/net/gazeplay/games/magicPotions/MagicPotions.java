@@ -4,9 +4,8 @@ import net.gazeplay.GameLifeCycle;
 
 public class MagicPotions implements GameLifeCycle {
 
-
     @Override
-    public void launch(){
+    public void launch() {
 
     }
 
