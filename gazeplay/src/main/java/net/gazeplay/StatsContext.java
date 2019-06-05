@@ -1,21 +1,17 @@
 package net.gazeplay;
 
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
-import javafx.scene.image.Image;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import javafx.scene.image.ImageView;
-import javax.imageio.ImageIO;
-
 import javafx.scene.input.MouseEvent;
+
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import lombok.Data;
@@ -30,9 +26,7 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
-import net.gazeplay.games.race.RaceGamesStats;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -117,12 +111,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         grid.setPadding(new Insets(50, 50, 50, 50));
 
         AtomicInteger currentFormRow = new AtomicInteger(1);
-
         {
             I18NText label = new I18NText(translator, "TotalLength", COLON);
-
             Text value = new Text(StatsDisplay.convert(stats.computeTotalElapsedDuration()));
-
             addToGrid(grid, currentFormRow, label, value);
         }
 
@@ -143,13 +134,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             } else {
                 value = new Text(String.valueOf(stats.getNbGoals()));
-
             }
-
             if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value);
             }
-
         }
         {
             final I18NText label;
@@ -161,7 +149,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 }
             }
         }
-
         {
             I18NText label = new I18NText(translator, "Length", COLON);
 
@@ -171,7 +158,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGrid(grid, currentFormRow, label, value);
             }
         }
-
         {
             final I18NText label;
 
@@ -233,66 +219,39 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             centerPane.getChildren().add(chart);
         }
 
-        if (config.isFixationSequenceDisabled() && !config.isHeatMapDisabled()) {
-            ImageView heatMap = StatsDisplay.buildHeatChart(stats, root);
+        if (!config.isHeatMapDisabled() || !config.isFixationSequenceDisabled()) {
+            StackPane charts = StatsDisplay.buildGazeChart(stats, root, !config.isHeatMapDisabled(),
+                    !config.isFixationSequenceDisabled());
+            for (Node n : charts.getChildren()) {
+                ImageView imageView = (ImageView) n;
+                root.widthProperty().addListener((observable, oldValue, newValue) -> {
+                    imageView.setFitWidth(newValue.doubleValue() * 0.35);
+                });
+                root.heightProperty().addListener((observable, oldValue, newValue) -> {
+                    imageView.setFitHeight(newValue.doubleValue() * 0.35);
+                });
 
-            root.widthProperty().addListener((observable, oldValue, newValue) -> {
-
-                heatMap.setFitWidth(newValue.doubleValue() * 0.35);
-            });
-            root.heightProperty().addListener((observable, oldValue, newValue) -> {
-
-                heatMap.setFitHeight(newValue.doubleValue() * 0.35);
-            });
-
-            heatMap.setFitWidth(root.getWidth() * 0.35);
-            heatMap.setFitHeight(root.getHeight() * 0.35);
-
-            centerPane.getChildren().add(heatMap);
-        } else if (!config.isFixationSequenceDisabled() && config.isHeatMapDisabled()) {
-
-            ImageView fixSequence = StatsDisplay.buildFSequenceChart(stats, root);
-
-            root.widthProperty().addListener((observable, oldValue, newValue) -> {
-
-                fixSequence.setFitWidth(newValue.doubleValue() * 0.35);
-            });
-            root.heightProperty().addListener((observable, oldValue, newValue) -> {
-
-                fixSequence.setFitHeight(newValue.doubleValue() * 0.35);
-            });
-
-            fixSequence.setFitWidth(root.getWidth() * 0.35);
-            fixSequence.setFitHeight(root.getHeight() * 0.35);
-
-            centerPane.getChildren().add(fixSequence);
-
-        } else if (!config.isFixationSequenceDisabled() && !config.isHeatMapDisabled()) { // display both (fixation
-                                                                                          // sequence on top of heatmap)
-
-            ImageView fixation_and_heatmap = StatsDisplay.buildFixSeq_and_HeatMap(stats, root);
-
-            root.widthProperty().addListener((observable, oldValue, newValue) -> {
-
-                fixation_and_heatmap.setFitWidth(newValue.doubleValue() * 0.35);
-            });
-            root.heightProperty().addListener((observable, oldValue, newValue) -> {
-
-                fixation_and_heatmap.setFitHeight(newValue.doubleValue() * 0.35);
-            });
-
-            fixation_and_heatmap.setFitWidth(root.getWidth() * 0.35);
-            fixation_and_heatmap.setFitHeight(root.getHeight() * 0.35);
-
-            centerPane.getChildren().add(fixation_and_heatmap);
-
+                imageView.setFitWidth(root.getWidth() * 0.35);
+                imageView.setFitHeight(root.getHeight() * 0.35);
+            }
+            centerPane.getChildren().add(charts);
         }
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
+        EventHandler<Event> AOIEvent = e -> {
+
+            AreaOfInterest areaOfInterest = AreaOfInterest.newInstance(gazePlay, stats);
+            gazePlay.onDisplayAOI(areaOfInterest);
+        };
+
+        HomeButton aoiButton = new HomeButton("data/common/images/aoibtn.png");
+        aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
 
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
+        if (config.isAreaOfInterestEnabled())
+            controlButtonPane.getChildren().add(aoiButton);
         controlButtonPane.getChildren().add(homeButton);
 
         if (continueButton != null) {
@@ -318,10 +277,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
         root.setCenter(centerStackPane);
         root.setBottom(controlButtonPane);
-
         root.setStyle(
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
     }
 
     @Override

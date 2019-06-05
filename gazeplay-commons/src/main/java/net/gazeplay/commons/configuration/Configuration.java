@@ -1,5 +1,6 @@
 package net.gazeplay.commons.configuration;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import lombok.Getter;
@@ -27,6 +28,9 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
+    private static final String PROPERTY_NAME_AREA_OF_INTEREST_DISABLED = "AREA_OF_INTEREST_DISABLED";
+    private static final String PROPERTY_NAME_CONVEX_HULL_DISABLED = "CONVEX_HULL_DISABLED";
+    private static final String PROPERTY_NAME_VIDEO_RECORDING_DISABLED = "VIDEO_RECORDING_DISABLED";
     private static final String PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED = "FIXATIONSEQUENCE_DISABLED";
     private static final String PROPERTY_NAME_MUSIC_VOLUME = "MUSIC_VOLUME";
     private static final String PROPERTY_NAME_MUSIC_FOLDER = "MUSIC_FOLDER";
@@ -60,6 +64,9 @@ public class Configuration implements Cloneable {
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
+    private static final boolean DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED = false;
+    private static final boolean DEFAULT_VALUE_CONVEX_HULL_DISABLED = false;
+    private static final boolean DEFAULT_VALUE_VIDEO_RECORDING = false;
     private static final boolean DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED = false;
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
@@ -181,7 +188,15 @@ public class Configuration implements Cloneable {
     @Getter
     protected final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
-
+    @Getter
+    protected final BooleanProperty areaOfInterestDisabledProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
+    @Getter
+    protected final BooleanProperty convexHullDisabledProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED);
+    @Getter
+    protected final BooleanProperty videoRecordingDisabledProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_VIDEO_RECORDING_DISABLED, DEFAULT_VALUE_VIDEO_RECORDING);
     @Getter
     protected final BooleanProperty fixationSequenceDisabledProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED);
@@ -331,6 +346,18 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             heatMapDisabledProperty.setValue(Boolean.parseBoolean(buffer));
         }
+        buffer = prop.getProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED);
+        if (buffer != null) {
+            areaOfInterestDisabledProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+        buffer = prop.getProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED);
+        if (buffer != null) {
+            convexHullDisabledProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+        buffer = prop.getProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED);
+        if (buffer != null) {
+            videoRecordingDisabledProperty.setValue(Boolean.parseBoolean(buffer));
+        }
 
         buffer = prop.getProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED);
         if (buffer != null) {
@@ -437,6 +464,12 @@ public class Configuration implements Cloneable {
         properties.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, this.menuButtonsOrientationProperty.getValue());
         properties.setProperty(PROPERTY_NAME_HEATMAP_DISABLED,
                 Boolean.toString(this.heatMapDisabledProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED,
+                Boolean.toString(this.areaOfInterestDisabledProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED,
+                Boolean.toString(this.convexHullDisabledProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED,
+                Boolean.toString(this.videoRecordingDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED,
                 Boolean.toString(this.fixationSequenceDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MUSIC_VOLUME, Double.toString(this.musicVolumeProperty.getValue()));
@@ -527,6 +560,18 @@ public class Configuration implements Cloneable {
 
     public Boolean isHeatMapDisabled() {
         return heatMapDisabledProperty.getValue();
+    }
+
+    public Boolean isAreaOfInterestEnabled() {
+        return areaOfInterestDisabledProperty.getValue();
+    }
+
+    public Boolean isConvexHullEnabled() {
+        return convexHullDisabledProperty.getValue();
+    }
+
+    public Boolean isVideoRecordingEnabled() {
+        return videoRecordingDisabledProperty.getValue();
     }
 
     public Boolean isFixationSequenceDisabled() {

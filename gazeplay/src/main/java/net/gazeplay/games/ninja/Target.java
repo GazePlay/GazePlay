@@ -4,6 +4,7 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
@@ -48,15 +49,21 @@ public class Target extends Portrait {
 
     private boolean animationStopped = true;
 
-    public TranslateTransition currentTranslation;
+    private final int gameVariant;
+
+    private Random randomGen;
+
+    public Animation currentTranslation;
 
     public Target(GameContext gameContext, RandomPositionGenerator randomPositionGenerator, Stats stats,
-            ImageLibrary imageLibrary) {
+            ImageLibrary imageLibrary, int gameVariant) {
         super(radius, randomPositionGenerator, imageLibrary);
 
         this.randomPositionGenerator = randomPositionGenerator;
         this.stats = stats;
         this.imageLibrary = imageLibrary;
+        this.gameVariant = gameVariant;
+        this.randomGen = new Random();
 
         this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, imageLibrary, nbBall);
         gameContext.getChildren().addAll(miniBallsPortraits);
@@ -102,13 +109,10 @@ public class Target extends Portrait {
         };
     }
 
-    private void move() {
-        // final int length = (int) (2000 * Math.random()) + 1000;// between 1 and 3 seconds
-
-        Random r = new Random();
-        final int length = r.nextInt(2000) + 1000;// between 1 and 3 seconds
+    private void moveRandom(int length) {
 
         final Position currentPosition = new Position((int) getCenterX(), (int) getCenterY());
+
         final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
         log.debug("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
 
@@ -119,16 +123,7 @@ public class Target extends Portrait {
         translation.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-
-                Target.this.setScaleX(1);
-                Target.this.setScaleY(1);
-                Target.this.setScaleZ(1);
-
-                Target.this.setPosition(newPosition);
-
-                Target.this.setTranslateX(0);
-                Target.this.setTranslateY(0);
-                Target.this.setTranslateZ(0);
+                resetTargetAtPosition(newPosition);
 
                 move();
             }
@@ -136,6 +131,77 @@ public class Target extends Portrait {
 
         currentTranslation = translation;
         translation.play();
+    }
+
+    private void resetTargetAtPosition(Position pos) {
+        Target.this.setScaleX(1);
+        Target.this.setScaleY(1);
+        Target.this.setScaleZ(1);
+
+        Target.this.setPosition(pos);
+
+        Target.this.setTranslateX(0);
+        Target.this.setTranslateY(0);
+        Target.this.setTranslateZ(0);
+    }
+
+    private void createBackAndForthTranlations(Position pos1, Position pos2, int length) {
+        Duration animationLength = new Duration(Configuration.getInstance().getSpeedEffects() * length);
+
+        Timeline translation1 = new Timeline(new KeyFrame(animationLength,
+                new KeyValue(this.centerXProperty(), pos1.getX()), new KeyValue(this.centerYProperty(), pos1.getY())));
+
+        Timeline translation2 = new Timeline(new KeyFrame(animationLength,
+                new KeyValue(this.centerXProperty(), pos2.getX()), new KeyValue(this.centerYProperty(), pos2.getY())));
+
+        translation1.setOnFinished(actionEvent -> {
+            resetTargetAtPosition(pos1);
+
+            currentTranslation = translation2;
+            translation2.playFromStart();
+        });
+
+        translation2.setOnFinished(actionEvent -> {
+            resetTargetAtPosition(pos2);
+
+            currentTranslation = translation1;
+            translation1.playFromStart();
+        });
+
+        setPosition(pos2);
+        translation1.playFrom(animationLength.multiply(randomGen.nextDouble()));
+        currentTranslation = translation1;
+    }
+
+    private void move() {
+        final int length = randomGen.nextInt(2000) + 1000;// between 1 and 3 seconds
+
+        Dimension2D dimension2D = randomPositionGenerator.getDimension2D();
+
+        switch (gameVariant) {
+        case 1: // random
+            moveRandom(length);
+            break;
+        case 2: // vertical
+            createBackAndForthTranlations(new Position(getCenterX(), getInitialRadius()),
+                    new Position(getCenterX(), dimension2D.getHeight() - getInitialRadius()), length * 2);
+            break;
+        case 3: // horizontal
+            createBackAndForthTranlations(new Position(getInitialRadius(), getCenterY()),
+                    new Position(dimension2D.getWidth() - getInitialRadius(), getCenterY()), length * 2);
+            break;
+        case 4: // Diagonal \
+            createBackAndForthTranlations(new Position(getInitialRadius(), getInitialRadius()),
+                    new Position(dimension2D.getWidth() - getInitialRadius(),
+                            dimension2D.getHeight() - getInitialRadius()),
+                    length * 2);
+            break;
+        case 5: // Diagonal /
+            createBackAndForthTranlations(new Position(dimension2D.getWidth() - getInitialRadius(), getInitialRadius()),
+                    new Position(0, dimension2D.getHeight() - getInitialRadius()), length * 2);
+            break;
+        }
+
     }
 
     public Position getPointerPosition(Event e) {
@@ -158,7 +224,7 @@ public class Target extends Portrait {
 
         stats.incNbGoals();
 
-        Transition runningTranslation = currentTranslation;
+        Animation runningTranslation = currentTranslation;
         if (runningTranslation != null) {
             runningTranslation.stop();
         }

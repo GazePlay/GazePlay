@@ -119,6 +119,8 @@
 				<scope>provided</scope>
 			</dependency>
 
+
+
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
@@ -143,6 +145,12 @@
 				<version>3.0.1</version>
 			</dependency>
 
+			<dependency>
+				<groupId>com.github.agomezmoron</groupId>
+				<artifactId>screen-recorder</artifactId>
+				<version>0.0.3</version>
+
+			</dependency>
 
 		</dependencies>
 	</dependencyManagement>
@@ -328,9 +336,23 @@
 					<artifactId>formatter-maven-plugin</artifactId>
 					<version>2.7.0</version>
 				</plugin>
+				<plugin>
+    					<groupId>org.codehaus.mojo</groupId>
+    					<artifactId>cobertura-maven-plugin</artifactId>
+    					<version>2.7</version>
+   					 <configuration>
+     						<formats>
+            						<format>html</format>
+            						<format>xml</format>
+        					</formats>
+        					<check />
+    					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
+
+
 
 	<repositories>
 		<repository>
@@ -347,6 +369,11 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
+		</repository>
+		<repository>
+			<id>screen-recorder</id>
+			<name>Java screen recorder library by agomezmoron</name>
+			<url>https://raw.github.com/agomezmoron/screen-recorder/mvn-repo</url>
 		</repository>
 	</repositories>
 

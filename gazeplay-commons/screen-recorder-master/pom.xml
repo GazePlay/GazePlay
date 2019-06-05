@@ -1,0 +1,122 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.github.agomezmoron</groupId>
+	<artifactId>screen-recorder</artifactId>
+	<version>0.0.4-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>Java screen recorder library</name>
+	<description>Screen recorder library to handle the video recording in Java</description>
+	<url>https://github.com/agomezmoron/screen-recorder</url>
+
+	<properties>
+		<!-- Versions section (minimum ones) -->
+		<java.version>1.7</java.version>
+		<log4j.version>1.2.17</log4j.version>
+		<jmf.version>2.1.1e</jmf.version>
+		<testng.version>6.8.8</testng.version>
+	</properties>
+
+
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
+
+
+	<distributionManagement>
+		<repository>
+			<id>internal.repo</id>
+			<name>Temporary Staging Repository</name>
+			<url>file://${project.build.directory}/mvn-repo</url>
+		</repository>
+	</distributionManagement>
+
+	<developers>
+		<developer>
+			<name>Alejandro Gomez</name>
+			<email>agommor@gmail.com</email>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.media</groupId>
+			<artifactId>jmf</artifactId>
+			<version>${jmf.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.jms</groupId>
+					<artifactId>jms</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>[${testng.version},)</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>0.11</version>
+				<configuration>
+					<message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
+					<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
+					<branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+					<includes>
+						<include>**/*</include>
+					</includes>
+					<repositoryName>screen-recorder</repositoryName>      <!-- github repo name -->
+					<repositoryOwner>agomezmoron</repositoryOwner>    <!-- github username -->
+					<server>github</server>
+				</configuration>
+				<executions>
+					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
+						'deploy' phase -->
+					<execution>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>deploy</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>

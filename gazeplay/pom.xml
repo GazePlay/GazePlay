@@ -14,7 +14,21 @@
 		<relativePath>..</relativePath>
 	</parent>
 
+
+	<repositories>
+		<repository>
+			<id>screen-recorder</id>
+			<name>Java screen recorder library by agomezmoron</name>
+			<url>https://raw.github.com/agomezmoron/screen-recorder/mvn-repo</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
+		<dependency>
+			<groupId>com.github.agomezmoron</groupId>
+			<artifactId>screen-recorder</artifactId>
+			<version>0.0.3</version>
+		</dependency>
 		<dependency>
 			<groupId>com.github.schwabdidier</groupId>
 			<artifactId>gazeplay-commons</artifactId>
@@ -71,7 +85,11 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>javax.media</groupId>
+			<artifactId>jmf</artifactId>
+			<version>2.1.1e</version>
+		</dependency>
 	</dependencies>
 
 	<build>
