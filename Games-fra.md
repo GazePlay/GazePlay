@@ -8,7 +8,7 @@ La cible suit des mouvements aléatoires et explose lorsque le joueur la regarde
 
 Après avoir lu le nom du pays la cible doit regarder le drapeau correspondant.
  
-![TrouveLesDrapeaux](https://raw.githubusercontent.com/schwabdidier/GazePlay/gazeplay-data/src/main/resources/data/Thumbnails/flags.png)
+![TrouveLesDrapeaux](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/flags.png)
 
 ## Trouvez l'intrus
 
