@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class AreaOfInterestProps {
     private final ArrayList<CoordinatesTracker> listOfPoints;
-    // private final int revisits;
     private final int fixations;
     private final int centerX;
     private final int centerY;
@@ -18,6 +17,7 @@ public class AreaOfInterestProps {
     private final int endingIndex;
     private final javafx.scene.shape.Polygon areaOfInterest;
     private final InfoBoxProps infoBox;
+    private double priority;
 
     public AreaOfInterestProps(ArrayList<CoordinatesTracker> listOfPoints, int centerX, int centerY,
             Double[] convexPoints, Point2D[] allPoint2DOfConvex, int startingIndex, int endingIndex,
@@ -37,6 +37,10 @@ public class AreaOfInterestProps {
     public Double[] getConvexPoints() {
         return this.convexPoints;
     }
+
+    public void setPriority(double priority){ this.priority = priority;}
+
+    public double getPriority(){ return this.priority;}
 
     public int getCenterX() {
         return this.centerX;

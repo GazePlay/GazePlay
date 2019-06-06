@@ -30,7 +30,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
-import org.monte.media.Registry;
 import ws.schild.jave.Encoder;
 import ws.schild.jave.EncodingAttributes;
 import ws.schild.jave.MultimediaObject;
@@ -38,6 +37,7 @@ import ws.schild.jave.VideoAttributes;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -66,7 +66,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private double combinationThreshHold = 0.70;
     private int[] areaMap;
     private boolean playing = false;
-    private long startTime;
+    private double startTime;
+    private double highestFixationTime = 0;
 
     @Override
     public ObservableList<Node> getChildren() {
@@ -121,11 +122,14 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     if (movementIndex != movementHistory.size() - 1) {
                         plotMovement(movementIndex + 1, graphicsPane);
                     } else {
-                        System.out.println("The total duration is");
-                        System.out.println((movementHistory.get(movementHistory.size()-1).getTimeStarted()+movementHistory.get(movementHistory.size()-1).getIntervalTime())-movementHistory.get(0).getTimeStarted());
-                        System.out.println("The duration ran is ");
-                        System.out.println(System.currentTimeMillis() - startTime);
+//                        System.out.println("The total duration is");
+//                        System.out.println((movementHistory.get(movementHistory.size()-1).getTimeStarted()+movementHistory.get(movementHistory.size()-1).getIntervalTime())-movementHistory.get(0).getTimeStarted());
+//                        System.out.println("The duration ran is ");
+//                        System.out.println(System.currentTimeMillis() - startTime);
                         clock.stop();
+                        for (InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
+                            graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
+                        }
                         playing = false;
                     }
                 });
@@ -133,7 +137,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }, (long) (movementHistory.get(movementIndex).getIntervalTime() * progressRate));
     }
 
-    private void calculateAreaOfInterest(int index, long startTime) {
+    private void calculateAreaOfInterest(int index, double startTime) {
         if (index != 0) {
             double x1 = movementHistory.get(index).getxValue();
             double y1 = movementHistory.get(index).getyValue();
@@ -144,19 +148,19 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 if (index == 1)
                     areaOfInterestList.add(movementHistory.get(0));
                 areaOfInterestList.add(movementHistory.get(index));
-                if (areaOfInterestList.size() == 1)
-                    System.out.println("Start of AOE");
+//                if (areaOfInterestList.size() == 1)
+//                    System.out.println("Start of AOE");
             } else if (areaOfInterestList.size() != 0) {
                 if (areaOfInterestList.size() > 2) {
-                    System.out.println("End of AOE");
-                    long AreaStartTime = areaOfInterestList.get(0).getTimeStarted();
-                    long AreaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
+//                    System.out.println("End of AOE");
+                    double AreaStartTime = areaOfInterestList.get(0).getTimeStarted();
+                    double AreaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
                             + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
-                    long TTFF = (AreaStartTime - startTime) / 100;
-                    System.out.println("The area end time is "+ AreaEndTime + " the area start time is "+AreaStartTime);
+                    double TTFF = (AreaStartTime - startTime) / 1000.0;
+                    double timeSpent = (AreaEndTime - AreaStartTime) / 1000.0;
+                    if(timeSpent > highestFixationTime)
+                        highestFixationTime = timeSpent;
 
-                    long timeSpent = (AreaEndTime - AreaStartTime) / 100;
-                    System.out.println("The time spent is "+ timeSpent);
                     int centerX = 0;
                     int centerY = 0;
                     int movementHistoryEndingIndex = index - 1;
@@ -178,7 +182,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     areaOfInterest.getPoints().addAll(polygonPoints);
                     colorIterator = index % 7;
                     areaOfInterest.setStroke(colors[colorIterator]);
-                    areaOfInterest.setFill(Color.rgb(18, 121, 131, 0.15));
+//                    areaOfInterest.setFill(Color.rgb(18, 121, 131, 0.15));
                     centerX = centerX / areaOfInterestList.size();
                     centerY = centerY / areaOfInterestList.size();
                     InfoBoxProps infoBox = calculateInfoBox("AOI number " + (allAOIList.size() + 1), TTFF, timeSpent,
@@ -196,13 +200,13 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
     }
 
-    private InfoBoxProps calculateInfoBox(String aoiID, long TTFF, long TimeSpent, long Fixation, int centerX,
+    private InfoBoxProps calculateInfoBox(String aoiID, double TTFF, double TimeSpent, int Fixation, int centerX,
             int centerY, Polygon currentAreaDisplay) {
-        Double ratioDouble = (currentAreaDisplay.getBoundsInLocal().getWidth()
-                * currentAreaDisplay.getBoundsInLocal().getHeight())
-                / (Screen.getPrimary().getBounds().getWidth() * Screen.getPrimary().getBounds().getHeight());
+//        Double ratioDouble = (currentAreaDisplay.getBoundsInLocal().getWidth()
+//                * currentAreaDisplay.getBoundsInLocal().getHeight())
+//                / (Screen.getPrimary().getBounds().getWidth() * Screen.getPrimary().getBounds().getHeight());
 
-        GridPane infoBox = makeInfoBox(aoiID, TTFF + "", TimeSpent + "", Fixation + "", ratioDouble + " ", 0);
+        GridPane infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(TTFF) , new DecimalFormat("##.###s").format(TimeSpent), Fixation + "",  0);
         double screenWidthCenter = Screen.getPrimary().getBounds().getWidth() / 2;
         double widthOfArea = currentAreaDisplay.getBoundsInLocal().getWidth();
 
@@ -211,7 +215,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         line.setEndY(centerY);
         line.setStroke(Color.YELLOW);
         if (centerX > screenWidthCenter) {
-            infoBox.setLayoutX(centerX - widthOfArea - 400);
+            infoBox.setLayoutX(centerX - widthOfArea - 290);
             line.setStartX(currentAreaDisplay.getBoundsInLocal().getMinX());
             line.setEndX(centerX - widthOfArea - 30);
             // will display infobox on the left side
@@ -221,7 +225,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             line.setStartX(currentAreaDisplay.getBoundsInLocal().getMaxX());
             // will display infobox on the right
         }
-
         infoBox.setLayoutY(centerY - 60);
         infoBox.setStyle("-fx-background-color: rgba(255,255,153, 0.4);");
         return new InfoBoxProps(infoBox, line, aoiID, TTFF, TimeSpent, Fixation);
@@ -304,6 +307,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(100);
         grid.setVgap(50);
+        highestFixationTime = 0;
         intereatorAOI = 0;
         grid.setPadding(new Insets(50, 50, 50, 50));
         allAOIList = new ArrayList<>();
@@ -316,17 +320,25 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         graphicsPane = new Pane();
         areaOfInterestList = new ArrayList<>();
         movementHistory = stats.getMovementHistoryWithTime();
-        System.out.println("The start time is " + stats.getStartTime());
         for (int i = 0; i < movementHistory.size(); i++)
             calculateAreaOfInterest(i, stats.getStartTime());
-        System.out.println("The amount of AOIs is " + allAOIList.size());
-
         areaMap = new int[allAOIList.size()];
         Arrays.fill(areaMap, -1);
         combinedAreaList = computeConnectedArea();
+        System.out.println("The highest fixaiton time is "+ highestFixationTime);
+        if(highestFixationTime != 0)
+        {
+            for (AreaOfInterestProps areaOfInterestProps : allAOIList) {
+                double priority = areaOfInterestProps.getInfoBoxProp().getTimeSpent() / highestFixationTime * 0.6 + 0.10;
+                areaOfInterestProps.getAreaOfInterest().setFill(Color.rgb(255, 0, 0, priority));
+                areaOfInterestProps.setPriority(priority);
+            }
+        }
         for (InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
+
+
         timeLabel = new Label();
         timeLabel.setTextFill(Color.web("#FFFFFF"));
         Button slowBtn10 = new Button("10X Slow ");
@@ -398,7 +410,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
         timeLabel.setMinSize(100, 0);
         timeLabel.setTextFill(Color.GREEN);
-        // playBtn.setStyle("-fx-alignment: baseline-right;");
 
         Region region1 = new Region();
         HBox.setHgrow(region1, Priority.ALWAYS);
@@ -471,7 +482,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }
     }
 
-    private GridPane makeInfoBox(String aoiID, String TTFF, String TimeSpent, String Fixation, String ratioDouble,
+    private GridPane makeInfoBox(String aoiID, String TTFF, String TimeSpent, String Fixation,
             int revisit) {
         GridPane infoBox = new GridPane();
         infoBox.setHgap(10);
@@ -484,8 +495,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         Text TimeSpentLabelV = new Text(TimeSpent);
         Text Fixations = new Text("Fixations:");
         Text FixationV = new Text(Fixation);
-        Text Ratio = new Text("Ratio:");
-        Text RatioV = new Text(ratioDouble);
+//        Text Ratio = new Text("Ratio:");
+//        Text RatioV = new Text(ratioDouble);
 
         infoBox.add(boxID, 1, 0);
         infoBox.add(TTFFLabel, 0, 2);
@@ -494,13 +505,13 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         infoBox.add(TimeSpentLabelV, 2, 3);
         infoBox.add(Fixations, 0, 4);
         infoBox.add(FixationV, 2, 4);
-        infoBox.add(Ratio, 0, 5);
-        infoBox.add(RatioV, 2, 5);
+//        infoBox.add(Ratio, 0, 5);
+//        infoBox.add(RatioV, 2, 5);
         if (revisit != 0) {
             Text Revisit = new Text("Revisits: ");
             Text RevisitV = new Text(revisit + "");
-            infoBox.add(Revisit, 0, 6);
-            infoBox.add(RevisitV, 2, 6);
+            infoBox.add(Revisit, 0, 5);
+            infoBox.add(RevisitV, 2, 5);
         }
         return infoBox;
     }
@@ -545,11 +556,11 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             if (areaMap[i] == i) {
                 tempPolygon = allAOIList.get(i).getAreaOfInterest();
                 String aoiID = allAOIList.get(i).getInfoBoxProp().getAoiID();
-                long TTFF = allAOIList.get(i).getInfoBoxProp().getTTFF();
-                long TimeSpent = allAOIList.get(i).getInfoBoxProp().getTimeSpent();
-                long Fixation = allAOIList.get(i).getInfoBoxProp().getTimeSpent();
+                double TTFF = allAOIList.get(i).getInfoBoxProp().getTTFF();
+                double TimeSpent = allAOIList.get(i).getInfoBoxProp().getTimeSpent();
+                int Fixation = allAOIList.get(i).getFixations();
                 int revisit = 1;
-                Double ratioDouble = 0.0;
+//                Double ratioDouble = 0.0;
                 for (int j = i + 1; j < allAOIList.size(); j++) {
                     if (areaMap[j] == i) {
                         TTFF += allAOIList.get(j).getInfoBoxProp().getTTFF();
@@ -558,41 +569,44 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         Fixation += allAOIList.get(j).getInfoBoxProp().getTimeSpent();
                         tempPolygon = Shape.union(tempPolygon, allAOIList.get(j).getAreaOfInterest());
                         tempPolygon.setFill(Color.rgb(249, 166, 2, 0.15));
-                        ratioDouble = (tempPolygon.getBoundsInLocal().getWidth()
-                                * tempPolygon.getBoundsInLocal().getHeight())
-                                / (Screen.getPrimary().getBounds().getWidth()
-                                        * Screen.getPrimary().getBounds().getHeight());
+//                        ratioDouble = (tempPolygon.getBoundsInLocal().getWidth()
+//                                * tempPolygon.getBoundsInLocal().getHeight())
+//                                / (Screen.getPrimary().getBounds().getWidth()
+//                                        * Screen.getPrimary().getBounds().getHeight());
                     }
                 }
-                infoBox = makeInfoBox(aoiID, TTFF + "", TimeSpent + " ", Fixation + " ", ratioDouble + "", revisit);
+                infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(TTFF), new DecimalFormat("##.###s").format(TimeSpent), Fixation + " ",  revisit);
             }
             if (tempPolygon != null) {
                 Shape finalTempPolygon = tempPolygon;
                 GridPane finalInfoBox = infoBox;
                 int finalI = i;
                 tempPolygon.setOnMouseEntered(event -> {
-                    if (areaMap[finalI] == -1) {
-                        finalTempPolygon.setFill(Color.rgb(18, 121, 131, 0.30));
-                    } else {
-                        finalTempPolygon.setFill(Color.rgb(249, 166, 2, 0.30));
+                    if(!playing)
+                    {
+                        if (areaMap[finalI] == -1) {
+                            finalTempPolygon.setFill(Color.rgb(255, 0, 0, allAOIList.get(finalI).getPriority() + 0.15));
+                        } else {
+                            finalTempPolygon.setFill(Color.rgb(249, 166, 2, allAOIList.get(finalI).getPriority() + 0.15));
+                        }
+                        previousInfoBoxX = finalInfoBox.getLayoutX();
+                        previousInfoBoxY = finalInfoBox.getLayoutY();
+                        currentInfoBox = new GridPane();
+                        finalInfoBox.setLayoutY(0);
+                        finalInfoBox.setLayoutX(0);
+                        finalInfoBox.setStyle("-fx-background-color: rgba(255,255,153, 0.4);");
+                        currentInfoBox = finalInfoBox;
+                        graphicsPane.getChildren().add(finalInfoBox);
                     }
-                    previousInfoBoxX = finalInfoBox.getLayoutX();
-                    previousInfoBoxY = finalInfoBox.getLayoutY();
-                    currentInfoBox = new GridPane();
-                    finalInfoBox.setLayoutY(0);
-                    finalInfoBox.setLayoutX(0);
-                    finalInfoBox.setStyle("-fx-background-color: rgba(255,255,153, 0.4);");
-                    currentInfoBox = finalInfoBox;
-                    graphicsPane.getChildren().add(finalInfoBox);
                 });
                 tempPolygon.setOnMouseExited(event -> {
                     graphicsPane.getChildren().remove(currentInfoBox);
                     finalInfoBox.setLayoutY(previousInfoBoxY);
                     finalInfoBox.setLayoutX(previousInfoBoxX);
                     if (areaMap[finalI] == -1) {
-                        finalTempPolygon.setFill(Color.rgb(18, 121, 131, 0.15));
+                        finalTempPolygon.setFill(Color.rgb(255, 0, 0, allAOIList.get(finalI).getPriority()));
                     } else {
-                        finalTempPolygon.setFill(Color.rgb(249, 166, 2, 0.15));
+                        finalTempPolygon.setFill(Color.rgb(249, 166, 2, allAOIList.get(finalI).getPriority()));
                     }
                 });
                 colorIterator = i % 7;
