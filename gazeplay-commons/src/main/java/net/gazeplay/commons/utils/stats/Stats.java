@@ -184,7 +184,7 @@ public class Stats implements GazeMotionListener {
                     incFixationSequence(getX, getY);
                 }
                 if (config.isAreaOfInterestEnabled()) {
-                    if (getX != previousX || getY != previousY && counter == 0) {
+                    if (getX != previousX || getY != previousY) {
                         long timeToFixation = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
@@ -192,13 +192,9 @@ public class Stats implements GazeMotionListener {
                         movementHistory.add(new CoordinatesTracker(getX, getY, timeToFixation, timeInterval,
                                 System.currentTimeMillis()));
                         previousTime = timeToFixation;
-                        counter++;
-                        if (counter == 2)
-                            counter = 0;
                     }
                 }
             };
-
             recordMouseMovements = e -> {
                 int getX = (int) e.getX();
                 int getY = (int) e.getY();
@@ -208,7 +204,7 @@ public class Stats implements GazeMotionListener {
                     incFixationSequence(getX, getY);
                 }
                 if (config.isAreaOfInterestEnabled()) {
-                    if (getX != previousX || getY != previousY && counter == 0) {
+                    if (getX != previousX || getY != previousY) {
                         long timeElapsedMillis = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
@@ -217,14 +213,15 @@ public class Stats implements GazeMotionListener {
                                 System.currentTimeMillis()));
                         previousTime = timeElapsedMillis;
                         counter++;
-                        if (counter == 2)
-                            counter = 0;
+//                        if (counter == 2)
+//                            counter = 0;
                     }
                 }
             };
             gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
             gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
             takeScreenShot();
+            System.out.println("This is being run");
 
         });
         currentRoundStartTime = lifeCycle.getStartTime();

@@ -10,7 +10,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -60,13 +59,14 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private int colorIterator;
     private int bias = 15;
     private Pane graphicsPane;
-    private int progressRate = 1;
+    private double progressRate = 1;
     private Double previousInfoBoxX;
     private Double previousInfoBoxY;
     private ArrayList<InitialAreaOfInterestProps> combinedAreaList;
     private double combinationThreshHold = 0.70;
     private int[] areaMap;
     private boolean playing = false;
+    private long startTime;
 
     @Override
     public ObservableList<Node> getChildren() {
@@ -79,17 +79,20 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     }
 
     private void plotMovement(int movementIndex, Pane graphicsPane) {
-        new Timer().schedule(new java.util.TimerTask() {
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 CoordinatesTracker coordinatesTracker = movementHistory.get(movementIndex);
+//                System.out.println(movementHistory.get(movementIndex).get);
                 Circle circle;
                 if (movementHistory.get(movementIndex).getIntervalTime() > 10) {
                     circle = new Circle(coordinatesTracker.getxValue(), coordinatesTracker.getyValue(), 4);
-                    circle.setStroke(Color.RED);
+                    circle.setStroke(Color.LIGHTYELLOW);
+                    circle.setFill(Color.ORANGERED);
                 } else {
                     circle = new Circle(coordinatesTracker.getxValue(), coordinatesTracker.getyValue(), 3);
-                    circle.setStroke(Color.GREEN);
+                    circle.setStroke(Color.LIGHTGREEN);
+                    circle.setFill(Color.GREEN);
                 }
                 Platform.runLater(() -> {
                     if (intereatorAOI < allAOIList.size()) {
@@ -109,7 +112,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         }
                     }
                     graphicsPane.getChildren().add(circle);
-                    new Timer().schedule(new java.util.TimerTask() {
+                    new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
                             Platform.runLater(() -> graphicsPane.getChildren().remove(circle));
@@ -118,12 +121,16 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     if (movementIndex != movementHistory.size() - 1) {
                         plotMovement(movementIndex + 1, graphicsPane);
                     } else {
+                        System.out.println("The total duration is");
+                        System.out.println((movementHistory.get(movementHistory.size()-1).getTimeStarted()+movementHistory.get(movementHistory.size()-1).getIntervalTime())-movementHistory.get(0).getTimeStarted());
+                        System.out.println("The duration ran is ");
+                        System.out.println(System.currentTimeMillis() - startTime);
                         clock.stop();
                         playing = false;
                     }
                 });
             }
-        }, (movementHistory.get(movementIndex).getIntervalTime() * progressRate));
+        }, (long) (movementHistory.get(movementIndex).getIntervalTime() * progressRate));
     }
 
     private void calculateAreaOfInterest(int index, long startTime) {
@@ -146,8 +153,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     long AreaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
                             + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
                     long TTFF = (AreaStartTime - startTime) / 100;
+                    System.out.println("The area end time is "+ AreaEndTime + " the area start time is "+AreaStartTime);
 
                     long timeSpent = (AreaEndTime - AreaStartTime) / 100;
+                    System.out.println("The time spent is "+ timeSpent);
                     int centerX = 0;
                     int centerY = 0;
                     int movementHistoryEndingIndex = index - 1;
@@ -331,20 +340,27 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         slowBtn10.setPrefSize(100, 20);
 
         playBtn.setOnAction(e -> {
-            progressRate = 1;
+            progressRate = 0.70;
+//            player.setRate(1.0);
             playButtonPressed();
         });
         slowBtn5.setOnAction(e -> {
             progressRate = 5;
+//            player.setRate(5.0);
+
             playButtonPressed();
         });
         slowBtn8.setOnAction(e -> {
             progressRate = 8;
+//            player.setRate(8.0);
+
             playButtonPressed();
         });
 
         slowBtn10.setOnAction(e -> {
             progressRate = 10;
+//            player.setRate(10.0);
+
             playButtonPressed();
         });
         if (config.isVideoRecordingEnabled()) {
@@ -369,7 +385,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 player = new MediaPlayer(media);
                 MediaView mediaView = new MediaView(player);
                 stackPane.getChildren().add(mediaView);
-                System.out.println("The conversion was succesfull!");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -436,9 +451,15 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 graphicsPane.getChildren().remove(areaOfInterestProps.getAreaOfInterest());
             }
             graphicsPane.getChildren().remove(currentInfoBox);
+
             if (config.isVideoRecordingEnabled())
+            {
+                player.setRate(0.01);
+                player.stop();
                 player.play();
+            }
             intereatorAOI = 0;
+            startTime = System.currentTimeMillis();
             plotMovement(0, graphicsPane);
             long startTime = System.currentTimeMillis();
             clock = new Timeline(new KeyFrame(Duration.ZERO, f -> {
