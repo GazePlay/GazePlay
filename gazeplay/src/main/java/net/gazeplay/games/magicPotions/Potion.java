@@ -17,6 +17,7 @@ import javafx.event.EventHandler;
 
 import javafx.util.Duration;
 import lombok.Getter;
+import lombok.Setter;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -45,6 +46,8 @@ public class Potion extends Parent {
     private final double initY;
 
     // it's true if the potion has been used/chosen for the mixture
+    @Getter
+    @Setter
     private boolean chosen = false;
 
     private final ProgressIndicator progressIndicator;
@@ -62,7 +65,7 @@ public class Potion extends Parent {
         this.potion.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
 
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.DARKGRAY);
+        shadow.setColor(Color.BLACK);
         shadow.setWidth(10);
         shadow.setHeight(10);
         shadow.setOffsetX(5);
@@ -167,5 +170,9 @@ public class Potion extends Parent {
 
             }
         };
+    }
+
+    public boolean isChosen() {
+        return this.chosen;
     }
 }

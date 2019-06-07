@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,6 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
-import org.w3c.dom.css.Rect;
 
 import java.util.LinkedList;
 
@@ -75,6 +75,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
         client = new Client(bibX, bibY, bibouleClient.getWidth(), bibouleClient.getHeight(), bibouleClient, request);
 
+        // since the background of the image is transparent this color will fill it
         Circle color = new Circle(gameDimension2D.getWidth() * 3 / 4, bibouleClient.getHeight() / 2.2,
                 bibouleClient.getHeight() / 5);
         color.setFill(request.getColor());
@@ -109,7 +110,17 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         Rectangle mixPot = new Rectangle(gameDimension2D.getWidth() * 2 / 7,
                 gameDimension2D.getHeight() - mixPotImage.getHeight(), mixPotImage.getWidth(), mixPotImage.getHeight());
         mixPot.setFill(new ImagePattern(mixPotImage, 0, 0, 1, 1, true));
+
+        Ellipse mixPotColor = new Ellipse(gameDimension2D.getWidth() * 2 / 7 + mixPotImage.getWidth() / 2,
+                gameDimension2D.getHeight() - mixPotImage.getHeight() / 1.5, mixPotImage.getHeight() / 2,
+                mixPotImage.getWidth() / 4);
+        if (potionRed.isChosen()) {
+            mixPot.setFill(potionRed.getPotionColor());
+        }
+        mixPotColor.setFill(Color.GRAY);
+        gameContext.getChildren().add(mixPotColor);
         gameContext.getChildren().add(mixPot);
+
     }
 
     @Override
