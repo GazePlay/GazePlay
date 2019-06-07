@@ -30,16 +30,18 @@ public class Potion extends Parent {
     @Getter // this potion will be Red | Blue | Yellow
     private final Rectangle potion;
     @Getter
-    private final String potionColor;
+    private final Color potionColor;
 
+    @Getter
     private final Image image;
 
     private final GameContext gameContext;
 
     private final double initWidth;
     private final double initHeight;
-
+    @Getter
     private final double initX;
+    @Getter
     private final double initY;
 
     // it's true if the potion has been used/chosen for the mixture
@@ -54,12 +56,12 @@ public class Potion extends Parent {
 
     private Timeline currentTimeline;
 
-    public Potion(double positionX, double positionY, double width, double height, Image image,String color ,GameContext gameContext, Stats stats, int fixationlength ){
+    public Potion(double positionX, double positionY, double width, double height, Image image, Color color , GameContext gameContext, Stats stats, int fixationlength ){
         this.potion = new Rectangle((int)positionX, (int)positionY, (int)width, (int)height);
         this.potion.setFill(new ImagePattern(image,0,0,1,1,true));
 
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.GRAY);
+        shadow.setColor(Color.DARKGRAY);
         shadow.setWidth(10);
         shadow.setHeight(10);
         shadow.setOffsetX(5);
@@ -90,6 +92,7 @@ public class Potion extends Parent {
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
         currentTimeline = new Timeline();
+        this.getChildren().add(this.potion);
     }
 
     private ProgressIndicator createProgressIndicator(double width, double height) {

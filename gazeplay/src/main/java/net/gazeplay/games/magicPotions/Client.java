@@ -1,26 +1,25 @@
 package net.gazeplay.games.magicPotions;
 
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
-import net.gazeplay.GameContext;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 
-public class Client extends Parent {
+public class Client extends Rectangle {
 
-private final GameContext gameContext;
-
-private final double initWidth;
-private final double initHeight;
-
-private final double initX;
-private final double initY;
-
+//private final GameContext gameContext;
+//@Getter
+//private StackPane colorPane;
+@Getter
 private final Rectangle client ;
 //private final Image clientImg;
 
@@ -35,29 +34,27 @@ private LinkedList<Color> colorsToMix;
 
         @Getter
         private final String colorName;
+        @Getter
         private final Color color;
 
         PotionMix(String name , Color color){
             this.colorName = name;
             this.color = color;
         }
+
+        public static PotionMix getRandomPotionRequest() {
+            Random random = new Random();
+            return values()[random.nextInt(values().length)];
+        }
     }
 
     public Client(double posX, double posY, double width, double height,
-                  GameContext gameContext, Image clientImage , PotionMix request){
-        this.gameContext = gameContext;
-
+                  Image clientImage , PotionMix request){
+        //this.gameContext = gameContext;
         this.client = new Rectangle(posX, posY, width, height);
         this.client.setFill(new ImagePattern(clientImage,0,0,1,1,true));
         this.potionRequest = request;
-        this.client.setFill(request.color);
         this.colorsToMix = toMix(request);
-
-        this.initX = posX;
-        this.initY = posY;
-        this.initWidth = width;
-        this.initHeight = height;
-
     }
 public LinkedList<Color> toMix(PotionMix potionRequest){
         LinkedList<Color> colorsToMix = new LinkedList<Color>();
