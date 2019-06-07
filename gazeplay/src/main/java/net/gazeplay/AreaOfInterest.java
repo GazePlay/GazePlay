@@ -119,7 +119,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                             Platform.runLater(() -> graphicsPane.getChildren().remove(circle));
                         }
                     }, 2000);
-                    if (movementIndex != movementHistory.size() - 1) {
+                    if (movementIndex != movementHistory.size() - 1 && playing) {
                         plotMovement(movementIndex + 1, graphicsPane);
                     } else {
                         // System.out.println("The total duration is");
@@ -127,14 +127,18 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         // System.out.println("The duration ran is ");
                         // System.out.println(System.currentTimeMillis() - startTime);
                         clock.stop();
-                        for (InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
-                            graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
-                        }
+                        addAllInitialArea();
                         playing = false;
                     }
                 });
             }
         }, (long) (movementHistory.get(movementIndex).getIntervalTime() * progressRate));
+    }
+    private void addAllInitialArea()
+    {
+        for (InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
+            graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
+        }
     }
 
     private void calculateAreaOfInterest(int index, double startTime) {
@@ -158,6 +162,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                             + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
                     double TTFF = (AreaStartTime - startTime) / 1000.0;
                     double timeSpent = (AreaEndTime - AreaStartTime) / 1000.0;
+                    System.out.println("The time spent is " +timeSpent);
                     if (timeSpent > highestFixationTime)
                         highestFixationTime = timeSpent;
 
@@ -344,11 +349,16 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         Button slowBtn8 = new Button("8X Slow ");
         Button slowBtn5 = new Button("5X Slow ");
         Button playBtn = new Button("Play ");
+        Button stopBtn = new Button("Stop ");
+        Button cancelBtn = new Button("Cancel ");
+
 
         playBtn.setPrefSize(100, 20);
         slowBtn5.setPrefSize(100, 20);
         slowBtn8.setPrefSize(100, 20);
         slowBtn10.setPrefSize(100, 20);
+        stopBtn.setPrefSize(100, 20);
+        cancelBtn.setPrefSize(100, 20);
 
         playBtn.setOnAction(e -> {
             progressRate = 0.70;
@@ -373,6 +383,13 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             // player.setRate(10.0);
 
             playButtonPressed();
+        });
+        cancelBtn.setOnAction(e -> {
+            if(playing)
+            {
+                playing = false;
+                addAllInitialArea();
+            }
         });
         if (config.isVideoRecordingEnabled()) {
             File source;
@@ -415,7 +432,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
         Region region2 = new Region();
         HBox.setHgrow(region2, Priority.ALWAYS);
-        HBox buttonBox = new HBox(playBtn, slowBtn5, slowBtn8, slowBtn10);
+        HBox buttonBox = new HBox(cancelBtn,playBtn, slowBtn5, slowBtn8, slowBtn10);
         buttonBox.setSpacing(10);
         buttonBox.setFillHeight(true);
         buttonBox.setPadding(new Insets(10, 10, 10, 10));

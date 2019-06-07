@@ -237,7 +237,7 @@
 						<directory>./gazeplay/src/main/java</directory>
 					</directories>
 					<lineEnding>LF</lineEnding>
-				</configuration>
+				</configuration> 
 				<executions>
 					<execution>
 						<id>formatterValidate</id>
