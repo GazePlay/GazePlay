@@ -56,9 +56,10 @@ public class Potion extends Parent {
 
     private Timeline currentTimeline;
 
-    public Potion(double positionX, double positionY, double width, double height, Image image, Color color , GameContext gameContext, Stats stats, int fixationlength ){
-        this.potion = new Rectangle((int)positionX, (int)positionY, (int)width, (int)height);
-        this.potion.setFill(new ImagePattern(image,0,0,1,1,true));
+    public Potion(double positionX, double positionY, double width, double height, Image image, Color color,
+            GameContext gameContext, Stats stats, int fixationlength) {
+        this.potion = new Rectangle((int) positionX, (int) positionY, (int) width, (int) height);
+        this.potion.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
 
         DropShadow shadow = new DropShadow();
         shadow.setColor(Color.DARKGRAY);
@@ -104,33 +105,37 @@ public class Potion extends Parent {
         indicator.setOpacity(0);
         return indicator;
     }
-    private void onGoodPotionSelected(){
+
+    private void onGoodPotionSelected() {
 
     }
-    private void onWrongPotionSelected(){
+
+    private void onWrongPotionSelected() {
         currentTimeline.stop();
         currentTimeline = new Timeline();
 
     }
-    private EventHandler<Event> buildEvent(){
+
+    private EventHandler<Event> buildEvent() {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
-                if(chosen)
+                if (chosen)
                     return;
-                if(event.getEventType() == MouseEvent.MOUSE_ENTERED || event.getEventType() == GazeEvent.GAZE_ENTERED){
+                if (event.getEventType() == MouseEvent.MOUSE_ENTERED
+                        || event.getEventType() == GazeEvent.GAZE_ENTERED) {
                     progressIndicator.setOpacity(1);
                     progressIndicator.setProgress(0);
 
                     currentTimeline.stop();
                     currentTimeline = new Timeline();
 
+                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(potion.xProperty(),
+                            potion.getX() - (initWidth * zoom_factor - initWidth) / 2)));
+                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(potion.yProperty(),
+                            potion.getY() - (initHeight * zoom_factor - initHeight) / 2)));
                     currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(potion.xProperty(), potion.getX() - (initWidth * zoom_factor - initWidth) / 2)));
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(potion.yProperty(), potion.getY() - (initHeight * zoom_factor - initHeight) / 2)));
-                    currentTimeline.getKeyFrames().add(
-                            new KeyFrame(new Duration(1), new KeyValue(potion.widthProperty(), initWidth * zoom_factor)));
+                            new KeyValue(potion.widthProperty(), initWidth * zoom_factor)));
                     currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
                             new KeyValue(potion.heightProperty(), initHeight * zoom_factor)));
 

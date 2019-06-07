@@ -13,31 +13,30 @@ import lombok.Getter;
 import java.util.LinkedList;
 import java.util.Random;
 
-
 public class Client extends Rectangle {
 
-//private final GameContext gameContext;
-//@Getter
-//private StackPane colorPane;
-@Getter
-private final Rectangle client ;
-//private final Image clientImg;
+    // private final GameContext gameContext;
+    // @Getter
+    // private StackPane colorPane;
+    @Getter
+    private final Rectangle client;
+    // private final Image clientImg;
 
-private PotionMix potionRequest;
-@Getter
-private LinkedList<Color> colorsToMix;
+    private PotionMix potionRequest;
+    @Getter
+    private LinkedList<Color> colorsToMix;
 
-    public enum PotionMix{
-        RED_Potion("Red", Color.RED),YELLOW_Potion("Yellow", Color.YELLOW),BLUE_Potion("Blue",Color.BLUE),
-        ORANGE_Potion("Orange",Color.ORANGE), GREEN_Potion("Green",Color.GREEN),PURPLE_Potion("Purple",Color.PURPLE),
-        BLACK_Potion("Black",Color.BLACK);
+    public enum PotionMix {
+        RED_Potion("Red", Color.RED), YELLOW_Potion("Yellow", Color.YELLOW), BLUE_Potion("Blue",
+                Color.BLUE), ORANGE_Potion("Orange", Color.ORANGE), GREEN_Potion("Green",
+                        Color.GREEN), PURPLE_Potion("Purple", Color.PURPLE), BLACK_Potion("Black", Color.BLACK);
 
         @Getter
         private final String colorName;
         @Getter
         private final Color color;
 
-        PotionMix(String name , Color color){
+        PotionMix(String name, Color color) {
             this.colorName = name;
             this.color = color;
         }
@@ -48,21 +47,21 @@ private LinkedList<Color> colorsToMix;
         }
     }
 
-    public Client(double posX, double posY, double width, double height,
-                  Image clientImage , PotionMix request){
-        //this.gameContext = gameContext;
+    public Client(double posX, double posY, double width, double height, Image clientImage, PotionMix request) {
+        // this.gameContext = gameContext;
         this.client = new Rectangle(posX, posY, width, height);
-        this.client.setFill(new ImagePattern(clientImage,0,0,1,1,true));
+        this.client.setFill(new ImagePattern(clientImage, 0, 0, 1, 1, true));
         this.potionRequest = request;
         this.colorsToMix = toMix(request);
     }
-public LinkedList<Color> toMix(PotionMix potionRequest){
+
+    public LinkedList<Color> toMix(PotionMix potionRequest) {
         LinkedList<Color> colorsToMix = new LinkedList<Color>();
-    if(potionRequest.color == Color.RED || potionRequest.color == Color.YELLOW ||  potionRequest.color == Color.BLUE){
-        colorsToMix.add(potionRequest.color);
-    }
-    else{
-        switch (potionRequest){
+        if (potionRequest.color == Color.RED || potionRequest.color == Color.YELLOW
+                || potionRequest.color == Color.BLUE) {
+            colorsToMix.add(potionRequest.color);
+        } else {
+            switch (potionRequest) {
             case ORANGE_Potion:
                 colorsToMix.clear();
                 colorsToMix.add(Color.RED);
@@ -84,9 +83,9 @@ public LinkedList<Color> toMix(PotionMix potionRequest){
                 colorsToMix.add(Color.YELLOW);
                 colorsToMix.add(Color.BLUE);
                 break;
+            }
         }
+        return colorsToMix;
     }
-    return colorsToMix;
-}
 
 }

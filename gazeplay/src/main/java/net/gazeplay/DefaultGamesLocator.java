@@ -76,22 +76,20 @@ public class DefaultGamesLocator implements GamesLocator {
 
         List<GameSpec> result = new ArrayList<>();
 
+        result.add(
+                new GameSpec(new GameSummary("Potions", "data/Thumbnails/potions.png", GameCategories.Category.TARGET),
+                        new GameSpec.GameLauncher() {
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new CakeStats(scene);
+                            }
 
-
-        result.add(new GameSpec(
-                new GameSummary("Potions", "data/Thumbnails/potions.png", GameCategories.Category.TARGET),
-                new GameSpec.GameLauncher() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new CakeStats(scene);
-                    }
-
-                    @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-                                                       Stats stats) {
-                        return new MagicPotions(gameContext, stats);
-                    }
-                }));
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.GameVariant gameVariant, Stats stats) {
+                                return new MagicPotions(gameContext, stats);
+                            }
+                        }));
 
         result.add(new GameSpec(new GameSummary("Math101", "data/Thumbnails/math101.png",
                 GameCategories.Category.MEMORIZATION, null, "MathDescAdd"), new GameSpec.GameVariantGenerator() {
