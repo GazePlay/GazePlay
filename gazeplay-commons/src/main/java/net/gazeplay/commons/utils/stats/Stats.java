@@ -169,14 +169,8 @@ public class Stats implements GazeMotionListener {
                 e.printStackTrace();
             }
             this.screenRecorder.setAudioMixer(null);
-
         }
         lifeCycle.start(() -> {
-
-            System.out.println("Head map" + config.isHeatMapDisabled());
-            System.out.println("Fixation" + config.isFixationSequenceDisabled());
-            System.out.println("AOI" + config.isAreaOfInterestEnabled());
-
             if (!config.isHeatMapDisabled())
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
             startTime = System.currentTimeMillis();
@@ -443,14 +437,11 @@ public class Stats implements GazeMotionListener {
         // log.info(String.format("Fixation-Sequence size: %3d X %3d",
         // (int) (gameContextScene.getWidth() / heatMapPixelSize),
         // (int) (gameContextScene.getHeight() / heatMapPixelSize)));
-        log.info(String.format("Fixation-Sequence size: %3d X %3d", (int) gameContextScene.getWidth(),
-                (int) gameContextScene.getHeight()));
 
         // FixationSequence sequence = new FixationSequence((int) (gameContextScene.getWidth() / heatMapPixelSize),
         // (int) (gameContextScene.getHeight() / heatMapPixelSize), fixationSequence);
         FixationSequence sequence = new FixationSequence((int) gameContextScene.getWidth(),
                 (int) gameContextScene.getHeight(), fixationSequence);
-
         try {
             sequence.saveToFile(outputPngFile);
         } catch (Exception e) {
@@ -462,10 +453,11 @@ public class Stats implements GazeMotionListener {
         long previousGaze;
         long gazeDuration;
 
-        // int x = (int) (Y / heatMapPixelSize); //
+        // int x = (int) (Y / heatMapPixelSize);
         // int y = (int) (X / heatMapPixelSize);
-        int x = (int) (Y); //
-        int y = (int) (X);
+        int x = Y;
+        int y = X;
+
         if (fixationSequence.size() == 0) {
             previousGaze = 0;
         } else {

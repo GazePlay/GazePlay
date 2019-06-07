@@ -8,7 +8,7 @@ Target perfoms a random walk and explode when player looks at it.
 
 After reading the contry name the target must look at the corresponding flag.
  
-![FunWithFlags](https://raw.githubusercontent.com/schwabdidier/GazePlay/gazeplay-data/src/main/resources/data/Thumbnails/flags.png)
+![FunWithFlags](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/flags.png)
 
 ## Find the odd one out
 
@@ -45,3 +45,15 @@ Roll from 1 to 6 dice.
 Capture biboules for your frog to move forward in a race against 3 other frogs!
 
 ![race](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/frogsrace.png)
+
+## Math Games
+
+Solve the math problems: Addition, Subtraction, Multiplication and Division of two numbers.
+
+![Math101](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/math101.png)
+
+## Identify The Letters
+
+Select all the blocks containing the specified letter.
+
+![Literacy](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/letters.png)
