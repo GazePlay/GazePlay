@@ -1,6 +1,5 @@
 package net.gazeplay.commons.utils.stats;
 
-
 import com.sun.javafx.PlatformUtil;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
@@ -140,23 +139,31 @@ public class Stats implements GazeMotionListener {
 
             ScreenRecorderCompactMain asi = null;
 
-            GraphicsConfiguration cfg = GraphicsEnvironment
-                    .getLocalGraphicsEnvironment()
-                    .getDefaultScreenDevice()
+            GraphicsConfiguration cfg = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
                     .getDefaultConfiguration();
             Rectangle areaRect = null;
             Dimension outputDimension = null;
             areaRect = cfg.getBounds();
-
 
             outputDimension = areaRect.getSize();
             byte screenRate;
             screenRate = 20;
             try {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 'at' HH.mm.ss");
-                nameOfVideo =this.movieFolder + "/ScreenRecording " + dateFormat.format(new Date());
-//                System.out.println("The movie name is 1 :" +this.movieFolder + "ScreenRecording " + dateFormat.format(new Date()).replaceAll(" ","%20"));
-                this.screenRecorder = new ScreenRecorder(cfg, areaRect, new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.FILE, VideoFormatKeys.MimeTypeKey, mimeType), new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.VIDEO, VideoFormatKeys.EncodingKey, videoFormatName, VideoFormatKeys.CompressorNameKey, compressorName, VideoFormatKeys.WidthKey, outputDimension.width, VideoFormatKeys.HeightKey, outputDimension.height, VideoFormatKeys.DepthKey, (int) bitDepth, VideoFormatKeys.FrameRateKey, Rational.valueOf((double)screenRate), VideoFormatKeys.QualityKey, quality, VideoFormatKeys.KeyFrameIntervalKey, screenRate * 60), null, null, this.movieFolder);
+                nameOfVideo = this.movieFolder + "/ScreenRecording " + dateFormat.format(new Date());
+                // System.out.println("The movie name is 1 :" +this.movieFolder + "ScreenRecording " +
+                // dateFormat.format(new Date()).replaceAll(" ","%20"));
+                this.screenRecorder = new ScreenRecorder(cfg, areaRect,
+                        new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.FILE, VideoFormatKeys.MimeTypeKey,
+                                mimeType),
+                        new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.VIDEO,
+                                VideoFormatKeys.EncodingKey, videoFormatName, VideoFormatKeys.CompressorNameKey,
+                                compressorName, VideoFormatKeys.WidthKey, outputDimension.width,
+                                VideoFormatKeys.HeightKey, outputDimension.height, VideoFormatKeys.DepthKey,
+                                (int) bitDepth, VideoFormatKeys.FrameRateKey, Rational.valueOf((double) screenRate),
+                                VideoFormatKeys.QualityKey, quality, VideoFormatKeys.KeyFrameIntervalKey,
+                                screenRate * 60),
+                        null, null, this.movieFolder);
                 this.screenRecorder.start();
             } catch (IOException | AWTException e) {
                 e.printStackTrace();
@@ -213,8 +220,8 @@ public class Stats implements GazeMotionListener {
                                 System.currentTimeMillis()));
                         previousTime = timeElapsedMillis;
                         counter++;
-//                        if (counter == 2)
-//                            counter = 0;
+                        // if (counter == 2)
+                        // counter = 0;
                     }
                 }
             };
@@ -383,7 +390,6 @@ public class Stats implements GazeMotionListener {
         return nameOfVideo;
     }
 
-
     File createInfoStatsFile() {
         File outputDirectory = getGameStatsOfTheDayDirectory();
 
@@ -522,5 +528,8 @@ public class Stats implements GazeMotionListener {
     private void takeScreenShot() {
         gameScreenShot = gameContextScene.snapshot(null);
     }
-    public WritableImage getGameScreenShot(){ return this.gameScreenShot;}
+
+    public WritableImage getGameScreenShot() {
+        return this.gameScreenShot;
+    }
 }

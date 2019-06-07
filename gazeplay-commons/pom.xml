@@ -88,9 +88,9 @@
 			<version>3.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.monte</groupId>
-			<artifactId>screen-recorder</artifactId>
-			<version>0.7.7</version>
+			<groupId>com.github.stephenc.monte</groupId>
+			<artifactId>monte-screen-recorder</artifactId>
+			<version>0.7.7.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.automation-remarks</groupId>

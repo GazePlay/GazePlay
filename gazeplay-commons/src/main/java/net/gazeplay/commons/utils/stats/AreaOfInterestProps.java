@@ -38,9 +38,13 @@ public class AreaOfInterestProps {
         return this.convexPoints;
     }
 
-    public void setPriority(double priority){ this.priority = priority;}
+    public void setPriority(double priority) {
+        this.priority = priority;
+    }
 
-    public double getPriority(){ return this.priority;}
+    public double getPriority() {
+        return this.priority;
+    }
 
     public int getCenterX() {
         return this.centerX;

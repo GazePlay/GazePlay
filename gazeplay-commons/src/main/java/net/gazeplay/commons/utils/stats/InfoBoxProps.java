@@ -11,7 +11,8 @@ public class InfoBoxProps {
     private final double TimeSpent;
     private final int Fixation;
 
-    public InfoBoxProps(GridPane infoBox, Line lineToInfoBox, String aoiID, double TTFF, double TimeSpent, int Fixation) {
+    public InfoBoxProps(GridPane infoBox, Line lineToInfoBox, String aoiID, double TTFF, double TimeSpent,
+            int Fixation) {
         this.infoBox = infoBox;
         this.lineToInfoBox = lineToInfoBox;
         this.aoiID = aoiID;
