@@ -1,14 +1,11 @@
 package net.gazeplay.games.magicPotions;
 
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -16,12 +13,10 @@ import java.util.Random;
 public class Client extends Rectangle {
 
     // private final GameContext gameContext;
-    // @Getter
-    // private StackPane colorPane;
+
     @Getter
     private final Rectangle client;
-    // private final Image clientImg;
-
+    @Getter
     private PotionMix potionRequest;
     @Getter
     private LinkedList<Color> colorsToMix;

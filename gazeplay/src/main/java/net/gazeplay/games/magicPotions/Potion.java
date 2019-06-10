@@ -22,28 +22,25 @@ import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
-public class Potion extends Parent {
+import java.util.LinkedList;
 
-    private static final float zoom_factor = 1.05f;
+public class Potion extends Parent {
 
     private final double fixationLength;
 
-    @Getter // this potion will be Red | Blue | Yellow
-    private final Rectangle potion;
     @Getter
-    private final Color potionColor;
+    private final Rectangle potion;
+
+    @Getter
+    private Color potionColor;
 
     @Getter
     private final Image image;
 
-    private final GameContext gameContext;
+    @Getter
+    private final LinkedList<Color> toMix;
 
-    private final double initWidth;
-    private final double initHeight;
-    @Getter
-    private final double initX;
-    @Getter
-    private final double initY;
+    private final GameContext gameContext;
 
     // it's true if the potion has been used/chosen for the mixture
     @Getter
@@ -60,7 +57,7 @@ public class Potion extends Parent {
     private Timeline currentTimeline;
 
     public Potion(double positionX, double positionY, double width, double height, Image image, Color color,
-            GameContext gameContext, Stats stats, int fixationlength) {
+                  GameContext gameContext, Stats stats, int fixationlength, LinkedList<Color>toMix) {
         this.potion = new Rectangle((int) positionX, (int) positionY, (int) width, (int) height);
         this.potion.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
 
@@ -75,18 +72,11 @@ public class Potion extends Parent {
 
         this.image = image;
         this.potionColor = color;
+        this.toMix = toMix;
 
         this.gameContext = gameContext;
         this.stats = stats;
         this.fixationLength = fixationlength;
-
-        this.initWidth = width;
-        this.initHeight = height;
-        this.initX = positionX;
-        this.initY = positionY;
-
-        this.progressIndicator = createProgressIndicator(width, height);
-        this.getChildren().add(this.progressIndicator);
 
         this.enterEvent = buildEvent(); // create method !
 
@@ -97,12 +87,15 @@ public class Potion extends Parent {
 
         currentTimeline = new Timeline();
         this.getChildren().add(this.potion);
+
+        this.progressIndicator = createProgressIndicator(width, width);
+        this.getChildren().add(this.progressIndicator);
     }
 
     private ProgressIndicator createProgressIndicator(double width, double height) {
         ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(potion.getX() + width * 0.05);
-        indicator.setTranslateY(potion.getY() + height * 0.2);
+        indicator.setTranslateX(potion.getX());
+        indicator.setTranslateY(potion.getY() + height * 0.75);
         indicator.setMinWidth(width * 0.9);
         indicator.setMinHeight(width * 0.9);
         indicator.setOpacity(0);
@@ -114,8 +107,8 @@ public class Potion extends Parent {
     }
 
     private void onWrongPotionSelected() {
-        currentTimeline.stop();
-        currentTimeline = new Timeline();
+//        currentTimeline.stop();
+//        currentTimeline = new Timeline();
 
     }
 
@@ -133,15 +126,6 @@ public class Potion extends Parent {
                     currentTimeline.stop();
                     currentTimeline = new Timeline();
 
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(potion.xProperty(),
-                            potion.getX() - (initWidth * zoom_factor - initWidth) / 2)));
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(potion.yProperty(),
-                            potion.getY() - (initHeight * zoom_factor - initHeight) / 2)));
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(potion.widthProperty(), initWidth * zoom_factor)));
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(potion.heightProperty(), initHeight * zoom_factor)));
-
                     timelineProgressBar = new Timeline();
 
                     timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationLength),
@@ -154,16 +138,38 @@ public class Potion extends Parent {
                     timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
+
                             chosen = true;
 
-                            // maybe change opacity of potion ..
+                            //change opacity of potion when it has been selected once
                             potion.setOpacity(.3);
 
-                            potion.removeEventFilter(MouseEvent.ANY, enterEvent);
-                            potion.removeEventFilter(GazeEvent.ANY, enterEvent);
-
                             // if should select this potion or not
+                            if(!toMix.contains(potionColor)){
+                                //play explosion animation !!!
+                            }
+                            else{
+                                if(MagicPotions.getColorsMixedCounter() == 0){
+                                    MagicPotions.setColorsMixedCounter(MagicPotions.getColorsMixedCounter()+1);
+                                    MagicPotions.getMixPotColor().setFill(potionColor);
+                                }
+                                else if(MagicPotions.getColorsMixedCounter() == 1 ){
+                                    if(toMix.size() == 2){
+                                        MagicPotions.getMixPotColor().setFill(MagicPotions.getColorRequest());
+                                        MagicPotions.setColorsMixedCounter(MagicPotions.getColorsMixedCounter()+1);
+                                    }
+                                }
+                                if(toMix.size() == MagicPotions.getColorsMixedCounter()){
+                                    MagicPotions.setPotionMixAchieved(true);
+                                    gameContext.playWinTransition(350, null);
+                                }
 
+
+
+                                potion.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                potion.removeEventFilter(GazeEvent.ANY, enterEvent);
+                            }
+                            //if(MagicPotions.getPotionMixAchieved())
                         }
                     });
                 }
