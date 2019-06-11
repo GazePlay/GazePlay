@@ -97,6 +97,12 @@
 			<artifactId>video-recorder-core</artifactId>
 			<version>2.0</version>
 		</dependency>
+		<dependency>
+			<groupId>ws.schild</groupId>
+			<artifactId>jave-core</artifactId>
+			<version>2.5.0</version>
+			<scope>compile</scope>
+		</dependency>
 
 	</dependencies>
 	<build>

@@ -27,6 +27,7 @@ import org.monte.media.gui.Worker;
 import org.monte.media.math.Rational;
 import org.monte.screenrecorder.ScreenRecorder;
 import org.monte.screenrecorder.ScreenRecorderCompactMain;
+import ws.schild.jave.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -72,6 +73,7 @@ public class Stats implements GazeMotionListener {
     private int nbShots = 0;
     private boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
+    private File target;
     long startTime;
     int sceneCounter = 0;
     @Getter
@@ -120,55 +122,92 @@ public class Stats implements GazeMotionListener {
         takeScreenShot();
     }
 
+    public void startVideoRecording()
+    {
+        directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
+        this.movieFolder = new File(directoryOfVideo);
+        float quality = 1.0F;
+        byte bitDepth = 24;
+        String mimeType;
+        String videoFormatName;
+        String compressorName;
+
+        mimeType = "video/avi";
+        videoFormatName = "tscc";
+        compressorName = "Techsmith Screen Capture";
+
+        ScreenRecorderCompactMain asi = null;
+
+        GraphicsConfiguration cfg = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+                .getDefaultConfiguration();
+        Rectangle areaRect = null;
+        Dimension outputDimension = null;
+        areaRect = cfg.getBounds();
+
+        outputDimension = areaRect.getSize();
+        byte screenRate;
+        screenRate = 20;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 'at' HH.mm.ss");
+            nameOfVideo = this.movieFolder + "/ScreenRecording " + dateFormat.format(new Date());
+            // System.out.println("The movie name is 1 :" +this.movieFolder + "ScreenRecording " +
+            // dateFormat.format(new Date()).replaceAll(" ","%20"));
+            this.screenRecorder = new ScreenRecorder(cfg, areaRect,
+                    new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.FILE, VideoFormatKeys.MimeTypeKey,
+                            mimeType),
+                    new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.VIDEO,
+                            VideoFormatKeys.EncodingKey, videoFormatName, VideoFormatKeys.CompressorNameKey,
+                            compressorName, VideoFormatKeys.WidthKey, outputDimension.width,
+                            VideoFormatKeys.HeightKey, outputDimension.height, VideoFormatKeys.DepthKey,
+                            (int) bitDepth, VideoFormatKeys.FrameRateKey, Rational.valueOf((double) screenRate),
+                            VideoFormatKeys.QualityKey, quality, VideoFormatKeys.KeyFrameIntervalKey,
+                            screenRate * 60),
+                    null, null, this.movieFolder);
+            this.screenRecorder.start();
+        } catch (IOException | AWTException e) {
+            e.printStackTrace();
+        }
+        this.screenRecorder.setAudioMixer(null);
+    }
+    public void endVideoRecording(){
+        final ScreenRecorder r = this.screenRecorder;
+        this.screenRecorder = null;
+        (new Worker() {
+            protected Object construct() throws Exception {
+                r.stop();
+                return null;
+            }
+            protected void finished() {
+                ScreenRecorder.State state = r.getState();
+                File source;
+                source = new File(nameOfVideo + ".avi");
+                target = new File(nameOfVideo + ".mp4");
+                // Audio Attributes
+                VideoAttributes videoAttributes = new VideoAttributes();
+                videoAttributes.setCodec("mpeg4");
+                // Encoding attributes
+                EncodingAttributes attrs = new EncodingAttributes();
+                attrs.setFormat("mp4");
+                attrs.setVideoAttributes(videoAttributes);
+
+                // Encode
+                Encoder encoder = new Encoder();
+                try {
+                    encoder.encode(new MultimediaObject(source), target, attrs);
+                } catch (EncoderException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+    }
+    public File getTarget(){
+        return this.target;
+    }
     public void start() {
         config = Configuration.getInstance();
         if (config.isVideoRecordingEnabled()) {
-            directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
-            this.movieFolder = new File(directoryOfVideo);
-
-            float quality = 1.0F;
-            byte bitDepth = 24;
-
-            String mimeType;
-            String videoFormatName;
-            String compressorName;
-
-            mimeType = "video/avi";
-            videoFormatName = "tscc";
-            compressorName = "Techsmith Screen Capture";
-
-            ScreenRecorderCompactMain asi = null;
-
-            GraphicsConfiguration cfg = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-                    .getDefaultConfiguration();
-            Rectangle areaRect = null;
-            Dimension outputDimension = null;
-            areaRect = cfg.getBounds();
-
-            outputDimension = areaRect.getSize();
-            byte screenRate;
-            screenRate = 20;
-            try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 'at' HH.mm.ss");
-                nameOfVideo = this.movieFolder + "/ScreenRecording " + dateFormat.format(new Date());
-                // System.out.println("The movie name is 1 :" +this.movieFolder + "ScreenRecording " +
-                // dateFormat.format(new Date()).replaceAll(" ","%20"));
-                this.screenRecorder = new ScreenRecorder(cfg, areaRect,
-                        new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.FILE, VideoFormatKeys.MimeTypeKey,
-                                mimeType),
-                        new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.VIDEO,
-                                VideoFormatKeys.EncodingKey, videoFormatName, VideoFormatKeys.CompressorNameKey,
-                                compressorName, VideoFormatKeys.WidthKey, outputDimension.width,
-                                VideoFormatKeys.HeightKey, outputDimension.height, VideoFormatKeys.DepthKey,
-                                (int) bitDepth, VideoFormatKeys.FrameRateKey, Rational.valueOf((double) screenRate),
-                                VideoFormatKeys.QualityKey, quality, VideoFormatKeys.KeyFrameIntervalKey,
-                                screenRate * 60),
-                        null, null, this.movieFolder);
-                this.screenRecorder.start();
-            } catch (IOException | AWTException e) {
-                e.printStackTrace();
-            }
-            this.screenRecorder.setAudioMixer(null);
+            startVideoRecording();
         }
         lifeCycle.start(() -> {
             if (!config.isHeatMapDisabled())
@@ -246,19 +285,7 @@ public class Stats implements GazeMotionListener {
 
     public void stop() {
         if (config.isVideoRecordingEnabled()) {
-            final ScreenRecorder r = this.screenRecorder;
-            this.screenRecorder = null;
-            (new Worker() {
-                protected Object construct() throws Exception {
-                    r.stop();
-                    return null;
-                }
-
-                protected void finished() {
-                    ScreenRecorder.State state = r.getState();
-
-                }
-            }).start();
+            endVideoRecording();
         }
         lifeCycle.stop(() -> {
             if (recordGazeMovements != null) {

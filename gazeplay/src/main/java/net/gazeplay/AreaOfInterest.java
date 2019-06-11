@@ -30,12 +30,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
-import ws.schild.jave.Encoder;
-import ws.schild.jave.EncodingAttributes;
-import ws.schild.jave.MultimediaObject;
-import ws.schild.jave.VideoAttributes;
-
-import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -68,6 +62,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private boolean playing = false;
     private double startTime;
     private double highestFixationTime = 0;
+    private Stats stats;
 
     @Override
     public ObservableList<Node> getChildren() {
@@ -122,13 +117,11 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     if (movementIndex != movementHistory.size() - 1 && playing) {
                         plotMovement(movementIndex + 1, graphicsPane);
                     } else {
-                        // System.out.println("The total duration is");
-                        // System.out.println((movementHistory.get(movementHistory.size()-1).getTimeStarted()+movementHistory.get(movementHistory.size()-1).getIntervalTime())-movementHistory.get(0).getTimeStarted());
-                        // System.out.println("The duration ran is ");
-                        // System.out.println(System.currentTimeMillis() - startTime);
                         clock.stop();
                         addAllInitialArea();
                         playing = false;
+                        if(config.isVideoRecordingEnabled())
+                            stats.endVideoRecording();
                     }
                 });
             }
@@ -162,7 +155,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                             + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
                     double TTFF = (AreaStartTime - startTime) / 1000.0;
                     double timeSpent = (AreaEndTime - AreaStartTime) / 1000.0;
-                    System.out.println("The time spent is " +timeSpent);
                     if (timeSpent > highestFixationTime)
                         highestFixationTime = timeSpent;
 
@@ -207,10 +199,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
     private InfoBoxProps calculateInfoBox(String aoiID, double TTFF, double TimeSpent, int Fixation, int centerX,
             int centerY, Polygon currentAreaDisplay) {
-        // Double ratioDouble = (currentAreaDisplay.getBoundsInLocal().getWidth()
-        // * currentAreaDisplay.getBoundsInLocal().getHeight())
-        // / (Screen.getPrimary().getBounds().getWidth() * Screen.getPrimary().getBounds().getHeight());
-
         GridPane infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(TTFF),
                 new DecimalFormat("##.###s").format(TimeSpent), Fixation + "", 0);
         double screenWidthCenter = Screen.getPrimary().getBounds().getWidth() / 2;
@@ -304,6 +292,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
     private AreaOfInterest(GazePlay gazePlay, BorderPane root, Stats stats) {
         super(gazePlay, root);
+        this.stats = stats;
         colors = new Color[] { Color.PURPLE, Color.WHITE, Color.PINK, Color.ORANGE, Color.BLUE, Color.RED,
                 Color.CHOCOLATE };
         config = Configuration.getInstance();
@@ -330,7 +319,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         areaMap = new int[allAOIList.size()];
         Arrays.fill(areaMap, -1);
         combinedAreaList = computeConnectedArea();
-        System.out.println("The highest fixaiton time is " + highestFixationTime);
         if (highestFixationTime != 0) {
             for (AreaOfInterestProps areaOfInterestProps : allAOIList) {
                 double priority = areaOfInterestProps.getInfoBoxProp().getTimeSpent() / highestFixationTime * 0.6
@@ -342,7 +330,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         for (InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
-
         timeLabel = new Label();
         timeLabel.setTextFill(Color.web("#FFFFFF"));
         Button slowBtn10 = new Button("10X Slow ");
@@ -361,7 +348,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         cancelBtn.setPrefSize(100, 20);
 
         playBtn.setOnAction(e -> {
-            progressRate = 0.70;
+            progressRate = 0.65;
             // player.setRate(1.0);
             playButtonPressed();
         });
@@ -388,28 +375,13 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             if(playing)
             {
                 playing = false;
+                graphicsPane.getChildren().removeAll();
                 addAllInitialArea();
             }
         });
         if (config.isVideoRecordingEnabled()) {
-            File source;
-            File target;
             try {
-                source = new File(stats.getDirectoryOfVideo() + ".avi");
-                target = new File(stats.getDirectoryOfVideo() + ".mp4");
-                System.out.println("Outfile name is:" + stats.getDirectoryOfVideo().replaceAll("%20+", "-") + ".mp4");
-                // Audio Attributes
-                VideoAttributes videoAttributes = new VideoAttributes();
-                videoAttributes.setCodec("mpeg4");
-                // Encoding attributes
-                EncodingAttributes attrs = new EncodingAttributes();
-                attrs.setFormat("mp4");
-                attrs.setVideoAttributes(videoAttributes);
-
-                // Encode
-                Encoder encoder = new Encoder();
-                encoder.encode(new MultimediaObject(source), target, attrs);
-                Media media = new Media(target.toURI().toString());
+                Media media = new Media(stats.getTarget().toURI().toString());
                 player = new MediaPlayer(media);
                 MediaView mediaView = new MediaView(player);
                 stackPane.getChildren().add(mediaView);
@@ -480,9 +452,12 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             graphicsPane.getChildren().remove(currentInfoBox);
 
             if (config.isVideoRecordingEnabled()) {
-                player.setRate(0.01);
+
+//                player.setRate(1);
                 player.stop();
                 player.play();
+                this.stats.startVideoRecording();
+
             }
             intereatorAOI = 0;
             startTime = System.currentTimeMillis();
@@ -583,10 +558,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         Fixation += allAOIList.get(j).getInfoBoxProp().getTimeSpent();
                         tempPolygon = Shape.union(tempPolygon, allAOIList.get(j).getAreaOfInterest());
                         tempPolygon.setFill(Color.rgb(249, 166, 2, 0.15));
-                        // ratioDouble = (tempPolygon.getBoundsInLocal().getWidth()
-                        // * tempPolygon.getBoundsInLocal().getHeight())
-                        // / (Screen.getPrimary().getBounds().getWidth()
-                        // * Screen.getPrimary().getBounds().getHeight());
                     }
                 }
                 infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(TTFF),
