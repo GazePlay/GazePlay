@@ -27,7 +27,10 @@ import org.monte.media.gui.Worker;
 import org.monte.media.math.Rational;
 import org.monte.screenrecorder.ScreenRecorder;
 import org.monte.screenrecorder.ScreenRecorderCompactMain;
-import ws.schild.jave.*;
+import ws.schild.jave.Encoder;
+import ws.schild.jave.EncodingAttributes;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.VideoAttributes;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -73,7 +76,6 @@ public class Stats implements GazeMotionListener {
     private int nbShots = 0;
     private boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
-    private File target;
     long startTime;
     int sceneCounter = 0;
     @Getter
@@ -128,6 +130,7 @@ public class Stats implements GazeMotionListener {
         this.movieFolder = new File(directoryOfVideo);
         float quality = 1.0F;
         byte bitDepth = 24;
+
         String mimeType;
         String videoFormatName;
         String compressorName;
@@ -146,12 +149,11 @@ public class Stats implements GazeMotionListener {
 
         outputDimension = areaRect.getSize();
         byte screenRate;
-        screenRate = 20;
+        screenRate = 30;
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 'at' HH.mm.ss");
             nameOfVideo = this.movieFolder + "/ScreenRecording " + dateFormat.format(new Date());
-            // System.out.println("The movie name is 1 :" +this.movieFolder + "ScreenRecording " +
-            // dateFormat.format(new Date()).replaceAll(" ","%20"));
+            System.out.println("The name of the video is "+nameOfVideo);
             this.screenRecorder = new ScreenRecorder(cfg, areaRect,
                     new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.FILE, VideoFormatKeys.MimeTypeKey,
                             mimeType),
@@ -180,29 +182,22 @@ public class Stats implements GazeMotionListener {
             protected void finished() {
                 ScreenRecorder.State state = r.getState();
                 File source;
-                source = new File(nameOfVideo + ".avi");
-                target = new File(nameOfVideo + ".mp4");
-                // Audio Attributes
-                VideoAttributes videoAttributes = new VideoAttributes();
-                videoAttributes.setCodec("mpeg4");
-                // Encoding attributes
-                EncodingAttributes attrs = new EncodingAttributes();
-                attrs.setFormat("mp4");
-                attrs.setVideoAttributes(videoAttributes);
-
-                // Encode
-                Encoder encoder = new Encoder();
+                File target;
                 try {
+                    source = new File(nameOfVideo + ".avi");
+                    target = new File(nameOfVideo + ".mp4");
+                    VideoAttributes videoAttributes = new VideoAttributes();
+                    videoAttributes.setCodec("mpeg4");
+                    EncodingAttributes attrs = new EncodingAttributes();
+                    attrs.setFormat("mp4");
+                    attrs.setVideoAttributes(videoAttributes);
+                    Encoder encoder = new Encoder();
                     encoder.encode(new MultimediaObject(source), target, attrs);
-                } catch (EncoderException e) {
-                    e.printStackTrace();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-
             }
         }).start();
-    }
-    public File getTarget(){
-        return this.target;
     }
     public void start() {
         config = Configuration.getInstance();

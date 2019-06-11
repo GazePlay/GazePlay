@@ -30,6 +30,11 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
+import ws.schild.jave.Encoder;
+import ws.schild.jave.EncodingAttributes;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.VideoAttributes;
+import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -120,8 +125,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         clock.stop();
                         addAllInitialArea();
                         playing = false;
-                        if(config.isVideoRecordingEnabled())
+                        if (config.isVideoRecordingEnabled())
+                        {
                             stats.endVideoRecording();
+                        }
                     }
                 });
             }
@@ -133,7 +140,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
     }
-
     private void calculateAreaOfInterest(int index, double startTime) {
         if (index != 0) {
             double x1 = movementHistory.get(index).getxValue();
@@ -145,8 +151,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 if (index == 1)
                     areaOfInterestList.add(movementHistory.get(0));
                 areaOfInterestList.add(movementHistory.get(index));
-                // if (areaOfInterestList.size() == 1)
-                // System.out.println("Start of AOE");
             } else if (areaOfInterestList.size() != 0) {
                 if (areaOfInterestList.size() > 2) {
                     // System.out.println("End of AOE");
@@ -157,7 +161,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     double timeSpent = (AreaEndTime - AreaStartTime) / 1000.0;
                     if (timeSpent > highestFixationTime)
                         highestFixationTime = timeSpent;
-
                     int centerX = 0;
                     int centerY = 0;
                     int movementHistoryEndingIndex = index - 1;
@@ -179,7 +182,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     areaOfInterest.getPoints().addAll(polygonPoints);
                     colorIterator = index % 7;
                     areaOfInterest.setStroke(colors[colorIterator]);
-                    // areaOfInterest.setFill(Color.rgb(18, 121, 131, 0.15));
                     centerX = centerX / areaOfInterestList.size();
                     centerY = centerY / areaOfInterestList.size();
                     InfoBoxProps infoBox = calculateInfoBox("AOI number " + (allAOIList.size() + 1), TTFF, timeSpent,
@@ -199,6 +201,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
     private InfoBoxProps calculateInfoBox(String aoiID, double TTFF, double TimeSpent, int Fixation, int centerX,
             int centerY, Polygon currentAreaDisplay) {
+
         GridPane infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(TTFF),
                 new DecimalFormat("##.###s").format(TimeSpent), Fixation + "", 0);
         double screenWidthCenter = Screen.getPrimary().getBounds().getWidth() / 2;
@@ -319,6 +322,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         areaMap = new int[allAOIList.size()];
         Arrays.fill(areaMap, -1);
         combinedAreaList = computeConnectedArea();
+        System.out.println("The highest fixaiton time is " + highestFixationTime);
         if (highestFixationTime != 0) {
             for (AreaOfInterestProps areaOfInterestProps : allAOIList) {
                 double priority = areaOfInterestProps.getInfoBoxProp().getTimeSpent() / highestFixationTime * 0.6
@@ -330,6 +334,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         for (InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
+
         timeLabel = new Label();
         timeLabel.setTextFill(Color.web("#FFFFFF"));
         Button slowBtn10 = new Button("10X Slow ");
@@ -380,8 +385,22 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             }
         });
         if (config.isVideoRecordingEnabled()) {
+            File source;
+            File target;
             try {
-                Media media = new Media(stats.getTarget().toURI().toString());
+                source = new File(stats.getDirectoryOfVideo() + ".avi");
+                target = new File(stats.getDirectoryOfVideo() + ".mp4");
+                // Audio Attributes
+                VideoAttributes videoAttributes = new VideoAttributes();
+                videoAttributes.setCodec("mpeg4");
+                // Encoding attributes
+                EncodingAttributes attrs = new EncodingAttributes();
+                attrs.setFormat("mp4");
+                attrs.setVideoAttributes(videoAttributes);
+                // Encode
+                Encoder encoder = new Encoder();
+                encoder.encode(new MultimediaObject(source), target, attrs);
+                Media media = new Media(target.toURI().toString());
                 player = new MediaPlayer(media);
                 MediaView mediaView = new MediaView(player);
                 stackPane.getChildren().add(mediaView);
@@ -442,7 +461,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         root.setStyle(
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
-
     private void playButtonPressed() {
         if (!playing) {
             playing = true;
@@ -484,8 +502,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         Text TimeSpentLabelV = new Text(TimeSpent);
         Text Fixations = new Text("Fixations:");
         Text FixationV = new Text(Fixation);
-        // Text Ratio = new Text("Ratio:");
-        // Text RatioV = new Text(ratioDouble);
 
         infoBox.add(boxID, 1, 0);
         infoBox.add(TTFFLabel, 0, 2);
@@ -494,8 +510,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         infoBox.add(TimeSpentLabelV, 2, 3);
         infoBox.add(Fixations, 0, 4);
         infoBox.add(FixationV, 2, 4);
-        // infoBox.add(Ratio, 0, 5);
-        // infoBox.add(RatioV, 2, 5);
         if (revisit != 0) {
             Text Revisit = new Text("Revisits: ");
             Text RevisitV = new Text(revisit + "");
