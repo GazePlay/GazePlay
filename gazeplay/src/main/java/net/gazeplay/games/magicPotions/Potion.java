@@ -164,12 +164,10 @@ public class Potion extends Parent {
                                     gameContext.playWinTransition(350, null);
                                 }
 
-
-
                                 potion.removeEventFilter(MouseEvent.ANY, enterEvent);
                                 potion.removeEventFilter(GazeEvent.ANY, enterEvent);
                             }
-                            //if(MagicPotions.getPotionMixAchieved())
+
                         }
                     });
                 }
