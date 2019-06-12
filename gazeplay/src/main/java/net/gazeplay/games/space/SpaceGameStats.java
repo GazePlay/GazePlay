@@ -10,6 +10,6 @@ public class SpaceGameStats extends Stats {
     }
 
     public void incNbGoals(int increment) {
-        nbGoals += increment;
+        nbGoals = increment;
     }
 }
