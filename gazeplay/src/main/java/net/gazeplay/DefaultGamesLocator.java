@@ -56,6 +56,8 @@ import net.gazeplay.games.rushHour.RushHour;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.shooter.Shooter;
 import net.gazeplay.games.shooter.ShooterGamesStats;
+import net.gazeplay.games.space.SpaceGame;
+import net.gazeplay.games.space.SpaceGameStats;
 import net.gazeplay.games.spotthedifferences.SpotTheDifferences;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
@@ -64,6 +66,7 @@ import org.apache.commons.lang.ObjectUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 import net.gazeplay.games.slidingpuzzle.slidingpuzzle;
 import net.gazeplay.games.slidingpuzzle.slidingpuzzlestats;
 
@@ -1214,6 +1217,21 @@ public class DefaultGamesLocator implements GamesLocator {
                                 return new Dice(gameContext, stats, gameVariant.getNumber());
                             }
 
+                        }));
+
+        result.add(
+                new GameSpec(new GameSummary("Space Game", "data/Thumbnails/space.png", GameCategories.Category.TARGET),
+                        new GameSpec.GameLauncher() {
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new SpaceGameStats(scene);
+                            }
+
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.GameVariant gameVariant, Stats stats) {
+                                return new SpaceGame(gameContext, stats);
+                            }
                         }));
 
         log.info("Games found : {}", result.size());
