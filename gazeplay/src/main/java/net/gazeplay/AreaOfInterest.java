@@ -474,7 +474,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 //                player.setRate(1);
                 player.stop();
                 player.play();
-                this.stats.startVideoRecording();
+//                this.stats.startVideoRecording();
 
             }
             intereatorAOI = 0;

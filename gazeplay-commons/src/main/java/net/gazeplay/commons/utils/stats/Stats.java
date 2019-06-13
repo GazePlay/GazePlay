@@ -123,7 +123,6 @@ public class Stats implements GazeMotionListener {
         currentRoundStartTime = System.currentTimeMillis();
         takeScreenShot();
     }
-
     public void startVideoRecording()
     {
         directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
@@ -138,9 +137,7 @@ public class Stats implements GazeMotionListener {
         mimeType = "video/avi";
         videoFormatName = "tscc";
         compressorName = "Techsmith Screen Capture";
-
         ScreenRecorderCompactMain asi = null;
-
         GraphicsConfiguration cfg = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
                 .getDefaultConfiguration();
         Rectangle areaRect = null;
@@ -181,21 +178,21 @@ public class Stats implements GazeMotionListener {
             }
             protected void finished() {
                 ScreenRecorder.State state = r.getState();
-                File source;
-                File target;
-                try {
-                    source = new File(nameOfVideo + ".avi");
-                    target = new File(nameOfVideo + ".mp4");
-                    VideoAttributes videoAttributes = new VideoAttributes();
-                    videoAttributes.setCodec("mpeg4");
-                    EncodingAttributes attrs = new EncodingAttributes();
-                    attrs.setFormat("mp4");
-                    attrs.setVideoAttributes(videoAttributes);
-                    Encoder encoder = new Encoder();
-                    encoder.encode(new MultimediaObject(source), target, attrs);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+//                File source;
+//                File target;
+//                try {
+//                    source = new File(nameOfVideo + ".avi");
+//                    target = new File(nameOfVideo + ".mp4");
+//                    VideoAttributes videoAttributes = new VideoAttributes();
+//                    videoAttributes.setCodec("mpeg4");
+//                    EncodingAttributes attrs = new EncodingAttributes();
+//                    attrs.setFormat("mp4");
+//                    attrs.setVideoAttributes(videoAttributes);
+//                    Encoder encoder = new Encoder();
+//                    encoder.encode(new MultimediaObject(source), target, attrs);
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
             }
         }).start();
     }
@@ -247,7 +244,7 @@ public class Stats implements GazeMotionListener {
                         movementHistory.add(new CoordinatesTracker(getX, getY, timeElapsedMillis, timeInterval,
                                 System.currentTimeMillis()));
                         previousTime = timeElapsedMillis;
-                        counter++;
+//                        counter++;
                         // if (counter == 2)
                         // counter = 0;
                     }
