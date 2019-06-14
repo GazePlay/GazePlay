@@ -1,7 +1,5 @@
 package net.gazeplay.commons.utils.stats;
 
-import com.sun.javafx.PlatformUtil;
-import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -21,16 +19,11 @@ import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.Utils;
 import org.monte.media.Format;
 import org.monte.media.FormatKeys;
-import org.monte.media.Registry;
 import org.monte.media.VideoFormatKeys;
 import org.monte.media.gui.Worker;
 import org.monte.media.math.Rational;
 import org.monte.screenrecorder.ScreenRecorder;
 import org.monte.screenrecorder.ScreenRecorderCompactMain;
-import ws.schild.jave.Encoder;
-import ws.schild.jave.EncodingAttributes;
-import ws.schild.jave.MultimediaObject;
-import ws.schild.jave.VideoAttributes;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -38,11 +31,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,6 +66,7 @@ public class Stats implements GazeMotionListener {
     private int nbShots = 0;
     private boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
+    private ArrayList<TargetAOI> targetAOIList = null;
     long startTime;
     int sceneCounter = 0;
     @Getter
@@ -112,6 +103,22 @@ public class Stats implements GazeMotionListener {
         this.gameName = gameName;
     }
 
+    public void setTargetAOIList(ArrayList<TargetAOI> targetAOIList)
+    {
+
+        this.targetAOIList = targetAOIList;
+        for(int i = 0 ; i< targetAOIList.size()-1; i++){
+            long duration = targetAOIList.get(i+1).getTimeStarted() - targetAOIList.get(i).getTimeStarted();
+            this.targetAOIList.get(i).setDuration(duration);
+            System.out.println("The duration is "+ duration);
+        }
+        targetAOIList.get(targetAOIList.size()-1).setDuration(0);
+
+    }
+    public ArrayList<TargetAOI> getTargetAOIList(){
+        return this.targetAOIList;
+    }
+
     private static double[][] instanciateHeatMapData(Scene gameContextScene, double heatMapPixelSize) {
         int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
         int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
@@ -123,6 +130,7 @@ public class Stats implements GazeMotionListener {
         currentRoundStartTime = System.currentTimeMillis();
         takeScreenShot();
     }
+
     public void startVideoRecording()
     {
         directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
@@ -221,7 +229,7 @@ public class Stats implements GazeMotionListener {
                         previousX = getX;
                         previousY = getY;
                         long timeInterval = (timeToFixation - previousTime);
-                        movementHistory.add(new CoordinatesTracker(getX, getY, timeToFixation, timeInterval,
+                        movementHistory.add(new CoordinatesTracker(getX, getY, timeInterval,
                                 System.currentTimeMillis()));
                         previousTime = timeToFixation;
                     }
@@ -236,24 +244,22 @@ public class Stats implements GazeMotionListener {
                     incFixationSequence(getX, getY);
                 }
                 if (config.isAreaOfInterestEnabled()) {
-                    if (getX != previousX || getY != previousY) {
+                    if (getX != previousX || getY != previousY && counter == 2) {
                         long timeElapsedMillis = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
                         long timeInterval = (timeElapsedMillis - previousTime);
-                        movementHistory.add(new CoordinatesTracker(getX, getY, timeElapsedMillis, timeInterval,
+                        movementHistory.add(new CoordinatesTracker(getX, getY, timeInterval,
                                 System.currentTimeMillis()));
                         previousTime = timeElapsedMillis;
-//                        counter++;
-                        // if (counter == 2)
-                        // counter = 0;
+                        counter = 0;
                     }
+                    counter++;
                 }
             };
             gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
             gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
             takeScreenShot();
-            System.out.println("This is being run");
 
         });
         currentRoundStartTime = lifeCycle.getStartTime();

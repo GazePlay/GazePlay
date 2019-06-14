@@ -1,5 +1,6 @@
 package net.gazeplay;
 
+import com.automation.remarks.video.recorder.VideoConfiguration;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -23,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.util.Duration;
@@ -45,6 +47,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
     private List<CoordinatesTracker> movementHistory;
     private Label timeLabel;
+    private Label scoreLabel;
     private Timeline clock;
     private MediaPlayer player;
     private List<AreaOfInterestProps> allAOIList;
@@ -55,19 +58,21 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private Polygon currentAreaDisplay;
     private GridPane currentInfoBox;
     private Line currentLineToInfoBox;
+    private double score;
     private int colorIterator;
     private int bias = 15;
     private Pane graphicsPane;
     private double progressRate = 1;
     private Double previousInfoBoxX;
     private Double previousInfoBoxY;
+    private int targetAOIIterator = 0;
     private ArrayList<InitialAreaOfInterestProps> combinedAreaList;
     private double combinationThreshHold = 0.70;
     private int[] areaMap;
     private boolean playing = false;
-    private double startTime;
     private double highestFixationTime = 0;
     private Stats stats;
+    private ArrayList<Polygon> targetArea;
 
     @Override
     public ObservableList<Node> getChildren() {
@@ -79,14 +84,25 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return new AreaOfInterest(gazePlay, root, stats);
     }
 
+    public void dataTreatment(){
+        //treating the data, post processing to take performance constraint of during the data collection
+        movementHistory.get(0).setDistance(0);
+        for(int i = 1 ; i < movementHistory.size() ; i++ )
+        {
+            double x = Math.pow(movementHistory.get(i).getxValue() - movementHistory.get(i-1).getxValue() ,2);
+            double y = Math.pow(movementHistory.get(i).getyValue() - movementHistory.get(i-1).getyValue(),2);
+            double distance = Math.sqrt(x + y);
+            movementHistory.get(i).setDistance(distance);
+        }
+    }
+
     private void plotMovement(int movementIndex, Pane graphicsPane) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 CoordinatesTracker coordinatesTracker = movementHistory.get(movementIndex);
-                // System.out.println(movementHistory.get(movementIndex).get);
                 Circle circle;
-                if (movementHistory.get(movementIndex).getIntervalTime() > 10) {
+                if (movementHistory.get(movementIndex).getIntervalTime() > 11 && movementHistory.get(movementIndex).getDistance() < 20) {
                     circle = new Circle(coordinatesTracker.getxValue(), coordinatesTracker.getyValue(), 4);
                     circle.setStroke(Color.LIGHTYELLOW);
                     circle.setFill(Color.ORANGERED);
@@ -125,10 +141,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         clock.stop();
                         addAllInitialArea();
                         playing = false;
-                        if (config.isVideoRecordingEnabled())
-                        {
-                            stats.endVideoRecording();
-                        }
+//                        if (config.isVideoRecordingEnabled())
+//                        {
+//                            stats.endVideoRecording();
+//                        }
                     }
                 });
             }
@@ -188,11 +204,12 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                             areaOfInterestList.size(), centerX, centerY, areaOfInterest);
                     AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(areaOfInterestList, centerX,
                             centerY, polygonPoints, point2DS, movementHistoryStartingIndex, movementHistoryEndingIndex,
-                            areaOfInterest, infoBox);
+                            areaOfInterest, infoBox, (long )AreaStartTime, (long)AreaEndTime);
                     allAOIList.add(areaOfInterestProps);
-                } else {
-                    System.out.println("Not enough points to make a convex hull" + areaOfInterestList.size());
                 }
+//                else {
+//                    System.out.println("Not enough points to make a convex hull" + areaOfInterestList.size());
+//                }
                 areaOfInterestList = new ArrayList<>();
             }
         }
@@ -317,12 +334,13 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         graphicsPane = new Pane();
         areaOfInterestList = new ArrayList<>();
         movementHistory = stats.getMovementHistoryWithTime();
+        this.dataTreatment();
         for (int i = 0; i < movementHistory.size(); i++)
             calculateAreaOfInterest(i, stats.getStartTime());
+
         areaMap = new int[allAOIList.size()];
         Arrays.fill(areaMap, -1);
         combinedAreaList = computeConnectedArea();
-        System.out.println("The highest fixaiton time is " + highestFixationTime);
         if (highestFixationTime != 0) {
             for (AreaOfInterestProps areaOfInterestProps : allAOIList) {
                 double priority = areaOfInterestProps.getInfoBoxProp().getTimeSpent() / highestFixationTime * 0.6
@@ -335,14 +353,48 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
 
-        timeLabel = new Label();
-        timeLabel.setTextFill(Color.web("#FFFFFF"));
+
+        if(stats.getTargetAOIList() != null)
+        {
+            calculateTargetAOI(stats.getTargetAOIList());
+            ArrayList<TargetAOI> targetAOIArrayList = stats.getTargetAOIList();
+
+            long timeTargetAreaStart;
+            long timeTargetAreaEnd;
+            score = 0;
+
+            for (AreaOfInterestProps areaOfInterestProps : allAOIList) {
+                if (targetAOIIterator < targetAOIArrayList.size()) {
+                    timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
+                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeStarted() + targetAOIArrayList.get(targetAOIIterator).getDuration();
+                    long timeAreaStart = areaOfInterestProps.getAreaStartTime();
+                    long timeAreaEnd = areaOfInterestProps.getAreaEndTime();
+
+                    if (timeTargetAreaStart <= timeAreaStart) {
+
+                        Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(), areaOfInterestProps.getAreaOfInterest());
+                        if (intersect.getBoundsInLocal().getWidth() != -1) {
+
+                            System.out.println("The intersection width is " + intersect.getBoundsInLocal().getWidth());
+                            System.out.println("The width of is " +areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth()  );
+                            score +=  (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() -1 ) / intersect.getBoundsInLocal().getWidth();
+                        }
+                    }
+
+                    if (timeAreaEnd > timeTargetAreaEnd)
+                        targetAOIIterator++;
+                }
+            }
+            score = score / allAOIList.size();
+        }
+
         Button slowBtn10 = new Button("10X Slow ");
         Button slowBtn8 = new Button("8X Slow ");
         Button slowBtn5 = new Button("5X Slow ");
         Button playBtn = new Button("Play ");
         Button stopBtn = new Button("Stop ");
         Button cancelBtn = new Button("Cancel ");
+
 
 
         playBtn.setPrefSize(100, 20);
@@ -353,26 +405,27 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         cancelBtn.setPrefSize(100, 20);
 
         playBtn.setOnAction(e -> {
-            progressRate = 0.65;
-            // player.setRate(1.0);
+            progressRate = 0.60;
+            if(config.isVideoRecordingEnabled())
+//                player.setRate(1.0);
             playButtonPressed();
         });
         slowBtn5.setOnAction(e -> {
-            progressRate = 5;
-            // player.setRate(5.0);
+            if(config.isVideoRecordingEnabled())
+//                player.setRate(0.5);
 
             playButtonPressed();
         });
         slowBtn8.setOnAction(e -> {
-            progressRate = 8;
-            // player.setRate(8.0);
+            if(config.isVideoRecordingEnabled())
+//                player.setRate(0.2);
 
             playButtonPressed();
         });
 
         slowBtn10.setOnAction(e -> {
-            progressRate = 10;
-            // player.setRate(10.0);
+            if(config.isVideoRecordingEnabled())
+//                player.setRate(0.1);
 
             playButtonPressed();
         });
@@ -388,6 +441,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             File source;
             File target;
             try {
+                System.out.println("The name of the video is "+stats.getDirectoryOfVideo());
                 source = new File(stats.getDirectoryOfVideo() + ".avi");
                 target = new File(stats.getDirectoryOfVideo() + ".mp4");
                 // Audio Attributes
@@ -415,8 +469,19 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             stackPane.getChildren().add(screenshot);
         }
 
-        timeLabel.setMinSize(100, 0);
-        timeLabel.setTextFill(Color.GREEN);
+        EventHandler<Event> AOIEvent = e -> {
+
+            StatsContext statsContext = null;
+            try {
+                statsContext = StatsContext.newInstance(gazePlay, stats);
+            } catch (IOException er) {
+                er.printStackTrace();
+            }
+            if(config.isVideoRecordingEnabled())
+                player.stop();
+            this.clear();
+            gazePlay.onDisplayStats(statsContext);
+        };
 
         Region region1 = new Region();
         HBox.setHgrow(region1, Priority.ALWAYS);
@@ -428,25 +493,29 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         buttonBox.setFillHeight(true);
         buttonBox.setPadding(new Insets(10, 10, 10, 10));
 
-        EventHandler<Event> AOIEvent = e -> {
+        timeLabel = new Label();
+        timeLabel.setTextFill(Color.web("#FFFFFF"));
+        timeLabel.setMinSize(100, 0);
+        timeLabel.setTextFill(Color.GREEN);
 
-            StatsContext statsContext = null;
-            try {
-                statsContext = StatsContext.newInstance(gazePlay, stats);
-            } catch (IOException er) {
-                er.printStackTrace();
-            }
-            this.clear();
-            gazePlay.onDisplayStats(statsContext);
-        };
+        scoreLabel = new Label();
+        scoreLabel.setTextFill(Color.WHITE);
+        scoreLabel.setFont(new Font("Arial", 20));
+        scoreLabel.setText("Score: "+ score);
+        if(stats.getTargetAOIList() != null)
+        {
+            topPane = new HBox(scoreLabel,timeLabel, region2, buttonBox);
 
-        HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
-        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
+        }else{
+            topPane = new HBox(timeLabel, region2, buttonBox);
 
-        topPane = new HBox(timeLabel, region2, buttonBox);
+        }
         topPane.setPadding(new Insets(15, 15, 0, 15));
         topPane.setSpacing(10);
         topPane.setStyle("-fx-background-color: transparent; -fx-max-height: 80px;");
+        HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
+
         HBox homebox = new HBox(homeButton);
         homebox.setStyle("-fx-background-color: transparent; -fx-max-height: 100px; -fx-max-width: 100px;");
         homebox.setPadding(new Insets(10, 10, 10, 10));
@@ -461,6 +530,26 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         root.setStyle(
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
+
+    private ArrayList<Polygon> calculateTargetAOI(ArrayList<TargetAOI> targetAOIArrayList)
+    {
+        Polygon targetArea;
+        ArrayList<Polygon> listOfPolygon = new ArrayList<>();
+        for (TargetAOI targetAOI : targetAOIArrayList) {
+            System.out.println("The target is at "+ targetAOI.getxValue()  + " Y " + targetAOI.getyValue());
+            int radius = targetAOI.getAreaRadius();
+            Point2D[] point2D = {new Point2D(targetAOI.getxValue()  - 100,targetAOI.getyValue()),new Point2D(targetAOI.getxValue()+radius,targetAOI.getyValue() + 100),
+                    new Point2D(targetAOI.getxValue(),targetAOI.getyValue()-radius),new Point2D(targetAOI.getxValue()+radius,targetAOI.getyValue()-radius)};
+            Double[] polygonPoints;
+            polygonPoints = calculateRectangle(point2D);
+            targetArea = new Polygon();
+            targetArea.getPoints().addAll(polygonPoints);
+            targetArea.setFill(Color.rgb(255, 255, 255, 0.4));
+            targetAOI.setPolygon(targetArea);
+            listOfPolygon.add(targetArea);
+        }
+        return listOfPolygon;
+    }
     private void playButtonPressed() {
         if (!playing) {
             playing = true;
@@ -474,11 +563,9 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 //                player.setRate(1);
                 player.stop();
                 player.play();
-//                this.stats.startVideoRecording();
-
+                this.stats.startVideoRecording();
             }
             intereatorAOI = 0;
-            startTime = System.currentTimeMillis();
             plotMovement(0, graphicsPane);
             long startTime = System.currentTimeMillis();
             clock = new Timeline(new KeyFrame(Duration.ZERO, f -> {
