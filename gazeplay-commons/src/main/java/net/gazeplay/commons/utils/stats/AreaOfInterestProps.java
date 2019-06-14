@@ -23,7 +23,7 @@ public class AreaOfInterestProps {
 
     public AreaOfInterestProps(ArrayList<CoordinatesTracker> listOfPoints, int centerX, int centerY,
             Double[] convexPoints, Point2D[] allPoint2DOfConvex, int startingIndex, int endingIndex,
-            javafx.scene.shape.Polygon areaOfInterest, InfoBoxProps infoBox,long areaStartTime,long areaEndTime) {
+            javafx.scene.shape.Polygon areaOfInterest, InfoBoxProps infoBox, long areaStartTime, long areaEndTime) {
         this.listOfPoints = listOfPoints;
         this.fixations = listOfPoints.size();
         this.centerX = centerX;
@@ -82,7 +82,12 @@ public class AreaOfInterestProps {
         return this.infoBox;
     }
 
-    public long getAreaStartTime(){ return this.areaStartTime;}
-    public long getAreaEndTime(){ return this.areaEndTime;}
+    public long getAreaStartTime() {
+        return this.areaStartTime;
+    }
+
+    public long getAreaEndTime() {
+        return this.areaEndTime;
+    }
 
 }

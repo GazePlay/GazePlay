@@ -98,8 +98,9 @@ public class Target extends Portrait {
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(radiusProperty(), radius)));
 
         Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
-//        System.out.println("The radius is "+ getInitialRadius());
-        targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(),getInitialRadius(),System.currentTimeMillis());
+        // System.out.println("The radius is "+ getInitialRadius());
+        targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius(),
+                System.currentTimeMillis());
         targetAOIList.add(targetAOI);
         timeline2.getKeyFrames()
                 .add(new KeyFrame(new Duration(1), new KeyValue(centerXProperty(), newPosition.getX())));

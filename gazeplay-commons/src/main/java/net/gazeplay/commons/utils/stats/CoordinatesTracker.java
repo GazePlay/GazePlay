@@ -31,8 +31,12 @@ public class CoordinatesTracker {
         return this.timeStarted;
     }
 
-    public void setDistance(double distance){this.distance = distance;}
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
 
-    public double getDistance(){ return this.distance;}
+    public double getDistance() {
+        return this.distance;
+    }
 
 }

@@ -13,12 +13,12 @@ public class TargetAOI {
     public TargetAOI(double xValue, double yValue, int radius, long timeStarted) {
         this.xValue = xValue;
         this.yValue = yValue;
-//        this.intervalTime = intervalTime;
+        // this.intervalTime = intervalTime;
         this.timeStarted = timeStarted;
         this.radius = radius;
     }
 
-    public double getxValue(){
+    public double getxValue() {
         return this.xValue;
     }
 
@@ -30,19 +30,24 @@ public class TargetAOI {
         return this.radius;
     }
 
-    public void setDuration(long duration){ this.duration = duration;}
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
 
-    public long getDuration(){return this.duration;}
+    public long getDuration() {
+        return this.duration;
+    }
 
-    public void setPolygon(Polygon polygon){this.polygon = polygon;}
+    public void setPolygon(Polygon polygon) {
+        this.polygon = polygon;
+    }
 
-    public Polygon getPolygon(){ return this.polygon;}
+    public Polygon getPolygon() {
+        return this.polygon;
+    }
 
     public long getTimeStarted() {
         return this.timeStarted;
     }
 
-
 }
-
-

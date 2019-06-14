@@ -84,13 +84,12 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return new AreaOfInterest(gazePlay, root, stats);
     }
 
-    public void dataTreatment(){
-        //treating the data, post processing to take performance constraint of during the data collection
+    public void dataTreatment() {
+        // treating the data, post processing to take performance constraint of during the data collection
         movementHistory.get(0).setDistance(0);
-        for(int i = 1 ; i < movementHistory.size() ; i++ )
-        {
-            double x = Math.pow(movementHistory.get(i).getxValue() - movementHistory.get(i-1).getxValue() ,2);
-            double y = Math.pow(movementHistory.get(i).getyValue() - movementHistory.get(i-1).getyValue(),2);
+        for (int i = 1; i < movementHistory.size(); i++) {
+            double x = Math.pow(movementHistory.get(i).getxValue() - movementHistory.get(i - 1).getxValue(), 2);
+            double y = Math.pow(movementHistory.get(i).getyValue() - movementHistory.get(i - 1).getyValue(), 2);
             double distance = Math.sqrt(x + y);
             movementHistory.get(i).setDistance(distance);
         }
@@ -102,7 +101,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             public void run() {
                 CoordinatesTracker coordinatesTracker = movementHistory.get(movementIndex);
                 Circle circle;
-                if (movementHistory.get(movementIndex).getIntervalTime() > 11 && movementHistory.get(movementIndex).getDistance() < 20) {
+                if (movementHistory.get(movementIndex).getIntervalTime() > 11
+                        && movementHistory.get(movementIndex).getDistance() < 20) {
                     circle = new Circle(coordinatesTracker.getxValue(), coordinatesTracker.getyValue(), 4);
                     circle.setStroke(Color.LIGHTYELLOW);
                     circle.setFill(Color.ORANGERED);
@@ -141,21 +141,22 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         clock.stop();
                         addAllInitialArea();
                         playing = false;
-//                        if (config.isVideoRecordingEnabled())
-//                        {
-//                            stats.endVideoRecording();
-//                        }
+                        // if (config.isVideoRecordingEnabled())
+                        // {
+                        // stats.endVideoRecording();
+                        // }
                     }
                 });
             }
         }, (long) (movementHistory.get(movementIndex).getIntervalTime() * progressRate));
     }
-    private void addAllInitialArea()
-    {
+
+    private void addAllInitialArea() {
         for (InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
     }
+
     private void calculateAreaOfInterest(int index, double startTime) {
         if (index != 0) {
             double x1 = movementHistory.get(index).getxValue();
@@ -204,12 +205,12 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                             areaOfInterestList.size(), centerX, centerY, areaOfInterest);
                     AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(areaOfInterestList, centerX,
                             centerY, polygonPoints, point2DS, movementHistoryStartingIndex, movementHistoryEndingIndex,
-                            areaOfInterest, infoBox, (long )AreaStartTime, (long)AreaEndTime);
+                            areaOfInterest, infoBox, (long) AreaStartTime, (long) AreaEndTime);
                     allAOIList.add(areaOfInterestProps);
                 }
-//                else {
-//                    System.out.println("Not enough points to make a convex hull" + areaOfInterestList.size());
-//                }
+                // else {
+                // System.out.println("Not enough points to make a convex hull" + areaOfInterestList.size());
+                // }
                 areaOfInterestList = new ArrayList<>();
             }
         }
@@ -353,9 +354,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
 
-
-        if(stats.getTargetAOIList() != null)
-        {
+        if (stats.getTargetAOIList() != null) {
             calculateTargetAOI(stats.getTargetAOIList());
             ArrayList<TargetAOI> targetAOIArrayList = stats.getTargetAOIList();
 
@@ -366,18 +365,22 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             for (AreaOfInterestProps areaOfInterestProps : allAOIList) {
                 if (targetAOIIterator < targetAOIArrayList.size()) {
                     timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
-                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeStarted() + targetAOIArrayList.get(targetAOIIterator).getDuration();
+                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeStarted()
+                            + targetAOIArrayList.get(targetAOIIterator).getDuration();
                     long timeAreaStart = areaOfInterestProps.getAreaStartTime();
                     long timeAreaEnd = areaOfInterestProps.getAreaEndTime();
 
                     if (timeTargetAreaStart <= timeAreaStart) {
 
-                        Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(), areaOfInterestProps.getAreaOfInterest());
+                        Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),
+                                areaOfInterestProps.getAreaOfInterest());
                         if (intersect.getBoundsInLocal().getWidth() != -1) {
 
                             System.out.println("The intersection width is " + intersect.getBoundsInLocal().getWidth());
-                            System.out.println("The width of is " +areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth()  );
-                            score +=  (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() -1 ) / intersect.getBoundsInLocal().getWidth();
+                            System.out.println("The width of is "
+                                    + areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth());
+                            score += (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
+                                    / intersect.getBoundsInLocal().getWidth();
                         }
                     }
 
@@ -395,8 +398,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         Button stopBtn = new Button("Stop ");
         Button cancelBtn = new Button("Cancel ");
 
-
-
         playBtn.setPrefSize(100, 20);
         slowBtn5.setPrefSize(100, 20);
         slowBtn8.setPrefSize(100, 20);
@@ -406,32 +407,31 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
         playBtn.setOnAction(e -> {
             progressRate = 0.60;
-            if(config.isVideoRecordingEnabled())
-//                player.setRate(1.0);
-            playButtonPressed();
+            if (config.isVideoRecordingEnabled())
+                // player.setRate(1.0);
+                playButtonPressed();
         });
         slowBtn5.setOnAction(e -> {
-            if(config.isVideoRecordingEnabled())
-//                player.setRate(0.5);
+            if (config.isVideoRecordingEnabled())
+                // player.setRate(0.5);
 
-            playButtonPressed();
+                playButtonPressed();
         });
         slowBtn8.setOnAction(e -> {
-            if(config.isVideoRecordingEnabled())
-//                player.setRate(0.2);
+            if (config.isVideoRecordingEnabled())
+                // player.setRate(0.2);
 
-            playButtonPressed();
+                playButtonPressed();
         });
 
         slowBtn10.setOnAction(e -> {
-            if(config.isVideoRecordingEnabled())
-//                player.setRate(0.1);
+            if (config.isVideoRecordingEnabled())
+                // player.setRate(0.1);
 
-            playButtonPressed();
+                playButtonPressed();
         });
         cancelBtn.setOnAction(e -> {
-            if(playing)
-            {
+            if (playing) {
                 playing = false;
                 graphicsPane.getChildren().removeAll();
                 addAllInitialArea();
@@ -441,7 +441,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             File source;
             File target;
             try {
-                System.out.println("The name of the video is "+stats.getDirectoryOfVideo());
+                System.out.println("The name of the video is " + stats.getDirectoryOfVideo());
                 source = new File(stats.getDirectoryOfVideo() + ".avi");
                 target = new File(stats.getDirectoryOfVideo() + ".mp4");
                 // Audio Attributes
@@ -477,7 +477,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             } catch (IOException er) {
                 er.printStackTrace();
             }
-            if(config.isVideoRecordingEnabled())
+            if (config.isVideoRecordingEnabled())
                 player.stop();
             this.clear();
             gazePlay.onDisplayStats(statsContext);
@@ -488,7 +488,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
         Region region2 = new Region();
         HBox.setHgrow(region2, Priority.ALWAYS);
-        HBox buttonBox = new HBox(cancelBtn,playBtn, slowBtn5, slowBtn8, slowBtn10);
+        HBox buttonBox = new HBox(cancelBtn, playBtn, slowBtn5, slowBtn8, slowBtn10);
         buttonBox.setSpacing(10);
         buttonBox.setFillHeight(true);
         buttonBox.setPadding(new Insets(10, 10, 10, 10));
@@ -501,12 +501,11 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         scoreLabel = new Label();
         scoreLabel.setTextFill(Color.WHITE);
         scoreLabel.setFont(new Font("Arial", 20));
-        scoreLabel.setText("Score: "+ score);
-        if(stats.getTargetAOIList() != null)
-        {
-            topPane = new HBox(scoreLabel,timeLabel, region2, buttonBox);
+        scoreLabel.setText("Score: " + score);
+        if (stats.getTargetAOIList() != null) {
+            topPane = new HBox(scoreLabel, timeLabel, region2, buttonBox);
 
-        }else{
+        } else {
             topPane = new HBox(timeLabel, region2, buttonBox);
 
         }
@@ -531,15 +530,16 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
-    private ArrayList<Polygon> calculateTargetAOI(ArrayList<TargetAOI> targetAOIArrayList)
-    {
+    private ArrayList<Polygon> calculateTargetAOI(ArrayList<TargetAOI> targetAOIArrayList) {
         Polygon targetArea;
         ArrayList<Polygon> listOfPolygon = new ArrayList<>();
         for (TargetAOI targetAOI : targetAOIArrayList) {
-            System.out.println("The target is at "+ targetAOI.getxValue()  + " Y " + targetAOI.getyValue());
+            System.out.println("The target is at " + targetAOI.getxValue() + " Y " + targetAOI.getyValue());
             int radius = targetAOI.getAreaRadius();
-            Point2D[] point2D = {new Point2D(targetAOI.getxValue()  - 100,targetAOI.getyValue()),new Point2D(targetAOI.getxValue()+radius,targetAOI.getyValue() + 100),
-                    new Point2D(targetAOI.getxValue(),targetAOI.getyValue()-radius),new Point2D(targetAOI.getxValue()+radius,targetAOI.getyValue()-radius)};
+            Point2D[] point2D = { new Point2D(targetAOI.getxValue() - 100, targetAOI.getyValue()),
+                    new Point2D(targetAOI.getxValue() + radius, targetAOI.getyValue() + 100),
+                    new Point2D(targetAOI.getxValue(), targetAOI.getyValue() - radius),
+                    new Point2D(targetAOI.getxValue() + radius, targetAOI.getyValue() - radius) };
             Double[] polygonPoints;
             polygonPoints = calculateRectangle(point2D);
             targetArea = new Polygon();
@@ -550,6 +550,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }
         return listOfPolygon;
     }
+
     private void playButtonPressed() {
         if (!playing) {
             playing = true;
@@ -560,7 +561,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
             if (config.isVideoRecordingEnabled()) {
 
-//                player.setRate(1);
+                // player.setRate(1);
                 player.stop();
                 player.play();
                 this.stats.startVideoRecording();
