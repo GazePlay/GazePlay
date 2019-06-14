@@ -57,7 +57,7 @@ public class Potion extends Parent {
     private Timeline currentTimeline;
 
     public Potion(double positionX, double positionY, double width, double height, Image image, Color color,
-                  GameContext gameContext, Stats stats, int fixationlength, LinkedList<Color>toMix) {
+            GameContext gameContext, Stats stats, int fixationlength, LinkedList<Color> toMix) {
         this.potion = new Rectangle((int) positionX, (int) positionY, (int) width, (int) height);
         this.potion.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
 
@@ -107,8 +107,8 @@ public class Potion extends Parent {
     }
 
     private void onWrongPotionSelected() {
-//        currentTimeline.stop();
-//        currentTimeline = new Timeline();
+        // currentTimeline.stop();
+        // currentTimeline = new Timeline();
 
     }
 
@@ -141,25 +141,23 @@ public class Potion extends Parent {
 
                             chosen = true;
 
-                            //change opacity of potion when it has been selected once
+                            // change opacity of potion when it has been selected once
                             potion.setOpacity(.3);
 
                             // if should select this potion or not
-                            if(!toMix.contains(potionColor)){
-                                //play explosion animation !!!
-                            }
-                            else{
-                                if(MagicPotions.getColorsMixedCounter() == 0){
-                                    MagicPotions.setColorsMixedCounter(MagicPotions.getColorsMixedCounter()+1);
+                            if (!toMix.contains(potionColor)) {
+                                // play explosion animation !!!
+                            } else {
+                                if (MagicPotions.getColorsMixedCounter() == 0) {
+                                    MagicPotions.setColorsMixedCounter(MagicPotions.getColorsMixedCounter() + 1);
                                     MagicPotions.getMixPotColor().setFill(potionColor);
-                                }
-                                else if(MagicPotions.getColorsMixedCounter() == 1 ){
-                                    if(toMix.size() == 2){
+                                } else if (MagicPotions.getColorsMixedCounter() == 1) {
+                                    if (toMix.size() == 2) {
                                         MagicPotions.getMixPotColor().setFill(MagicPotions.getColorRequest());
-                                        MagicPotions.setColorsMixedCounter(MagicPotions.getColorsMixedCounter()+1);
+                                        MagicPotions.setColorsMixedCounter(MagicPotions.getColorsMixedCounter() + 1);
                                     }
                                 }
-                                if(toMix.size() == MagicPotions.getColorsMixedCounter()){
+                                if (toMix.size() == MagicPotions.getColorsMixedCounter()) {
                                     MagicPotions.setPotionMixAchieved(true);
                                     gameContext.playWinTransition(350, null);
                                 }
