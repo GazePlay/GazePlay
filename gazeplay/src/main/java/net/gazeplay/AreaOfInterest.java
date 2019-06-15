@@ -407,28 +407,28 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
         playBtn.setOnAction(e -> {
             progressRate = 0.60;
-            if (config.isVideoRecordingEnabled())
-                // player.setRate(1.0);
-                playButtonPressed();
+            // if (config.isVideoRecordingEnabled())
+            // player.setRate(1.0);
+            playButtonPressed();
         });
         slowBtn5.setOnAction(e -> {
-            if (config.isVideoRecordingEnabled())
-                // player.setRate(0.5);
+            // if (config.isVideoRecordingEnabled())
+            // player.setRate(0.5);
 
-                playButtonPressed();
+            playButtonPressed();
         });
         slowBtn8.setOnAction(e -> {
-            if (config.isVideoRecordingEnabled())
-                // player.setRate(0.2);
+            // if (config.isVideoRecordingEnabled())
+            // player.setRate(0.2);
 
-                playButtonPressed();
+            playButtonPressed();
         });
 
         slowBtn10.setOnAction(e -> {
-            if (config.isVideoRecordingEnabled())
-                // player.setRate(0.1);
+            // if (config.isVideoRecordingEnabled())
+            // player.setRate(0.1);
 
-                playButtonPressed();
+            playButtonPressed();
         });
         cancelBtn.setOnAction(e -> {
             if (playing) {
@@ -466,7 +466,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             javafx.scene.image.ImageView screenshot = new javafx.scene.image.ImageView();
             screenshot.setPreserveRatio(true);
             screenshot.setImage(new Image(savedStatsInfo.getScreenshotFile().toURI().toString()));
-            stackPane.getChildren().add(screenshot);
+            // stackPane.getChildren().add(screenshot);
         }
 
         EventHandler<Event> AOIEvent = e -> {
