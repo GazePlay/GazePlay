@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class AreaOfInterestProps {
     private final ArrayList<CoordinatesTracker> listOfPoints;
-    // private final int revisits;
     private final int fixations;
     private final int centerX;
     private final int centerY;
@@ -18,10 +17,13 @@ public class AreaOfInterestProps {
     private final int endingIndex;
     private final javafx.scene.shape.Polygon areaOfInterest;
     private final InfoBoxProps infoBox;
+    private double priority;
+    private final long areaStartTime;
+    private final long areaEndTime;
 
     public AreaOfInterestProps(ArrayList<CoordinatesTracker> listOfPoints, int centerX, int centerY,
             Double[] convexPoints, Point2D[] allPoint2DOfConvex, int startingIndex, int endingIndex,
-            javafx.scene.shape.Polygon areaOfInterest, InfoBoxProps infoBox) {
+            javafx.scene.shape.Polygon areaOfInterest, InfoBoxProps infoBox, long areaStartTime, long areaEndTime) {
         this.listOfPoints = listOfPoints;
         this.fixations = listOfPoints.size();
         this.centerX = centerX;
@@ -32,10 +34,20 @@ public class AreaOfInterestProps {
         this.endingIndex = endingIndex;
         this.areaOfInterest = areaOfInterest;
         this.infoBox = infoBox;
+        this.areaStartTime = areaStartTime;
+        this.areaEndTime = areaEndTime;
     }
 
     public Double[] getConvexPoints() {
         return this.convexPoints;
+    }
+
+    public void setPriority(double priority) {
+        this.priority = priority;
+    }
+
+    public double getPriority() {
+        return this.priority;
     }
 
     public int getCenterX() {
@@ -68,6 +80,14 @@ public class AreaOfInterestProps {
 
     public InfoBoxProps getInfoBoxProp() {
         return this.infoBox;
+    }
+
+    public long getAreaStartTime() {
+        return this.areaStartTime;
+    }
+
+    public long getAreaEndTime() {
+        return this.areaEndTime;
     }
 
 }

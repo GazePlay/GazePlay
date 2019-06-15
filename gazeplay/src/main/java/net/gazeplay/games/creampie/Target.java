@@ -13,7 +13,11 @@ import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
 import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.commons.utils.stats.CoordinatesTracker;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
+
+import java.util.ArrayList;
 
 /**
  * Created by schwab on 26/12/2016.
@@ -34,27 +38,27 @@ public class Target extends Portrait {
 
     private final ImageLibrary imageLibrary;
 
+    private ArrayList<TargetAOI> targetAOIList;
+    private TargetAOI targetAOI;
+
     public Target(RandomPositionGenerator randomPositionGenerator, Hand hand, Stats stats, GameContext gameContext,
             ImageLibrary imageLibrary) {
 
         super(radius, randomPositionGenerator, imageLibrary);
-
         this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
         this.imageLibrary = imageLibrary;
         this.stats = stats;
+        targetAOIList = new ArrayList<>();
 
-        enterEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED
-                        || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)
-                        && anniOff) {
+        enterEvent = e -> {
+            if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED
+                    || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)
+                    && anniOff) {
 
-                    anniOff = false;
-                    stats.incNbGoals();
-                    enter();
-                }
+                anniOff = false;
+                stats.incNbGoals();
+                enter();
             }
         };
 
@@ -77,6 +81,10 @@ public class Target extends Portrait {
         animation.play();
     }
 
+    public ArrayList<TargetAOI> getTargetAOIList() {
+        return this.targetAOIList;
+    }
+
     private Animation createAnimation() {
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
@@ -90,7 +98,10 @@ public class Target extends Portrait {
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(radiusProperty(), radius)));
 
         Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
-
+        // System.out.println("The radius is "+ getInitialRadius());
+        targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius(),
+                System.currentTimeMillis());
+        targetAOIList.add(targetAOI);
         timeline2.getKeyFrames()
                 .add(new KeyFrame(new Duration(1), new KeyValue(centerXProperty(), newPosition.getX())));
         timeline2.getKeyFrames()
