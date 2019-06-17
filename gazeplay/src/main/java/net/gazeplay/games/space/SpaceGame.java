@@ -290,9 +290,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         bossKilled.clear();
         timelineList.clear();
         hashMap.clear();
-//        for (Timeline t : timelineList){
-//            t.stop();
-//        }
+        // for (Timeline t : timelineList){
+        // t.stop();
+        // }
 
         spaceship = new Rectangle(dimension2D.getWidth() / 2, 6 * dimension2D.getHeight() / 7,
                 dimension2D.getWidth() / 8, dimension2D.getHeight() / 7);
@@ -350,7 +350,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         }
 
         spaceship.setX(spaceship.getX() + velocity.getX() * timeElapsed);
-//        System.out.println("velocity x: " + velocity.getX());
+        // System.out.println("velocity x: " + velocity.getX());
         spaceship.setY(6 * dimension2D.getHeight() / 7);
         System.out.println("Number of bullets: " + bulletListRec.size());
         System.out.println("Number of biboules: " + biboules.size());
@@ -367,7 +367,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             for (Biboule b : biboules) {
                 boolean lower = random.nextBoolean();
                 if (lower == true) {
-                    b.moveToLower(biboulesPos.get(0).getX(), biboulesPos.get(0).getY()) ;
+                    b.moveToLower(biboulesPos.get(0).getX(), biboulesPos.get(0).getY());
                 } else {
                     b.moveToUpper(biboulesPos.get(0).getX(), biboulesPos.get(0).getY());
                     if (b.getY() <= 50) {
@@ -391,7 +391,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bulletTransition.setToY(-1 * dimension2D.getHeight());
             bulletTransition.setCycleCount(1);
             bulletTransition.setInterpolator(Interpolator.LINEAR);
-//            bulletTransition.setOnFinished(event -> bulletListRec.remove(bulletRec));
+            // bulletTransition.setOnFinished(event -> bulletListRec.remove(bulletRec));
             bulletTransition.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
@@ -405,12 +405,12 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bulletTransition.play();
             bulletValue = 0;
         }
-//            bulletValue = 0;
+        // bulletValue = 0;
 
         for (Rectangle r : bulletListRec) {
-//                r.setY(r.getY() - 4);
-//                Rectangle realBullet = new Rectangle(r.getX() + r.getWidth()/3, r.getY() + r.getHeight()/3,
-//                        r.getWidth()/3,r.getHeight()/3);
+            // r.setY(r.getY() - 4);
+            // Rectangle realBullet = new Rectangle(r.getX() + r.getWidth()/3, r.getY() + r.getHeight()/3,
+            // r.getWidth()/3,r.getHeight()/3);
             for (Biboule b : biboules) {
                 // for (Rectangle r : bulletListRec) {
                 ObservableBooleanValue colliding = Bindings.createBooleanBinding(new Callable<Boolean>() {
@@ -418,15 +418,14 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                     @Override
                     public Boolean call() throws Exception {
                         return r.getBoundsInParent().intersects(b.getBoundsInParent());
-//                            return realBullet.getBoundsInParent().intersects(b.getBoundsInParent());
+                        // return realBullet.getBoundsInParent().intersects(b.getBoundsInParent());
                     }
 
                 }, r.boundsInParentProperty(), b.boundsInParentProperty());
 
                 colliding.addListener(new ChangeListener<Boolean>() {
                     @Override
-                    public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue,
-                                        Boolean newValue) {
+                    public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue, Boolean newValue) {
                         if (newValue) {
                             System.out.println("Colliding");
 
@@ -436,23 +435,23 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                 biboulesKilled.add(b);
                                 bibouleBoolean = true;
                             }
-//                                bulletListRec.remove(r);
-//                                biboules.remove(b);
+                            // bulletListRec.remove(r);
+                            // biboules.remove(b);
                             if (bibouleBoolean == true) {
-//                                    bibouleDisappear = new FadeTransition(Duration.millis(1000), b);
-//                                    bibouleDisappear.setFromValue(1);
-//                                    bibouleDisappear.setToValue(0);
-//                                    bibouleDisappear.setCycleCount(1);
-//                                    bibouleDisappear.setInterpolator(Interpolator.LINEAR);
-//
-//                                    bulletDisappear = new FadeTransition(Duration.millis(100), r);
-//                                    bulletDisappear.setFromValue(1);
-//                                    bulletDisappear.setToValue(0);
-//                                    bulletDisappear.setCycleCount(1);
-//                                    bulletDisappear.setInterpolator(Interpolator.LINEAR);
-//
-//                                    parallelTransition = new ParallelTransition(bibouleDisappear, bulletDisappear);
-//                                    parallelTransition.play();
+                                // bibouleDisappear = new FadeTransition(Duration.millis(1000), b);
+                                // bibouleDisappear.setFromValue(1);
+                                // bibouleDisappear.setToValue(0);
+                                // bibouleDisappear.setCycleCount(1);
+                                // bibouleDisappear.setInterpolator(Interpolator.LINEAR);
+                                //
+                                // bulletDisappear = new FadeTransition(Duration.millis(100), r);
+                                // bulletDisappear.setFromValue(1);
+                                // bulletDisappear.setToValue(0);
+                                // bulletDisappear.setCycleCount(1);
+                                // bulletDisappear.setInterpolator(Interpolator.LINEAR);
+                                //
+                                // parallelTransition = new ParallelTransition(bibouleDisappear, bulletDisappear);
+                                // parallelTransition.play();
 
                                 bulletListRec.remove(r);
                                 biboules.remove(b);
@@ -471,13 +470,12 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             }
             // updateScore();
         }
-//        }
+        // }
 
-//        bibouleBulletValue += 1;
-//        if (bibouleBulletValue == 120) {
+        // bibouleBulletValue += 1;
+        // if (bibouleBulletValue == 120) {
         Rectangle spaceshipCollider = new Rectangle(spaceship.getX() + spaceship.getWidth() / 3,
-                spaceship.getY() + spaceship.getHeight() * 2 / 3, spaceship.getWidth() / 3,
-                spaceship.getHeight() / 3);
+                spaceship.getY() + spaceship.getHeight() * 2 / 3, spaceship.getWidth() / 3, spaceship.getHeight() / 3);
         backgroundLayer.getChildren().add(spaceshipCollider);
         spaceshipCollider.setFill(Color.TRANSPARENT);
 
@@ -496,7 +494,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                 timeline.getKeyFrames()
                         .add(new KeyFrame(Duration.seconds(15), new KeyValue(bulletBibouleRec.translateYProperty(),
                                 dimension2D.getHeight(), Interpolator.LINEAR)));
-//                    timeline.setOnFinished(event -> bulletBibouleListRec.remove(bulletBibouleRec));
+                // timeline.setOnFinished(event -> bulletBibouleListRec.remove(bulletBibouleRec));
                 timeline.setOnFinished(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
@@ -523,8 +521,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
                 collidingBulletBibSpaceship.addListener(new ChangeListener<Boolean>() {
                     @Override
-                    public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue,
-                                        Boolean newValue) {
+                    public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue, Boolean newValue) {
                         if (newValue) {
                             System.out.println("die");
 
@@ -538,22 +535,22 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             if (deathBoolean == true) {
                                 bulletBibouleListRec.remove(rb);
 
-//                                    spaceshipDisappear = new FadeTransition(Duration.millis(1000), spaceship);
-//                                    spaceshipDisappear.setFromValue(1);
-//                                    spaceshipDisappear.setToValue(0);
-//                                    spaceshipDisappear.setCycleCount(1);
-//                                    spaceshipDisappear.setInterpolator(Interpolator.LINEAR);
-//
-//                                    bulletBibouleDisappear = new FadeTransition(Duration.millis(100), rb);
-//                                    bulletBibouleDisappear.setFromValue(1);
-//                                    bulletBibouleDisappear.setToValue(0);
-//                                    bulletBibouleDisappear.setCycleCount(1);
-//                                    bulletBibouleDisappear.setInterpolator(Interpolator.LINEAR);
-//
-//                                    parallelTransition2 = new ParallelTransition(spaceshipDisappear,
-//                                            bulletBibouleDisappear);
-//
-//                                    parallelTransition2.play();
+                                // spaceshipDisappear = new FadeTransition(Duration.millis(1000), spaceship);
+                                // spaceshipDisappear.setFromValue(1);
+                                // spaceshipDisappear.setToValue(0);
+                                // spaceshipDisappear.setCycleCount(1);
+                                // spaceshipDisappear.setInterpolator(Interpolator.LINEAR);
+                                //
+                                // bulletBibouleDisappear = new FadeTransition(Duration.millis(100), rb);
+                                // bulletBibouleDisappear.setFromValue(1);
+                                // bulletBibouleDisappear.setToValue(0);
+                                // bulletBibouleDisappear.setCycleCount(1);
+                                // bulletBibouleDisappear.setInterpolator(Interpolator.LINEAR);
+                                //
+                                // parallelTransition2 = new ParallelTransition(spaceshipDisappear,
+                                // bulletBibouleDisappear);
+                                //
+                                // parallelTransition2.play();
                                 middleLayer.getChildren().remove(spaceship);
                                 backgroundLayer.getChildren().remove(rb);
                                 death();
@@ -568,8 +565,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             }
         }
 
-//            bibouleBulletValue = 0;
-//        }
+        // bibouleBulletValue = 0;
+        // }
 
         if (biboules.size() < 5) {
             while (biboules.size() != 15) {
@@ -637,7 +634,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
         return score;
     }
 
@@ -755,7 +751,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             colliding.addListener(new ChangeListener<Boolean>() {
                                 @Override
                                 public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue,
-                                                    Boolean newValue) {
+                                        Boolean newValue) {
                                     if (newValue) {
                                         System.out.println("Colliding");
 
@@ -854,7 +850,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             collidingBulletBibSpaceship.addListener(new ChangeListener<Boolean>() {
                                 @Override
                                 public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue,
-                                                    Boolean newValue) {
+                                        Boolean newValue) {
                                     if (newValue) {
                                         System.out.println("die");
 
@@ -951,7 +947,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             collidingBulletBibSpaceship.addListener(new ChangeListener<Boolean>() {
                                 @Override
                                 public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue,
-                                                    Boolean newValue) {
+                                        Boolean newValue) {
                                     if (newValue) {
                                         System.out.println("die");
 
@@ -1041,7 +1037,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             colliding2.addListener(new ChangeListener<Boolean>() {
                                 @Override
                                 public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue,
-                                                    Boolean newValue) {
+                                        Boolean newValue) {
                                     if (newValue) {
                                         System.out.println("Hit the boss");
 
