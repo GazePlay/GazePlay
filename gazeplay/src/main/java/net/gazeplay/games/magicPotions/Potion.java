@@ -42,8 +42,6 @@ public class Potion extends Parent {
 
     private final GameContext gameContext;
 
-    private Explosion explosion;
-
     // it's true if the potion has been used/chosen for the mixture
     @Getter
     @Setter
