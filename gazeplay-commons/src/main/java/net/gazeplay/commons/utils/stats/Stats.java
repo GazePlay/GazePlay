@@ -1,10 +1,5 @@
 package net.gazeplay.commons.utils.stats;
 
-import com.github.agomezmoron.multimedia.recorder.VideoRecorder;
-import com.github.agomezmoron.multimedia.recorder.configuration.VideoRecorderConfiguration;
-
-import com.sun.javafx.PlatformUtil;
-import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -22,15 +17,25 @@ import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.Utils;
+import org.monte.media.Format;
+import org.monte.media.FormatKeys;
+import org.monte.media.VideoFormatKeys;
+import org.monte.media.gui.Worker;
+import org.monte.media.math.Rational;
+import org.monte.screenrecorder.ScreenRecorder;
+import org.monte.screenrecorder.ScreenRecorderCompactMain;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,8 +62,11 @@ public class Stats implements GazeMotionListener {
     private long previousTime = 0;
     private int previousX = 0;
     private int previousY = 0;
+    private File movieFolder;
     private int nbShots = 0;
     private boolean convexHULL = true;
+    private ScreenRecorder screenRecorder;
+    private ArrayList<TargetAOI> targetAOIList = null;
     long startTime;
     int sceneCounter = 0;
     @Getter
@@ -95,6 +103,22 @@ public class Stats implements GazeMotionListener {
         this.gameName = gameName;
     }
 
+    public void setTargetAOIList(ArrayList<TargetAOI> targetAOIList) {
+
+        this.targetAOIList = targetAOIList;
+        for (int i = 0; i < targetAOIList.size() - 1; i++) {
+            long duration = targetAOIList.get(i + 1).getTimeStarted() - targetAOIList.get(i).getTimeStarted();
+            this.targetAOIList.get(i).setDuration(duration);
+            System.out.println("The duration is " + duration);
+        }
+        targetAOIList.get(targetAOIList.size() - 1).setDuration(0);
+
+    }
+
+    public ArrayList<TargetAOI> getTargetAOIList() {
+        return this.targetAOIList;
+    }
+
     private static double[][] instanciateHeatMapData(Scene gameContextScene, double heatMapPixelSize) {
         int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
         int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
@@ -107,17 +131,86 @@ public class Stats implements GazeMotionListener {
         takeScreenShot();
     }
 
+    public void startVideoRecording() {
+        directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
+        this.movieFolder = new File(directoryOfVideo);
+        float quality = 1.0F;
+        byte bitDepth = 24;
+
+        String mimeType;
+        String videoFormatName;
+        String compressorName;
+
+        mimeType = "video/avi";
+        videoFormatName = "tscc";
+        compressorName = "Techsmith Screen Capture";
+        ScreenRecorderCompactMain asi = null;
+        GraphicsConfiguration cfg = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+                .getDefaultConfiguration();
+        Rectangle areaRect = null;
+        Dimension outputDimension = null;
+        areaRect = cfg.getBounds();
+
+        outputDimension = areaRect.getSize();
+        byte screenRate;
+        screenRate = 30;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 'at' HH.mm.ss");
+            nameOfVideo = this.movieFolder + "/ScreenRecording " + dateFormat.format(new Date());
+            System.out.println("The name of the video is " + nameOfVideo);
+            this.screenRecorder = new ScreenRecorder(cfg, areaRect,
+                    new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.FILE, VideoFormatKeys.MimeTypeKey,
+                            mimeType),
+                    new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.VIDEO, VideoFormatKeys.EncodingKey,
+                            videoFormatName, VideoFormatKeys.CompressorNameKey, compressorName,
+                            VideoFormatKeys.WidthKey, outputDimension.width, VideoFormatKeys.HeightKey,
+                            outputDimension.height, VideoFormatKeys.DepthKey, (int) bitDepth,
+                            VideoFormatKeys.FrameRateKey, Rational.valueOf((double) screenRate),
+                            VideoFormatKeys.QualityKey, quality, VideoFormatKeys.KeyFrameIntervalKey, screenRate * 60),
+                    null, null, this.movieFolder);
+            this.screenRecorder.start();
+        } catch (IOException | AWTException e) {
+            e.printStackTrace();
+        }
+        this.screenRecorder.setAudioMixer(null);
+    }
+
+    public void endVideoRecording() {
+        final ScreenRecorder r = this.screenRecorder;
+        this.screenRecorder = null;
+        (new Worker() {
+            protected Object construct() throws Exception {
+                r.stop();
+                return null;
+            }
+
+            protected void finished() {
+                ScreenRecorder.State state = r.getState();
+                // File source;
+                // File target;
+                // try {
+                // source = new File(nameOfVideo + ".avi");
+                // target = new File(nameOfVideo + ".mp4");
+                // VideoAttributes videoAttributes = new VideoAttributes();
+                // videoAttributes.setCodec("mpeg4");
+                // EncodingAttributes attrs = new EncodingAttributes();
+                // attrs.setFormat("mp4");
+                // attrs.setVideoAttributes(videoAttributes);
+                // Encoder encoder = new Encoder();
+                // encoder.encode(new MultimediaObject(source), target, attrs);
+                // } catch (Exception ex) {
+                // ex.printStackTrace();
+                // }
+            }
+        }).start();
+    }
+
     public void start() {
         config = Configuration.getInstance();
         if (config.isVideoRecordingEnabled()) {
-            nameOfVideo = Utils.now() + "video";
-            directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
-            VideoRecorder.start(nameOfVideo);
-            VideoRecorderConfiguration.setVideoDirectory(getGameStatsOfTheDayDirectory());
-
+            startVideoRecording();
         }
         lifeCycle.start(() -> {
-
             if (!config.isHeatMapDisabled())
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
             startTime = System.currentTimeMillis();
@@ -132,17 +225,14 @@ public class Stats implements GazeMotionListener {
                     incFixationSequence(getX, getY);
                 }
                 if (config.isAreaOfInterestEnabled()) {
-                    if (getX != previousX || getY != previousY && counter == 0) {
+                    if (getX != previousX || getY != previousY) {
                         long timeToFixation = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
                         long timeInterval = (timeToFixation - previousTime);
-                        movementHistory.add(new CoordinatesTracker(getX, getY, timeToFixation, timeInterval,
-                                System.currentTimeMillis()));
+                        movementHistory
+                                .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         previousTime = timeToFixation;
-                        counter++;
-                        if (counter == 2)
-                            counter = 0;
                     }
                 }
             };
@@ -155,18 +245,17 @@ public class Stats implements GazeMotionListener {
                     incFixationSequence(getX, getY);
                 }
                 if (config.isAreaOfInterestEnabled()) {
-                    if (getX != previousX || getY != previousY && counter == 0) {
+                    if (getX != previousX || getY != previousY && counter == 2) {
                         long timeElapsedMillis = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
                         long timeInterval = (timeElapsedMillis - previousTime);
-                        movementHistory.add(new CoordinatesTracker(getX, getY, timeElapsedMillis, timeInterval,
-                                System.currentTimeMillis()));
+                        movementHistory
+                                .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         previousTime = timeElapsedMillis;
-                        counter++;
-                        if (counter == 2)
-                            counter = 0;
+                        counter = 0;
                     }
+                    counter++;
                 }
             };
             gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
@@ -195,12 +284,7 @@ public class Stats implements GazeMotionListener {
 
     public void stop() {
         if (config.isVideoRecordingEnabled()) {
-            try {
-                VideoRecorder.stop();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                System.out.println("Video couldn't stop");
-            }
+            endVideoRecording();
         }
         lifeCycle.stop(() -> {
             if (recordGazeMovements != null) {
@@ -323,24 +407,7 @@ public class Stats implements GazeMotionListener {
     }
 
     public String getDirectoryOfVideo() {
-        Runtime rt = Runtime.getRuntime();
-        if (PlatformUtil.isWindows()) {
-            try {
-                Process proc = rt.exec("rename " + VideoRecorderConfiguration.getVideoDirectory() + "/"
-                        + this.nameOfVideo + ".mov " + this.nameOfVideo + ".mp4");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                Process proc = rt.exec("mv " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo
-                        + ".mov " + VideoRecorderConfiguration.getVideoDirectory() + "/" + this.nameOfVideo + ".mp4");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return VideoRecorderConfiguration.getVideoDirectory().toURI() + this.nameOfVideo + ".mp4";
+        return nameOfVideo;
     }
 
     File createInfoStatsFile() {
@@ -480,4 +547,7 @@ public class Stats implements GazeMotionListener {
         gameScreenShot = gameContextScene.snapshot(null);
     }
 
+    public WritableImage getGameScreenShot() {
+        return this.gameScreenShot;
+    }
 }

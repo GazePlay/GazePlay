@@ -7,11 +7,12 @@ public class InfoBoxProps {
     private final GridPane infoBox;
     private final Line lineToInfoBox;
     private final String aoiID;
-    private final long TTFF;
-    private final long TimeSpent;
-    private final long Fixation;
+    private final double TTFF;
+    private final double TimeSpent;
+    private final int Fixation;
 
-    public InfoBoxProps(GridPane infoBox, Line lineToInfoBox, String aoiID, long TTFF, long TimeSpent, long Fixation) {
+    public InfoBoxProps(GridPane infoBox, Line lineToInfoBox, String aoiID, double TTFF, double TimeSpent,
+            int Fixation) {
         this.infoBox = infoBox;
         this.lineToInfoBox = lineToInfoBox;
         this.aoiID = aoiID;
@@ -32,15 +33,15 @@ public class InfoBoxProps {
         return this.aoiID;
     }
 
-    public long getTTFF() {
+    public double getTTFF() {
         return this.TTFF;
     }
 
-    public long getTimeSpent() {
+    public double getTimeSpent() {
         return this.TimeSpent;
     }
 
-    public long getFixation() {
+    public int getFixation() {
         return this.Fixation;
     }
 
