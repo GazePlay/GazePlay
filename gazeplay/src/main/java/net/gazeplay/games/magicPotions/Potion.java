@@ -42,6 +42,8 @@ public class Potion extends Parent {
 
     private final GameContext gameContext;
 
+    private Explosion explosion;
+
     // it's true if the potion has been used/chosen for the mixture
     @Getter
     @Setter
@@ -147,6 +149,13 @@ public class Potion extends Parent {
                             // if should select this potion or not
                             if (!toMix.contains(potionColor)) {
                                 // play explosion animation !!!
+                                 //explosion = new Explosion();
+                                gameContext.playExplosion( e -> {
+                                    gameContext.clear();
+                                    //Blocs.this.launch();
+                                    //gameContext.onGameStarted();
+                                });
+
                             } else {
                                 if (MagicPotions.getColorsMixedCounter() == 0) {
                                     MagicPotions.setColorsMixedCounter(MagicPotions.getColorsMixedCounter() + 1);
