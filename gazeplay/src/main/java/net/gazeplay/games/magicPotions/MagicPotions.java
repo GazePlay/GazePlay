@@ -22,7 +22,12 @@ import java.util.LinkedList;
 public class MagicPotions extends Parent implements GameLifeCycle {
 
     private final String image_PATH = "data/potions/images/";
+
     private final GameContext gameContext;
+
+    private final Stats stats;
+
+    private Dimension2D gameDimension2D;
 
     @Getter
     @Setter
@@ -48,15 +53,10 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     // private int fixationLength;
     private Client client;
 
-    private final Stats stats;
-
-    private Dimension2D gameDimension2D;
-
     public MagicPotions(GameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
     }
 
     @Override
@@ -100,15 +100,15 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         Image blue = new Image(image_PATH + "potionBlue.png");
         potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (red.getWidth() + yellow.getWidth()) * 1.5,
                 gameDimension2D.getHeight() - red.getHeight() - 10, red.getWidth(), red.getHeight(), red, Color.RED,
-                this.gameContext, this.stats, Configuration.getInstance().getFixationLength(), mixFormula);
+                this.gameContext, this.stats, this,Configuration.getInstance().getFixationLength(), mixFormula);
 
         potionYellow = new Potion(gameDimension2D.getWidth() * 6 / 7 - yellow.getWidth() * 1.5,
                 gameDimension2D.getHeight() - yellow.getHeight() - 10, yellow.getWidth(), yellow.getHeight(), yellow,
-                Color.YELLOW, this.gameContext, this.stats, Configuration.getInstance().getFixationLength(),
+                Color.YELLOW, this.gameContext, this.stats, this,Configuration.getInstance().getFixationLength(),
                 mixFormula);
 
         potionBlue = new Potion(gameDimension2D.getWidth() * 6 / 7, gameDimension2D.getHeight() - blue.getHeight() - 10,
-                blue.getWidth(), blue.getHeight(), blue, Color.BLUE, this.gameContext, this.stats,
+                blue.getWidth(), blue.getHeight(), blue, Color.BLUE, this.gameContext, this.stats,this,
                 Configuration.getInstance().getFixationLength(), mixFormula);
 
         LinkedList<Potion> potionsOnTable = new LinkedList<>();
@@ -137,6 +137,8 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         // // play animation and start new round
         // gameContext.playWinTransition(350, null);
         // }
+
+        stats.notifyNewRoundReady();
 
     }
 

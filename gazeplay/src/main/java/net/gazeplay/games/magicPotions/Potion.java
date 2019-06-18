@@ -50,6 +50,8 @@ public class Potion extends Parent {
     private final ProgressIndicator progressIndicator;
     private Timeline timelineProgressBar;
 
+    private final MagicPotions gameInstance;
+
     final Stats stats;
 
     final EventHandler<Event> enterEvent;
@@ -57,7 +59,7 @@ public class Potion extends Parent {
     private Timeline currentTimeline;
 
     public Potion(double positionX, double positionY, double width, double height, Image image, Color color,
-            GameContext gameContext, Stats stats, int fixationlength, LinkedList<Color> toMix) {
+            GameContext gameContext, Stats stats,MagicPotions gameInstance ,int fixationlength, LinkedList<Color> toMix) {
         this.potion = new Rectangle((int) positionX, (int) positionY, (int) width, (int) height);
         this.potion.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
 
@@ -76,6 +78,7 @@ public class Potion extends Parent {
 
         this.gameContext = gameContext;
         this.stats = stats;
+        this.gameInstance = gameInstance;
         this.fixationLength = fixationlength;
 
         this.enterEvent = buildEvent(); // create method !
