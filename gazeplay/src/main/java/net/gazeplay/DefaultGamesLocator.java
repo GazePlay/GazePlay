@@ -2,11 +2,9 @@ package net.gazeplay;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.sun.jndi.toolkit.dir.LazySearchEnumerationImpl;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.stats.Stats;
-//import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.games.biboulejump.BibouleJump;
 import net.gazeplay.games.biboulejump.BibouleJumpStats;
 import net.gazeplay.games.blocs.Blocs;
@@ -48,26 +46,25 @@ import net.gazeplay.games.pet.PetStats;
 import net.gazeplay.games.pianosight.Piano;
 import net.gazeplay.games.race.Race;
 import net.gazeplay.games.race.RaceGamesStats;
-import net.gazeplay.games.race.Target;
 import net.gazeplay.games.room.Room;
 import net.gazeplay.games.room.RoomStats;
 import net.gazeplay.games.rushHour.RushHour;
 import net.gazeplay.games.scratchcard.ScratchcardGamesStats;
 import net.gazeplay.games.shooter.Shooter;
 import net.gazeplay.games.shooter.ShooterGamesStats;
+import net.gazeplay.games.slidingpuzzle.slidingpuzzle;
+import net.gazeplay.games.slidingpuzzle.slidingpuzzlestats;
 import net.gazeplay.games.space.SpaceGame;
 import net.gazeplay.games.space.SpaceGameStats;
 import net.gazeplay.games.spotthedifferences.SpotTheDifferences;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
-import org.apache.commons.lang.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import net.gazeplay.games.slidingpuzzle.slidingpuzzle;
-import net.gazeplay.games.slidingpuzzle.slidingpuzzlestats;
+//import net.gazeplay.commons.ui.Translator;
 
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
