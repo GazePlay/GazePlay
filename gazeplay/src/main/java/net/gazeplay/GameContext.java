@@ -2,12 +2,10 @@ package net.gazeplay;
 
 import com.github.agomezmoron.multimedia.recorder.VideoRecorder;
 import com.github.agomezmoron.multimedia.recorder.configuration.VideoRecorderConfiguration;
-import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
-import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -59,7 +57,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private static final double BUTTON_MIN_HEIGHT = 64;
 
-    //private Explosion explosion;
+    // private Explosion explosion;
 
     public static GameContext newInstance(GazePlay gazePlay) {
         translator = gazePlay.getTranslator();
@@ -181,7 +179,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
         currentLanguage = gazePlay.getTranslator().currentLanguage();
 
-        return new GameContext(gazePlay, root, gamingRoot, bravo, explosion,controlPanel, gamePanelDimensionProvider,
+        return new GameContext(gazePlay, root, gamingRoot, bravo, explosion, controlPanel, gamePanelDimensionProvider,
                 randomPositionGenerator, gazeDeviceManager, root2);
     }
 
@@ -283,9 +281,10 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final Pane gamingRoot;
 
-    private GameContext(GazePlay gazePlay, final Pane root, Pane gamingRoot, Bravo bravo,Explosion explosion, HBox menuHBox,
-            GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
-            GazeDeviceManager gazeDeviceManager, final Pane configPane) {
+    private GameContext(GazePlay gazePlay, final Pane root, Pane gamingRoot, Bravo bravo, Explosion explosion,
+            HBox menuHBox, GamePanelDimensionProvider gamePanelDimensionProvider,
+            RandomPositionGenerator randomPositionGenerator, GazeDeviceManager gazeDeviceManager,
+            final Pane configPane) {
         super(gazePlay, root);
         this.gamingRoot = gamingRoot;
         this.bravo = bravo;
@@ -295,7 +294,6 @@ public class GameContext extends GraphicalContext<Pane> {
         this.randomPositionGenerator = randomPositionGenerator;
         this.gazeDeviceManager = gazeDeviceManager;
         this.configPane = configPane;
-        //this.explosion = new Explosion(this);
     }
 
     @Override
@@ -468,17 +466,23 @@ public class GameContext extends GraphicalContext<Pane> {
         bravo.setConfetiOnStart(this);
         bravo.playWinTransition(root, delay, onFinishedEventHandler);
     }
-//    public void playExplosion(){
-//        getChildren().add(explosion.getImageView());
-//    }
-    public void playExplosion(EventHandler<ActionEvent> onFinishedEventHandler){
-        //add Explosion
+
+    // public void playExplosion(){
+    // getChildren().add(explosion.getImageView());
+    // }
+    public void playExplosion(EventHandler<ActionEvent> onFinishedEventHandler) {
+        // add Explosion
         getChildren().add(explosion);
         explosion.toFront();
-        explosion.playExplosion(onFinishedEventHandler);
+        explosion.playExplosion(root, onFinishedEventHandler);
     }
+
     public void endWinTransition() {
         getChildren().remove(bravo);
+    }
+
+    public void endExplosion() {
+        getChildren().remove(explosion);
     }
 
     @Override

@@ -149,11 +149,11 @@ public class Potion extends Parent {
                             // if should select this potion or not
                             if (!toMix.contains(potionColor)) {
                                 // play explosion animation !!!
-                                 //explosion = new Explosion();
-                                gameContext.playExplosion( e -> {
+                                // explosion = new Explosion();
+                                gameContext.playExplosion(e -> {
                                     gameContext.clear();
-                                    //Blocs.this.launch();
-                                    //gameContext.onGameStarted();
+
+                                    // gameContext.onGameStarted();
                                 });
 
                             } else {
