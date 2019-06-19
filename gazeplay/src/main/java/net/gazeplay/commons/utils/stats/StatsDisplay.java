@@ -23,13 +23,6 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
-
-import javafx.embed.swing.SwingFXUtils;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.File;
-import java.nio.Buffer;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -86,7 +79,9 @@ public class StatsDisplay {
         } else {
             shoots = stats.getOriginalDurationsBetweenGoals();
         }
-
+        for (Long shoot : shoots) {
+            System.out.println("The interval is at " + shoot);
+        }
         double sd = stats.computeRoundsDurationStandardDeviation();
 
         int i = 0;

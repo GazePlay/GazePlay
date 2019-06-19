@@ -50,6 +50,6 @@ public class CreamPie implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        stats.setTargetAOIList(target.getTargetAOIList());
     }
 }
