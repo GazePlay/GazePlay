@@ -73,7 +73,7 @@ public class GameContext extends GraphicalContext<Pane> {
         root.minHeightProperty().bind(primaryStage.heightProperty());
 
         Bravo bravo = new Bravo();
-        Explosion explosion = new Explosion();
+        // Explosion explosion = new Explosion();
 
         Pane gamingRoot = new Pane();
         gamingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
@@ -179,7 +179,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
         currentLanguage = gazePlay.getTranslator().currentLanguage();
 
-        return new GameContext(gazePlay, root, gamingRoot, bravo, explosion, controlPanel, gamePanelDimensionProvider,
+        return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
                 randomPositionGenerator, gazeDeviceManager, root2);
     }
 
@@ -264,7 +264,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final Bravo bravo;
 
-    private final Explosion explosion;
+    // private final Explosion explosion;
     @Getter
     private final HBox menuHBox;
 
@@ -281,14 +281,13 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final Pane gamingRoot;
 
-    private GameContext(GazePlay gazePlay, final Pane root, Pane gamingRoot, Bravo bravo, Explosion explosion,
-            HBox menuHBox, GamePanelDimensionProvider gamePanelDimensionProvider,
-            RandomPositionGenerator randomPositionGenerator, GazeDeviceManager gazeDeviceManager,
-            final Pane configPane) {
+    private GameContext(GazePlay gazePlay, final Pane root, Pane gamingRoot, Bravo bravo, HBox menuHBox,
+            GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
+            GazeDeviceManager gazeDeviceManager, final Pane configPane) {
         super(gazePlay, root);
         this.gamingRoot = gamingRoot;
         this.bravo = bravo;
-        this.explosion = explosion;
+        // this.explosion = explosion;
         this.menuHBox = menuHBox;
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
         this.randomPositionGenerator = randomPositionGenerator;
@@ -470,20 +469,20 @@ public class GameContext extends GraphicalContext<Pane> {
     // public void playExplosion(){
     // getChildren().add(explosion.getImageView());
     // }
-    public void playExplosion(EventHandler<ActionEvent> onFinishedEventHandler) {
-        // add Explosion
-        getChildren().add(explosion);
-        explosion.toFront();
-        explosion.playExplosion(root, onFinishedEventHandler);
-    }
+    // public void playExplosion(EventHandler<ActionEvent> onFinishedEventHandler) {
+    // // add Explosion
+    // getChildren().add(explosion);
+    // explosion.toFront();
+    // explosion.playExplosion(root, onFinishedEventHandler);
+    // }
 
     public void endWinTransition() {
         getChildren().remove(bravo);
     }
 
-    public void endExplosion() {
-        getChildren().remove(explosion);
-    }
+    // public void endExplosion() {
+    // getChildren().remove(explosion);
+    // }
 
     @Override
     public ObservableList<Node> getChildren() {

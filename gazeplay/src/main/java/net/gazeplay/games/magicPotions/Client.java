@@ -12,8 +12,6 @@ import java.util.Random;
 
 public class Client extends Rectangle {
 
-    // private final GameContext gameContext;
-
     @Getter
     private final Rectangle client;
     @Getter
@@ -43,7 +41,7 @@ public class Client extends Rectangle {
     }
 
     public Client(double posX, double posY, double width, double height, Image clientImage, PotionMix request) {
-        // this.gameContext = gameContext;
+
         this.client = new Rectangle(posX, posY, width, height);
         this.client.setFill(new ImagePattern(clientImage, 0, 0, 1, 1, true));
         this.potionRequest = request;
