@@ -2,6 +2,8 @@ package net.gazeplay.games.magicPotions;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.image.Image;
@@ -16,8 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import java.util.LinkedList;
+
+/**
+ *
+ * @author Johana MARKU - the graphics are kindly provided by these -
+ * @artists 0melapics,macrovector,vectorpouch / Freepik
+ */
 
 @Slf4j
 public class MagicPotions extends Parent implements GameLifeCycle {
@@ -33,12 +42,12 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
     private final GameContext gameContext;
 
-    private final Stats stats;
+    private final MagicPotionsStats stats;
 
     public MagicPotions.RoundDetails currentRoundDetails;
 
     private Dimension2D gameDimension2D;
-
+    @Getter
     private static Rectangle mixPot;
     @Getter
     private static Ellipse mixPotColor;
@@ -60,7 +69,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     public MagicPotions(GameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
-        this.stats = stats;
+        this.stats = (MagicPotionsStats) stats;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
     }
 
@@ -145,5 +154,6 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         potionBlue.setChosen(false);
         potionYellow.setChosen(false);
         Potion.getMixture().clear();
+
     }
 }

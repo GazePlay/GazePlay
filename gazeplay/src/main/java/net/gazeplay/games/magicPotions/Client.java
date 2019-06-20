@@ -10,6 +10,12 @@ import lombok.Setter;
 import java.util.LinkedList;
 import java.util.Random;
 
+/**
+ *
+ * @author Johana MARKU
+ *
+ */
+
 public class Client extends Rectangle {
 
     @Getter
