@@ -27,6 +27,8 @@ public class Pawn {
         this.turnsLeftToSkip = 0;
         this.canPlay = true;
         this.currentSquare = startSquare;
+        pawnDisplay.setX(startSquare.getPawnPosition().getX() - pawnDisplay.getFitWidth()/2);
+        pawnDisplay.setY(startSquare.getPawnPosition().getY() - pawnDisplay.getFitHeight()/2);
     }
 
     public void skipTurns(int nbTurns){
