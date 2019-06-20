@@ -3,14 +3,13 @@ package net.gazeplay.commons.utils.stats;
 public class CoordinatesTracker {
     private final int xValue;
     private final int yValue;
-    private final long timeToFixation;
     private final long intervalTime;
     private final long timeStarted;
+    private double distance;
 
-    public CoordinatesTracker(int xValue, int yValue, long timeToFixation, long intervalTime, long timeStarted) {
+    public CoordinatesTracker(int xValue, int yValue, long intervalTime, long timeStarted) {
         this.xValue = xValue;
         this.yValue = yValue;
-        this.timeToFixation = timeToFixation;
         this.intervalTime = intervalTime;
         this.timeStarted = timeStarted;
 
@@ -24,10 +23,6 @@ public class CoordinatesTracker {
         return this.yValue;
     }
 
-    public long getTimeToFixation() {
-        return this.timeToFixation;
-    }
-
     public long getIntervalTime() {
         return this.intervalTime;
     }
@@ -35,4 +30,13 @@ public class CoordinatesTracker {
     public long getTimeStarted() {
         return this.timeStarted;
     }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public double getDistance() {
+        return this.distance;
+    }
+
 }

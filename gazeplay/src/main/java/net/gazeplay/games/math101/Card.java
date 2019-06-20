@@ -62,7 +62,7 @@ public class Card extends Parent {
     final EventHandler<Event> enterEvent;
 
     /**
-     * Use a comme Timeline object so we can stop the current animation to prevent overlapses.
+     * Use a comme Timeline object so we can stop the current animation to prevent overlaps.
      */
 
     private Timeline currentTimeline;
