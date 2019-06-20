@@ -29,6 +29,8 @@ import net.gazeplay.games.labyrinth.Labyrinth;
 import net.gazeplay.games.labyrinth.LabyrinthStats;
 import net.gazeplay.games.literacy.Letters;
 import net.gazeplay.games.literacy.LettersGamesStats;
+import net.gazeplay.games.magicPotions.MagicPotions;
+import net.gazeplay.games.magicPotions.MagicPotionsStats;
 import net.gazeplay.games.magiccards.MagicCards;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.games.math101.Math101;
@@ -74,6 +76,21 @@ public class DefaultGamesLocator implements GamesLocator {
     public List<GameSpec> listGames() {
 
         List<GameSpec> result = new ArrayList<>();
+
+        result.add(
+                new GameSpec(new GameSummary("Potions", "data/Thumbnails/potions.jpg", GameCategories.Category.TARGET),
+                        new GameSpec.GameLauncher() {
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new MagicPotionsStats(scene);
+                            }
+
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.GameVariant gameVariant, Stats stats) {
+                                return new MagicPotions(gameContext, stats);
+                            }
+                        }));
 
         result.add(new GameSpec(new GameSummary("Math101", "data/Thumbnails/math101.png",
                 GameCategories.Category.MEMORIZATION, null, "MathDescAdd"), new GameSpec.GameVariantGenerator() {
