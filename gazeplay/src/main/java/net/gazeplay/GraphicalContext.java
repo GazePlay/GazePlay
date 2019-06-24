@@ -23,6 +23,7 @@ import javafx.stage.Screen;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NButton;
@@ -82,7 +83,9 @@ public abstract class GraphicalContext<T extends Parent> {
     public static final int ICON_SIZE = 32;
 
     public static final double MUSIC_GRID_MAX_WIDTH = 200;
-
+    // @Getter
+    // @Setter
+    // public static Slider speedEffectSlider ;
     /**
      * Field used to know if the background music controler has already been built once. This is used to get audio and
      * play it at the beginning.
@@ -423,7 +426,7 @@ public abstract class GraphicalContext<T extends Parent> {
         return slider;
     }
 
-    private Slider createSpeedEffectSlider(@NonNull GazePlay gazePlay) {
+    public Slider createSpeedEffectSlider(@NonNull GazePlay gazePlay) {
 
         final Configuration config = Configuration.getInstance();
         Slider slider = new Slider();
@@ -477,9 +480,9 @@ public abstract class GraphicalContext<T extends Parent> {
         mainPane.setCenter(center);
         center.setSpacing(5);
 
-        final Slider speedEffectsSlider = createSpeedEffectSlider(gazePlay);
+        Slider speedEffectSlider = createSpeedEffectSlider(gazePlay);
 
-        center.getChildren().add(speedEffectsSlider);
+        center.getChildren().add(speedEffectSlider);
 
         return pane;
     }
