@@ -12,15 +12,17 @@ public class PrisonSquare extends Square {
 
     @Override
     protected void pawnStays(Pawn pawn){
-        game.endOfTurn();
+        game.showMessage("Player " + pawn.getNumber() + " fell into a well");
         pawn.imprison();
         lockedPawn = pawn;
+        game.endOfTurn();
     }
 
     @Override
     protected void pawnPassesBy(Pawn pawn){
         if(lockedPawn != null){
             lockedPawn.free();
+            game.showMessage("Player " + pawn.getNumber() + " freed player " + lockedPawn.getNumber());
             lockedPawn = null;
         }
     }

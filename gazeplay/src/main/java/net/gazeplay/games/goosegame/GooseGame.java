@@ -8,14 +8,17 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
@@ -41,7 +44,11 @@ public class GooseGame implements GameLifeCycle {
     private final Dimension2D dimensions;
     private final Configuration config;
     private final int nbPlayers;
+    @Getter
     private final Multilinguism translate;
+
+    private Rectangle background;
+    private ImageView boardImage;
 
     private ArrayList<DiceRoller> diceRollers;
     private Timeline moveDiceIn;
@@ -50,8 +57,7 @@ public class GooseGame implements GameLifeCycle {
     private int[] rolls;
     private ProgressButton rollButton;
 
-    private Text messageText;
-    private Timeline showMessage;
+    private VBox messages;
 
     private JsonArray positions;
 
@@ -68,13 +74,6 @@ public class GooseGame implements GameLifeCycle {
         this.config = Configuration.getInstance();
         this.translate = Multilinguism.getSingleton();
 
-        Rectangle background = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
-        background.setFill(Color.GRAY);
-        gameContext.getChildren().add(background);
-
-        ImageView boardImage = new ImageView("data/goosegame/gooseboard.png");
-        gameContext.getChildren().add(boardImage);
-
         JsonParser parser = new JsonParser();
         try {
             positions = (JsonArray) parser.parse(new InputStreamReader(
@@ -84,12 +83,23 @@ public class GooseGame implements GameLifeCycle {
             e.printStackTrace();
         }
 
+        boardImage = new ImageView("data/goosegame/gooseboard.png");
+        double scaleRatio = Math.min((dimensions.getHeight() * 0.9) / boardImage.getImage().getHeight(), (dimensions.getWidth() * 0.9) / boardImage.getImage().getWidth());
+        double boardWidth = boardImage.getImage().getWidth() * scaleRatio;
+        double boardHeight = boardImage.getImage().getHeight() * scaleRatio;
+        boardImage.setFitHeight(boardHeight);
+        boardImage.setFitWidth(boardWidth);
+        double xOffset = (dimensions.getWidth() - boardWidth)/2;
+        double yOffset = (dimensions.getHeight() - boardHeight)/2;
+        boardImage.setX(xOffset);
+        boardImage.setY(yOffset);
+
         ArrayList<Integer> repeatSquares = new ArrayList<>(Arrays.asList(5, 9, 13, 18, 24, 28, 34, 36, 40, 45, 49, 54));
         Square previousSquare = null;
         BridgeSquare beginBridge = null;
         for(int i = 0; i < 64; i++){
             JsonObject jsonPos = (JsonObject)positions.get(i);
-            Position position = new Position(jsonPos.get("x").getAsDouble(), jsonPos.get("y").getAsDouble());
+            Position position = new Position(xOffset+jsonPos.get("x").getAsDouble() * scaleRatio, yOffset+jsonPos.get("y").getAsDouble() * scaleRatio);
 
             Square newSquare;
             if(repeatSquares.contains(i)){
@@ -128,8 +138,7 @@ public class GooseGame implements GameLifeCycle {
             ImageView imagePawn = new ImageView("data/biboulejump/biboules/" + colors[i] + ".png");
             imagePawn.setFitHeight(dimensions.getWidth()/20);
             imagePawn.setFitWidth(dimensions.getWidth()/20);
-            gameContext.getChildren().add(imagePawn);
-            pawns.add(new Pawn(imagePawn, firstSquare));
+            pawns.add(new Pawn(imagePawn, firstSquare, i + 1));
         }
 
         diceDisplay = new GridPane();
@@ -162,7 +171,6 @@ public class GooseGame implements GameLifeCycle {
         diceDisplay.setScaleX(0.5);
         diceDisplay.setScaleY(0.5);
         diceDisplay.setLayoutX(-dieWidth);
-        gameContext.getChildren().add(diceDisplay);
 
         rollButton = new ProgressButton();
         ImageView rollImage = new ImageView("data/dice/roll.png");
@@ -175,27 +183,12 @@ public class GooseGame implements GameLifeCycle {
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
-        gameContext.getChildren().add(rollButton);
-
-        messageText = new Text(0, dimensions.getHeight() / 3, "");
-        messageText.setTextAlignment(TextAlignment.CENTER);
-        messageText.setFill(Color.BLUE);
-        messageText.setFont(new Font(dimensions.getHeight() / 10));
-        messageText.setWrappingWidth(dimensions.getWidth());
-        messageText.setOpacity(0);
-
-        gameContext.getChildren().add(messageText);
-
-        showMessage = new Timeline(
-                new KeyFrame(Duration.seconds(0.3), new KeyValue(messageText.opacityProperty(), 1)),
-                new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
-                new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0))
-                );
+        messages = new VBox();
+        messages.setAlignment(Pos.CENTER);
     }
 
     private void roll(){
-        rollButton.disable();
-        rollButton.setOpacity(0);
+        rollButton.setLayoutY(dimensions.getHeight()*2);
         moveDiceIn.playFromStart();
         moveDiceIn.setOnFinished(e -> {
             for (int i = 0; i < diceRollers.size(); i++) {
@@ -212,44 +205,84 @@ public class GooseGame implements GameLifeCycle {
 
     @Override
     public void launch() {
+        background = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+        background.setFill(Color.GRAY);
+
+        gameContext.getChildren().addAll(background, boardImage);
+
         for(Pawn pawn: pawns){
             pawn.reset(firstSquare);
+            gameContext.getChildren().add(pawn.getPawnDisplay());
         }
         currentPawn = 0;
+
+        gameContext.getChildren().addAll(diceDisplay, rollButton, messages);
     }
 
     @Override
     public void dispose() {
+        gameContext.getChildren().remove(gameContext.getChildren().size()-1);
+        for(Pawn pawn: pawns) {
+            pawn.reset(firstSquare);
+        }
+        currentPawn = 0;
+        rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollButton.getImage().getFitHeight());
+    }
 
+    private boolean isGameStuck(){
+        int i = 0;
+        while(i < pawns.size() && pawns.get(i).isStuck()){
+            i++;
+        }
+        return i == pawns.size();
     }
 
     public void endOfTurn(){
-        rollButton.active();
-        rollButton.setOpacity(1);
-        int i = 0;
-        do {
-            currentPawn = (currentPawn + 1) % nbPlayers;
-            i++;
-        }while(!pawns.get(currentPawn).canPlay() && i <= nbPlayers);
+        if(isGameStuck()){
+            showMessage("STUCK");
+        } else {
+            rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollButton.getImage().getFitHeight());
+            Pawn pawn;
+            do {
+                currentPawn = (currentPawn + 1) % nbPlayers;
+                pawn = pawns.get(currentPawn);
+                if (pawn.isStuck()) {
+                    showMessage("Player " + pawn.getNumber() + " is stuck");
+                } else if (pawn.isSleeping()) {
+                    showMessage("Player " + pawn.getNumber() + " is asleep");
+                }
+            } while (pawn.isSleeping() || pawn.isStuck());
 
-        if(i >= nbPlayers){
-            //draw
+            showMessage("Player " + pawn.getNumber() + "'s turn");
         }
-
     }
 
     public void showMessage(String message){
-        messageText.setText(translate.getTrad(message, config.getLanguage()));
+        Text messageText = new Text(0, dimensions.getHeight() / 3, message);
+        messageText.setTextAlignment(TextAlignment.CENTER);
+        messageText.setFill(Color.WHITE);
+        messageText.setFont(new Font(dimensions.getHeight() / 10));
+        messageText.setWrappingWidth(dimensions.getWidth());
+        messageText.setOpacity(0);
+
+        messages.getChildren().add(messageText);
+
+        Timeline showMessage = new Timeline(
+                new KeyFrame(Duration.seconds(0.3), new KeyValue(messageText.opacityProperty(), 1)),
+                new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
+                new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0))
+        );
+
+        showMessage.setOnFinished(e -> {
+            messages.getChildren().remove(messageText);
+        });
+
         showMessage.playFromStart();
     }
 
     void winner(Pawn pawn) {
         gameContext.playWinTransition(200, actionEvent -> {
-            try {
-                gameContext.showRoundStats(stats, this);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            dispose();
         });
     }
 }

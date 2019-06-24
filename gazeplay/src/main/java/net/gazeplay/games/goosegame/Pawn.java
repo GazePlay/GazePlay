@@ -12,6 +12,7 @@ import net.gazeplay.commons.utils.Position;
 
 public class Pawn {
 
+    @Getter
     private ImageView pawnDisplay;
     private int turnsLeftToSkip;
     @Getter
@@ -19,10 +20,14 @@ public class Pawn {
     @Getter
     private Square currentSquare;
     private int nbMovementsLeft;
+    @Getter
+    private int number;
+    private boolean movementStart;
 
-    public Pawn(ImageView pawnDisplay, Square startSquare) {
+    public Pawn(ImageView pawnDisplay, Square startSquare, int number) {
         this.pawnDisplay = pawnDisplay;
         this.turnsLeftToSkip = 0;
+        this.number = number;
         reset(startSquare);
         nbMovementsLeft = 0;
     }
@@ -36,6 +41,7 @@ public class Pawn {
     public void move(int nbMovementsLeft){
         this.lastThrowResult = nbMovementsLeft;
         this.nbMovementsLeft = nbMovementsLeft;
+        movementStart = true;
         move();
     }
 
@@ -73,13 +79,17 @@ public class Pawn {
         turnsLeftToSkip = 0;
     }
 
-    public boolean canPlay(){
+    public boolean isStuck(){
+        return turnsLeftToSkip == -1;
+    }
+
+    public boolean isSleeping(){
         if(turnsLeftToSkip > 0){
             turnsLeftToSkip--;
-        }else if(turnsLeftToSkip == 0){
             return true;
+        }else{
+            return false;
         }
-        return false;
     }
 
     public void moveToSquare(Square square){
@@ -92,6 +102,13 @@ public class Pawn {
         Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5), new KeyValue(pawnDisplay.xProperty(), targetX, Interpolator.EASE_BOTH), new KeyValue(pawnDisplay.yProperty(), targetY, Interpolator.EASE_BOTH)));
         newTimeline.setOnFinished(e -> move());
 
-        newTimeline.playFromStart();
+        if(movementStart){
+            movementStart = false;
+            Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5)));
+            delay.setOnFinished(e -> newTimeline.playFromStart());
+            delay.playFromStart();
+        }else{
+            newTimeline.playFromStart();
+        }
     }
 }

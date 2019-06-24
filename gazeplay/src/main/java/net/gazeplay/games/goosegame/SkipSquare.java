@@ -14,7 +14,7 @@ public class SkipSquare extends Square {
     protected void pawnStays(Pawn pawn){
         game.endOfTurn();
         pawn.skipTurns(nbTurnsToSkip);
-        game.showMessage("The biboule is tired and needs to rest");
+        game.showMessage("Player " + pawn.getNumber() + " is tired and sleeps for " + nbTurnsToSkip + " turns");
     }
 
 }
