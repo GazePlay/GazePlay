@@ -97,8 +97,8 @@ public class Pawn {
         currentSquare = square;
         square.pawnPassesBy(this);
         Position position = square.getPawnPosition();
-        double targetX = position.getX() - pawnDisplay.getFitWidth() / 2;
-        double targetY = position.getY() - pawnDisplay.getFitHeight() / 2;
+        double targetX = position.getX() - pawnDisplay.getFitWidth() / 2 + Math.cos(number * 2 * Math.PI / 5) * 10;
+        double targetY = position.getY() - pawnDisplay.getFitHeight() / 2 + Math.sin(number * 2 * Math.PI / 5) * 10;
 
         Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(pawnDisplay.xProperty(), targetX, Interpolator.EASE_BOTH),

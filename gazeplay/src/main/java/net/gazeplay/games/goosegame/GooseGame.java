@@ -79,6 +79,7 @@ public class GooseGame implements GameLifeCycle {
         this.config = Configuration.getInstance();
         this.translate = Multilinguism.getSingleton();
 
+        // JSON file used to store the position of each square, later used for pawn movement
         JsonParser parser = new JsonParser();
         try {
             positions = (JsonArray) parser.parse(new InputStreamReader(
@@ -88,17 +89,21 @@ public class GooseGame implements GameLifeCycle {
         }
 
         boardImage = new ImageView("data/goosegame/gooseboard.png");
+        // The board is scaled according to the window size, this influences the position we got above, so we need to
+        // scale those too
         double scaleRatio = Math.min((dimensions.getHeight() * 0.9) / boardImage.getImage().getHeight(),
                 (dimensions.getWidth() * 0.9) / boardImage.getImage().getWidth());
         double boardWidth = boardImage.getImage().getWidth() * scaleRatio;
         double boardHeight = boardImage.getImage().getHeight() * scaleRatio;
         boardImage.setFitHeight(boardHeight);
         boardImage.setFitWidth(boardWidth);
+        // Board is centered
         double xOffset = (dimensions.getWidth() - boardWidth) / 2;
         double yOffset = (dimensions.getHeight() - boardHeight) / 2;
         boardImage.setX(xOffset);
         boardImage.setY(yOffset);
 
+        // Creating the squares
         ArrayList<Integer> repeatSquares = new ArrayList<>(Arrays.asList(5, 9, 13, 18, 24, 28, 34, 36, 40, 45, 49, 54));
         Square previousSquare = null;
         BridgeSquare beginBridge = null;
@@ -138,6 +143,7 @@ public class GooseGame implements GameLifeCycle {
             previousSquare = newSquare;
         }
 
+        // Creating the pawns
         pawns = new ArrayList<>();
         bibouleColors = new ArrayList<>(Arrays.asList("Blue", "Orange", "green", "Yellow", "Red"));
         for (int i = 0; i < nbPlayers; i++) {
@@ -147,10 +153,12 @@ public class GooseGame implements GameLifeCycle {
             pawns.add(new Pawn(imagePawn, firstSquare, i + 1));
         }
 
+        // Creating the turn indicator, it shows which biboule's turn it is
         turnIndicator = new ImageView(String.format(BIBOULEPATH, bibouleColors.get(0)));
         turnIndicator.setFitHeight(dimensions.getWidth() / 12);
         turnIndicator.setFitWidth(dimensions.getWidth() / 12);
 
+        // The dice are set in a grid pane, one next to the other
         diceDisplay = new GridPane();
         diceDisplay.setHgap(dimensions.getWidth() / 20);
         rolls = new int[2];
@@ -165,6 +173,7 @@ public class GooseGame implements GameLifeCycle {
             rolls[i] = 1;
         }
 
+        // Animation to move the dice in and out of the center if the window
         moveDiceIn = new Timeline(new KeyFrame(Duration.seconds(1),
                 new KeyValue(diceDisplay.layoutXProperty(), dimensions.getWidth() / 2 - 3 * dieWidth,
                         Interpolator.EASE_OUT),
@@ -176,10 +185,12 @@ public class GooseGame implements GameLifeCycle {
                 new KeyValue(diceDisplay.layoutYProperty(), 0, Interpolator.EASE_OUT),
                 new KeyValue(diceDisplay.scaleXProperty(), 0.5), new KeyValue(diceDisplay.scaleYProperty(), 0.5)));
 
+        // Dice are put in their default location, smaller, in the upper left corner
         diceDisplay.setScaleX(0.5);
         diceDisplay.setScaleY(0.5);
         diceDisplay.setLayoutX(-dieWidth);
 
+        // Button which starts the beginning of a turn by rolling the dice
         rollButton = new ProgressButton();
         ImageView rollImage = new ImageView("data/dice/roll.png");
         rollImage.setFitHeight(dimensions.getHeight() / 6);
@@ -191,10 +202,14 @@ public class GooseGame implements GameLifeCycle {
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
+        // The message queue
         messages = new VBox();
         messages.setAlignment(Pos.CENTER);
     }
 
+    /***
+     * Rolls the dice, and hides the roll button
+     */
     private void roll() {
         rollButton.setLayoutY(dimensions.getHeight() * 2);
         moveDiceIn.playFromStart();
@@ -205,12 +220,18 @@ public class GooseGame implements GameLifeCycle {
         });
     }
 
+    /***
+     * Computes the dice result and sends it to the pawn in play.
+     */
     private void playTurn() {
         moveDiceOut.playFromStart();
         int rollResult = rolls[0] + rolls[1];
         pawns.get(currentPawn).move(rollResult);
     }
 
+    /***
+     * Called at launch, fills the gamecontext
+     */
     @Override
     public void launch() {
         background = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
@@ -229,6 +250,9 @@ public class GooseGame implements GameLifeCycle {
         gameContext.getChildren().addAll(diceDisplay, rollButton, messages);
     }
 
+    /***
+     * Is called to reset the game for a new one, pawns are put at the beginning of the track.
+     */
     @Override
     public void dispose() {
         gameContext.getChildren().remove(gameContext.getChildren().size() - 1);
@@ -240,6 +264,11 @@ public class GooseGame implements GameLifeCycle {
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollButton.getImage().getFitHeight());
     }
 
+    /***
+     * Game can get stuck, if there are only 2 players, and they both are stuck.
+     * 
+     * @return true if stuck
+     */
     private boolean isGameStuck() {
         int i = 0;
         while (i < pawns.size() && pawns.get(i).isStuck()) {
@@ -248,6 +277,9 @@ public class GooseGame implements GameLifeCycle {
         return i == pawns.size();
     }
 
+    /***
+     * Called at the end of a turn, switches to the next pawn in line, and checks if the game is not stuck
+     */
     public void endOfTurn() {
         if (isGameStuck()) {
             showMessage("STUCK");
@@ -269,6 +301,12 @@ public class GooseGame implements GameLifeCycle {
         }
     }
 
+    /***
+     * Show a message on screen, the messages are in a vertical queue. The message is translated, not the values
+     * 
+     * @param message
+     * @param values
+     */
     public void showMessage(String message, Object... values) {
         Text messageText = new Text(0, dimensions.getHeight() / 3,
                 String.format(translate.getTrad(message, config.getLanguage()), values));
@@ -292,6 +330,12 @@ public class GooseGame implements GameLifeCycle {
         showMessage.playFromStart();
     }
 
+    /***
+     * Called when a pawn reaches square 63
+     * 
+     * @param pawn
+     *            winner pawn
+     */
     void winner(Pawn pawn) {
         showMessage("Player %d wins the game", pawn.getNumber());
         gameContext.playWinTransition(200, actionEvent -> {
