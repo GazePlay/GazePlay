@@ -52,7 +52,7 @@ Selectionnez tos les blocs contenant la lettre mentionné.
 
 ![Literacy](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/letters.png)
 
-##Potions Magiques
+## Potions Magiques
 
 Mélangez les bonnes potions colorées pour préparer la commande de Biboule. Attention à ne pas faire une mauvaise mélange ! 
 

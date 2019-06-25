@@ -394,7 +394,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         DefaultGamesLocator df = new DefaultGamesLocator();
         List<GameSpec> filteredGames = df.listGames();
 
-        /*
+        /**
          * 2^3 = 8 OPTIONS
          */
 

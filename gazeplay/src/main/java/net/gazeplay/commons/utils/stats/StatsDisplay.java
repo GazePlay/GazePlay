@@ -79,9 +79,9 @@ public class StatsDisplay {
         } else {
             shoots = stats.getOriginalDurationsBetweenGoals();
         }
-        for (Long shoot : shoots) {
-            System.out.println("The interval is at " + shoot);
-        }
+        // for (Long shoot : shoots) {
+        // System.out.println("The interval is at " + shoot);
+        // }
         double sd = stats.computeRoundsDurationStandardDeviation();
 
         int i = 0;
