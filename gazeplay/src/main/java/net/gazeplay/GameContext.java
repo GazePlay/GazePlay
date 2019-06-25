@@ -6,7 +6,6 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
-import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -40,6 +39,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.io.IOException;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import net.gazeplay.games.magicPotions.Explosion;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
@@ -57,6 +57,8 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private static final double BUTTON_MIN_HEIGHT = 64;
 
+    // private Explosion explosion;
+
     public static GameContext newInstance(GazePlay gazePlay) {
         translator = gazePlay.getTranslator();
         currentLanguage = gazePlay.getTranslator().currentLanguage();
@@ -71,6 +73,7 @@ public class GameContext extends GraphicalContext<Pane> {
         root.minHeightProperty().bind(primaryStage.heightProperty());
 
         Bravo bravo = new Bravo();
+        // Explosion explosion = new Explosion();
 
         Pane gamingRoot = new Pane();
         gamingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
@@ -261,6 +264,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final Bravo bravo;
 
+    // private final Explosion explosion;
     @Getter
     private final HBox menuHBox;
 
@@ -283,12 +287,12 @@ public class GameContext extends GraphicalContext<Pane> {
         super(gazePlay, root);
         this.gamingRoot = gamingRoot;
         this.bravo = bravo;
+        // this.explosion = explosion;
         this.menuHBox = menuHBox;
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
         this.randomPositionGenerator = randomPositionGenerator;
         this.gazeDeviceManager = gazeDeviceManager;
         this.configPane = configPane;
-
     }
 
     @Override
@@ -462,9 +466,23 @@ public class GameContext extends GraphicalContext<Pane> {
         bravo.playWinTransition(root, delay, onFinishedEventHandler);
     }
 
+    // public void playExplosion(){
+    // getChildren().add(explosion.getImageView());
+    // }
+    // public void playExplosion(EventHandler<ActionEvent> onFinishedEventHandler) {
+    // // add Explosion
+    // getChildren().add(explosion);
+    // explosion.toFront();
+    // explosion.playExplosion(root, onFinishedEventHandler);
+    // }
+
     public void endWinTransition() {
         getChildren().remove(bravo);
     }
+
+    // public void endExplosion() {
+    // getChildren().remove(explosion);
+    // }
 
     @Override
     public ObservableList<Node> getChildren() {

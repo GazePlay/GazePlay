@@ -57,3 +57,15 @@ Solve the math problems: Addition, Subtraction, Multiplication and Division of t
 Select all the blocks containing the specified letter.
 
 ![Literacy](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/letters.png)
+
+##Magic Potions
+
+Mix the right colored potions to prepare Biball's order. Careful not to make a wrong mix !
+
+![MagicPotions](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/potions.jpg)
+
+##Goose Game
+
+Roll the dice and advance along the squares on the path to reach the end before the other players do.
+
+![Goosegame](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/goosegame.png)
