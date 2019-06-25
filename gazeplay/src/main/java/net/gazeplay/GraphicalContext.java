@@ -426,7 +426,7 @@ public abstract class GraphicalContext<T extends Parent> {
         return slider;
     }
 
-    public Slider createSpeedEffectSlider(@NonNull GazePlay gazePlay) {
+    private Slider createSpeedEffectSlider(@NonNull GazePlay gazePlay) {
 
         final Configuration config = Configuration.getInstance();
         Slider slider = new Slider();

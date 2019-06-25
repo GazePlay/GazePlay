@@ -52,7 +52,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private static final double BUTTON_MIN_HEIGHT = 64;
 
-    private static Slider getSpeedSlider;
+    private Slider getSpeedSlider;
 
     public static GameContext newInstance(GazePlay gazePlay) {
         translator = gazePlay.getTranslator();
