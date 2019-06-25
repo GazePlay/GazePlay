@@ -223,18 +223,22 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             StackPane charts = StatsDisplay.buildGazeChart(stats, root, !config.isHeatMapDisabled(),
                     !config.isFixationSequenceDisabled());
             for (Node n : charts.getChildren()) {
-                ImageView imageView = (ImageView) n;
-                root.widthProperty().addListener((observable, oldValue, newValue) -> {
-                    imageView.setFitWidth(newValue.doubleValue() * 0.35);
-                });
-                root.heightProperty().addListener((observable, oldValue, newValue) -> {
-                    imageView.setFitHeight(newValue.doubleValue() * 0.35);
-                });
+                if (n instanceof ImageView) {
+                    ImageView imageView = (ImageView) n;
+                    root.widthProperty().addListener((observable, oldValue, newValue) -> {
+                        imageView.setFitWidth(newValue.doubleValue() * 0.35);
+                    });
+                    root.heightProperty().addListener((observable, oldValue, newValue) -> {
+                        imageView.setFitHeight(newValue.doubleValue() * 0.35);
+                    });
 
-                imageView.setFitWidth(root.getWidth() * 0.35);
-                imageView.setFitHeight(root.getHeight() * 0.35);
+                    imageView.setFitWidth(root.getWidth() * 0.35);
+                    imageView.setFitHeight(root.getHeight() * 0.35);
+                }
+
             }
             centerPane.getChildren().add(charts);
+
         }
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
