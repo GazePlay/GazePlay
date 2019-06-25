@@ -1233,29 +1233,28 @@ public class DefaultGamesLocator implements GamesLocator {
                             }
                         }));
 
-        result.add(
-                new GameSpec(new GameSummary("Goose Game", "data/Thumbnails/goosegame.png", GameCategories.Category.MEMORIZATION),
-                        new GameSpec.GameVariantGenerator() {
-                            @Override
-                            public Set<GameSpec.GameVariant> getVariants() {
-                                return Sets.newLinkedHashSet(Lists.newArrayList(
+        result.add(new GameSpec(
+                new GameSummary("Goose Game", "data/Thumbnails/goosegame.png", GameCategories.Category.MEMORIZATION),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
 
-                                        new GameSpec.IntGameVariant(2, "2 players"),
-                                        new GameSpec.IntGameVariant(3, "3 players"),
-                                        new GameSpec.IntGameVariant(4, "4 players"),
-                                        new GameSpec.IntGameVariant(5, "5 players")
+                                new GameSpec.IntGameVariant(2, "2 players"),
+                                new GameSpec.IntGameVariant(3, "3 players"),
+                                new GameSpec.IntGameVariant(4, "4 players"), new GameSpec.IntGameVariant(5, "5 players")
 
-                                ));
-                            }
-                        }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new Stats(scene, "goosegame");
                     }
 
                     @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext,
-                                                       GameSpec.IntGameVariant gameVariant, Stats stats) {
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
                         return new GooseGame(gameContext, stats, gameVariant.getNumber());
                     }
 

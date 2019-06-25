@@ -11,7 +11,7 @@ public class SkipSquare extends Square {
     }
 
     @Override
-    protected void pawnStays(Pawn pawn){
+    protected void pawnStays(Pawn pawn) {
         pawn.skipTurns(nbTurnsToSkip);
         game.showMessage("Player %d falls asleep for %d turns", pawn.getNumber(), nbTurnsToSkip);
         game.endOfTurn();

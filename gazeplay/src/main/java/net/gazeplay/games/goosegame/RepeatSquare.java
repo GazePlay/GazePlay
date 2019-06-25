@@ -8,7 +8,7 @@ public class RepeatSquare extends Square {
     }
 
     @Override
-    protected void pawnStays(Pawn pawn){
+    protected void pawnStays(Pawn pawn) {
         pawn.move(pawn.getLastThrowResult());
         game.showMessage("Repeat last throw!");
     }

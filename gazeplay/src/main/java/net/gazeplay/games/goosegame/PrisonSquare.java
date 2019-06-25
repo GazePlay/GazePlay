@@ -13,7 +13,7 @@ public class PrisonSquare extends Square {
     }
 
     @Override
-    protected void pawnStays(Pawn pawn){
+    protected void pawnStays(Pawn pawn) {
         game.showMessage(message, pawn.getNumber());
         pawn.imprison();
         lockedPawn = pawn;
@@ -21,8 +21,8 @@ public class PrisonSquare extends Square {
     }
 
     @Override
-    protected void pawnPassesBy(Pawn pawn){
-        if(lockedPawn != null){
+    protected void pawnPassesBy(Pawn pawn) {
+        if (lockedPawn != null) {
             lockedPawn.free();
             game.showMessage("Player %d freed player %d", pawn.getNumber(), lockedPawn.getNumber());
             lockedPawn = null;

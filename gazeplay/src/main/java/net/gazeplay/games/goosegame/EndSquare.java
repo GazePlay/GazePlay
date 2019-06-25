@@ -8,7 +8,7 @@ public class EndSquare extends Square {
     }
 
     @Override
-    protected void pawnStays(Pawn pawn){
+    protected void pawnStays(Pawn pawn) {
         game.winner(pawn);
     }
 }

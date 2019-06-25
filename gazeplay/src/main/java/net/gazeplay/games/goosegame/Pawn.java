@@ -33,82 +33,84 @@ public class Pawn {
         nbMovementsLeft = 0;
     }
 
-    public void reset(Square startSquare){
+    public void reset(Square startSquare) {
         this.currentSquare = startSquare;
-        pawnDisplay.setX(startSquare.getPawnPosition().getX() - pawnDisplay.getFitWidth()/2);
-        pawnDisplay.setY(startSquare.getPawnPosition().getY() - pawnDisplay.getFitHeight()/2);
+        pawnDisplay.setX(startSquare.getPawnPosition().getX() - pawnDisplay.getFitWidth() / 2);
+        pawnDisplay.setY(startSquare.getPawnPosition().getY() - pawnDisplay.getFitHeight() / 2);
     }
 
-    public void move(int nbMovementsLeft){
+    public void move(int nbMovementsLeft) {
         this.lastThrowResult = nbMovementsLeft;
         this.nbMovementsLeft = nbMovementsLeft;
         movementStart = true;
         move();
     }
 
-    private void move(){
-        if(nbMovementsLeft == 0){
+    private void move() {
+        if (nbMovementsLeft == 0) {
             currentSquare.pawnStays(this);
-        }else if (nbMovementsLeft > 0) {
-            if(currentSquare.getNextSquare() == null) {
+        } else if (nbMovementsLeft > 0) {
+            if (currentSquare.getNextSquare() == null) {
                 moveToSquare(currentSquare.getPreviousSquare());
                 nbMovementsLeft = -nbMovementsLeft + 1;
-            }else{
+            } else {
                 moveToSquare(currentSquare.getNextSquare());
                 nbMovementsLeft--;
             }
-        }else{
-            if(currentSquare.getPreviousSquare() == null) {
+        } else {
+            if (currentSquare.getPreviousSquare() == null) {
                 nbMovementsLeft = 0;
                 currentSquare.pawnStays(this);
-            }else {
+            } else {
                 moveToSquare(currentSquare.getPreviousSquare());
                 nbMovementsLeft++;
             }
         }
     }
 
-    public void skipTurns(int nbTurns){
+    public void skipTurns(int nbTurns) {
         turnsLeftToSkip = nbTurns;
     }
 
-    public void imprison(){
+    public void imprison() {
         turnsLeftToSkip = -1;
     }
 
-    public void free(){
+    public void free() {
         turnsLeftToSkip = 0;
     }
 
-    public boolean isStuck(){
+    public boolean isStuck() {
         return turnsLeftToSkip == -1;
     }
 
-    public boolean isSleeping(){
-        if(turnsLeftToSkip > 0){
+    public boolean isSleeping() {
+        if (turnsLeftToSkip > 0) {
             turnsLeftToSkip--;
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public void moveToSquare(Square square){
+    public void moveToSquare(Square square) {
         currentSquare = square;
         square.pawnPassesBy(this);
         Position position = square.getPawnPosition();
-        double targetX = position.getX() - pawnDisplay.getFitWidth()/2;
-        double targetY = position.getY() - pawnDisplay.getFitHeight()/2;
+        double targetX = position.getX() - pawnDisplay.getFitWidth() / 2;
+        double targetY = position.getY() - pawnDisplay.getFitHeight() / 2;
 
-        Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5), new KeyValue(pawnDisplay.xProperty(), targetX, Interpolator.EASE_BOTH), new KeyValue(pawnDisplay.yProperty(), targetY, Interpolator.EASE_BOTH)));
+        Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
+                new KeyValue(pawnDisplay.xProperty(), targetX, Interpolator.EASE_BOTH),
+                new KeyValue(pawnDisplay.yProperty(), targetY, Interpolator.EASE_BOTH)));
         newTimeline.setOnFinished(e -> move());
 
-        if(movementStart){
+        if (movementStart) {
             movementStart = false;
             Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5)));
             delay.setOnFinished(e -> newTimeline.playFromStart());
             delay.playFromStart();
-        }else{
+        } else {
             newTimeline.playFromStart();
         }
     }

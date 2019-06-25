@@ -24,11 +24,11 @@ public class Square {
         this.game = game;
     }
 
-    protected void pawnStays(Pawn pawn){
+    protected void pawnStays(Pawn pawn) {
         game.endOfTurn();
     }
 
-    protected void pawnPassesBy(Pawn pawn){
+    protected void pawnPassesBy(Pawn pawn) {
 
     }
 

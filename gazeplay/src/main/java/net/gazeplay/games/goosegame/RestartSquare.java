@@ -12,7 +12,7 @@ public class RestartSquare extends Square {
     }
 
     @Override
-    protected void pawnStays(Pawn pawn){
+    protected void pawnStays(Pawn pawn) {
         pawn.moveToSquare(firstSquare);
         game.showMessage("Restart from the beginning");
     }
