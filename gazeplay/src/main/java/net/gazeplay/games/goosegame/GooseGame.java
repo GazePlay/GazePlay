@@ -9,6 +9,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -38,6 +39,7 @@ public class GooseGame implements GameLifeCycle {
 
     private static final int WIDTH = 9;
     private static final int HEIGHT = 7;
+    private static final String BIBOULEPATH = "data/biboulejump/biboules/%s.png";
 
     private final GameContext gameContext;
     private final Stats stats;
@@ -49,6 +51,7 @@ public class GooseGame implements GameLifeCycle {
 
     private Rectangle background;
     private ImageView boardImage;
+    private ArrayList<String> bibouleColors;
 
     private ArrayList<DiceRoller> diceRollers;
     private Timeline moveDiceIn;
@@ -64,6 +67,9 @@ public class GooseGame implements GameLifeCycle {
     private ArrayList<Pawn> pawns;
     private int currentPawn;
     private Square firstSquare;
+
+    private ImageView turnIndicator;
+    private Text turnText;
 
     public GooseGame(GameContext gameContext, Stats stats, int nbPlayers) {
         this.gameContext = gameContext;
@@ -105,7 +111,7 @@ public class GooseGame implements GameLifeCycle {
             if(repeatSquares.contains(i)){
                 newSquare = new RepeatSquare(i, position, previousSquare, this);
             }else if(i == 31 || i == 52){
-                newSquare = new PrisonSquare(i, position, previousSquare, this);
+                newSquare = new PrisonSquare(i, position, previousSquare, this, i == 31? "Player %d fell into a well" : "Player %d got locked up in prison");
             }else if(i == 19){
                 newSquare = new SkipSquare(i, position, previousSquare, this, 2);
             }else if(i == 58){
@@ -132,14 +138,18 @@ public class GooseGame implements GameLifeCycle {
         }
 
         pawns = new ArrayList<>();
-        String colors[] = {"Blue", "Orange", "green"};
-
+        bibouleColors = new ArrayList<>(Arrays.asList("Blue", "Orange", "green", "Yellow", "Red"));
         for(int i = 0; i < nbPlayers; i++){
-            ImageView imagePawn = new ImageView("data/biboulejump/biboules/" + colors[i] + ".png");
+            ImageView imagePawn = new ImageView(String.format(BIBOULEPATH, bibouleColors.get(i)));
             imagePawn.setFitHeight(dimensions.getWidth()/20);
             imagePawn.setFitWidth(dimensions.getWidth()/20);
             pawns.add(new Pawn(imagePawn, firstSquare, i + 1));
         }
+
+        turnIndicator = new ImageView(String.format(BIBOULEPATH, bibouleColors.get(0)));
+        turnIndicator.setFitHeight(dimensions.getWidth()/12);
+        turnIndicator.setFitWidth(dimensions.getWidth()/12);
+        Text turnText = new Text("");
 
         diceDisplay = new GridPane();
         diceDisplay.setHgap(dimensions.getWidth() / 20);
@@ -207,8 +217,10 @@ public class GooseGame implements GameLifeCycle {
     public void launch() {
         background = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         background.setFill(Color.GRAY);
+        turnIndicator.setX(11*dimensions.getWidth()/12 - dimensions.getWidth()/25);
+        turnIndicator.setY(dimensions.getWidth()/25);
 
-        gameContext.getChildren().addAll(background, boardImage);
+        gameContext.getChildren().addAll(background, boardImage, turnIndicator);
 
         for(Pawn pawn: pawns){
             pawn.reset(firstSquare);
@@ -226,6 +238,7 @@ public class GooseGame implements GameLifeCycle {
             pawn.reset(firstSquare);
         }
         currentPawn = 0;
+        turnIndicator.setImage(new Image(String.format(BIBOULEPATH, bibouleColors.get(currentPawn))));
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollButton.getImage().getFitHeight());
     }
 
@@ -247,18 +260,19 @@ public class GooseGame implements GameLifeCycle {
                 currentPawn = (currentPawn + 1) % nbPlayers;
                 pawn = pawns.get(currentPawn);
                 if (pawn.isStuck()) {
-                    showMessage("Player " + pawn.getNumber() + " is stuck");
+                    showMessage("Player %d is stuck", pawn.getNumber());
                 } else if (pawn.isSleeping()) {
-                    showMessage("Player " + pawn.getNumber() + " is asleep");
+                    showMessage("Player %d is asleep for %d more turn(s)", pawn.getNumber(), pawn.getTurnsLeftToSkip());
                 }
             } while (pawn.isSleeping() || pawn.isStuck());
 
-            showMessage("Player " + pawn.getNumber() + "'s turn");
+            turnIndicator.setImage(new Image(String.format(BIBOULEPATH, bibouleColors.get(currentPawn))));
+            showMessage("Player %d's turn", pawn.getNumber());
         }
     }
 
-    public void showMessage(String message){
-        Text messageText = new Text(0, dimensions.getHeight() / 3, message);
+    public void showMessage(String message, Object... values){
+        Text messageText = new Text(0, dimensions.getHeight() / 3, String.format(translate.getTrad(message, config.getLanguage()), values));
         messageText.setTextAlignment(TextAlignment.CENTER);
         messageText.setFill(Color.WHITE);
         messageText.setFont(new Font(dimensions.getHeight() / 10));
@@ -281,6 +295,7 @@ public class GooseGame implements GameLifeCycle {
     }
 
     void winner(Pawn pawn) {
+        showMessage("Player %d wins the game", pawn.getNumber());
         gameContext.playWinTransition(200, actionEvent -> {
             dispose();
         });

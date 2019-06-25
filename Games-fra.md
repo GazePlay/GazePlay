@@ -48,12 +48,18 @@ Résoudre les problèmes de maths: Addition, Soustraction, Multiplication et Div
 
 ## Identifiez La Lettre
 
-Selectionnez tos les blocs contenant la lettre mentionné.
+Selectionnez tous les blocs contenant la lettre mentionnée.
 
 ![Literacy](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/letters.png)
 
 ##Potions Magiques
 
-Mélangez les bonnes potions colorées pour préparer la commande de Biboule. Attention à ne pas faire une mauvaise mélange ! 
+Mélangez les bonnes potions colorées pour préparer la commande de Biboule. Attention à ne pas faire un mauvais mélange ! 
 
 ![PotionsMagiques](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/potions.jpg)
+
+##Jeu de l'oie
+
+Lancez les dés pour avancer le long des cases afin d'atteindre la fin avant les autres joueurs.
+
+![Goosegame](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/goosegame.png)

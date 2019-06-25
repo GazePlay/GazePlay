@@ -13,6 +13,7 @@ public class BridgeSquare extends Square {
 
     @Override
     protected void pawnStays(Pawn pawn){
+        game.showMessage("Player %d takes the bridge to square %d", pawn.getNumber(), destinationSquare.number);
         pawn.moveToSquare(destinationSquare);
     }
 }

@@ -1234,14 +1234,16 @@ public class DefaultGamesLocator implements GamesLocator {
                         }));
 
         result.add(
-                new GameSpec(new GameSummary("Goose Game", "data/Thumbnails/dice.png", GameCategories.Category.MEMORIZATION),
+                new GameSpec(new GameSummary("Goose Game", "data/Thumbnails/goosegame.png", GameCategories.Category.MEMORIZATION),
                         new GameSpec.GameVariantGenerator() {
                             @Override
                             public Set<GameSpec.GameVariant> getVariants() {
                                 return Sets.newLinkedHashSet(Lists.newArrayList(
 
                                         new GameSpec.IntGameVariant(2, "2 players"),
-                                        new GameSpec.IntGameVariant(3, "3 players")
+                                        new GameSpec.IntGameVariant(3, "3 players"),
+                                        new GameSpec.IntGameVariant(4, "4 players"),
+                                        new GameSpec.IntGameVariant(5, "5 players")
 
                                 ));
                             }

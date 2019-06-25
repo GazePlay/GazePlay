@@ -14,6 +14,7 @@ public class Pawn {
 
     @Getter
     private ImageView pawnDisplay;
+    @Getter
     private int turnsLeftToSkip;
     @Getter
     private int lastThrowResult;
