@@ -175,28 +175,28 @@ public class StatsDisplay {
             Rectangle tickRed = new Rectangle(0, 0, 10, 1.5);
             tickRed.setFill(Color.WHITE);
 
-            Label red = new Label("\"red\" s");
+            Label red = new Label("> 330 ms");
             red.setFont(Font.font(9));
             red.setTextFill(Color.WHITE);
 
             Rectangle tickYellow = new Rectangle(0, 0, 10, 1.5);
             tickYellow.setFill(Color.WHITE);
 
-            Label yellow = new Label("\"yellow\" s");
+            Label yellow = new Label("280 ms");
             yellow.setFont(Font.font(9));
             yellow.setTextFill(Color.WHITE);
 
             Rectangle tickGreen = new Rectangle(0, 0, 10, 1.5);
             tickGreen.setFill(Color.WHITE);
 
-            Label green = new Label("\"green\" s");
+            Label green = new Label("230 ms");
             green.setFont(Font.font(9));
             green.setTextFill(Color.WHITE);
 
             Rectangle tickDarkBlue = new Rectangle(0, 0, 10, 1.5);
             tickDarkBlue.setFill(Color.WHITE);
 
-            Label blue = new Label("\"blue\" s");
+            Label blue = new Label("< 180  ms");
             blue.setFont(Font.font(9));
             blue.setTextFill(Color.WHITE);
 
