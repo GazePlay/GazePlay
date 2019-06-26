@@ -5,6 +5,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
@@ -26,6 +27,7 @@ public class HeatMap {
     /**
      * Writable image used to create the heatmap image
      */
+    @Getter
     private WritableImage image;
     /**
      * Array of the different colors used to interpolate

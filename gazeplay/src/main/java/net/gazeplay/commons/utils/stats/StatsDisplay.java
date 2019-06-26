@@ -16,13 +16,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -79,9 +79,7 @@ public class StatsDisplay {
         } else {
             shoots = stats.getOriginalDurationsBetweenGoals();
         }
-        for (Long shoot : shoots) {
-            System.out.println("The interval is at " + shoot);
-        }
+
         double sd = stats.computeRoundsDurationStandardDeviation();
 
         int i = 0;
@@ -137,36 +135,22 @@ public class StatsDisplay {
         return lineChart;
     }
 
-    public static StackPane buildGazeChart(Stats stats, final Region root, boolean showHeatmap,
-            boolean showFixationPoints) {
-        StackPane finalChart = new StackPane();
+    public static ImageView buildGazeMetrics(Stats stats, final Region root) {
+        ImageView gazeMetrics = new ImageView();
+        gazeMetrics.setPreserveRatio(true);
 
         SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+        savedStatsInfo.addObserver((o, arg) -> {
+            Platform.runLater(
+                    () -> gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString())));
+        });
 
-        ImageView screenshot = new ImageView();
-        screenshot.setPreserveRatio(true);
-        screenshot.setImage(new Image(savedStatsInfo.getScreenshotFile().toURI().toString()));
-        finalChart.getChildren().add(screenshot);
+        gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString()));
 
-        if (showHeatmap) {
-            ImageView heatmap = new ImageView();
-            heatmap.setImage(new Image(savedStatsInfo.getHeatMapPngFile().toURI().toString()));
-            GaussianBlur blur = new GaussianBlur();
-            blur.setRadius(10.0);
-            heatmap.setEffect(blur);
-            finalChart.getChildren().add(heatmap);
-        }
+        EventHandler<Event> openGazeMetricsEvent = createZoomInGazeMetricsEventHandler(gazeMetrics, root);
+        gazeMetrics.addEventHandler(MouseEvent.MOUSE_CLICKED, openGazeMetricsEvent);
 
-        if (showFixationPoints) {
-            ImageView fixationPoints = new ImageView();
-            fixationPoints.setImage(new Image(savedStatsInfo.getFixationPointsPngFile().toURI().toString()));
-            finalChart.getChildren().add(fixationPoints);
-        }
-
-        EventHandler<Event> openChartEvent = createZoomInStackPaneEventHandler(finalChart, root);
-        finalChart.addEventHandler(MouseEvent.MOUSE_CLICKED, openChartEvent);
-
-        return finalChart;
+        return gazeMetrics;
     }
 
     private static void resetToOriginalIndexInParent(Node node, int originalIndexInParent) {
@@ -218,35 +202,35 @@ public class StatsDisplay {
         };
     }
 
-    private static EventHandler<Event> createZoomOutStackPaneEventHandler(StackPane i, final Region root,
+    private static EventHandler<Event> createZoomOuGazeMetricsEventHandler(ImageView gazeMetrics, final Region root,
             int originalIndexInParent) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                i.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+                gazeMetrics.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                zoomOutAndReset(i);
+                zoomOutAndReset(gazeMetrics);
 
-                resetToOriginalIndexInParent(i, originalIndexInParent);
+                resetToOriginalIndexInParent(gazeMetrics, originalIndexInParent);
 
-                i.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInStackPaneEventHandler(i, root));
+                gazeMetrics.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        createZoomInGazeMetricsEventHandler(gazeMetrics, root));
             }
         };
     }
 
-    private static EventHandler<Event> createZoomInStackPaneEventHandler(StackPane i, final Region root) {
+    private static EventHandler<Event> createZoomInGazeMetricsEventHandler(ImageView gazeMetrics, final Region root) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                i.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+                gazeMetrics.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                int originalIndexInParent = getOriginalIndexInParent(i);
+                int originalIndexInParent = getOriginalIndexInParent(gazeMetrics);
 
-                ImageView image = (ImageView) i.getChildren().get(0);
-                zoomInAndCenter(i, image.getFitWidth(), image.getFitHeight(), true);
+                zoomInAndCenter(gazeMetrics, gazeMetrics.getFitWidth(), gazeMetrics.getFitHeight(), true);
 
-                i.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOutStackPaneEventHandler(i, root, originalIndexInParent));
+                gazeMetrics.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        createZoomOuGazeMetricsEventHandler(gazeMetrics, root, originalIndexInParent));
             }
         };
     }
