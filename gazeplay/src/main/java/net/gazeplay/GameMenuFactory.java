@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -47,12 +48,16 @@ public class GameMenuFactory {
     private List<GameButtonPane> pausedEvents = new LinkedList<GameButtonPane>();
 
     public GameButtonPane createGameButton(GazePlay gazePlay, final Region root, Configuration config,
-            Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
-            GazeDeviceManager gazeDeviceManager, BooleanProperty gameSelected) {
+                                           Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
+                                           GazeDeviceManager gazeDeviceManager, BooleanProperty gameSelected) {
         this.gazeDeviceManager = gazeDeviceManager;
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
+
+        Image heartIcon = new Image("data/common/images/heart_small.png");
+        ImageView favGamesIcon = new ImageView(heartIcon);
+
 
         final I18NText gameTitleText = new I18NText(translator, gameSummary.getNameCode());
         gameTitleText.getStyleClass().add("gameChooserButtonTitle");
@@ -63,24 +68,24 @@ public class GameMenuFactory {
             gameDesc.getStyleClass().add("gameChooserButtonDesc");
         }
 
-        BorderPane thumbnailImageViewContainer = new BorderPane();
-        thumbnailImageViewContainer.setPadding(new Insets(1, 1, 1, 1));
-        thumbnailImageViewContainer.setOpaqueInsets(new Insets(1, 1, 1, 1));
+        BorderPane thumbnailContainer = new BorderPane();
+        thumbnailContainer.setPadding(new Insets(1, 1, 1, 1));
+        thumbnailContainer.setOpaqueInsets(new Insets(1, 1, 1, 1));
         if (useDebuggingBackgrounds) {
-            thumbnailImageViewContainer
+            thumbnailContainer
                     .setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
         GameButtonPane gameCard = new GameButtonPane();
         switch (orientation) {
-        case HORIZONTAL:
-            gameCard.getStyleClass().add("gameChooserButton");
-            gameCard.getStyleClass().add("gameChooserButtonHorizontal");
-            break;
-        case VERTICAL:
-            gameCard.getStyleClass().add("gameChooserButton");
-            gameCard.getStyleClass().add("gameChooserButtonVertical");
-            break;
+            case HORIZONTAL:
+                gameCard.getStyleClass().add("gameChooserButton");
+                gameCard.getStyleClass().add("gameChooserButtonHorizontal");
+                break;
+            case VERTICAL:
+                gameCard.getStyleClass().add("gameChooserButton");
+                gameCard.getStyleClass().add("gameChooserButtonVertical");
+                break;
         }
 
         if (useDebuggingBackgrounds) {
@@ -102,33 +107,31 @@ public class GameMenuFactory {
             ImageView imageView = new ImageView(buttonGraphics);
             imageView.getStyleClass().add("gameChooserButtonThumbnail");
             imageView.setPreserveRatio(true);
-            StackPane.setAlignment(imageView, Pos.CENTER);
-            thumbnailImageViewContainer.setCenter(imageView);
+            thumbnailContainer.setCenter(imageView);
 
             double imageSizeRatio = buttonGraphics.getWidth() / buttonGraphics.getHeight();
 
             switch (orientation) {
-            case HORIZONTAL:
-                gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-                    double preferedHeight = newValue.doubleValue() - thumbnailBorderSize;
-                    imageView.setFitHeight(preferedHeight);
-                    imageView.setFitWidth(preferedHeight * imageSizeRatio);
-                });
-                // gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
-                // imageView.setFitWidth(newValue.doubleValue() / 2);
-                // });
-                break;
-            case VERTICAL:
-                gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
-                    double preferedWidth = newValue.doubleValue() * THUMBNAIL_WIDTH_RATIO;
-                    imageView.setFitWidth(preferedWidth);
-                });
-                gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-                    imageView.setFitHeight(newValue.doubleValue() * THUMBNAIL_HEIGHT_RATIO);
-                });
-                break;
+                case HORIZONTAL:
+                    gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+                        double preferredHeight = newValue.doubleValue() - thumbnailBorderSize;
+                        imageView.setFitHeight(preferredHeight);
+                        imageView.setFitWidth(preferredHeight * imageSizeRatio);
+                    });
+                    // gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+                    // imageView.setFitWidth(newValue.doubleValue() / 2);
+                    // });
+                    break;
+                case VERTICAL:
+                    gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+                        double preferredWidth = newValue.doubleValue() * THUMBNAIL_WIDTH_RATIO;
+                        imageView.setFitWidth(preferredWidth);
+                    });
+                    gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+                        imageView.setFitHeight(newValue.doubleValue() * THUMBNAIL_HEIGHT_RATIO);
+                    });
+                    break;
             }
-
         }
 
         if (gameSummary.getCategory().getThumbnail() != null) {
@@ -137,29 +140,26 @@ public class GameMenuFactory {
             imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
             imageView.setPreserveRatio(true);
 
-            final VBox gameTypeIndicatorImageViewContainer = new VBox();
+            final VBox gameCategoryContainer = new VBox();
             switch (orientation) {
-            case HORIZONTAL:
-                gameCard.heightProperty().addListener(
-                        (observableValue, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() / 10));
-                StackPane.setAlignment(imageView, Pos.BOTTOM_RIGHT);
+                case HORIZONTAL:
+                    gameCard.heightProperty().addListener(
+                            (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
 
-                gameTypeIndicatorImageViewContainer.setAlignment(Pos.BOTTOM_RIGHT);
-                gameTypeIndicatorImageViewContainer.getChildren().add(imageView);
-                gameCard.setBottom(gameTypeIndicatorImageViewContainer);
-                gameCard.setTop(new VBox());
+                    gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
+                    gameCategoryContainer.getChildren().add(imageView);
+                    gameCard.setBottom(gameCategoryContainer);
+                    gameCard.setTop(new HBox(favGamesIcon));
 
-                break;
-            case VERTICAL:
-                gameCard.widthProperty().addListener(
-                        (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
-                StackPane.setAlignment(imageView, Pos.BOTTOM_RIGHT);
+                    break;
+                case VERTICAL:
+                    gameCard.widthProperty().addListener(
+                            (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
 
-                gameTypeIndicatorImageViewContainer.setAlignment(Pos.TOP_RIGHT);
-                gameTypeIndicatorImageViewContainer.getChildren().add(imageView);
-                gameCard.setTop(gameTypeIndicatorImageViewContainer);
-
-                break;
+                    gameCategoryContainer.setAlignment(Pos.TOP_RIGHT);
+                    gameCategoryContainer.getChildren().add(imageView);
+                    gameCard.setTop(gameCategoryContainer);
+                    break;
             }
         }
 
@@ -168,62 +168,60 @@ public class GameMenuFactory {
         gameDescriptionPane.setTop(gameTitleContainer);
 
         if (gameDesc != null) {
-            final Pane gameDescContainer = new StackPane(gameDesc);
-            StackPane.setAlignment(gameDesc, Pos.CENTER_LEFT);
             gameDesc.wrappingWidthProperty().bind(gameDescriptionPane.prefWidthProperty());
+            gameDesc.setFont(Font.font("Arial",10));
             gameDesc.setTextAlignment(TextAlignment.JUSTIFY);
-            gameDescriptionPane.setCenter(gameDescContainer);
+            gameDescriptionPane.setCenter(gameDesc);
         }
 
         switch (orientation) {
-        case HORIZONTAL:
-            gameDescriptionPane.setPadding(new Insets(0, 10, 0, 10));
+            case HORIZONTAL:
+                gameDescriptionPane.setPadding(new Insets(0, 10, 0, 10));
 
-            gameCard.setRight(gameDescriptionPane);
-            gameCard.setLeft(thumbnailImageViewContainer);
+                gameCard.setRight(gameDescriptionPane);
+                gameCard.setLeft(thumbnailContainer);
 
-            // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
-            StackPane.setAlignment(gameTitleText, Pos.TOP_RIGHT);
-            gameTitleContainer.setAlignment(Pos.TOP_RIGHT);
-            gameTitleText.setTextAlignment(TextAlignment.RIGHT);
+                gameTitleContainer.setAlignment(Pos.TOP_RIGHT);
+                gameTitleText.setTextAlignment(TextAlignment.RIGHT);
 
-            gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-                // thumbnailImageViewContainer.setPrefWidth(newValue.doubleValue() / 2);
-                thumbnailImageViewContainer.setPrefHeight(newValue.doubleValue() / 2 / 16 * 9);
-                gameDescriptionPane.setPrefHeight(newValue.doubleValue() - thumbnailBorderSize);
-            });
-            gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
-                thumbnailImageViewContainer.setPrefWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
-                thumbnailImageViewContainer.setMaxWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
-                gameDescriptionPane.setPrefWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
-                gameDescriptionPane.setMaxWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
-                gameTitleText.setWrappingWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
+                gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+                    // thumbnailContainer.setPrefWidth(newValue.doubleValue() / 2);
+                    thumbnailContainer.setPrefHeight(newValue.doubleValue() / 2 / 16 * 9);
+                    gameDescriptionPane.setPrefHeight(newValue.doubleValue() - thumbnailBorderSize);
+                });
+                gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+                    thumbnailContainer.setPrefWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
+                    thumbnailContainer.setMaxWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
+                    gameDescriptionPane.setPrefWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
+                    gameDescriptionPane.setMaxWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
+                    gameTitleText.setWrappingWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
 
-            });
+                });
 
-            break;
-        case VERTICAL:
-            gameDescriptionPane.setPadding(new Insets(10, 0, 10, 0));
+                break;
+            case VERTICAL:
+                gameDescriptionPane.setPadding(new Insets(10, 0, 10, 0));
 
-            gameCard.setBottom(gameDescriptionPane);
-            gameCard.setCenter(thumbnailImageViewContainer);
+                gameCard.setBottom(gameDescriptionPane);
+                gameCard.setCenter(thumbnailContainer);
 
-            // thumbnailImageViewContainer.setAlignment(Pos.CENTER);
-            StackPane.setAlignment(gameTitleText, Pos.TOP_CENTER);
-            gameTitleContainer.setAlignment(Pos.TOP_CENTER);
-            gameTitleText.setTextAlignment(TextAlignment.CENTER);
+                VBox favIconContainer = new VBox(favGamesIcon);
+                gameCard.setLeft(favIconContainer);
 
-            gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
-                thumbnailImageViewContainer.setPrefWidth(newValue.doubleValue() - thumbnailBorderSize);
-                gameDescriptionPane.setPrefWidth(newValue.doubleValue() - thumbnailBorderSize);
-                gameTitleText.setWrappingWidth(newValue.doubleValue() - thumbnailBorderSize);
-            });
-            gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-                thumbnailImageViewContainer.setPrefHeight(newValue.doubleValue() / 2);
-                gameDescriptionPane.setPrefHeight(newValue.doubleValue() / 2);
-            });
+                gameTitleContainer.setAlignment(Pos.TOP_CENTER);
+                gameTitleText.setTextAlignment(TextAlignment.CENTER);
 
-            break;
+                gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+                    thumbnailContainer.setPrefWidth(newValue.doubleValue() - thumbnailBorderSize);
+                    gameDescriptionPane.setPrefWidth(newValue.doubleValue() - thumbnailBorderSize);
+                    gameTitleText.setWrappingWidth(newValue.doubleValue() - thumbnailBorderSize);
+                });
+                gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+                    thumbnailContainer.setPrefHeight(newValue.doubleValue() / 2);
+                    gameDescriptionPane.setPrefHeight(newValue.doubleValue() / 2);
+                });
+
+                break;
         }
 
         gameCard.setEventhandler(new EventHandler<Event>() {
@@ -329,12 +327,8 @@ public class GameMenuFactory {
     }
 
     private void chooseGame(GazePlay gazePlay, GameSpec selectedGameSpec, GameSpec.GameVariant gameVariant,
-            Configuration config) {
+                            Configuration config) {
         GameContext gameContext = GameContext.newInstance(gazePlay);
-
-        // SecondScreen secondScreen = SecondScreen.launch();
-        // this.gazeDeviceManager.clear();
-        // this.gazeDeviceManager.destroy();
 
         gazePlay.onGameLaunch(gameContext);
 
