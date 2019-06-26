@@ -11,6 +11,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -148,7 +150,8 @@ public class GameMenuFactory {
                 gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
                 gameCategoryContainer.getChildren().add(imageView);
                 gameCard.setBottom(gameCategoryContainer);
-                gameCard.setTop(new HBox(favGamesIcon));
+                VBox favIconContainer = new VBox(favGamesIcon);
+                gameCard.setTop(favIconContainer);
 
                 break;
             case VERTICAL:
@@ -223,7 +226,7 @@ public class GameMenuFactory {
             break;
         }
 
-        gameCard.setEventhandler(new EventHandler<Event>() {
+        EventHandler event = new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
 
@@ -252,9 +255,17 @@ public class GameMenuFactory {
                     }
                 }
             }
-        });
+        };
 
-        gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, gameCard.getEventhandler());
+        EventHandler favGameHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+               favGamesIcon.setImage(new Image("data/common/images/heart_small_filled.png"));
+            }
+        };
+
+        gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
+        favGamesIcon.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler);
         pausedEvents.add(gameCard);
         return gameCard;
     }
