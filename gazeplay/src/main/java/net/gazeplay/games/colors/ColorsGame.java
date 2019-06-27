@@ -176,6 +176,8 @@ public class ColorsGame implements GameLifeCycle {
 
         // log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
         buildDraw(DEFAULT_IMAGE, width, height);
+
+        stats.notifyNewRoundReady();
     }
 
     @Override

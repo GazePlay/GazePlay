@@ -248,6 +248,7 @@ public class GooseGame implements GameLifeCycle {
         currentPawn = 0;
 
         gameContext.getChildren().addAll(diceDisplay, rollButton, messages);
+        stats.notifyNewRoundReady();
     }
 
     /***

@@ -139,6 +139,7 @@ public class slidingpuzzle implements GameLifeCycle {
 
         gameContext.getChildren().addAll(cardList);
 
+        stats.notifyNewRoundReady();
     }
 
     @Override

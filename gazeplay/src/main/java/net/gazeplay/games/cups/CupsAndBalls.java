@@ -117,7 +117,7 @@ public class CupsAndBalls implements GameLifeCycle {
                 createNewTransition(actions);
             });
         }
-
+        stats.notifyNewRoundReady();
     }
 
     @Override
