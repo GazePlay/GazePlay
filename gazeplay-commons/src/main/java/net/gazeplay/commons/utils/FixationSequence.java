@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.lang.Math;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -26,6 +27,7 @@ public class FixationSequence {
     /**
      * Writable image used to create the fixation Sequence image
      */
+    @Getter
     private WritableImage image;
 
     private static Font sanSerifFont = new Font("SanSerif", 10);
