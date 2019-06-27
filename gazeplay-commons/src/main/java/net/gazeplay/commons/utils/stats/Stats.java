@@ -348,7 +348,7 @@ public class Stats implements GazeMotionListener {
                     new float[] { 1 / 16f, 1 / 8f, 1 / 16f, 1 / 8f, 1 / 4f, 1 / 8f, 1 / 16f, 1 / 8f, 1 / 16f });
             BufferedImageOp op = new ConvolveOp(kernel);
             heatmapImage = op.filter(heatmapImage, null);
-            g.drawImage(heatmapImage, 0, 0, bImage.getWidth(), bImage.getHeight(), null);
+            g.drawImage(heatmapImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
 
             BufferedImage key = SwingFXUtils.fromFXImage(hm.getColorKey(bImage.getWidth() / 20, bImage.getHeight() / 2),
                     null);
@@ -361,7 +361,7 @@ public class Stats implements GazeMotionListener {
             FixationSequence sequence = new FixationSequence((int) gameContextScene.getWidth(),
                     (int) gameContextScene.getHeight(), fixationSequence);
             BufferedImage seqImage = SwingFXUtils.fromFXImage(sequence.getImage(), null);
-            g.drawImage(seqImage, 0, 0, bImage.getWidth(), bImage.getHeight(), null);
+            g.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
         }
 
         saveImageAsPng(bImage, gazeMetricsFile);
