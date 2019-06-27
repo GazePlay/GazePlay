@@ -219,27 +219,20 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             centerPane.getChildren().add(chart);
         }
 
-        if (!config.isHeatMapDisabled() || !config.isFixationSequenceDisabled()) {
-            StackPane charts = StatsDisplay.buildGazeChart(stats, root, !config.isHeatMapDisabled(),
-                    !config.isFixationSequenceDisabled());
-            for (Node n : charts.getChildren()) {
-                if (n instanceof ImageView) {
-                    ImageView imageView = (ImageView) n;
-                    root.widthProperty().addListener((observable, oldValue, newValue) -> {
-                        imageView.setFitWidth(newValue.doubleValue() * 0.35);
-                    });
-                    root.heightProperty().addListener((observable, oldValue, newValue) -> {
-                        imageView.setFitHeight(newValue.doubleValue() * 0.35);
-                    });
+        ImageView gazeMetrics = StatsDisplay.buildGazeMetrics(stats, root);
+        root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
-                    imageView.setFitWidth(root.getWidth() * 0.35);
-                    imageView.setFitHeight(root.getHeight() * 0.35);
-                }
+            gazeMetrics.setFitWidth(newValue.doubleValue() * 0.35);
+        });
+        root.heightProperty().addListener((observable, oldValue, newValue) -> {
 
-            }
-            centerPane.getChildren().add(charts);
+            gazeMetrics.setFitHeight(newValue.doubleValue() * 0.35);
+        });
 
-        }
+        gazeMetrics.setFitWidth(root.getWidth() * 0.35);
+        gazeMetrics.setFitHeight(root.getHeight() * 0.35);
+
+        centerPane.getChildren().add(gazeMetrics);
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
         EventHandler<Event> AOIEvent = e -> {
