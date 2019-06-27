@@ -307,6 +307,14 @@ public class Stats implements GazeMotionListener {
         incFixationSequence(positionX, positionY);
     }
 
+    private void saveImageAsPng(BufferedImage bufferedImage, File outputFile) {
+        try {
+            ImageIO.write(bufferedImage, "png", outputFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public SavedStatsInfo saveStats() throws IOException {
 
         File todayDirectory = getGameStatsOfTheDayDirectory();
@@ -314,17 +322,19 @@ public class Stats implements GazeMotionListener {
         final String gazeMetricsFilePrefix = Utils.now() + "-metrics";
         final String screenShotFilePrefix = Utils.now() + "-screenshot";
 
-        File gazeMetricsFile = new File(todayDirectory, heatmapFilePrefix + ".png");
+        File gazeMetricsFile = new File(todayDirectory, gazeMetricsFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
         File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
-        BufferedImage bImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
-        Graphics g = bImage.getGraphics();
 
-        try {
-            ImageIO.write(bImage, "png", screenShotFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
+        saveImageAsPng(screenshotImage, screenShotFile);
+
+        BufferedImage bImage = new BufferedImage(screenshotImage.getWidth() + (heatMap != null? screenshotImage.getWidth()/20 + 10 : 0), screenshotImage.getHeight(), screenshotImage.getType());
+
+        Graphics g = bImage.getGraphics();
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
+        g.drawImage(screenshotImage, 0, 0, null);
 
         SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFile, screenShotFile);
 
@@ -337,6 +347,10 @@ public class Stats implements GazeMotionListener {
             BufferedImageOp op = new ConvolveOp(kernel);
             heatmapImage = op.filter(heatmapImage, null);
             g.drawImage(heatmapImage, 0, 0, bImage.getWidth(), bImage.getHeight(), null);
+
+            BufferedImage key = SwingFXUtils.fromFXImage(hm.getColorKey(bImage.getWidth()/20, bImage.getHeight()/2), null);
+            g.drawImage(key, bImage.getWidth() - key.getWidth(), (bImage.getHeight() - key.getHeight()) / 2, null);
+
             saveHeatMapAsCsv(heatMapCsvFile);
         }
 
@@ -347,11 +361,7 @@ public class Stats implements GazeMotionListener {
             g.drawImage(seqImage, 0, 0, bImage.getWidth(), bImage.getHeight(), null);
         }
 
-        try {
-            ImageIO.write(bImage, "png", gazeMetricsFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        saveImageAsPng(bImage, gazeMetricsFile);
 
         savedStatsInfo.notifyFilesReady();
         return savedStatsInfo;

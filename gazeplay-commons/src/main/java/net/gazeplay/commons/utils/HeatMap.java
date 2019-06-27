@@ -2,9 +2,17 @@ package net.gazeplay.commons.utils;
 
 import javafx.animation.Interpolator;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.VPos;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.text.Font;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,6 +20,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Creates a heatmap image from a given 2D array
@@ -54,7 +65,6 @@ public class HeatMap {
      */
     public HeatMap(double[][] data) {
         this(data, defaultColors);
-
     }
 
     /**
@@ -125,6 +135,41 @@ public class HeatMap {
                     (value % subdivisionValue) / subdivisionValue);
             return Color.color(red, green, blue, 0.8);
         }
+    }
+
+    public WritableImage getColorKey(int width, int height) {
+        WritableImage keyImage = new WritableImage(width, height);
+        Canvas canvas = new Canvas(width, height);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        ArrayList<Stop> stops = new ArrayList<>();
+        for (int i = 0; i < colors.length; i++) {
+            stops.add(new Stop((double)i / (double)(colors.length - 1), colors[colors.length - 1 - i]));
+        }
+        LinearGradient heatGradient = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
+
+        double margin = height / 20;
+        double barHeight = height - 2*margin;
+        gc.setFont(new Font(margin));
+        gc.setFill(heatGradient);
+        gc.fillRect(0, margin, width/3, barHeight);
+
+        gc.setStroke(Color.BLACK);
+        gc.setFill(Color.WHITE);
+
+        DecimalFormat numberFormat = new DecimalFormat("#.00");
+
+        for (int i = 0; i < colors.length; i++) {
+            double y = margin + (double)i / (double)(colors.length-1) * barHeight;
+            gc.strokeLine(0, y, width/3, y);
+            gc.setTextBaseline(VPos.CENTER);
+            gc.fillText(numberFormat.format(maxValue - (i * subdivisionValue)) + "", width / 3 + 5, y, 2*width/3 - 5);
+        }
+
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        canvas.snapshot(params, keyImage);
+        return keyImage;
     }
 
     /**
