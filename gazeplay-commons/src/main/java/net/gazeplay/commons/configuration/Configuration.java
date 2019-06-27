@@ -1,6 +1,8 @@
 package net.gazeplay.commons.configuration;
 
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.input.KeyCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +11,9 @@ import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
 import java.util.Properties;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
@@ -41,13 +46,18 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
-    /*
+    /**
      * Game Categories Properties
      */
     private static final String PROPERTY_NAME_TARGET_GAMES = "Target games";
     private static final String PROPERTY_NAME_SEARCHING_GAMES = "Searching games";
     private static final String PROPERTY_NAME_MEMORIZATION_GAMES = "Memorization games";
     private static final String PROPERTY_NAME_NO_CATEGORY_GAMES = "No category games";
+    /**
+     * Favourite Games Property
+     */
+
+    private static final String PROPERTY_NAME_FAVOURITE_GAMES = "Favourite games";
 
     @Getter
     @Setter
@@ -74,8 +84,8 @@ public class Configuration implements Cloneable {
     private static final boolean DEFAULT_VALUE_MEMORIZATION_GAMES = true;
     private static final boolean DEFAULT_VALUE_SEARCHING_GAMES = true;
     private static final boolean DEFAULT_VALUE_NO_CATEGORY_GAMES = true;
-    // next thing to do
-    // private static final String DEFAULT_EXIT_SHORTCUT_KEY = "SPACE";
+    private static final ArrayList<String> DEFAULT_VALUE_FAVOURITE_GAMES = null;
+
     @Setter
     @Getter
     public static String DEFAULT_VALUE_FILE_DIR = getFileDirectoryDefaultValue();
@@ -517,7 +527,7 @@ public class Configuration implements Cloneable {
     }
 
     public String getQuitKey() {
-        System.out.println(QuitKeyProperty.getValue());
+        // System.out.println(QuitKeyProperty.getValue());
         return QuitKeyProperty.getValue();
     }
 

@@ -21,6 +21,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
@@ -31,12 +32,14 @@ import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.labyrinth.Mouse;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
+@Data
 public class GameMenuFactory {
 
     private final boolean useDebuggingBackgrounds = false;
@@ -57,7 +60,7 @@ public class GameMenuFactory {
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
 
-        Image heartIcon = new Image("data/common/images/heart_small.png");
+        Image heartIcon = new Image("data/common/images/heart_empty.png");
         ImageView favGamesIcon = new ImageView(heartIcon);
 
         final I18NText gameTitleText = new I18NText(translator, gameSummary.getNameCode());
@@ -256,16 +259,22 @@ public class GameMenuFactory {
                 }
             }
         };
-
         EventHandler favGameHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-               favGamesIcon.setImage(new Image("data/common/images/heart_small_filled.png"));
+                if (!gameSummary.isFavourite()) {
+                    favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
+                    gameSummary.setFavourite(true);
+                    // log.info("game {}");
+                } else if (gameSummary.isFavourite()) {
+                    favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
+                    gameSummary.setFavourite(false);
+                }
             }
         };
 
         gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
-        favGamesIcon.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler);
+        favGamesIcon.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler);
         pausedEvents.add(gameCard);
         return gameCard;
     }

@@ -2,8 +2,11 @@ package net.gazeplay;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
+import net.gazeplay.commons.configuration.Configuration;
 
 @Data
+
 public class GameSummary {
 
     @Getter
@@ -21,6 +24,10 @@ public class GameSummary {
     @Getter
     private final String description;
 
+    @Getter
+    @Setter
+    private boolean favourite;
+
     public GameSummary(String nameCode, String gameThumbnail, GameCategories.Category category) {
         this(nameCode, gameThumbnail, category, null);
     }
@@ -37,6 +44,7 @@ public class GameSummary {
         this.category = category;
         this.backgroundMusicUrl = backgroundMusicUrl;
         this.description = description;
+        this.setFavourite(false);
     }
 
 }
