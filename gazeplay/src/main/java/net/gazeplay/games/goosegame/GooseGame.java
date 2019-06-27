@@ -27,12 +27,14 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.DiceRoller;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.ProgressButton;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 @Slf4j
 public class GooseGame implements GameLifeCycle {
@@ -70,6 +72,8 @@ public class GooseGame implements GameLifeCycle {
 
     private ImageView turnIndicator;
 
+    private Random random;
+
     public GooseGame(GameContext gameContext, Stats stats, int nbPlayers) {
         this.gameContext = gameContext;
         this.stats = stats;
@@ -78,6 +82,8 @@ public class GooseGame implements GameLifeCycle {
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.config = Configuration.getInstance();
         this.translate = Multilinguism.getSingleton();
+
+        this.random = new Random();
 
         // JSON file used to store the position of each square, later used for pawn movement
         JsonParser parser = new JsonParser();
@@ -342,5 +348,13 @@ public class GooseGame implements GameLifeCycle {
         gameContext.playWinTransition(200, actionEvent -> {
             dispose();
         });
+    }
+
+    public void playMovementSound() {
+        try {
+            Utils.playSound(String.format("data/goosegame/sounds/mvmt%d.wav", random.nextInt(6)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

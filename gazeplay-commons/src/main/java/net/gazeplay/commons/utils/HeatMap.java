@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Creates a heatmap image from a given 2D array
@@ -171,20 +170,5 @@ public class HeatMap {
         params.setFill(Color.TRANSPARENT);
         canvas.snapshot(params, keyImage);
         return keyImage;
-    }
-
-    /**
-     * Saves the heatmap to a PNG file
-     * 
-     * @param outputFile
-     *            The output file (Must be open and writable)
-     */
-    public void saveToFile(File outputFile) {
-        BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
-        try {
-            ImageIO.write(bImage, "png", outputFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
