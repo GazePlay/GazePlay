@@ -329,7 +329,9 @@ public class Stats implements GazeMotionListener {
         BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
         saveImageAsPng(screenshotImage, screenShotFile);
 
-        BufferedImage bImage = new BufferedImage(screenshotImage.getWidth() + (heatMap != null? screenshotImage.getWidth()/20 + 10 : 0), screenshotImage.getHeight(), screenshotImage.getType());
+        BufferedImage bImage = new BufferedImage(
+                screenshotImage.getWidth() + (heatMap != null ? screenshotImage.getWidth() / 20 + 10 : 0),
+                screenshotImage.getHeight(), screenshotImage.getType());
 
         Graphics g = bImage.getGraphics();
         g.setColor(Color.BLACK);
@@ -348,7 +350,8 @@ public class Stats implements GazeMotionListener {
             heatmapImage = op.filter(heatmapImage, null);
             g.drawImage(heatmapImage, 0, 0, bImage.getWidth(), bImage.getHeight(), null);
 
-            BufferedImage key = SwingFXUtils.fromFXImage(hm.getColorKey(bImage.getWidth()/20, bImage.getHeight()/2), null);
+            BufferedImage key = SwingFXUtils.fromFXImage(hm.getColorKey(bImage.getWidth() / 20, bImage.getHeight() / 2),
+                    null);
             g.drawImage(key, bImage.getWidth() - key.getWidth(), (bImage.getHeight() - key.getHeight()) / 2, null);
 
             saveHeatMapAsCsv(heatMapCsvFile);
