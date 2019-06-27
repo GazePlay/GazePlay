@@ -37,6 +37,6 @@ public class Ninja implements GameLifeCycle {
     public void dispose() {
         gameContext.clear();
         portrait.currentTranslation.stop();
-        portrait = null;
+        // portrait = null; <- it introduced a NullPointerException
     }
 }

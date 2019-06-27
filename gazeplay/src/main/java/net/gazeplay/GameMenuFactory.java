@@ -357,6 +357,8 @@ public class GameMenuFactory {
 
         gameContext.createQuitShortcut(gazePlay, stats, currentGame);
 
+        gameContext.speedAdjust(gazePlay);
+
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
 
             final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();

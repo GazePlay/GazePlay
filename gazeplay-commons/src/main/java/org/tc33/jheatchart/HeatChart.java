@@ -59,7 +59,7 @@ import java.util.Iterator;
  * <h4>Object axis getLanguages</h4>
  * 
  * <p>
- * The simplist way to set the axis getLanguages is to use the methods which take an array of Object[]. This array must
+ * The simplest way to set the axis getLanguages is to use the methods which take an array of Object[]. This array must
  * have the same length as the number of columns for setXValues and same as the number of rows for setYValues. The
  * string representation of the objects will then be used as the axis getLanguages.
  * 
