@@ -28,6 +28,9 @@ import org.monte.screenrecorder.ScreenRecorderCompactMain;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -304,38 +307,65 @@ public class Stats implements GazeMotionListener {
         incFixationSequence(positionX, positionY);
     }
 
+    private void saveImageAsPng(BufferedImage bufferedImage, File outputFile) {
+        try {
+            ImageIO.write(bufferedImage, "png", outputFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public SavedStatsInfo saveStats() throws IOException {
 
         File todayDirectory = getGameStatsOfTheDayDirectory();
         final String heatmapFilePrefix = Utils.now() + "-heatmap";
-        final String fixationSequenceFilePrefix = Utils.now() + "-fixationSequence";
-        final String screenshotPrefix = Utils.now() + "-screenshot";
+        final String gazeMetricsFilePrefix = Utils.now() + "-metrics";
+        final String screenShotFilePrefix = Utils.now() + "-screenshot";
 
-        File heatMapPngFile = new File(todayDirectory, heatmapFilePrefix + ".png");
+        File gazeMetricsFile = new File(todayDirectory, gazeMetricsFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
+        File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
 
-        File fixationSequencePngFile = new File(todayDirectory, fixationSequenceFilePrefix + ".png");
+        BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
+        saveImageAsPng(screenshotImage, screenShotFile);
 
-        File screenshotFile = new File(todayDirectory, screenshotPrefix + ".png");
-        BufferedImage bImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
-        try {
-            ImageIO.write(bImage, "png", screenshotFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        BufferedImage bImage = new BufferedImage(
+                screenshotImage.getWidth() + (heatMap != null ? screenshotImage.getWidth() / 20 + 10 : 0),
+                screenshotImage.getHeight(), screenshotImage.getType());
 
-        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapPngFile, heatMapCsvFile, screenshotFile,
-                fixationSequencePngFile);
+        Graphics g = bImage.getGraphics();
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
+        g.drawImage(screenshotImage, 0, 0, null);
+
+        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFile, screenShotFile);
 
         this.savedStatsInfo = savedStatsInfo;
         if (this.heatMap != null) {
-            saveHeatMapAsPng(heatMapPngFile);
+            HeatMap hm = new HeatMap(heatMap);
+            BufferedImage heatmapImage = SwingFXUtils.fromFXImage(hm.getImage(), null);
+            Kernel kernel = new Kernel(3, 3,
+                    new float[] { 1 / 16f, 1 / 8f, 1 / 16f, 1 / 8f, 1 / 4f, 1 / 8f, 1 / 16f, 1 / 8f, 1 / 16f });
+            BufferedImageOp op = new ConvolveOp(kernel);
+            heatmapImage = op.filter(heatmapImage, null);
+            g.drawImage(heatmapImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
+
+            BufferedImage key = SwingFXUtils.fromFXImage(hm.getColorKey(bImage.getWidth() / 20, bImage.getHeight() / 2),
+                    null);
+            g.drawImage(key, bImage.getWidth() - key.getWidth(), (bImage.getHeight() - key.getHeight()) / 2, null);
+
             saveHeatMapAsCsv(heatMapCsvFile);
         }
 
         if (this.fixationSequence != null) {
-            saveFixationSequenceAsPng(fixationSequencePngFile);
+            FixationSequence sequence = new FixationSequence((int) gameContextScene.getWidth(),
+                    (int) gameContextScene.getHeight(), fixationSequence);
+            BufferedImage seqImage = SwingFXUtils.fromFXImage(sequence.getImage(), null);
+            g.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
         }
+
+        saveImageAsPng(bImage, gazeMetricsFile);
+
         savedStatsInfo.notifyFilesReady();
         return savedStatsInfo;
     }

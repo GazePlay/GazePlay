@@ -1,15 +1,15 @@
 package net.gazeplay;
 
-import com.github.agomezmoron.multimedia.recorder.VideoRecorder;
-import com.github.agomezmoron.multimedia.recorder.configuration.VideoRecorderConfiguration;
 import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TitledPane;
+import javafx.scene.input.KeyEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -21,7 +21,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -35,11 +34,7 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.Stats;
-
 import java.io.IOException;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import net.gazeplay.games.magicPotions.Explosion;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> {
@@ -57,7 +52,7 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private static final double BUTTON_MIN_HEIGHT = 64;
 
-    // private Explosion explosion;
+    private Slider getSpeedSlider;
 
     public static GameContext newInstance(GazePlay gazePlay) {
         translator = gazePlay.getTranslator();
@@ -73,7 +68,6 @@ public class GameContext extends GraphicalContext<Pane> {
         root.minHeightProperty().bind(primaryStage.heightProperty());
 
         Bravo bravo = new Bravo();
-        // Explosion explosion = new Explosion();
 
         Pane gamingRoot = new Pane();
         gamingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
@@ -264,7 +258,6 @@ public class GameContext extends GraphicalContext<Pane> {
 
     private final Bravo bravo;
 
-    // private final Explosion explosion;
     @Getter
     private final HBox menuHBox;
 
@@ -287,7 +280,6 @@ public class GameContext extends GraphicalContext<Pane> {
         super(gazePlay, root);
         this.gamingRoot = gamingRoot;
         this.bravo = bravo;
-        // this.explosion = explosion;
         this.menuHBox = menuHBox;
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
         this.randomPositionGenerator = randomPositionGenerator;
@@ -314,22 +306,19 @@ public class GameContext extends GraphicalContext<Pane> {
         final Scene scene = gazePlay.getPrimaryScene();
 
         // gamingRoot.getChildren().add(scene);
-        EventHandler buttonHandler = new EventHandler<javafx.scene.input.KeyEvent>() {
+        EventHandler buttonHandler = new EventHandler<KeyEvent>() {
 
-            public void handle(javafx.scene.input.KeyEvent event) {
+            public void handle(KeyEvent event) {
 
                 try {
-                    QuitKeyPressed(stats, gazePlay, currentGame);
+                    exitGame(stats, gazePlay, currentGame);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                 scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
-
             }
-
         };
-
         // scene.addEventHandler(KeyEvent.KEY_PRESSED, buttonHandler);
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if (key.getCode().toString() == config.getQuitKey()) {
@@ -337,6 +326,78 @@ public class GameContext extends GraphicalContext<Pane> {
                 scene.addEventHandler(KeyEvent.KEY_RELEASED, buttonHandler);
             }
         });
+    }
+
+    public void speedAdjust(@NonNull GazePlay gp) {
+        Configuration config = Configuration.getInstance();
+        final Scene scene = gp.getPrimaryScene();
+
+        Node outerNode = menuHBox.getChildren().get(2); // get SpeedEffectsPane
+        if (outerNode instanceof TitledPane) {
+            Node inPane = ((TitledPane) outerNode).getContent();
+            if (inPane instanceof BorderPane) {
+                Node inBorderPane = ((BorderPane) inPane).getCenter();
+                if (inBorderPane instanceof HBox) {
+                    for (Node inHBox : ((HBox) inBorderPane).getChildren()) {
+                        if (inHBox instanceof Slider) {
+                            getSpeedSlider = (Slider) inHBox;
+                        }
+                    }
+                }
+            }
+        }
+
+        EventHandler increaseSpeed = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+
+                double sliderSpeedValue = getSpeedSlider.getValue();
+                sliderSpeedValue = Math.floor(sliderSpeedValue);
+
+                if (sliderSpeedValue < getSpeedSlider.getMax()) {
+                    getSpeedSlider.setValue(sliderSpeedValue + 1);
+                    config.getSpeedEffectsProperty().bind(getSpeedSlider.valueProperty());
+                }
+
+                else
+                    log.info("max speed for effects reached !");
+                config.saveConfigIgnoringExceptions();
+
+                scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
+
+            }
+        };
+        EventHandler decreaseSpeed = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+
+                double sliderSpeedValue = getSpeedSlider.getValue();
+                sliderSpeedValue = Math.floor(sliderSpeedValue);
+
+                if (sliderSpeedValue > getSpeedSlider.getMin()) {
+                    getSpeedSlider.setValue(sliderSpeedValue - 1);
+                    config.getSpeedEffectsProperty().bind(getSpeedSlider.valueProperty());
+
+                } else
+                    log.info("min speed for effects reached !");
+                config.saveConfigIgnoringExceptions();
+
+                scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
+            }
+        };
+
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            if (key.getCode().toString().equals("F")) {
+                log.info("Key Value :{}", key.getCode().toString());
+                scene.addEventHandler(KeyEvent.KEY_RELEASED, increaseSpeed);
+            } else if (key.getCode().toString().equals("S")) {
+                log.info("Key Value :{}", key.getCode().toString());
+                scene.addEventHandler(KeyEvent.KEY_RELEASED, decreaseSpeed);
+            }
+        });
+
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
@@ -357,7 +418,7 @@ public class GameContext extends GraphicalContext<Pane> {
         EventHandler<Event> homeEvent = e -> {
             root.setCursor(Cursor.WAIT); // Change cursor to wait style
             try {
-                homeButtonClicked(stats, gazePlay, currentGame);
+                exitGame(stats, gazePlay, currentGame);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -370,36 +431,7 @@ public class GameContext extends GraphicalContext<Pane> {
         return homeButton;
     }
 
-    private void QuitKeyPressed(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
-            throws IOException {
-
-        currentGame.dispose();
-        stats.stop();
-        gazeDeviceManager.clear();
-        gazeDeviceManager.destroy();
-        Runnable asynchronousStatsPersistTask = () -> {
-            try {
-                stats.saveStats();
-            } catch (IOException e) {
-                log.error("Failed to save stats file", e);
-            }
-        };
-
-        if (runAsynchronousStatsPersist) {
-            AsyncUiTaskExecutor.getInstance().getExecutorService().execute(asynchronousStatsPersistTask);
-        } else {
-            asynchronousStatsPersistTask.run();
-        }
-
-        StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
-
-        this.clear();
-
-        gazePlay.onDisplayStats(statsContext);
-
-    }
-
-    private void homeButtonClicked(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
+    private void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
             throws IOException {
         currentGame.dispose();
 
@@ -466,23 +498,9 @@ public class GameContext extends GraphicalContext<Pane> {
         bravo.playWinTransition(root, delay, onFinishedEventHandler);
     }
 
-    // public void playExplosion(){
-    // getChildren().add(explosion.getImageView());
-    // }
-    // public void playExplosion(EventHandler<ActionEvent> onFinishedEventHandler) {
-    // // add Explosion
-    // getChildren().add(explosion);
-    // explosion.toFront();
-    // explosion.playExplosion(root, onFinishedEventHandler);
-    // }
-
     public void endWinTransition() {
         getChildren().remove(bravo);
     }
-
-    // public void endExplosion() {
-    // getChildren().remove(explosion);
-    // }
 
     @Override
     public ObservableList<Node> getChildren() {

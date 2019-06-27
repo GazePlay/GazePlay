@@ -58,7 +58,7 @@ Select all the blocks containing the specified letter.
 
 ![Literacy](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/letters.png)
 
-##Magic Potions
+## Magic Potions
 
 Mix the right colored potions to prepare Biball's order. Careful not to make a wrong mix !
 
