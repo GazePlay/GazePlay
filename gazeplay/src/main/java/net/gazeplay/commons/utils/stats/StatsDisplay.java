@@ -1,5 +1,6 @@
 package net.gazeplay.commons.utils.stats;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
