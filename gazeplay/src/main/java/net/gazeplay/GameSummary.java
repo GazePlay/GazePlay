@@ -1,5 +1,7 @@
 package net.gazeplay;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +30,9 @@ public class GameSummary {
     @Setter
     private boolean favourite;
 
+    // @Getter
+    // private BooleanProperty favouriteProperty;
+
     public GameSummary(String nameCode, String gameThumbnail, GameCategories.Category category) {
         this(nameCode, gameThumbnail, category, null);
     }
@@ -45,6 +50,8 @@ public class GameSummary {
         this.backgroundMusicUrl = backgroundMusicUrl;
         this.description = description;
         this.setFavourite(false);
+        // this.favouriteProperty = new
+        // SimpleBooleanProperty(Configuration.getInstance(),"FAV_PROPERTY_"+this.getNameCode().toUpperCase(),false);
     }
 
 }
