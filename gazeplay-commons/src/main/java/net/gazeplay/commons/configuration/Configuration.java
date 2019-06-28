@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.Utils;
 
+import java.awt.print.Book;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,57 +57,57 @@ public class Configuration implements Cloneable {
     /**
      * Favourite Games Property
      */
-    private static final String PROPERTY_NAME_FAVOURITE_POTIONS = "Potion Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MATH101 = "Math101 Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MATH102 = "Math102 Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MATH103 = "Math103 Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MATH104 = "Math104 Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MATH201 = "Math201 Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_CREAMPIE = "Cream Pie Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_NINJA = "Ninja Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_PUZZLE = "Sliding Puzzle Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MAGICCARDS = "Magic Cards Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_BLOCKS = "Blocks Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_LETTERS = "Identify the Letters Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_SCRATCHCARD = "Scratch Card Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_COLOREDBUBBLES = "Colored Bubbles Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_PORTRAITBUBBLES = "Portrait Bubbles Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHEANIMAL = "Where is the Animal Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHECOLOR = "Where is the Color Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_FINDODD = "Find the Odd Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHELETTER = "Where is the Letter Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHENUMBER = "Where is the Number Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_FLAGS = "Fun with Flags Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHEREISIT = "Where is it Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_BIBOULES = "Biboule Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_ROBOTS = "Robots Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_DIVISOR = "Divisor Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_LAPINS = "Rabbits Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MEMORY = "Memory Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MEMORYLETTERS = "Memory Letters Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MEMORYNUMBERS = "Memory Numbers Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_OPENMEMORY = "Open Memory Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_OPENMEMORYLETTERS = "Open Memory Letters Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_OPENMEMORYNUMBERS = "Open Memory Numbers Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_VIDEOPLAYER = "Video Player with feedback Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_SCRIBBLE = "Scribble Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_CUPSBALLS = "Cups and Balls Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_ORDER = "Order Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_ROOM = "Room Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_PIANO = "Piano Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHACAMOLE = "Whac-A-Mole Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_PET = "Pet Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MEDIAPLAYER = "Media Player Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_RUSHHOUR = "Rush Hour Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_COLORSSS = "Colors! Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_CAKES = "Cakes Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_LABYRINTH = "Labyrinth Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_FROGSRACE = "Frogs Race Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_BIBJUMP = "Biboule Jump Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_SPOTDIFFERENCE = "Spot the Difference Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_DICE = "Dice Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_SPACEGAME = "Space Game Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_GOOSEGAME = "Goose Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_POTIONS = "POTIONS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_MATH101 = "MATH101 Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_MATH102 = "MATH102 Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_MATH103 = "MATH103 Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_MATH104 = "MATH104 Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_MATH201 = "MATH201 Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_CREAMPIE = "CREAMPIE Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_NINJA = "NINJA Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_PUZZLE = "PUZZLE Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_MAGICCARDS = "MAGICCARDS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_BLOCKS = "BLOCKS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_LETTERS = "LETTERS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_SCRATCHCARD = "SCRATCHCARD Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_COLOREDBUBBLES = "COLOREDBUBBLES Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_PORTRAITBUBBLES = "PORTRAITBUBBLES Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHEANIMAL = "WHEREISTHEANIMAL Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHECOLOR = "WHEREISTHECOLOR Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_FINDODD = "FINDODD Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHELETTER = "WHEREISTHELETTER Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHENUMBER = "WHEREISTHENUMBER Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_FLAGS = "FLAGS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_WHEREISIT = "WHEREISIT Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_BIBOULES = "BIBOULE Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_ROBOTS = "ROBOTS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_DIVISOR = "DIVISOR Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_LAPINS = "RABBITS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_MEMORY = "MEMORY Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_MEMORYLETTERS = "MEMORYLETTERS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_MEMORYNUMBERS = "MEMORYNUMBERS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_OPENMEMORY = "OPENMEMORY Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_OPENMEMORYLETTERS = "OOPENMEMORYLETTERS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_OPENMEMORYNUMBERS = "OPENMEMORYNUMBERS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_VIDEOPLAYER = "VIDEOPLAYER Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_SCRIBBLE = "SCRIBBLE Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_CUPSBALLS = "CUPSBALLS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_ORDER = "ORDER Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_ROOM = "ROOM Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_PIANO = "PIANO Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_WHACAMOLE = "WHACAMOLE Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_PET = "PET Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_MEDIAPLAYER = "MEDIAPLAYER Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_RUSHHOUR = "RUSHHOUR Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_COLORSSS = "COLORSSS Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_CAKES = "CAKES Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_LABYRINTH = "LABYRINTH Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_FROGSRACE = "FROGSRACE Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_BIBJUMP = "BIBJUMP Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_SPOTDIFFERENCE = "SPOTDIFFERENCE Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_DICE = "DICE Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_SPACEGAME = "SPACEGAME Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_GOOSEGAME = "GOOSEGAME Game fav";
 
     @Getter
     @Setter
@@ -200,6 +201,11 @@ public class Configuration implements Cloneable {
     // protected final ListProperty<BooleanProperty> FavouriteGamesProperty = new
     // SimpleListProperty<BooleanProperty>(this, PROPERTY_NAME_FAVOURITE_GAMES,
     // DEFAULT_VALUE_FAVOURITE_GAMES);
+
+    @Getter
+//    // @Setter
+     private List<BooleanProperty> favouriteGameProperties = new ArrayList<BooleanProperty>();
+////
 
     @Getter
     protected final StringProperty QuitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
@@ -313,7 +319,6 @@ public class Configuration implements Cloneable {
     @Getter
     protected final BooleanProperty potionsFavProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_FAVOURITE_POTIONS, DEFAULT_VALUE_FAVOURITE_GAMES);
-
     @Getter
     protected final BooleanProperty math101FavProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_FAVOURITE_MATH101, DEFAULT_VALUE_FAVOURITE_GAMES);
@@ -491,15 +496,68 @@ public class Configuration implements Cloneable {
     protected final BooleanProperty diceFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_DICE,
             DEFAULT_VALUE_FAVOURITE_GAMES);
     @Getter
-    protected final BooleanProperty spaceGameFavProperty = new SimpleBooleanProperty(this,
+    private final BooleanProperty spaceGameFavProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_FAVOURITE_SPACEGAME, DEFAULT_VALUE_FAVOURITE_GAMES);
     @Getter
     protected final BooleanProperty gooseGameFavProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_FAVOURITE_GOOSEGAME, DEFAULT_VALUE_FAVOURITE_GAMES);
 
-    // @Getter
-    // @Setter
-    // public List<BooleanProperty> favouriteGameProperties;
+
+    private List<BooleanProperty> getFavProperties(){
+
+               favouriteGameProperties.add(bibouleJumpFavProperty);
+               favouriteGameProperties.add(biboulesFavProperty);
+               favouriteGameProperties.add(blocksFavProperty);
+               favouriteGameProperties.add(cakesFavProperty);
+               favouriteGameProperties.add(coloredBubblesFavProperty);
+               favouriteGameProperties.add(colorsFavProperty);
+               favouriteGameProperties.add(creamPieFavProperty);
+               favouriteGameProperties.add(cupsBallsFavProperty);
+               favouriteGameProperties.add(diceFavProperty);
+               favouriteGameProperties.add(divisorFavProperty);
+               favouriteGameProperties.add(findOddFavProperty);
+               favouriteGameProperties.add(flagsFavProperty);
+               favouriteGameProperties.add(frogsRaceFavProperty);
+               favouriteGameProperties.add(gooseGameFavProperty);
+               favouriteGameProperties.add(lettersFavProperty);
+               favouriteGameProperties.add(labyrinthFavProperty);
+               favouriteGameProperties.add(rabbitsFavProperty);
+               favouriteGameProperties.add(math101FavProperty);
+               favouriteGameProperties.add(math102FavProperty);
+               favouriteGameProperties.add(math103FavProperty);
+               favouriteGameProperties.add(math104FavProperty);
+               favouriteGameProperties.add(math201FavProperty);
+               favouriteGameProperties.add(magicCardsFavProperty);
+               favouriteGameProperties.add(mediaPlayerFavProperty);
+               favouriteGameProperties.add(memoryFavProperty);
+               favouriteGameProperties.add(memoryLettersFavProperty);
+               favouriteGameProperties.add(memoryNumbersFavProperty);
+               favouriteGameProperties.add(ninjaFavProperty);
+               favouriteGameProperties.add(openMemoryFavProperty);
+               favouriteGameProperties.add(openMemoryLettersFavProperty);
+               favouriteGameProperties.add(openMemoryNumbersFavProperty);
+               favouriteGameProperties.add(orderFavProperty);
+               favouriteGameProperties.add(petFavProperty);
+               favouriteGameProperties.add(pianoFavProperty);
+               favouriteGameProperties.add(portraitBubblesFavProperty);
+               favouriteGameProperties.add(potionsFavProperty);
+               favouriteGameProperties.add(puzzleFavProperty);
+               favouriteGameProperties.add(robotsFavProperty);
+               favouriteGameProperties.add(roomFavProperty);
+               favouriteGameProperties.add(rushHourFavProperty);
+               favouriteGameProperties.add(scratchCardFavProperty);
+               favouriteGameProperties.add(scribbleFavProperty);
+               favouriteGameProperties.add(spaceGameFavProperty);
+               favouriteGameProperties.add(spotDifferenceFavProperty);
+               favouriteGameProperties.add(videoPlayerFavProperty);
+               favouriteGameProperties.add(whacamoleFavProperty);
+               favouriteGameProperties.add(whereItFavProperty);
+               favouriteGameProperties.add(whereAnimalFavProperty);
+               favouriteGameProperties.add(whereColorFavProperty);
+               favouriteGameProperties.add(whereLetterFavProperty);
+               favouriteGameProperties.add(whereNumberFavProperty);
+        return favouriteGameProperties;
+    }
 
     protected Configuration() {
 

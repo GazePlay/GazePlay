@@ -1,14 +1,18 @@
 package net.gazeplay;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 
-@Data
+import java.util.Properties;
 
+@Data
+@Slf4j
 public class GameSummary {
 
     @Getter
@@ -49,9 +53,14 @@ public class GameSummary {
         this.category = category;
         this.backgroundMusicUrl = backgroundMusicUrl;
         this.description = description;
-        this.setFavourite(false);
-        // this.favouriteProperty = new
-        // SimpleBooleanProperty(Configuration.getInstance(),"FAV_PROPERTY_"+this.getNameCode().toUpperCase(),false);
+
+        for(BooleanProperty p : Configuration.getInstance().getFavouriteGameProperties()){
+            if(p.getName().equals(this.getNameCode().toUpperCase()+" Game fav")){
+                this.setFavourite(p.getValue());
+            }
+        }
+
+        //this.setFavourite(false);
     }
 
 }

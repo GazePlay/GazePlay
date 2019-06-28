@@ -218,10 +218,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         BooleanProperty gameSelected = new SimpleBooleanProperty();
         gameSelected.setValue(false);
 
+        // confi.getfa
+
         for (GameSpec gameSpec : games) {
 
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
                     translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
+
+            //if(config.)
+
             /* all categories */
             if (config.targetCategory() && config.memorizationCategory() && config.searchingCategory()) {
                 choicePanel.getChildren().add(gameCard);
