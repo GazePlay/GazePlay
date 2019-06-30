@@ -19,7 +19,7 @@ matrix:
 #before_install:
 #  - if [[ "$JENV" == "xenial_openjdk8" ]]; then sudo apt-get update -q && sudo apt-get install openjfx -y            ; fi
 script:
-- mvn clean install cobertura:cobertura -Dfindbugs.skip=false -DskipFormatterFormat=true -DskipFormatterValidate=false
+- mvn clean install cobertura:cobertura --batch-mode -Dfindbugs.skip=false -DskipFormatterFormat=true -DskipFormatterValidate=false
 
 #### in order to test codecov
 
