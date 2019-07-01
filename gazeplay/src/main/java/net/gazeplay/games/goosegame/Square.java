@@ -29,7 +29,7 @@ public class Square {
     }
 
     protected void pawnPassesBy(Pawn pawn) {
-
+        game.playMovementSound();
     }
 
 }

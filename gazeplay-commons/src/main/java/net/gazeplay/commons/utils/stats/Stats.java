@@ -475,19 +475,6 @@ public class Stats implements GazeMotionListener {
         }
     }
 
-    private void saveHeatMapAsPng(File outputPngFile) {
-
-        log.info(String.format("Heatmap size: %3d X %3d", heatMap[0].length, heatMap.length));
-
-        HeatMap map = new HeatMap(heatMap);
-
-        try {
-            map.saveToFile(outputPngFile);
-        } catch (Exception e) {
-            log.error("Exception", e);
-        }
-    }
-
     private void saveFixationSequenceAsPng(File outputPngFile) {
 
         // log.info(String.format("Fixation-Sequence size: %3d X %3d",

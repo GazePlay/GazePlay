@@ -107,7 +107,7 @@ public class Blocs implements GameLifeCycle {
         double width = dimension2D.getWidth() / nbColomns;
         double height = dimension2D.getHeight() / nbLines;
 
-        for (int i = 0; i < nbColomns; i++)
+        for (int i = 0; i < nbColomns; i++) {
             for (int j = 0; j < nbLines; j++) {
 
                 Bloc bloc = new Bloc(i * width, j * height, width + 1, height + 1, i, j);// width+1, height+1 to avoid
@@ -130,8 +130,9 @@ public class Blocs implements GameLifeCycle {
 
                 bloc.addEventFilter(GazeEvent.ANY, enterEvent);
 
-                stats.notifyNewRoundReady();
             }
+        }
+        stats.notifyNewRoundReady();
     }
 
     @Override
