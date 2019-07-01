@@ -3,6 +3,7 @@ package net.gazeplay.games.magicPotions;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.DropShadow;
@@ -94,7 +95,7 @@ public class Potion extends Parent {
 
         this.enterEvent = buildEvent();
 
-        gameContext.getGazeDeviceManager().addEventFilter(potion);
+        gameContext.getGazeDeviceManager().addEventFilter(this.potion);
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
@@ -200,25 +201,18 @@ public class Potion extends Parent {
                     progressIndicator.setOpacity(1);
                     progressIndicator.setProgress(0);
 
-                    currentTimeline.stop();
-                    currentTimeline = new Timeline();
-
                     timelineProgressBar = new Timeline();
 
                     timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationLength),
                             new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                    currentTimeline.play();
-
                     timelineProgressBar.play();
-
-                    chosen = true;
-                    mixture.add(potionColor); // we add the color of the potion to our mixture
 
                     timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-
+                            chosen = true;
+                            mixture.add(potionColor); // we add the color of the potion to our mixture
                             // change opacity of potion when it has been selected once
                             potion.setOpacity(.3);
 
