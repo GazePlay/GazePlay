@@ -150,9 +150,9 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     @Override
     public void dispose() {
         currentRoundDetails.getPotionsToMix().clear();
-//        potionRed.setChosen(false);
-//        potionBlue.setChosen(false);
-//        potionYellow.setChosen(false);
+        // potionRed.setChosen(false);
+        // potionBlue.setChosen(false);
+        // potionYellow.setChosen(false);
         Potion.getMixture().clear();
 
     }
