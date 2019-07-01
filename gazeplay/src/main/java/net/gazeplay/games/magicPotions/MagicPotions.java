@@ -111,7 +111,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         Image red = new Image(image_PATH + "potionRed.png");
         Image yellow = new Image(image_PATH + "potionYellow.png");
         Image blue = new Image(image_PATH + "potionBlue.png");
-        potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (red.getWidth() + yellow.getWidth()) * 1.5,
+        potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (red.getWidth() + red.getWidth()) * 1.5,
                 gameDimension2D.getHeight() - red.getHeight() - 10, red.getWidth(), red.getHeight(), red, Color.RED,
                 gameContext, stats, this, Configuration.getInstance().getFixationLength());
 
@@ -150,9 +150,9 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     @Override
     public void dispose() {
         currentRoundDetails.getPotionsToMix().clear();
-        potionRed.setChosen(false);
-        potionBlue.setChosen(false);
-        potionYellow.setChosen(false);
+        // potionRed.setChosen(false);
+        // potionBlue.setChosen(false);
+        // potionYellow.setChosen(false);
         Potion.getMixture().clear();
 
     }
