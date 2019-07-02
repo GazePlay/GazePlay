@@ -217,7 +217,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     private int getsetHighscore(int score) {
 
-        File f = new File(Utils.getUserStatsFolder(config.getUserName()) + "/Biboule Jump/highscores.dat");
+        File f = new File(Utils.getUserStatsFolder(config.getUserName()) + "/biboule-jump/highscores.dat");
+        log.info("Highscore file: " + f.getAbsolutePath());
         try {
             ArrayList<Integer> highscores = new ArrayList();
             if (!f.createNewFile()) {
