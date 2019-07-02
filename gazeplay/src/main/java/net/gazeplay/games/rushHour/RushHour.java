@@ -66,7 +66,8 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         });
 
-        ground = new Rectangle(0,0); // to avoid NullPointerException
+        ground = new Rectangle(); // to avoid NullPointerException
+
     }
 
     public void setLevel(int i) {

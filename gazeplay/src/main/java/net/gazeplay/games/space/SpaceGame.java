@@ -329,14 +329,14 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         double timeElapsed = ((double) now - (double) lastTickTime) / Math.pow(10, 6); // in ms
         lastTickTime = now;
 
-        System.out.println("FPS: " + (int) (1000 / timeElapsed));
+        log.info("FPS: " + (int) (1000 / timeElapsed));
         if (1000 / timeElapsed < minFPS) {
             minFPS = 1000 / (int) timeElapsed;
         }
         timeElapsed /= getGameSpeed();
-        System.out.println("Speed effect: " + configuration.getSpeedEffects());
-        System.out.println("MinFPS: " + minFPS);
-        System.out.println("Time elapsed: " + timeElapsed);
+        log.info("Speed effect: " + configuration.getSpeedEffects());
+        log.info("MinFPS: " + minFPS);
+        log.info("Time elapsed: " + timeElapsed);
 
         // Movement
         /// Lateral movement: Mouse Moved
@@ -350,13 +350,13 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         }
 
         spaceship.setX(spaceship.getX() + velocity.getX() * timeElapsed);
-        // System.out.println("velocity x: " + velocity.getX());
+        // log.info("velocity x: " + velocity.getX());
         spaceship.setY(6 * dimension2D.getHeight() / 7);
-        System.out.println("Number of bullets: " + bulletListRec.size());
-        System.out.println("Number of biboules: " + biboules.size());
-        System.out.println("Number of biboule bullets: " + bulletBibouleListRec.size());
-        System.out.println("Number of timeline biboule bullets: " + timelineList.size());
-        System.out.println("Number of bullet - transition pair: " + hashMap.size());
+        log.info("Number of bullets: " + bulletListRec.size());
+        log.info("Number of biboules: " + biboules.size());
+        log.info("Number of biboule bullets: " + bulletBibouleListRec.size());
+        log.info("Number of timeline biboule bullets: " + timelineList.size());
+        log.info("Number of bullet - transition pair: " + hashMap.size());
 
         /// Lateral movement: Mouse Pressed
         // spaceship.setX(gazeTarget.getX() - spaceship.getWidth() / 2);
@@ -427,7 +427,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue, Boolean newValue) {
                         if (newValue) {
-                            System.out.println("Colliding");
+                            log.info("Colliding");
 
                             boolean bibouleBoolean = false;
 
@@ -462,7 +462,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             }
 
                         } else {
-                            System.out.println("Not colliding");
+                            log.info("Not colliding");
                         }
                     }
                 });
@@ -523,7 +523,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue, Boolean newValue) {
                         if (newValue) {
-                            System.out.println("die");
+                            log.info("die");
 
                             boolean deathBoolean = false;
 
@@ -558,7 +558,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             }
 
                         } else {
-                            System.out.println("Not die");
+                            log.info("Not die");
                         }
                     }
                 });
@@ -753,7 +753,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                 public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue,
                                         Boolean newValue) {
                                     if (newValue) {
-                                        System.out.println("Colliding");
+                                        log.info("Colliding");
 
                                         boolean bibouleBoolean = false;
 
@@ -785,7 +785,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                         }
 
                                     } else {
-                                        System.out.println("Not colliding");
+                                        log.info("Not colliding");
                                     }
                                 }
                             });
@@ -852,7 +852,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                 public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue,
                                         Boolean newValue) {
                                     if (newValue) {
-                                        System.out.println("die");
+                                        log.info("die");
 
                                         boolean deathBoolean = false;
 
@@ -885,7 +885,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                         }
 
                                     } else {
-                                        System.out.println("Not die");
+                                        log.info("Not die");
                                     }
                                 }
                             });
@@ -949,7 +949,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                 public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue,
                                         Boolean newValue) {
                                     if (newValue) {
-                                        System.out.println("die");
+                                        log.info("die");
 
                                         boolean deathBoolean = false;
 
@@ -984,7 +984,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                         // }
 
                                     } else {
-                                        System.out.println("Not die");
+                                        log.info("Not die");
                                     }
                                 }
                             });
@@ -1039,7 +1039,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                 public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue,
                                         Boolean newValue) {
                                     if (newValue) {
-                                        System.out.println("Hit the boss");
+                                        log.info("Hit the boss");
 
                                         bulletListRec.remove(r);
 
@@ -1109,7 +1109,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                         }
 
                                     } else {
-                                        System.out.println("Not hit the boss");
+                                        log.info("Not hit the boss");
                                     }
                                 }
                             });
