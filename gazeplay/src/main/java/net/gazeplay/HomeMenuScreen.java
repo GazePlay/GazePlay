@@ -123,12 +123,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CheckBox memoGames = buildCategoryCheckBox(GameCategories.Category.MEMORIZATION, config, configurationContext);
         CheckBox actionReactionGames = buildCategoryCheckBox(GameCategories.Category.ACTION_REACTION, config,
                 configurationContext);
+        CheckBox logicGames = buildCategoryCheckBox(GameCategories.Category.LOGIC, config, configurationContext);
 
         EventHandler<Event> filterEvent = new EventHandler<javafx.event.Event>() {
             @Override
             public void handle(javafx.event.Event e) {
 
-                filterGames(selectionGames.isSelected(), memoGames.isSelected(), actionReactionGames.isSelected());
+                filterGames(selectionGames.isSelected(), memoGames.isSelected(), actionReactionGames.isSelected(), logicGames.isSelected());
 
                 HomeMenuScreen hm = newInstance(gazePlay, config);
                 gazePlay.setHomeMenuScreen(hm);
@@ -141,11 +142,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         selectionGames.addEventHandler(MouseEvent.MOUSE_CLICKED, filterEvent);
         actionReactionGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
         memoGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
+        logicGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
 
         HBox categoryFilters = new HBox(10);
         categoryFilters.setAlignment(Pos.CENTER);
         categoryFilters.setPadding(new Insets(15, 12, 15, 12));
-        categoryFilters.getChildren().addAll(selectionGames, memoGames, actionReactionGames);
+        categoryFilters.getChildren().addAll(selectionGames, memoGames, actionReactionGames,logicGames);
 
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
@@ -395,17 +397,23 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
             });
             break;
+        case LOGIC:
+            categoryCheckbox.setSelected(config.logicCategory());
+            categoryCheckbox.selectedProperty().addListener((o)->{
+                config.getLogicCategoryProperty().setValue(categoryCheckbox.isSelected());
+                config.saveConfigIgnoringExceptions();
+            });
         }
 
         return categoryCheckbox;
     }
 
-    private void filterGames(boolean selectionFilter, boolean memoFilter, boolean actionReactionFilter) {
+    private void filterGames(boolean selectionFilter, boolean memoFilter, boolean actionReactionFilter, boolean logicFiler) {
         DefaultGamesLocator df = new DefaultGamesLocator();
         List<GameSpec> filteredGames = df.listGames();
 
         /**
-         * 2^3 = 8 OPTIONS
+         * 2^3 = 8 OPTIONS -- update 2^4 options 
          */
 
         if (selectionFilter && memoFilter && actionReactionFilter) { // all the games
