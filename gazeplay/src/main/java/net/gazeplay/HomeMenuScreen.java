@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import lombok.Data;
 import lombok.Getter;
@@ -117,15 +118,17 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         // filters for games based on their category
 
-        CheckBox targetGames = buildCategoryCheckBox(GameCategories.Category.TARGET, config, configurationContext);
+        CheckBox selectionGames = buildCategoryCheckBox(GameCategories.Category.SELECTION, config,
+                configurationContext);
         CheckBox memoGames = buildCategoryCheckBox(GameCategories.Category.MEMORIZATION, config, configurationContext);
-        CheckBox searchGames = buildCategoryCheckBox(GameCategories.Category.SEARCHING, config, configurationContext);
+        CheckBox actionReactionGames = buildCategoryCheckBox(GameCategories.Category.ACTION_REACTION, config,
+                configurationContext);
 
         EventHandler<Event> filterEvent = new EventHandler<javafx.event.Event>() {
             @Override
             public void handle(javafx.event.Event e) {
 
-                filterGames(targetGames.isSelected(), memoGames.isSelected(), searchGames.isSelected());
+                filterGames(selectionGames.isSelected(), memoGames.isSelected(), actionReactionGames.isSelected());
 
                 HomeMenuScreen hm = newInstance(gazePlay, config);
                 gazePlay.setHomeMenuScreen(hm);
@@ -135,14 +138,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
         };
 
-        targetGames.addEventHandler(MouseEvent.MOUSE_CLICKED, filterEvent);
-        searchGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
+        selectionGames.addEventHandler(MouseEvent.MOUSE_CLICKED, filterEvent);
+        actionReactionGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
         memoGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
 
         HBox categoryFilters = new HBox(10);
         categoryFilters.setAlignment(Pos.CENTER);
         categoryFilters.setPadding(new Insets(15, 12, 15, 12));
-        categoryFilters.getChildren().addAll(targetGames, memoGames, searchGames);
+        categoryFilters.getChildren().addAll(selectionGames, memoGames, actionReactionGames);
 
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
@@ -223,25 +226,31 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
                     translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
             /* all categories */
-            if (config.targetCategory() && config.memorizationCategory() && config.searchingCategory()) {
+            if (config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()) {
                 choicePanel.getChildren().add(gameCard);
-            } else if (config.targetCategory() && config.memorizationCategory() && !config.searchingCategory()) {
-                if (gameSpec.getGameSummary().getCategory() != GameCategories.Category.SEARCHING)
+            } else if (config.selectionCategory() && config.memorizationCategory()
+                    && !config.actionReactionCategory()) {
+                if (gameSpec.getGameSummary().getCategory() != GameCategories.Category.ACTION_REACTION)
                     choicePanel.getChildren().add(gameCard);
-            } else if (config.targetCategory() && !config.memorizationCategory() && config.searchingCategory()) {
+            } else if (config.selectionCategory() && !config.memorizationCategory()
+                    && config.actionReactionCategory()) {
                 if (gameSpec.getGameSummary().getCategory() != GameCategories.Category.MEMORIZATION)
                     choicePanel.getChildren().add(gameCard);
-            } else if (!config.targetCategory() && config.memorizationCategory() && config.searchingCategory()) {
-                if (gameSpec.getGameSummary().getCategory() != GameCategories.Category.TARGET)
+            } else if (!config.selectionCategory() && config.memorizationCategory()
+                    && config.actionReactionCategory()) {
+                if (gameSpec.getGameSummary().getCategory() != GameCategories.Category.SELECTION)
                     choicePanel.getChildren().add(gameCard);
-            } else if (config.targetCategory() && !config.memorizationCategory() && !config.searchingCategory()) {
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.TARGET)
+            } else if (config.selectionCategory() && !config.memorizationCategory()
+                    && !config.actionReactionCategory()) {
+                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.SELECTION)
                     choicePanel.getChildren().add(gameCard);
-            } else if (!config.targetCategory() && config.memorizationCategory() && !config.searchingCategory()) {
+            } else if (!config.selectionCategory() && config.memorizationCategory()
+                    && !config.actionReactionCategory()) {
                 if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
                     choicePanel.getChildren().add(gameCard);
-            } else if (!config.targetCategory() && !config.memorizationCategory() && config.searchingCategory()) {
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.SEARCHING)
+            } else if (!config.selectionCategory() && !config.memorizationCategory()
+                    && config.actionReactionCategory()) {
+                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION)
                     choicePanel.getChildren().add(gameCard);
             }
 
@@ -361,12 +370,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         I18NText label = new I18NText(confContext.getGazePlay().getTranslator(), category.getGameCategory());
         CheckBox categoryCheckbox = new CheckBox(label.getText());
+        categoryCheckbox.setTextFill(Color.WHITE);
 
         switch (category) {
-        case TARGET:
-            categoryCheckbox.setSelected(config.targetCategory());
+        case SELECTION:
+            categoryCheckbox.setSelected(config.selectionCategory());
             categoryCheckbox.selectedProperty().addListener((o) -> {
-                config.getTargetCategoryProperty().setValue(categoryCheckbox.isSelected());
+                config.getSelectionCategoryProperty().setValue(categoryCheckbox.isSelected());
                 config.saveConfigIgnoringExceptions();
             });
             break;
@@ -377,10 +387,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 config.saveConfigIgnoringExceptions();
             });
             break;
-        case SEARCHING:
-            categoryCheckbox.setSelected(config.searchingCategory());
+        case ACTION_REACTION:
+            categoryCheckbox.setSelected(config.actionReactionCategory());
             categoryCheckbox.selectedProperty().addListener((o) -> {
-                config.getSearchingCategoryProperty().setValue(categoryCheckbox.isSelected());
+                config.getActionReactionCategoryProperty().setValue(categoryCheckbox.isSelected());
                 config.saveConfigIgnoringExceptions();
 
             });
@@ -390,7 +400,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return categoryCheckbox;
     }
 
-    private void filterGames(boolean targetFilter, boolean memoFilter, boolean searchFilter) {
+    private void filterGames(boolean selectionFilter, boolean memoFilter, boolean actionReactionFilter) {
         DefaultGamesLocator df = new DefaultGamesLocator();
         List<GameSpec> filteredGames = df.listGames();
 
@@ -398,17 +408,17 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
          * 2^3 = 8 OPTIONS
          */
 
-        if (targetFilter && memoFilter && searchFilter) { // all the games
+        if (selectionFilter && memoFilter && actionReactionFilter) { // all the games
             this.games = filteredGames;
-        } else if (targetFilter && memoFilter && !searchFilter) { // target & memorization games
+        } else if (selectionFilter && memoFilter && !actionReactionFilter) { // Selection & memorization games
             for (GameSpec g : df.listGames()) {
-                if (g.getGameSummary().getCategory() != GameCategories.Category.SEARCHING) {
+                if (g.getGameSummary().getCategory() != GameCategories.Category.ACTION_REACTION) {
                     filteredGames.clear();
                     filteredGames.add(g);
                 }
             }
             this.games = filteredGames;
-        } else if (targetFilter && !memoFilter && searchFilter) { // target & searching games
+        } else if (selectionFilter && !memoFilter && actionReactionFilter) { // Selection & Action_Reaction games
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.MEMORIZATION) {
                     filteredGames.clear();
@@ -416,21 +426,21 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 }
             }
             this.games = filteredGames;
-        } else if (!targetFilter && memoFilter && searchFilter) { // memorization and searching games
+        } else if (!selectionFilter && memoFilter && actionReactionFilter) { // memorization and Action_Reaction games
             for (GameSpec g : df.listGames()) {
-                if (g.getGameSummary().getCategory() != GameCategories.Category.TARGET)
+                if (g.getGameSummary().getCategory() != GameCategories.Category.SELECTION)
                     filteredGames.add(g);
             }
             this.games = filteredGames;
-        } else if (targetFilter && !memoFilter && !searchFilter) { // only target games
+        } else if (selectionFilter && !memoFilter && !actionReactionFilter) { // only selection games
             for (GameSpec g : df.listGames()) {
-                if (g.getGameSummary().getCategory() == GameCategories.Category.TARGET) {
+                if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION) {
                     filteredGames.clear();
                     filteredGames.add(g);
                 }
             }
             this.games = filteredGames;
-        } else if (!targetFilter && memoFilter && !searchFilter) { // only memorizatin games
+        } else if (!selectionFilter && memoFilter && !actionReactionFilter) { // only memorization games
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION) {
                     filteredGames.clear();
@@ -438,9 +448,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 }
             }
             this.games = filteredGames;
-        } else if (!targetFilter && !memoFilter && searchFilter) { // only searching games
+        } else if (!selectionFilter && !memoFilter && actionReactionFilter) { // only Action_Reaction games
             for (GameSpec g : df.listGames()) {
-                if (g.getGameSummary().getCategory() == GameCategories.Category.SEARCHING) {
+                if (g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION) {
                     filteredGames.clear();
                     filteredGames.add(g);
                 }
