@@ -58,7 +58,7 @@ Mélangez les bonnes potions colorées pour préparer la commande de Biboule. At
 
 ![PotionsMagiques](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/potions.jpg)
 
-##Jeu de l'oie
+## Jeu de l'oie
 
 Lancez les dés pour avancer le long des cases afin d'atteindre la fin avant les autres joueurs.
 

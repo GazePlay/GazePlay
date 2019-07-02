@@ -67,8 +67,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-//import net.gazeplay.commons.ui.Translator;
-
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
 
@@ -79,7 +77,7 @@ public class DefaultGamesLocator implements GamesLocator {
         List<GameSpec> result = new ArrayList<>();
 
         result.add(new GameSpec(
-                new GameSummary("Creampie", "data/Thumbnails/creamPie.png", GameCategories.Category.TARGET),
+                new GameSummary("Creampie", "data/Thumbnails/creamPie.png", GameCategories.Category.SELECTION),
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -93,32 +91,34 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Ninja", "data/Thumbnails/ninja.png", GameCategories.Category.TARGET),
-                new GameSpec.GameVariantGenerator() {
-                    @Override
-                    public Set<GameSpec.GameVariant> getVariants() {
-                        return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(1, "Random"),
-                                new GameSpec.IntGameVariant(2, "Vertical"),
-                                new GameSpec.IntGameVariant(3, "Horizontal"),
-                                new GameSpec.IntGameVariant(4, "Diagonal from upper left to lower right"),
-                                new GameSpec.IntGameVariant(5, "Diagonal from upper right to lower left")));
-                    }
-                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new NinjaStats(scene);
-                    }
+        result.add(
+                new GameSpec(new GameSummary("Ninja", "data/Thumbnails/ninja.png", GameCategories.Category.SELECTION),
+                        new GameSpec.GameVariantGenerator() {
+                            @Override
+                            public Set<GameSpec.GameVariant> getVariants() {
+                                return Sets.newLinkedHashSet(Lists.newArrayList(
+                                        new GameSpec.IntGameVariant(1, "Random"),
+                                        new GameSpec.IntGameVariant(2, "Vertical"),
+                                        new GameSpec.IntGameVariant(3, "Horizontal"),
+                                        new GameSpec.IntGameVariant(4, "Diagonal from upper left to lower right"),
+                                        new GameSpec.IntGameVariant(5, "Diagonal from upper right to lower left")));
+                            }
+                        }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new NinjaStats(scene);
+                            }
 
-                    @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
-                            Stats stats) {
-                        return new Ninja(gameContext, stats, gameVariant.getNumber());
-                    }
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.IntGameVariant gameVariant, Stats stats) {
+                                return new Ninja(gameContext, stats, gameVariant.getNumber());
+                            }
 
-                }));
+                        }));
 
         result.add(new GameSpec(
-                new GameSummary("MagicCards", "data/Thumbnails/magicCard.png", GameCategories.Category.SEARCHING),
+                new GameSummary("MagicCards", "data/Thumbnails/magicCard.png", GameCategories.Category.ACTION_REACTION),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -147,37 +147,37 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(
-                new GameSpec(new GameSummary("Blocks", "data/Thumbnails/block.png", GameCategories.Category.SEARCHING),
-                        new GameSpec.GameVariantGenerator() {
-                            @Override
-                            public Set<GameSpec.GameVariant> getVariants() {
-                                return Sets.newLinkedHashSet(Lists.newArrayList(
+        result.add(new GameSpec(
+                new GameSummary("Blocks", "data/Thumbnails/block.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
 
-                                        new GameSpec.DimensionGameVariant(2, 2),
+                                new GameSpec.DimensionGameVariant(2, 2),
 
-                                        new GameSpec.DimensionGameVariant(2, 3),
+                                new GameSpec.DimensionGameVariant(2, 3),
 
-                                        new GameSpec.DimensionGameVariant(3, 3)
+                                new GameSpec.DimensionGameVariant(3, 3)
 
-                        ));
-                            }
-                        }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
-                            @Override
-                            public Stats createNewStats(Scene scene) {
-                                return new BlocsGamesStats(scene);
-                            }
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new BlocsGamesStats(scene);
+                    }
 
-                            @Override
-                            public GameLifeCycle createNewGame(GameContext gameContext,
-                                    GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                                return new Blocs(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), true, 1,
-                                        false, stats);
-                            }
-                        }));
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new Blocs(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), true, 1, false,
+                                stats);
+                    }
+                }));
 
         result.add(new GameSpec(new GameSummary("Identify The Letters", "data/Thumbnails/letters.png",
-                GameCategories.Category.SEARCHING), new GameSpec.GameVariantGenerator() {
+                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -203,9 +203,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(
-                new GameSummary("ScratchCard", "data/Thumbnails/scratchcard.png", GameCategories.Category.SEARCHING),
-                new GameSpec.GameLauncher() {
+        result.add(new GameSpec(new GameSummary("ScratchCard", "data/Thumbnails/scratchcard.png",
+                GameCategories.Category.ACTION_REACTION), new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
                         return new ScratchcardGamesStats(scene);
@@ -219,7 +218,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("ColoredBubbles", "data/Thumbnails/bubblecolor.png", GameCategories.Category.TARGET),
+                new GameSummary("ColoredBubbles", "data/Thumbnails/bubblecolor.png", GameCategories.Category.SELECTION),
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -234,7 +233,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("PortraitBubbles", "data/Thumbnails/bubble.png", GameCategories.Category.TARGET),
+                new GameSummary("PortraitBubbles", "data/Thumbnails/bubble.png", GameCategories.Category.SELECTION),
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -447,7 +446,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Biboules", "data/Thumbnails/biboules.png", GameCategories.Category.TARGET,
+                new GameSummary("Biboules", "data/Thumbnails/biboules.png", GameCategories.Category.SELECTION,
                         "https://opengameart.org/sites/default/files/TalkingCuteChiptune_0.mp3"),
                 new GameSpec.GameLauncher() {
                     @Override
@@ -463,7 +462,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Robots", "data/Thumbnails/robots.png", GameCategories.Category.TARGET,
+                new GameSummary("Robots", "data/Thumbnails/robots.png", GameCategories.Category.SELECTION,
                         "https://opengameart.org/sites/default/files/DST-TowerDefenseTheme_1.mp3"),
                 new GameSpec.GameLauncher() {
                     @Override
@@ -478,35 +477,35 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(
-                new GameSpec(new GameSummary("Divisor", "data/Thumbnails/divisor.png", GameCategories.Category.TARGET),
-                        new GameSpec.GameLauncher() {
-                            @Override
-                            public Stats createNewStats(Scene scene) {
-                                return new DivisorStats(scene);
-                            }
+        result.add(new GameSpec(
+                new GameSummary("Divisor", "data/Thumbnails/divisor.png", GameCategories.Category.SELECTION),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new DivisorStats(scene);
+                    }
 
-                            @Override
-                            public GameLifeCycle createNewGame(GameContext gameContext,
-                                    GameSpec.GameVariant gameVariant, Stats stats) {
-                                return new Divisor(gameContext, stats, false);
-                            }
-                        }));
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new Divisor(gameContext, stats, false);
+                    }
+                }));
 
-        result.add(
-                new GameSpec(new GameSummary("Lapins", "data/Thumbnails/rabbits.png", GameCategories.Category.TARGET),
-                        new GameSpec.GameLauncher() {
-                            @Override
-                            public Stats createNewStats(Scene scene) {
-                                return new DivisorStats(scene);
-                            }
+        result.add(new GameSpec(
+                new GameSummary("Lapins", "data/Thumbnails/rabbits.png", GameCategories.Category.SELECTION),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new DivisorStats(scene);
+                    }
 
-                            @Override
-                            public GameLifeCycle createNewGame(GameContext gameContext,
-                                    GameSpec.GameVariant gameVariant, Stats stats) {
-                                return new Divisor(gameContext, stats, true);
-                            }
-                        }));
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new Divisor(gameContext, stats, true);
+                    }
+                }));
 
         result.add(new GameSpec(
                 new GameSummary("Memory", "data/Thumbnails/memory.png", GameCategories.Category.MEMORIZATION),
@@ -605,9 +604,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(
-                new GameSummary("OpenMemory", "data/Thumbnails/openMemory.png", GameCategories.Category.SEARCHING),
-                new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(new GameSummary("OpenMemory", "data/Thumbnails/openMemory.png",
+                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -639,7 +637,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(new GameSummary("OpenMemoryLetters", "data/Thumbnails/openMemoryLetters.png",
-                GameCategories.Category.SEARCHING), new GameSpec.GameVariantGenerator() {
+                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -673,7 +671,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(new GameSummary("OpenMemoryNumbers", "data/Thumbnails/openMemoryNumbers.png",
-                GameCategories.Category.SEARCHING), new GameSpec.GameVariantGenerator() {
+                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -707,7 +705,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(new GameSummary("Video Player with Feedback", "data/Thumbnails/youtube.png",
-                GameCategories.Category.SEARCHING), new GameSpec.GameVariantGenerator() {
+                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -748,7 +746,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Scribble", "data/Thumbnails/gribouille.png", GameCategories.Category.SEARCHING),
+                new GameSummary("Scribble", "data/Thumbnails/gribouille.png", GameCategories.Category.ACTION_REACTION),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -805,7 +803,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Room", "data/Thumbnails/home.png", GameCategories.Category.SEARCHING),
+        result.add(new GameSpec(
+                new GameSummary("Room", "data/Thumbnails/home.png", GameCategories.Category.ACTION_REACTION),
                 new GameSpec.GameLauncher() {
 
                     @Override
@@ -823,7 +822,7 @@ public class DefaultGamesLocator implements GamesLocator {
         // cups and balls was here
 
         result.add(new GameSpec(
-                new GameSummary("Piano", "data/Thumbnails/pianosight.png", GameCategories.Category.SEARCHING),
+                new GameSummary("Piano", "data/Thumbnails/pianosight.png", GameCategories.Category.ACTION_REACTION),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
 
                     @Override
@@ -838,7 +837,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
         result.add(new GameSpec(
-                new GameSummary("Whac-a-mole", "data/Thumbnails/mole.png", GameCategories.Category.SEARCHING),
+                new GameSummary("Whac-a-mole", "data/Thumbnails/mole.png", GameCategories.Category.ACTION_REACTION),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -853,23 +852,25 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        result.add(new GameSpec(new GameSummary("Pet", "data/Thumbnails/pet.png", GameCategories.Category.SEARCHING),
-                new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new PetStats(scene);
-                    }
+        result.add(
+                new GameSpec(new GameSummary("Pet", "data/Thumbnails/pet.png", GameCategories.Category.ACTION_REACTION),
+                        new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                            @Override
+                            public Stats createNewStats(Scene scene) {
+                                return new PetStats(scene);
+                            }
 
-                    @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext,
-                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                        return new PetHouse(gameContext, stats);
-                    }
+                            @Override
+                            public GameLifeCycle createNewGame(GameContext gameContext,
+                                    GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                                return new PetHouse(gameContext, stats);
+                            }
 
-                }));
+                        }));
 
         result.add(new GameSpec(
-                new GameSummary("MediaPlayer", "data/Thumbnails/gazeMedia.png", GameCategories.Category.SEARCHING),
+                new GameSummary("MediaPlayer", "data/Thumbnails/gazeMedia.png",
+                        GameCategories.Category.ACTION_REACTION),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -884,7 +885,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
         result.add(new GameSpec(
-                new GameSummary("RushHour", "data/Thumbnails/rushHour.png", GameCategories.Category.SEARCHING),
+                new GameSummary("RushHour", "data/Thumbnails/rushHour.png", GameCategories.Category.ACTION_REACTION),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -900,7 +901,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Colors!", "data/Thumbnails/colors.png", GameCategories.Category.SEARCHING, null,
+                new GameSummary("Colors!", "data/Thumbnails/colors.png", GameCategories.Category.ACTION_REACTION, null,
                         "ColorDesc"),
 
                 new GameSpec.GameLauncher() {
@@ -950,7 +951,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Labyrinth", "data/Thumbnails/labyrinth.png", GameCategories.Category.SEARCHING),
+                new GameSummary("Labyrinth", "data/Thumbnails/labyrinth.png", GameCategories.Category.ACTION_REACTION),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -984,7 +985,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("FrogsRace", "data/Thumbnails/frogsrace.png", GameCategories.Category.TARGET),
+                new GameSummary("FrogsRace", "data/Thumbnails/frogsrace.png", GameCategories.Category.SELECTION),
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -999,7 +1000,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Biboule Jump", "data/Thumbnails/biboulejump.png", GameCategories.Category.TARGET),
+                new GameSummary("Biboule Jump", "data/Thumbnails/biboulejump.png", GameCategories.Category.SELECTION),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -1025,8 +1026,8 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        result.add(new GameSpec(new GameSummary("Math101", "data/Thumbnails/math101.png",
-                GameCategories.Category.MEMORIZATION, null, "MathDescAdd"), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(new GameSummary("Math101", "data/Thumbnails/math101.png", GameCategories.Category.LOGIC,
+                null, "MathDescAdd"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 8"),
@@ -1046,8 +1047,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Math102", "data/Thumbnails/math101.png",
-                GameCategories.Category.MEMORIZATION, null, "MathDescSub"), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(new GameSummary("Math102", "data/Thumbnails/math101.png", GameCategories.Category.LOGIC,
+                null, "MathDescSub"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 8"),
@@ -1067,8 +1068,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Math103", "data/Thumbnails/math101.png",
-                GameCategories.Category.MEMORIZATION, null, "MathDescMult"), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(new GameSummary("Math103", "data/Thumbnails/math101.png", GameCategories.Category.LOGIC,
+                null, "MathDescMult"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 3"),
@@ -1090,8 +1091,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Math104", "data/Thumbnails/math101.png",
-                GameCategories.Category.MEMORIZATION, null, "MathDescDiv"), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(new GameSummary("Math104", "data/Thumbnails/math101.png", GameCategories.Category.LOGIC,
+                null, "MathDescDiv"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 10"),
@@ -1112,8 +1113,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Math201", "data/Thumbnails/math101.png",
-                GameCategories.Category.MEMORIZATION, null, "MathDesc"), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(new GameSummary("Math201", "data/Thumbnails/math101.png", GameCategories.Category.LOGIC,
+                null, "MathDesc"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 5"),
@@ -1135,7 +1136,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(new GameSummary("Sliding Puzzle", "data/Thumbnails/slidingpuzzle.png",
-                GameCategories.Category.SEARCHING), new GameSpec.GameVariantGenerator() {
+                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(1, "Numbers"),
@@ -1156,7 +1157,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(new GameSummary("Spot The Difference", "data/Thumbnails/spotthedifference.png",
-                GameCategories.Category.SEARCHING), new GameSpec.GameLauncher() {
+                GameCategories.Category.ACTION_REACTION), new GameSpec.GameLauncher() {
 
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -1205,35 +1206,35 @@ public class DefaultGamesLocator implements GamesLocator {
 
                         }));
 
-        result.add(
-                new GameSpec(new GameSummary("Space Game", "data/Thumbnails/space.png", GameCategories.Category.TARGET),
-                        new GameSpec.GameLauncher() {
-                            @Override
-                            public Stats createNewStats(Scene scene) {
-                                return new SpaceGameStats(scene);
-                            }
+        result.add(new GameSpec(
+                new GameSummary("Space Game", "data/Thumbnails/space.png", GameCategories.Category.SELECTION),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new SpaceGameStats(scene);
+                    }
 
-                            @Override
-                            public GameLifeCycle createNewGame(GameContext gameContext,
-                                    GameSpec.GameVariant gameVariant, Stats stats) {
-                                return new SpaceGame(gameContext, stats);
-                            }
-                        }));
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new SpaceGame(gameContext, stats);
+                    }
+                }));
 
-        result.add(
-                new GameSpec(new GameSummary("Potions", "data/Thumbnails/potions.jpg", GameCategories.Category.TARGET),
-                        new GameSpec.GameLauncher() {
-                            @Override
-                            public Stats createNewStats(Scene scene) {
-                                return new MagicPotionsStats(scene);
-                            }
+        result.add(new GameSpec(
+                new GameSummary("Potions", "data/Thumbnails/potions.jpg", GameCategories.Category.SELECTION),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new MagicPotionsStats(scene);
+                    }
 
-                            @Override
-                            public GameLifeCycle createNewGame(GameContext gameContext,
-                                    GameSpec.GameVariant gameVariant, Stats stats) {
-                                return new MagicPotions(gameContext, stats);
-                            }
-                        }));
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new MagicPotions(gameContext, stats);
+                    }
+                }));
 
         result.add(new GameSpec(
                 new GameSummary("Goose Game", "data/Thumbnails/goosegame.png", GameCategories.Category.MEMORIZATION),

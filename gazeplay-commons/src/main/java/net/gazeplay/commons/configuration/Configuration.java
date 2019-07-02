@@ -41,12 +41,13 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
-    /*
+    /**
      * Game Categories Properties
      */
-    private static final String PROPERTY_NAME_TARGET_GAMES = "Target games";
-    private static final String PROPERTY_NAME_SEARCHING_GAMES = "Searching games";
+    private static final String PROPERTY_NAME_SELECTION_GAMES = "Selection games";
+    private static final String PROPERTY_NAME_ACTION_REACTION_GAMES = "Action-Reaction games";
     private static final String PROPERTY_NAME_MEMORIZATION_GAMES = "Memorization games";
+    private static final String PROPERTY_NAME_LOGIC_GAMES = "Logic games";
     private static final String PROPERTY_NAME_NO_CATEGORY_GAMES = "No category games";
 
     @Getter
@@ -70,10 +71,11 @@ public class Configuration implements Cloneable {
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
-    private static final boolean DEFAULT_VALUE_TARGET_GAMES = true;
+    private static final boolean DEFAULT_VALUE_SELECTION_GAMES = true;
     private static final boolean DEFAULT_VALUE_MEMORIZATION_GAMES = true;
-    private static final boolean DEFAULT_VALUE_SEARCHING_GAMES = true;
+    private static final boolean DEFAULT_VALUE_ACTION_REACTION_GAMES = true;
     private static final boolean DEFAULT_VALUE_NO_CATEGORY_GAMES = true;
+    private static final boolean DEFAULT_VALUE_LOGIC_GAMES = true;
     // next thing to do
     // private static final String DEFAULT_EXIT_SHORTCUT_KEY = "SPACE";
     @Setter
@@ -231,20 +233,24 @@ public class Configuration implements Cloneable {
             DEFAULT_VALUE_USER_PICTURE);
 
     @Getter
-    protected final BooleanProperty targetCategoryProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_TARGET_GAMES,
-            DEFAULT_VALUE_TARGET_GAMES);
+    protected final BooleanProperty selectionCategoryProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_SELECTION_GAMES, DEFAULT_VALUE_SELECTION_GAMES);
 
     @Getter
     protected final BooleanProperty memorizationCategoryProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_MEMORIZATION_GAMES, DEFAULT_VALUE_MEMORIZATION_GAMES);
 
     @Getter
-    protected final BooleanProperty searchingCategoryProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_SEARCHING_GAMES, DEFAULT_VALUE_SEARCHING_GAMES);
+    protected final BooleanProperty actionReactionCategoryProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_ACTION_REACTION_GAMES, DEFAULT_VALUE_ACTION_REACTION_GAMES);
 
     @Getter
     protected final BooleanProperty noCategoryProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_NO_CATEGORY_GAMES, DEFAULT_VALUE_NO_CATEGORY_GAMES);
+
+    @Getter
+    protected final BooleanProperty logicCategoryProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_LOGIC_GAMES,
+            DEFAULT_VALUE_LOGIC_GAMES);
 
     protected Configuration() {
 
@@ -415,13 +421,13 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             userPictureProperty.setValue(buffer);
         }
-        buffer = prop.getProperty(PROPERTY_NAME_TARGET_GAMES);
+        buffer = prop.getProperty(PROPERTY_NAME_SELECTION_GAMES);
         if (buffer != null) {
-            targetCategoryProperty.setValue(Boolean.parseBoolean(buffer));
+            selectionCategoryProperty.setValue(Boolean.parseBoolean(buffer));
         }
-        buffer = prop.getProperty(PROPERTY_NAME_SEARCHING_GAMES);
+        buffer = prop.getProperty(PROPERTY_NAME_ACTION_REACTION_GAMES);
         if (buffer != null) {
-            searchingCategoryProperty.setValue(Boolean.parseBoolean(buffer));
+            actionReactionCategoryProperty.setValue(Boolean.parseBoolean(buffer));
         }
         buffer = prop.getProperty(PROPERTY_NAME_MEMORIZATION_GAMES);
         if (buffer != null) {
@@ -430,6 +436,10 @@ public class Configuration implements Cloneable {
         buffer = prop.getProperty(PROPERTY_NAME_NO_CATEGORY_GAMES);
         if (buffer != null) {
             noCategoryProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+        buffer = prop.getProperty(PROPERTY_NAME_LOGIC_GAMES);
+        if (buffer != null) {
+            logicCategoryProperty.setValue(Boolean.parseBoolean(buffer));
         }
 
     }
@@ -481,11 +491,13 @@ public class Configuration implements Cloneable {
         /*
          * properties.setProperty(PROPERTY_NAME_GAZE_MENU, Boolean.toString(this.gazeMenuProperty.getValue()));
          */
-        properties.setProperty(PROPERTY_NAME_TARGET_GAMES, Boolean.toString(targetCategoryProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_SELECTION_GAMES, Boolean.toString(selectionCategoryProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MEMORIZATION_GAMES,
                 Boolean.toString(memorizationCategoryProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_SEARCHING_GAMES, Boolean.toString(searchingCategoryProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_ACTION_REACTION_GAMES,
+                Boolean.toString(actionReactionCategoryProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_NO_CATEGORY_GAMES, Boolean.toString(noCategoryProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_LOGIC_GAMES, Boolean.toString(logicCategoryProperty.getValue()));
         return properties;
     }
 
@@ -627,20 +639,24 @@ public class Configuration implements Cloneable {
         userPictureProperty.setValue(newPicture);
     }
 
-    public Boolean targetCategory() {
-        return targetCategoryProperty.getValue();
+    public Boolean selectionCategory() {
+        return selectionCategoryProperty.getValue();
     }
 
     public Boolean memorizationCategory() {
         return memorizationCategoryProperty.getValue();
     }
 
-    public Boolean searchingCategory() {
-        return searchingCategoryProperty.getValue();
+    public Boolean actionReactionCategory() {
+        return actionReactionCategoryProperty.getValue();
     }
 
     public Boolean noCategory() {
         return noCategoryProperty.getValue();
+    }
+
+    public Boolean logicCategory() {
+        return logicCategoryProperty.getValue();
     }
 
 }
