@@ -67,8 +67,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-//import net.gazeplay.commons.ui.Translator;
-
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
 
