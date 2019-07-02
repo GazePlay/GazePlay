@@ -34,6 +34,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 @Slf4j
@@ -89,8 +90,9 @@ public class GooseGame implements GameLifeCycle {
         JsonParser parser = new JsonParser();
         try {
             positions = (JsonArray) parser.parse(new InputStreamReader(
-                    new FileInputStream("gazeplay-data/src/main/resources/data/goosegame/positions.json"), "utf-8"));
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                    Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("data/goosegame/positions.json")),
+                    "utf-8"));
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
