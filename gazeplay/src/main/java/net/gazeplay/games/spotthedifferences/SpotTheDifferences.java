@@ -25,6 +25,7 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.*;
+import java.util.Objects;
 
 @Slf4j
 public class SpotTheDifferences implements GameLifeCycle {
@@ -111,10 +112,12 @@ public class SpotTheDifferences implements GameLifeCycle {
 
         JsonParser parser = new JsonParser();
         try {
-            instances = (JsonArray) parser.parse(new InputStreamReader(
-                    new FileInputStream("gazeplay-data/src/main/resources/data/spotthedifferences/instances.json"),
-                    "utf-8"));
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            instances = (JsonArray) parser
+                    .parse(new InputStreamReader(
+                            Objects.requireNonNull(
+                                    ClassLoader.getSystemResourceAsStream("data/spotthedifferences/instances.json")),
+                            "utf-8"));
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
