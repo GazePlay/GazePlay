@@ -8,6 +8,8 @@ package net.gazeplay.games.slidingpuzzle;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -142,7 +144,7 @@ public class slidingpuzzlecard extends Parent {
     private void isMyNeighborEvent() {
 
         progressIndicator.setOpacity(1);
-        currentTimeline.stop();
+        // currentTimeline.stop();
         currentTimeline = new Timeline();
         KeyValue xValue = new KeyValue(card.xProperty(), kingPosX);
         KeyValue yValue = new KeyValue(card.yProperty(), kingPosY);
@@ -154,7 +156,7 @@ public class slidingpuzzlecard extends Parent {
 
     public void isKingCardEvent(double x, double y) {
         progressIndicator.setOpacity(0);
-        currentTimeline.stop();
+        // currentTimeline.stop();
         currentTimeline = new Timeline();
         KeyValue xValue = new KeyValue(card.xProperty(), x);
         KeyValue yValue = new KeyValue(card.yProperty(), y);
@@ -211,12 +213,14 @@ public class slidingpuzzlecard extends Parent {
             @Override
             public void handle(Event e) {
 
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                if (!(currentTimeline.getStatus() == Animation.Status.RUNNING)
+                        && (e.getEventType() == MouseEvent.MOUSE_ENTERED
+                                || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
 
                     progressIndicator.setOpacity(1);
                     progressIndicator.setProgress(0);
 
-                    currentTimeline.stop();
+                    // currentTimeline.stop();
                     currentTimeline = new Timeline();
 
                     timelineProgressBar = new Timeline();
@@ -244,7 +248,6 @@ public class slidingpuzzlecard extends Parent {
                                 isMyNeighborEvent();
 
                                 gameInstance.fixCoord(CardId, initX, initY, kingPosX, kingPosY);
-
                                 // gameInstance.showCards();
 
                                 if (gameInstance.isGameOver())
@@ -255,7 +258,6 @@ public class slidingpuzzlecard extends Parent {
                     });
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
                     timelineProgressBar.stop();
-
                     progressIndicator.setOpacity(0);
                     progressIndicator.setProgress(0);
                 }

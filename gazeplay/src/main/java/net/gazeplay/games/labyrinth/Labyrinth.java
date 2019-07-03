@@ -100,6 +100,8 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         // launch of cheese
         cheese.beginCheese();
         gameContext.getChildren().add(cheese);
+
+        stats.notifyNewRoundReady();
     }
 
     @Override

@@ -27,5 +27,6 @@ public class PrisonSquare extends Square {
             game.showMessage("Player %d freed player %d", pawn.getNumber(), lockedPawn.getNumber());
             lockedPawn = null;
         }
+        game.playMovementSound();
     }
 }

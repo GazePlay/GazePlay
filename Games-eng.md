@@ -64,7 +64,7 @@ Mix the right colored potions to prepare Biball's order. Careful not to make a w
 
 ![MagicPotions](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/potions.jpg)
 
-##Goose Game
+## Goose Game
 
 Roll the dice and advance along the squares on the path to reach the end before the other players do.
 

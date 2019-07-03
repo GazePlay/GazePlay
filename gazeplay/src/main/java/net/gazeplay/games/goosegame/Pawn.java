@@ -95,7 +95,6 @@ public class Pawn {
 
     public void moveToSquare(Square square) {
         currentSquare = square;
-        square.pawnPassesBy(this);
         Position position = square.getPawnPosition();
         double targetX = position.getX() - pawnDisplay.getFitWidth() / 2 + Math.cos(number * 2 * Math.PI / 5) * 10;
         double targetY = position.getY() - pawnDisplay.getFitHeight() / 2 + Math.sin(number * 2 * Math.PI / 5) * 10;
@@ -103,7 +102,10 @@ public class Pawn {
         Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(pawnDisplay.xProperty(), targetX, Interpolator.EASE_BOTH),
                 new KeyValue(pawnDisplay.yProperty(), targetY, Interpolator.EASE_BOTH)));
-        newTimeline.setOnFinished(e -> move());
+        newTimeline.setOnFinished(e -> {
+            square.pawnPassesBy(this);
+            move();
+        });
 
         if (movementStart) {
             movementStart = false;
