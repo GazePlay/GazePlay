@@ -221,8 +221,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Translator translator = getGazePlay().getTranslator();
 
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
-//        BooleanProperty gameSelected = new SimpleBooleanProperty();
-//        gameSelected.setValue(false);
+        // BooleanProperty gameSelected = new SimpleBooleanProperty();
+        // gameSelected.setValue(false);
 
         BooleanProperty prop = null;
 

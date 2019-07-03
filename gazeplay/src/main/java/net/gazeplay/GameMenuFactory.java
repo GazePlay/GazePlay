@@ -64,12 +64,12 @@ public class GameMenuFactory {
         final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
 
         Image heartIcon;
-        if(isFavourite.getValue()){
+        if (isFavourite.getValue()) {
             heartIcon = new Image("data/common/images/heart_filled.png");
             gameSummary.setFavourite(true);
         }
 
-        else{
+        else {
             heartIcon = new Image("data/common/images/heart_empty.png");
             gameSummary.setFavourite(false);
         }
@@ -276,25 +276,25 @@ public class GameMenuFactory {
             // Configuration config = Configuration.getInstance();
             @Override
             public void handle(MouseEvent event) {
-//                BooleanProperty prop = null;
-//
-//                for (BooleanProperty p : config.getFavouriteGameProperties()) {
-//                    if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav"))
-//                        prop = p;
-//                }
+                // BooleanProperty prop = null;
+                //
+                // for (BooleanProperty p : config.getFavouriteGameProperties()) {
+                // if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav"))
+                // prop = p;
+                // }
 
                 if (!gameSummary.isFavourite()) {
                     favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
                     gameSummary.setFavourite(true);
 
-//                    for (BooleanProperty p : config.getFavouriteGameProperties()) {
-//                        if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav")) {
-//                            log.info("property name {}", p.getName());
-//                            p.setValue(true);
-//                            config.saveConfigIgnoringExceptions();
-//                        }
-//                        // p.bind(favPropertyBinding);
-//                    }
+                    // for (BooleanProperty p : config.getFavouriteGameProperties()) {
+                    // if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav")) {
+                    // log.info("property name {}", p.getName());
+                    // p.setValue(true);
+                    // config.saveConfigIgnoringExceptions();
+                    // }
+                    // // p.bind(favPropertyBinding);
+                    // }
                     isFavourite.setValue(true);
                     config.saveConfigIgnoringExceptions();
                     // log.info("game {}");
@@ -302,14 +302,14 @@ public class GameMenuFactory {
                     favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
                     gameSummary.setFavourite(false);
 
-//                    for (BooleanProperty p : config.getFavouriteGameProperties()) {
-//                        if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav")) {
-//                            log.info("property name {}", p.getName());
-//                            p.setValue(false);
-//                            config.saveConfigIgnoringExceptions();
-//                        }
-//                        // p.bind(favPropertyBinding);
-//                    }
+                    // for (BooleanProperty p : config.getFavouriteGameProperties()) {
+                    // if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav")) {
+                    // log.info("property name {}", p.getName());
+                    // p.setValue(false);
+                    // config.saveConfigIgnoringExceptions();
+                    // }
+                    // // p.bind(favPropertyBinding);
+                    // }
                     isFavourite.setValue(false);
                     config.saveConfigIgnoringExceptions();
                 }

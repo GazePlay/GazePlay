@@ -564,7 +564,7 @@ public class Configuration implements Cloneable {
         favouriteGameProperties.add(whereColorFavProperty);
         favouriteGameProperties.add(whereLetterFavProperty);
         favouriteGameProperties.add(whereNumberFavProperty);
-        //return favouriteGameProperties;
+        // return favouriteGameProperties;
     }
 
     protected Configuration() {
