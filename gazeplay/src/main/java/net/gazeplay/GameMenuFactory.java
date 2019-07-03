@@ -57,13 +57,23 @@ public class GameMenuFactory {
 
     public GameButtonPane createGameButton(GazePlay gazePlay, final Region root, Configuration config,
             Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
-            GazeDeviceManager gazeDeviceManager, BooleanProperty gameSelected) {
+            GazeDeviceManager gazeDeviceManager, BooleanProperty isFavourite) {
         this.gazeDeviceManager = gazeDeviceManager;
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
 
-        Image heartIcon = new Image("data/common/images/heart_empty.png");
+        Image heartIcon;
+        if(isFavourite.getValue()){
+            heartIcon = new Image("data/common/images/heart_filled.png");
+            gameSummary.setFavourite(true);
+        }
+
+        else{
+            heartIcon = new Image("data/common/images/heart_empty.png");
+            gameSummary.setFavourite(false);
+        }
+
         ImageView favGamesIcon = new ImageView(heartIcon);
 
         final I18NText gameTitleText = new I18NText(translator, gameSummary.getNameCode());
@@ -266,31 +276,42 @@ public class GameMenuFactory {
             // Configuration config = Configuration.getInstance();
             @Override
             public void handle(MouseEvent event) {
+//                BooleanProperty prop = null;
+//
+//                for (BooleanProperty p : config.getFavouriteGameProperties()) {
+//                    if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav"))
+//                        prop = p;
+//                }
+
                 if (!gameSummary.isFavourite()) {
                     favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
                     gameSummary.setFavourite(true);
 
-                    for (BooleanProperty p : config.getFavouriteGameProperties()) {
-                        if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav"))
-                            log.info("property name {}", p.getName());
-                        p.setValue(true);
-                        // p.bind(favPropertyBinding);
-                    }
+//                    for (BooleanProperty p : config.getFavouriteGameProperties()) {
+//                        if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav")) {
+//                            log.info("property name {}", p.getName());
+//                            p.setValue(true);
+//                            config.saveConfigIgnoringExceptions();
+//                        }
+//                        // p.bind(favPropertyBinding);
+//                    }
+                    isFavourite.setValue(true);
                     config.saveConfigIgnoringExceptions();
-
                     // log.info("game {}");
                 } else if (gameSummary.isFavourite()) {
                     favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
                     gameSummary.setFavourite(false);
 
-                    for (BooleanProperty p : config.getFavouriteGameProperties()) {
-                        if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav"))
-                            log.info("property name {}", p.getName());
-                        p.setValue(false);
-                        // p.bind(favPropertyBinding);
-                    }
+//                    for (BooleanProperty p : config.getFavouriteGameProperties()) {
+//                        if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav")) {
+//                            log.info("property name {}", p.getName());
+//                            p.setValue(false);
+//                            config.saveConfigIgnoringExceptions();
+//                        }
+//                        // p.bind(favPropertyBinding);
+//                    }
+                    isFavourite.setValue(false);
                     config.saveConfigIgnoringExceptions();
-
                 }
 
                 // BooleanBinding favPropertyBinding = new BooleanBinding() {

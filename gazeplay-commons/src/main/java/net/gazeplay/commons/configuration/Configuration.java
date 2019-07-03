@@ -511,7 +511,7 @@ public class Configuration implements Cloneable {
     protected final BooleanProperty gooseGameFavProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_FAVOURITE_GOOSEGAME, DEFAULT_VALUE_FAVOURITE_GAMES);
 
-    private List<BooleanProperty> getFavProperties() {
+    public void FavProperties() {
 
         favouriteGameProperties.add(bibouleJumpFavProperty);
         favouriteGameProperties.add(biboulesFavProperty);
@@ -564,11 +564,12 @@ public class Configuration implements Cloneable {
         favouriteGameProperties.add(whereColorFavProperty);
         favouriteGameProperties.add(whereLetterFavProperty);
         favouriteGameProperties.add(whereNumberFavProperty);
-        return favouriteGameProperties;
+        //return favouriteGameProperties;
     }
 
     protected Configuration() {
 
+        FavProperties();
         // Listeners
         musicVolumeProperty.addListener((observable) -> {
             double musicVolume = getMusicVolume();

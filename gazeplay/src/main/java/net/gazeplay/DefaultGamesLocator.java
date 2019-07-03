@@ -176,8 +176,9 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("letters", "data/Thumbnails/letters.png",
-                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(
+                new GameSummary("letters", "data/Thumbnails/letters.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -704,8 +705,9 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("VideoPlayer", "data/Thumbnails/youtube.png",
-                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(
+                new GameSummary("VideoPlayer", "data/Thumbnails/youtube.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -1135,8 +1137,9 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("puzzle", "data/Thumbnails/slidingpuzzle.png",
-                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(
+                new GameSummary("puzzle", "data/Thumbnails/slidingpuzzle.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(1, "Numbers"),

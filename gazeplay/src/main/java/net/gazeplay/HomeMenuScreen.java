@@ -221,13 +221,20 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Translator translator = getGazePlay().getTranslator();
 
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
-        BooleanProperty gameSelected = new SimpleBooleanProperty();
-        gameSelected.setValue(false);
+//        BooleanProperty gameSelected = new SimpleBooleanProperty();
+//        gameSelected.setValue(false);
+
+        BooleanProperty prop = null;
 
         for (GameSpec gameSpec : games) {
 
+            for (BooleanProperty p : config.getFavouriteGameProperties()) {
+                if (p.getName().equals(gameSpec.getGameSummary().getNameCode().toUpperCase() + " Game fav"))
+                    prop = p;
+            }
+
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
-                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
+                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, prop);
 
             /* all categories */
             if (config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()
