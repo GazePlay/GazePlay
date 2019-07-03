@@ -7,12 +7,15 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -32,16 +35,18 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
+import static sun.plugin.javascript.navig.JSType.URL;
+
 @Slf4j
 public class GooseGame implements GameLifeCycle {
 
-    private static final int WIDTH = 9;
-    private static final int HEIGHT = 7;
     private static final String BIBOULEPATH = "data/biboulejump/biboules/%s.png";
 
     private final GameContext gameContext;
@@ -74,6 +79,7 @@ public class GooseGame implements GameLifeCycle {
     private ImageView turnIndicator;
 
     private Random random;
+    private AudioClip mvmt;
 
     public GooseGame(GameContext gameContext, Stats stats, int nbPlayers) {
         this.gameContext = gameContext;
@@ -85,6 +91,8 @@ public class GooseGame implements GameLifeCycle {
         this.translate = Multilinguism.getSingleton();
 
         this.random = new Random();
+
+        mvmt = new AudioClip(ClassLoader.getSystemResource("data/goosegame/sounds/mvmt0.wav").toString());
 
         // JSON file used to store the position of each square, later used for pawn movement
         JsonParser parser = new JsonParser();
@@ -353,10 +361,25 @@ public class GooseGame implements GameLifeCycle {
     }
 
     public void playMovementSound() {
-        try {
+        /*try {
             Utils.playSound(String.format("data/goosegame/sounds/mvmt%d.wav", random.nextInt(6)));
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
+        //mvmt.play();
+        Service<Void> playMvmtSound = new Service<Void>(){
+
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        mvmt.play();
+                        return null;
+                    }
+                };
+            }
+        };
+        playMvmtSound.start();
     }
 }
