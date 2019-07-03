@@ -2,8 +2,10 @@ package net.gazeplay;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import javafx.beans.property.BooleanProperty;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.biboulejump.BibouleJump;
 import net.gazeplay.games.biboulejump.BibouleJumpStats;
@@ -1268,7 +1270,18 @@ public class DefaultGamesLocator implements GamesLocator {
 
         log.info("Games found : {}", result.size());
 
+        // reorder
+        // for( GameSpec g : result){
+        // for (BooleanProperty p : Configuration.getInstance().getFavouriteGameProperties()) {
+        // if (p.getName().equals(g.getGameSummary().getNameCode().toUpperCase() + " Game fav"))
+        // if(p.getValue()){
+        // GameSpec theGame = g;
+        // result.remove(g);
+        // result.add(0,theGame);
+        // }
+        // }
+        // }
+
         return result;
     }
-
 }

@@ -64,17 +64,16 @@ public class GameMenuFactory {
         final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
 
         Image heartIcon;
-        if (isFavourite.getValue()) {
+        if (isFavourite.getValue())
             heartIcon = new Image("data/common/images/heart_filled.png");
-            gameSummary.setFavourite(true);
-        }
-
-        else {
+        else
             heartIcon = new Image("data/common/images/heart_empty.png");
-            gameSummary.setFavourite(false);
-        }
 
         ImageView favGamesIcon = new ImageView(heartIcon);
+        favGamesIcon.imageProperty().addListener((l) -> {
+            isFavourite.setValue(favGamesIcon.getImage().equals(new Image("data/common/images/heart_filled.png")));
+            config.saveConfigIgnoringExceptions();
+        });
 
         final I18NText gameTitleText = new I18NText(translator, gameSummary.getNameCode());
         gameTitleText.getStyleClass().add("gameChooserButtonTitle");
@@ -132,7 +131,7 @@ public class GameMenuFactory {
             case HORIZONTAL:
                 gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
                     double preferredHeight = newValue.doubleValue() - thumbnailBorderSize;
-                    imageView.setFitHeight(preferredHeight);
+                    imageView.setFitHeight(preferredHeight - 10);
                     imageView.setFitWidth(preferredHeight * imageSizeRatio);
                 });
                 // gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -272,76 +271,27 @@ public class GameMenuFactory {
                 }
             }
         };
-        EventHandler favGameHandler = new EventHandler<MouseEvent>() {
+        EventHandler favGameHandler_enter = new EventHandler<MouseEvent>() {
             // Configuration config = Configuration.getInstance();
             @Override
             public void handle(MouseEvent event) {
-                // BooleanProperty prop = null;
-                //
-                // for (BooleanProperty p : config.getFavouriteGameProperties()) {
-                // if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav"))
-                // prop = p;
-                // }
 
-                if (!gameSummary.isFavourite()) {
+                if (!isFavourite.getValue()) {
                     favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
-                    gameSummary.setFavourite(true);
 
-                    // for (BooleanProperty p : config.getFavouriteGameProperties()) {
-                    // if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav")) {
-                    // log.info("property name {}", p.getName());
-                    // p.setValue(true);
-                    // config.saveConfigIgnoringExceptions();
-                    // }
-                    // // p.bind(favPropertyBinding);
-                    // }
                     isFavourite.setValue(true);
-                    config.saveConfigIgnoringExceptions();
-                    // log.info("game {}");
-                } else if (gameSummary.isFavourite()) {
+
+                } else if (isFavourite.getValue()) {
                     favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
-                    gameSummary.setFavourite(false);
 
-                    // for (BooleanProperty p : config.getFavouriteGameProperties()) {
-                    // if (p.getName().equals(gameSummary.getNameCode().toUpperCase() + " Game fav")) {
-                    // log.info("property name {}", p.getName());
-                    // p.setValue(false);
-                    // config.saveConfigIgnoringExceptions();
-                    // }
-                    // // p.bind(favPropertyBinding);
-                    // }
                     isFavourite.setValue(false);
-                    config.saveConfigIgnoringExceptions();
                 }
-
-                // BooleanBinding favPropertyBinding = new BooleanBinding() {
-                // @Override
-                // protected boolean computeValue() {
-                // if(gameSummary.isFavourite())
-                // return true;
-                // else return false;
-                //
-                //// if(favGamesIcon.imageProperty().equals(new Image("data/common/images/heart_filled.png")))
-                //// return true;
-                //// else return false;
-                // }
-                // };
-                //
-                // //Configuration.getInstance().getSpaceGameFavProperty().bind(favPropertyBinding);
-                //
-                // for( BooleanProperty p : config.getFavouriteGameProperties()){
-                // if(p.getName().equals(gameSummary.getNameCode().toUpperCase()+" Game fav"))
-                // log.info("property name {}", p.getName());
-                // p.bind(favPropertyBinding);
-                // }
-                // config.saveConfigIgnoringExceptions();
-                //
-
+                config.saveConfigIgnoringExceptions();
             }
         };
 
         gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
-        favGamesIcon.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler);
+        favGamesIcon.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler_enter);
         pausedEvents.add(gameCard);
         return gameCard;
     }

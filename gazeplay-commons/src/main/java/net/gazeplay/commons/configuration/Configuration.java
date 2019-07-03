@@ -1,22 +1,16 @@
 package net.gazeplay.commons.configuration;
 
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.input.KeyCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.Utils;
-
-import java.awt.print.Book;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 import java.util.Properties;
-
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
 @Slf4j
@@ -136,10 +130,7 @@ public class Configuration implements Cloneable {
     private static final boolean DEFAULT_VALUE_ACTION_REACTION_GAMES = true;
     private static final boolean DEFAULT_VALUE_NO_CATEGORY_GAMES = true;
     private static final boolean DEFAULT_VALUE_FAVOURITE_GAMES = false;
-
     private static final boolean DEFAULT_VALUE_LOGIC_GAMES = true;
-    // next thing to do
-    // private static final String DEFAULT_EXIT_SHORTCUT_KEY = "SPACE";
 
     @Setter
     @Getter
@@ -202,15 +193,8 @@ public class Configuration implements Cloneable {
     @Setter
     private static Configuration instance = Configuration.createFromPropertiesResource();
 
-    // @Getter
-    // protected final ListProperty<BooleanProperty> FavouriteGamesProperty = new
-    // SimpleListProperty<BooleanProperty>(this, PROPERTY_NAME_FAVOURITE_GAMES,
-    // DEFAULT_VALUE_FAVOURITE_GAMES);
-
     @Getter
-    // // @Setter
     private List<BooleanProperty> favouriteGameProperties = new ArrayList<BooleanProperty>();
-    ////
 
     @Getter
     protected final StringProperty QuitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
@@ -564,7 +548,6 @@ public class Configuration implements Cloneable {
         favouriteGameProperties.add(whereColorFavProperty);
         favouriteGameProperties.add(whereLetterFavProperty);
         favouriteGameProperties.add(whereNumberFavProperty);
-        // return favouriteGameProperties;
     }
 
     protected Configuration() {
