@@ -1,31 +1,5 @@
 [
   {
-    "image1": "img1.png",
-    "image2": "img2.png",
-    "differences": [
-      {
-        "x": 1353,
-        "y": 588,
-        "radius": 150
-      },
-      {
-        "x": 2900,
-        "y": 740,
-        "radius": 150
-      },
-      {
-        "x": 2190,
-        "y": 400,
-        "radius": 200
-      },
-      {
-        "x": 175,
-        "y": 530,
-        "radius": 150
-      }
-    ]
-  },
-  {
     "image1": "house1.png",
     "image2": "house2.png",
     "differences": [
