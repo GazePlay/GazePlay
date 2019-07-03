@@ -223,9 +223,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
         BooleanProperty gameSelected = new SimpleBooleanProperty();
         gameSelected.setValue(false);
-
-        // confi.getfa
-
+        
         for (GameSpec gameSpec : games) {
 
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
@@ -466,7 +464,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             this.games = filteredGames;
 
         else if (selectionFilter && memoFilter && actionReactionFilter && !logicFiler) { // selection & memorization &
-                                                                                         // actionReaction
+            // actionReaction
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.LOGIC) {
                     filteredGames.clear();
@@ -475,7 +473,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (selectionFilter && memoFilter && !actionReactionFilter && logicFiler) { // Selection & Memorization &
-                                                                                           // Logic
+            // Logic
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.ACTION_REACTION) {
                     filteredGames.clear();
@@ -484,7 +482,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && actionReactionFilter && logicFiler) { // ActionReaction &
-                                                                                           // Memorization & Logic
+            // Memorization & Logic
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.SELECTION) {
                     filteredGames.clear();
@@ -493,7 +491,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && actionReactionFilter && logicFiler) { // Selection & ActionReaction
-                                                                                           // & Logic
+            // & Logic
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.MEMORIZATION) {
                     filteredGames.clear();
@@ -502,7 +500,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (selectionFilter && memoFilter && !actionReactionFilter && !logicFiler) { // Selection & memorization
-                                                                                            // games
+            // games
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION) {
@@ -512,7 +510,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && actionReactionFilter && !logicFiler) { // Selection &
-                                                                                            // Action_Reaction games
+            // Action_Reaction games
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION) {
@@ -522,7 +520,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && actionReactionFilter && !logicFiler) { // memorization and
-                                                                                            // Action_Reaction games
+            // Action_Reaction games
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION
                         && g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION)
@@ -567,7 +565,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (!selectionFilter && !memoFilter && actionReactionFilter && !logicFiler) { // only Action_Reaction
-                                                                                             // games
+            // games
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION) {
                     filteredGames.clear();
@@ -587,5 +585,4 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         this.games = filteredGames;
 
     }
-
 }
