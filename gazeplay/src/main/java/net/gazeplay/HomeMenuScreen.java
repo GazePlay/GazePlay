@@ -231,7 +231,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
                     translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
 
-            //if(config.)
+            // if(config.)
 
             /* all categories */
             if (config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()

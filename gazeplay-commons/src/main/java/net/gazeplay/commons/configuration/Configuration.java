@@ -208,9 +208,9 @@ public class Configuration implements Cloneable {
     // DEFAULT_VALUE_FAVOURITE_GAMES);
 
     @Getter
-//    // @Setter
-     private List<BooleanProperty> favouriteGameProperties = new ArrayList<BooleanProperty>();
-////
+    // // @Setter
+    private List<BooleanProperty> favouriteGameProperties = new ArrayList<BooleanProperty>();
+    ////
 
     @Getter
     protected final StringProperty QuitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
@@ -511,65 +511,61 @@ public class Configuration implements Cloneable {
     protected final BooleanProperty gooseGameFavProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_FAVOURITE_GOOSEGAME, DEFAULT_VALUE_FAVOURITE_GAMES);
 
+    private List<BooleanProperty> getFavProperties() {
 
-    private List<BooleanProperty> getFavProperties(){
-
-               favouriteGameProperties.add(bibouleJumpFavProperty);
-               favouriteGameProperties.add(biboulesFavProperty);
-               favouriteGameProperties.add(blocksFavProperty);
-               favouriteGameProperties.add(cakesFavProperty);
-               favouriteGameProperties.add(coloredBubblesFavProperty);
-               favouriteGameProperties.add(colorsFavProperty);
-               favouriteGameProperties.add(creamPieFavProperty);
-               favouriteGameProperties.add(cupsBallsFavProperty);
-               favouriteGameProperties.add(diceFavProperty);
-               favouriteGameProperties.add(divisorFavProperty);
-               favouriteGameProperties.add(findOddFavProperty);
-               favouriteGameProperties.add(flagsFavProperty);
-               favouriteGameProperties.add(frogsRaceFavProperty);
-               favouriteGameProperties.add(gooseGameFavProperty);
-               favouriteGameProperties.add(lettersFavProperty);
-               favouriteGameProperties.add(labyrinthFavProperty);
-               favouriteGameProperties.add(rabbitsFavProperty);
-               favouriteGameProperties.add(math101FavProperty);
-               favouriteGameProperties.add(math102FavProperty);
-               favouriteGameProperties.add(math103FavProperty);
-               favouriteGameProperties.add(math104FavProperty);
-               favouriteGameProperties.add(math201FavProperty);
-               favouriteGameProperties.add(magicCardsFavProperty);
-               favouriteGameProperties.add(mediaPlayerFavProperty);
-               favouriteGameProperties.add(memoryFavProperty);
-               favouriteGameProperties.add(memoryLettersFavProperty);
-               favouriteGameProperties.add(memoryNumbersFavProperty);
-               favouriteGameProperties.add(ninjaFavProperty);
-               favouriteGameProperties.add(openMemoryFavProperty);
-               favouriteGameProperties.add(openMemoryLettersFavProperty);
-               favouriteGameProperties.add(openMemoryNumbersFavProperty);
-               favouriteGameProperties.add(orderFavProperty);
-               favouriteGameProperties.add(petFavProperty);
-               favouriteGameProperties.add(pianoFavProperty);
-               favouriteGameProperties.add(portraitBubblesFavProperty);
-               favouriteGameProperties.add(potionsFavProperty);
-               favouriteGameProperties.add(puzzleFavProperty);
-               favouriteGameProperties.add(robotsFavProperty);
-               favouriteGameProperties.add(roomFavProperty);
-               favouriteGameProperties.add(rushHourFavProperty);
-               favouriteGameProperties.add(scratchCardFavProperty);
-               favouriteGameProperties.add(scribbleFavProperty);
-               favouriteGameProperties.add(spaceGameFavProperty);
-               favouriteGameProperties.add(spotDifferenceFavProperty);
-               favouriteGameProperties.add(videoPlayerFavProperty);
-               favouriteGameProperties.add(whacamoleFavProperty);
-               favouriteGameProperties.add(whereItFavProperty);
-               favouriteGameProperties.add(whereAnimalFavProperty);
-               favouriteGameProperties.add(whereColorFavProperty);
-               favouriteGameProperties.add(whereLetterFavProperty);
-               favouriteGameProperties.add(whereNumberFavProperty);
+        favouriteGameProperties.add(bibouleJumpFavProperty);
+        favouriteGameProperties.add(biboulesFavProperty);
+        favouriteGameProperties.add(blocksFavProperty);
+        favouriteGameProperties.add(cakesFavProperty);
+        favouriteGameProperties.add(coloredBubblesFavProperty);
+        favouriteGameProperties.add(colorsFavProperty);
+        favouriteGameProperties.add(creamPieFavProperty);
+        favouriteGameProperties.add(cupsBallsFavProperty);
+        favouriteGameProperties.add(diceFavProperty);
+        favouriteGameProperties.add(divisorFavProperty);
+        favouriteGameProperties.add(findOddFavProperty);
+        favouriteGameProperties.add(flagsFavProperty);
+        favouriteGameProperties.add(frogsRaceFavProperty);
+        favouriteGameProperties.add(gooseGameFavProperty);
+        favouriteGameProperties.add(lettersFavProperty);
+        favouriteGameProperties.add(labyrinthFavProperty);
+        favouriteGameProperties.add(rabbitsFavProperty);
+        favouriteGameProperties.add(math101FavProperty);
+        favouriteGameProperties.add(math102FavProperty);
+        favouriteGameProperties.add(math103FavProperty);
+        favouriteGameProperties.add(math104FavProperty);
+        favouriteGameProperties.add(math201FavProperty);
+        favouriteGameProperties.add(magicCardsFavProperty);
+        favouriteGameProperties.add(mediaPlayerFavProperty);
+        favouriteGameProperties.add(memoryFavProperty);
+        favouriteGameProperties.add(memoryLettersFavProperty);
+        favouriteGameProperties.add(memoryNumbersFavProperty);
+        favouriteGameProperties.add(ninjaFavProperty);
+        favouriteGameProperties.add(openMemoryFavProperty);
+        favouriteGameProperties.add(openMemoryLettersFavProperty);
+        favouriteGameProperties.add(openMemoryNumbersFavProperty);
+        favouriteGameProperties.add(orderFavProperty);
+        favouriteGameProperties.add(petFavProperty);
+        favouriteGameProperties.add(pianoFavProperty);
+        favouriteGameProperties.add(portraitBubblesFavProperty);
+        favouriteGameProperties.add(potionsFavProperty);
+        favouriteGameProperties.add(puzzleFavProperty);
+        favouriteGameProperties.add(robotsFavProperty);
+        favouriteGameProperties.add(roomFavProperty);
+        favouriteGameProperties.add(rushHourFavProperty);
+        favouriteGameProperties.add(scratchCardFavProperty);
+        favouriteGameProperties.add(scribbleFavProperty);
+        favouriteGameProperties.add(spaceGameFavProperty);
+        favouriteGameProperties.add(spotDifferenceFavProperty);
+        favouriteGameProperties.add(videoPlayerFavProperty);
+        favouriteGameProperties.add(whacamoleFavProperty);
+        favouriteGameProperties.add(whereItFavProperty);
+        favouriteGameProperties.add(whereAnimalFavProperty);
+        favouriteGameProperties.add(whereColorFavProperty);
+        favouriteGameProperties.add(whereLetterFavProperty);
+        favouriteGameProperties.add(whereNumberFavProperty);
         return favouriteGameProperties;
     }
-
-
-
 
     protected Configuration() {
 
@@ -1084,7 +1080,7 @@ public class Configuration implements Cloneable {
                 Boolean.toString(whereLetterFavProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_FAVOURITE_WHEREISTHENUMBER,
                 Boolean.toString(whereNumberFavProperty.getValue()));
-        
+
         return properties;
     }
 

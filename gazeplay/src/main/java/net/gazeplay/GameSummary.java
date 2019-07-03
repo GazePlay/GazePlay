@@ -54,13 +54,13 @@ public class GameSummary {
         this.backgroundMusicUrl = backgroundMusicUrl;
         this.description = description;
 
-        for(BooleanProperty p : Configuration.getInstance().getFavouriteGameProperties()){
-            if(p.getName().equals(this.getNameCode().toUpperCase()+" Game fav")){
+        for (BooleanProperty p : Configuration.getInstance().getFavouriteGameProperties()) {
+            if (p.getName().equals(this.getNameCode().toUpperCase() + " Game fav")) {
                 this.setFavourite(p.getValue());
             }
         }
 
-        //this.setFavourite(false);
+        // this.setFavourite(false);
     }
 
 }

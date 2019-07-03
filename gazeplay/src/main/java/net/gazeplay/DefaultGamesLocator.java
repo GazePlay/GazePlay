@@ -115,8 +115,7 @@ public class DefaultGamesLocator implements GamesLocator {
                                 return new Ninja(gameContext, stats, gameVariant.getNumber());
                             }
 
-
-                }));
+                        }));
 
         result.add(new GameSpec(
                 new GameSummary("MagicCards", "data/Thumbnails/magicCard.png", GameCategories.Category.ACTION_REACTION),
@@ -177,8 +176,9 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("letters", "data/Thumbnails/letters.png",
-                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(
+                new GameSummary("letters", "data/Thumbnails/letters.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameVariantGenerator() {
 
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -1142,8 +1142,9 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Puzzle", "data/Thumbnails/slidingpuzzle.png",
-                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(
+                new GameSummary("Puzzle", "data/Thumbnails/slidingpuzzle.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(1, "Numbers"),
@@ -1165,7 +1166,6 @@ public class DefaultGamesLocator implements GamesLocator {
 
         result.add(new GameSpec(new GameSummary("SpotDifference", "data/Thumbnails/spotthedifference.png",
                 GameCategories.Category.ACTION_REACTION), new GameSpec.GameLauncher() {
-
 
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -1214,14 +1214,13 @@ public class DefaultGamesLocator implements GamesLocator {
 
                         }));
 
-
-        result.add(
-                new GameSpec(new GameSummary("SpaceGame", "data/Thumbnails/space.png", GameCategories.Category.SELECTION),
-                        new GameSpec.GameLauncher() {
-                            @Override
-                            public Stats createNewStats(Scene scene) {
-                                return new SpaceGameStats(scene);
-                            }
+        result.add(new GameSpec(
+                new GameSummary("SpaceGame", "data/Thumbnails/space.png", GameCategories.Category.SELECTION),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new SpaceGameStats(scene);
+                    }
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
