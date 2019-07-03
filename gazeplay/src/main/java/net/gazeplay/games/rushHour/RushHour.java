@@ -65,6 +65,9 @@ public class RushHour extends Parent implements GameLifeCycle {
                     ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         });
+
+        ground = new Rectangle(); // to avoid NullPointerException
+
     }
 
     public void setLevel(int i) {

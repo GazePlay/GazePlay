@@ -3,14 +3,20 @@ package net.gazeplay;
 import lombok.*;
 
 public class GameCategories {
-
-    // FIXATION_GAME = "";
-    // LOGIC_GAME = "";
+    /**
+     * Action-Reaction Skill
+     *
+     * Selection Skill
+     *
+     * Memorization Skill
+     */
 
     public enum Category {
-        TARGET("Target games", "data/common/images/categoriesThumbnails/target.png"), MEMORIZATION("Memorization games",
-                "data/common/images/categoriesThumbnails/male-brain.png"), SEARCHING("Searching games",
-                        "data/common/images/categoriesThumbnails/searching-magnifying-glass.png");
+        SELECTION("Selection games", "data/common/images/categoriesThumbnails/target.png"), MEMORIZATION(
+                "Memorization games",
+                "data/common/images/categoriesThumbnails/male-brain.png"), ACTION_REACTION("ActionReaction games",
+                        "data/common/images/categoriesThumbnails/searching-magnifying-glass.png"), LOGIC("Logic games",
+                                "data/common/images/categoriesThumbnails/logic_gear.png");
 
         @NonNull
         @Getter
