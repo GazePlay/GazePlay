@@ -192,7 +192,7 @@ public class slidingpuzzle implements GameLifeCycle {
         List<slidingpuzzlecard> result = new ArrayList<>();
         int counter = 1;
         // Initialize KingPos
-        int index = randomGenerator.nextInt(CoordList.size());
+        int index = 8;// randomGenerator.nextInt(CoordList.size());
         double kingPosX = CoordList.get(index).getX();
         double kingPosY = CoordList.get(index).getY();
         CoordList.remove(index);
@@ -208,11 +208,11 @@ public class slidingpuzzle implements GameLifeCycle {
                     result.add(card);
                 } else {
 
-                    index = randomGenerator.nextInt(CoordList.size());
+                    index = (i - 1) * 3 + j - 1;// randomGenerator.nextInt(CoordList.size());
 
                     double positionX = CoordList.get(index).getX();
                     double positionY = CoordList.get(index).getY();
-                    CoordList.remove(index);
+                    // CoordList.remove(index);
 
                     slidingpuzzlecard card = new slidingpuzzlecard(counter, positionX, positionY, cardWidth, cardHeight,
                             PicPath + counter + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY);
