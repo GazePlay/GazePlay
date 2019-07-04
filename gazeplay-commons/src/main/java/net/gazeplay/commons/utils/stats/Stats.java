@@ -342,7 +342,7 @@ public class Stats implements GazeMotionListener {
 
         this.savedStatsInfo = savedStatsInfo;
         if (this.heatMap != null) {
-            HeatMap hm = new HeatMap(heatMap, config.getHeatMapOpacity());
+            HeatMap hm = new HeatMap(heatMap, config.getHeatMapOpacity(), config.getHeatMapColors());
             BufferedImage heatmapImage = SwingFXUtils.fromFXImage(hm.getImage(), null);
             Kernel kernel = new Kernel(3, 3,
                     new float[] { 1 / 16f, 1 / 8f, 1 / 16f, 1 / 8f, 1 / 4f, 1 / 8f, 1 / 16f, 1 / 8f, 1 / 16f });

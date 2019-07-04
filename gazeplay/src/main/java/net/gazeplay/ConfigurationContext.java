@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -271,7 +272,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         {
             I18NText label = new I18NText(translator, "HeatMapOpacity", COLON);
-            ChoiceBox input = buildHeatMapOpacityChoiceBox(config, configurationContext);
+            ChoiceBox input = buildHeatMapOpacityChoiceBox(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
+        {
+            I18NText label = new I18NText(translator, "HeatMapColors", COLON);
+            HBox input = buildHeatMapColorHBox(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -1012,8 +1020,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     }
 
-    private ChoiceBox<Double> buildHeatMapOpacityChoiceBox(Configuration config,
-            ConfigurationContext configurationContext) {
+    private ChoiceBox<Double> buildHeatMapOpacityChoiceBox(Configuration config) {
         ChoiceBox<Double> choiceBox = new ChoiceBox();
         for (double i = 0; i <= 10; i++) {
             choiceBox.getItems().add(i / 10);
@@ -1026,5 +1033,51 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             config.saveConfigIgnoringExceptions();
         });
         return choiceBox;
+    }
+
+    private HBox buildHeatMapColorHBox(Configuration config) {
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+
+        Button plusButton = new Button("+");
+        hbox.getChildren().add(plusButton);
+
+        plusButton.setOnAction(e -> {
+            ColorPicker colorPicker = new ColorPicker(Color.RED);
+            colorPicker.valueProperty()
+                    .addListener((observableValue, color1, t1) -> updateHeatMapColorProperty(hbox, config));
+            hbox.getChildren().add(colorPicker);
+            updateHeatMapColorProperty(hbox, config);
+        });
+
+        Button minusButton = new Button("-");
+        hbox.getChildren().add(minusButton);
+        minusButton.setOnAction(e -> {
+            if (hbox.getChildren().size() > 4) {
+                hbox.getChildren().remove(hbox.getChildren().size() - 1);
+            }
+            updateHeatMapColorProperty(hbox, config);
+        });
+
+        for (Color color : config.getHeatMapColors()) {
+            ColorPicker colorPicker = new ColorPicker(color);
+            colorPicker.valueProperty()
+                    .addListener((observableValue, color1, t1) -> updateHeatMapColorProperty(hbox, config));
+            hbox.getChildren().add(colorPicker);
+        }
+
+        return hbox;
+    }
+
+    private void updateHeatMapColorProperty(HBox hbox, Configuration config) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 2; i < hbox.getChildren().size(); i++) {
+            stringBuilder.append(((ColorPicker) (hbox.getChildren().get(i))).getValue().toString());
+            if (i != hbox.getChildren().size() - 1)
+                stringBuilder.append(",");
+        }
+        log.info(stringBuilder.toString());
+        config.getHeatMapColorsProperty().setValue(stringBuilder.toString());
+        config.saveConfigIgnoringExceptions();
     }
 }

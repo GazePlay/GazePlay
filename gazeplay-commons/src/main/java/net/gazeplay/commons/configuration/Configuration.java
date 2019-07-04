@@ -2,6 +2,7 @@ package net.gazeplay.commons.configuration;
 
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
@@ -28,6 +30,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
     private static final String PROPERTY_NAME_HEATMAP_OPACITY = "HEATMAP_OPACITY";
+    private static final String PROPERTY_NAME_HEATMAP_COLORS = "HEATMAP_COLORS";
     private static final String PROPERTY_NAME_AREA_OF_INTEREST_DISABLED = "AREA_OF_INTEREST_DISABLED";
     private static final String PROPERTY_NAME_CONVEX_HULL_DISABLED = "CONVEX_HULL_DISABLED";
     private static final String PROPERTY_NAME_VIDEO_RECORDING_DISABLED = "VIDEO_RECORDING_DISABLED";
@@ -66,6 +69,7 @@ public class Configuration implements Cloneable {
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
     private static final double DEFAULT_VALUE_HEATMAP_OPACITY = 0.7;
+    private static final String DEFAULT_VALUE_HEATMAP_COLORS = "0000FF,00FF00,FFFF00,FF0000";
     private static final boolean DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED = false;
     private static final boolean DEFAULT_VALUE_CONVEX_HULL_DISABLED = false;
     private static final boolean DEFAULT_VALUE_VIDEO_RECORDING = false;
@@ -194,6 +198,9 @@ public class Configuration implements Cloneable {
     @Getter
     protected final DoubleProperty heatMapOpacityProperty = new SimpleDoubleProperty(this,
             PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY);
+    @Getter
+    protected final StringProperty heatMapColorsProperty = new SimpleStringProperty(this, PROPERTY_NAME_HEATMAP_COLORS,
+            DEFAULT_VALUE_HEATMAP_COLORS);
     @Getter
     protected final BooleanProperty areaOfInterestDisabledProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
@@ -360,6 +367,10 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             heatMapOpacityProperty.setValue(Double.parseDouble(buffer));
         }
+        buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_COLORS);
+        if (buffer != null) {
+            heatMapColorsProperty.setValue(buffer);
+        }
         buffer = prop.getProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED);
         if (buffer != null) {
             areaOfInterestDisabledProperty.setValue(Boolean.parseBoolean(buffer));
@@ -483,6 +494,7 @@ public class Configuration implements Cloneable {
         properties.setProperty(PROPERTY_NAME_HEATMAP_DISABLED,
                 Boolean.toString(this.heatMapDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_HEATMAP_OPACITY, Double.toString(this.heatMapOpacityProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_HEATMAP_COLORS, this.heatMapColorsProperty.getValue());
         properties.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED,
                 Boolean.toString(this.areaOfInterestDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED,
@@ -585,6 +597,15 @@ public class Configuration implements Cloneable {
 
     public Double getHeatMapOpacity() {
         return heatMapOpacityProperty.getValue();
+    }
+
+    public ArrayList<Color> getHeatMapColors() {
+        String colorsString = heatMapColorsProperty.getValue();
+        ArrayList<Color> colors = new ArrayList<>();
+        for (String colorString : colorsString.split(",")) {
+            colors.add(Color.web(colorString));
+        }
+        return colors;
     }
 
     public Boolean isAreaOfInterestEnabled() {
