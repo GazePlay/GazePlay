@@ -268,6 +268,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+
+        {
+            I18NText label = new I18NText(translator, "HeatMapOpacity", COLON);
+            ChoiceBox input = buildHeatMapOpacityChoiceBox(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
         {
             I18NText label = new I18NText(translator, "DisableSequence", COLON);
             CheckBox input = buildDisableFixationSequenceCheckBox(config, configurationContext);
@@ -1002,5 +1010,21 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return KeyBox;
 
+    }
+
+    private ChoiceBox<Double> buildHeatMapOpacityChoiceBox(Configuration config,
+            ConfigurationContext configurationContext) {
+        ChoiceBox<Double> choiceBox = new ChoiceBox();
+        for (double i = 0; i <= 10; i++) {
+            choiceBox.getItems().add(i / 10);
+        }
+        choiceBox.getSelectionModel().select(config.getHeatMapOpacity());
+        choiceBox.setPrefSize(PREF_WIDTH, PREF_HEIGHT);
+
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            config.getHeatMapOpacityProperty().setValue(newValue);
+            config.saveConfigIgnoringExceptions();
+        });
+        return choiceBox;
     }
 }

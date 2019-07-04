@@ -193,3 +193,4 @@ Player %d freed player %d,,,,,,Player %d freed player %d,,Le joueur %d a libér�
 Restart from the beginning,,,,,,Restart from the beginning,,Retour à la case départ,,,,,,,,,,,
 Player %d got locked up in prison,,,,,,Player %d got locked up in prison,,Le joueur %d tombe en prison,,,,,,,,,,,
 Player %d falls asleep for %d turns,,,,,,Player %d falls asleep for %d turns,,Le joueur %d s'endort pour %d tours,,,,,,,,,,,
+HeatMapOpacity,,,,,,Heat map's opacity,,Opacité de la heat map,,,,,,,,,,,

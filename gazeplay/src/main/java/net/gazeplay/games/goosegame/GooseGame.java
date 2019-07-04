@@ -7,8 +7,6 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -35,14 +33,10 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
-
-import static sun.plugin.javascript.navig.JSType.URL;
 
 @Slf4j
 public class GooseGame implements GameLifeCycle {
@@ -361,25 +355,12 @@ public class GooseGame implements GameLifeCycle {
     }
 
     public void playMovementSound() {
-        /*try {
+
+        try {
             Utils.playSound(String.format("data/goosegame/sounds/mvmt%d.wav", random.nextInt(6)));
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
-        //mvmt.play();
-        Service<Void> playMvmtSound = new Service<Void>(){
+        }
 
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        mvmt.play();
-                        return null;
-                    }
-                };
-            }
-        };
-        playMvmtSound.start();
     }
 }

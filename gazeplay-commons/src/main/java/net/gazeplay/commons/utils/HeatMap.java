@@ -32,7 +32,7 @@ public class HeatMap {
     /**
      * Default colors, in case the default constructor is called
      */
-    private static final Color[] defaultColors = { Color.DARKBLUE, Color.GREEN, Color.YELLOW, Color.RED };
+    private static final Color[] defaultColors = { Color.BLUE, Color.LIME, Color.YELLOW, Color.RED };
 
     /**
      * Writable image used to create the heatmap image
@@ -57,13 +57,18 @@ public class HeatMap {
     private double subdivisionValue;
 
     /**
+     * Opacity of each pixel
+     */
+    private double opacity;
+
+    /**
      * Default constructor, uses dark blue, green, yellow, and red as color variants.
      * 
      * @param data
      *            monitor data
      */
-    public HeatMap(double[][] data) {
-        this(data, defaultColors);
+    public HeatMap(double[][] data, double opacity) {
+        this(data, opacity, defaultColors);
     }
 
     /**
@@ -75,10 +80,11 @@ public class HeatMap {
      * @param colors
      *            custom colors for the heatmap, must be on order from minimum to maximum.
      */
-    public HeatMap(double[][] data, Color[] colors) {
+    public HeatMap(double[][] data, double opacity, Color[] colors) {
 
         this.image = new WritableImage(data[0].length, data.length);
         this.colors = colors;
+        this.opacity = opacity;
 
         // Computing max and min values
         minValue = Double.MAX_VALUE;
@@ -132,7 +138,7 @@ public class HeatMap {
                     (value % subdivisionValue) / subdivisionValue);
             double blue = Interpolator.LINEAR.interpolate(colors[i].getBlue(), colors[i + 1].getBlue(),
                     (value % subdivisionValue) / subdivisionValue);
-            return Color.color(red, green, blue, 0.8);
+            return Color.color(red, green, blue, opacity);
         }
     }
 

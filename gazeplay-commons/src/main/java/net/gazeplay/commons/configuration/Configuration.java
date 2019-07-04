@@ -27,6 +27,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
+    private static final String PROPERTY_NAME_HEATMAP_OPACITY = "HEATMAP_OPACITY";
     private static final String PROPERTY_NAME_AREA_OF_INTEREST_DISABLED = "AREA_OF_INTEREST_DISABLED";
     private static final String PROPERTY_NAME_CONVEX_HULL_DISABLED = "CONVEX_HULL_DISABLED";
     private static final String PROPERTY_NAME_VIDEO_RECORDING_DISABLED = "VIDEO_RECORDING_DISABLED";
@@ -64,6 +65,7 @@ public class Configuration implements Cloneable {
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
+    private static final double DEFAULT_VALUE_HEATMAP_OPACITY = 0.7;
     private static final boolean DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED = false;
     private static final boolean DEFAULT_VALUE_CONVEX_HULL_DISABLED = false;
     private static final boolean DEFAULT_VALUE_VIDEO_RECORDING = false;
@@ -189,6 +191,9 @@ public class Configuration implements Cloneable {
     @Getter
     protected final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
+    @Getter
+    protected final DoubleProperty heatMapOpacityProperty = new SimpleDoubleProperty(this,
+            PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY);
     @Getter
     protected final BooleanProperty areaOfInterestDisabledProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
@@ -351,6 +356,10 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             heatMapDisabledProperty.setValue(Boolean.parseBoolean(buffer));
         }
+        buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_OPACITY);
+        if (buffer != null) {
+            heatMapOpacityProperty.setValue(Double.parseDouble(buffer));
+        }
         buffer = prop.getProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED);
         if (buffer != null) {
             areaOfInterestDisabledProperty.setValue(Boolean.parseBoolean(buffer));
@@ -473,6 +482,7 @@ public class Configuration implements Cloneable {
         properties.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, this.menuButtonsOrientationProperty.getValue());
         properties.setProperty(PROPERTY_NAME_HEATMAP_DISABLED,
                 Boolean.toString(this.heatMapDisabledProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_HEATMAP_OPACITY, Double.toString(this.heatMapOpacityProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED,
                 Boolean.toString(this.areaOfInterestDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED,
@@ -571,6 +581,10 @@ public class Configuration implements Cloneable {
 
     public Boolean isHeatMapDisabled() {
         return heatMapDisabledProperty.getValue();
+    }
+
+    public Double getHeatMapOpacity() {
+        return heatMapOpacityProperty.getValue();
     }
 
     public Boolean isAreaOfInterestEnabled() {
