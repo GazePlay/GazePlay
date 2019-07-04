@@ -2,8 +2,10 @@ package net.gazeplay;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import javafx.beans.property.BooleanProperty;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.biboulejump.BibouleJump;
 import net.gazeplay.games.biboulejump.BibouleJumpStats;
@@ -176,8 +178,9 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Identify The Letters", "data/Thumbnails/letters.png",
-                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(
+                new GameSummary("letters", "data/Thumbnails/letters.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -400,7 +403,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Fun with Flags", "data/Thumbnails/flags.png", GameCategories.Category.MEMORIZATION),
+                new GameSummary("flags", "data/Thumbnails/flags.png", GameCategories.Category.MEMORIZATION),
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -446,7 +449,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Biboules", "data/Thumbnails/biboules.png", GameCategories.Category.SELECTION,
+                new GameSummary("Biboule", "data/Thumbnails/biboules.png", GameCategories.Category.SELECTION,
                         "https://opengameart.org/sites/default/files/TalkingCuteChiptune_0.mp3"),
                 new GameSpec.GameLauncher() {
                     @Override
@@ -704,8 +707,9 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Video Player with Feedback", "data/Thumbnails/youtube.png",
-                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(
+                new GameSummary("VideoPlayer", "data/Thumbnails/youtube.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
@@ -761,7 +765,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Cups and Balls", "data/Thumbnails/passpass.png", GameCategories.Category.MEMORIZATION),
+                new GameSummary("CupsBalls", "data/Thumbnails/passpass.png", GameCategories.Category.MEMORIZATION),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -837,7 +841,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
         result.add(new GameSpec(
-                new GameSummary("Whac-a-mole", "data/Thumbnails/mole.png", GameCategories.Category.ACTION_REACTION),
+                new GameSummary("WhacAmole", "data/Thumbnails/mole.png", GameCategories.Category.ACTION_REACTION),
                 new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -901,7 +905,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Colors!", "data/Thumbnails/colors.png", GameCategories.Category.ACTION_REACTION, null,
+                new GameSummary("Colorsss", "data/Thumbnails/colors.png", GameCategories.Category.ACTION_REACTION, null,
                         "ColorDesc"),
 
                 new GameSpec.GameLauncher() {
@@ -1000,7 +1004,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Biboule Jump", "data/Thumbnails/biboulejump.png", GameCategories.Category.SELECTION),
+                new GameSummary("BibJump", "data/Thumbnails/biboulejump.png", GameCategories.Category.SELECTION),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -1135,8 +1139,9 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Sliding Puzzle", "data/Thumbnails/slidingpuzzle.png",
-                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
+        result.add(new GameSpec(
+                new GameSummary("puzzle", "data/Thumbnails/slidingpuzzle.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(1, "Numbers"),
@@ -1156,7 +1161,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        result.add(new GameSpec(new GameSummary("Spot The Difference", "data/Thumbnails/spotthedifference.png",
+        result.add(new GameSpec(new GameSummary("SpotDifference", "data/Thumbnails/spotthedifference.png",
                 GameCategories.Category.ACTION_REACTION), new GameSpec.GameLauncher() {
 
                     @Override
@@ -1207,7 +1212,7 @@ public class DefaultGamesLocator implements GamesLocator {
                         }));
 
         result.add(new GameSpec(
-                new GameSummary("Space Game", "data/Thumbnails/space.png", GameCategories.Category.SELECTION),
+                new GameSummary("SpaceGame", "data/Thumbnails/space.png", GameCategories.Category.SELECTION),
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
@@ -1237,7 +1242,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         result.add(new GameSpec(
-                new GameSummary("Goose Game", "data/Thumbnails/goosegame.png", GameCategories.Category.MEMORIZATION),
+                new GameSummary("GooseGame", "data/Thumbnails/goosegame.png", GameCategories.Category.MEMORIZATION),
                 new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
@@ -1265,7 +1270,18 @@ public class DefaultGamesLocator implements GamesLocator {
 
         log.info("Games found : {}", result.size());
 
+        // reorder
+        // for( GameSpec g : result){
+        // for (BooleanProperty p : Configuration.getInstance().getFavouriteGameProperties()) {
+        // if (p.getName().equals(g.getGameSummary().getNameCode().toUpperCase() + " Game fav"))
+        // if(p.getValue()){
+        // GameSpec theGame = g;
+        // result.remove(g);
+        // result.add(0,theGame);
+        // }
+        // }
+        // }
+
         return result;
     }
-
 }

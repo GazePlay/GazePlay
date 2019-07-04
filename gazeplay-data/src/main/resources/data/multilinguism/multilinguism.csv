@@ -17,7 +17,7 @@ WhereIsTheColor,Ku është ngjyra?,اين هذا اللون؟,这个颜色在哪
 WhereIsTheLetter,Ku është shkronja?,اين هذا الحرف؟,,,,Where is the letter?,,Où est cette lettre ?,,,Dov'è questa lettera?,,,,,,,,
 WhereIsTheNumber,Ku është numri?,اين هذا الرقم؟,,,,Where is the number?,,Où est ce nombre ?,,,Dov'è questo numero?,,,,,,,,
 WhereIsIt,Ku është?,اين هذا؟,它在哪？,Wo ist es?,Επιτυχημένες αποκαλύψεις,Where is it ?,missä se on,Où est-ce ?,Gdje je?,Di mana ia?,Dov'è?,これはドコ？,Gdzie to jest ?,Onde é ?,Di mana ia?,Waar is het?,Где это находится?,Donde está?,Nó ở đâu?
-Fun with Flags,Luajmë me Flamujt,اين هذا العلم؟,,,,Fun with Flags,,Trouve les drapeaux,,,Trova la bandiera,,,Scopri la bandiera,,,,,
+flags,Luajmë me Flamujt,اين هذا العلم؟,,,,Fun with Flags,,Trouve les drapeaux,,,Trova la bandiera,,,Scopri la bandiera,,,,,
 StatsTitle,Statistika,احصائيات,统计,Statistiken,Στατιστικά,Statistics,otsikko,Statistiques,Statistika,Statistik,Statistiche,統計,Statystyka,Estatística,Statistik,Statistieken,Статистика,Estadísticas,Số liệu thống kê
 Aver,Mesatarja,معدل,平均值,Durchschnitt,Μέση τιμή,Average,Keskiverto,Moyenne,Prosječan,Purata,Media,平均,Średni,Média,Purata,Gemiddelde,Средний показатель,Promedio,Trung bình
 Med,Mediani,متوسط,中位数,Median,Διάμεσος,Median,Mediaani,Médiane,Srednji,Median,Mediana,中央値,Sredni/Srodkowy,Mediana,Median,Mediaan,Медианное значение,Mediana,Giá trị giữa
@@ -42,8 +42,8 @@ LayoutFile,Stilet,ملف نموذجي,,Style Sheets,Φύλλα στυλ,Style Sh
 WhereIsItDirectory,Direktoria “Ku është?”, دليل اللعبة اين هذا؟,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? >,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco ""Dov'è?""""artella",, Gdzie to jest?  Katalog gier,Duracaõ de afichagem das perguntas,« Di mana? » Arahan permainan,Waar is het Spel bestandslocatie,Где это? директория Игры,"Directorio del juego ""¿Donde está?""""irectorio del",Thư mục game
 WII-error,Verifikim i direktorisë “Ku është?”,تثبت من دليل اللعبة اين هذا؟,查找《它在哪》游戏目录,Überprüfen Spielverzeichnis « Wo ist es? »,Ελέγξτε «Πού είναι; ,Check « Where is it? » Game directory,Tarkista «Missä se on? » Pelihakemisto,Vérifiez le répertoire du jeu « Où est-ce ? ».,Provjeri ,Semak « Di mana? » Arahan permainan,"Controllo cartella di gioco ""Dov'è?""""ontroll",,Sprawdź «Gdzie to jest? » Katalog gier,*Verifique «Onde está? ,Semak «Di mana? » Arahan permainan,verifiëer ,Проверка ,"Verifica el directorio del juego ""¿Donde está?""""erifica el di",Kiểm tra Thư mục game
 QuestionLength,Kohëzgjatja e pyetjeve,مدة ظهور الاسئلة,,Dauer der Veröffentlichung von Fragen,Μήκος εμφάνισης ερωτήματος,Question Display Length,kysymys,Durée d’affichage des question,Dužina prikazivanja pitanja,Panjang Paparan Soalan,Durata esposizione della domanda,,Długość wyświetlania pytania,*Pergunta Display Length,Panjang Paparan Soalan,Hoe lang de vraag tonen?,Длина дисплея вопроса,Duración de visualización de las preguntas,Thời gian hiển thị câu hỏi
-Cups and Balls,Tasa dhe topa,كؤوس وكرات,杯子和球,Bechertrick,Επιτυχημένες αποκαλύψεις,Cups and Balls,kupit ja pallot,Gobelets Pass Pass,Šalice i lopte,Piala dan Balls,Tazze e palle,,Puchary i kule,*Copos e Bolas,Piala dan Balls,Bekers en Ballen,Чашки и шарики,Tazas y bolas,Chiếc cốc và Quả bóng
-Biboules,Biboules,كويرات,垒球,Biboles,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Biballs,biboules,Biboules,Biboules,Biballs,Biballs,,Biballs,Biboules,Biballs,Vliegjes,Безделушки,Biboules,Bóng Bi
+CupsBalls,Tasa dhe topa,كؤوس وكرات,杯子和球,Bechertrick,Επιτυχημένες αποκαλύψεις,Cups and Balls,kupit ja pallot,Gobelets Pass Pass,Šalice i lopte,Piala dan Balls,Tazze e palle,,Puchary i kule,*Copos e Bolas,Piala dan Balls,Bekers en Ballen,Чашки и шарики,Tazas y bolas,Chiếc cốc và Quả bóng
+Biboule,Biboules,كويرات,垒球,Biboles,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Biballs,biboules,Biboules,Biboules,Biballs,Biballs,,Biballs,Biboules,Biballs,Vliegjes,Безделушки,Biboules,Bóng Bi
 Robots,Robota,روبوتات,机器人,Roboters,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Robots,ropotit,Robots,Roboti,Robot,Robot,,Roboty,Robots,Robot,Robotten,Роботы,Robot,Rô-bốt
 Memory,Memorizo,ذاكرة,记忆,Memory,Επιτυχημένες αποκαλύψεις,Memory,muisti,Memory,Memory,Memori,Memoria,,Pamięć,Memoria,Memori,Memory,Память,Memory,Bộ nhớ
 MemoryLetters,Memorizo Shkronjat,ذاكرة (الأحرف),,,,Memory (Letters),,Memory (lettres),,,Memoria(lettere),,,,,,,,
@@ -58,7 +58,7 @@ Volume,Volumi,صوت,,Volume,Ενταση Ήχου,Volume,äänenvoimakkuus,Volu
 OpenMemory,Memorizo (hapur),ذاكرة مفتوحة,,OpenMemory,Επιτυχημένες αποκαλύψεις,OpenMemory,avoin muisti,Memory ouvert,Otvori memoriju,OpenMemory,Memoria aperta,,Otwarta pamiec,Memoria Aberta,OpenMemory,Open Memory,Доступная память,Memory abierto,Bộ nhớ Mở rộng
 OpenMemoryLetters,Memorizo Shkronjat (hapur),ذاكرة مفتوحة (الأحرف),,,,Open Memory (Letters),,Memory ouvert (lettres),,,,,,,,,,,
 OpenMemoryNumbers,Memorizo Numrat (hapur),ذاكرة مفتوحة (أرقام),,,,Open Memory (Numbers),,Memory ouvert (nombres),,,,,,,,,,,
-Video Player with Feedback,Video player me reagim,تشغيل الفيديو مع العودة,,Video Player mit Feedback,Βίντεο με Ανατροφοδότηση,Video Player with Feedback,video player palautteella,Lecteur Video avec retour,Video player sa povratnom informacijom,Pemain Video dengan Maklum Balas,Lettore video con feedback,,Odtwarzacz wideo z komentarzem,Leitore video com feedback,Pemain Video dengan Maklum Balas,Video speler met feedback,Видеоплеер с Обратной связью,Reproductor de video con comentarios,Trình chơi nhạc có Phản hồi
+VideoPlayer,Video player me reagim,تشغيل الفيديو مع العودة,,Video Player mit Feedback,Βίντεο με Ανατροφοδότηση,Video Player with Feedback,video player palautteella,Lecteur Video avec retour,Video player sa povratnom informacijom,Pemain Video dengan Maklum Balas,Lettore video con feedback,,Odtwarzacz wideo z komentarzem,Leitore video com feedback,Pemain Video dengan Maklum Balas,Video speler met feedback,Видеоплеер с Обратной связью,Reproductor de video con comentarios,Trình chơi nhạc có Phản hồi
 Choose Game Variante,Zgjidh një variant,اختيار البديل,,Wählen Sie Variante,Επιλέξτε εναλλακτική λύση,Choose Variante,valitse peli -muunnos,Choisi une variante,Izaberi varijantu igre,Pilih Variante,Scegli una variante,,Wybierz wariant,Escolhe jogo variante,Pilih Variante,Kies een variant,Выбрать вариант игры,Elija Variante,Chọn loại bạn muốn
 Enter FullScreen,Aktivizo Ekranin e plotë,إدخال كامل الشاشة,,Vollbild,Κατάσταση πλήρους οθόνης,Enter FullScreen,valitse täysi näyttö,Mettre en plein écran,Povećaj ekran,Masukkan Fullscreen,Attiva modalità schermo intero,,Wlacz pelny ekran,Entrar ao modo pleino ecrà,Masukkan Fullscreen,Toon op volledig scherm,Войти в режим Полного экрана,Pantalla completa,Chuyển sang
 Exit FullScreen,Çaktivizo Ekranin e plotë,الخروج من كامل الشاشة,,Beenden Sie den Vollbildmodus,Έξοδος από Κατάσταση πλήρους οθόνης,Exit FullScreen,pois täydestä näytöstä,Sortir du plein écran,Smanji ekran,Keluar Fullscreen,Esci da modalità schermo intero,,Wyłączyć tryb pełnoekranowy,Sair do modo pleino ecrà,Keluar Fullscreen,Stop tonen op volledig scherm,Выйти из режима Полного экрана,Salir de pantalla completa,Thoát
@@ -67,7 +67,7 @@ Colors,Ngjyra,الالوان,颜色,Farben!,Χρώματα!,Colors !,värit,Coul
 Lapins,Lepurusha,الارانب,,Conejos,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Rabbits,jänis,Lapins,Zečevi,Arnab,Conigli,,Króliki,Coelhos,Arnab,Konijnen,Кролики,Conejos,Thỏ
 Divisor,Ndarës,المقسوم عليه,,Divisor,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Divisor,jakaja,Diviseur,Podijeli,Pembahagi,Divisore,,Dzielnik,Divisor,Pembahagi,Delen,Делитель,Divisor,Phép chia
 Piano,Piano,بيانو,,Piano,Πιάνο,Piano,piano,Piano,Sviraj piano,Piano,Pianoforte,,Pianino,Piano,Piano,Piano,Пианино,Piano,Đàn Piano
-Colors!,Ngjyros!,تلوين,,Färbung,Χρωματίζω,Coloring,värit,Coloriage,Oboji,Mewarna,Colorare,,Kolorowanie,Coloraçaõ,Mewarna,Schilderen,Раскраска,Colorear,Tô màu
+Colorsss,Ngjyros!,تلوين,,Färbung,Χρωματίζω,Coloring,värit,Coloriage,Oboji,Mewarna,Colorare,,Kolorowanie,Coloraçaõ,Mewarna,Schilderen,Раскраска,Colorear,Tô màu
 LoadImg,Ngarko Imazhin,تحميل الصورة,,Bild laden,Φόρτωση εικόνας,Load image,lataa,Charger image,Učitavanje slike ,Muatkan imej,Carica immagine,,Załaduj obraz,*Carregar imagem,Muatkan imej,Laad foto,Загрузить изображение,Cargar imagen,Load ảnh
 SaveImg,Ruaj Imazhin,حفظ الصورة,,Bild speichern,Αποθήκευση εικόνας,Save image,tallentaa,Sauvegarder image,Sačuvaj sliku,Menyimpan imej,Salva immagine,,Zapisać obraz,*Salvar imagem,Menyimpan imej,Bewaar foto,Сохранить изображение,Guardar imagen,Lưu ảnh
 imgLoadChooserTitle,Zgjidh imazhin për të ngarkuar,اختار الصورة لتحميل,,Wählen Sie Ihr Bild zum Laden,Επιλέξτε την εικόνα που θέλετε να φορτώσετε,Choose your image to load,lataa valitun tiedoston,Choisissez votre image à charger,Izaberi sliku,Pilih imej anda untuk dimuatkan,Scegli la tua immagine da caricare,,Wybierz obraz do załadowania,*Escolha sua imagem para carregar,Pilih imej anda untuk dimuatkan,Kies je foto om te laden,Выберите изображение для загрузки,Elige tu imagen para cargar,Chọn ảnh để mở
@@ -76,7 +76,7 @@ confirmBWText,Dëshiron të çngjyrosësh imazhin?,هل تريد ازالة لو
 confirmBWTitle,Dëshiron të transformosh në bardhë e zi ?,تحويل الى ابيض و اسود,,In schwarz und weiß verwandeln?,Μετασχηματισμός σε μαύρο και άσπρο;,Transform in black and white ?,varmistaa BW tiedosto,Transformer en noir et blanc ?,Želiš li pretvoriti sliku u crno-bijelo?,Mengubah dalam warna hitam dan putih?,Trasformare in bianco e nero?,,Przekształcić w czerni i bieli?,*Transforme em preto e branco?,Mengubah dalam warna hitam dan putih?,Omzetten in zwart-wit?,Преобразовать в черное и белое?,¿Transformar en blanco y negro?,Chuyển sang chế độ
 confirmBWHeader,Dëshiron të tranformosh imazhin në bardhë e zi?,تحويل الصورة الى ابيض و اسود,,Verwandle das Bild in Schwarz-Weiß?,Μετατροπή της εικόνας σε ασπρόμαυρη;,Transform the image in black and white ?,varmistaa BW otsikko,Transformer l'image en noir et blanc ?,Pretvori sliku u crno-bijelo,Mengubah imej dalam hitam dan putih,Trasformare l'immagine in banco e nero?,,Zmień obraz na czarno-biały,*Transforme a imagem em preto e branco?,Mengubah imej dalam hitam dan putih,Beeld omzetten in zwart wit ?,Преобразовать картинку в черное и белое?,¿Transformar la imagen en blanco y negro?,Chuyển hình sang
 Room,Dhoma,الغرفة,房间,Das Zimmer,Το δωμάτιο,The room,huone,La pièce,Soba,Bilik,La camera,,Pokój,*A sala,Bilik,De kamer,Комната,La habitación,Căn phòng
-Whac-a-mole,Godit urithin,لعبة واكامول,,Whac-a-mole,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Whac-a-mole,Whac-a-mole,Jeu de la taupe,Igra s čekićem,Whac-a-mole,Colpisci una talpa,,Walnij kreta,*Jogo da toupeira,Whac-a-mole,Klop een mol,Замочи крота,Juego del topo,Chơi đập chuột
+WhacAmole,Godit urithin,لعبة واكامول,,Whac-a-mole,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Whac-a-mole,Whac-a-mole,Jeu de la taupe,Igra s čekićem,Whac-a-mole,Colpisci una talpa,,Walnij kreta,*Jogo da toupeira,Whac-a-mole,Klop een mol,Замочи крота,Juego del topo,Chơi đập chuột
 Cakes,Fabrika e tortave,مصنع الحلويات,,Die Kuchenfabrik ,Το εργοστάσιο κέικ,The cake factory ,kakut,La Fabrique a Gateaux,Tvornica kolača,Kilang kek,La fabbrica dei dolci,,Fabryka ciastek,*A fábrica de bolos,Kilang kek,De cakejes fabriek,Фабрика тортиков,La Fabrica de Pasteles,Xưởng làm bánh ga-tô
 MusicFolder,Direktoria e muzikës,ملف الموسيقى,,Musikmappe,φάκελος μουσικής,music folder,musiikkikansio,Dossier musiques,Datoteka Muzika,folder muzik,Cartella musica,,folder muzyczny,*pasta de musica,Folder muzik,Muziek folder,Папка Музыка,Carpeta de música,Thư mục âm nhạc
 Order,Rendit,امر,,Reihenfolge,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Order,tilaaja,Ordre,Poredak,Perintah,Ordinare,,Zamówienie/porzadek,*Ordem,Perintah,Bestellen,Заказать,Orden,Thứ tự
@@ -117,7 +117,7 @@ Select the mouse then look at the destination box to move,Selekto miun pastaj sh
 free,Lehtë,حر,,,,Free,,Facile,,,Facile,,,,,,,Fácil,
 normal,Normal,عادي,,,,Normal,,Normal,,,Normale,,,,,,,Normal,
 extreme,Ekstrem,درجة قصوى,,,,Extreme,,Extrême,,,Estremo,,,,,,,Extremo,
-Biboule Jump,Biboule Jump,بيبول يقذف,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump
+BibJump,Biboule Jump,بيبول يقذف,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump
 Score,Pikët,مجموع النقاط,,,,Score,,Score,,,Punteggio,,,,,,,Puntuación,
 Highscore,Rekord ,أعلى نتيجة,,,,Highscore,,Meilleur score,,,Record !,,,,,,,Récord,
 New highscore!,Rekord i ri !,نتيجة عالية جديدة,,,,New highscore!,,Nouveau meilleur score!,,,Nuovo record !,,,,,,,Niuevo récord !,
@@ -158,7 +158,7 @@ Memorization games,Lojëra me Memorizim,,,,,Memorization games,,Jeux Mémorisati
 ActionReaction games,Lojëra me Veprim-Reagim,,,,,Action-Reaction games,,Jeux Action – Réaction,,,Giochi Azione – Reazione,,,,,,,,
 Logic games,Lojëra me Logjikë,,,,,Logic games,,Jeux Logique,,,Giochi Logica,,,,,,,,
 Spot the differences,Gjej ndryshimet,,,,,Spot the differences,,Trouvez les différences,,,Trova le differenze,,,,,,,,
-Spot The Difference,Gjej Ndryshimin,,,,,Spot The Difference,,Trouvez les différences,,,,,,,,,,,
+SpotDifference,Gjej Ndryshimin,,,,,Spot The Difference,,Trouvez les différences,,,,,,,,,,,
 Spot all the differences,Gjej gjithë ndryshimet,,,,,Spot all the differences,,Trouvez toutes les différences,,,Trova tutte le differenze,,,,,,,,
 Differences found,Ndryshimet e gjetura,,,,,Differences found,,Différences trouvées,,,Differenze trovate,,,,,,,,
 Dice,Zara,,,,,Dice,,Dés,,,Dadi ,,,,,,,,
@@ -168,16 +168,16 @@ Dice,Zara,,,,,Dice,,Dés,,,Dadi ,,,,,,,,
 4 dice,4 Zar,,,,,4 dice,,4 dés,,,4 dadi,,,,,,,,
 5 dice,5 Zar,,,,,5 dice,,5 dés,,,5 dadi,,,,,,,,
 6 dice,6 Zar,,,,,6 dice,,6 dés,,,6 dadi,,,,,,,,
-Identify The Letters,Gjej shkronjat ,,,,,Identify The Letters,,Identifiez La Lettre,,,Trova la lettera,,,,,,,,
-Sliding Puzzle,,,,,,Sliding Puzzle,,Puzzle Glissant,,,Puzzle scorrevole,,,,,,,,
+letters,Gjej shkronjat ,,,,,Identify The Letters,,Identifiez La Lettre,,,Trova la lettera,,,,,,,,
+puzzle,,,,,,Sliding Puzzle,,Puzzle Glissant,,,Puzzle scorrevole,,,,,,,,
 Choose the Letter,Zgjidh shkronjën ,,,,,Choose the Letter,,Choisissez la Lettre,,,Scegli la lettera,,,,,,,,
 Numbers,Numra,,,,,Numbers,,Nombres,,,Numeri,,,,,,,,
 Mona Lisa,Mona Liza,,,,,Mona Lisa,,Mona Lisa,,,Mona Lisa,,,,,,,,
 Fish,Peshk,,,,,Fish,,Poisson,,,Pesce,,,,,,,,
 Biboule,Biboule,,,,,Biboule,,Biboule,,,Biball,,,,,,,,
 Potions,Përzierje Magjike,,,,,Magic Potions,,Potions Magiques,,,Pozioni Magiche ,,,,,,,Pociones Mágicas,
-Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game
-Goose Game,,,,,,Goose Game,,Jeu de l'oie,,,,,,,,,,,
+SpaceGame,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game
+GooseGame,,,,,,Goose Game,,Jeu de l'oie,,,,,,,,,,,
 2 players,,,,,,2 players,,2 joueurs,,,,,,,,,,,
 3 players,,,,,,3 players,,3 joueurs,,,,,,,,,,,
 4 players,,,,,,4 players,,4 joueurs,,,,,,,,,,,

@@ -221,13 +221,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Translator translator = getGazePlay().getTranslator();
 
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
-        BooleanProperty gameSelected = new SimpleBooleanProperty();
-        gameSelected.setValue(false);
+
+        BooleanProperty prop = null;
 
         for (GameSpec gameSpec : games) {
 
+            for (BooleanProperty p : config.getFavouriteGameProperties()) {
+                if (p.getName().equals(gameSpec.getGameSummary().getNameCode().toUpperCase() + " Game fav"))
+                    prop = p;
+            }
+
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
-                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, gameSelected);
+                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, prop);
+
             /* all categories */
             if (config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()
                     && config.logicCategory()) // all games
@@ -461,7 +467,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             this.games = filteredGames;
 
         else if (selectionFilter && memoFilter && actionReactionFilter && !logicFiler) { // selection & memorization &
-                                                                                         // actionReaction
+            // actionReaction
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.LOGIC) {
                     filteredGames.clear();
@@ -470,7 +476,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (selectionFilter && memoFilter && !actionReactionFilter && logicFiler) { // Selection & Memorization &
-                                                                                           // Logic
+            // Logic
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.ACTION_REACTION) {
                     filteredGames.clear();
@@ -479,7 +485,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && actionReactionFilter && logicFiler) { // ActionReaction &
-                                                                                           // Memorization & Logic
+            // Memorization & Logic
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.SELECTION) {
                     filteredGames.clear();
@@ -488,7 +494,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && actionReactionFilter && logicFiler) { // Selection & ActionReaction
-                                                                                           // & Logic
+            // & Logic
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.MEMORIZATION) {
                     filteredGames.clear();
@@ -497,7 +503,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (selectionFilter && memoFilter && !actionReactionFilter && !logicFiler) { // Selection & memorization
-                                                                                            // games
+            // games
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION) {
@@ -507,7 +513,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && actionReactionFilter && !logicFiler) { // Selection &
-                                                                                            // Action_Reaction games
+            // Action_Reaction games
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION) {
@@ -517,7 +523,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && actionReactionFilter && !logicFiler) { // memorization and
-                                                                                            // Action_Reaction games
+            // Action_Reaction games
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION
                         && g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION)
@@ -562,7 +568,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
             this.games = filteredGames;
         } else if (!selectionFilter && !memoFilter && actionReactionFilter && !logicFiler) { // only Action_Reaction
-                                                                                             // games
+            // games
             for (GameSpec g : df.listGames()) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION) {
                     filteredGames.clear();
@@ -582,5 +588,4 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         this.games = filteredGames;
 
     }
-
 }
