@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -40,8 +41,6 @@ import java.util.Random;
 @Slf4j
 public class GooseGame implements GameLifeCycle {
 
-    private static final int WIDTH = 9;
-    private static final int HEIGHT = 7;
     private static final String BIBOULEPATH = "data/biboulejump/biboules/%s.png";
 
     private final GameContext gameContext;
@@ -74,6 +73,7 @@ public class GooseGame implements GameLifeCycle {
     private ImageView turnIndicator;
 
     private Random random;
+    private AudioClip mvmt;
 
     public GooseGame(GameContext gameContext, Stats stats, int nbPlayers) {
         this.gameContext = gameContext;
@@ -85,6 +85,8 @@ public class GooseGame implements GameLifeCycle {
         this.translate = Multilinguism.getSingleton();
 
         this.random = new Random();
+
+        mvmt = new AudioClip(ClassLoader.getSystemResource("data/goosegame/sounds/mvmt0.wav").toString());
 
         // JSON file used to store the position of each square, later used for pawn movement
         JsonParser parser = new JsonParser();
@@ -353,10 +355,12 @@ public class GooseGame implements GameLifeCycle {
     }
 
     public void playMovementSound() {
+
         try {
             Utils.playSound(String.format("data/goosegame/sounds/mvmt%d.wav", random.nextInt(6)));
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 }

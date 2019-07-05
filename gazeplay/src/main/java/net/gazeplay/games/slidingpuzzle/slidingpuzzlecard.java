@@ -173,8 +173,8 @@ public class slidingpuzzlecard extends Parent {
 
         progressIndicator.setOpacity(0);
 
-        currentTimeline.stop();
-        currentTimeline = new Timeline();
+        // currentTimeline.stop();
+        // currentTimeline = new Timeline();
 
         currentTimeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
             @Override
@@ -204,7 +204,8 @@ public class slidingpuzzlecard extends Parent {
             }
         });
 
-        currentTimeline.play();
+        if (!currentTimeline.getStatus().equals(Timeline.Status.RUNNING))
+            currentTimeline.playFromStart();
     }
 
     private EventHandler<Event> buildEvent() {

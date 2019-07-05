@@ -30,11 +30,6 @@ import java.util.ArrayList;
 public class HeatMap {
 
     /**
-     * Default colors, in case the default constructor is called
-     */
-    private static final Color[] defaultColors = { Color.DARKBLUE, Color.GREEN, Color.YELLOW, Color.RED };
-
-    /**
      * Writable image used to create the heatmap image
      */
     @Getter
@@ -42,7 +37,7 @@ public class HeatMap {
     /**
      * Array of the different colors used to interpolate
      */
-    private Color[] colors;
+    private ArrayList<Color> colors;
     /**
      * Maximum value of the data
      */
@@ -57,14 +52,9 @@ public class HeatMap {
     private double subdivisionValue;
 
     /**
-     * Default constructor, uses dark blue, green, yellow, and red as color variants.
-     * 
-     * @param data
-     *            monitor data
+     * Opacity of each pixel
      */
-    public HeatMap(double[][] data) {
-        this(data, defaultColors);
-    }
+    private double opacity;
 
     /**
      * Custom colors constructor, builds a heatmap from the given data, by interpolating the values through the given
@@ -75,10 +65,11 @@ public class HeatMap {
      * @param colors
      *            custom colors for the heatmap, must be on order from minimum to maximum.
      */
-    public HeatMap(double[][] data, Color[] colors) {
+    public HeatMap(double[][] data, double opacity, ArrayList<Color> colors) {
 
         this.image = new WritableImage(data[0].length, data.length);
         this.colors = colors;
+        this.opacity = opacity;
 
         // Computing max and min values
         minValue = Double.MAX_VALUE;
@@ -93,11 +84,11 @@ public class HeatMap {
                 }
             }
         }
-        subdivisionValue = (maxValue - minValue) / (this.colors.length - 1);
+        subdivisionValue = (maxValue - minValue) / (this.colors.size() - 1);
 
         log.info(
                 "Creating new heatmap with the following values: minValue: {}, maxValue: {}, subdivisionValue: {}, # of colors: {}",
-                minValue, maxValue, subdivisionValue, colors.length);
+                minValue, maxValue, subdivisionValue, colors.size());
 
         // Create heatmap pixel per pixel
         PixelWriter pxWriter = image.getPixelWriter();
@@ -121,18 +112,18 @@ public class HeatMap {
         } else {
             double compValue = minValue + subdivisionValue;
             int i = 0; // Once out of the loop, will be the index of the starting color of the interpolation
-            while (i < colors.length - 2 && value >= compValue) { // Finding the right subdivision, in order to get the
+            while (i < colors.size() - 2 && value >= compValue) { // Finding the right subdivision, in order to get the
                 // colors between which the values is located
                 i++;
                 compValue += subdivisionValue;
             }
-            double red = Interpolator.LINEAR.interpolate(colors[i].getRed(), colors[i + 1].getRed(),
+            double red = Interpolator.LINEAR.interpolate(colors.get(i).getRed(), colors.get(i + 1).getRed(),
                     (value % subdivisionValue) / subdivisionValue);
-            double green = Interpolator.LINEAR.interpolate(colors[i].getGreen(), colors[i + 1].getGreen(),
+            double green = Interpolator.LINEAR.interpolate(colors.get(i).getGreen(), colors.get(i + 1).getGreen(),
                     (value % subdivisionValue) / subdivisionValue);
-            double blue = Interpolator.LINEAR.interpolate(colors[i].getBlue(), colors[i + 1].getBlue(),
+            double blue = Interpolator.LINEAR.interpolate(colors.get(i).getBlue(), colors.get(i + 1).getBlue(),
                     (value % subdivisionValue) / subdivisionValue);
-            return Color.color(red, green, blue, 0.8);
+            return Color.color(red, green, blue, opacity);
         }
     }
 
@@ -142,8 +133,8 @@ public class HeatMap {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         ArrayList<Stop> stops = new ArrayList<>();
-        for (int i = 0; i < colors.length; i++) {
-            stops.add(new Stop((double) i / (double) (colors.length - 1), colors[colors.length - 1 - i]));
+        for (int i = 0; i < colors.size(); i++) {
+            stops.add(new Stop((double) i / (double) (colors.size() - 1), colors.get(colors.size() - 1 - i)));
         }
         LinearGradient heatGradient = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
 
@@ -158,8 +149,8 @@ public class HeatMap {
 
         DecimalFormat numberFormat = new DecimalFormat("#.00");
 
-        for (int i = 0; i < colors.length; i++) {
-            double y = margin + (double) i / (double) (colors.length - 1) * barHeight;
+        for (int i = 0; i < colors.size(); i++) {
+            double y = margin + (double) i / (double) (colors.size() - 1) * barHeight;
             gc.strokeLine(0, y, width / 3, y);
             gc.setTextBaseline(VPos.CENTER);
             gc.fillText(numberFormat.format(maxValue - (i * subdivisionValue)) + "", width / 3 + 5, y,
