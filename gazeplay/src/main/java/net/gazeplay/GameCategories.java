@@ -9,6 +9,8 @@ public class GameCategories {
      * Selection Skill
      *
      * Memorization Skill
+     *
+     * Logic Skill
      */
 
     public enum Category {
