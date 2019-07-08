@@ -40,6 +40,7 @@ import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -222,17 +223,17 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
 
-        BooleanProperty prop = null;
+        BooleanProperty favouriteGameProperty = null;
 
         for (GameSpec gameSpec : games) {
 
             for (BooleanProperty p : config.getFavouriteGameProperties()) {
                 if (p.getName().equals(gameSpec.getGameSummary().getNameCode().toUpperCase() + " Game fav"))
-                    prop = p;
+                    favouriteGameProperty = p;
             }
 
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
-                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, prop);
+                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, favouriteGameProperty);
 
             /* all categories */
             if (config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()
@@ -255,19 +256,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 if (gameSpec.getGameSummary().getCategory() != GameCategories.Category.ACTION_REACTION)
                     choicePanel.getChildren().add(gameCard);
             } else if (config.selectionCategory() && config.memorizationCategory() && !config.actionReactionCategory()
-                    || !config.logicCategory()) { // S & M
+                    && !config.logicCategory()) { // S & M
                 if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.SELECTION
-                        && gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
+                        || gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
                     choicePanel.getChildren().add(gameCard);
             } else if (config.selectionCategory() && !config.memorizationCategory() && config.actionReactionCategory()
-                    || !config.logicCategory()) { // AR & S
+                    && !config.logicCategory()) { // AR & S
                 if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.SELECTION
-                        && gameSpec.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION)
+                        || gameSpec.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION)
                     choicePanel.getChildren().add(gameCard);
             } else if (!config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()
-                    || !config.logicCategory()) { // AR & M
+                    && !config.logicCategory()) { // AR & M
                 if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION
-                        && gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
+                        || gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
                     choicePanel.getChildren().add(gameCard);
             } else if (!config.selectionCategory() && !config.memorizationCategory() && config.actionReactionCategory()
                     && config.logicCategory()) { // AR & L
@@ -457,130 +458,136 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private void filterGames(boolean selectionFilter, boolean memoFilter, boolean actionReactionFilter,
             boolean logicFiler) {
         DefaultGamesLocator df = new DefaultGamesLocator();
-        List<GameSpec> filteredGames = df.listGames();
+        List<GameSpec> allGames = df.listGames();
+        List<GameSpec> filteredGames = new ArrayList<GameSpec>();
+        // maybe reorder here ... ? favourites on top
 
         /**
          * 2^4 options
          */
 
         if (selectionFilter && memoFilter && actionReactionFilter && logicFiler) // all games
-            this.games = filteredGames;
+            this.games = allGames;
 
         else if (selectionFilter && memoFilter && actionReactionFilter && !logicFiler) { // selection & memorization &
             // actionReaction
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.LOGIC) {
-                    filteredGames.clear();
                     filteredGames.add(g);
                 }
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (selectionFilter && memoFilter && !actionReactionFilter && logicFiler) { // Selection & Memorization &
             // Logic
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.ACTION_REACTION) {
-                    filteredGames.clear();
                     filteredGames.add(g);
                 }
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && actionReactionFilter && logicFiler) { // ActionReaction &
             // Memorization & Logic
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.SELECTION) {
-                    filteredGames.clear();
                     filteredGames.add(g);
                 }
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && actionReactionFilter && logicFiler) { // Selection & ActionReaction
             // & Logic
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.MEMORIZATION) {
-                    filteredGames.clear();
                     filteredGames.add(g);
                 }
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (selectionFilter && memoFilter && !actionReactionFilter && !logicFiler) { // Selection & memorization
-            // games
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION) {
-                    filteredGames.clear();
                     filteredGames.add(g);
                 }
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && actionReactionFilter && !logicFiler) { // Selection &
             // Action_Reaction games
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION) {
-                    filteredGames.clear();
                     filteredGames.add(g);
                 }
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && actionReactionFilter && !logicFiler) { // memorization and
             // Action_Reaction games
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION
                         && g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION)
                     filteredGames.add(g);
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && !actionReactionFilter && logicFiler) { // memorization & logic
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION
                         && g.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
                     filteredGames.add(g);
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && !actionReactionFilter && logicFiler) { // selection & logic
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
                     filteredGames.add(g);
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && actionReactionFilter && logicFiler) { // actionReaction & logic
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
                     filteredGames.add(g);
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && !actionReactionFilter && !logicFiler) { // only selection games
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION) {
-                    filteredGames.clear();
                     filteredGames.add(g);
                 }
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && !actionReactionFilter && !logicFiler) { // only memorization games
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION) {
-                    filteredGames.clear();
                     filteredGames.add(g);
                 }
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else if (!selectionFilter && !memoFilter && actionReactionFilter && !logicFiler) { // only Action_Reaction
             // games
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION) {
-                    filteredGames.clear();
                     filteredGames.add(g);
                 }
             }
         } else if (!selectionFilter && !memoFilter && !actionReactionFilter && logicFiler) { // only logic games
-            for (GameSpec g : df.listGames()) {
+            // filteredGames.clear();
+            for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
                     filteredGames.add(g);
             }
-            this.games = filteredGames;
+            // this.games = filteredGames;
         } else {
             filteredGames.clear();
         }
