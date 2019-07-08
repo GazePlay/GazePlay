@@ -1049,18 +1049,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         hbox.setSpacing(5);
 
         final I18NButton resetButton = new I18NButton(translator, "reset");
+
+        Button plusButton = new Button("+");
+
+        Button minusButton = new Button("-");
+
+        hbox.getChildren().addAll(resetButton, plusButton, minusButton);
+
         resetButton.setOnAction((event) -> {
             config.getHeatMapColorsProperty().setValue(config.DEFAULT_VALUE_HEATMAP_COLORS);
             hbox.getChildren().remove(3, hbox.getChildren().size());
             fillHBoxWithColorPickers(hbox, config);
+            minusButton.setDisable(false);
         });
-        hbox.getChildren().add(resetButton);
-
-        Button plusButton = new Button("+");
-        hbox.getChildren().add(plusButton);
-
-        Button minusButton = new Button("-");
-        hbox.getChildren().add(minusButton);
 
         minusButton.setOnAction(e -> {
             if (hbox.getChildren().size() > 5) {
