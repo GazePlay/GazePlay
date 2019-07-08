@@ -272,21 +272,23 @@ public class GameMenuFactory {
             }
         };
         EventHandler favGameHandler_enter = new EventHandler<MouseEvent>() {
-            // Configuration config = Configuration.getInstance();
             @Override
             public void handle(MouseEvent event) {
 
-                if (!isFavourite.getValue()) {
-                    favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
+                switch (isFavourite.getValue().toString()){
+                    case "true":
+                        favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
+                        isFavourite.setValue(false);
+                        config.saveConfigIgnoringExceptions();
 
-                    isFavourite.setValue(true);
+                        break;
+                    case "false":
+                        favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
+                        isFavourite.setValue(true);
+                        config.saveConfigIgnoringExceptions();
 
-                } else if (isFavourite.getValue()) {
-                    favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
-
-                    isFavourite.setValue(false);
+                        break;
                 }
-                config.saveConfigIgnoringExceptions();
             }
         };
 
