@@ -1270,18 +1270,6 @@ public class DefaultGamesLocator implements GamesLocator {
 
         log.info("Games found : {}", result.size());
 
-        // reorder
-        // for( GameSpec g : result){
-        // for (BooleanProperty p : Configuration.getInstance().getFavouriteGameProperties()) {
-        // if (p.getName().equals(g.getGameSummary().getNameCode().toUpperCase() + " Game fav"))
-        // if(p.getValue()){
-        // GameSpec theGame = g;
-        // result.remove(g);
-        // result.add(0,theGame);
-        // }
-        // }
-        // }
-
         return result;
     }
 }
