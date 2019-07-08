@@ -1035,35 +1035,66 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
-    private HBox buildHeatMapColorHBox(Configuration config) {
-        HBox hbox = new HBox();
-        hbox.setSpacing(5);
-
-        Button plusButton = new Button("+");
-        hbox.getChildren().add(plusButton);
-
-        plusButton.setOnAction(e -> {
-            ColorPicker colorPicker = new ColorPicker(Color.RED);
-            colorPicker.valueProperty()
-                    .addListener((observableValue, color1, t1) -> updateHeatMapColorProperty(hbox, config));
-            hbox.getChildren().add(colorPicker);
-            updateHeatMapColorProperty(hbox, config);
-        });
-
-        Button minusButton = new Button("-");
-        hbox.getChildren().add(minusButton);
-        minusButton.setOnAction(e -> {
-            if (hbox.getChildren().size() > 4) {
-                hbox.getChildren().remove(hbox.getChildren().size() - 1);
-            }
-            updateHeatMapColorProperty(hbox, config);
-        });
-
+    private void fillHBoxWithColorPickers(HBox hbox, Configuration config) {
         for (Color color : config.getHeatMapColors()) {
             ColorPicker colorPicker = new ColorPicker(color);
             colorPicker.valueProperty()
                     .addListener((observableValue, color1, t1) -> updateHeatMapColorProperty(hbox, config));
             hbox.getChildren().add(colorPicker);
+        }
+    }
+
+    private HBox buildHeatMapColorHBox(Configuration config) {
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+
+        final I18NButton resetButton = new I18NButton(translator, "reset");
+        resetButton.setOnAction((event) -> {
+            config.getHeatMapColorsProperty().setValue(config.DEFAULT_VALUE_HEATMAP_COLORS);
+            hbox.getChildren().remove(3, hbox.getChildren().size());
+            fillHBoxWithColorPickers(hbox, config);
+        });
+        hbox.getChildren().add(resetButton);
+
+        Button plusButton = new Button("+");
+        hbox.getChildren().add(plusButton);
+
+        Button minusButton = new Button("-");
+        hbox.getChildren().add(minusButton);
+
+        minusButton.setOnAction(e -> {
+            if (hbox.getChildren().size() > 5) {
+                hbox.getChildren().remove(hbox.getChildren().size() - 1);
+                plusButton.setDisable(false);
+            }
+
+            if (hbox.getChildren().size() == 5) {
+                minusButton.setDisable(true);
+            }
+            updateHeatMapColorProperty(hbox, config);
+        });
+
+        plusButton.setOnAction(e -> {
+            if (hbox.getChildren().size() < 10) {
+                ColorPicker colorPicker = new ColorPicker(Color.RED);
+                colorPicker.valueProperty()
+                        .addListener((observableValue, color1, t1) -> updateHeatMapColorProperty(hbox, config));
+                hbox.getChildren().add(colorPicker);
+                updateHeatMapColorProperty(hbox, config);
+                minusButton.setDisable(false);
+            }
+
+            if (hbox.getChildren().size() >= 10) {
+                plusButton.setDisable(true);
+            }
+        });
+
+        fillHBoxWithColorPickers(hbox, config);
+
+        if (hbox.getChildren().size() >= 10) {
+            plusButton.setDisable(true);
+        } else if (hbox.getChildren().size() <= 5) {
+            minusButton.setDisable(true);
         }
 
         return hbox;
@@ -1071,7 +1102,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private void updateHeatMapColorProperty(HBox hbox, Configuration config) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 2; i < hbox.getChildren().size(); i++) {
+        for (int i = 3; i < hbox.getChildren().size(); i++) {
             stringBuilder.append(((ColorPicker) (hbox.getChildren().get(i))).getValue().toString());
             if (i != hbox.getChildren().size() - 1)
                 stringBuilder.append(",");
