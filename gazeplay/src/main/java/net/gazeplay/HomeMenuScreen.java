@@ -223,6 +223,27 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
 
+        // reorder games by Favourite Filter
+
+        List<GameSpec> favGames = new ArrayList<GameSpec>();
+        List<BooleanProperty> favourites = new ArrayList<BooleanProperty>();
+
+        for (BooleanProperty p : config.getFavouriteGameProperties()) {
+            if (p.getValue()) {
+                favourites.add(p);
+            }
+        }
+        for (GameSpec g : games) {
+            for (BooleanProperty p : favourites) {
+                if (p.getName().equals(g.getGameSummary().getNameCode().toUpperCase() + " Game fav")) {
+                    favGames.add(g);
+                }
+            }
+        }
+
+        games.removeAll(favGames);
+        games.addAll(0, favGames); // favourite Games are in the beginning of the list
+
         BooleanProperty favouriteGameProperty = null;
 
         for (GameSpec gameSpec : games) {
@@ -235,7 +256,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
                     translator, gameSpec, gameButtonOrientation, gazeDeviceManager, favouriteGameProperty);
 
-            /* all categories */
+            /* Game categories */
             if (config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()
                     && config.logicCategory()) // all games
                 choicePanel.getChildren().add(gameCard);
@@ -460,8 +481,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         DefaultGamesLocator df = new DefaultGamesLocator();
         List<GameSpec> allGames = df.listGames();
         List<GameSpec> filteredGames = new ArrayList<GameSpec>();
-        // maybe reorder here ... ? favourites on top
-
         /**
          * 2^4 options
          */
@@ -471,123 +490,108 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         else if (selectionFilter && memoFilter && actionReactionFilter && !logicFiler) { // selection & memorization &
             // actionReaction
-            // filteredGames.clear();
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.LOGIC) {
                     filteredGames.add(g);
                 }
             }
-            // this.games = filteredGames;
         } else if (selectionFilter && memoFilter && !actionReactionFilter && logicFiler) { // Selection & Memorization &
             // Logic
-            // filteredGames.clear();
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.ACTION_REACTION) {
                     filteredGames.add(g);
                 }
             }
-            // this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && actionReactionFilter && logicFiler) { // ActionReaction &
             // Memorization & Logic
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.SELECTION) {
                     filteredGames.add(g);
                 }
             }
-            // this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && actionReactionFilter && logicFiler) { // Selection & ActionReaction
             // & Logic
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() != GameCategories.Category.MEMORIZATION) {
                     filteredGames.add(g);
                 }
             }
-            // this.games = filteredGames;
         } else if (selectionFilter && memoFilter && !actionReactionFilter && !logicFiler) { // Selection & memorization
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION) {
                     filteredGames.add(g);
                 }
             }
-            // this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && actionReactionFilter && !logicFiler) { // Selection &
             // Action_Reaction games
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION) {
                     filteredGames.add(g);
                 }
             }
-            // this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && actionReactionFilter && !logicFiler) { // memorization and
             // Action_Reaction games
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION
                         && g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION)
                     filteredGames.add(g);
             }
-            // this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && !actionReactionFilter && logicFiler) { // memorization & logic
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION
                         && g.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
                     filteredGames.add(g);
             }
-            // this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && !actionReactionFilter && logicFiler) { // selection & logic
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
                     filteredGames.add(g);
             }
-            // this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && actionReactionFilter && logicFiler) { // actionReaction & logic
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION
                         && g.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
                     filteredGames.add(g);
             }
-            // this.games = filteredGames;
         } else if (selectionFilter && !memoFilter && !actionReactionFilter && !logicFiler) { // only selection games
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.SELECTION) {
                     filteredGames.add(g);
                 }
             }
-            // this.games = filteredGames;
         } else if (!selectionFilter && memoFilter && !actionReactionFilter && !logicFiler) { // only memorization games
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION) {
                     filteredGames.add(g);
                 }
             }
-            // this.games = filteredGames;
         } else if (!selectionFilter && !memoFilter && actionReactionFilter && !logicFiler) { // only Action_Reaction
             // games
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION) {
                     filteredGames.add(g);
                 }
             }
         } else if (!selectionFilter && !memoFilter && !actionReactionFilter && logicFiler) { // only logic games
-            // filteredGames.clear();
+
             for (GameSpec g : allGames) {
                 if (g.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
                     filteredGames.add(g);
             }
-            // this.games = filteredGames;
         } else {
             filteredGames.clear();
         }
