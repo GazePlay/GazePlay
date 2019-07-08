@@ -275,23 +275,24 @@ public class GameMenuFactory {
             @Override
             public void handle(MouseEvent event) {
 
-                switch (isFavourite.getValue().toString()){
-                    case "true":
-                        favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
-                        isFavourite.setValue(false);
-                        config.saveConfigIgnoringExceptions();
+                switch (isFavourite.getValue().toString()) {
+                case "true":
+                    favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
+                    isFavourite.setValue(false);
+                    config.saveConfigIgnoringExceptions();
+                    log.info("enter-T: " + isFavourite.getName() + " = " + isFavourite.getValue());
 
-                        break;
-                    case "false":
-                        favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
-                        isFavourite.setValue(true);
-                        config.saveConfigIgnoringExceptions();
+                    break;
+                case "false":
+                    favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
+                    isFavourite.setValue(true);
+                    config.saveConfigIgnoringExceptions();
+                    log.info("enter-F: " + isFavourite.getName() + " = " + isFavourite.getValue());
 
-                        break;
+                    break;
                 }
             }
         };
-
         gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
         favGamesIcon.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler_enter);
         pausedEvents.add(gameCard);
