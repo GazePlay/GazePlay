@@ -1270,17 +1270,21 @@ public class DefaultGamesLocator implements GamesLocator {
 
         log.info("Games found : {}", result.size());
 
-        // reorder
-        // for( GameSpec g : result){
+        // List<GameSpec> favGames = new ArrayList<GameSpec>();
+        // List<GameSpec> reOrderedGames = result;
+        // for (GameSpec g : reOrderedGames) {
         // for (BooleanProperty p : Configuration.getInstance().getFavouriteGameProperties()) {
-        // if (p.getName().equals(g.getGameSummary().getNameCode().toUpperCase() + " Game fav"))
         // if(p.getValue()){
-        // GameSpec theGame = g;
-        // result.remove(g);
-        // result.add(0,theGame);
+        // if (p.getName().equals(g.getGameSummary().getNameCode().toUpperCase() + " Game fav")){
+        // favGames.add(g);
+        // reOrderedGames.remove(g);
         // }
         // }
         // }
+        // }
+        // reOrderedGames.addAll(0,favGames);
+        //
+        // result = reOrderedGames;
 
         return result;
     }
