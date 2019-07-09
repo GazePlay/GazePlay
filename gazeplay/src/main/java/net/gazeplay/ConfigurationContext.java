@@ -989,7 +989,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         musicManager.play();
     }
 
-    private static HBox buildVideoFolderChooser(Configuration config){
+    private static HBox buildVideoFolderChooser(Configuration config) {
         HBox hbox = new HBox(5);
 
         Button buttonFolder = new Button(config.getVideoFolder());

@@ -1271,33 +1271,34 @@ public class DefaultGamesLocator implements GamesLocator {
 
         result.add(new GameSpec(new GameSummary("VideoGrid", "data/Thumbnails/openMemoryLetters.png",
                 GameCategories.Category.SELECTION), new GameSpec.GameVariantGenerator() {
-            @Override
-            public Set<GameSpec.GameVariant> getVariants() {
-                return Sets.newLinkedHashSet(Lists.newArrayList(
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
 
-                        new GameSpec.DimensionGameVariant(2, 1),
+                                new GameSpec.DimensionGameVariant(2, 1),
 
-                        new GameSpec.DimensionGameVariant(2, 2),
+                                new GameSpec.DimensionGameVariant(2, 2),
 
-                        new GameSpec.DimensionGameVariant(3, 2),
+                                new GameSpec.DimensionGameVariant(3, 2),
 
-                        new GameSpec.DimensionGameVariant(4, 2)
+                                new GameSpec.DimensionGameVariant(3, 3),
+
+                                new GameSpec.DimensionGameVariant(4, 2)
 
                 ));
-            }
-        }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new Stats(scene, "videogrid");
-            }
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "videogrid");
+                    }
 
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext,
-                                               GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-                return new VideoGrid(gameContext, stats, gameVariant.getWidth(),
-                        gameVariant.getHeight());
-            }
-        }));
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext,
+                            GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                        return new VideoGrid(gameContext, stats, gameVariant.getWidth(), gameVariant.getHeight());
+                    }
+                }));
 
         log.info("Games found : {}", result.size());
 
