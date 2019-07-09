@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
@@ -20,6 +21,7 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.apache.commons.io.FilenameUtils;
 
@@ -36,6 +38,7 @@ public class VideoGrid implements GameLifeCycle {
     private final Stats stats;
     private final Dimension2D dimensions;
     private final Configuration config;
+    private final Multilinguism translate;
 
     private final int nbLines;
     private final int nbColumns;
@@ -43,6 +46,8 @@ public class VideoGrid implements GameLifeCycle {
     private final File videoFolder;
     private final Random random;
     private final ArrayList<String> compatibleFileTypes;
+
+    private final ColorAdjust grayscale;
 
     public VideoGrid(GameContext gameContext, Stats stats, int nbLines, int nbColumns) {
         this.gameContext = gameContext;
@@ -52,10 +57,14 @@ public class VideoGrid implements GameLifeCycle {
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.config = Configuration.getInstance();
         this.random = new Random();
+        this.translate = Multilinguism.getSingleton();
 
         grid = new GridPane();
         videoFolder = new File(config.getVideoFolder());
-        compatibleFileTypes = new ArrayList<>(Arrays.asList("mp4"));
+        compatibleFileTypes = new ArrayList<>(Arrays.asList("mp4", "m4a", "m4v"));
+
+        grayscale = new ColorAdjust();
+        grayscale.setSaturation(-1);
     }
 
     @Override
@@ -94,9 +103,16 @@ public class VideoGrid implements GameLifeCycle {
                     mediaView.setMediaPlayer(mediaPlayer);
                     mediaView.setFitHeight(dimensions.getHeight() / nbLines);
                     mediaView.setFitWidth(dimensions.getWidth() / nbColumns);
+                    mediaView.setEffect(grayscale);
 
-                    EventHandler<Event> enterEvent = (Event event) -> mediaPlayer.play();
-                    EventHandler<Event> exitEvent = (Event event) -> mediaPlayer.pause();
+                    EventHandler<Event> enterEvent = (Event event) -> {
+                        mediaPlayer.play();
+                        mediaView.setEffect(null);
+                    };
+                    EventHandler<Event> exitEvent = (Event event) -> {
+                        mediaPlayer.pause();
+                        mediaView.setEffect(grayscale);
+                    };
 
                     mediaView.addEventFilter(MouseEvent.MOUSE_ENTERED, enterEvent);
                     mediaView.addEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
@@ -114,10 +130,11 @@ public class VideoGrid implements GameLifeCycle {
         } else {
             noVideosFound();
         }
+        stats.notifyNewRoundReady();
     }
 
     private void noVideosFound() {
-        Text errorText = new Text("No videos found");
+        Text errorText = new Text(translate.getTrad("No videos found", config.getLanguage()));
         errorText.setY(dimensions.getHeight() / 2);
         errorText.setTextAlignment(TextAlignment.CENTER);
         errorText.setFill(config.isBackgroundWhite() ? Color.BLACK : Color.WHITE);
