@@ -1269,7 +1269,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        result.add(new GameSpec(new GameSummary("VideoGrid", "data/Thumbnails/openMemoryLetters.png",
+        result.add(new GameSpec(new GameSummary("VideoGrid", "data/Thumbnails/videogrid.png",
                 GameCategories.Category.SELECTION), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
