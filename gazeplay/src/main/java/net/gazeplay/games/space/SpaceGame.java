@@ -329,14 +329,14 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         double timeElapsed = ((double) now - (double) lastTickTime) / Math.pow(10, 6); // in ms
         lastTickTime = now;
 
-        log.info("FPS: " + (int) (1000 / timeElapsed));
+        // log.info("FPS: " + (int) (1000 / timeElapsed));
         if (1000 / timeElapsed < minFPS) {
             minFPS = 1000 / (int) timeElapsed;
         }
         timeElapsed /= getGameSpeed();
-        log.info("Speed effect: " + configuration.getSpeedEffects());
-        log.info("MinFPS: " + minFPS);
-        log.info("Time elapsed: " + timeElapsed);
+        // log.info("Speed effect: " + configuration.getSpeedEffects());
+        // log.info("MinFPS: " + minFPS);
+        // log.info("Time elapsed: " + timeElapsed);
 
         // Movement
         /// Lateral movement: Mouse Moved
@@ -352,11 +352,11 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         spaceship.setX(spaceship.getX() + velocity.getX() * timeElapsed);
         // log.info("velocity x: " + velocity.getX());
         spaceship.setY(6 * dimension2D.getHeight() / 7);
-        log.info("Number of bullets: " + bulletListRec.size());
-        log.info("Number of biboules: " + biboules.size());
-        log.info("Number of biboule bullets: " + bulletBibouleListRec.size());
-        log.info("Number of timeline biboule bullets: " + timelineList.size());
-        log.info("Number of bullet - transition pair: " + hashMap.size());
+        // log.info("Number of bullets: " + bulletListRec.size());
+        // log.info("Number of biboules: " + biboules.size());
+        // log.info("Number of biboule bullets: " + bulletBibouleListRec.size());
+        // log.info("Number of timeline biboule bullets: " + timelineList.size());
+        // log.info("Number of bullet - transition pair: " + hashMap.size());
 
         /// Lateral movement: Mouse Pressed
         // spaceship.setX(gazeTarget.getX() - spaceship.getWidth() / 2);
@@ -427,7 +427,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> obs, Boolean oldValue, Boolean newValue) {
                         if (newValue) {
-                            log.info("Colliding");
+                            // log.info("Colliding");
 
                             boolean bibouleBoolean = false;
 
@@ -461,9 +461,10 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                 updateScore();
                             }
 
-                        } else {
-                            log.info("Not colliding");
                         }
+                        // else {
+                        // log.info("Not colliding");
+                        // }
                     }
                 });
                 // }
