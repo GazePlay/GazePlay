@@ -61,7 +61,7 @@ public class VideoGrid implements GameLifeCycle {
 
         grid = new GridPane();
         videoFolder = new File(config.getVideoFolder());
-        compatibleFileTypes = new ArrayList<>(Arrays.asList("mp4"));
+        compatibleFileTypes = new ArrayList<>(Arrays.asList("mp4", "m4a", "m4v"));
 
         grayscale = new ColorAdjust();
         grayscale.setSaturation(-1);
