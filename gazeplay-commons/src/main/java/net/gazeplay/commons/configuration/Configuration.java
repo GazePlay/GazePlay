@@ -44,6 +44,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
+    private static final String PROPERTY_NAME_VIDEO_FOLDER = "VIDEO_FOLDER";
     /**
      * Game Categories Properties
      */
@@ -146,6 +147,7 @@ public class Configuration implements Cloneable {
     public static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     public static final String DEFAULT_VALUE_USER_PICTURE = "";
+    public static final String DEFAULT_VALUE_VIDEO_FOLDER = getFileDirectoryDefaultValue() + "/videos";
 
     public static boolean isMouseFree = false;
 
@@ -292,6 +294,10 @@ public class Configuration implements Cloneable {
     @Getter
     protected final DoubleProperty speedEffectsProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_SPEED_EFFECTS,
             DEFAULT_VALUE_SPEED_EFFECTS);
+
+    @Getter
+    protected final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER,
+            DEFAULT_VALUE_VIDEO_FOLDER);
 
     @Getter
     protected final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME,
@@ -696,6 +702,11 @@ public class Configuration implements Cloneable {
             musicFolderProperty.setValue(buffer);
         }
 
+        buffer = prop.getProperty(PROPERTY_NAME_VIDEO_FOLDER);
+        if (buffer != null) {
+            videoFolderProperty.setValue(buffer);
+        }
+
         buffer = prop.getProperty(PROPERTY_NAME_EFFECTS_VOLUME);
         if (buffer != null) {
             try {
@@ -1007,6 +1018,7 @@ public class Configuration implements Cloneable {
         properties.setProperty(PROPERTY_NAME_MUSIC_FOLDER, this.musicFolderProperty.getValue());
         properties.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, Double.toString(effectsVolumeProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_SPEED_EFFECTS, Double.toString(speedEffectsProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_VIDEO_FOLDER, this.videoFolderProperty.getValue());
         properties.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_USER_NAME, this.userNameProperty.getValue());
         properties.setProperty(PROPERTY_NAME_USER_PICTURE, this.userPictureProperty.getValue());
@@ -1196,6 +1208,10 @@ public class Configuration implements Cloneable {
 
     public String getMusicFolder() {
         return musicFolderProperty.getValue();
+    }
+
+    public String getVideoFolder() {
+        return videoFolderProperty.getValue();
     }
 
     public Double getEffectsVolume() {

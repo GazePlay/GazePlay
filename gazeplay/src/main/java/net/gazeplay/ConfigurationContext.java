@@ -305,6 +305,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
+            I18NText label = new I18NText(translator, "VideoFolder", COLON);
+            final Node input = buildVideoFolderChooser(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
+        {
             I18NText label = new I18NText(translator, "EnableGazeMenu", COLON);
             CheckBox input = buildGazeMenu(config, configurationContext);
 
@@ -980,6 +987,42 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         musicManager.emptyPlaylist();
         musicManager.getAudioFromFolder(musicFolder);
         musicManager.play();
+    }
+
+    private static HBox buildVideoFolderChooser(Configuration config){
+        HBox hbox = new HBox(5);
+
+        Button buttonFolder = new Button(config.getVideoFolder());
+        buttonFolder.textProperty().bind(config.getVideoFolderProperty());
+        I18NButton buttonReset = new I18NButton(translator, "reset");
+        hbox.getChildren().addAll(buttonFolder, buttonReset);
+
+        buttonFolder.setOnAction(e -> {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            final File currentVideoFolder = new File(config.getVideoFolder());
+            if (currentVideoFolder.isDirectory()) {
+                directoryChooser.setInitialDirectory(currentVideoFolder);
+            }
+            final GazePlay gazePlay = GazePlay.getInstance();
+            final Scene scene = gazePlay.getPrimaryScene();
+            File file = directoryChooser.showDialog(scene.getWindow());
+            if (file == null) {
+                return;
+            }
+            String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
+            if (Utils.isWindows()) {
+                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
+            }
+            config.getVideoFolderProperty().setValue(newPropertyValue);
+            config.saveConfigIgnoringExceptions();
+        });
+
+        buttonReset.setOnAction(e -> {
+            config.getVideoFolderProperty().setValue(Configuration.DEFAULT_VALUE_VIDEO_FOLDER);
+            config.saveConfigIgnoringExceptions();
+        });
+
+        return hbox;
     }
 
     private static GameButtonOrientation findSelectedGameButtonOrientation(Configuration configuration) {
