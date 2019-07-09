@@ -1,9 +1,6 @@
 package net.gazeplay;
 
-import javafx.beans.Observable;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,8 +11,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -35,8 +30,6 @@ import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.labyrinth.Mouse;
-
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -272,24 +265,27 @@ public class GameMenuFactory {
             }
         };
         EventHandler favGameHandler_enter = new EventHandler<MouseEvent>() {
-            // Configuration config = Configuration.getInstance();
             @Override
             public void handle(MouseEvent event) {
 
-                if (!isFavourite.getValue()) {
-                    favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
-
-                    isFavourite.setValue(true);
-
-                } else if (isFavourite.getValue()) {
+                switch (isFavourite.getValue().toString()) {
+                case "true":
                     favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
-
                     isFavourite.setValue(false);
+                    config.saveConfigIgnoringExceptions();
+                    log.info("enter-T: " + isFavourite.getName() + " = " + isFavourite.getValue());
+
+                    break;
+                case "false":
+                    favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
+                    isFavourite.setValue(true);
+                    config.saveConfigIgnoringExceptions();
+                    log.info("enter-F: " + isFavourite.getName() + " = " + isFavourite.getValue());
+
+                    break;
                 }
-                config.saveConfigIgnoringExceptions();
             }
         };
-
         gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
         favGamesIcon.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler_enter);
         pausedEvents.add(gameCard);
