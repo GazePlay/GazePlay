@@ -33,6 +33,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 import java.io.IOException;
 
@@ -434,7 +435,7 @@ public class GameContext extends GraphicalContext<Pane> {
     private void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
             throws IOException {
         currentGame.dispose();
-
+        Utils.stopSound(); // to stop playing the sound of Bravo
         stats.stop();
         gazeDeviceManager.clear();
         gazeDeviceManager.destroy();

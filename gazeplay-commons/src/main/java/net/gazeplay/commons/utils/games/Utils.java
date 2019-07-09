@@ -86,6 +86,13 @@ public class Utils {
         soundPlayer.play();
     }
 
+    public static void stopSound() {
+
+        if (soundPlayer != null)
+            soundPlayer.stop();
+
+    }
+
     public static InputStream getInputStream(String ressource) {
 
         log.debug("Try to play " + ressource);

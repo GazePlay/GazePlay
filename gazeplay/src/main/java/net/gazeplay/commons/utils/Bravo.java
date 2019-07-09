@@ -255,4 +255,5 @@ public class Bravo extends Rectangle {
         fadeInTransition.setOnFinished(actionEvent -> log.debug("finished fadeInTransition"));
         return fadeInTransition;
     }
+
 }
