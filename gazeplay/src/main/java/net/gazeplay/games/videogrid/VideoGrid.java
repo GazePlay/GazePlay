@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
@@ -46,6 +47,8 @@ public class VideoGrid implements GameLifeCycle {
     private final Random random;
     private final ArrayList<String> compatibleFileTypes;
 
+    private final ColorAdjust grayscale;
+
     public VideoGrid(GameContext gameContext, Stats stats, int nbLines, int nbColumns) {
         this.gameContext = gameContext;
         this.stats = stats;
@@ -59,6 +62,9 @@ public class VideoGrid implements GameLifeCycle {
         grid = new GridPane();
         videoFolder = new File(config.getVideoFolder());
         compatibleFileTypes = new ArrayList<>(Arrays.asList("mp4"));
+
+        grayscale = new ColorAdjust();
+        grayscale.setSaturation(-1);
     }
 
     @Override
@@ -97,9 +103,16 @@ public class VideoGrid implements GameLifeCycle {
                     mediaView.setMediaPlayer(mediaPlayer);
                     mediaView.setFitHeight(dimensions.getHeight() / nbLines);
                     mediaView.setFitWidth(dimensions.getWidth() / nbColumns);
+                    mediaView.setEffect(grayscale);
 
-                    EventHandler<Event> enterEvent = (Event event) -> mediaPlayer.play();
-                    EventHandler<Event> exitEvent = (Event event) -> mediaPlayer.pause();
+                    EventHandler<Event> enterEvent = (Event event) -> {
+                        mediaPlayer.play();
+                        mediaView.setEffect(null);
+                    };
+                    EventHandler<Event> exitEvent = (Event event) -> {
+                        mediaPlayer.pause();
+                        mediaView.setEffect(grayscale);
+                    };
 
                     mediaView.addEventFilter(MouseEvent.MOUSE_ENTERED, enterEvent);
                     mediaView.addEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
