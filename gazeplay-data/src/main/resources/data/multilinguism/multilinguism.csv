@@ -195,3 +195,6 @@ Player %d got locked up in prison,,,,,,Player %d got locked up in prison,,Le jou
 Player %d falls asleep for %d turns,,,,,,Player %d falls asleep for %d turns,,Le joueur %d s'endort pour %d tours,,,,,,,,,,,
 HeatMapOpacity,,,,,,Heat map's opacity,,Opacité de la heat map,,,,,,,,,,,
 HeatMapColors,,,,,,Heat map's colors,,Couleurs de la heat map,,,,,,,,,,,
+VideoFolder,,,,,,Video folder,,Répertoire des vidéos,,,,,,,,,,,
+VideoGrid,,,,,,Video Grid,,Grille de vidéos,,,,,,,,,,,
+No videos found,,,,,,No videos found,,Pas de vidéos,,,,,,,,,,,

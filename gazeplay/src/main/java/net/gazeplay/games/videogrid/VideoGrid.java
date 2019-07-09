@@ -20,6 +20,7 @@ import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.apache.commons.io.FilenameUtils;
 
@@ -36,6 +37,7 @@ public class VideoGrid implements GameLifeCycle {
     private final Stats stats;
     private final Dimension2D dimensions;
     private final Configuration config;
+    private final Multilinguism translate;
 
     private final int nbLines;
     private final int nbColumns;
@@ -52,6 +54,7 @@ public class VideoGrid implements GameLifeCycle {
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.config = Configuration.getInstance();
         this.random = new Random();
+        this.translate = Multilinguism.getSingleton();
 
         grid = new GridPane();
         videoFolder = new File(config.getVideoFolder());
@@ -114,10 +117,11 @@ public class VideoGrid implements GameLifeCycle {
         } else {
             noVideosFound();
         }
+        stats.notifyNewRoundReady();
     }
 
     private void noVideosFound() {
-        Text errorText = new Text("No videos found");
+        Text errorText = new Text(translate.getTrad("No videos found", config.getLanguage()));
         errorText.setY(dimensions.getHeight() / 2);
         errorText.setTextAlignment(TextAlignment.CENTER);
         errorText.setFill(config.isBackgroundWhite() ? Color.BLACK : Color.WHITE);
