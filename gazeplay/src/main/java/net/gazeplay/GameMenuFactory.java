@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-
 import javafx.beans.property.BooleanProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;

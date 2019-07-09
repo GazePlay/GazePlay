@@ -85,9 +85,10 @@ public class Utils {
         soundPlayer.volumeProperty().bind(configuration.getEffectsVolumeProperty());
         soundPlayer.play();
     }
+
     public static void stopSound() {
 
-        if(soundPlayer!=null)
+        if (soundPlayer != null)
             soundPlayer.stop();
 
     }
