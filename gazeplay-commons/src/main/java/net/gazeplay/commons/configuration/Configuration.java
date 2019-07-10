@@ -107,6 +107,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_FAVOURITE_DICE = "DICE Game fav";
     private static final String PROPERTY_NAME_FAVOURITE_SPACEGAME = "SPACEGAME Game fav";
     private static final String PROPERTY_NAME_FAVOURITE_GOOSEGAME = "GOOSEGAME Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_VIDEOGRID = "VIDEOGRID Game fav";
 
     @Getter
     @Setter
@@ -512,6 +513,10 @@ public class Configuration implements Cloneable {
     protected final BooleanProperty gooseGameFavProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_FAVOURITE_GOOSEGAME, DEFAULT_VALUE_FAVOURITE_GAMES);
 
+    @Getter
+    protected final BooleanProperty videoGridFavProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_FAVOURITE_VIDEOGRID, DEFAULT_VALUE_FAVOURITE_GAMES);
+
     public void FavProperties() {
 
         favouriteGameProperties.add(bibouleJumpFavProperty);
@@ -558,6 +563,7 @@ public class Configuration implements Cloneable {
         favouriteGameProperties.add(scribbleFavProperty);
         favouriteGameProperties.add(spaceGameFavProperty);
         favouriteGameProperties.add(spotDifferenceFavProperty);
+        favouriteGameProperties.add(videoGridFavProperty);
         favouriteGameProperties.add(videoPlayerFavProperty);
         favouriteGameProperties.add(whacamoleFavProperty);
         favouriteGameProperties.add(whereItFavProperty);
@@ -945,6 +951,10 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             spotDifferenceFavProperty.setValue(Boolean.parseBoolean(buffer));
         }
+        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_VIDEOGRID);
+        if (buffer != null) {
+            videoGridFavProperty.setValue(Boolean.parseBoolean(buffer));
+        }
         buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_VIDEOPLAYER);
         if (buffer != null) {
             videoPlayerFavProperty.setValue(Boolean.parseBoolean(buffer));
@@ -1087,6 +1097,7 @@ public class Configuration implements Cloneable {
                 Boolean.toString(spotDifferenceFavProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_FAVOURITE_VIDEOPLAYER,
                 Boolean.toString(videoPlayerFavProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_FAVOURITE_VIDEOGRID, Boolean.toString(videoGridFavProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_FAVOURITE_WHACAMOLE, Boolean.toString(whacamoleFavProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_FAVOURITE_WHEREISIT, Boolean.toString(whereItFavProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_FAVOURITE_WHEREISTHEANIMAL,
