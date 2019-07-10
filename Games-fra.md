@@ -29,6 +29,12 @@ Une grande image est cachée dans une carte à gratter. Le joueur gratte la cart
 
 ![Scratchcard](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/scratchcard.png)
 
+## Où est-ce?
+
+Le joueur doit regarder l'image correspondant à ce qui a été indiqué au début du jeu. Ce jeux est disponible en cinq versions : Où est cette Couleur? , Où est cet Animal? , Où est cette Lettre? , Où est ce Nombre? et Où est-ce? .Pour la dernière version l'utilisateur peut choisir ses propres ressources pour le jeu.
+
+![OuEst](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/whereisit.png)
+
 ## Bulles
 
 Des bulles de couleur remontent lentement à la surface et exploser lorsque le joueur les regarde.
@@ -94,6 +100,13 @@ Associez les cartes qui ont le même image en les regardant. Ce jeux est en troi
 Jouez une mélodie en regardant les touches jaunes du piano qui vous guident. 
 
 ![Piano](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/pianosight.png)
+
+## J'ai une Biboule!
+
+Prenez-vous soin de votre Biboule en le nourrissant , le lavant , en jouant avec lui et en le caressant.
+
+![Pet](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/pet.png)
+
 
 ## Gribouille 
 
@@ -184,3 +197,19 @@ Lancez les dés pour avancer le long des cases afin d'atteindre la fin avant les
 Tuez les biboules aliénés avec les lasers de votre vaisseau spatial et incrementez votre score. Faites attention à ne pas être touché de leurs lasers rouges !
 
 ![Spacegame](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/space.png)
+
+## Lecteur Video avec retour 
+
+![Lecteur](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/youtube.png)
+
+## Media Player 
+
+![Media](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/gazeMedia.png)
+
+## La pièce 
+
+![piece](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/home.png)
+
+## Coloriage
+
+![coloriage](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/colors.png)

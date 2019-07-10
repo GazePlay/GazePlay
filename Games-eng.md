@@ -28,6 +28,12 @@ A big image is hidden under a scratchcard. With his/her gaze, the player scratch
 
 ![Scratchcard](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/scratchcard.png)
 
+## Where is it?
+
+The player has to look at the image corresponding to the thing indicated in the beginning of the game. This game comes in five versions: Where is the Color?, Where is the Animal?, Where is the Letter? , Where is the Number? and Where is it? .For the latter the user can choose his own resources for the game.
+
+![WhereIsIt](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/whereisit.png)
+
 ## Colored Bubbles
 
 Some colored bubbles arrive from the deep sea and explode when the player looks at them.
@@ -94,6 +100,12 @@ Associate the cards that have the same image to each other by looking at them. T
 Play a melody by looking at the guiding yellow keys of the piano. 
 
 ![Piano](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/pianosight.png)
+
+## I've got a Biball!
+
+Take care of your Biball pet by feeding it, washing it, playing with it and petting it.
+
+![Pet](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/pet.png)
 
 ## Scribble 
 
@@ -190,3 +202,19 @@ Roll the dice and advance along the squares on the path to reach the end before 
 Kill the alien biballs with your spaceship's lasers and increase your score. Be careful not to be hit by their red lasers!
 
 ![Spacegame](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/space.png)
+
+## VideoPlayer with Feedback 
+
+![videoPlayer](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/youtube.png)
+
+## Media Player 
+
+![Media](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/gazeMedia.png)
+
+## The room 
+
+![room](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/home.png)
+
+## Coloring
+
+![coloring](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/colors.png)
