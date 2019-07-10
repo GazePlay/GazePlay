@@ -1,17 +1,21 @@
 package net.gazeplay.games.videogrid;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -28,7 +32,6 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Random;
 
 @Slf4j
@@ -47,9 +50,9 @@ public class VideoGrid implements GameLifeCycle {
     private final Random random;
     private final ArrayList<String> compatibleFileTypes;
 
-    private final ColorAdjust grayscale;
+    private final ColorAdjust greyscale;
 
-    public VideoGrid(GameContext gameContext, Stats stats, int nbLines, int nbColumns) {
+    public VideoGrid(GameContext gameContext, Stats stats, int nbColumns, int nbLines) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.nbLines = nbLines;
@@ -60,11 +63,13 @@ public class VideoGrid implements GameLifeCycle {
         this.translate = Multilinguism.getSingleton();
 
         grid = new GridPane();
+        grid.setHgap(3);
+        grid.setVgap(3);
         videoFolder = new File(config.getVideoFolder());
         compatibleFileTypes = new ArrayList<>(Arrays.asList("mp4", "m4a", "m4v"));
 
-        grayscale = new ColorAdjust();
-        grayscale.setSaturation(-1);
+        greyscale = new ColorAdjust();
+        greyscale.setSaturation(-1);
     }
 
     @Override
@@ -84,17 +89,16 @@ public class VideoGrid implements GameLifeCycle {
              */
             ArrayList<File> filesChooseFrom = new ArrayList<>(files);
 
-            for (int i = 0; i < nbLines; i++) {
-                for (int j = 0; j < nbColumns; j++) {
+            for (int i = 0; i < nbColumns; i++) {
+                for (int j = 0; j < nbLines; j++) {
                     if (filesChooseFrom.size() == 0) {
                         filesChooseFrom.addAll(files);
                     }
                     int index = random.nextInt(filesChooseFrom.size());
-                    String path = filesChooseFrom.remove(index).toURI().toString();
-                    Media media = new Media(path);
+                    File file = filesChooseFrom.remove(index);
+                    Media media = new Media(file.toURI().toString());
                     MediaPlayer mediaPlayer = new MediaPlayer(media);
                     mediaPlayer.volumeProperty().bind(config.getEffectsVolumeProperty());
-                    mediaPlayer.setOnError(() -> log.info("ERROR: " + mediaPlayer.getError()));
 
                     // loop
                     mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
@@ -103,7 +107,7 @@ public class VideoGrid implements GameLifeCycle {
                     mediaView.setMediaPlayer(mediaPlayer);
                     mediaView.setFitHeight(dimensions.getHeight() / nbLines);
                     mediaView.setFitWidth(dimensions.getWidth() / nbColumns);
-                    mediaView.setEffect(grayscale);
+                    mediaView.setEffect(greyscale);
 
                     EventHandler<Event> enterEvent = (Event event) -> {
                         mediaPlayer.play();
@@ -111,7 +115,7 @@ public class VideoGrid implements GameLifeCycle {
                     };
                     EventHandler<Event> exitEvent = (Event event) -> {
                         mediaPlayer.pause();
-                        mediaView.setEffect(grayscale);
+                        mediaView.setEffect(greyscale);
                     };
 
                     mediaView.addEventFilter(MouseEvent.MOUSE_ENTERED, enterEvent);
@@ -122,10 +126,22 @@ public class VideoGrid implements GameLifeCycle {
 
                     gameContext.getGazeDeviceManager().addEventFilter(mediaView);
 
-                    grid.add(mediaView, i, j);
+                    StackPane pane = new StackPane();
+                    pane.setAlignment(Pos.CENTER);// j == 0?Pos.BOTTOM_CENTER:j==nbLines-1?Pos.TOP_CENTER:Pos.CENTER);
+                    pane.getChildren().addAll(new Rectangle(dimensions.getWidth() / nbColumns,
+                            dimensions.getHeight() / nbLines, Color.grayRgb(50)), mediaView);
+                    grid.add(pane, i, j);
+
+                    mediaPlayer.setOnError(() -> {
+                        Text errorText = new Text((String.format(
+                                translate.getTrad("File %s is not supported", config.getLanguage()), file.getName())));
+                        errorText.setFill(Color.WHITE);
+                        errorText.setTextAlignment(TextAlignment.CENTER);
+                        errorText.setWrappingWidth(dimensions.getWidth() / nbColumns);
+                        pane.getChildren().add(errorText);
+                    });
                 }
             }
-
             gameContext.getChildren().add(grid);
         } else {
             noVideosFound();
