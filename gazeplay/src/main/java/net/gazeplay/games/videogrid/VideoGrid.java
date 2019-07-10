@@ -37,6 +37,7 @@ import java.util.Random;
 @Slf4j
 public class VideoGrid implements GameLifeCycle {
 
+    private final static int GAP = 3;
     private final GameContext gameContext;
     private final Stats stats;
     private final Dimension2D dimensions;
@@ -63,11 +64,12 @@ public class VideoGrid implements GameLifeCycle {
         this.translate = Multilinguism.getSingleton();
 
         grid = new GridPane();
-        grid.setHgap(3);
-        grid.setVgap(3);
+        grid.setHgap(GAP);
+        grid.setVgap(GAP);
         videoFolder = new File(config.getVideoFolder());
         compatibleFileTypes = new ArrayList<>(Arrays.asList("mp4", "m4a", "m4v"));
 
+        // Greyscale effect for out of focus videos
         greyscale = new ColorAdjust();
         greyscale.setSaturation(-1);
     }
@@ -84,31 +86,32 @@ public class VideoGrid implements GameLifeCycle {
             if (files.size() == 0)
                 noVideosFound();
 
-            /*
-             * Different list where we will pick files from randomly. To reduce the number of duplicates
-             */
+            // Separate list where we will pick files from randomly. To reduce the number of duplicates
             ArrayList<File> filesChooseFrom = new ArrayList<>(files);
 
             for (int i = 0; i < nbColumns; i++) {
                 for (int j = 0; j < nbLines; j++) {
+                    // If there aren't enough videos to fill the grid, we use duplicates
                     if (filesChooseFrom.size() == 0) {
                         filesChooseFrom.addAll(files);
                     }
+                    // Picking a random file from the array, and removing it
                     int index = random.nextInt(filesChooseFrom.size());
                     File file = filesChooseFrom.remove(index);
+                    // Creating the mediaplayer
                     Media media = new Media(file.toURI().toString());
                     MediaPlayer mediaPlayer = new MediaPlayer(media);
                     mediaPlayer.volumeProperty().bind(config.getEffectsVolumeProperty());
-
-                    // loop
+                    // Loop when the video is over
                     mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
-
+                    // Creating mediaview, the graphic container which plays the mediaplayer's content
                     MediaView mediaView = new MediaView();
                     mediaView.setMediaPlayer(mediaPlayer);
-                    mediaView.setFitHeight(dimensions.getHeight() / nbLines);
-                    mediaView.setFitWidth(dimensions.getWidth() / nbColumns);
+                    mediaView.setFitHeight(dimensions.getHeight() / nbLines - GAP);
+                    mediaView.setFitWidth(dimensions.getWidth() / nbColumns - GAP);
                     mediaView.setEffect(greyscale);
 
+                    // Play only when the mouse or gaze is on the video, otherwise add a greyscale effect to the video
                     EventHandler<Event> enterEvent = (Event event) -> {
                         mediaPlayer.play();
                         mediaView.setEffect(null);
@@ -126,12 +129,15 @@ public class VideoGrid implements GameLifeCycle {
 
                     gameContext.getGazeDeviceManager().addEventFilter(mediaView);
 
+                    // Adding the video to a stack pane with a grey background, this helps centering the video inside
+                    // the grid square
                     StackPane pane = new StackPane();
                     pane.setAlignment(Pos.CENTER);// j == 0?Pos.BOTTOM_CENTER:j==nbLines-1?Pos.TOP_CENTER:Pos.CENTER);
-                    pane.getChildren().addAll(new Rectangle(dimensions.getWidth() / nbColumns,
-                            dimensions.getHeight() / nbLines, Color.grayRgb(50)), mediaView);
+                    pane.getChildren().addAll(new Rectangle(dimensions.getWidth() / nbColumns - GAP,
+                            dimensions.getHeight() / nbLines - GAP, Color.grayRgb(50)), mediaView);
                     grid.add(pane, i, j);
 
+                    // When a video is larger than 1920x1080, it won't work, and sends an error
                     mediaPlayer.setOnError(() -> {
                         Text errorText = new Text((String.format(
                                 translate.getTrad("File %s is not supported", config.getLanguage()), file.getName())));
