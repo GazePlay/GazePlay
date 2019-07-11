@@ -31,6 +31,7 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
+import net.gazeplay.games.labyrinth.Mouse;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -160,8 +161,24 @@ public class StatsDisplay {
 
         EventHandler<Event> openGazeMetricsEvent = createZoomInGazeMetricsEventHandler(gazeMetrics, root);
         gazeMetrics.addEventHandler(MouseEvent.MOUSE_CLICKED, openGazeMetricsEvent);
+//        EventHandler<MouseEvent> scanpathEvent = scanpathInteraction(gazeMetrics, root);
+//        gazeMetrics.addEventHandler(MouseEvent.MOUSE_MOVED, ...);
 
         return gazeMetrics;
+    }
+    private static EventHandler<Event> scanpathInteration(ImageView gazeMetrics, final Region root) {
+        return new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+                gazeMetrics.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+
+                /**
+                 *  complete the method ... 
+                  */
+
+            }
+
+        };
     }
 
     private static void resetToOriginalIndexInParent(Node node, int originalIndexInParent) {

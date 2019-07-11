@@ -5,9 +5,9 @@ Version : ${project.version} (${build.date})
 contact : didier.schwab@univ-grenoble-alpes.fr
 
 Ce logiciel est réalisé dans le cadre d'un projet de recherche
-au sein de l'équipe getalp (Groupe d'Étude en Traduction Automatique/Traitement
+au sein de l'équipe GETALP (Groupe d'Étude en Traduction Automatique/Traitement
 Automatisé des Langues et de la parole) du LIG (Laboratoire d'Informatique de Grenoble)
-dont les partenaire académiques sont l'Université Grenoble Alpes, le CNRS, Grenoble INP, l'INRIA.
+dont les partenaires académiques sont l'Université Grenoble Alpes, le CNRS, Grenoble INP, l'INRIA.
 
 Ce projet a été initié par Didier Schwab qui a été rejoint par de nombreuses personnes. Le dépôt
 github du projet peut permettre de constater leur contribution directe.
@@ -22,7 +22,7 @@ de leur formation :
 - en 2017-2018 : Rajaa BARHTAOUI (Univ. Grenoble Alpes), Amela FEJZA (Grenoble INP)
 - en 2018-2019 : Mélanie CARRIÈRE (Univ. Grenoble Alpes), Dumitru CORINI (Univ. Grenoble Alpes),
  Vincent GIVAUDAN (Univ.Grenoble Alpes), Thomas MEDARD (Univ. Grenoble Alpes), Sébastien RIOU (Univ. Grenoble Alpes)
-- en 2019-2020 : Sannara ek (Univ. Grenoble Alpes), Teo Blachère (Univ. Grenoble Alpes),
+- en 2019-2020 : Sannara Ek (Univ. Grenoble Alpes), Teo Blachère (Univ. Grenoble Alpes),
 Johana Marku (Grenoble INP), Peter Bardawil (Grenoble INP), Wafaa El Husseini (Grenoble INP),
  TRUONG Hai Long (Univ. Grenoble Alpes)
 
@@ -47,16 +47,17 @@ Albanais (Johana Marku)
 Espagnol (Nancy Rodriguez, Université de Montpellier)
 Portugais (Paulo Da Costa)
 Arabe (Riadh Benhassen, Fatma Ghorbel Hajjem, El Husseini Wafaa)
-Chinese ()
+Chinois ()
 Croate (Kristina Marjanović)
 Grec (MK Prossopsis Ltd)
 Italien (Giuseppe Melfi)
 Japonais ()
 Hollandais (Leen Vangroenweghe)
 Russe (Anna Berkutova)
-Malais (LIM Lian Tze et Nur HUSSEIN)
+Malais (LIM Lian Tze, Nur HUSSEIN)
 Indonésien (Awatrawika Dharmmesti ATMYANEGORO)
 Vietnamien ()
+
 
  -------------------------------------------------------------------
 
