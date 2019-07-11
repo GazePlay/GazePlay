@@ -139,7 +139,7 @@ public class FixationSequence {
             if (distance <= tolerance) {
                 // add to the accepted vertex the duration of the reduced vertices -- to adapt the radius
                 pivotVertex.setGazeDuration(pivotVertex.getGazeDuration() + allPoints.get(i).getGazeDuration());
-                continue;
+                //continue;
             }
 
             else {
