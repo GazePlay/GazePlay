@@ -161,11 +161,12 @@ public class StatsDisplay {
 
         EventHandler<Event> openGazeMetricsEvent = createZoomInGazeMetricsEventHandler(gazeMetrics, root);
         gazeMetrics.addEventHandler(MouseEvent.MOUSE_CLICKED, openGazeMetricsEvent);
-//        EventHandler<MouseEvent> scanpathEvent = scanpathInteraction(gazeMetrics, root);
-//        gazeMetrics.addEventHandler(MouseEvent.MOUSE_MOVED, ...);
+        // EventHandler<MouseEvent> scanpathEvent = scanpathInteraction(gazeMetrics, root);
+        // gazeMetrics.addEventHandler(MouseEvent.MOUSE_MOVED, ...);
 
         return gazeMetrics;
     }
+
     private static EventHandler<Event> scanpathInteration(ImageView gazeMetrics, final Region root) {
         return new EventHandler<Event>() {
             @Override
@@ -173,8 +174,8 @@ public class StatsDisplay {
                 gazeMetrics.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
                 /**
-                 *  complete the method ... 
-                  */
+                 * complete the method ...
+                 */
 
             }
 
