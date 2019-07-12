@@ -71,6 +71,7 @@ public class GooseGame implements GameLifeCycle {
     private Square firstSquare;
 
     private ImageView turnIndicator;
+    private Timeline showPlayingBiboule;
 
     private Random random;
     private AudioClip mvmt;
@@ -168,6 +169,33 @@ public class GooseGame implements GameLifeCycle {
         turnIndicator.setFitHeight(dimensions.getWidth() / 12);
         turnIndicator.setFitWidth(dimensions.getWidth() / 12);
 
+        showPlayingBiboule = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(turnIndicator.layoutXProperty(),
+                                (dimensions.getWidth() / 2) - turnIndicator.getFitWidth() / 2),
+                        new KeyValue(turnIndicator.layoutYProperty(),
+                                (dimensions.getHeight() / 2) - turnIndicator.getFitHeight() / 2),
+                        new KeyValue(turnIndicator.scaleXProperty(), 2),
+                        new KeyValue(turnIndicator.scaleYProperty(), 2),
+                        new KeyValue(turnIndicator.opacityProperty(), 0)),
+                new KeyFrame(Duration.seconds(2),
+                        new KeyValue(turnIndicator.opacityProperty(), 1, Interpolator.EASE_OUT),
+                        new KeyValue(turnIndicator.layoutXProperty(),
+                                (dimensions.getWidth() / 2) - turnIndicator.getFitWidth() / 2),
+                        new KeyValue(turnIndicator.layoutYProperty(),
+                                (dimensions.getHeight() / 2) - turnIndicator.getFitHeight() / 2),
+                        new KeyValue(turnIndicator.scaleXProperty(), 2),
+                        new KeyValue(turnIndicator.scaleYProperty(), 2)),
+                new KeyFrame(Duration.seconds(3),
+                        new KeyValue(turnIndicator.layoutXProperty(),
+                                11 * dimensions.getWidth() / 12 - dimensions.getWidth() / 25),
+                        new KeyValue(turnIndicator.layoutYProperty(), dimensions.getWidth() / 25),
+                        new KeyValue(turnIndicator.scaleXProperty(), 1),
+                        new KeyValue(turnIndicator.scaleYProperty(), 1)));
+
+        showPlayingBiboule.setOnFinished(
+                e -> rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollButton.getImage().getFitHeight()));
+
         // The dice are set in a grid pane, one next to the other
         diceDisplay = new GridPane();
         diceDisplay.setHgap(dimensions.getWidth() / 20);
@@ -246,19 +274,18 @@ public class GooseGame implements GameLifeCycle {
     public void launch() {
         background = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         background.setFill(Color.GRAY);
-        turnIndicator.setX(11 * dimensions.getWidth() / 12 - dimensions.getWidth() / 25);
-        turnIndicator.setY(dimensions.getWidth() / 25);
 
-        gameContext.getChildren().addAll(background, boardImage, turnIndicator);
+        gameContext.getChildren().addAll(background, boardImage);
 
         for (Pawn pawn : pawns) {
             pawn.reset(firstSquare);
             gameContext.getChildren().add(pawn.getPawnDisplay());
         }
-        currentPawn = 0;
+        currentPawn = nbPlayers - 1;
 
-        gameContext.getChildren().addAll(diceDisplay, rollButton, messages);
+        gameContext.getChildren().addAll(diceDisplay, rollButton, turnIndicator, messages);
         stats.notifyNewRoundReady();
+        endOfTurn();
     }
 
     /***
@@ -294,8 +321,8 @@ public class GooseGame implements GameLifeCycle {
     public void endOfTurn() {
         if (isGameStuck()) {
             showMessage("STUCK");
+            launch();
         } else {
-            rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollButton.getImage().getFitHeight());
             Pawn pawn;
             do {
                 currentPawn = (currentPawn + 1) % nbPlayers;
@@ -308,6 +335,7 @@ public class GooseGame implements GameLifeCycle {
             } while (pawn.isSleeping() || pawn.isStuck());
 
             turnIndicator.setImage(new Image(String.format(BIBOULEPATH, bibouleColors.get(currentPawn))));
+            showPlayingBiboule.playFromStart();
             showMessage("Player %d's turn", pawn.getNumber());
         }
     }
