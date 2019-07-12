@@ -31,6 +31,11 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Welcome to the Biboule Jump source code. I would advise you to stay away from it, I myself, the creator would much
+ * rather do literally anything else than get back into this mess. But if you are courageous (or stupid?) enough, and
+ * still want to tinker with the abominable physics involved, then please come on in, I applaud your bravery.
+ */
 @Slf4j
 public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
@@ -173,6 +178,9 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         }
     }
 
+    /**
+     * Sets up a new game by emptying out all the layers, and setting everything back to their initial values
+     */
     @Override
     public void launch() {
 
@@ -210,11 +218,25 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     }
 
+    /**
+     * Caps the game speed, so it's not too fast
+     * 
+     * @return capped game speed
+     */
     private double getGameSpeed() {
         double speed = config.getSpeedEffects();
         return speed <= 1.0 ? 1.0 : speed;
     }
 
+    /**
+     * It uses a dat file in the stat folder to save the highscores, the top 3 at the moment even though only the
+     * highest score is displayed, a leaderboard system could be implemented. It reads the top 3 from the file, inserts
+     * the new score, sorts it, and then takes the new top 3, and writes it in the file.
+     * 
+     * @param score
+     *            new score
+     * @return the highest score
+     */
     private int getsetHighscore(int score) {
 
         File f = new File(Utils.getUserStatsFolder(config.getUserName()) + "/biboule-jump/highscores.dat");
@@ -248,6 +270,9 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         return score;
     }
 
+    /**
+     * Upon the end of a game, a menu is displayed with the highscore and a restart button
+     */
     private void death() {
         this.stop();
         // Show end menu (restart, quit, score)
@@ -267,6 +292,14 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         stats.addRoundDuration();
     }
 
+    /**
+     * A bouncepad is just a smaller platform with a higher bounce factor set on top of another platform
+     * 
+     * @param platformX
+     *            The other platform X position
+     * @param platformY
+     *            The other platform Y position
+     */
     private void createBouncepad(double platformX, double platformY) {
         Platform b = new Platform(
                 platformX + randomGenerator.nextInt((int) (platformWidth * 4 / 5)) - platformWidth / 2,
@@ -276,6 +309,16 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         platforms.add(b);
     }
 
+    /**
+     * Creates a platform (cloud)
+     * 
+     * @param centerX
+     *            The center position of the platform, the new X position must be calculated accordingly
+     * @param centerY
+     *            Same as X
+     * @param moving
+     *            moving platform or not
+     */
     private void createPlatform(double centerX, double centerY, boolean moving) {
         Platform p;
         if (!moving) {
@@ -291,6 +334,13 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         backgroundLayer.getChildren().add(p);
     }
 
+    /**
+     * Generates platforms from bottom to top, and outside the window to anticipate scrolling. The platforms are
+     * separated so they are not too far and reachable, and not too close and overlapping. At random times, a moving
+     * platform is created, a bouncepad can also added to the platform
+     * 
+     * @param bottomLimit
+     */
     private void generatePlatforms(double bottomLimit) {
         double top = -dimensions.getHeight();
         double bottom = bottomLimit;
@@ -315,6 +365,13 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         }
     }
 
+    /**
+     * Takes a list of platforms, and pushes them down to create the scrolling effect If the platform has left the
+     * window, it is removed
+     * 
+     * @param rects
+     * @param difference
+     */
     private void scrollList(ArrayList<Platform> rects, double difference) {
         Iterator<Platform> rectIter = rects.iterator();
         while (rectIter.hasNext()) {
@@ -327,6 +384,14 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         }
     }
 
+    /**
+     * Main game loop This is called over and over, anytime it can be called, but the time between every call is not
+     * equal so we need to compute the elapsed time since the last call, annd move objects on screen according to that
+     * time in order to have smooth looking and consistent movement.
+     * 
+     * @param now
+     *            Time when handle is called
+     */
     @Override
     public void handle(long now) {
 
@@ -398,6 +463,11 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         // onScreenText.setText(logs);
     }
 
+    /**
+     * Updates the score according to the pixel difference scrolled upwards by the player
+     * 
+     * @param difference
+     */
     private void updateScore(double difference) {
         int inc = (int) (difference / dimensions.getHeight() * 100);
         score += inc;
