@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -12,27 +11,16 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Label;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
-import net.gazeplay.games.labyrinth.Mouse;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -161,25 +149,8 @@ public class StatsDisplay {
 
         EventHandler<Event> openGazeMetricsEvent = createZoomInGazeMetricsEventHandler(gazeMetrics, root);
         gazeMetrics.addEventHandler(MouseEvent.MOUSE_CLICKED, openGazeMetricsEvent);
-        // EventHandler<MouseEvent> scanpathEvent = scanpathInteraction(gazeMetrics, root);
-        // gazeMetrics.addEventHandler(MouseEvent.MOUSE_MOVED, ...);
 
         return gazeMetrics;
-    }
-
-    private static EventHandler<Event> scanpathInteration(ImageView gazeMetrics, final Region root) {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                gazeMetrics.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
-
-                /**
-                 * complete the method ...
-                 */
-
-            }
-
-        };
     }
 
     private static void resetToOriginalIndexInParent(Node node, int originalIndexInParent) {
@@ -231,7 +202,7 @@ public class StatsDisplay {
         };
     }
 
-    private static EventHandler<Event> createZoomOuGazeMetricsEventHandler(ImageView gazeMetrics, final Region root,
+    private static EventHandler<Event> createZoomOutGazeMetricsEventHandler(ImageView gazeMetrics, final Region root,
             int originalIndexInParent) {
         return new EventHandler<Event>() {
             @Override
@@ -259,7 +230,7 @@ public class StatsDisplay {
                 zoomInAndCenter(gazeMetrics, gazeMetrics.getFitWidth(), gazeMetrics.getFitHeight(), true);
 
                 gazeMetrics.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOuGazeMetricsEventHandler(gazeMetrics, root, originalIndexInParent));
+                        createZoomOutGazeMetricsEventHandler(gazeMetrics, root, originalIndexInParent));
             }
         };
     }
@@ -272,6 +243,8 @@ public class StatsDisplay {
     }
 
     private static void zoomInAndCenter(Node node, double initialWidth, double initialHeight, boolean preserveRatio) {
+
+        // if(Configuration.getInstance().isFixationSequenceDisabled()) {
         Parent parent = node.getParent();
 
         node.toFront();
@@ -297,6 +270,32 @@ public class StatsDisplay {
 
         node.setTranslateX(translateX);
         node.setTranslateY(translateY);
+        // }
+        //
+        // else{
+        //
+        // if(node.getParent() instanceof VBox){
+        // VBox n1 = (VBox) node.getParent();
+        // if(n1.getParent() instanceof StackPane){
+        // StackPane n2 = (StackPane) n1.getParent();
+        // if(n2.getParent() instanceof BorderPane){
+        // BorderPane root = (BorderPane) n2.getParent();
+        // ImageView scanpath = (ImageView) node;
+        // scanpath.setFitHeight(scanpath.getImage().getHeight());
+        // scanpath.setFitWidth(scanpath.getImage().getWidth());
+        //
+        // StackPane scanPath = new StackPane(scanpath);
+        // scanPath.setAlignment(Pos.CENTER);
+        // scanPath.setPrefHeight(root.getHeight());
+        // scanPath.setPrefWidth(root.getWidth());
+        // //root.getChildren().add(scanPath);
+        // root.setCenter(scanPath);
+        // scanPath.toFront();
+        // }
+        // }
+        // }
+        // }
+
     }
 
     public static String convert(long totalTime) {

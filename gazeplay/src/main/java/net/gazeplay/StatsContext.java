@@ -26,6 +26,7 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
+import net.gazeplay.games.labyrinth.Mouse;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -235,6 +236,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         centerPane.getChildren().add(gazeMetrics);
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
+
         EventHandler<Event> AOIEvent = e -> {
 
             AreaOfInterest areaOfInterest = AreaOfInterest.newInstance(gazePlay, stats);
@@ -244,11 +246,22 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         HomeButton aoiButton = new HomeButton("data/common/images/aoibtn.png");
         aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
 
+        EventHandler<Event> viewScanpath = s -> {
+            /**
+             * similar to AOIEvent ...
+             */
+        };
+
+        HomeButton scanpathButton = new HomeButton("data/common/images/scanpathButton.png");
+        scanpathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanpath);
+
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
         if (config.isAreaOfInterestEnabled())
             controlButtonPane.getChildren().add(aoiButton);
+        if (!config.isFixationSequenceDisabled())
+            controlButtonPane.getChildren().add(scanpathButton);
         controlButtonPane.getChildren().add(homeButton);
 
         if (continueButton != null) {
