@@ -131,12 +131,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         restartButton.setImage(restartImage);
         restartButton.setLayoutX(dimensions.getWidth() / 2 - dimensions.getHeight() / 12);
         restartButton.setLayoutY(dimensions.getHeight() / 2 - dimensions.getHeight() / 12);
-        restartButton.assignIndicator(new EventHandler<Event>() {
-            @Override
-            public void handle(Event event) {
-                launch();
-            }
-        }, fixationLength);
+        restartButton.assignIndicator(event -> launch(), fixationLength);
 
         finalScoreText = new Text(0, dimensions.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);

@@ -28,6 +28,7 @@ import net.gazeplay.games.divisor.DivisorStats;
 import net.gazeplay.games.draw.DrawApplication;
 import net.gazeplay.games.drawonvideo.VideoPlayerWithLiveFeedbackApp;
 import net.gazeplay.games.goosegame.GooseGame;
+import net.gazeplay.games.horses.Horses;
 import net.gazeplay.games.labyrinth.Labyrinth;
 import net.gazeplay.games.labyrinth.LabyrinthStats;
 import net.gazeplay.games.literacy.Letters;
@@ -1298,6 +1299,33 @@ public class DefaultGamesLocator implements GamesLocator {
                         return new VideoGrid(gameContext, stats, gameVariant.getWidth(), gameVariant.getHeight());
                     }
                 }));
+
+        result.add(new GameSpec(
+                new GameSummary("Horses", "data/Thumbnails/goosegame.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.IntGameVariant(2, "2 players"),
+                                new GameSpec.IntGameVariant(3, "3 players"),
+                                new GameSpec.IntGameVariant(4, "4 players")
+
+                        ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+            @Override
+            public Stats createNewStats(Scene scene) {
+                return new Stats(scene, "horses");
+            }
+
+            @Override
+            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                                               Stats stats) {
+                return new Horses(gameContext, stats, gameVariant.getNumber());
+            }
+
+        }));
 
         log.info("Games found : {}", result.size());
 
