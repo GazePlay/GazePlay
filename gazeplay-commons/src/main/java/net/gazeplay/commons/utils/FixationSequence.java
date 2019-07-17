@@ -20,6 +20,7 @@ import java.lang.Math;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import sun.awt.image.ImageWatched;
 
 @Slf4j
 public class FixationSequence {
@@ -29,8 +30,6 @@ public class FixationSequence {
      */
     @Getter
     private WritableImage image;
-    @Getter
-    private static LinkedList<FixationPoint> sequence = new LinkedList<>();
 
     private static Font sanSerifFont = new Font("SanSerif", 10);
 
@@ -38,6 +37,7 @@ public class FixationSequence {
 
         this.image = new WritableImage(width, height);
         Canvas canvas = new Canvas(width, height);
+
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // draw the line of the sequence
@@ -70,7 +70,7 @@ public class FixationSequence {
         gc.setStroke(Color.RED);
         int x = fixSeq.get(0).getY();
         int y = fixSeq.get(0).getX();
-        this.sequence.add(fixSeq.get(0));
+
         int radius = 45; // central fixation bias . Read more about it at
         // https://imotions.com/blog/7-terms-metrics-eye-tracking/
 
@@ -98,7 +98,6 @@ public class FixationSequence {
                 gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
                 gc.setFill(Color.BLACK);
                 gc.fillText(Integer.toString(label_count), x, y, 80);
-                this.sequence.add(fixSeq.get(j));
 
             } else
                 continue;
@@ -123,7 +122,16 @@ public class FixationSequence {
             throw new RuntimeException(e);
         }
     }
+
     // Vertex Cluster Reduction -- successive vertices that are clustered too closely are reduced to a single vertex
+    public static LinkedList<FixationPoint> getFixationSequence(LinkedList<FixationPoint> sequence) {
+        for (int i = 1; i < sequence.size(); i++) {
+            if (sequence.get(i).getGazeDuration() <= 20) {
+                sequence.remove(i);
+            }
+        }
+        return sequence;
+    }
 
     public static LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
 
@@ -142,9 +150,7 @@ public class FixationSequence {
                 // add to the accepted vertex the duration of the reduced vertices -- to adapt the radius
                 pivotVertex.setGazeDuration(pivotVertex.getGazeDuration() + allPoints.get(i).getGazeDuration());
                 // continue;
-            }
-
-            else {
+            } else {
                 reducedPolyline.add(allPoints.get(i));
 
                 accepted = i;

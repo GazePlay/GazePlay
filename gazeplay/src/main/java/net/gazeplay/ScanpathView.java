@@ -37,13 +37,14 @@ public class ScanpathView extends GraphicalContext<Pane> {
         SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
         this.scanPathView = new ImageView(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString()));
         root.getChildren().add(scanPathView);
-        this.points = FixationSequence.getSequence();
+        this.points = FixationSequence
+                .getFixationSequence(FixationSequence.vertexReduction(stats.getFixationSequence(), 15));
 
         List<Ellipse> Points = new LinkedList<Ellipse>();
         for (FixationPoint p : this.points) {
             Ellipse newPoint = new Ellipse();
             // newPoint.setFill(Color.RED);
-            // newPoint.setOpacity(0.4);
+            newPoint.setOpacity(0.0);
             // newPoint.setStroke(Color.BLACK);
             // newPoint.setStrokeWidth(1);
 
