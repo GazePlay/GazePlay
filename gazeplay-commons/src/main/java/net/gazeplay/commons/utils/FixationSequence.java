@@ -30,14 +30,13 @@ public class FixationSequence {
     @Getter
     private WritableImage image;
     @Getter
-    private static LinkedList<FixationPoint> sequence;
+    private static LinkedList<FixationPoint> sequence = new LinkedList<>();
 
     private static Font sanSerifFont = new Font("SanSerif", 10);
 
     public FixationSequence(int width, int height, LinkedList<FixationPoint> fixSeq) {
 
         this.image = new WritableImage(width, height);
-        this.sequence = new LinkedList<>();
         Canvas canvas = new Canvas(width, height);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
