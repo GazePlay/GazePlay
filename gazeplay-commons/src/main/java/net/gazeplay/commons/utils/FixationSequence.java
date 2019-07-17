@@ -29,13 +29,15 @@ public class FixationSequence {
      */
     @Getter
     private WritableImage image;
+    @Getter
+    private static LinkedList<FixationPoint> sequence;
 
     private static Font sanSerifFont = new Font("SanSerif", 10);
 
     public FixationSequence(int width, int height, LinkedList<FixationPoint> fixSeq) {
 
         this.image = new WritableImage(width, height);
-
+        this.sequence = new LinkedList<>();
         Canvas canvas = new Canvas(width, height);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -69,7 +71,7 @@ public class FixationSequence {
         gc.setStroke(Color.RED);
         int x = fixSeq.get(0).getY();
         int y = fixSeq.get(0).getX();
-
+        this.sequence.add(fixSeq.get(0));
         int radius = 45; // central fixation bias . Read more about it at
         // https://imotions.com/blog/7-terms-metrics-eye-tracking/
 
@@ -97,6 +99,7 @@ public class FixationSequence {
                 gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
                 gc.setFill(Color.BLACK);
                 gc.fillText(Integer.toString(label_count), x, y, 80);
+                this.sequence.add(fixSeq.get(j));
 
             } else
                 continue;
@@ -123,7 +126,7 @@ public class FixationSequence {
     }
     // Vertex Cluster Reduction -- successive vertices that are clustered too closely are reduced to a single vertex
 
-    public LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
+    public static LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
 
         int accepted = 0;
         double distance = 0.0;

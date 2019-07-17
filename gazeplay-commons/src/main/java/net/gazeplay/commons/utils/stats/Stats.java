@@ -35,7 +35,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,7 +85,7 @@ public class Stats implements GazeMotionListener {
     @Setter
     private long lastGazeTime;
     @Getter
-    private java.util.LinkedList<net.gazeplay.commons.utils.FixationPoint> fixationSequence;
+    private LinkedList<FixationPoint> fixationSequence;
     @Getter
     private SavedStatsInfo savedStatsInfo;
     private WritableImage gameScreenShot;
@@ -360,6 +359,7 @@ public class Stats implements GazeMotionListener {
         if (this.fixationSequence != null) {
             FixationSequence scanpath = new FixationSequence((int) gameContextScene.getWidth(),
                     (int) gameContextScene.getHeight(), fixationSequence);
+
             BufferedImage seqImage = SwingFXUtils.fromFXImage(scanpath.getImage(), null);
             g.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
         }

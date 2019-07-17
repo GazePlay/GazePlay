@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import com.automation.remarks.video.recorder.VideoConfiguration;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

@@ -161,6 +161,10 @@ public class GazePlay extends Application {
         areaOfInterest.setUpOnStage(primaryScene);
     }
 
+    public void onDisplayScanpath(ScanpathView scanPath) {
+        scanPath.setUpOnStage(primaryScene);
+    }
+
     public void onDisplayConfigurationManagement(ConfigurationContext configurationContext) {
         configurationContext.setUpOnStage(primaryScene);
     }
