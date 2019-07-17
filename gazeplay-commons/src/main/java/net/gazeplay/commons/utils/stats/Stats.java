@@ -35,7 +35,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,7 +85,7 @@ public class Stats implements GazeMotionListener {
     @Setter
     private long lastGazeTime;
     @Getter
-    private java.util.LinkedList<net.gazeplay.commons.utils.FixationPoint> fixationSequence;
+    private LinkedList<FixationPoint> fixationSequence;
     @Getter
     private SavedStatsInfo savedStatsInfo;
     private WritableImage gameScreenShot;
@@ -358,9 +357,10 @@ public class Stats implements GazeMotionListener {
         }
 
         if (this.fixationSequence != null) {
-            FixationSequence sequence = new FixationSequence((int) gameContextScene.getWidth(),
+            FixationSequence scanpath = new FixationSequence((int) gameContextScene.getWidth(),
                     (int) gameContextScene.getHeight(), fixationSequence);
-            BufferedImage seqImage = SwingFXUtils.fromFXImage(sequence.getImage(), null);
+
+            BufferedImage seqImage = SwingFXUtils.fromFXImage(scanpath.getImage(), null);
             g.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
         }
 
@@ -483,10 +483,10 @@ public class Stats implements GazeMotionListener {
 
         // FixationSequence sequence = new FixationSequence((int) (gameContextScene.getWidth() / heatMapPixelSize),
         // (int) (gameContextScene.getHeight() / heatMapPixelSize), fixationSequence);
-        FixationSequence sequence = new FixationSequence((int) gameContextScene.getWidth(),
+        FixationSequence scanpath = new FixationSequence((int) gameContextScene.getWidth(),
                 (int) gameContextScene.getHeight(), fixationSequence);
         try {
-            sequence.saveToFile(outputPngFile);
+            scanpath.saveToFile(outputPngFile);
         } catch (Exception e) {
             log.error("Exception", e);
         }
@@ -516,7 +516,8 @@ public class Stats implements GazeMotionListener {
         if (fixationSequence.size() > 1
                 && (newGazePoint.getX() == fixationSequence.get(fixationSequence.size() - 1).getX())
                 && (newGazePoint.getY() == fixationSequence.get(fixationSequence.size() - 1).getY())) {
-            fixationSequence.get(fixationSequence.size() - 1).setGazeDuration(gazeDuration);
+            long gDuration = fixationSequence.get(fixationSequence.size() - 1).getGazeDuration();
+            fixationSequence.get(fixationSequence.size() - 1).setGazeDuration(gazeDuration + gDuration); //
         } else { // else add the new point in the list
             newGazePoint.setGazeDuration(gazeDuration);
             fixationSequence.add(newGazePoint);
