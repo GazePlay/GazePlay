@@ -20,6 +20,7 @@ import java.lang.Math;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import sun.awt.image.ImageWatched;
 
 @Slf4j
 public class FixationSequence {
@@ -35,8 +36,8 @@ public class FixationSequence {
     public FixationSequence(int width, int height, LinkedList<FixationPoint> fixSeq) {
 
         this.image = new WritableImage(width, height);
-
         Canvas canvas = new Canvas(width, height);
+
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // draw the line of the sequence
@@ -121,9 +122,18 @@ public class FixationSequence {
             throw new RuntimeException(e);
         }
     }
-    // Vertex Cluster Reduction -- successive vertices that are clustered too closely are reduced to a single vertex
 
-    public LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
+    // Vertex Cluster Reduction -- successive vertices that are clustered too closely are reduced to a single vertex
+    public static LinkedList<FixationPoint> getFixationSequence(LinkedList<FixationPoint> sequence) {
+        for (int i = 1; i < sequence.size(); i++) {
+            if (sequence.get(i).getGazeDuration() <= 20) {
+                sequence.remove(i);
+            }
+        }
+        return sequence;
+    }
+
+    public static LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
 
         int accepted = 0;
         double distance = 0.0;
@@ -139,10 +149,8 @@ public class FixationSequence {
             if (distance <= tolerance) {
                 // add to the accepted vertex the duration of the reduced vertices -- to adapt the radius
                 pivotVertex.setGazeDuration(pivotVertex.getGazeDuration() + allPoints.get(i).getGazeDuration());
-                continue;
-            }
-
-            else {
+                // continue;
+            } else {
                 reducedPolyline.add(allPoints.get(i));
 
                 accepted = i;
