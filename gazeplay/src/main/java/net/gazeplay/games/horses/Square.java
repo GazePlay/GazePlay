@@ -15,7 +15,7 @@ public class Square {
     @Getter
     private Position pawnPosition;
     protected Pawn stationnedPawn;
-    private Horses game;
+    protected Horses game;
 
     public Square(Position pawnPosition, Horses game) {
         this.pawnPosition = pawnPosition;
@@ -23,26 +23,32 @@ public class Square {
         stationnedPawn = null;
     }
 
-    protected Square getNextSquare(Pawn pawn){
+    protected Square getNextSquare(Pawn pawn) {
         return nextSquare;
     }
 
-    public void pawnLands(Pawn pawn){
-        if(stationnedPawn != null && stationnedPawn != pawn){
+    protected Square getPreviousSquare(Pawn pawn) {
+        return previousSquare;
+    }
+
+    public void pawnLands(Pawn pawn) {
+        if (stationnedPawn != null && stationnedPawn != pawn && stationnedPawn.getTeam() != pawn.getTeam()) {
             stationnedPawn.moveBackToStart();
+        } else if (stationnedPawn != null) {
+            pawn.moveToSquare(getPreviousSquare());
         }
         stationnedPawn = pawn;
         game.endOfTurn();
     }
 
     public Square getDestination(Pawn pawn, int nbMovementsLeft, int nbMovementsTotal) {
-        if(nbMovementsLeft == nbMovementsTotal){
+        if (nbMovementsLeft == nbMovementsTotal) {
             stationnedPawn = null;
         }
-        if(nbMovementsLeft > 0){
+        if ((nbMovementsLeft > 0 && stationnedPawn == null) || (nbMovementsLeft < 0 && stationnedPawn != null)) {
             return getNextSquare(pawn);
-        }else {
-            return previousSquare;
+        } else {
+            return getPreviousSquare(pawn);
         }
     }
 
@@ -50,7 +56,7 @@ public class Square {
         return true;
     }
 
-    public boolean isOccupied(){
+    public boolean isOccupied() {
         return stationnedPawn != null;
     }
 }

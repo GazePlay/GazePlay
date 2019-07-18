@@ -1308,24 +1308,23 @@ public class DefaultGamesLocator implements GamesLocator {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
 
                                 new GameSpec.IntGameVariant(2, "2 players"),
-                                new GameSpec.IntGameVariant(3, "3 players"),
-                                new GameSpec.IntGameVariant(4, "4 players")
+                                new GameSpec.IntGameVariant(3, "3 players"), new GameSpec.IntGameVariant(4, "4 players")
 
-                        ));
+                ));
                     }
                 }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
-            @Override
-            public Stats createNewStats(Scene scene) {
-                return new Stats(scene, "horses");
-            }
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "horses");
+                    }
 
-            @Override
-            public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
-                                               Stats stats) {
-                return new Horses(gameContext, stats, gameVariant.getNumber());
-            }
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
+                        return new Horses(gameContext, stats, gameVariant.getNumber());
+                    }
 
-        }));
+                }));
 
         log.info("Games found : {}", result.size());
 

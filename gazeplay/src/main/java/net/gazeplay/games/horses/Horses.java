@@ -37,7 +37,10 @@ public class Horses implements GameLifeCycle {
 
     private static final String BIBOULEPATH = "data/horses/biboules/%s.png";
     private static final int NBPAWNS = 4;
-    public enum TEAMS {BLUE, RED, GREEN, YELLOW}
+
+    public enum TEAMS {
+        BLUE, RED, GREEN, YELLOW
+    }
 
     private final GameContext gameContext;
     private final Stats stats;
@@ -73,17 +76,17 @@ public class Horses implements GameLifeCycle {
 
         boardImage = new ImageView("data/horses/horsiesboard.png");
         double imageSize = Math.min(dimensions.getHeight(), dimensions.getWidth());
-        gridElementSize = imageSize/15;
-        double xOffset = (dimensions.getWidth() - imageSize)/2;
-        double yOffset = (dimensions.getHeight() - imageSize)/2;
+        gridElementSize = imageSize / 15;
+        double xOffset = (dimensions.getWidth() - imageSize) / 2;
+        double yOffset = (dimensions.getHeight() - imageSize) / 2;
         boardImage.setFitHeight(imageSize);
         boardImage.setFitWidth(imageSize);
         boardImage.setX(xOffset);
         boardImage.setY(yOffset);
         gameContext.getChildren().add(boardImage);
 
-        die = new DiceRoller((float)gridElementSize/2);
-        double diePositionInImage = (14 * imageSize)/30;
+        die = new DiceRoller((float) gridElementSize / 2);
+        double diePositionInImage = (14 * imageSize) / 30;
         StackPane dieContainer = new StackPane();
         dieContainer.getChildren().add(die);
         dieContainer.setLayoutX(xOffset + diePositionInImage);
@@ -109,15 +112,16 @@ public class Horses implements GameLifeCycle {
         nbTeamsChosen = 0;
 
         HashMap<TEAMS, double[]> teamChooserPositions = new HashMap<>();
-        teamChooserPositions.put(TEAMS.YELLOW, new double[]{xOffset, yOffset});
-        teamChooserPositions.put(TEAMS.BLUE, new double[]{xOffset + 9*gridElementSize, yOffset});
-        teamChooserPositions.put(TEAMS.RED, new double[]{xOffset + 9*gridElementSize, yOffset + 9*gridElementSize});
-        teamChooserPositions.put(TEAMS.GREEN, new double[]{xOffset, yOffset + 9*gridElementSize});
+        teamChooserPositions.put(TEAMS.YELLOW, new double[] { xOffset, yOffset });
+        teamChooserPositions.put(TEAMS.BLUE, new double[] { xOffset + 9 * gridElementSize, yOffset });
+        teamChooserPositions.put(TEAMS.RED,
+                new double[] { xOffset + 9 * gridElementSize, yOffset + 9 * gridElementSize });
+        teamChooserPositions.put(TEAMS.GREEN, new double[] { xOffset, yOffset + 9 * gridElementSize });
 
         JsonParser parser = new JsonParser();
         JsonObject positions = null;
         try {
-            positions = (JsonObject)parser.parse(new InputStreamReader(
+            positions = (JsonObject) parser.parse(new InputStreamReader(
                     Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("data/horses/positions.json")),
                     "utf-8"));
         } catch (UnsupportedEncodingException e) {
@@ -127,69 +131,74 @@ public class Horses implements GameLifeCycle {
         double scaleRatio = imageSize / boardImage.getImage().getHeight();
         Square loopBack = null;
         Square previousCommonSquare = null;
-        for(TEAMS team: TEAMS.values()){
-            JsonObject teamObject = (JsonObject)positions.get(team.name());
-            JsonArray finalPath = (JsonArray)teamObject.get("finalPath");
-            JsonArray commonPath = (JsonArray)teamObject.get("commonPath");
-            JsonArray spawnPointsArray = (JsonArray)teamObject.get("spawnPoints");
+        Square centerSquare = new FinishSquare(new Position(xOffset + imageSize / 2, yOffset + imageSize / 2), this);
+        for (TEAMS team : TEAMS.values()) {
+            JsonObject teamObject = (JsonObject) positions.get(team.name());
+            JsonArray finalPath = (JsonArray) teamObject.get("finalPath");
+            JsonArray commonPath = (JsonArray) teamObject.get("commonPath");
+            JsonArray spawnPointsArray = (JsonArray) teamObject.get("spawnPoints");
 
             Square firstFromFinal = null;
             Square previousSquare = null;
-            for(int i = 0; i < finalPath.size(); i++){
-                JsonObject object = (JsonObject)finalPath.get(i);
+            for (int i = 0; i < finalPath.size(); i++) {
+                JsonObject object = (JsonObject) finalPath.get(i);
                 Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio,
                         yOffset + object.get("y").getAsDouble() * scaleRatio);
                 FinalPathSquare square = new FinalPathSquare(position, this, i + 1);
                 square.setPreviousSquare(previousSquare);
-                if(previousSquare != null){
+                if (previousSquare != null) {
                     previousSquare.setNextSquare(square);
                 }
-                if(i == 0){
+                if (i == 0) {
                     firstFromFinal = square;
                 }
                 previousSquare = square;
             }
+            previousSquare.setNextSquare(centerSquare);
 
-            for(int i = 0; i < commonPath.size(); i++){
-                JsonObject object = (JsonObject)commonPath.get(i);
+            for (int i = 0; i < commonPath.size(); i++) {
+                JsonObject object = (JsonObject) commonPath.get(i);
                 Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio,
                         yOffset + object.get("y").getAsDouble() * scaleRatio);
                 Square square = null;
-                if(i == 0){
+                if (i == 0) {
                     square = new FinalPathStart(position, this, team, firstFromFinal);
                     firstFromFinal.setPreviousSquare(square);
-                }else{
+                } else if (i == 1) {
+                    square = new StartSquare(position, this, team);
+                } else {
                     square = new Square(position, this);
                 }
 
-                if(previousCommonSquare == null){
+                if (previousCommonSquare == null) {
                     loopBack = square;
-                }else{
+                } else {
                     previousCommonSquare.setNextSquare(square);
                     square.setPreviousSquare(previousCommonSquare);
                 }
 
-                if(i == 1){
+                if (i == 1) {
                     startSquares.put(team, square);
                 }
-                if(team == TEAMS.YELLOW && i == commonPath.size() - 1){
+                if (team == TEAMS.YELLOW && i == commonPath.size() - 1) {
                     square.setNextSquare(loopBack);
                 }
                 previousCommonSquare = square;
             }
 
             ArrayList<Position> spawnPositionsList = new ArrayList<>();
-            for(int i = 0; i < NBPAWNS; i++){
-                JsonObject object = (JsonObject)spawnPointsArray.get(i);
-                Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio - gridElementSize/2,
-                        yOffset + object.get("y").getAsDouble() * scaleRatio - gridElementSize/2);
+            for (int i = 0; i < NBPAWNS; i++) {
+                JsonObject object = (JsonObject) spawnPointsArray.get(i);
+                Position position = new Position(
+                        xOffset + object.get("x").getAsDouble() * scaleRatio - gridElementSize / 2,
+                        yOffset + object.get("y").getAsDouble() * scaleRatio - gridElementSize / 2);
                 spawnPositionsList.add(position);
             }
             spawnPoints.put(team, spawnPositionsList);
 
             ProgressButton chooseButton = new ProgressButton();
-            chooseButton.setPrefWidth(6*gridElementSize);
-            chooseButton.setPrefHeight(6*gridElementSize);
+            chooseButton.setPrefWidth(6 * gridElementSize);
+            chooseButton.setPrefHeight(6 * gridElementSize);
             chooseButton.setLayoutX(teamChooserPositions.get(team)[0]);
             chooseButton.setLayoutY(teamChooserPositions.get(team)[1]);
             chooseButton.assignIndicator(e -> {
@@ -203,11 +212,11 @@ public class Horses implements GameLifeCycle {
         }
     }
 
-    private void selectTeam(TEAMS team){
+    private void selectTeam(TEAMS team) {
         chosenTeams.add(team);
         ArrayList<Pawn> pawnList = new ArrayList();
         ArrayList<Position> spawnPositions = spawnPoints.get(team);
-        for(int i = 0; i < NBPAWNS; i++){
+        for (int i = 0; i < NBPAWNS; i++) {
             StackPane pawnDisplay = new StackPane();
             pawnDisplay.setLayoutX(spawnPositions.get(i).getX());
             pawnDisplay.setLayoutY(spawnPositions.get(i).getY());
@@ -232,18 +241,18 @@ public class Horses implements GameLifeCycle {
         }
         pawns.put(team, pawnList);
         nbTeamsChosen++;
-        if(nbTeamsChosen >= nbPlayers){
+        if (nbTeamsChosen >= nbPlayers) {
             gameContext.getChildren().removeAll(teamChoosers);
             startGame();
         }
     }
 
-    private void startGame(){
+    private void startGame() {
         gameContext.getChildren().add(rollButton);
         currentTeam = 0;
     }
 
-    private void roll(){
+    private void roll() {
         rollButton.disable();
         diceOutcome = die.roll(e -> showMovablePawns());
     }
@@ -251,38 +260,44 @@ public class Horses implements GameLifeCycle {
     private void showMovablePawns() {
         ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
         int nbNonMovablePawns = 0;
-        for(Pawn pawn : currentPawns){
-            if(!pawn.isOnTrack() && diceOutcome == 6 && !startSquares.get(chosenTeams.get(currentTeam)).isOccupied()){
+        for (Pawn pawn : currentPawns) {
+            if (!pawn.isOnTrack() && diceOutcome == 6 && !startSquares.get(chosenTeams.get(currentTeam)).isOccupied()) {
                 pawn.activate(e -> {
                     deactivatePawns();
                     pawn.spawn();
                 }, config.getFixationLength(), gameContext);
-            }else if(pawn.isOnTrack() && pawn.canMove(diceOutcome)){
+            } else if (pawn.isOnTrack() && pawn.canMove(diceOutcome)) {
                 pawn.activate(e -> {
                     deactivatePawns();
                     pawn.move(diceOutcome);
                 }, config.getFixationLength(), gameContext);
-            }else{
+            } else {
                 nbNonMovablePawns++;
             }
         }
-        if(nbNonMovablePawns == currentPawns.size()){
+        if (nbNonMovablePawns == currentPawns.size()) {
             endOfTurn();
         }
     }
 
     private void deactivatePawns() {
         ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
-        for(Pawn pawn : currentPawns){
+        for (Pawn pawn : currentPawns) {
             pawn.deactivate(gameContext);
         }
     }
 
-    public void endOfTurn(){
+    public void endOfTurn() {
         rollButton.active();
-        if(diceOutcome != 6) {
+        if (diceOutcome != 6) {
             currentTeam = (currentTeam + 1) % nbPlayers;
         }
+    }
+
+    public void win(Pawn pawn) {
+        gameContext.playWinTransition(100, e -> {
+
+        });
     }
 
     @Override

@@ -86,10 +86,6 @@ public class HeatMap {
         }
         subdivisionValue = (maxValue - minValue) / (this.colors.size() - 1);
 
-        log.info(
-                "Creating new heatmap with the following values: minValue: {}, maxValue: {}, subdivisionValue: {}, # of colors: {}",
-                minValue, maxValue, subdivisionValue, colors.size());
-
         // Create heatmap pixel per pixel
         PixelWriter pxWriter = image.getPixelWriter();
         for (int x = 0; x < data.length; x++) {

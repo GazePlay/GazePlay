@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.gazeplay.commons.utils.Position;
 
-public class FinalPathStart extends Square{
+public class FinalPathStart extends Square {
 
     private Horses.TEAMS team;
     @Getter
@@ -19,9 +19,9 @@ public class FinalPathStart extends Square{
 
     @Override
     protected Square getNextSquare(Pawn pawn) {
-        if(pawn.getTeam() == team){
+        if (pawn.getTeam() == team) {
             return pathStart;
-        }else{
+        } else {
             return getNextSquare();
         }
     }

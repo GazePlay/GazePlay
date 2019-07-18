@@ -13,15 +13,15 @@ public class FinalPathSquare extends Square {
 
     @Override
     public Square getDestination(Pawn pawn, int nbMovementsLeft, int nbMovementsTotal) {
-        if(nbMovementsLeft == nbMovementsTotal){
+        if (nbMovementsLeft == nbMovementsTotal) {
             pawn.cancelMovement();
-            if(nbMovementsTotal == requiredNumber){
+            if (nbMovementsTotal == requiredNumber) {
                 stationnedPawn = null;
                 return getNextSquare();
-            }else{
+            } else {
                 return null;
             }
-        }else{
+        } else {
             return getPreviousSquare();
         }
     }

@@ -31,7 +31,8 @@ public class Pawn {
     private int nbMovementsLeft;
     private int movementOrientation;
 
-    public Pawn(Horses.TEAMS team, StackPane pawnDisplay, ProgressButton button, Position initialPosition, Square startSquare) {
+    public Pawn(Horses.TEAMS team, StackPane pawnDisplay, ProgressButton button, Position initialPosition,
+            Square startSquare) {
         this.team = team;
         this.pawnDisplay = pawnDisplay;
         this.button = button;
@@ -40,7 +41,7 @@ public class Pawn {
         currentSquare = null;
     }
 
-    public void moveToSquare(Square square){
+    public void moveToSquare(Square square) {
         currentSquare = square;
         Position position = square.getPawnPosition();
         double targetX = position.getX() - pawnDisplay.getWidth() / 2;
@@ -56,7 +57,7 @@ public class Pawn {
         newTimeline.playFromStart();
     }
 
-    public void moveBackToStart(){
+    public void moveBackToStart() {
         currentSquare = null;
         Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(pawnDisplay.layoutXProperty(), initialPosition.getX(), Interpolator.EASE_BOTH),
@@ -64,59 +65,59 @@ public class Pawn {
         newTimeline.playFromStart();
     }
 
-    public void spawn(){
+    public void spawn() {
         moveToSquare(startSquare);
     }
 
-    public boolean canMove(int diceOutcome){
+    public boolean canMove(int diceOutcome) {
         return currentSquare.canPawnMove(diceOutcome);
     }
 
-    public boolean isOnTrack(){
+    public boolean isOnTrack() {
         return currentSquare != null;
     }
 
-    public void activate(EventHandler<Event> eventHandler, int fixationLength, GameContext gameContext){
+    public void activate(EventHandler<Event> eventHandler, int fixationLength, GameContext gameContext) {
         button.assignIndicator(eventHandler, fixationLength);
         button.active();
         gameContext.getGazeDeviceManager().addEventFilter(pawnDisplay);
     }
 
-    public void deactivate(GameContext gameContext){
+    public void deactivate(GameContext gameContext) {
         button.disable();
         gameContext.getGazeDeviceManager().removeEventFilter(pawnDisplay);
     }
 
-    private ColorAdjust getGreyscale(){
-        if(greyscale == null){
+    private ColorAdjust getGreyscale() {
+        if (greyscale == null) {
             greyscale = new ColorAdjust();
             greyscale.setSaturation(-1);
         }
         return greyscale;
     }
 
-    private void move(){
-        if(nbMovementsLeft > 0) {
+    private void move() {
+        if (nbMovementsLeft > 0) {
             Square destination = currentSquare.getDestination(this, nbMovementsLeft * movementOrientation, lastThrow);
-            if(destination == currentSquare.getPreviousSquare()){
+            if (destination == currentSquare.getPreviousSquare()) {
                 movementOrientation = -1;
-            }else{
+            } else {
                 movementOrientation = 1;
             }
 
-            if(destination != null){
+            if (destination != null) {
                 moveToSquare(destination);
                 nbMovementsLeft--;
-            }else{
+            } else {
                 currentSquare.pawnLands(this);
             }
-        }else{
+        } else {
             currentSquare.pawnLands(this);
         }
     }
 
-    public void move(int nbMovements){
-        if(currentSquare == null){
+    public void move(int nbMovements) {
+        if (currentSquare == null) {
             currentSquare = startSquare;
         }
         nbMovementsLeft = nbMovements;
@@ -125,7 +126,7 @@ public class Pawn {
         move();
     }
 
-    public void cancelMovement(){
+    public void cancelMovement() {
         nbMovementsLeft = 0;
     }
 }
