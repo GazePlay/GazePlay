@@ -4,18 +4,26 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
+import net.gazeplay.GameContext;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.ProgressButton;
 
 public class Pawn {
 
+    private ColorAdjust greyscale;
     @Getter
     private Horses.TEAMS team;
-    private ProgressButton pawnDisplay;
+    private StackPane pawnDisplay;
+    private ProgressButton button;
     private Position initialPosition;
+    private Square startSquare;
     @Setter
     private Square currentSquare;
 
@@ -23,10 +31,13 @@ public class Pawn {
     private int nbMovementsLeft;
     private int movementOrientation;
 
-    public Pawn(Horses.TEAMS team, ProgressButton pawnDisplay, Position initialPosition) {
+    public Pawn(Horses.TEAMS team, StackPane pawnDisplay, ProgressButton button, Position initialPosition, Square startSquare) {
         this.team = team;
         this.pawnDisplay = pawnDisplay;
+        this.button = button;
         this.initialPosition = initialPosition;
+        this.startSquare = startSquare;
+        currentSquare = null;
     }
 
     public void moveToSquare(Square square){
@@ -47,14 +58,57 @@ public class Pawn {
 
     public void moveBackToStart(){
         currentSquare = null;
+        Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
+                new KeyValue(pawnDisplay.layoutXProperty(), initialPosition.getX(), Interpolator.EASE_BOTH),
+                new KeyValue(pawnDisplay.layoutYProperty(), initialPosition.getY(), Interpolator.EASE_BOTH)));
+        newTimeline.playFromStart();
+    }
+
+    public void spawn(){
+        moveToSquare(startSquare);
+    }
+
+    public boolean canMove(int diceOutcome){
+        return currentSquare.canPawnMove(diceOutcome);
+    }
+
+    public boolean isOnTrack(){
+        return currentSquare != null;
+    }
+
+    public void activate(EventHandler<Event> eventHandler, int fixationLength, GameContext gameContext){
+        button.assignIndicator(eventHandler, fixationLength);
+        button.active();
+        gameContext.getGazeDeviceManager().addEventFilter(pawnDisplay);
+    }
+
+    public void deactivate(GameContext gameContext){
+        button.disable();
+        gameContext.getGazeDeviceManager().removeEventFilter(pawnDisplay);
+    }
+
+    private ColorAdjust getGreyscale(){
+        if(greyscale == null){
+            greyscale = new ColorAdjust();
+            greyscale.setSaturation(-1);
+        }
+        return greyscale;
     }
 
     private void move(){
         if(nbMovementsLeft > 0) {
             Square destination = currentSquare.getDestination(this, nbMovementsLeft * movementOrientation, lastThrow);
-            if(destination != null && destination != currentSquare){
+            if(destination == currentSquare.getPreviousSquare()){
+                movementOrientation = -1;
+            }else{
+                movementOrientation = 1;
+            }
+
+            if(destination != null){
                 moveToSquare(destination);
                 nbMovementsLeft--;
+            }else{
+                currentSquare.pawnLands(this);
             }
         }else{
             currentSquare.pawnLands(this);
@@ -62,14 +116,13 @@ public class Pawn {
     }
 
     public void move(int nbMovements){
+        if(currentSquare == null){
+            currentSquare = startSquare;
+        }
         nbMovementsLeft = nbMovements;
         lastThrow = nbMovements;
         movementOrientation = 1;
         move();
-    }
-
-    public void invertMovement(){
-        movementOrientation *= -1;
     }
 
     public void cancelMovement(){

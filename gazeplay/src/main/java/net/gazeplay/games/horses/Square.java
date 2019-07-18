@@ -14,7 +14,7 @@ public class Square {
     private Square previousSquare;
     @Getter
     private Position pawnPosition;
-    private Pawn stationnedPawn;
+    protected Pawn stationnedPawn;
     private Horses game;
 
     public Square(Position pawnPosition, Horses game) {
@@ -28,21 +28,29 @@ public class Square {
     }
 
     public void pawnLands(Pawn pawn){
-        if(stationnedPawn != null){
+        if(stationnedPawn != null && stationnedPawn != pawn){
             stationnedPawn.moveBackToStart();
         }
         stationnedPawn = pawn;
+        game.endOfTurn();
     }
 
     public Square getDestination(Pawn pawn, int nbMovementsLeft, int nbMovementsTotal) {
-        if(nbMovementsLeft != nbMovementsTotal && stationnedPawn != null){
-            pawn.invertMovement();
-        }else if(nbMovementsLeft > 0){
-            return getNextSquare(pawn);
-        }
         if(nbMovementsLeft == nbMovementsTotal){
             stationnedPawn = null;
         }
-        return previousSquare;
+        if(nbMovementsLeft > 0){
+            return getNextSquare(pawn);
+        }else {
+            return previousSquare;
+        }
+    }
+
+    public boolean canPawnMove(int diceOutcome) {
+        return true;
+    }
+
+    public boolean isOccupied(){
+        return stationnedPawn != null;
     }
 }

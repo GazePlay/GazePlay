@@ -16,13 +16,18 @@ public class FinalPathSquare extends Square {
         if(nbMovementsLeft == nbMovementsTotal){
             pawn.cancelMovement();
             if(nbMovementsTotal == requiredNumber){
+                stationnedPawn = null;
                 return getNextSquare();
             }else{
                 return null;
             }
         }else{
-            pawn.invertMovement();
             return getPreviousSquare();
         }
+    }
+
+    @Override
+    public boolean canPawnMove(int diceOutcome) {
+        return diceOutcome == requiredNumber && !getNextSquare().isOccupied();
     }
 }
