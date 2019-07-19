@@ -105,9 +105,9 @@ public class ScanpathView extends GraphicalContext<Pane> {
         HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ExitScanpathView);
 
-        //StackPane homeButtonPane = new StackPane();
+        // StackPane homeButtonPane = new StackPane();
         Dimension2D dimension = GameContext.newInstance(gazePlay).getGamePanelDimensionProvider().getDimension2D();
-        homeButton.relocate(15,dimension.getHeight());
+        homeButton.relocate(15, dimension.getHeight());
         root.getChildren().add(homeButton);
     }
 
