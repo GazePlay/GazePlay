@@ -238,8 +238,8 @@ public class Horses implements GameLifeCycle {
 
             ProgressButton button = new ProgressButton();
             ImageView selector = new ImageView("data/horses/selector.png");
-            selector.setFitHeight(gridElementSize * 1.5);
-            selector.setFitWidth(gridElementSize * 1.5);
+            selector.setFitHeight(gridElementSize);
+            selector.setFitWidth(gridElementSize);
             button.setImage(selector);
             button.disable();
             gameContext.getGazeDeviceManager().addEventFilter(button);
@@ -272,7 +272,7 @@ public class Horses implements GameLifeCycle {
         ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
         int nbNonMovablePawns = 0;
         for (Pawn pawn : currentPawns) {
-            if (!pawn.isOnTrack() /*&& diceOutcome == 6*/ && !startSquares.get(chosenTeams.get(currentTeam)).isOccupied()) {
+            if (!pawn.isOnTrack() && diceOutcome == 6 && !startSquares.get(chosenTeams.get(currentTeam)).isOccupied()) {
                 pawn.activate(e -> {
                     deactivatePawns();
                     pawn.spawn();
