@@ -1,4 +1,7 @@
 {
+  "imageName" : "horsiesboard.png",
+  "nbPawns" : 4,
+  "elementsPerSide" : 15,
   "BLUE": {
     "finalPath": [
       {

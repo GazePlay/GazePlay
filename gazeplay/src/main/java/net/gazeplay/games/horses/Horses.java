@@ -36,7 +36,6 @@ import java.util.Objects;
 public class Horses implements GameLifeCycle {
 
     private static final String BIBOULEPATH = "data/horses/biboules/%s.png";
-    private static final int NBPAWNS = 4;
 
     public enum TEAMS {
         BLUE, RED, GREEN, YELLOW
@@ -49,6 +48,8 @@ public class Horses implements GameLifeCycle {
     private final int nbPlayers;
     @Getter
     private final Multilinguism translate;
+    private final String jsonPath;
+    private final int nbPawns;
 
     private final ImageView boardImage;
     private double gridElementSize;
@@ -65,7 +66,7 @@ public class Horses implements GameLifeCycle {
     private HashMap<TEAMS, ArrayList<Pawn>> pawns;
     private HashMap<TEAMS, ArrayList<Position>> spawnPoints;
 
-    public Horses(GameContext gameContext, Stats stats, int nbPlayers) {
+    public Horses(GameContext gameContext, Stats stats, int gameVersion, int nbPlayers) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.nbPlayers = nbPlayers;
@@ -74,9 +75,26 @@ public class Horses implements GameLifeCycle {
         this.config = Configuration.getInstance();
         this.translate = Multilinguism.getSingleton();
 
-        boardImage = new ImageView("data/horses/horsiesboard.png");
+        if (gameVersion == 0) {
+            jsonPath = "data/horses/positions.json";
+        } else {
+            jsonPath = "data/horses/positionsSimplified.json";
+        }
+
+        JsonParser parser = new JsonParser();
+        JsonObject positions = null;
+        try {
+            positions = (JsonObject) parser.parse(new InputStreamReader(
+                    Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(jsonPath)), "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        nbPawns = positions.get("nbPawns").getAsInt();
+        int nbElementsPerSide = positions.get("elementsPerSide").getAsInt();
+        boardImage = new ImageView("data/horses/" + positions.get("imageName").getAsString());
         double imageSize = Math.min(dimensions.getHeight(), dimensions.getWidth());
-        gridElementSize = imageSize / 15;
+        gridElementSize = imageSize / nbElementsPerSide;
         double xOffset = (dimensions.getWidth() - imageSize) / 2;
         double yOffset = (dimensions.getHeight() - imageSize) / 2;
         boardImage.setFitHeight(imageSize);
@@ -86,7 +104,7 @@ public class Horses implements GameLifeCycle {
         gameContext.getChildren().add(boardImage);
 
         die = new DiceRoller((float) gridElementSize / 2);
-        double diePositionInImage = (14 * imageSize) / 30;
+        double diePositionInImage = imageSize / 2 - gridElementSize / 2;
         StackPane dieContainer = new StackPane();
         dieContainer.getChildren().add(die);
         dieContainer.setLayoutX(xOffset + diePositionInImage);
@@ -112,21 +130,12 @@ public class Horses implements GameLifeCycle {
         nbTeamsChosen = 0;
 
         HashMap<TEAMS, double[]> teamChooserPositions = new HashMap<>();
+        int elementOffset = (nbElementsPerSide - 3) / 2 + 3;
         teamChooserPositions.put(TEAMS.YELLOW, new double[] { xOffset, yOffset });
-        teamChooserPositions.put(TEAMS.BLUE, new double[] { xOffset + 9 * gridElementSize, yOffset });
+        teamChooserPositions.put(TEAMS.BLUE, new double[] { xOffset + elementOffset * gridElementSize, yOffset });
         teamChooserPositions.put(TEAMS.RED,
-                new double[] { xOffset + 9 * gridElementSize, yOffset + 9 * gridElementSize });
-        teamChooserPositions.put(TEAMS.GREEN, new double[] { xOffset, yOffset + 9 * gridElementSize });
-
-        JsonParser parser = new JsonParser();
-        JsonObject positions = null;
-        try {
-            positions = (JsonObject) parser.parse(new InputStreamReader(
-                    Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("data/horses/positions.json")),
-                    "utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+                new double[] { xOffset + elementOffset * gridElementSize, yOffset + elementOffset * gridElementSize });
+        teamChooserPositions.put(TEAMS.GREEN, new double[] { xOffset, yOffset + elementOffset * gridElementSize });
 
         double scaleRatio = imageSize / boardImage.getImage().getHeight();
         Square loopBack = null;
@@ -187,7 +196,7 @@ public class Horses implements GameLifeCycle {
             }
 
             ArrayList<Position> spawnPositionsList = new ArrayList<>();
-            for (int i = 0; i < NBPAWNS; i++) {
+            for (int i = 0; i < nbPawns; i++) {
                 JsonObject object = (JsonObject) spawnPointsArray.get(i);
                 Position position = new Position(
                         xOffset + object.get("x").getAsDouble() * scaleRatio - gridElementSize / 2,
@@ -197,8 +206,8 @@ public class Horses implements GameLifeCycle {
             spawnPoints.put(team, spawnPositionsList);
 
             ProgressButton chooseButton = new ProgressButton();
-            chooseButton.setPrefWidth(6 * gridElementSize);
-            chooseButton.setPrefHeight(6 * gridElementSize);
+            chooseButton.setPrefWidth((nbElementsPerSide - 3) / 2 * gridElementSize);
+            chooseButton.setPrefHeight((nbElementsPerSide - 3) / 2 * gridElementSize);
             chooseButton.setLayoutX(teamChooserPositions.get(team)[0]);
             chooseButton.setLayoutY(teamChooserPositions.get(team)[1]);
             chooseButton.assignIndicator(e -> {
@@ -216,7 +225,7 @@ public class Horses implements GameLifeCycle {
         chosenTeams.add(team);
         ArrayList<Pawn> pawnList = new ArrayList();
         ArrayList<Position> spawnPositions = spawnPoints.get(team);
-        for (int i = 0; i < NBPAWNS; i++) {
+        for (int i = 0; i < nbPawns; i++) {
             StackPane pawnDisplay = new StackPane();
             pawnDisplay.setLayoutX(spawnPositions.get(i).getX());
             pawnDisplay.setLayoutY(spawnPositions.get(i).getY());
