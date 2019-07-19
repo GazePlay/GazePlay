@@ -1,9 +1,13 @@
 package net.gazeplay;
 
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -12,9 +16,11 @@ import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.FixationSequence;
+import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -83,6 +89,26 @@ public class ScanpathView extends GraphicalContext<Pane> {
                 root.getChildren().remove(label);
             });
         }
+
+        EventHandler<Event> ExitScanpathView = e -> {
+
+            StatsContext statsContext = null;
+            try {
+                statsContext = StatsContext.newInstance(gazePlay, stats);
+            } catch (IOException er) {
+                er.printStackTrace();
+            }
+            this.clear();
+            gazePlay.onDisplayStats(statsContext);
+        };
+
+        HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ExitScanpathView);
+
+        // StackPane homeButtonPane = new StackPane();
+        Dimension2D dimension = GameContext.newInstance(gazePlay).getGamePanelDimensionProvider().getDimension2D();
+        homeButton.relocate(15, dimension.getHeight());
+        root.getChildren().add(homeButton);
     }
 
     @Override
