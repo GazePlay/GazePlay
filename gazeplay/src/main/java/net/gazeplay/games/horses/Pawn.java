@@ -26,6 +26,7 @@ public class Pawn {
     private Square startSquare;
     @Setter
     private Square currentSquare;
+    private boolean isActive;
 
     private int lastThrow;
     private int nbMovementsLeft;
@@ -39,6 +40,7 @@ public class Pawn {
         this.initialPosition = initialPosition;
         this.startSquare = startSquare;
         currentSquare = null;
+        isActive = false;
     }
 
     public void moveToSquare(Square square) {
@@ -80,12 +82,16 @@ public class Pawn {
     public void activate(EventHandler<Event> eventHandler, int fixationLength, GameContext gameContext) {
         button.assignIndicator(eventHandler, fixationLength);
         button.active();
-        gameContext.getGazeDeviceManager().addEventFilter(pawnDisplay);
+        gameContext.getGazeDeviceManager().addEventFilter(button);
+        isActive = true;
     }
 
     public void deactivate(GameContext gameContext) {
-        button.disable();
-        gameContext.getGazeDeviceManager().removeEventFilter(pawnDisplay);
+        if(isActive) {
+            //gameContext.getGazeDeviceManager().removeEventFilter(button);
+            button.disable();
+            isActive = false;
+        }
     }
 
     private ColorAdjust getGreyscale() {
