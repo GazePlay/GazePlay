@@ -146,11 +146,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         memoGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
         logicGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
 
-        //the following lines have to be uncommented to permit category filtering
-      //  HBox categoryFilters = new HBox(10);
-      //  categoryFilters.setAlignment(Pos.CENTER);
-      //  categoryFilters.setPadding(new Insets(15, 12, 15, 12));
-      //  categoryFilters.getChildren().addAll(selectionGames, memoGames, actionReactionGames, logicGames);
+        // the following lines have to be uncommented to permit category filtering
+        // HBox categoryFilters = new HBox(10);
+        // categoryFilters.setAlignment(Pos.CENTER);
+        // categoryFilters.setPadding(new Insets(15, 12, 15, 12));
+        // categoryFilters.getChildren().addAll(selectionGames, memoGames, actionReactionGames, logicGames);
 
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
@@ -161,7 +161,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         centerCenterPane.getChildren().add(gamePickerChoicePane);
 
         BorderPane centerPanel = new BorderPane();
-     //   centerPanel.setTop(categoryFilters);
+        // centerPanel.setTop(categoryFilters);
         centerPanel.setCenter(centerCenterPane);
         centerPanel.setLeft(leftPanel);
 
