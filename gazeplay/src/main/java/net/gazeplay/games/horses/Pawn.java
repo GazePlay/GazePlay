@@ -87,8 +87,8 @@ public class Pawn {
     }
 
     public void deactivate(GameContext gameContext) {
-        if(isActive) {
-            //gameContext.getGazeDeviceManager().removeEventFilter(button);
+        if (isActive) {
+            // gameContext.getGazeDeviceManager().removeEventFilter(button);
             button.disable();
             isActive = false;
         }
