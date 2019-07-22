@@ -10,6 +10,7 @@ import javafx.animation.Timeline;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.DepthTest;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -37,6 +38,7 @@ import java.util.Objects;
 public class Horses implements GameLifeCycle {
 
     private static final String BIBOULEPATH = "data/horses/biboules/%s.png";
+    private static final String ROLLIMAGESPATH = "data/horses/rollImages/roll%s.png";
 
     public enum TEAMS {
         BLUE, RED, GREEN, YELLOW
@@ -57,6 +59,7 @@ public class Horses implements GameLifeCycle {
 
     private final DiceRoller die;
     private final ProgressButton rollButton;
+    private HashMap<TEAMS, ImageView> rollImages;
     private int diceOutcome;
 
     private ArrayList<ProgressButton> teamChoosers;
@@ -113,16 +116,11 @@ public class Horses implements GameLifeCycle {
         gameContext.getChildren().add(dieContainer);
 
         rollButton = new ProgressButton();
-        ImageView rollImage = new ImageView("data/dice/roll.png");
-        rollImage.setFitHeight(dimensions.getHeight() / 6);
-        rollImage.setFitWidth(dimensions.getHeight() / 6);
-        rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
-        rollButton.setLayoutY(dimensions.getHeight() / 2 - rollImage.getFitHeight() / 2);
-        rollButton.setImage(rollImage);
         rollButton.assignIndicator(event -> roll(), config.getFixationLength());
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
+        rollImages = new HashMap<>();
         startSquares = new HashMap<>();
         pawns = new HashMap<>();
         spawnPoints = new HashMap<>();
@@ -219,6 +217,11 @@ public class Horses implements GameLifeCycle {
             chooseButton.active();
             gameContext.getChildren().add(chooseButton);
             teamChoosers.add(chooseButton);
+
+            ImageView rollImage = new ImageView(String.format(ROLLIMAGESPATH, team));
+            rollImage.setFitHeight(dimensions.getHeight() / 6);
+            rollImage.setFitWidth(dimensions.getHeight() / 6);
+            rollImages.put(team, rollImage);
         }
     }
 
@@ -260,7 +263,8 @@ public class Horses implements GameLifeCycle {
 
     private void startGame() {
         gameContext.getChildren().add(rollButton);
-        currentTeam = 0;
+        currentTeam = -1;
+        endOfTurn();
     }
 
     private void roll() {
@@ -299,10 +303,14 @@ public class Horses implements GameLifeCycle {
     }
 
     public void endOfTurn() {
-        rollButton.active();
         if (diceOutcome != 6) {
             currentTeam = (currentTeam + 1) % nbPlayers;
         }
+        ImageView rollImage = rollImages.get(chosenTeams.get(currentTeam));
+        rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
+        rollButton.setLayoutY(dimensions.getHeight() / 2 - rollImage.getFitHeight() / 2);
+        rollButton.setImage(rollImage);
+        rollButton.active();
     }
 
     public void win(Pawn pawn) {
