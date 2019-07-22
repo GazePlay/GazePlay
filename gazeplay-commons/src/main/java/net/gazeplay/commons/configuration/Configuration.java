@@ -108,6 +108,8 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_FAVOURITE_SPACEGAME = "SPACEGAME Game fav";
     private static final String PROPERTY_NAME_FAVOURITE_GOOSEGAME = "GOOSEGAME Game fav";
     private static final String PROPERTY_NAME_FAVOURITE_VIDEOGRID = "VIDEOGRID Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_HORSES = "HORSES Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_HORSESSIMPLIFIED = "HORSES SIMPLIFIED Game fav";
 
     @Getter
     @Setter
@@ -517,6 +519,14 @@ public class Configuration implements Cloneable {
     protected final BooleanProperty videoGridFavProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_FAVOURITE_VIDEOGRID, DEFAULT_VALUE_FAVOURITE_GAMES);
 
+    @Getter
+    protected final BooleanProperty horsesFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_HORSES,
+            DEFAULT_VALUE_FAVOURITE_GAMES);
+
+    @Getter
+    protected final BooleanProperty horsesSimplifiedFavProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_FAVOURITE_HORSESSIMPLIFIED, DEFAULT_VALUE_FAVOURITE_GAMES);
+
     public void FavProperties() {
 
         favouriteGameProperties.add(bibouleJumpFavProperty);
@@ -571,6 +581,8 @@ public class Configuration implements Cloneable {
         favouriteGameProperties.add(whereColorFavProperty);
         favouriteGameProperties.add(whereLetterFavProperty);
         favouriteGameProperties.add(whereNumberFavProperty);
+        favouriteGameProperties.add(horsesFavProperty);
+        favouriteGameProperties.add(horsesSimplifiedFavProperty);
     }
 
     protected Configuration() {
@@ -983,6 +995,14 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             whereNumberFavProperty.setValue(Boolean.parseBoolean(buffer));
         }
+        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_HORSES);
+        if (buffer != null) {
+            horsesFavProperty.setValue(Boolean.parseBoolean(buffer));
+        }
+        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_HORSESSIMPLIFIED);
+        if (buffer != null) {
+            horsesSimplifiedFavProperty.setValue(Boolean.parseBoolean(buffer));
+        }
     }
 
     public Properties toProperties() {
@@ -1108,6 +1128,9 @@ public class Configuration implements Cloneable {
                 Boolean.toString(whereLetterFavProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_FAVOURITE_WHEREISTHENUMBER,
                 Boolean.toString(whereNumberFavProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_FAVOURITE_HORSES, Boolean.toString(horsesFavProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_FAVOURITE_HORSESSIMPLIFIED,
+                Boolean.toString(horsesSimplifiedFavProperty.getValue()));
 
         return properties;
     }
