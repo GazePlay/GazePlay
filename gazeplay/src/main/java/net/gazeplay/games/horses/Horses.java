@@ -247,6 +247,7 @@ public class Horses implements GameLifeCycle {
             rollImage.setFitWidth(dimensions.getHeight() / 6);
             rollImages.put(team, rollImage);
         }
+        previousCommonSquare.setNextSquare(loopBack);
     }
 
     private void selectTeam(TEAMS team) {
@@ -294,7 +295,8 @@ public class Horses implements GameLifeCycle {
     }
 
     private void roll() {
-        rollButton.disable();
+        rollButton.setLayoutX(-1000);
+        rollButton.setLayoutY(-1000);
         diceOutcome = die.roll(e -> showMovablePawns());
     }
 
@@ -371,7 +373,6 @@ public class Horses implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() / 2 - rollImage.getFitHeight() / 2);
         rollButton.setImage(rollImage);
-        rollButton.active();
     }
 
     public void win(Pawn pawn) {
