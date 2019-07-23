@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
@@ -252,9 +253,18 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             gazePlay.onDisplayScanpath(scanpath);
         };
 
-        HomeButton scanpathButton = new HomeButton("data/common/images/scanpathButton.png"); // change graphics of this
-                                                                                             // Button
+        HomeButton scanpathButton = new HomeButton("data/common/images/scanpathButton.png");
         scanpathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanpath);
+
+        EventHandler<Event> viewColorBands = s -> {
+
+//            ScanpathView scanpath = ScanpathView.newInstance(gazePlay, stats);
+//            gazePlay.onDisplayScanpath(scanpath);
+        };
+
+        // new Data representation
+        HomeButton colorBandsButton = new HomeButton("data/common/images/bluebutton.png");
+        colorBandsButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewColorBands);
 
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
@@ -263,6 +273,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             controlButtonPane.getChildren().add(aoiButton);
         if (!config.isFixationSequenceDisabled())
             controlButtonPane.getChildren().add(scanpathButton);
+        controlButtonPane.getChildren().add(colorBandsButton);
         controlButtonPane.getChildren().add(homeButton);
 
         if (continueButton != null) {
