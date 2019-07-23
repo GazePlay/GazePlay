@@ -376,6 +376,8 @@ public class Horses implements GameLifeCycle {
     }
 
     public void win(Pawn pawn) {
+        showMessage(getCurrentFontColor(), "%s team wins",
+                translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
         gameContext.playWinTransition(100, e -> {
 
         });
