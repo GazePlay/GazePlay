@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -20,19 +21,18 @@ public class Pawn {
     private ColorAdjust greyscale;
     @Getter
     private Horses.TEAMS team;
-    private StackPane pawnDisplay;
+    private ImageView pawnDisplay;
     private ProgressButton button;
     private Position initialPosition;
     private Square startSquare;
     @Setter
     private Square currentSquare;
-    private boolean isActive;
 
     private int lastThrow;
     private int nbMovementsLeft;
     private int movementOrientation;
 
-    public Pawn(Horses.TEAMS team, StackPane pawnDisplay, ProgressButton button, Position initialPosition,
+    public Pawn(Horses.TEAMS team, ImageView pawnDisplay, ProgressButton button, Position initialPosition,
             Square startSquare) {
         this.team = team;
         this.pawnDisplay = pawnDisplay;
@@ -40,18 +40,19 @@ public class Pawn {
         this.initialPosition = initialPosition;
         this.startSquare = startSquare;
         currentSquare = null;
-        isActive = false;
     }
 
     public void moveToSquare(Square square) {
         currentSquare = square;
         Position position = square.getPawnPosition();
-        double targetX = position.getX() - pawnDisplay.getWidth() / 2;
-        double targetY = position.getY() - pawnDisplay.getHeight() / 2;
+        double targetX = position.getX() - pawnDisplay.getFitWidth() / 2;
+        double targetY = position.getY() - pawnDisplay.getFitHeight() / 2;
 
         Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(pawnDisplay.layoutXProperty(), targetX, Interpolator.EASE_BOTH),
-                new KeyValue(pawnDisplay.layoutYProperty(), targetY, Interpolator.EASE_BOTH)));
+                new KeyValue(pawnDisplay.layoutYProperty(), targetY, Interpolator.EASE_BOTH),
+                new KeyValue(button.layoutXProperty(), targetX, Interpolator.EASE_BOTH),
+                new KeyValue(button.layoutYProperty(), targetY, Interpolator.EASE_BOTH)));
         newTimeline.setOnFinished(e -> {
             move();
         });
@@ -63,7 +64,9 @@ public class Pawn {
         currentSquare = null;
         Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(pawnDisplay.layoutXProperty(), initialPosition.getX(), Interpolator.EASE_BOTH),
-                new KeyValue(pawnDisplay.layoutYProperty(), initialPosition.getY(), Interpolator.EASE_BOTH)));
+                new KeyValue(pawnDisplay.layoutYProperty(), initialPosition.getY(), Interpolator.EASE_BOTH),
+                new KeyValue(button.layoutXProperty(), initialPosition.getX(), Interpolator.EASE_BOTH),
+                new KeyValue(button.layoutYProperty(), initialPosition.getY(), Interpolator.EASE_BOTH)));
         newTimeline.playFromStart();
     }
 
@@ -79,19 +82,13 @@ public class Pawn {
         return currentSquare != null;
     }
 
-    public void activate(EventHandler<Event> eventHandler, int fixationLength, GameContext gameContext) {
+    public void activate(EventHandler<Event> eventHandler, int fixationLength) {
         button.assignIndicator(eventHandler, fixationLength);
         button.active();
-        gameContext.getGazeDeviceManager().addEventFilter(button);
-        isActive = true;
     }
 
-    public void deactivate(GameContext gameContext) {
-        if (isActive) {
-            // gameContext.getGazeDeviceManager().removeEventFilter(button);
-            button.disable();
-            isActive = false;
-        }
+    public void deactivate() {
+        button.disable();
     }
 
     private ColorAdjust getGreyscale() {
