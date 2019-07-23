@@ -304,7 +304,7 @@ public class Horses implements GameLifeCycle {
         ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
         int nbNonMovablePawns = 0;
         for (Pawn pawn : currentPawns) {
-            if (!pawn.isOnTrack() /*&& diceOutcome == 6*/ && !startSquares.get(chosenTeams.get(currentTeam)).isOccupied()) {
+            if (!pawn.isOnTrack() && diceOutcome == 6 && !startSquares.get(chosenTeams.get(currentTeam)).isOccupied()) {
                 pawn.activate(e -> {
                     deactivatePawns();
                     pawn.spawn();
