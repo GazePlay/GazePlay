@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
@@ -20,6 +21,7 @@ import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
+import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -139,6 +141,7 @@ public class StatsDisplay {
 
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Coordinates");
 
         AreaChart<Number, Number> colorBands = new AreaChart<Number, Number>(xAxis, yAxis);
 
@@ -148,17 +151,16 @@ public class StatsDisplay {
         XYChart.Series xValues = new XYChart.Series();
         xValues.setName("X coordinates");
         for (FixationPoint p : points) {
-            xValues.getData().add(new XYChart.Data(p.getX(), p.getFirstGaze()));
+            xValues.getData().add(new XYChart.Data(p.getFirstGaze(), p.getY()));
         }
 
         XYChart.Series yValues = new XYChart.Series();
-        xValues.setName("Y coordinates");
+        yValues.setName("Y coordinates");
         for (FixationPoint p : points) {
-            yValues.getData().add(new XYChart.Data(p.getY(), p.getFirstGaze()));
+            yValues.getData().add(new XYChart.Data(p.getFirstGaze(), p.getX()));
         }
 
-        colorBands.getData().add(xValues);
-        colorBands.getData().add(yValues);
+        colorBands.getData().addAll(xValues, yValues);
 
         EventHandler<Event> openAreaChartEvent = createZoomInAreaChartEventHandler(colorBands, root);
 
