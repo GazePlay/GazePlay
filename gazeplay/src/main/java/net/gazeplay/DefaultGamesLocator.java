@@ -1352,7 +1352,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        result.add(new GameSpec(new GameSummary("Sounds of Life", "data/Thumbnails/horsesSimplified.png",
+        result.add(new GameSpec(new GameSummary("Sounds of Life", "data/Thumbnails/soundsoflife.png",
                 GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {

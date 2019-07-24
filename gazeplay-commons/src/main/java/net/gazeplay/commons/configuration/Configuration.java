@@ -110,6 +110,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_FAVOURITE_VIDEOGRID = "VIDEOGRID Game fav";
     private static final String PROPERTY_NAME_FAVOURITE_HORSES = "HORSES Game fav";
     private static final String PROPERTY_NAME_FAVOURITE_HORSESSIMPLIFIED = "HORSES SIMPLIFIED Game fav";
+    private static final String PROPERTY_NAME_FAVOURITE_SOUNDOFLIFE = "SOUNDS OF LIFE Game fav";
 
     @Getter
     @Setter
@@ -527,6 +528,10 @@ public class Configuration implements Cloneable {
     protected final BooleanProperty horsesSimplifiedFavProperty = new SimpleBooleanProperty(this,
             PROPERTY_NAME_FAVOURITE_HORSESSIMPLIFIED, DEFAULT_VALUE_FAVOURITE_GAMES);
 
+    @Getter
+    protected final BooleanProperty soundOfLifeFavProperty = new SimpleBooleanProperty(this,
+            PROPERTY_NAME_FAVOURITE_SOUNDOFLIFE, DEFAULT_VALUE_FAVOURITE_GAMES);
+
     public void FavProperties() {
 
         favouriteGameProperties.add(bibouleJumpFavProperty);
@@ -583,6 +588,7 @@ public class Configuration implements Cloneable {
         favouriteGameProperties.add(whereNumberFavProperty);
         favouriteGameProperties.add(horsesFavProperty);
         favouriteGameProperties.add(horsesSimplifiedFavProperty);
+        favouriteGameProperties.add(soundOfLifeFavProperty);
     }
 
     protected Configuration() {
@@ -1003,6 +1009,10 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             horsesSimplifiedFavProperty.setValue(Boolean.parseBoolean(buffer));
         }
+        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_SOUNDOFLIFE);
+        if (buffer != null) {
+            soundOfLifeFavProperty.setValue(Boolean.parseBoolean(buffer));
+        }
     }
 
     public Properties toProperties() {
@@ -1131,6 +1141,8 @@ public class Configuration implements Cloneable {
         properties.setProperty(PROPERTY_NAME_FAVOURITE_HORSES, Boolean.toString(horsesFavProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_FAVOURITE_HORSESSIMPLIFIED,
                 Boolean.toString(horsesSimplifiedFavProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_FAVOURITE_SOUNDOFLIFE,
+                Boolean.toString(soundOfLifeFavProperty.getValue()));
 
         return properties;
     }
