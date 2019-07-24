@@ -60,6 +60,7 @@ import net.gazeplay.games.shooter.Shooter;
 import net.gazeplay.games.shooter.ShooterGamesStats;
 import net.gazeplay.games.slidingpuzzle.slidingpuzzle;
 import net.gazeplay.games.slidingpuzzle.slidingpuzzlestats;
+import net.gazeplay.games.soundsoflife.SoundsOfLife;
 import net.gazeplay.games.space.SpaceGame;
 import net.gazeplay.games.space.SpaceGameStats;
 import net.gazeplay.games.spotthedifferences.SpotTheDifferences;
@@ -1347,6 +1348,30 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
                             Stats stats) {
                         return new Horses(gameContext, stats, 1, gameVariant.getNumber());
+                    }
+
+                }));
+
+        result.add(new GameSpec(new GameSummary("Sounds of Life", "data/Thumbnails/horsesSimplified.png",
+                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
+                    @Override
+                    public Set<GameSpec.GameVariant> getVariants() {
+                        return Sets.newLinkedHashSet(Lists.newArrayList(
+
+                                new GameSpec.IntGameVariant(0, "Farm")
+
+                ));
+                    }
+                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "soundsoflife");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                            Stats stats) {
+                        return new SoundsOfLife(gameContext, stats, gameVariant.getNumber());
                     }
 
                 }));
