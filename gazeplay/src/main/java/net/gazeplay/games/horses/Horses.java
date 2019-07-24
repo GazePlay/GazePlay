@@ -251,8 +251,8 @@ public class Horses implements GameLifeCycle {
     }
 
     /**
-     * When a team is selected (by gazing at a big round button)
-     * This adds the pawns to the game, in their initial position
+     * When a team is selected (by gazing at a big round button) This adds the pawns to the game, in their initial
+     * position
      */
     private void selectTeam(TEAMS team) {
         chosenTeams.add(team);
@@ -384,8 +384,8 @@ public class Horses implements GameLifeCycle {
     }
 
     /**
-     * Called at the end of a turn, it gives the turn to the next team, or leaves it to the current if a 6 was rolled
-     * It resets the roll button, with the appropriate color
+     * Called at the end of a turn, it gives the turn to the next team, or leaves it to the current if a 6 was rolled It
+     * resets the roll button, with the appropriate color
      */
     public void endOfTurn() {
         if (diceOutcome != 6) {
