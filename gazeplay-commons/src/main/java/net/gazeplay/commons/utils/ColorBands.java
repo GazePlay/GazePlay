@@ -19,7 +19,7 @@ public class ColorBands {
     @Getter
     private WritableImage image;
 
-    public ColorBands(int width, int height, LinkedList<FixationPoint> points){
+    public ColorBands(int width, int height, LinkedList<FixationPoint> points) {
         this.image = new WritableImage(width, height);
 
     }

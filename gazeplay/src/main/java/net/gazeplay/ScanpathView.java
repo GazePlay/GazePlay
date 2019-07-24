@@ -48,7 +48,7 @@ public class ScanpathView extends GraphicalContext<Pane> {
         List<Ellipse> Points = new LinkedList<Ellipse>();
         for (FixationPoint p : this.points) {
             Ellipse newPoint = new Ellipse();
-            //newPoint.setFill(Color.RED);
+            // newPoint.setFill(Color.RED);
             newPoint.setOpacity(0.4);
             // newPoint.setStroke(Color.BLACK);
             // newPoint.setStrokeWidth(1);

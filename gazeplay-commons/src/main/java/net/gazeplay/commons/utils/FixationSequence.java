@@ -101,8 +101,8 @@ public class FixationSequence {
                 gc.setFill(Color.BLACK);
                 gc.fillText(Integer.toString(label_count), x, y, 80);
 
-            } else{
-                //this.sequence.remove(j);
+            } else {
+                // this.sequence.remove(j);
                 fixSeq.get(j).setGazeDuration(-1);
             }
 
@@ -112,8 +112,8 @@ public class FixationSequence {
         params.setFill(Color.TRANSPARENT);
         canvas.snapshot(params, image);
 
-        for(int i = 0 ; i < fixSeq.size()-1; i++){
-            if(fixSeq.get(i).getGazeDuration()<0)
+        for (int i = 0; i < fixSeq.size() - 1; i++) {
+            if (fixSeq.get(i).getGazeDuration() < 0)
                 fixSeq.remove(i);
         }
         sequence = fixSeq;
@@ -136,9 +136,9 @@ public class FixationSequence {
     }
 
     // Vertex Cluster Reduction -- successive vertices that are clustered too closely are reduced to a single vertex
-//    public static LinkedList<FixationPoint> getFixationSequence() {
-//        return  sequence;
-//    }
+    // public static LinkedList<FixationPoint> getFixationSequence() {
+    // return sequence;
+    // }
 
     public static LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
 
