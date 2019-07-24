@@ -95,6 +95,7 @@ public class SoundsOfLife implements GameLifeCycle {
             SoundMakingEntity entity = new SoundMakingEntity(imageView, sounds, progressIndicator,
                     config.getFixationLength());
             gameContext.getChildren().add(entity);
+            gameContext.getGazeDeviceManager().addEventFilter(entity);
         }
 
     }
