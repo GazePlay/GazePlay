@@ -1,6 +1,7 @@
 package net.gazeplay;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -9,11 +10,13 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 
+import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import lombok.Data;
 import lombok.NonNull;
@@ -256,24 +259,30 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         HomeButton scanpathButton = new HomeButton("data/common/images/scanpathButton.png");
         scanpathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanpath);
 
-        EventHandler<Event> viewColorBands = s -> {
+        RadioButton colorBands = new RadioButton("Color Bands");
+        colorBands.setTextFill(Color.WHITE);
+        colorBands.getStylesheets().add("data/common/radio.css");
 
-//            ScanpathView scanpath = ScanpathView.newInstance(gazePlay, stats);
-//            gazePlay.onDisplayScanpath(scanpath);
-        };
-
-        // new Data representation
-        HomeButton colorBandsButton = new HomeButton("data/common/images/bluebutton.png");
-        colorBandsButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewColorBands);
+        colorBands.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(colorBands.isSelected()){
+                    gazeMetrics.setImage(new Image("data/common/images/red.png")); // just to test
+                }
+                else{
+                    gazeMetrics.setImage(new Image(stats.getSavedStatsInfo().getGazeMetricsFile().toURI().toString()));
+                }
+            }
+        });
 
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
+        controlButtonPane.getChildren().add(colorBands);
         if (config.isAreaOfInterestEnabled())
             controlButtonPane.getChildren().add(aoiButton);
         if (!config.isFixationSequenceDisabled())
             controlButtonPane.getChildren().add(scanpathButton);
-        controlButtonPane.getChildren().add(colorBandsButton);
         controlButtonPane.getChildren().add(homeButton);
 
         if (continueButton != null) {
