@@ -18,7 +18,6 @@ import net.gazeplay.commons.utils.ProgressButton;
 
 public class Pawn {
 
-    private ColorAdjust greyscale;
     @Getter
     private Horses.TEAMS team;
     private ImageView pawnDisplay;
@@ -50,9 +49,7 @@ public class Pawn {
 
         Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(pawnDisplay.layoutXProperty(), targetX, Interpolator.EASE_BOTH),
-                new KeyValue(pawnDisplay.layoutYProperty(), targetY, Interpolator.EASE_BOTH),
-                new KeyValue(button.layoutXProperty(), targetX, Interpolator.EASE_BOTH),
-                new KeyValue(button.layoutYProperty(), targetY, Interpolator.EASE_BOTH)));
+                new KeyValue(pawnDisplay.layoutYProperty(), targetY, Interpolator.EASE_BOTH)));
         newTimeline.setOnFinished(e -> {
             move();
         });
@@ -64,9 +61,7 @@ public class Pawn {
         currentSquare = null;
         Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(pawnDisplay.layoutXProperty(), initialPosition.getX(), Interpolator.EASE_BOTH),
-                new KeyValue(pawnDisplay.layoutYProperty(), initialPosition.getY(), Interpolator.EASE_BOTH),
-                new KeyValue(button.layoutXProperty(), initialPosition.getX(), Interpolator.EASE_BOTH),
-                new KeyValue(button.layoutYProperty(), initialPosition.getY(), Interpolator.EASE_BOTH)));
+                new KeyValue(pawnDisplay.layoutYProperty(), initialPosition.getY(), Interpolator.EASE_BOTH)));
         newTimeline.playFromStart();
     }
 
@@ -85,18 +80,13 @@ public class Pawn {
     public void activate(EventHandler<Event> eventHandler, int fixationLength) {
         button.assignIndicator(eventHandler, fixationLength);
         button.active();
+        button.setLayoutX(pawnDisplay.getLayoutX());
+        button.setLayoutY(pawnDisplay.getLayoutY());
     }
 
     public void deactivate() {
-        button.disable();
-    }
-
-    private ColorAdjust getGreyscale() {
-        if (greyscale == null) {
-            greyscale = new ColorAdjust();
-            greyscale.setSaturation(-1);
-        }
-        return greyscale;
+        button.setLayoutX(-1000);
+        button.setLayoutY(-1000);
     }
 
     private void move() {

@@ -320,10 +320,12 @@ public class Stats implements GazeMotionListener {
         final String heatmapFilePrefix = Utils.now() + "-heatmap";
         final String gazeMetricsFilePrefix = Utils.now() + "-metrics";
         final String screenShotFilePrefix = Utils.now() + "-screenshot";
+        final String colorBandsFilePrefix = Utils.now() + "-colorBands";
 
         File gazeMetricsFile = new File(todayDirectory, gazeMetricsFilePrefix + ".png");
         File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
         File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
+        File colorBandsFile = new File(todayDirectory, colorBandsFilePrefix+"png");
 
         BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
         saveImageAsPng(screenshotImage, screenShotFile);
@@ -337,7 +339,7 @@ public class Stats implements GazeMotionListener {
         g.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
         g.drawImage(screenshotImage, 0, 0, null);
 
-        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFile, screenShotFile);
+        SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFile, screenShotFile,colorBandsFile);
 
         this.savedStatsInfo = savedStatsInfo;
         if (this.heatMap != null) {

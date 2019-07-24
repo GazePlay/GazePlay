@@ -247,8 +247,13 @@ public class Horses implements GameLifeCycle {
             rollImage.setFitWidth(dimensions.getHeight() / 6);
             rollImages.put(team, rollImage);
         }
+        loopBack.setPreviousSquare(previousCommonSquare);
     }
 
+    /**
+     * When a team is selected (by gazing at a big round button) This adds the pawns to the game, in their initial
+     * position
+     */
     private void selectTeam(TEAMS team) {
         chosenTeams.add(team);
         ArrayList<Pawn> pawnList = new ArrayList();
@@ -287,17 +292,27 @@ public class Horses implements GameLifeCycle {
         }
     }
 
+    /**
+     * Is called when teams have been selected
+     */
     private void startGame() {
         foregroundLayer.getChildren().add(rollButton);
         currentTeam = -1;
         endOfTurn();
     }
 
+    /**
+     * Hides the roll button out of the way, and rolls the die
+     */
     private void roll() {
-        rollButton.disable();
+        rollButton.setLayoutX(-1000);
+        rollButton.setLayoutY(-1000);
         diceOutcome = die.roll(e -> showMovablePawns());
     }
 
+    /**
+     * Checks which pawns from the current team are allowed to move, if they are, their button is activated
+     */
     private void showMovablePawns() {
         ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
         int nbNonMovablePawns = 0;
@@ -324,6 +339,9 @@ public class Horses implements GameLifeCycle {
         }
     }
 
+    /**
+     * When a pawn is selected, all other pawns need to be deactivated
+     */
     private void deactivatePawns() {
         ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
         for (Pawn pawn : currentPawns) {
@@ -331,10 +349,16 @@ public class Horses implements GameLifeCycle {
         }
     }
 
+    /**
+     * @return the color associated to the current team playing
+     */
     private Color getCurrentFontColor() {
         return fontColors.get(chosenTeams.get(currentTeam));
     }
 
+    /**
+     * Displays a message in a vertical queue, which disappears after a short time
+     */
     public void showMessage(Color fontColor, String message, Object... values) {
         Text messageText = new Text(0, dimensions.getHeight() / 3,
                 String.format(translate.getTrad(message, config.getLanguage()), values));
@@ -359,6 +383,10 @@ public class Horses implements GameLifeCycle {
         showMessage.playFromStart();
     }
 
+    /**
+     * Called at the end of a turn, it gives the turn to the next team, or leaves it to the current if a 6 was rolled It
+     * resets the roll button, with the appropriate color
+     */
     public void endOfTurn() {
         if (diceOutcome != 6) {
             currentTeam = (currentTeam + 1) % nbPlayers;
@@ -371,10 +399,14 @@ public class Horses implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() / 2 - rollImage.getFitHeight() / 2);
         rollButton.setImage(rollImage);
-        rollButton.active();
     }
 
+    /**
+     * Plays the win animation at the end of the game
+     */
     public void win(Pawn pawn) {
+        showMessage(getCurrentFontColor(), "%s team wins",
+                translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
         gameContext.playWinTransition(100, e -> {
 
         });

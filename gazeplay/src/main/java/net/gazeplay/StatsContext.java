@@ -266,10 +266,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         colorBands.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(colorBands.isSelected()){
+                if (colorBands.isSelected()) {
                     gazeMetrics.setImage(new Image("data/common/images/red.png")); // just to test
-                }
-                else{
+                } else {
                     gazeMetrics.setImage(new Image(stats.getSavedStatsInfo().getGazeMetricsFile().toURI().toString()));
                 }
             }
