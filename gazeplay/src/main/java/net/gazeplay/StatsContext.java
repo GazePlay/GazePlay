@@ -8,6 +8,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 
 import javafx.scene.control.RadioButton;
@@ -26,12 +27,14 @@ import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
+import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 import net.gazeplay.games.labyrinth.Mouse;
 
+import java.awt.geom.Area;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -219,11 +222,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         VBox centerPane = new VBox();
         centerPane.setAlignment(Pos.CENTER);
 
-        {
-            LineChart<String, Number> chart = StatsDisplay.buildLineChart(stats, root);
-            centerPane.getChildren().add(chart);
-        }
-
         ImageView gazeMetrics = StatsDisplay.buildGazeMetrics(stats, root);
         root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -238,6 +236,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         gazeMetrics.setFitHeight(root.getHeight() * 0.35);
 
         centerPane.getChildren().add(gazeMetrics);
+
+        // charts
+
+        LineChart<String, Number> lineChart = StatsDisplay.buildLineChart(stats, root);
+        centerPane.getChildren().add(lineChart);
+
+        AreaChart<Number, Number> areaChart = StatsDisplay.buildAreaChart(FixationSequence.getSequence(), root);
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
@@ -267,9 +272,18 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             @Override
             public void handle(ActionEvent event) {
                 if (colorBands.isSelected()) {
-                    gazeMetrics.setImage(new Image("data/common/images/red.png")); // just to test
+                    centerPane.getChildren().remove(lineChart);
+
+                    centerPane.getChildren().add(areaChart);
+
+                    // centerPane.getChildren().replaceAll(chart);
+                    // gazeMetrics.setImage(new Image("data/common/images/red.png")); // just to test
                 } else {
-                    gazeMetrics.setImage(new Image(stats.getSavedStatsInfo().getGazeMetricsFile().toURI().toString()));
+                    centerPane.getChildren().remove(areaChart);
+
+                    centerPane.getChildren().add(lineChart);
+                    // gazeMetrics.setImage(new
+                    // Image(stats.getSavedStatsInfo().getGazeMetricsFile().toURI().toString()));
                 }
             }
         });

@@ -7,10 +7,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -19,8 +16,11 @@ import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
+import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
+
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -135,6 +135,50 @@ public class StatsDisplay {
         return lineChart;
     }
 
+    public static AreaChart<Number, Number> buildAreaChart(LinkedList<FixationPoint> points, final Region root) {
+
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+
+        AreaChart<Number, Number> colorBands = new AreaChart<Number, Number>(xAxis, yAxis);
+
+        colorBands.setCreateSymbols(true);
+        colorBands.setLegendVisible(true);
+
+        XYChart.Series xValues = new XYChart.Series();
+        xValues.setName("X coordinates");
+        for (FixationPoint p : points) {
+            xValues.getData().add(new XYChart.Data(p.getX(), p.getFirstGaze()));
+        }
+
+        XYChart.Series yValues = new XYChart.Series();
+        xValues.setName("Y coordinates");
+        for (FixationPoint p : points) {
+            yValues.getData().add(new XYChart.Data(p.getY(), p.getFirstGaze()));
+        }
+
+        colorBands.getData().add(xValues);
+        colorBands.getData().add(yValues);
+
+        EventHandler<Event> openAreaChartEvent = createZoomInAreaChartEventHandler(colorBands, root);
+
+        colorBands.addEventHandler(MouseEvent.MOUSE_CLICKED, openAreaChartEvent);
+
+        root.widthProperty().addListener((observable, oldValue, newValue) -> {
+
+            colorBands.setMaxWidth(newValue.doubleValue() * 0.4);
+        });
+        root.heightProperty().addListener((observable, oldValue, newValue) -> {
+
+            colorBands.setMaxHeight(newValue.doubleValue() * 0.4);
+        });
+        colorBands.setMaxWidth(root.getWidth() * 0.4);
+        colorBands.setMaxHeight(root.getHeight() * 0.4);
+
+        return colorBands;
+
+    }
+
     public static ImageView buildGazeMetrics(Stats stats, final Region root) {
         ImageView gazeMetrics = new ImageView();
         gazeMetrics.setPreserveRatio(true);
@@ -168,36 +212,70 @@ public class StatsDisplay {
         return parentVBox.getChildren().indexOf(node);
     }
 
-    private static EventHandler<Event> createZoomOutLineChartEventHandler(LineChart<String, Number> lineChart,
+    private static EventHandler<Event> createZoomOutAreaChartEventHandler(XYChart<Number, Number> chart,
             final Region root, int originalIndexInParent) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                lineChart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+                chart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                zoomOutAndReset(lineChart);
+                zoomOutAndReset(chart);
 
-                resetToOriginalIndexInParent(lineChart, originalIndexInParent);
+                resetToOriginalIndexInParent(chart, originalIndexInParent);
 
-                lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInLineChartEventHandler(lineChart, root));
+                chart.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInAreaChartEventHandler(chart, root));
             }
 
         };
     }
 
-    private static EventHandler<Event> createZoomInLineChartEventHandler(LineChart<String, Number> lineChart,
+    private static EventHandler<Event> createZoomOutLineChartEventHandler(XYChart<String, Number> chart,
+            final Region root, int originalIndexInParent) {
+        return new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+                chart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+
+                zoomOutAndReset(chart);
+
+                resetToOriginalIndexInParent(chart, originalIndexInParent);
+
+                chart.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInLineChartEventHandler(chart, root));
+            }
+
+        };
+    }
+
+    private static EventHandler<Event> createZoomInAreaChartEventHandler(XYChart<Number, Number> chart,
             final Region root) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
-                lineChart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+                chart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-                int originalIndexInParent = getOriginalIndexInParent(lineChart);
+                int originalIndexInParent = getOriginalIndexInParent(chart);
 
-                zoomInAndCenter(lineChart, lineChart.getWidth(), lineChart.getHeight(), false);
+                zoomInAndCenter(chart, chart.getWidth(), chart.getHeight(), false);
 
-                lineChart.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOutLineChartEventHandler(lineChart, root, originalIndexInParent));
+                chart.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        createZoomOutAreaChartEventHandler(chart, root, originalIndexInParent));
+            }
+        };
+    }
+
+    private static EventHandler<Event> createZoomInLineChartEventHandler(XYChart<String, Number> chart,
+            final Region root) {
+        return new EventHandler<Event>() {
+            @Override
+            public void handle(Event e) {
+                chart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+
+                int originalIndexInParent = getOriginalIndexInParent(chart);
+
+                zoomInAndCenter(chart, chart.getWidth(), chart.getHeight(), false);
+
+                chart.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        createZoomOutLineChartEventHandler(chart, root, originalIndexInParent));
             }
         };
     }
