@@ -367,6 +367,13 @@ public class Stats implements GazeMotionListener {
             g.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
         }
 
+        currentGazeTime = System.currentTimeMillis();
+        for (FixationPoint p : fixationSequence) {
+            p.setFirstGaze(Math.abs(p.getFirstGaze() - currentGazeTime));
+            // log.info("x = {}, y = {}, fGaze= {}, gDuration={}",p.getY(), p.getX(), p.getFirstGaze(),
+            // p.getGazeDuration());
+        }
+
         saveImageAsPng(bImage, gazeMetricsFile);
 
         savedStatsInfo.notifyFilesReady();
@@ -496,6 +503,7 @@ public class Stats implements GazeMotionListener {
     }
 
     private void incFixationSequence(int X, int Y) {
+        // currentGazeTime = System.currentTimeMillis();
         long previousGaze;
         long gazeDuration;
 

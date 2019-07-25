@@ -32,7 +32,7 @@ public class FixationSequence {
     @Getter
     private WritableImage image;
     @Getter
-    private static LinkedList<FixationPoint> sequence;
+    private LinkedList<FixationPoint> sequence;
 
     private static Font sanSerifFont = new Font("SanSerif", 10);
 
@@ -103,10 +103,8 @@ public class FixationSequence {
                 gc.fillText(Integer.toString(label_count), x, y, 80);
 
             } else {
-                // this.sequence.remove(j);
                 fixSeq.get(j).setGazeDuration(-1);
             }
-
         }
 
         SnapshotParameters params = new SnapshotParameters();
@@ -118,7 +116,6 @@ public class FixationSequence {
             if (it.next().getGazeDuration() == -1)
                 it.remove();
         }
-
         sequence = fixSeq;
     }
 
