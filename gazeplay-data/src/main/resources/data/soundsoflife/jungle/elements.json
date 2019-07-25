@@ -63,6 +63,18 @@
         "elephant2.wav",
         "elephant3.wav"
       ]
+    },
+    {
+      "image":"frog.png",
+      "scale":0.3,
+      "coords":{
+        "x":750,
+        "y":700
+      },
+      "sounds":[
+        "frog.wav",
+        "frog2.wav"
+      ]
     }
   ]
 }

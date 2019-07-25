@@ -76,7 +76,6 @@ public class SoundsOfLife implements GameLifeCycle {
             ImageView imageView = new ImageView(image);
             // Scaling image
             double scale = elementObj.get("scale").getAsDouble();
-            log.info("width: {}, ratio: {}, scale: {}", image.getWidth(), scaleRatio, scale);
             imageView.setFitWidth(image.getWidth() * scaleRatio * scale);
             imageView.setFitHeight(image.getHeight() * scaleRatio * scale);
             // Positioning image
