@@ -48,10 +48,9 @@ public class ScanpathView extends GraphicalContext<Pane> {
         List<Ellipse> Points = new LinkedList<Ellipse>();
         for (FixationPoint p : this.points) {
             Ellipse newPoint = new Ellipse();
-            // newPoint.setFill(Color.RED);
-            newPoint.setOpacity(0.4);
-            // newPoint.setStroke(Color.BLACK);
-            // newPoint.setStrokeWidth(1);
+            // newPoint.setFill(Color.RED); // uncomment for "debug"/ to see if the ellipses are the same as the
+            // scanpath image
+            newPoint.setOpacity(0);
 
             newPoint.setCenterX(p.getY());
             newPoint.setCenterY(p.getX());
@@ -62,14 +61,14 @@ public class ScanpathView extends GraphicalContext<Pane> {
         log.info("nb points = " + Points.size());
         root.getChildren().addAll(Points);
 
-        for (int i = 0; i < Points.size(); i++) {
+        for (int i = 0; i < Points.size() - 1; i++) {
             int index = i;
             /**
              * to add a labelBox in the top left corner uncomment the code and make the necessary modifications
              */
             // HBox labelBox = new HBox();
             Text label = new Text();
-            Points.get(i).setOnMouseEntered(s -> {
+            Points.get(index).setOnMouseEntered(s -> {
 
                 label.setText(stats.getFixationSequence().get(index).getGazeDuration() + " ms");
                 label.setFont(new Font("Verdana", 20));
@@ -84,7 +83,7 @@ public class ScanpathView extends GraphicalContext<Pane> {
                 root.getChildren().add(label);
             });
 
-            Points.get(i).setOnMouseExited(s -> {
+            Points.get(index).setOnMouseExited(s -> {
                 root.getChildren().remove(label);
             });
         }

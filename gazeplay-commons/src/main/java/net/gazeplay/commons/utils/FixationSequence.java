@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.lang.Math;
 
@@ -112,10 +113,12 @@ public class FixationSequence {
         params.setFill(Color.TRANSPARENT);
         canvas.snapshot(params, image);
 
-        for (int i = 0; i < fixSeq.size() - 1; i++) {
-            if (fixSeq.get(i).getGazeDuration() < 0)
-                fixSeq.remove(i);
+        Iterator<FixationPoint> it = fixSeq.iterator();
+        while (it.hasNext()) {
+            if (it.next().getGazeDuration() == -1)
+                it.remove();
         }
+
         sequence = fixSeq;
     }
 
