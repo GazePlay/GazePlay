@@ -144,23 +144,25 @@ public class StatsDisplay {
         yAxis.setLabel("Coordinates");
 
         AreaChart<Number, Number> colorBands = new AreaChart<Number, Number>(xAxis, yAxis);
+        colorBands.setTitle("Color Bands");
 
         colorBands.setCreateSymbols(true);
         colorBands.setLegendVisible(true);
 
-        XYChart.Series xValues = new XYChart.Series();
-        xValues.setName("X coordinates");
+        XYChart.Series xEyeCoordinates = new XYChart.Series();
+        xEyeCoordinates.setName("X coordinate");
         for (FixationPoint p : points) {
-            xValues.getData().add(new XYChart.Data(p.getFirstGaze(), p.getY()));
+            xEyeCoordinates.getData().add(new XYChart.Data(p.getFirstGaze(), p.getY()));
         }
 
-        XYChart.Series yValues = new XYChart.Series();
-        yValues.setName("Y coordinates");
+        XYChart.Series yEyeCoordinates = new XYChart.Series();
+        yEyeCoordinates.setName("Y coordinate");
         for (FixationPoint p : points) {
-            yValues.getData().add(new XYChart.Data(p.getFirstGaze(), p.getX()));
+            yEyeCoordinates.getData().add(new XYChart.Data(p.getFirstGaze(), p.getX()));
         }
+        xAxis.setTickLabelsVisible(false);
 
-        colorBands.getData().addAll(xValues, yValues);
+        colorBands.getData().addAll(xEyeCoordinates, yEyeCoordinates);
 
         EventHandler<Event> openAreaChartEvent = createZoomInAreaChartEventHandler(colorBands, root);
 

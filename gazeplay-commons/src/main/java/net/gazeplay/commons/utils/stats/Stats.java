@@ -215,9 +215,9 @@ public class Stats implements GazeMotionListener {
         lifeCycle.start(() -> {
             if (!config.isHeatMapDisabled())
                 heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
-            startTime = System.currentTimeMillis();
             if (!config.isFixationSequenceDisabled())
                 fixationSequence = new LinkedList<FixationPoint>();
+            startTime = System.currentTimeMillis();
             recordGazeMovements = e -> {
                 int getX = (int) e.getX();
                 int getY = (int) e.getY();
@@ -360,19 +360,20 @@ public class Stats implements GazeMotionListener {
         }
 
         if (this.fixationSequence != null) {
+            // set the gazeDuration of the last Fixation Point
+            fixationSequence.get(fixationSequence.size() - 1)
+                    .setGazeDuration(fixationSequence.get(fixationSequence.size() - 1).getFirstGaze()
+                            - fixationSequence.get(fixationSequence.size() - 2).getFirstGaze());
             FixationSequence scanpath = new FixationSequence((int) gameContextScene.getWidth(),
                     (int) gameContextScene.getHeight(), fixationSequence);
             fixationSequence = scanpath.getSequence();
             BufferedImage seqImage = SwingFXUtils.fromFXImage(scanpath.getImage(), null);
             g.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
         }
-
-        currentGazeTime = System.currentTimeMillis();
-        for (FixationPoint p : fixationSequence) {
-            p.setFirstGaze(Math.abs(p.getFirstGaze() - currentGazeTime));
-            // log.info("x = {}, y = {}, fGaze= {}, gDuration={}",p.getY(), p.getX(), p.getFirstGaze(),
-            // p.getGazeDuration());
-        }
+        // for (FixationPoint p : fixationSequence) {
+        // log.info("x = {}, y = {}, fGaze= {}, gDuration={}",p.getY(), p.getX(), p.getFirstGaze(),
+        // p.getGazeDuration());
+        // }
 
         saveImageAsPng(bImage, gazeMetricsFile);
 
@@ -503,7 +504,7 @@ public class Stats implements GazeMotionListener {
     }
 
     private void incFixationSequence(int X, int Y) {
-        // currentGazeTime = System.currentTimeMillis();
+
         long previousGaze;
         long gazeDuration;
 
@@ -511,16 +512,18 @@ public class Stats implements GazeMotionListener {
         // int y = (int) (X / heatMapPixelSize);
         int x = Y;
         int y = X;
+        FixationPoint newGazePoint;
+        currentGazeTime = System.currentTimeMillis();
 
         if (fixationSequence.size() == 0) {
-            previousGaze = 0;
+            newGazePoint = new FixationPoint(0, 0, x, y);
+            fixationSequence.add(newGazePoint);
         } else {
-            previousGaze = (fixationSequence.get(fixationSequence.size() - 1)).getFirstGaze();
+            newGazePoint = new FixationPoint(System.currentTimeMillis() - startTime, 0, x, y);
+            gazeDuration = newGazePoint.getFirstGaze()
+                    - (fixationSequence.get(fixationSequence.size() - 1)).getFirstGaze();
+            (fixationSequence.get(fixationSequence.size() - 1)).setGazeDuration(gazeDuration);
         }
-
-        FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(), 0, x, y);
-        gazeDuration = Math.abs(previousGaze - newGazePoint.getFirstGaze());
-
         // if the new points coordinates are the same as last one's in the list then update the last fixationPoint in
         // the list
         // same coordinate points are a result of the eyetracker's frequency of sampling
@@ -528,9 +531,9 @@ public class Stats implements GazeMotionListener {
                 && (newGazePoint.getX() == fixationSequence.get(fixationSequence.size() - 1).getX())
                 && (newGazePoint.getY() == fixationSequence.get(fixationSequence.size() - 1).getY())) {
             long gDuration = fixationSequence.get(fixationSequence.size() - 1).getGazeDuration();
-            fixationSequence.get(fixationSequence.size() - 1).setGazeDuration(gazeDuration + gDuration); //
+            fixationSequence.get(fixationSequence.size() - 1)
+                    .setGazeDuration(newGazePoint.getGazeDuration() + gDuration); //
         } else { // else add the new point in the list
-            newGazePoint.setGazeDuration(gazeDuration);
             fixationSequence.add(newGazePoint);
         }
     }
