@@ -43,14 +43,15 @@ public class ScanpathView extends GraphicalContext<Pane> {
         SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
         this.scanPathView = new ImageView(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString()));
         root.getChildren().add(scanPathView);
-        this.points = FixationSequence.getSequence();
+        //this.points = FixationSequence.getSequence();
+        this.points = stats.getFixationSequence();
 
         List<Ellipse> Points = new LinkedList<Ellipse>();
         for (FixationPoint p : this.points) {
             Ellipse newPoint = new Ellipse();
-            // newPoint.setFill(Color.RED); // uncomment for "debug"/ to see if the ellipses are the same as the
+             newPoint.setFill(Color.RED); // uncomment for "debug"/ to see if the ellipses are the same as the
             // scanpath image
-            newPoint.setOpacity(0);
+            newPoint.setOpacity(0.4);
 
             newPoint.setCenterX(p.getY());
             newPoint.setCenterY(p.getX());
@@ -58,6 +59,7 @@ public class ScanpathView extends GraphicalContext<Pane> {
             newPoint.setRadiusY(newPoint.getRadiusX());
             Points.add(newPoint);
         }
+        Points.remove(0);
         log.info("nb points = " + Points.size());
         root.getChildren().addAll(Points);
 

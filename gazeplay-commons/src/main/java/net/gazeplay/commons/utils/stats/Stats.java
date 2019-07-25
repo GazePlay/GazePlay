@@ -362,7 +362,7 @@ public class Stats implements GazeMotionListener {
         if (this.fixationSequence != null) {
             FixationSequence scanpath = new FixationSequence((int) gameContextScene.getWidth(),
                     (int) gameContextScene.getHeight(), fixationSequence);
-
+            fixationSequence = scanpath.getSequence();
             BufferedImage seqImage = SwingFXUtils.fromFXImage(scanpath.getImage(), null);
             g.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
         }
