@@ -3,7 +3,7 @@
   "elements":[
     {
       "image":"parrot.png",
-      "scale":0.1,
+      "scale":0.15,
       "coords":{
         "x":620,
         "y":200
@@ -17,7 +17,7 @@
     },
     {
       "image":"snake.png",
-      "scale":0.1,
+      "scale":0.15,
       "coords":{
         "x":250,
         "y":750
@@ -29,14 +29,39 @@
     },
     {
       "image":"monkey.png",
-      "scale":0.1,
+      "scale":0.3,
       "coords":{
         "x":500,
         "y":650
       },
       "sounds":[
-        "snake.wav",
-        "snake2.wav"
+        "monkey.wav"
+      ]
+    },
+    {
+      "image":"jaguar.png",
+      "scale":0.4,
+      "coords":{
+        "x":1200,
+        "y":720
+      },
+      "sounds":[
+        "jaguar.wav",
+        "jaguar2.wav",
+        "jaguar3.wav"
+      ]
+    },
+    {
+      "image":"elephant.png",
+      "scale":0.4,
+      "coords":{
+        "x":820,
+        "y":450
+      },
+      "sounds":[
+        "elephant.wav",
+        "elephant2.wav",
+        "elephant3.wav"
       ]
     }
   ]
