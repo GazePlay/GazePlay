@@ -162,7 +162,10 @@ public class StatsDisplay {
         }
         xAxis.setTickLabelsVisible(false);
 
+
         colorBands.getData().addAll(xEyeCoordinates, yEyeCoordinates);
+       
+        colorBands.getStylesheets().add("data/common/chart.css");
 
         EventHandler<Event> openAreaChartEvent = createZoomInAreaChartEventHandler(colorBands, root);
 

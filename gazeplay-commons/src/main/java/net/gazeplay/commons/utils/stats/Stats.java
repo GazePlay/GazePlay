@@ -513,7 +513,6 @@ public class Stats implements GazeMotionListener {
         int x = Y;
         int y = X;
         FixationPoint newGazePoint;
-        currentGazeTime = System.currentTimeMillis();
 
         if (fixationSequence.size() == 0) {
             newGazePoint = new FixationPoint(0, 0, x, y);
