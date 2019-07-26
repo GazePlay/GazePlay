@@ -1,18 +1,23 @@
 package net.gazeplay;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 
+import javafx.scene.control.RadioButton;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import lombok.Data;
 import lombok.NonNull;
@@ -26,7 +31,6 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
-import net.gazeplay.games.labyrinth.Mouse;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -215,11 +219,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         VBox centerPane = new VBox();
         centerPane.setAlignment(Pos.CENTER);
 
-        {
-            LineChart<String, Number> chart = StatsDisplay.buildLineChart(stats, root);
-            centerPane.getChildren().add(chart);
-        }
-
         ImageView gazeMetrics = StatsDisplay.buildGazeMetrics(stats, root);
         root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -234,6 +233,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         gazeMetrics.setFitHeight(root.getHeight() * 0.35);
 
         centerPane.getChildren().add(gazeMetrics);
+
+        // charts
+
+        LineChart<String, Number> lineChart = StatsDisplay.buildLineChart(stats, root);
+        centerPane.getChildren().add(lineChart);
+
+        AreaChart<Number, Number> areaChart = StatsDisplay.buildAreaChart(stats.getFixationSequence(), root);
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
@@ -252,13 +258,31 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             gazePlay.onDisplayScanpath(scanpath);
         };
 
-        HomeButton scanpathButton = new HomeButton("data/common/images/scanpathButton.png"); // change graphics of this
-                                                                                             // Button
+        HomeButton scanpathButton = new HomeButton("data/common/images/scanpathButton.png");
         scanpathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanpath);
+
+        RadioButton colorBands = new RadioButton("Color Bands");
+        colorBands.setTextFill(Color.WHITE);
+        colorBands.getStylesheets().add("data/common/radio.css");
+
+        colorBands.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (colorBands.isSelected()) {
+                    centerPane.getChildren().remove(lineChart);
+                    centerPane.getChildren().add(areaChart);
+
+                } else {
+                    centerPane.getChildren().remove(areaChart);
+                    centerPane.getChildren().add(lineChart);
+                }
+            }
+        });
 
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
+        controlButtonPane.getChildren().add(colorBands);
         if (config.isAreaOfInterestEnabled())
             controlButtonPane.getChildren().add(aoiButton);
         if (!config.isFixationSequenceDisabled())

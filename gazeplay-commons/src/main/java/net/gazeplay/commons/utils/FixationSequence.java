@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.lang.Math;
 
@@ -30,11 +31,13 @@ public class FixationSequence {
      */
     @Getter
     private WritableImage image;
+    @Getter
+    private LinkedList<FixationPoint> sequence;
 
     private static Font sanSerifFont = new Font("SanSerif", 10);
 
     public FixationSequence(int width, int height, LinkedList<FixationPoint> fixSeq) {
-
+        sequence = new LinkedList<FixationPoint>();
         this.image = new WritableImage(width, height);
         Canvas canvas = new Canvas(width, height);
 
@@ -99,12 +102,21 @@ public class FixationSequence {
                 gc.setFill(Color.BLACK);
                 gc.fillText(Integer.toString(label_count), x, y, 80);
 
-            } else
-                continue;
+            } else {
+                fixSeq.get(j).setGazeDuration(-1);
+            }
         }
+
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
         canvas.snapshot(params, image);
+
+        Iterator<FixationPoint> it = fixSeq.iterator();
+        while (it.hasNext()) {
+            if (it.next().getGazeDuration() == -1)
+                it.remove();
+        }
+        sequence = fixSeq;
     }
 
     /**
@@ -124,14 +136,9 @@ public class FixationSequence {
     }
 
     // Vertex Cluster Reduction -- successive vertices that are clustered too closely are reduced to a single vertex
-    public static LinkedList<FixationPoint> getFixationSequence(LinkedList<FixationPoint> sequence) {
-        for (int i = 1; i < sequence.size(); i++) {
-            if (sequence.get(i).getGazeDuration() <= 20) {
-                sequence.remove(i);
-            }
-        }
-        return sequence;
-    }
+    // public static LinkedList<FixationPoint> getFixationSequence() {
+    // return sequence;
+    // }
 
     public static LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
 

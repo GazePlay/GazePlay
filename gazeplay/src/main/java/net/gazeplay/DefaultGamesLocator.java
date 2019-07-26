@@ -27,8 +27,6 @@ import net.gazeplay.games.divisor.Divisor;
 import net.gazeplay.games.divisor.DivisorStats;
 import net.gazeplay.games.draw.DrawApplication;
 import net.gazeplay.games.drawonvideo.VideoPlayerWithLiveFeedbackApp;
-import net.gazeplay.games.egg.EggGame;
-import net.gazeplay.games.egg.EggGamesStats;
 import net.gazeplay.games.goosegame.GooseGame;
 import net.gazeplay.games.horses.Horses;
 import net.gazeplay.games.labyrinth.Labyrinth;
@@ -419,20 +417,6 @@ public class DefaultGamesLocator implements GamesLocator {
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
                             Stats stats) {
                         return new WhereIsIt(WhereIsIt.WhereIsItGameType.FLAGS, 2, 2, false, gameContext, stats);
-                    }
-                }));
-
-        result.add(new GameSpec(new GameSummary("egg", "data/Thumbnails/flags.png", GameCategories.Category.SELECTION),
-                new GameSpec.GameLauncher() {
-                    @Override
-                    public Stats createNewStats(Scene scene) {
-                        return new EggGamesStats(scene);
-                    }
-
-                    @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-                            Stats stats) {
-                        return new EggGame(gameContext, stats);
                     }
                 }));
 
