@@ -8,6 +8,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
@@ -18,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+@Slf4j
 public class SoundsOfLife implements GameLifeCycle {
     private final GameContext gameContext;
     private final Stats stats;
@@ -33,6 +35,11 @@ public class SoundsOfLife implements GameLifeCycle {
         String path = "data/soundsoflife/";
         switch (gameVariant) {
         case 0:
+            path += "farm/";
+            break;
+        case 1:
+            path += "jungle/";
+            break;
         default:
             path += "farm/";
         }
@@ -68,7 +75,7 @@ public class SoundsOfLife implements GameLifeCycle {
             Image image = new Image(imagePath);
             ImageView imageView = new ImageView(image);
             // Scaling image
-            int scale = elementObj.get("scale").getAsInt();
+            double scale = elementObj.get("scale").getAsDouble();
             imageView.setFitWidth(image.getWidth() * scaleRatio * scale);
             imageView.setFitHeight(image.getHeight() * scaleRatio * scale);
             // Positioning image

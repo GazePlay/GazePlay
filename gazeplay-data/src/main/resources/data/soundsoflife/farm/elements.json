@@ -63,7 +63,7 @@
     },
     {
       "image":"sheep.png",
-      "scale":2.3,
+      "scale":2,
       "coords":{
         "x":1520,
         "y":2520
