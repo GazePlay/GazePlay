@@ -165,7 +165,7 @@ public class StatsDisplay {
 
         colorBands.getData().addAll(xEyeCoordinates, yEyeCoordinates);
        
-        colorBands.getStylesheets().add("data/common/chart.css");
+        //colorBands.getStylesheets().add("data/common/chart.css"); // doesn't affect anything in
 
         EventHandler<Event> openAreaChartEvent = createZoomInAreaChartEventHandler(colorBands, root);
 
