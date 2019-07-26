@@ -162,10 +162,20 @@ public class StatsDisplay {
         }
         xAxis.setTickLabelsVisible(false);
 
-
         colorBands.getData().addAll(xEyeCoordinates, yEyeCoordinates);
-       
-        //colorBands.getStylesheets().add("data/common/chart.css"); // doesn't affect anything in
+
+        Node n = colorBands.lookup(".chart-legend");
+        n.setStyle("-fx-background-color:  transparent;");
+
+        n = colorBands.lookup(".default-color0.chart-series-area-line");
+        n.setStyle("-fx-stroke: rgba(51, 51, 51, 0.5);");
+        n = colorBands.lookup(".default-color1.chart-series-area-line");
+        n.setStyle("-fx-stroke: rgba(51, 51, 51, 0.5);");
+
+        n = colorBands.lookup(".default-color0.chart-series-area-fill");
+        n.setStyle("{-fx-fill: rgba(51, 230, 225, 0.5); -fx-blend-mode: difference;}");
+        n = colorBands.lookup(".default-color1.chart-series-area-fill");
+        n.setStyle("{-fx-fill: rgba(51, 230, 225, 0.5); -fx-blend-mode: difference;}");
 
         EventHandler<Event> openAreaChartEvent = createZoomInAreaChartEventHandler(colorBands, root);
 
