@@ -151,50 +151,39 @@ public class StatsDisplay {
 
         XYChart.Series xEyeCoordinates = new XYChart.Series();
         xEyeCoordinates.setName("X coordinate");
-        for (FixationPoint p : points) {
-            xEyeCoordinates.getData().add(new XYChart.Data(p.getFirstGaze(), p.getY()));
-        }
+        if (points.size() > 0) {
 
-        XYChart.Series yEyeCoordinates = new XYChart.Series();
-        yEyeCoordinates.setName("Y coordinate");
-        for (FixationPoint p : points) {
-            yEyeCoordinates.getData().add(new XYChart.Data(p.getFirstGaze(), p.getX()));
-        }
-        xAxis.setTickLabelsVisible(false);
+            for (FixationPoint p : points) {
+                xEyeCoordinates.getData().add(new XYChart.Data(p.getFirstGaze(), p.getY()));
+            }
 
-        colorBands.getData().addAll(xEyeCoordinates, yEyeCoordinates);
+            XYChart.Series yEyeCoordinates = new XYChart.Series();
+            yEyeCoordinates.setName("Y coordinate");
+            for (FixationPoint p : points) {
+                yEyeCoordinates.getData().add(new XYChart.Data(p.getFirstGaze(), p.getX()));
+            }
+            xAxis.setTickLabelsVisible(false);
 
-        Node n = colorBands.lookup(".chart-legend");
-        n.setStyle("-fx-background-color:  transparent;");
+            colorBands.getData().addAll(xEyeCoordinates, yEyeCoordinates);
 
-        n = colorBands.lookup(".default-color0.chart-series-area-line");
-        n.setStyle("-fx-stroke: rgba(51, 51, 51, 0.5);");
-        n = colorBands.lookup(".default-color1.chart-series-area-line");
-        n.setStyle("-fx-stroke: rgba(51, 51, 51, 0.5);");
+            EventHandler<Event> openAreaChartEvent = createZoomInAreaChartEventHandler(colorBands, root);
 
-        n = colorBands.lookup(".default-color0.chart-series-area-fill");
-        n.setStyle("-fx-fill: rgba(51, 230, 225, 0.5); ");
-        n.setStyle("-fx-blend-mode : difference;");
-        n = colorBands.lookup(".default-color1.chart-series-area-fill");
-        n.setStyle("-fx-fill: rgba(51, 230, 225, 0.5); ");
-        n.setStyle("-fx-blend-mode : add;");
-        EventHandler<Event> openAreaChartEvent = createZoomInAreaChartEventHandler(colorBands, root);
+            colorBands.addEventHandler(MouseEvent.MOUSE_CLICKED, openAreaChartEvent);
 
-        colorBands.addEventHandler(MouseEvent.MOUSE_CLICKED, openAreaChartEvent);
+            root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
-        root.widthProperty().addListener((observable, oldValue, newValue) -> {
+                colorBands.setMaxWidth(newValue.doubleValue() * 0.4);
+            });
+            root.heightProperty().addListener((observable, oldValue, newValue) -> {
 
-            colorBands.setMaxWidth(newValue.doubleValue() * 0.4);
-        });
-        root.heightProperty().addListener((observable, oldValue, newValue) -> {
+                colorBands.setMaxHeight(newValue.doubleValue() * 0.4);
+            });
+            colorBands.setMaxWidth(root.getWidth() * 0.4);
+            colorBands.setMaxHeight(root.getHeight() * 0.4);
 
-            colorBands.setMaxHeight(newValue.doubleValue() * 0.4);
-        });
-        colorBands.setMaxWidth(root.getWidth() * 0.4);
-        colorBands.setMaxHeight(root.getHeight() * 0.4);
-
-        return colorBands;
-
+            return colorBands;
+        } else
+            return null;
     }
 
     public static ImageView buildGazeMetrics(Stats stats, final Region root) {

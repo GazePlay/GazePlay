@@ -240,8 +240,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         centerPane.getChildren().add(lineChart);
         AreaChart<Number, Number> areaChart;
         RadioButton colorBands = new RadioButton("Color Bands");
-        if(!config.isFixationSequenceDisabled()){
+        if (!config.isFixationSequenceDisabled()) {
             areaChart = StatsDisplay.buildAreaChart(stats.getFixationSequence(), root);
+
             colorBands.setTextFill(Color.WHITE);
             colorBands.getStylesheets().add("data/common/radio.css");
 
@@ -251,6 +252,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     if (colorBands.isSelected()) {
                         centerPane.getChildren().remove(lineChart);
                         centerPane.getChildren().add(areaChart);
+                        centerPane.getStylesheets().add("data/common/chart.css");
 
                     } else {
                         centerPane.getChildren().remove(areaChart);
@@ -259,7 +261,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 }
             });
         }
-
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
@@ -287,7 +288,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         if (config.isAreaOfInterestEnabled())
             controlButtonPane.getChildren().add(aoiButton);
-        if (!config.isFixationSequenceDisabled()){
+        if (!config.isFixationSequenceDisabled()) {
             controlButtonPane.getChildren().add(colorBands);
             controlButtonPane.getChildren().add(scanpathButton);
         }
