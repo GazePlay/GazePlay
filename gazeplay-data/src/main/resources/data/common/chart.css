@@ -1,0 +1,10 @@
+
+.default-color0.chart-area-symbol { -fx-background-color: #f0e68c, #fffacd; }
+.default-color1.chart-area-symbol { -fx-background-color: #dda0dd, #d8bfd8; }
+ 
+.default-color0.chart-series-area-line { -fx-stroke: rgba(51,51,51,0.5); }
+.default-color1.chart-series-area-line { -fx-stroke: rgba(51,51,51,0.5); }
+ 
+.default-color0.chart-series-area-fill { -fx-fill: #FF0000; -fx-blend-mode:difference; }
+.default-color1.chart-series-area-fill { -fx-fill: #FF0000; -fx-blend-mode:difference; }
+

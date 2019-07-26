@@ -238,8 +238,29 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         LineChart<String, Number> lineChart = StatsDisplay.buildLineChart(stats, root);
         centerPane.getChildren().add(lineChart);
+        AreaChart<Number, Number> areaChart;
+        RadioButton colorBands = new RadioButton("Color Bands");
+        if (!config.isFixationSequenceDisabled()) {
+            areaChart = StatsDisplay.buildAreaChart(stats.getFixationSequence(), root);
 
-        AreaChart<Number, Number> areaChart = StatsDisplay.buildAreaChart(stats.getFixationSequence(), root);
+            colorBands.setTextFill(Color.WHITE);
+            colorBands.getStylesheets().add("data/common/radio.css");
+
+            colorBands.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    if (colorBands.isSelected()) {
+                        centerPane.getChildren().remove(lineChart);
+                        centerPane.getChildren().add(areaChart);
+                        centerPane.getStylesheets().add("data/common/chart.css");
+
+                    } else {
+                        centerPane.getChildren().remove(areaChart);
+                        centerPane.getChildren().add(lineChart);
+                    }
+                }
+            });
+        }
 
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
@@ -261,32 +282,17 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         HomeButton scanpathButton = new HomeButton("data/common/images/scanpathButton.png");
         scanpathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanpath);
 
-        RadioButton colorBands = new RadioButton("Color Bands");
-        colorBands.setTextFill(Color.WHITE);
-        colorBands.getStylesheets().add("data/common/radio.css");
-
-        colorBands.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (colorBands.isSelected()) {
-                    centerPane.getChildren().remove(lineChart);
-                    centerPane.getChildren().add(areaChart);
-
-                } else {
-                    centerPane.getChildren().remove(areaChart);
-                    centerPane.getChildren().add(lineChart);
-                }
-            }
-        });
-
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
-        controlButtonPane.getChildren().add(colorBands);
+
         if (config.isAreaOfInterestEnabled())
             controlButtonPane.getChildren().add(aoiButton);
-        if (!config.isFixationSequenceDisabled())
+        if (!config.isFixationSequenceDisabled()) {
+            controlButtonPane.getChildren().add(colorBands);
             controlButtonPane.getChildren().add(scanpathButton);
+        }
+
         controlButtonPane.getChildren().add(homeButton);
 
         if (continueButton != null) {
