@@ -1374,7 +1374,7 @@ public class DefaultGamesLocator implements GamesLocator {
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(
 
-                                new GameSpec.IntGameVariant(0, "Farm"), new GameSpec.IntGameVariant(1, "Jungle")
+                                new GameSpec.IntGameVariant(0, "Farm"), new GameSpec.IntGameVariant(1, "Jungle"), new GameSpec.IntGameVariant(2, "Savanna")
 
                 ));
                     }
