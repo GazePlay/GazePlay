@@ -40,6 +40,9 @@ public class SoundsOfLife implements GameLifeCycle {
         case 1:
             path += "jungle/";
             break;
+        case 2:
+            path += "savanna/";
+            break;
         default:
             path += "farm/";
         }

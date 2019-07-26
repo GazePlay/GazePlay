@@ -48,11 +48,11 @@ public class SoundMakingEntity extends Parent {
 
         progressTimeline.setOnFinished(e -> selected());
 
-        movetimeline = new Timeline(new KeyFrame(Duration.seconds(0.5), new KeyValue(imageView.rotateProperty(), 15)),
-                new KeyFrame(Duration.seconds(1), new KeyValue(imageView.rotateProperty(), -15)),
-                new KeyFrame(Duration.seconds(1.5), new KeyValue(imageView.rotateProperty(), 15)),
-                new KeyFrame(Duration.seconds(2), new KeyValue(imageView.rotateProperty(), -15)),
-                new KeyFrame(Duration.seconds(2.5), new KeyValue(imageView.rotateProperty(), 15)),
+        movetimeline = new Timeline(new KeyFrame(Duration.seconds(0.5), new KeyValue(imageView.rotateProperty(), 10)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(imageView.rotateProperty(), -10)),
+                new KeyFrame(Duration.seconds(1.5), new KeyValue(imageView.rotateProperty(), 10)),
+                new KeyFrame(Duration.seconds(2), new KeyValue(imageView.rotateProperty(), -10)),
+                new KeyFrame(Duration.seconds(2.5), new KeyValue(imageView.rotateProperty(), 10)),
                 new KeyFrame(Duration.seconds(3), new KeyValue(imageView.rotateProperty(), 0)));
 
         EventHandler<Event> enterHandler = (Event event) -> {
