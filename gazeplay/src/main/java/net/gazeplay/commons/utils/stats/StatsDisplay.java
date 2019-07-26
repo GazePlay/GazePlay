@@ -173,10 +173,11 @@ public class StatsDisplay {
         n.setStyle("-fx-stroke: rgba(51, 51, 51, 0.5);");
 
         n = colorBands.lookup(".default-color0.chart-series-area-fill");
-        n.setStyle("{-fx-fill: rgba(51, 230, 225, 0.5); -fx-blend-mode: difference;}");
+        n.setStyle("-fx-fill: rgba(51, 230, 225, 0.5); ");
+        n.setStyle("-fx-blend-mode : difference;");
         n = colorBands.lookup(".default-color1.chart-series-area-fill");
-        n.setStyle("{-fx-fill: rgba(51, 230, 225, 0.5); -fx-blend-mode: difference;}");
-
+        n.setStyle("-fx-fill: rgba(51, 230, 225, 0.5); ");
+        n.setStyle("-fx-blend-mode : add;");
         EventHandler<Event> openAreaChartEvent = createZoomInAreaChartEventHandler(colorBands, root);
 
         colorBands.addEventHandler(MouseEvent.MOUSE_CLICKED, openAreaChartEvent);
