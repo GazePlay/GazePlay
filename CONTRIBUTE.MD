@@ -65,6 +65,7 @@ positionX : 3 ; positionY : 4
 More information and message levels: 
 https://www.tutorialspoint.com/log4j/log4j_logging_levels.htm
 
+Log managment is done in logback.xml file (for both console and log file gazeplay.log).
 
 #### Lombok
 
