@@ -42,6 +42,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     public static final String COLON = "Colon";
     private static Boolean ALIGN_LEFT = true;
     private static String currentLanguage;
+    private static final double RATIO = 0.35;
 
     public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats) throws IOException {
         BorderPane root = new BorderPane();
@@ -222,15 +223,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         ImageView gazeMetrics = StatsDisplay.buildGazeMetrics(stats, root);
         root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
-            gazeMetrics.setFitWidth(newValue.doubleValue() * 0.35);
+            gazeMetrics.setFitWidth(newValue.doubleValue() * RATIO);
         });
         root.heightProperty().addListener((observable, oldValue, newValue) -> {
 
-            gazeMetrics.setFitHeight(newValue.doubleValue() * 0.35);
+            gazeMetrics.setFitHeight(newValue.doubleValue() * RATIO);
         });
 
-        gazeMetrics.setFitWidth(root.getWidth() * 0.35);
-        gazeMetrics.setFitHeight(root.getHeight() * 0.35);
+        gazeMetrics.setFitWidth(root.getWidth() * RATIO);
+        gazeMetrics.setFitHeight(root.getHeight() * RATIO);
 
         centerPane.getChildren().add(gazeMetrics);
 
