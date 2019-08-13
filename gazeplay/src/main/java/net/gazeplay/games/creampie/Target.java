@@ -7,13 +7,14 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.Portrait;
 import net.gazeplay.commons.utils.Position;
 import net.gazeplay.commons.utils.RandomPositionGenerator;
 import net.gazeplay.commons.utils.games.ImageLibrary;
-import net.gazeplay.commons.utils.stats.CoordinatesTracker;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by schwab on 26/12/2016.
  */
+@Slf4j
 public class Target extends Portrait {
 
     private final Hand hand;
@@ -40,6 +42,8 @@ public class Target extends Portrait {
 
     private ArrayList<TargetAOI> targetAOIList;
     private TargetAOI targetAOI;
+
+    private static final String SOUNDS_MISSILE = "data/creampie/sounds/missile.mp3";
 
     public Target(RandomPositionGenerator randomPositionGenerator, Hand hand, Stats stats, GameContext gameContext,
             ImageLibrary imageLibrary) {
@@ -75,10 +79,17 @@ public class Target extends Portrait {
 
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
-        hand.onTargetHit(this);
-
         Animation animation = createAnimation();
         animation.play();
+
+        hand.onTargetHit(this);
+
+        try {
+            Utils.playSound(SOUNDS_MISSILE);
+        } catch (Exception e) {
+            log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
+
     }
 
     public ArrayList<TargetAOI> getTargetAOIList() {

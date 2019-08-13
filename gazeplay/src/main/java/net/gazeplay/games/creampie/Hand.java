@@ -7,7 +7,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.utils.games.Utils;
 
 /**
  * Created by schwab on 17/08/2016.
@@ -63,17 +62,9 @@ public class Hand extends Parent {
     }
 
     public void onTargetHit(Target target) {
+
         Animation animation = createAnimation(target);
         animation.play();
-
-        String soundResource = "data/creampie/sounds/missile.mp3";
-
-        try {
-            Utils.playSound(soundResource);
-        } catch (Exception e) {
-            log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
-
     }
 
     private Animation createAnimation(Target target) {

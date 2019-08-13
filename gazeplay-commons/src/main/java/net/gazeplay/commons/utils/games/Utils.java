@@ -55,7 +55,7 @@ public class Utils {
         }
     }
 
-    public static void playSound(String ressource) throws Exception {
+    public static MediaPlayer playSound(String ressource) throws Exception {
 
         log.debug("Try to play " + ressource);
 
@@ -84,6 +84,7 @@ public class Utils {
         soundPlayer.setVolume(configuration.getEffectsVolume());
         soundPlayer.volumeProperty().bind(configuration.getEffectsVolumeProperty());
         soundPlayer.play();
+        return soundPlayer;
     }
 
     public static void stopSound() {
