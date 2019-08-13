@@ -148,14 +148,24 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         log.info(Utils.getGazePlayFolder() + "profiles");
         String[] nameList = directory.list();
         if (nameList != null) {
-            nbUser = nbUser + nameList.length;
+            nbUser = 1;
+            System.out.println("nbUser " + nbUser);
             allUsers = new LinkedList<String>();
-            for (String names : nameList) {
-                allUsers.add(names);
+            for (String name : nameList) {
+                System.out.println(name);
+                System.out.println(name.startsWith("."));
+                if(!name.startsWith(".")) {
+                    nbUser++;
+                    allUsers.add(name);
+                    System.out.println("added");
+                }
             }
+            System.out.println("nbUser " + nbUser);
         }
 
-        for (int i = 1; i < nbUser; i++) {
+        /* code modified in order to resolve "on macos, files with . as first letter in name should't be considered as a profile #857"
+        btw, I think it should be like that else why allUsers was needed ??
+         for (int i = 1; i < nbUser; i++) {
             log.info("Profile founded : ={}", nameList[i - 1]);
             Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + nameList[i - 1]
                     + Utils.FILESEPARATOR + "GazePlay.properties");
@@ -172,7 +182,27 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     }
                 }
             }
-            userCard = createUser(choicePanel, gazePlay, nameList[i - 1], ip, i);
+
+         */
+
+        for (int i = 0; i < allUsers.size(); i++) {
+            log.info("Profile founded : ={}", allUsers.get(i));
+            Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + allUsers.get(i)
+                    + Utils.FILESEPARATOR + "GazePlay.properties");
+            Configuration conf2 = Configuration.createFromPropertiesResource();
+            ImagePattern ip = null;
+            String s = conf2.getUserPicture();
+            if (s != null) {
+                File f = new File(s);
+                if (f.exists()) {
+                    try {
+                        ip = new ImagePattern(new Image(new FileInputStream(f)));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            userCard = createUser(choicePanel, gazePlay, allUsers.get(i), ip, i+1);
             choicePanel.getChildren().add(userCard);
 
         }
@@ -185,6 +215,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     }
 
     private User createUser(FlowPane choicePanel, GazePlay gazePlay, String name, ImagePattern ip, int i) {
+
         User user = new User();
         user.setAlignment(Pos.TOP_RIGHT);
 
