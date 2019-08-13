@@ -154,7 +154,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             for (String name : nameList) {
                 System.out.println(name);
                 System.out.println(name.startsWith("."));
-                if(!name.startsWith(".")) {
+                if (!name.startsWith(".")) {
                     nbUser++;
                     allUsers.add(name);
                     System.out.println("added");
@@ -163,26 +163,17 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             System.out.println("nbUser " + nbUser);
         }
 
-        /* code modified in order to resolve "on macos, files with . as first letter in name should't be considered as a profile #857"
-        btw, I think it should be like that else why allUsers was needed ??
-         for (int i = 1; i < nbUser; i++) {
-            log.info("Profile founded : ={}", nameList[i - 1]);
-            Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + nameList[i - 1]
-                    + Utils.FILESEPARATOR + "GazePlay.properties");
-            Configuration conf2 = Configuration.createFromPropertiesResource();
-            ImagePattern ip = null;
-            String s = conf2.getUserPicture();
-            if (s != null) {
-                File f = new File(s);
-                if (f.exists()) {
-                    try {
-                        ip = new ImagePattern(new Image(new FileInputStream(f)));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
+        /*
+         * code modified in order to resolve
+         * "on macos, files with . as first letter in name should't be considered as a profile #857" btw, I think it
+         * should be like that else why allUsers was needed ?? for (int i = 1; i < nbUser; i++) {
+         * log.info("Profile founded : ={}", nameList[i - 1]); Configuration.setCONFIGPATH(Utils.getGazePlayFolder() +
+         * "profiles" + Utils.FILESEPARATOR + nameList[i - 1] + Utils.FILESEPARATOR + "GazePlay.properties");
+         * Configuration conf2 = Configuration.createFromPropertiesResource(); ImagePattern ip = null; String s =
+         * conf2.getUserPicture(); if (s != null) { File f = new File(s); if (f.exists()) { try { ip = new
+         * ImagePattern(new Image(new FileInputStream(f))); } catch (FileNotFoundException e) { e.printStackTrace(); } }
+         * }
+         * 
          */
 
         for (int i = 0; i < allUsers.size(); i++) {
@@ -202,7 +193,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     }
                 }
             }
-            userCard = createUser(choicePanel, gazePlay, allUsers.get(i), ip, i+1);
+            userCard = createUser(choicePanel, gazePlay, allUsers.get(i), ip, i + 1);
             choicePanel.getChildren().add(userCard);
 
         }
