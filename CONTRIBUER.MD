@@ -65,7 +65,7 @@ positionX : 3 ; positionY : 4
 Plus d'informations et niveaux de messages : 
 https://www.tutorialspoint.com/log4j/log4j_logging_levels.htm
 
-La gestion des logs se fait dans logback.xml file (à la fois pour les sorties dans la console et la sortie dans le fichier de log gazeplay.log).
+La gestion des logs se fait dans gazeplay-commons/src/main/resources/logback.xml file (à la fois pour les sorties dans la console et la sortie dans le fichier de log gazeplay.log).
 
 ### Lombok
 
