@@ -37,6 +37,7 @@ public class FixationSequence {
     private static Font sanSerifFont = new Font("SanSerif", 10);
 
     public FixationSequence(int width, int height, LinkedList<FixationPoint> fixSeq) {
+
         sequence = new LinkedList<FixationPoint>();
         this.image = new WritableImage(width, height);
         Canvas canvas = new Canvas(width, height);
