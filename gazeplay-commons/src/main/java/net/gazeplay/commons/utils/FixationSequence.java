@@ -109,7 +109,12 @@ public class FixationSequence {
 
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
-        canvas.snapshot(params, image);
+        try {
+            canvas.snapshot(params, image);
+        } catch (Exception e) {
+
+            log.error("Can\'t make properly Snapshot in Fixation Sequence");
+        }
 
         Iterator<FixationPoint> it = fixSeq.iterator();
         while (it.hasNext()) {
