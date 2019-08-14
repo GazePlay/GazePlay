@@ -15,10 +15,12 @@
 	</parent>
 
 	<dependencies>
-		<dependency>
+		<!--<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>javafx</artifactId>
 		</dependency>
+
+		-->
 		
 		<dependency>
 			<groupId>commons-io</groupId>
