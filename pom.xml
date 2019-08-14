@@ -48,12 +48,11 @@
 
     <dependencyManagement>
         <dependencies>
-        <!--    <dependency>
+            <dependency>
                 <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.3</version>
+                <artifactId>javafx-controls</artifactId>
+                <version>12.0.2</version>
             </dependency>
-            -->
             <!--<dependency>
                 <groupId>com.oracle</groupId>
                 <artifactId>javafx</artifactId>
