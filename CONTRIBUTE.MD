@@ -39,9 +39,14 @@ For the common use of *maven*, you will have to do at the beginning to install a
 mvn clean install
 ```
 
+##Java
+
+GazePlay is compiled with java 1.8 built with jdk 1.8 (currently, it is not possible to use an upper version of Java because they don't integrate JavaFX).
+
+
 ## Utilities
 
-#### Sl4J
+### Sl4J
 
 Simple Logging Facade for Java (https://www.slf4j.org). Manages displays on the console or in the debug file gazeplay.log (automatically located in the default GazePlay directory).
 
@@ -67,7 +72,7 @@ https://www.tutorialspoint.com/log4j/log4j_logging_levels.htm
 
 Log managment is done in gazeplay-commons/src/main/resources/logback.xml file (for both console and log file gazeplay.log).
 
-#### Lombok
+### Lombok
 
 Lombok allows you to simplify the Java code. The principle is to place at the beginning of the class tags that will be replaced at compilation by the corresponding machine code.
 
@@ -79,7 +84,7 @@ For example:
 More information: 
 https://projectlombok.org
 
-#### Findbugs
+### Findbugs
 
 Findbugs prevents the introduction of bugs that could be automatically detected by static analysis of the code.
 
@@ -97,13 +102,13 @@ mvn clean install -Dfindbugs.skip=false
 
 For more information, visit http://findbugs.sourceforge.net
 
-#### formatter-maven-plugin
+### formatter-maven-plugin
 
 This plugin is automatically called when you make a call to Maven. It allows you to perform a certain number of operations such as normalizing the end of a line, spaces, etc.
 
 For more information, visit http://code.revelc.net/formatter-maven-plugin/
 
-#### TravisCI
+### TravisCI
 
 Travis CI is a free software for continuous integration ([Wikipedia] (https://en.wikipedia.org/wiki/Travis_CI)). Continuous integration is a set of practices used in software engineering to verify at each change in source code that the result of the changes does not produce regression in the developed application ([Wikipedia] (https://en.wikipedia.org/wiki/Continuous_integration)).
  
@@ -113,9 +118,9 @@ A badge is added at the top of the README.md, indicating the status of the main 
 
 For more information, visit https://docs.travis-ci.com/user/getting-started/
 
-#### "Ideal" command line
+### "Ideal" command line
 
 This command line performs all the operations verified by Travis
 ```
-mvn clean install -T 1C -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
+mvn clean install -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
 ```

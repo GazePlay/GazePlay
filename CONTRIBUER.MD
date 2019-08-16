@@ -39,6 +39,10 @@ Pour l'utilisation commune de *maven*, vous devrez faire au départ pour install
 mvn clean install
 ```
 
+### Java
+
+GazePlay est compilé en java 1.8 produit avec le jdk 1.8 (actuellement, il n'est pas possible d'utiliser une version ulterieure car elle n'intègrent pas JavaFX).
+
 ## Utilitaires
 
 ### Sl4J
@@ -117,6 +121,6 @@ En savoir plus https://docs.travis-ci.com/user/getting-started/
 
 Cette ligne de commande réalise l'ensemble des opérations vérifiées par Travis
 ```
-mvn clean install -T 1C -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
+mvn clean install -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
 ```
 
