@@ -1359,29 +1359,49 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        gameList.add(new GameSpec(new GameSummary("Sounds of Life", "data/Thumbnails/soundsoflife.png",
-                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
-                    @Override
-                    public Set<GameSpec.GameVariant> getVariants() {
-                        return Sets.newLinkedHashSet(Lists.newArrayList(
-
-                                new GameSpec.IntGameVariant(0, "Farm"), new GameSpec.IntGameVariant(1, "Jungle"),
-                                new GameSpec.IntGameVariant(2, "Savanna")
-
-                ));
-                    }
-                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+        gameList.add(new GameSpec(
+                new GameSummary("Farm", "data/Thumbnails/farm.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "soundsoflife");
+                        return new Stats(scene,  "Farm");
                     }
 
                     @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
-                            Stats stats) {
-                        return new SoundsOfLife(gameContext, stats, gameVariant.getNumber());
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                                                       Stats stats) {
+                        return new SoundsOfLife(gameContext, stats,0);
+                    }
+                }));
+
+        gameList.add(new GameSpec(
+                new GameSummary("Jungle", "data/Thumbnails/jungle.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene,  "Jungle");
                     }
 
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                                                       Stats stats) {
+                        return new SoundsOfLife(gameContext, stats,1);
+                    }
+                }));
+
+        gameList.add(new GameSpec(
+                new GameSummary("Savanna", "data/Thumbnails/Savana.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene,  "Jungle");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                                                       Stats stats) {
+                        return new SoundsOfLife(gameContext, stats,2);
+                    }
                 }));
 
         log.info("Games found : {}", gameList.size());
