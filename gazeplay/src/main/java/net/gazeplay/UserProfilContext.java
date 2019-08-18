@@ -22,8 +22,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.util.Duration;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +48,6 @@ import java.util.List;
 @Slf4j
 public class UserProfilContext extends GraphicalContext<BorderPane> {
 
-    private final static String LOGO_PATH = "data/common/images/gazeplay.png";
     private int nbUser = 1;
 
     @Override
@@ -387,13 +384,13 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         double width = root.getWidth() * 0.5;
         double height = root.getHeight() * 0.2;
 
-        log.info(LOGO_PATH);
-        final Image logoImage = new Image(LOGO_PATH, width, height, true, true);
+        log.info(HomeMenuScreen.LOGO_PATH);
+        final Image logoImage = new Image(HomeMenuScreen.LOGO_PATH, width, height, true, true);
         final ImageView logoView = new ImageView(logoImage);
 
         root.heightProperty().addListener((observable, oldValue, newValue) -> {
             final double newHeight = newValue.doubleValue() * 0.2;
-            final Image newLogoImage = new Image(LOGO_PATH, width, newHeight, true, true);
+            final Image newLogoImage = new Image(HomeMenuScreen.LOGO_PATH, width, newHeight, true, true);
             logoView.setImage(newLogoImage);
         });
 
