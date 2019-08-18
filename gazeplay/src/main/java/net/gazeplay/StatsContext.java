@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-//@Data
+// @Data
 public class StatsContext extends GraphicalContext<BorderPane> {
 
     public static final String COLON = "Colon";

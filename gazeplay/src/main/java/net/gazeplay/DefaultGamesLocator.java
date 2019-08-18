@@ -1031,8 +1031,8 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        gameList.add(new GameSpec(new GameSummary("Math101", "data/Thumbnails/math101.png", GameCategories.Category.LOGIC,
-                null, "MathDescAdd"), new GameSpec.GameVariantGenerator() {
+        gameList.add(new GameSpec(new GameSummary("Math101", "data/Thumbnails/math101.png",
+                GameCategories.Category.LOGIC, null, "MathDescAdd"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 8"),
@@ -1052,8 +1052,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        gameList.add(new GameSpec(new GameSummary("Math102", "data/Thumbnails/math101.png", GameCategories.Category.LOGIC,
-                null, "MathDescSub"), new GameSpec.GameVariantGenerator() {
+        gameList.add(new GameSpec(new GameSummary("Math102", "data/Thumbnails/math101.png",
+                GameCategories.Category.LOGIC, null, "MathDescSub"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 8"),
@@ -1073,8 +1073,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        gameList.add(new GameSpec(new GameSummary("Math103", "data/Thumbnails/math101.png", GameCategories.Category.LOGIC,
-                null, "MathDescMult"), new GameSpec.GameVariantGenerator() {
+        gameList.add(new GameSpec(new GameSummary("Math103", "data/Thumbnails/math101.png",
+                GameCategories.Category.LOGIC, null, "MathDescMult"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 3"),
@@ -1096,8 +1096,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        gameList.add(new GameSpec(new GameSummary("Math104", "data/Thumbnails/math101.png", GameCategories.Category.LOGIC,
-                null, "MathDescDiv"), new GameSpec.GameVariantGenerator() {
+        gameList.add(new GameSpec(new GameSummary("Math104", "data/Thumbnails/math101.png",
+                GameCategories.Category.LOGIC, null, "MathDescDiv"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 10"),
@@ -1118,8 +1118,8 @@ public class DefaultGamesLocator implements GamesLocator {
                     }
                 }));
 
-        gameList.add(new GameSpec(new GameSummary("Math201", "data/Thumbnails/math101.png", GameCategories.Category.LOGIC,
-                null, "MathDesc"), new GameSpec.GameVariantGenerator() {
+        gameList.add(new GameSpec(new GameSummary("Math201", "data/Thumbnails/math101.png",
+                GameCategories.Category.LOGIC, null, "MathDesc"), new GameSpec.GameVariantGenerator() {
                     @Override
                     public Set<GameSpec.GameVariant> getVariants() {
                         return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 5"),

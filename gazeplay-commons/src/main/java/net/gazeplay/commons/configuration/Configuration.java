@@ -1029,7 +1029,7 @@ public class Configuration implements Cloneable {
         };
 
         // FIXME why is this not saved to file ? -> Certainly no longer usefull (see issue #102)
-       // properties.setProperty(PROPERTY_NAME_GAZEMODE, this.gazeMode);
+        // properties.setProperty(PROPERTY_NAME_GAZEMODE, this.gazeMode);
 
         properties.setProperty(PROPERTY_NAME_EYETRACKER, this.eyetrackerProperty.getValue());
         properties.setProperty(PROPERTY_NAME_LANGUAGE, this.languageProperty.getValue());

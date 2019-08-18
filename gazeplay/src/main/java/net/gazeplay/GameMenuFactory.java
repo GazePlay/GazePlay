@@ -282,7 +282,7 @@ public class GameMenuFactory {
         };
         gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
         favGamesIcon.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler_enter);
-       // pausedEvents.add(gameCard);
+        // pausedEvents.add(gameCard);
         return gameCard;
     }
 
