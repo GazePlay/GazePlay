@@ -1,10 +1,6 @@
 package net.gazeplay.games.rushHour;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
-
 import com.sun.glass.ui.Screen;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -17,8 +13,6 @@ import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -26,11 +20,12 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.DefaultGamesLocator;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import tobii.Tobii;
+
+import java.awt.*;
 
 @Slf4j
 public class Car extends Rectangle {

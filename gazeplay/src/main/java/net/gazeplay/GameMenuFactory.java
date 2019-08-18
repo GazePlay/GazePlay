@@ -57,7 +57,7 @@ public class GameMenuFactory {
             heartIcon = new Image("data/common/images/heart_empty.png");
 
         ImageView favGamesIcon = new ImageView(heartIcon);
-        favGamesIcon.imageProperty().addListener((l) -> {
+        favGamesIcon.imageProperty().addListener((listener) -> {
             isFavourite.setValue(favGamesIcon.getImage().equals(new Image("data/common/images/heart_filled.png")));
             config.saveConfigIgnoringExceptions();
         });

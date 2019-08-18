@@ -66,18 +66,26 @@ import net.gazeplay.games.videogrid.VideoGrid;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
 
-    // public static final Translator translator = this.getTranslator();
+    private static List<GameSpec> gameList = null;
+
     @Override
     public List<GameSpec> listGames() {
 
-        List<GameSpec> gameList = new ArrayList<>();
+        if (gameList != null) {
+
+            log.debug("Game List already created.");
+            return gameList;
+        } else {
+
+            log.debug("Game List has to be created.");
+        }
+
+        LinkedList<GameSpec> gameList = new LinkedList<>();
 
         gameList.add(new GameSpec(
                 new GameSummary("Creampie", "data/Thumbnails/creamPie.png", GameCategories.Category.SELECTION),
@@ -1350,33 +1358,59 @@ public class DefaultGamesLocator implements GamesLocator {
 
                 }));
 
-        gameList.add(new GameSpec(new GameSummary("Sounds of Life", "data/Thumbnails/soundsoflife.png",
-                GameCategories.Category.ACTION_REACTION), new GameSpec.GameVariantGenerator() {
-                    @Override
-                    public Set<GameSpec.GameVariant> getVariants() {
-                        return Sets.newLinkedHashSet(Lists.newArrayList(
-
-                                new GameSpec.IntGameVariant(0, "Farm"), new GameSpec.IntGameVariant(1, "Jungle"),
-                                new GameSpec.IntGameVariant(2, "Savanna")
-
-                ));
-                    }
-                }, new GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant>() {
+        gameList.add(new GameSpec(
+                new GameSummary("Farm", "data/Thumbnails/farm.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "soundsoflife");
+                        return new Stats(scene, "Farm");
                     }
 
                     @Override
-                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
                             Stats stats) {
-                        return new SoundsOfLife(gameContext, stats, gameVariant.getNumber());
+                        return new SoundsOfLife(gameContext, stats, 0);
+                    }
+                }));
+
+        gameList.add(new GameSpec(
+                new GameSummary("Jungle", "data/Thumbnails/jungle.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "Jungle");
                     }
 
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new SoundsOfLife(gameContext, stats, 1);
+                    }
+                }));
+
+        gameList.add(new GameSpec(
+                new GameSummary("Savanna", "data/Thumbnails/Savana.png", GameCategories.Category.ACTION_REACTION),
+                new GameSpec.GameLauncher() {
+                    @Override
+                    public Stats createNewStats(Scene scene) {
+                        return new Stats(scene, "Jungle");
+                    }
+
+                    @Override
+                    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                            Stats stats) {
+                        return new SoundsOfLife(gameContext, stats, 2);
+                    }
                 }));
 
         log.info("Games found : {}", gameList.size());
 
         return gameList;
+    }
+
+    // TODO complete fonction
+    public List<GameSpec> listGames(GameCategories.Category category) {
+
+        return listGames();
     }
 }
