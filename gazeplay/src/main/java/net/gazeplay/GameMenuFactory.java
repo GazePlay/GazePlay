@@ -38,20 +38,14 @@ import java.util.List;
 @Data
 public class GameMenuFactory {
 
-    private final boolean useDebuggingBackgrounds = false;
-
-    public GazeDeviceManager gazeDeviceManager;
+    private final boolean useDebuggingBackgrounds = true;
 
     private final static double THUMBNAIL_WIDTH_RATIO = 1;
     private final static double THUMBNAIL_HEIGHT_RATIO = 0.4;
 
-    @Getter
-    private List<GameButtonPane> pausedEvents = new LinkedList<GameButtonPane>();
-
     public GameButtonPane createGameButton(GazePlay gazePlay, final Region root, Configuration config,
             Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
             GazeDeviceManager gazeDeviceManager, BooleanProperty isFavourite) {
-        this.gazeDeviceManager = gazeDeviceManager;
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
@@ -288,7 +282,7 @@ public class GameMenuFactory {
         };
         gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
         favGamesIcon.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler_enter);
-        pausedEvents.add(gameCard);
+       // pausedEvents.add(gameCard);
         return gameCard;
     }
 

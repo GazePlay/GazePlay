@@ -46,7 +46,7 @@ import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-@Data
+//@Data
 @Slf4j
 public class UserProfilContext extends GraphicalContext<BorderPane> {
 

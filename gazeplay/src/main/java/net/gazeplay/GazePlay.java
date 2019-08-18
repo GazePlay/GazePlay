@@ -148,7 +148,7 @@ public class GazePlay extends Application {
         final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
         musicMananger.onEndGame();
 
-        log.info("here is the list of pausedEvent = {}", homeMenuScreen.getGameMenuFactory().getPausedEvents());
+   //     log.info("here is the list of pausedEvent = {}", homeMenuScreen.getGameMenuFactory().getPausedEvents());
 
         // homeMenuScreen.updateMusicControler();
     }
