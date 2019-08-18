@@ -66,18 +66,27 @@ import net.gazeplay.games.videogrid.VideoGrid;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItStats;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
 
-    // public static final Translator translator = this.getTranslator();
+    private static List<GameSpec> gameList = null;
+
     @Override
     public List<GameSpec> listGames() {
 
-        List<GameSpec> gameList = new ArrayList<>();
+        if (gameList != null) {
+
+            log.debug("Game List already created.");
+            return gameList;
+        }
+        else{
+
+            log.debug("Game List has to be created.");
+        }
+
+        LinkedList<GameSpec> gameList = new LinkedList<>();
 
         gameList.add(new GameSpec(
                 new GameSummary("Creampie", "data/Thumbnails/creamPie.png", GameCategories.Category.SELECTION),
@@ -89,7 +98,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-                            Stats stats) {
+                                                       Stats stats) {
                         return new CreamPie(gameContext, stats);
                     }
                 }));
@@ -1378,5 +1387,12 @@ public class DefaultGamesLocator implements GamesLocator {
         log.info("Games found : {}", gameList.size());
 
         return gameList;
+    }
+
+
+    //TODO complete fonction
+    public List<GameSpec> listGames(GameCategories.Category category){
+
+        return listGames();
     }
 }

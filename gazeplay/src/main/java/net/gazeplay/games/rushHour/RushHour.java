@@ -1,8 +1,5 @@
 package net.gazeplay.games.rushHour;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
@@ -11,16 +8,17 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.DefaultGamesLocator;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Slf4j
 public class RushHour extends Parent implements GameLifeCycle {

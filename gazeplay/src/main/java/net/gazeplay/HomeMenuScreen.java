@@ -4,8 +4,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -42,19 +40,18 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @Data
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private final static String LOGO_PATH = "data/common/images/gazeplay.png";
+    private final static GamesLocator gamesLocator = new DefaultGamesLocator();
 
     // private static String currentLanguage;
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
-        GamesLocator gamesLocator = new DefaultGamesLocator();
         List<GameSpec> games = gamesLocator.listGames();
 
         BorderPane root = new BorderPane();
@@ -118,7 +115,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         leftPanel.getChildren().add(menuBar);
 
         // filters for games based on their category
-
+        // the following lines have to be uncommented to permit category filtering
+/*
         CheckBox selectionGames = buildCategoryCheckBox(GameCategories.Category.SELECTION, config,
                 configurationContext);
         CheckBox memoGames = buildCategoryCheckBox(GameCategories.Category.MEMORIZATION, config, configurationContext);
@@ -146,12 +144,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         memoGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
         logicGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
 
-        // the following lines have to be uncommented to permit category filtering
-        // HBox categoryFilters = new HBox(10);
-        // categoryFilters.setAlignment(Pos.CENTER);
-        // categoryFilters.setPadding(new Insets(15, 12, 15, 12));
-        // categoryFilters.getChildren().addAll(selectionGames, memoGames, actionReactionGames, logicGames);
+         HBox categoryFilters = new HBox(10);
+         categoryFilters.setAlignment(Pos.CENTER);
+         categoryFilters.setPadding(new Insets(15, 12, 15, 12));
+         categoryFilters.getChildren().addAll(selectionGames, memoGames, actionReactionGames, logicGames);
 
+ */
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
 
@@ -227,37 +225,49 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         // reorder games by Favourite Filter
 
         List<GameSpec> favGames = new ArrayList<GameSpec>();
-        List<BooleanProperty> favourites = new ArrayList<BooleanProperty>();
+        List<GameSpec> notFavGames = new ArrayList<GameSpec>();
+        List<BooleanProperty> favorites = new ArrayList<BooleanProperty>();
 
-        for (BooleanProperty p : config.getFavouriteGameProperties()) {
+        for (BooleanProperty p : config.getFavoriteGameProperties()) {
             if (p.getValue()) {
-                favourites.add(p);
+                favorites.add(p);
             }
         }
+
+        //identification of favorite games
         for (GameSpec g : games) {
-            for (BooleanProperty p : favourites) {
-                if (p.getName().equals(g.getGameSummary().getNameCode().toUpperCase() + " Game fav")) {
-                    favGames.add(g);
-                }
+
+            if(isFavorite(favorites, g)){
+
+                favGames.add(g);
             }
+            else
+                notFavGames.add(g);
         }
 
-        games.removeAll(favGames);
-        games.addAll(0, favGames); // favourite Games are in the beginning of the list
+        games = new ArrayList((favGames.size()+notFavGames.size())*2);
 
-        BooleanProperty favouriteGameProperty = null;
+        //First, we add favorite games, then not favorite games
+        games.addAll(favGames);
+        games.addAll(notFavGames);
+
+        BooleanProperty favoriteGameProperty = null;
 
         for (GameSpec gameSpec : games) {
 
-            for (BooleanProperty p : config.getFavouriteGameProperties()) {
+            for (BooleanProperty p : config.getFavoriteGameProperties()) {
                 if (p.getName().equals(gameSpec.getGameSummary().getNameCode().toUpperCase() + " Game fav"))
-                    favouriteGameProperty = p;
+                    favoriteGameProperty = p;
             }
 
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
-                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, favouriteGameProperty);
+                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, favoriteGameProperty);
+
+            choicePanel.getChildren().add(gameCard);
+
 
             /* Game categories */
+            /*
             if (config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()
                     && config.logicCategory()) // all games
                 choicePanel.getChildren().add(gameCard);
@@ -323,7 +333,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                     && config.logicCategory()) { // only L
                 if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
                     choicePanel.getChildren().add(gameCard);
-            }
+            }*/
 
             gameCard.setEnterhandler(new EventHandler<Event>() {
                 @Override
@@ -407,6 +417,16 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return choicePanelScroller;
     }
 
+    private boolean isFavorite(List<BooleanProperty> favorites, GameSpec g) {
+
+        int i = 0;
+
+        while(i < favorites.size() && !(favorites.get(i).getName().equals(g.getGameSummary().getNameCode().toUpperCase() + " Game fav")))
+            i++;
+
+        return (i < favorites.size());
+    }
+
     private CustomButton createExitButton() {
         CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
@@ -479,8 +499,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private void filterGames(boolean selectionFilter, boolean memoFilter, boolean actionReactionFilter,
             boolean logicFiler) {
-        DefaultGamesLocator df = new DefaultGamesLocator();
-        List<GameSpec> allGames = df.listGames();
+
+        List<GameSpec> allGames = gamesLocator.listGames();
         List<GameSpec> filteredGames = new ArrayList<GameSpec>();
         /**
          * 2^4 options

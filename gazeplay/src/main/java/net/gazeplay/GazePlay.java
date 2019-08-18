@@ -104,8 +104,6 @@ public class GazePlay extends Application {
 
         userProfileScreen.setUpOnStage(primaryScene);
 
-        // homeMenuScreen.setUpOnStage(primaryScene);
-
         primaryStage.setFullScreen(true);
         primaryStage.centerOnScreen();
         primaryStage.show();
