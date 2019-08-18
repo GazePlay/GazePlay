@@ -116,40 +116,35 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         // filters for games based on their category
         // the following lines have to be uncommented to permit category filtering
-/*
-        CheckBox selectionGames = buildCategoryCheckBox(GameCategories.Category.SELECTION, config,
-                configurationContext);
-        CheckBox memoGames = buildCategoryCheckBox(GameCategories.Category.MEMORIZATION, config, configurationContext);
-        CheckBox actionReactionGames = buildCategoryCheckBox(GameCategories.Category.ACTION_REACTION, config,
-                configurationContext);
-        CheckBox logicGames = buildCategoryCheckBox(GameCategories.Category.LOGIC, config, configurationContext);
-
-        EventHandler<Event> filterEvent = new EventHandler<javafx.event.Event>() {
-            @Override
-            public void handle(javafx.event.Event e) {
-
-                filterGames(selectionGames.isSelected(), memoGames.isSelected(), actionReactionGames.isSelected(),
-                        logicGames.isSelected());
-
-                HomeMenuScreen hm = newInstance(gazePlay, config);
-                gazePlay.setHomeMenuScreen(hm);
-                // gazePlay.loading();
-                gazePlay.onReturnToMenu();
-
-            }
-        };
-
-        selectionGames.addEventHandler(MouseEvent.MOUSE_CLICKED, filterEvent);
-        actionReactionGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
-        memoGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
-        logicGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
-
-         HBox categoryFilters = new HBox(10);
-         categoryFilters.setAlignment(Pos.CENTER);
-         categoryFilters.setPadding(new Insets(15, 12, 15, 12));
-         categoryFilters.getChildren().addAll(selectionGames, memoGames, actionReactionGames, logicGames);
-
- */
+        /*
+         * CheckBox selectionGames = buildCategoryCheckBox(GameCategories.Category.SELECTION, config,
+         * configurationContext); CheckBox memoGames = buildCategoryCheckBox(GameCategories.Category.MEMORIZATION,
+         * config, configurationContext); CheckBox actionReactionGames =
+         * buildCategoryCheckBox(GameCategories.Category.ACTION_REACTION, config, configurationContext); CheckBox
+         * logicGames = buildCategoryCheckBox(GameCategories.Category.LOGIC, config, configurationContext);
+         * 
+         * EventHandler<Event> filterEvent = new EventHandler<javafx.event.Event>() {
+         * 
+         * @Override public void handle(javafx.event.Event e) {
+         * 
+         * filterGames(selectionGames.isSelected(), memoGames.isSelected(), actionReactionGames.isSelected(),
+         * logicGames.isSelected());
+         * 
+         * HomeMenuScreen hm = newInstance(gazePlay, config); gazePlay.setHomeMenuScreen(hm); // gazePlay.loading();
+         * gazePlay.onReturnToMenu();
+         * 
+         * } };
+         * 
+         * selectionGames.addEventHandler(MouseEvent.MOUSE_CLICKED, filterEvent);
+         * actionReactionGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
+         * memoGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
+         * logicGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
+         * 
+         * HBox categoryFilters = new HBox(10); categoryFilters.setAlignment(Pos.CENTER); categoryFilters.setPadding(new
+         * Insets(15, 12, 15, 12)); categoryFilters.getChildren().addAll(selectionGames, memoGames, actionReactionGames,
+         * logicGames);
+         * 
+         */
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
 
@@ -234,20 +229,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
         }
 
-        //identification of favorite games
+        // identification of favorite games
         for (GameSpec g : games) {
 
-            if(isFavorite(favorites, g)){
+            if (isFavorite(favorites, g)) {
 
                 favGames.add(g);
-            }
-            else
+            } else
                 notFavGames.add(g);
         }
 
-        games = new ArrayList((favGames.size()+notFavGames.size())*2);
+        games = new ArrayList((favGames.size() + notFavGames.size()) * 2);
 
-        //First, we add favorite games, then not favorite games
+        // First, we add favorite games, then not favorite games
         games.addAll(favGames);
         games.addAll(notFavGames);
 
@@ -265,75 +259,59 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
             choicePanel.getChildren().add(gameCard);
 
-
             /* Game categories */
             /*
-            if (config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()
-                    && config.logicCategory()) // all games
-                choicePanel.getChildren().add(gameCard);
-            else if (config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()
-                    && !config.logicCategory()) { // S & M & AR
-                if (gameSpec.getGameSummary().getCategory() != GameCategories.Category.LOGIC)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (config.selectionCategory() && !config.memorizationCategory() && config.actionReactionCategory()
-                    && config.logicCategory()) { // S & L & AR
-                if (gameSpec.getGameSummary().getCategory() != GameCategories.Category.MEMORIZATION)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (!config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()
-                    && config.logicCategory()) { // L & M & AR
-                if (gameSpec.getGameSummary().getCategory() != GameCategories.Category.SELECTION)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (config.selectionCategory() && config.memorizationCategory() && !config.actionReactionCategory()
-                    && config.logicCategory()) { // S & M & L
-                if (gameSpec.getGameSummary().getCategory() != GameCategories.Category.ACTION_REACTION)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (config.selectionCategory() && config.memorizationCategory() && !config.actionReactionCategory()
-                    && !config.logicCategory()) { // S & M
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.SELECTION
-                        || gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (config.selectionCategory() && !config.memorizationCategory() && config.actionReactionCategory()
-                    && !config.logicCategory()) { // AR & S
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.SELECTION
-                        || gameSpec.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (!config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory()
-                    && !config.logicCategory()) { // AR & M
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION
-                        || gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (!config.selectionCategory() && !config.memorizationCategory() && config.actionReactionCategory()
-                    && config.logicCategory()) { // AR & L
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION
-                        || gameSpec.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (config.selectionCategory() && !config.memorizationCategory() && !config.actionReactionCategory()
-                    && config.logicCategory()) { // S & L
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.SELECTION
-                        || gameSpec.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (!config.selectionCategory() && config.memorizationCategory() && !config.actionReactionCategory()
-                    && config.logicCategory()) { // M & L
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION
-                        || gameSpec.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (config.selectionCategory() && !config.memorizationCategory() && !config.actionReactionCategory()
-                    && !config.logicCategory()) { // only S
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.SELECTION)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (!config.selectionCategory() && config.memorizationCategory() && !config.actionReactionCategory()
-                    && !config.logicCategory()) { // only M
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.MEMORIZATION)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (!config.selectionCategory() && !config.memorizationCategory() && config.actionReactionCategory()
-                    && !config.logicCategory()) { // only AR
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.ACTION_REACTION)
-                    choicePanel.getChildren().add(gameCard);
-            } else if (!config.selectionCategory() && !config.memorizationCategory() && !config.actionReactionCategory()
-                    && config.logicCategory()) { // only L
-                if (gameSpec.getGameSummary().getCategory() == GameCategories.Category.LOGIC)
-                    choicePanel.getChildren().add(gameCard);
-            }*/
+             * if (config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory() &&
+             * config.logicCategory()) // all games choicePanel.getChildren().add(gameCard); else if
+             * (config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory() &&
+             * !config.logicCategory()) { // S & M & AR if (gameSpec.getGameSummary().getCategory() !=
+             * GameCategories.Category.LOGIC) choicePanel.getChildren().add(gameCard); } else if
+             * (config.selectionCategory() && !config.memorizationCategory() && config.actionReactionCategory() &&
+             * config.logicCategory()) { // S & L & AR if (gameSpec.getGameSummary().getCategory() !=
+             * GameCategories.Category.MEMORIZATION) choicePanel.getChildren().add(gameCard); } else if
+             * (!config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory() &&
+             * config.logicCategory()) { // L & M & AR if (gameSpec.getGameSummary().getCategory() !=
+             * GameCategories.Category.SELECTION) choicePanel.getChildren().add(gameCard); } else if
+             * (config.selectionCategory() && config.memorizationCategory() && !config.actionReactionCategory() &&
+             * config.logicCategory()) { // S & M & L if (gameSpec.getGameSummary().getCategory() !=
+             * GameCategories.Category.ACTION_REACTION) choicePanel.getChildren().add(gameCard); } else if
+             * (config.selectionCategory() && config.memorizationCategory() && !config.actionReactionCategory() &&
+             * !config.logicCategory()) { // S & M if (gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.SELECTION || gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.MEMORIZATION) choicePanel.getChildren().add(gameCard); } else if
+             * (config.selectionCategory() && !config.memorizationCategory() && config.actionReactionCategory() &&
+             * !config.logicCategory()) { // AR & S if (gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.SELECTION || gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.ACTION_REACTION) choicePanel.getChildren().add(gameCard); } else if
+             * (!config.selectionCategory() && config.memorizationCategory() && config.actionReactionCategory() &&
+             * !config.logicCategory()) { // AR & M if (gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.ACTION_REACTION || gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.MEMORIZATION) choicePanel.getChildren().add(gameCard); } else if
+             * (!config.selectionCategory() && !config.memorizationCategory() && config.actionReactionCategory() &&
+             * config.logicCategory()) { // AR & L if (gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.ACTION_REACTION || gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.LOGIC) choicePanel.getChildren().add(gameCard); } else if
+             * (config.selectionCategory() && !config.memorizationCategory() && !config.actionReactionCategory() &&
+             * config.logicCategory()) { // S & L if (gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.SELECTION || gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.LOGIC) choicePanel.getChildren().add(gameCard); } else if
+             * (!config.selectionCategory() && config.memorizationCategory() && !config.actionReactionCategory() &&
+             * config.logicCategory()) { // M & L if (gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.MEMORIZATION || gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.LOGIC) choicePanel.getChildren().add(gameCard); } else if
+             * (config.selectionCategory() && !config.memorizationCategory() && !config.actionReactionCategory() &&
+             * !config.logicCategory()) { // only S if (gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.SELECTION) choicePanel.getChildren().add(gameCard); } else if
+             * (!config.selectionCategory() && config.memorizationCategory() && !config.actionReactionCategory() &&
+             * !config.logicCategory()) { // only M if (gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.MEMORIZATION) choicePanel.getChildren().add(gameCard); } else if
+             * (!config.selectionCategory() && !config.memorizationCategory() && config.actionReactionCategory() &&
+             * !config.logicCategory()) { // only AR if (gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.ACTION_REACTION) choicePanel.getChildren().add(gameCard); } else if
+             * (!config.selectionCategory() && !config.memorizationCategory() && !config.actionReactionCategory() &&
+             * config.logicCategory()) { // only L if (gameSpec.getGameSummary().getCategory() ==
+             * GameCategories.Category.LOGIC) choicePanel.getChildren().add(gameCard); }
+             */
 
             gameCard.setEnterhandler(new EventHandler<Event>() {
                 @Override
@@ -421,7 +399,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         int i = 0;
 
-        while(i < favorites.size() && !(favorites.get(i).getName().equals(g.getGameSummary().getNameCode().toUpperCase() + " Game fav")))
+        while (i < favorites.size()
+                && !(favorites.get(i).getName().equals(g.getGameSummary().getNameCode().toUpperCase() + " Game fav")))
             i++;
 
         return (i < favorites.size());

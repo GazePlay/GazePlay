@@ -80,8 +80,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
             log.debug("Game List already created.");
             return gameList;
-        }
-        else{
+        } else {
 
             log.debug("Game List has to be created.");
         }
@@ -98,7 +97,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-                                                       Stats stats) {
+                            Stats stats) {
                         return new CreamPie(gameContext, stats);
                     }
                 }));
@@ -1364,13 +1363,13 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene,  "Farm");
+                        return new Stats(scene, "Farm");
                     }
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-                                                       Stats stats) {
-                        return new SoundsOfLife(gameContext, stats,0);
+                            Stats stats) {
+                        return new SoundsOfLife(gameContext, stats, 0);
                     }
                 }));
 
@@ -1379,13 +1378,13 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene,  "Jungle");
+                        return new Stats(scene, "Jungle");
                     }
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-                                                       Stats stats) {
-                        return new SoundsOfLife(gameContext, stats,1);
+                            Stats stats) {
+                        return new SoundsOfLife(gameContext, stats, 1);
                     }
                 }));
 
@@ -1394,13 +1393,13 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene,  "Jungle");
+                        return new Stats(scene, "Jungle");
                     }
 
                     @Override
                     public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-                                                       Stats stats) {
-                        return new SoundsOfLife(gameContext, stats,2);
+                            Stats stats) {
+                        return new SoundsOfLife(gameContext, stats, 2);
                     }
                 }));
 
@@ -1409,9 +1408,8 @@ public class DefaultGamesLocator implements GamesLocator {
         return gameList;
     }
 
-
-    //TODO complete fonction
-    public List<GameSpec> listGames(GameCategories.Category category){
+    // TODO complete fonction
+    public List<GameSpec> listGames(GameCategories.Category category) {
 
         return listGames();
     }
