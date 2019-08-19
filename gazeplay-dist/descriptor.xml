@@ -4,7 +4,6 @@
     <id>assembly</id>
     <formats>
         <format>tar.gz</format>
-        <!--format>tar.bz2</format-->
         <format>zip</format>
         <format>dir</format>
     </formats>
@@ -27,13 +26,21 @@
             <lineEnding>unix</lineEnding>
         </fileSet>
         <fileSet>
-            <directory>src/main/bin</directory>
-            <filtered>true</filtered>
+        <directory>src/main/bin</directory>
+        <filtered>true</filtered>
+        <includes>
+            <include>**/*.bat</include>
+        </includes>
+        <outputDirectory>./bin</outputDirectory>
+        <lineEnding>dos</lineEnding>
+    </fileSet>
+        <!-- JRE : Java Runtime Environment (Windows XP)-->
+        <fileSet>
+            <directory>src</directory>
             <includes>
-                <include>**/*.bat</include>
+                <include>jre1.8.0_221/**</include>
             </includes>
-            <outputDirectory>./bin</outputDirectory>
-            <lineEnding>dos</lineEnding>
+            <outputDirectory>./lib</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>target/generated-resources/licenses</directory>
