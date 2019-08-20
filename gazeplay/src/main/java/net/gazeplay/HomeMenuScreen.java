@@ -45,8 +45,8 @@ import java.util.List;
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
-    //public final static String LOGO_PATH = "data/common/images/logos/gazeplay.png";
-    public final static String LOGO_PATH = "data/common/images/logos/gazeplay16.png";
+    public final static String LOGO_PATH = "data/common/images/logos/gazeplay.png";
+    //public final static String LOGO_PATH = "data/common/images/logos/gazeplay16.png";
     private final static GamesLocator gamesLocator = new DefaultGamesLocator();
 
     // private static String currentLanguage;
