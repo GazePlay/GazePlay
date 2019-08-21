@@ -106,6 +106,7 @@ public class GameMenuFactory {
         }
 
         if (gameSummary.getGameThumbnail() != null) {
+
             Image buttonGraphics = new Image(gameSummary.getGameThumbnail());
             ImageView imageView = new ImageView(buttonGraphics);
             imageView.getStyleClass().add("gameChooserButtonThumbnail");

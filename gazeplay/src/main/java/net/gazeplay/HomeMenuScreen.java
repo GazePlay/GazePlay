@@ -45,8 +45,8 @@ import java.util.List;
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
+    public final static String LOGO_PATH = "data/common/images/logos/gazeplay1.6.png";
     // public final static String LOGO_PATH = "data/common/images/logos/gazeplayClassicLogo.png";
-    public final static String LOGO_PATH = "data/common/images/logos/gazeplay.png";
     private final static GamesLocator gamesLocator = new DefaultGamesLocator();
 
     // private static String currentLanguage;
@@ -104,6 +104,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         MenuBar menuBar = Utils.buildLicence();
 
         Node logo = createLogo();
+
         StackPane topLogoPane = new StackPane();
         topLogoPane.getChildren().add(logo);
 
@@ -148,12 +149,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
          */
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
-
         VBox centerCenterPane = new VBox();
         centerCenterPane.setSpacing(40);
         centerCenterPane.setAlignment(Pos.TOP_CENTER);
         centerCenterPane.getChildren().add(gamePickerChoicePane);
-
         BorderPane centerPanel = new BorderPane();
         // centerPanel.setTop(categoryFilters);
         centerPanel.setCenter(centerCenterPane);
@@ -167,7 +166,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setTop(topPane);
         root.setBottom(bottomPane);
         root.setCenter(centerPanel);
-
         /*
          * config.getWhiteBackgroundProperty().addListener((val, oldvalue, newvalue) -> { Color c =
          * (newvalue.booleanValue()) ? Color.WHITE : Color.BLACK; ((BorderPane) root.getBottom()).setBackground(new
@@ -190,7 +188,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
                 + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
     }
 
     @Override
@@ -200,6 +197,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config,
             ProgressIndicator indicator) {
+
+        int i = 0;
 
         final int flowpaneGap = 20;
         choicePanel = new FlowPane();
@@ -246,11 +245,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         games.addAll(favGames);
         games.addAll(notFavGames);
 
+        log.debug("Favorite Games : {}", favGames);
+        log.debug("Other Games : {}", notFavGames);
+
         BooleanProperty favoriteGameProperty = null;
+
+        log.debug("in GameSpec gameSpec : games");
 
         for (GameSpec gameSpec : games) {
 
+            i = 0;
+
             for (BooleanProperty p : config.getFavoriteGameProperties()) {
+
                 if (p.getName().equals(gameSpec.getGameSummary().getNameCode().toUpperCase() + " Game fav"))
                     favoriteGameProperty = p;
             }
@@ -426,7 +433,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         log.info(LOGO_PATH);
         final Image logoImage = new Image(LOGO_PATH, width, height, true, true);
         final ImageView logoView = new ImageView(logoImage);
-
         root.heightProperty().addListener((observable, oldValue, newValue) -> {
             final double newHeight = newValue.doubleValue() * 0.2;
             final Image newLogoImage = new Image(LOGO_PATH, width, newHeight, true, true);

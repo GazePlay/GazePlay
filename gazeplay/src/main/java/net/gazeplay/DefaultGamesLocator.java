@@ -1389,11 +1389,11 @@ public class DefaultGamesLocator implements GamesLocator {
                 }));
 
         gameList.add(new GameSpec(
-                new GameSummary("Savanna", "data/Thumbnails/Savana.png", GameCategories.Category.ACTION_REACTION),
+                new GameSummary("Savanna", "data/Thumbnails/savana.png", GameCategories.Category.ACTION_REACTION),
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "Jungle");
+                        return new Stats(scene, "Savana");
                     }
 
                     @Override
