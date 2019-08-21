@@ -20,7 +20,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Data;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
@@ -30,9 +29,11 @@ import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
+
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Date;
+
+import static javafx.scene.input.MouseEvent.*;
 
 @Slf4j
 @Data
@@ -42,6 +43,9 @@ public class GameMenuFactory {
 
     private final static double THUMBNAIL_WIDTH_RATIO = 1;
     private final static double THUMBNAIL_HEIGHT_RATIO = 0.4;
+
+    private long lastModificationDate = (new Date()).getTime();
+    private final static long MINLENGTH = 1000; // min time between two modification of favorite
 
     public GameButtonPane createGameButton(GazePlay gazePlay, final Region root, Configuration config,
             Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
@@ -57,10 +61,12 @@ public class GameMenuFactory {
             heartIcon = new Image("data/common/images/heart_empty.png");
 
         ImageView favGamesIcon = new ImageView(heartIcon);
-        favGamesIcon.imageProperty().addListener((listener) -> {
-            isFavourite.setValue(favGamesIcon.getImage().equals(new Image("data/common/images/heart_filled.png")));
-            config.saveConfigIgnoringExceptions();
-        });
+
+        // can't understand the goal of the following 3 lines
+        // favGamesIcon.imageProperty().addListener((listener) -> {
+        // isFavourite.setValue(favGamesIcon.getImage().equals(new Image("data/common/images/heart_filled.png")));
+        // config.saveConfigIgnoringExceptions();
+        // });
 
         final I18NText gameTitleText = new I18NText(translator, gameSummary.getNameCode());
         gameTitleText.getStyleClass().add("gameChooserButtonTitle");
@@ -122,9 +128,7 @@ public class GameMenuFactory {
                     imageView.setFitHeight(preferredHeight - 10);
                     imageView.setFitWidth(preferredHeight * imageSizeRatio);
                 });
-                // gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
-                // imageView.setFitWidth(newValue.doubleValue() / 2);
-                // });
+
                 break;
             case VERTICAL:
                 gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -263,6 +267,14 @@ public class GameMenuFactory {
             @Override
             public void handle(MouseEvent event) {
 
+                long dateSinceLastModification = (new Date()).getTime() - lastModificationDate;
+                log.debug("{} milliseconds since last modification", dateSinceLastModification);
+
+                if (dateSinceLastModification < MINLENGTH) {
+                    // too early
+                    return;
+                }
+
                 switch (isFavourite.getValue().toString()) {
                 case "true":
                     favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
@@ -279,10 +291,12 @@ public class GameMenuFactory {
 
                     break;
                 }
+                lastModificationDate = (new Date()).getTime();
             }
         };
-        gameCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
-        favGamesIcon.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler_enter);
+        // favGamesIcon.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler_enter);
+        favGamesIcon.addEventFilter(MOUSE_ENTERED_TARGET, favGameHandler_enter);
+        gameCard.addEventHandler(MOUSE_PRESSED, event);
         // pausedEvents.add(gameCard);
         return gameCard;
     }
@@ -339,7 +353,7 @@ public class GameMenuFactory {
                     chooseGame(gazePlay, gameSpec, variant, config);
                 }
             };
-            button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
+            button.addEventHandler(MOUSE_CLICKED, event);
 
         } // end for
 
