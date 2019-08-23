@@ -113,7 +113,8 @@ public class Stats implements GazeMotionListener {
             this.targetAOIList.get(i).setDuration(duration);
             System.out.println("The duration is " + duration);
         }
-        targetAOIList.get(targetAOIList.size() - 1).setDuration(0);
+        if (targetAOIList.size() >= 1)
+            targetAOIList.get(targetAOIList.size() - 1).setDuration(0);
 
     }
 

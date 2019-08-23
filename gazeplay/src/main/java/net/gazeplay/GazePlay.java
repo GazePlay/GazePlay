@@ -135,6 +135,7 @@ public class GazePlay extends Application {
     }
 
     public void onGameLaunch(GameContext gameContext) {
+
         gameContext.setUpOnStage(primaryScene);
         gameContext.updateMusicControler();
     }
