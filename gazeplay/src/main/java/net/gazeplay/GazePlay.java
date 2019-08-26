@@ -84,7 +84,7 @@ public class GazePlay extends Application {
 
         homeMenuScreen = HomeMenuScreen.newInstance(this, config);
 
-        new OpenPopUp();
+        new OpeningPopUp();
 
         this.primaryScene = new Scene(homeMenuScreen.getRoot(), primaryStage.getWidth(), primaryStage.getHeight(),
                 Color.BLACK);
