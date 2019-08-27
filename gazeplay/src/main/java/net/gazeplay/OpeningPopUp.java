@@ -53,7 +53,6 @@ public class OpeningPopUp {
 
         // Scene scene = new Scene(root, screen.getWidth() * ratio, screen.getHeight() * ratio);
         Scene scene = new Scene(root, width, height);
-        // Scene scene = new Scene(root);
 
         Stage stage = new Stage();
         stage.setScene(scene);

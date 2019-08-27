@@ -39,7 +39,7 @@ import static javafx.scene.input.MouseEvent.*;
 @Data
 public class GameMenuFactory {
 
-    private final boolean useDebuggingBackgrounds = true;
+    private final boolean useDebuggingBackgrounds = false;
 
     private final static double THUMBNAIL_WIDTH_RATIO = 1;
     private final static double THUMBNAIL_HEIGHT_RATIO = 0.4;

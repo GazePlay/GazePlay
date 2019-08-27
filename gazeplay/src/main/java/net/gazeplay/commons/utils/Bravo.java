@@ -167,6 +167,7 @@ public class Bravo extends Rectangle {
             }
             log.debug("Adding task to JavaFX thread queue ...");
             Platform.runLater(uiRunnable);
+            log.debug("Task added");
         };
 
         AsyncUiTaskExecutor.getInstance().getExecutorService().submit(deferedAnimationRunnable);

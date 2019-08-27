@@ -1,3 +1,16 @@
+# Action-réaction
+
+# Selection
+
+# Mémoire à court terme
+
+# Mémoire à long terme
+
+# Logique
+
+# Multimedia
+
+
 ## Tartes à la crème
 
 Le joueur lance une tarte à la crème sur la cible statique lorsqu'il la regarde.
@@ -35,7 +48,7 @@ Le joueur doit regarder l'image correspondant à ce qui a été indiqué au déb
 
 ![OuEst](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/whereisit.png)
 
-## Bulles
+## Bulles colorées
 
 Des bulles de couleur remontent lentement à la surface et exploser lorsque le joueur les regarde.
 
@@ -101,7 +114,7 @@ Jouez une mélodie en regardant les touches jaunes du piano qui vous guident.
 
 ![Piano](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/pianosight.png)
 
-## J'ai une Biboule!
+## J'ai un Biboule!
 
 Prenez-vous soin de votre Biboule en le nourrissant , le lavant , en jouant avec lui et en le caressant.
 
@@ -144,9 +157,9 @@ Le joueur doit trouver l'intrus parmi les photos qui sont affichées.
 
 ![Find-the-odd-one-out](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/findtheodd.jpg)
 
-## Puzzle Glissant
+## Jeu de taquin
 
-Un puzzle glissant doit être résolû  en regardant la piece de puzzle à bouger.
+Le jeu de taquin doit être résolu en regardant la piece de puzzle à bouger.
 
 ![Sliding-Puzzle](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/slidingpuzzle.png)
 
@@ -213,3 +226,43 @@ Tuez les biboules aliénés avec les lasers de votre vaisseau spatial et increme
 ## Coloriage
 
 ![coloriage](https://raw.githubusercontent.com/schwabdidier/GazePlay/master/gazeplay-data/src/main/resources/data/Thumbnails/colors.png)
+
+##Où est-cet animal ?
+
+##Où est-cette couleur ?
+
+##Où est-cette lettre ?
+
+##Où est-ce nombre ?
+
+##Lapin
+
+##Memory
+
+##Memory lettres
+
+##Memory (Nombres)
+
+##Memory ouvert (Lettres)
+
+##Course Grenouille
+
+##Math 101
+
+##Math 102
+
+##Math 103
+
+##Math 104
+
+##Grille de videos
+
+##Petits chevaux
+
+##Petits chevaux simplifiés
+
+##Ferme
+
+##Jungle
+
+##Savane
