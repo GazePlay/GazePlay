@@ -177,12 +177,12 @@ public class Blocs implements GameLifeCycle {
             return;
         }
 
-            toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
-            toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
-            gameContext.getGazeDeviceManager().removeEventFilter(toRemove);
-            toRemove.setTranslateX(-10000);
-            toRemove.setOpacity(0);
-            currentRoundDetails.remainingCount--;
+        toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
+        toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
+        gameContext.getGazeDeviceManager().removeEventFilter(toRemove);
+        toRemove.setTranslateX(-10000);
+        toRemove.setOpacity(0);
+        currentRoundDetails.remainingCount--;
     }
 
     private EventHandler<Event> buildEvent(GameContext gameContext, Stats stats, boolean useTrail) {

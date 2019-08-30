@@ -77,7 +77,7 @@ public class OpeningPopUp {
         });
         // Load page
 
-        if(config.getLanguage().equals("fra"))
+        if (config.getLanguage().equals("fra"))
             webEngine.load("https://gazeplayreleases.wordpress.com/gazeplay-1-6-2-fra");
         else
             webEngine.load("https://gazeplayreleases.wordpress.com/gazeplay-1-6-2-eng");

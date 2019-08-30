@@ -33,13 +33,13 @@ public class SoundMakingEntity extends Parent {
     private int soundIter;
     private Stats stats;
 
-    public SoundMakingEntity(ImageView imageView, Stats stats, ArrayList<String> audioClips, ProgressIndicator progressIndicator,
-            int fixationLength) {
+    public SoundMakingEntity(ImageView imageView, Stats stats, ArrayList<String> audioClips,
+            ProgressIndicator progressIndicator, int fixationLength) {
         this.imageView = imageView;
         this.audioClips = audioClips;
         this.progressIndicator = progressIndicator;
         this.fixationLength = fixationLength;
-        this.stats=stats;
+        this.stats = stats;
 
         random = new Random();
         soundIter = random.nextInt(audioClips.size());
