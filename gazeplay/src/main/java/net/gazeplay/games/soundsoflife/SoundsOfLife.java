@@ -40,11 +40,8 @@ public class SoundsOfLife implements GameLifeCycle {
         case 1:
             path += "jungle/";
             break;
-        case 2:
-            path += "savanna/";
-            break;
         default:
-            path += "farm/";
+            path += "savanna/";
         }
 
         JsonParser parser = new JsonParser();
@@ -104,7 +101,7 @@ public class SoundsOfLife implements GameLifeCycle {
                 sounds.add(path + sound.getAsString());
             }
 
-            SoundMakingEntity entity = new SoundMakingEntity(imageView, sounds, progressIndicator,
+            SoundMakingEntity entity = new SoundMakingEntity(imageView, stats, sounds, progressIndicator,
                     config.getFixationLength());
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);

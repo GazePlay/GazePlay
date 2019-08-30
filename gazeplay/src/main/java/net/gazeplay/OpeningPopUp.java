@@ -12,6 +12,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import net.gazeplay.commons.configuration.Configuration;
 
 /**
  * Created by schwab on 24/08/2019.
@@ -21,6 +22,8 @@ import javafx.stage.Stage;
  */
 
 public class OpeningPopUp {
+
+    final Configuration config = Configuration.getInstance();
 
     public OpeningPopUp() {
 
@@ -51,7 +54,6 @@ public class OpeningPopUp {
         browser.setPrefHeight(screen.getWidth());
         browser.setPrefWidth(screen.getHeight());
 
-        // Scene scene = new Scene(root, screen.getWidth() * ratio, screen.getHeight() * ratio);
         Scene scene = new Scene(root, width, height);
 
         Stage stage = new Stage();
@@ -70,12 +72,15 @@ public class OpeningPopUp {
                     webEngine.loadContent(html);
 
                     webEngine.loadContent(html, "text/html");
-
                 }
             }
         });
         // Load page
-        webEngine.load("https://gazeplayreleases.wordpress.com/gazeplay-1-6-2/");
+
+        if(config.getLanguage().equals("fra"))
+            webEngine.load("https://gazeplayreleases.wordpress.com/gazeplay-1-6-2-fra");
+        else
+            webEngine.load("https://gazeplayreleases.wordpress.com/gazeplay-1-6-2-eng");
 
         stage.showAndWait();
 

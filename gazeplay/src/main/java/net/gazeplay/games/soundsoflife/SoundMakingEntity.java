@@ -16,6 +16,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -30,13 +31,15 @@ public class SoundMakingEntity extends Parent {
     private Timeline progressTimeline;
     private Timeline movetimeline;
     private int soundIter;
+    private Stats stats;
 
-    public SoundMakingEntity(ImageView imageView, ArrayList<String> audioClips, ProgressIndicator progressIndicator,
+    public SoundMakingEntity(ImageView imageView, Stats stats, ArrayList<String> audioClips, ProgressIndicator progressIndicator,
             int fixationLength) {
         this.imageView = imageView;
         this.audioClips = audioClips;
         this.progressIndicator = progressIndicator;
         this.fixationLength = fixationLength;
+        this.stats=stats;
 
         random = new Random();
         soundIter = random.nextInt(audioClips.size());
@@ -85,5 +88,7 @@ public class SoundMakingEntity extends Parent {
         }
 
         soundIter = (soundIter + 1) % audioClips.size();
+
+        stats.incNbGoals();
     }
 }

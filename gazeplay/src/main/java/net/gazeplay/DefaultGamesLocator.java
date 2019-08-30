@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.utils.stats.SelectionGamesStats;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.biboulejump.BibouleJump;
 import net.gazeplay.games.biboulejump.BibouleJumpStats;
@@ -59,6 +60,7 @@ import net.gazeplay.games.shooter.ShooterGamesStats;
 import net.gazeplay.games.slidingpuzzle.slidingpuzzle;
 import net.gazeplay.games.slidingpuzzle.slidingpuzzlestats;
 import net.gazeplay.games.soundsoflife.SoundsOfLife;
+import net.gazeplay.games.soundsoflife.SoundsOfLifeStats;
 import net.gazeplay.games.space.SpaceGame;
 import net.gazeplay.games.space.SpaceGameStats;
 import net.gazeplay.games.spotthedifferences.SpotTheDifferences;
@@ -1363,7 +1365,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "Farm");
+                        return new SoundsOfLifeStats(scene, "Farm");
                     }
 
                     @Override
@@ -1378,7 +1380,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "Jungle");
+                        return new SoundsOfLifeStats(scene, "Jungle");
                     }
 
                     @Override
@@ -1393,7 +1395,7 @@ public class DefaultGamesLocator implements GamesLocator {
                 new GameSpec.GameLauncher() {
                     @Override
                     public Stats createNewStats(Scene scene) {
-                        return new Stats(scene, "Savana");
+                        return new SoundsOfLifeStats(scene, "Savana");
                     }
 
                     @Override
