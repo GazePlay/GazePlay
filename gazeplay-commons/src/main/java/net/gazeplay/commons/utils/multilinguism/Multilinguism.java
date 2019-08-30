@@ -35,6 +35,24 @@ public class Multilinguism {
         String translate = i18n.translate(key, language);
         if (translate == null || "".equals(translate)) {
             log.warn("No translation found for key '{}'", key);
+
+            return getENGTrad(key);
+        }
+        return translate;
+    }
+
+    /**
+     *
+     * This function is used if no key exist for the language in getTrad(String key, String language) function
+     *
+     * @param key
+     * @return
+     */
+    public String getENGTrad(String key) {
+        String translate = i18n.translate(key, "eng");
+        if (translate == null || "".equals(translate)) {
+            log.warn("No translation found for key '{}'", key);
+
             return "[untranslated!] " + key;
         }
         return translate;
