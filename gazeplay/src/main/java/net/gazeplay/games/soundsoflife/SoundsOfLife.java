@@ -59,6 +59,8 @@ public class SoundsOfLife implements GameLifeCycle {
         String backgroundPath = path + jsonRoot.get("background").getAsString();
         Image backgroundImage = new Image(backgroundPath);
         ImageView background = new ImageView(backgroundImage);
+
+        // use ratio in order to adapt images to screen
         double scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
                 dimensions.getHeight() / backgroundImage.getHeight());
         background.setFitWidth(backgroundImage.getWidth() * scaleRatio);

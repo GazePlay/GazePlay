@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameContext;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.commons.configuration.Configuration;
@@ -25,6 +26,7 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
+@Slf4j
 public class Blocs implements GameLifeCycle {
 
     private final EventHandler<Event> enterEvent;
@@ -159,7 +161,6 @@ public class Blocs implements GameLifeCycle {
                             for (int j = 0; j < maxY; j++) {
 
                                 removeBloc(blocs[i][j]);
-
                             }
                         }
                         return null;
@@ -171,16 +172,17 @@ public class Blocs implements GameLifeCycle {
     }
 
     private void removeBloc(Bloc toRemove) {
+
         if (toRemove == null) {
             return;
         }
 
-        toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
-        toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
-        gameContext.getGazeDeviceManager().removeEventFilter(toRemove);
-        toRemove.setTranslateX(-10000);
-        toRemove.setOpacity(0);
-        currentRoundDetails.remainingCount--;
+            toRemove.removeEventFilter(MouseEvent.ANY, enterEvent);
+            toRemove.removeEventFilter(GazeEvent.ANY, enterEvent);
+            gameContext.getGazeDeviceManager().removeEventFilter(toRemove);
+            toRemove.setTranslateX(-10000);
+            toRemove.setOpacity(0);
+            currentRoundDetails.remainingCount--;
     }
 
     private EventHandler<Event> buildEvent(GameContext gameContext, Stats stats, boolean useTrail) {
