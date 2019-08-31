@@ -94,7 +94,8 @@ public class FixationSequence {
             y = fixSeq.get(j).getX();
             duration = fixSeq.get(j).getGazeDuration();
 
-            // modify this value in order to increase or decrease the number of fixation points (Johanna put 20 ; Didier 100)
+            // modify this value in order to increase or decrease the number of fixation points (Johanna put 20 ; Didier
+            // 100)
             if (duration > 100) {
                 label_count++;
                 radius = 45 + (int) duration / 100;
