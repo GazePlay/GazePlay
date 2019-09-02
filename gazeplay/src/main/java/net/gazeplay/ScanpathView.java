@@ -12,6 +12,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.FixationPoint;
@@ -56,12 +57,11 @@ public class ScanpathView extends GraphicalContext<Pane> {
 
             newPoint.setCenterX(p.getY());
             newPoint.setCenterY(p.getX());
-            newPoint.setRadiusX(23 + (int) p.getGazeDuration() / 100);
+            newPoint.setRadiusX(30 + (int) (p.getGazeDuration() / 1000));
             newPoint.setRadiusY(newPoint.getRadiusX());
             Points.add(newPoint);
         }
-        Points.remove(0);
-        log.info("nb points = " + Points.size());
+
         root.getChildren().addAll(Points);
 
         for (int i = 0; i < Points.size() - 1; i++) {
@@ -74,9 +74,10 @@ public class ScanpathView extends GraphicalContext<Pane> {
             Points.get(index).setOnMouseEntered(s -> {
 
                 label.setText(stats.getFixationSequence().get(index).getGazeDuration() + " ms");
-                label.setFont(new Font("Verdana", 20));
-                label.setStrokeWidth(6);
-                label.setFill(Color.BLACK);
+                label.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+                label.setStrokeWidth(2);
+                label.setStroke(Color.BLACK);
+                label.setFill(Color.RED);
                 label.setX(Points.get(index).getCenterX() + Points.get(index).getRadiusX());
                 label.setY(Points.get(index).getCenterY() - label.getLayoutY());
 

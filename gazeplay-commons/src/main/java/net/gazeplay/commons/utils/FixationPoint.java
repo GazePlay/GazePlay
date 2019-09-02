@@ -7,7 +7,7 @@ public class FixationPoint {
 
     @Setter
     @Getter
-    private long firstGaze;
+    private long timeGaze;
     @Setter
     @Getter
     private long gazeDuration;
@@ -19,16 +19,22 @@ public class FixationPoint {
     private int y;
 
     public FixationPoint() {
-        firstGaze = 0;
+        timeGaze = 0;
         gazeDuration = 0;
         x = -1;
         y = -1;
     }
 
-    public FixationPoint(long fG, long gD, int X, int Y) {
-        firstGaze = fG;
-        gazeDuration = gD;
+    public FixationPoint(long timeGaze, long gazeDuration, int X, int Y) {
+        this.timeGaze = timeGaze;
+        this.gazeDuration = gazeDuration;
         x = X;
         y = Y;
+    }
+
+    @Override
+    public String toString() {
+        return "FixationPoint{" + "timeGaze=" + timeGaze + ", gazeDuration=" + gazeDuration + ", x=" + x + ", y=" + y
+                + '}';
     }
 }

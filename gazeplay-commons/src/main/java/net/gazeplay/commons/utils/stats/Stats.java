@@ -49,15 +49,20 @@ import java.util.List;
 @ToString
 public class Stats implements GazeMotionListener {
 
-    private Configuration config;
     private static final int trail = 10;
+    private static final int fixationTrail = 50;
     private final double heatMapPixelSize = computeHeatMapPixelSize();
+    private final Scene gameContextScene;
+    protected String gameName;
+    @Getter
+    protected int nbGoals = 0;
+    long startTime;
+    int sceneCounter = 0;
+    private Configuration config;
     private EventHandler<MouseEvent> recordMouseMovements;
     private EventHandler<GazeEvent> recordGazeMovements;
-    private final Scene gameContextScene;
     private LifeCycle lifeCycle = new LifeCycle();
     private RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
-    protected String gameName;
     private Instant starts;
     private int counter = 0;
     private List<CoordinatesTracker> movementHistory = new ArrayList<>();
@@ -69,10 +74,6 @@ public class Stats implements GazeMotionListener {
     private boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
     private ArrayList<TargetAOI> targetAOIList = null;
-    long startTime;
-    int sceneCounter = 0;
-    @Getter
-    protected int nbGoals = 0;
     @Setter
     private long accidentalShotPreventionPeriod = 0;
     @Getter
@@ -105,6 +106,17 @@ public class Stats implements GazeMotionListener {
         this.gameName = gameName;
     }
 
+    private static double[][] instanciateHeatMapData(Scene gameContextScene, double heatMapPixelSize) {
+        int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
+        int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
+        log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
+        return new double[heatMapWidth][heatMapHeight];
+    }
+
+    public ArrayList<TargetAOI> getTargetAOIList() {
+        return this.targetAOIList;
+    }
+
     public void setTargetAOIList(ArrayList<TargetAOI> targetAOIList) {
 
         this.targetAOIList = targetAOIList;
@@ -116,17 +128,6 @@ public class Stats implements GazeMotionListener {
         if (targetAOIList.size() >= 1)
             targetAOIList.get(targetAOIList.size() - 1).setDuration(0);
 
-    }
-
-    public ArrayList<TargetAOI> getTargetAOIList() {
-        return this.targetAOIList;
-    }
-
-    private static double[][] instanciateHeatMapData(Scene gameContextScene, double heatMapPixelSize) {
-        int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
-        int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
-        log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
-        return new double[heatMapWidth][heatMapHeight];
     }
 
     public void notifyNewRoundReady() {
@@ -363,8 +364,8 @@ public class Stats implements GazeMotionListener {
         if (this.fixationSequence != null) {
             // set the gazeDuration of the last Fixation Point
             fixationSequence.get(fixationSequence.size() - 1)
-                    .setGazeDuration(fixationSequence.get(fixationSequence.size() - 1).getFirstGaze()
-                            - fixationSequence.get(fixationSequence.size() - 2).getFirstGaze());
+                    .setGazeDuration(fixationSequence.get(fixationSequence.size() - 1).getTimeGaze()
+                            - fixationSequence.get(fixationSequence.size() - 2).getTimeGaze());
             FixationSequence scanpath = new FixationSequence((int) gameContextScene.getWidth(),
                     (int) gameContextScene.getHeight(), fixationSequence);
             fixationSequence = scanpath.getSequence();
@@ -513,26 +514,32 @@ public class Stats implements GazeMotionListener {
         // int y = (int) (X / heatMapPixelSize);
         int x = Y;
         int y = X;
-        FixationPoint newGazePoint;
-
-        if (fixationSequence.size() == 0) {
-            newGazePoint = new FixationPoint(0, 0, x, y);
-            fixationSequence.add(newGazePoint);
-        } else {
-            newGazePoint = new FixationPoint(System.currentTimeMillis() - startTime, 0, x, y);
-            gazeDuration = newGazePoint.getFirstGaze()
-                    - (fixationSequence.get(fixationSequence.size() - 1)).getFirstGaze();
-            (fixationSequence.get(fixationSequence.size() - 1)).setGazeDuration(gazeDuration);
+        FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(), 0, x, y);
+        if (fixationSequence.size() != 0) {
+            gazeDuration = newGazePoint.getTimeGaze()
+                    - (fixationSequence.get(fixationSequence.size() - 1)).getTimeGaze();
+            newGazePoint.setGazeDuration(gazeDuration);
         }
+
+        /*
+         * if (fixationSequence.size() == 0) { newGazePoint = new FixationPoint(0, 0, x, y);
+         * fixationSequence.add(newGazePoint); } else { newGazePoint = new FixationPoint(System.currentTimeMillis() -
+         * startTime, 0, x, y); gazeDuration = newGazePoint.getTimeGaze() -
+         * (fixationSequence.get(fixationSequence.size() - 1)).getTimeGaze();
+         * (fixationSequence.get(fixationSequence.size() - 1)).setGazeDuration(gazeDuration); }
+         */
         // if the new points coordinates are the same as last one's in the list then update the last fixationPoint in
         // the list
         // same coordinate points are a result of the eyetracker's frequency of sampling
         if (fixationSequence.size() > 1
-                && (newGazePoint.getX() == fixationSequence.get(fixationSequence.size() - 1).getX())
-                && (newGazePoint.getY() == fixationSequence.get(fixationSequence.size() - 1).getY())) {
+                && (Math.abs(newGazePoint.getX()
+                        - fixationSequence.get(fixationSequence.size() - 1).getX()) <= fixationTrail)
+                && (Math.abs(newGazePoint.getY()
+                        - fixationSequence.get(fixationSequence.size() - 1).getY()) <= fixationTrail)) {
             long gDuration = fixationSequence.get(fixationSequence.size() - 1).getGazeDuration();
             fixationSequence.get(fixationSequence.size() - 1)
-                    .setGazeDuration(newGazePoint.getGazeDuration() + gDuration); //
+                    .setGazeDuration(newGazePoint.getGazeDuration() + newGazePoint.getGazeDuration()); //
+
         } else { // else add the new point in the list
             fixationSequence.add(newGazePoint);
         }

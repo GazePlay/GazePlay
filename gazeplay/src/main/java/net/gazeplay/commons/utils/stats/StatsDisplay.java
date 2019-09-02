@@ -13,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
@@ -21,7 +20,6 @@ import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.games.bubbles.BubblesGamesStats;
 
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -154,13 +152,13 @@ public class StatsDisplay {
         if (points.size() > 0) {
 
             for (FixationPoint p : points) {
-                xEyeCoordinates.getData().add(new XYChart.Data(p.getFirstGaze(), p.getY()));
+                xEyeCoordinates.getData().add(new XYChart.Data(p.getTimeGaze(), p.getY()));
             }
 
             XYChart.Series yEyeCoordinates = new XYChart.Series();
             yEyeCoordinates.setName("Y coordinate");
             for (FixationPoint p : points) {
-                yEyeCoordinates.getData().add(new XYChart.Data(p.getFirstGaze(), p.getX()));
+                yEyeCoordinates.getData().add(new XYChart.Data(p.getTimeGaze(), p.getX()));
             }
             xAxis.setTickLabelsVisible(false);
 

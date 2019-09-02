@@ -98,7 +98,8 @@ public class FixationSequence {
             // 100)
             if (duration > 100) {
                 label_count++;
-                radius = 45 + (int) duration / 100;
+                // fixation circle size
+                radius = 20 + (int) (duration / 20);
                 gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
                 gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
                 gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
