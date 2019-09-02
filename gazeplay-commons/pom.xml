@@ -89,11 +89,11 @@
 			<artifactId>TobiiStreamEngineForJava</artifactId>
 			<version>3.0</version>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>com.github.stephenc.monte</groupId>
 			<artifactId>monte-screen-recorder</artifactId>
 			<version>0.7.7.0</version>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>com.automation-remarks</groupId>
 			<artifactId>video-recorder-core</artifactId>
