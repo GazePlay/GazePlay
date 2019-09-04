@@ -170,29 +170,31 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
          * conf2.getUserPicture(); if (s != null) { File f = new File(s); if (f.exists()) { try { ip = new
          * ImagePattern(new Image(new FileInputStream(f))); } catch (FileNotFoundException e) { e.printStackTrace(); } }
          * }
-         * 
+         *
          */
 
-        for (int i = 0; i < allUsers.size(); i++) {
-            log.info("Profile founded : ={}", allUsers.get(i));
-            Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + allUsers.get(i)
-                    + Utils.FILESEPARATOR + "GazePlay.properties");
-            Configuration conf2 = Configuration.createFromPropertiesResource();
-            ImagePattern ip = null;
-            String s = conf2.getUserPicture();
-            if (s != null) {
-                File f = new File(s);
-                if (f.exists()) {
-                    try {
-                        ip = new ImagePattern(new Image(new FileInputStream(f)));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+        if (allUsers != null) {
+            for (int i = 0; i < allUsers.size(); i++) {
+                log.info("Profile founded : ={}", allUsers.get(i));
+                Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
+                        + allUsers.get(i) + Utils.FILESEPARATOR + "GazePlay.properties");
+                Configuration conf2 = Configuration.createFromPropertiesResource();
+                ImagePattern ip = null;
+                String s = conf2.getUserPicture();
+                if (s != null) {
+                    File f = new File(s);
+                    if (f.exists()) {
+                        try {
+                            ip = new ImagePattern(new Image(new FileInputStream(f)));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-            userCard = createUser(choicePanel, gazePlay, allUsers.get(i), ip, i + 1);
-            choicePanel.getChildren().add(userCard);
+                userCard = createUser(choicePanel, gazePlay, allUsers.get(i), ip, i + 1);
+                choicePanel.getChildren().add(userCard);
 
+            }
         }
         Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "GazePlay.properties");
 

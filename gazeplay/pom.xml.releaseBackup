@@ -1,0 +1,193 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+
+	<groupId>com.github.schwabdidier</groupId>
+	<artifactId>gazeplay</artifactId>
+	<packaging>jar</packaging>
+	<version>1.5.2-SNAPSHOT</version>
+
+	<parent>
+		<groupId>com.github.schwabdidier</groupId>
+		<artifactId>gazeplay-project</artifactId>
+		<version>1.5.2-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+
+	<repositories>
+		<repository>
+			<id>screen-recorder</id>
+			<name>Java screen recorder library by agomezmoron</name>
+			<url>https://raw.github.com/agomezmoron/screen-recorder/mvn-repo</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.github.agomezmoron</groupId>
+			<artifactId>screen-recorder</artifactId>
+			<version>0.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.schwabdidier</groupId>
+			<artifactId>gazeplay-commons</artifactId>
+			<version>1.5.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.schwabdidier</groupId>
+			<artifactId>gazeplay-data</artifactId>
+			<version>1.5.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.rxtx</groupId>
+			<artifactId>rxtx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.theeyetribe</groupId>
+			<artifactId>eyetribe-java</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>uk.org.lidalia</groupId>
+			<artifactId>sysout-over-slf4j</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.media</groupId>
+			<artifactId>jmf</artifactId>
+			<version>2.1.1e</version>
+		</dependency>
+		<dependency>
+			<groupId>ws.schild</groupId>
+			<artifactId>jave-all-deps</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>ws.schild</groupId>
+			<artifactId>jave-core</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources-filtered</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>target/generated-resources</directory>
+			</resource>
+			<resource>
+				<directory>target/generated-sources/license</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.zenjava</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<configuration>
+					<vendor>schwabdidier</vendor>
+					<mainClass>net.gazeplay.GazePlayLauncher</mainClass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+						<manifestEntries>
+							<Implementation-Title>${project.artifactId}</Implementation-Title>
+							<Implementation-Version>${project.version}</Implementation-Version>
+							<JavaFX-Version>8.0</JavaFX-Version>
+							<Created-By>JavaFX Packager</Created-By>
+							<Implementation-Vendor>Univ. Grenoble Alpes - LIG - GETALP</Implementation-Vendor>
+							<Main-Class>net.gazeplay.GazePlayLauncher</Main-Class>
+							<Build-Time>${maven.build.timestamp}</Build-Time>
+							<Built-By />
+							<Created-By />
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+						<manifest>
+							<addClasspath>false</addClasspath>
+						</manifest>
+						<manifestEntries>
+							<Implementation-Title>${project.artifactId}</Implementation-Title>
+							<Implementation-Version>${project.version}</Implementation-Version>
+							<JavaFX-Version>8.0</JavaFX-Version>
+							<Created-By>JavaFX Packager</Created-By>
+							<Implementation-Vendor>Univ. Grenoble Alpes - LIG - GETALP</Implementation-Vendor>
+							<Main-Class>net.gazeplay.GazePlayLauncher</Main-Class>
+							<Build-Time>${maven.build.timestamp}</Build-Time>
+							<Built-By />
+							<Created-By />
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
