@@ -1,0 +1,17 @@
+dependencies {
+    compile 'commons-io:commons-io:2.5'
+    compile 'com.google.code.gson:gson:2.8.1'
+    compile 'org.rxtx:rxtx:2.1.7'
+    compile 'com.theeyetribe:eyetribe-java:0.9.77'
+    compile 'ch.qos.logback:logback-classic:1.2.1'
+    compile 'ch.qos.logback:logback-core:1.2.1'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
+    compile 'junit:junit:4.12'
+    compile 'com.google.guava:guava:23.6-jre'
+    compile 'com.github.coylz:TobiiStreamEngineForJava:3.0'
+    compile 'com.automation-remarks:video-recorder-core:2.0'
+    compile 'ws.schild:jave-core:2.5.0'
+    runtime 'org.slf4j:jcl-over-slf4j:1.7.25'
+    runtime 'org.slf4j:log4j-over-slf4j:1.7.25'
+}
