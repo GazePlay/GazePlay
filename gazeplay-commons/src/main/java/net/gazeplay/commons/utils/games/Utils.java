@@ -46,11 +46,9 @@ public class Utils {
     }
 
     private static String loadLicenseFileAsString(ClassLoader classLoader) {
-        try {
-            try (InputStream is = classLoader.getResourceAsStream("data/common/licence.txt")) {
-                return IOUtils.toString(is, Charset.forName("UTF-8"));
-            }
-        } catch (IOException e) {
+        try (InputStream is = classLoader.getResourceAsStream("data/common/licence.txt")) {
+            return IOUtils.toString(is, Charset.forName("UTF-8"));
+        } catch (Exception e) {
             return "Failed to load the license file";
         }
     }
