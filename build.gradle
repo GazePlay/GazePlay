@@ -42,7 +42,7 @@ subprojects {
     }
 
     dependencies {
-        compileOnly 'com.google.code.findbugs:findbugs:3.0.1'
+
     }
 
     sourceCompatibility = '11'
