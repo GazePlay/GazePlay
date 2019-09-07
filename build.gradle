@@ -3,6 +3,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.8'
     id 'io.freefair.lombok' version '4.0.1'
     id 'com.github.hierynomus.license-report' version '0.15.0'
+    id 'com.github.spotbugs' version '2.0.0'
 }
 
 allprojects {
@@ -16,10 +17,15 @@ subprojects {
     apply plugin: 'org.openjfx.javafxplugin'
     apply plugin: 'io.freefair.lombok'
     apply plugin: 'com.github.hierynomus.license-report'
+    apply plugin: 'com.github.spotbugs'
 
     javafx {
         version = "11.0.2"
         modules = [ 'javafx.controls', 'javafx.swing', 'javafx.media', 'javafx.web' ]
+    }
+
+    spotbugs {
+        toolVersion = '4.0.0-beta3'
     }
 
     downloadLicenses {
@@ -61,3 +67,5 @@ subprojects {
 }
 
 mainClassName = 'net.gazeplay.GazePlayLauncher'
+
+defaultTasks 'clean', 'build'
