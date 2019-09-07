@@ -21,7 +21,6 @@ import java.lang.Math;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import sun.awt.image.ImageWatched;
 
 @Slf4j
 public class FixationSequence {
