@@ -88,7 +88,10 @@ public class OpeningPopUp {
 
     private String buildDefaultPage() {
 
-        return buildFrenchPage();
+        if (config.getLanguage().equals("fra"))
+            return buildFrenchPage();
+        else
+            return buildEnglishPage();
     }
 
     private String buildFrenchPage() {
