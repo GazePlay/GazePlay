@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'distribution'
     id 'org.openjfx.javafxplugin' version '0.0.8'
     id 'io.freefair.lombok' version '4.0.1'
     id 'com.github.hierynomus.license-report' version '0.15.0'
@@ -64,6 +65,16 @@ subprojects {
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
     }
+}
+
+distZip {
+    from "gazeplay-dist/src/main/bin"
+    into "${project.name}-${project.version}"
+}
+
+distTar {
+    from "gazeplay-dist/src/main/bin"
+    into "${project.name}-${project.version}"
 }
 
 mainClassName = 'net.gazeplay.GazePlayLauncher'
