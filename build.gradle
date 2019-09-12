@@ -8,6 +8,12 @@ plugins {
     id "com.github.johnrengelman.shadow" version "5.1.0"
 }
 
+apply from: "${rootDir}/gradle/package.gradle"
+
+// Add -PSpotBugs=true to the Gradle Command Line to run spotbugs.
+String value = project.getProperties().get('SpotBugs')
+boolean SpotBugs = Boolean.parseBoolean(value) ?: false
+
 allprojects {
     group = 'com.github.schwabdidier'
     version = '1.6.2-SNAPSHOT'
@@ -46,6 +52,9 @@ subprojects {
         toolVersion = '4.0.0-beta3'
     }
 
+    spotbugsMain.enabled = SpotBugs
+    spotbugsTest.enabled = SpotBugs
+
     downloadLicenses {
         dependencyConfiguration = 'compileClasspath'
         includeProjectDependencies = true
@@ -74,6 +83,15 @@ dependencies {
     runtime project(':gazeplay-data')
     runtime project(':gazeplay-melordi')
     runtime project(':gazeplay-picto-pick')
+}
+
+distributions {
+    shadow {
+        contents {
+            from "gazeplay-dist/src/main/bin"
+            from "build/reports"
+        }
+    }
 }
 
 mainClassName = 'net.gazeplay.GazePlayLauncher'
