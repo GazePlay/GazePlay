@@ -8,13 +8,23 @@ plugins {
     id "com.github.johnrengelman.shadow" version "5.1.0"
 }
 
-shadowJar {
-    zip64 true
-}
-
 allprojects {
     group = 'com.github.schwabdidier'
     version = '1.6.2-SNAPSHOT'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+
+        maven {
+            url = 'https://jitpack.io'
+        }
+
+        maven {
+            url = 'https://raw.github.com/agomezmoron/screen-recorder/mvn-repo'
+        }
+    }
 }
 
 subprojects {
@@ -41,20 +51,6 @@ subprojects {
         includeProjectDependencies = true
     }
 
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
-
-        maven {
-            url = 'https://jitpack.io'
-        }
-
-        maven {
-            url = 'https://raw.github.com/agomezmoron/screen-recorder/mvn-repo'
-        }
-    }
-
     dependencies {}
 
     sourceCompatibility = '11'
@@ -72,17 +68,12 @@ subprojects {
     }
 }
 
-jar {
-    def manifestClasspath = configurations.runtime.collect { it.getName() }.join(' ')
-    manifest {
-        attributes  'Implementation-Title': "Test thing",
-                'Implementation-Version': '0.0.1',
-                'Built-By': System.getProperty('user.name'),
-                'Built-Date': new Date(),
-                'Built-JDK': System.getProperty('java.version'),
-                'Built-Gradle': gradle.gradleVersion,
-                'Class-Path': manifestClasspath
-    }
+dependencies {
+    runtime project(':gazeplay')
+    runtime project(':gazeplay-commons')
+    runtime project(':gazeplay-data')
+    runtime project(':gazeplay-melordi')
+    runtime project(':gazeplay-picto-pick')
 }
 
 mainClassName = 'net.gazeplay.GazePlayLauncher'
