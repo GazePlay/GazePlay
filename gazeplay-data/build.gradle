@@ -1,9 +1,0 @@
-distZip {
-    from "src/main/data"
-    into "${project.name}-${project.version}"
-}
-
-distTar {
-    from "src/main/data"
-    into "${project.name}-${project.version}"
-}

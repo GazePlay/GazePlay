@@ -84,10 +84,11 @@ dependencies {
 }
 
 distributions {
-    shadow {
+    main {
         contents {
-            from "gazeplay-dist/src/main/bin"
-            from "build/reports"
+            from("gazeplay-dist/src/main/")
+            from("build/reports")
+            from("gazeplay-data/src/main/resources")
         }
     }
 }
@@ -104,3 +105,4 @@ jar {
 mainClassName = 'net.gazeplay.GazePlayLauncher'
 
 defaultTasks 'clean', 'build'
+startScripts.enabled = false
