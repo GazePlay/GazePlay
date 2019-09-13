@@ -1,3 +1,3 @@
-task packageApp(dependsOn: ['shadowJar' ,'distTar', 'distZip', 'downloadLicenses']) {
-    tasks.findByName('shadowJar').mustRunAfter('downloadLicenses')
+task packageApp(dependsOn: ['assembleDist', 'downloadLicenses']) {
+    tasks.findByName('assembleDist').mustRunAfter('downloadLicenses')
 }
