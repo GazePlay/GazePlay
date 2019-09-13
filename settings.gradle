@@ -1,4 +1,4 @@
-rootProject.name = 'gazeplay-project'
+rootProject.name = 'gazeplay'
 include(':gazeplay-commons')
 include(':gazeplay')
 include(':gazeplay-side-projects')
