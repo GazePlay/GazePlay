@@ -14,7 +14,6 @@ boolean SpotBugs = Boolean.parseBoolean(value) ?: false
 
 allprojects {
     group = 'com.github.schwabdidier'
-    version = '1.6.2-SNAPSHOT'
 
     repositories {
         mavenLocal()
