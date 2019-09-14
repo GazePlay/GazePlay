@@ -105,6 +105,12 @@ jar {
     }
 }
 
+release {
+    failOnPublishNeeded = false
+    failOnCommitNeeded =  false
+    versionPropertyFile = 'release.properties'
+}
+
 mainClassName = 'net.gazeplay.GazePlayLauncher'
 
 defaultTasks 'clean', 'build'
