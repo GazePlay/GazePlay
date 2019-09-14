@@ -12,3 +12,5 @@ task scriptsForRelease(type: Copy) {
         ReplaceTokens, tokens: [VERSION: project.version, NAME: project.name]
     )
 }
+
+afterReleaseBuild.dependsOn packageApp
