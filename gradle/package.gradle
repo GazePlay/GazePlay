@@ -1,3 +1,14 @@
-task packageApp(dependsOn: ['assembleDist', 'downloadLicenses']) {
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task packageApp(dependsOn: ['assembleDist', 'downloadLicenses', 'scriptsForRelease']) {
     tasks.findByName('assembleDist').mustRunAfter('downloadLicenses')
+    tasks.findByName('assembleDist').mustRunAfter('scriptsForRelease')
+}
+
+task scriptsForRelease(type: Copy) {
+    from "${rootDir}/gazeplay-dist/src/main/bin"
+    into "${rootDir}/build/scripts"
+    filter(
+        ReplaceTokens, tokens: [VERSION: project.version, NAME: project.name]
+    )
 }

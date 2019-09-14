@@ -7,8 +7,6 @@ plugins {
     id 'com.github.spotbugs' version '2.0.0'
 }
 
-apply from: "${rootDir}/gradle/package.gradle"
-
 // Add -PSpotBugs=true to the Gradle Command Line to run spotbugs.
 String value = project.getProperties().get('SpotBugs')
 boolean SpotBugs = Boolean.parseBoolean(value) ?: false
@@ -75,6 +73,8 @@ subprojects {
     }
 }
 
+apply from: "${rootDir}/gradle/package.gradle"
+
 dependencies {
     runtime project(':gazeplay')
     runtime project(':gazeplay-commons')
@@ -86,8 +86,10 @@ dependencies {
 distributions {
     main {
         contents {
-            from("gazeplay-dist/src/main/")
             from("build/reports")
+            from("build/scripts") {
+                into 'bin'
+            }
             from("gazeplay-data/src/main/resources")
         }
     }
