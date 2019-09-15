@@ -11,6 +11,8 @@ $ ./gradlew
 You may decide to add the `-PSpotBugs=true` flag to check for bugs. This is disabled by default.
 e.g. `gradlew -PSpotBugs=true`
 
+## [Creating a custom JRE](gazeplay-dist/README.md)
+
 ## Utilising Spotbugs feature
 You can make Gradle find any potential bugs by running a standard `gradlew` build.
 
