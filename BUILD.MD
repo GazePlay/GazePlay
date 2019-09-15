@@ -8,8 +8,8 @@ Once you have cloned the repository, run the following command:
 > gradlew
 $ ./gradlew
 ```
-You may decide to add the `-x spotbugsMain` flag to stop the build from checking bugs. This is also done in the 
-Travis CI build.
+You may decide to add the `-PSpotBugs=true` flag to check for bugs. This is disabled by default.
+e.g. `gradlew -PSpotBugs=true`
 
 ## Utilising Spotbugs feature
 You can make Gradle find any potential bugs by running a standard `gradlew` build.
@@ -24,28 +24,20 @@ bugs are.
 > gradlew clean
 $ ./gradlew clean
 
-# Build binaries once and install them in local repository, this is needed for the license plugin to work
-> gradlew build
-$ ./gradlew build
-
-# Build binaries, including license information
-> gradlew clean downloadLicenses build
-$ ./gradlew clean downloadLicenses build
+# Running the packageApp task will compile all code, generate JAR files for all modules and dependencies, and package
+everything up into Zip and Tar formats.
+> gradlew packageApp
+$ ./gradlew packageApp
 ```
 
-## How to release the software, for version tagging in official SCM and binaries distribution
+## How to release the software, for version tagging in the official SCM and binary distribution
 ```
 # Make sure local repository is clean, so that you get the same result as a first time user
 > gradlew clean
 $ ./gradlew clean
 
-# Build binaries once and install them in local repository, this is needed for the license plugin to work
-> gradlew build
-$ ./gradlew build
-
-# Remove the -SNAPSHOT from the version label, commit and tag the version in SCM, build binaries, including license information, and increment to the next -SNAPSHOT version label.  
-> gradlew clean downloadLicenses build
-$ ./gradlew clean downloadLicenses build
+# Run the release task and follow the on-screen instructions. This will fail if any changes haven't been commited or 
+pushed.
+> gradlew release
+$ ./gradlew release
 ```
-At this time, a release task has not been created. One will come in the future, but for now a zip and tar archive will 
-be found in [`/build/distributions/`]() for the version built. 
