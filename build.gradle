@@ -12,6 +12,8 @@ plugins {
 String value = project.getProperties().get('SpotBugs')
 boolean SpotBugs = Boolean.parseBoolean(value) ?: false
 
+String javafxVersion = "11.0.2"
+
 allprojects {
     group = 'com.github.schwabdidier'
 
@@ -40,7 +42,7 @@ subprojects {
     apply plugin: 'distribution'
 
     javafx {
-        version = "11.0.2"
+        version = javafxVersion
         modules = [ 'javafx.controls', 'javafx.swing', 'javafx.media', 'javafx.web' ]
     }
 
@@ -98,8 +100,13 @@ distributions {
 jar {
     manifest {
         attributes (
-            "Main-Class": 'net.gazeplay.GazePlayLauncher',
-            "Class-Path": configurations.runtime.collect { it.getName() }.join(' ')
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.version,
+                "Implementation-Vendor": "Univ. Grenoble Alpes - LIG - GETALP",
+                "Main-Class": 'net.gazeplay.GazePlayLauncher',
+                "Class-Path": configurations.runtime.collect { it.getName() }.join(' '),
+                "JavaFX-Version": javafxVersion,
+                "Built-By": System.properties['user.name']
         )
     }
 }
