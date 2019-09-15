@@ -8,7 +8,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
     compile 'junit:junit:4.12'
-    compile 'com.google.guava:guava:23.6-jre'
+    compile 'com.google.guava:guava:28.1-jre'
     compile 'com.github.coylz:TobiiStreamEngineForJava:3.0'
     compile 'com.automation-remarks:video-recorder-core:2.0'
     compile 'ws.schild:jave-core:2.5.0'

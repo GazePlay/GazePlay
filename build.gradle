@@ -83,6 +83,8 @@ dependencies {
     runtime project(':gazeplay-data')
     runtime project(':gazeplay-melordi')
     runtime project(':gazeplay-picto-pick')
+
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
 }
 
 distributions {
@@ -93,6 +95,9 @@ distributions {
                 into 'bin'
             }
             from("gazeplay-data/src/main/resources")
+            from("gazeplay-dist/src/jre-11.0.4") {
+                into 'lib/jre'
+            }
         }
     }
 }
