@@ -19,4 +19,4 @@ matrix:
 #before_install:
 #  - if [[ "$JENV" == "xenial_openjdk8" ]]; then sudo apt-get update -q && sudo apt-get install openjfx -y            ; fi
 script:
-- ./gradlew clean build -x test -x spotbugsMain -x spotbugsTest
+- ./gradlew
