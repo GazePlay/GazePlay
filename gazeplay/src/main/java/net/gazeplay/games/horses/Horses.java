@@ -20,7 +20,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-import jdk.nashorn.internal.ir.debug.JSONWriter;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

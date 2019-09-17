@@ -3,7 +3,6 @@ package net.gazeplay.commons.utils;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
-import javafx.animation.TranslateTransitionBuilder;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -43,8 +42,11 @@ public class MarqueeText extends Region {
         this.text = new Text(text);
         this.getChildren().add(this.text);
 
-        transition = TranslateTransitionBuilder.create().duration(new Duration(speed)).node(this.text)
-                .interpolator(Interpolator.LINEAR).cycleCount(Animation.INDEFINITE).build();
+        // As of OpenJFX 9, all builders are deprecated. I have therefore matched the previous builder (see Git
+        // commit history) with a standard constructor and setters.
+        transition = new TranslateTransition(new Duration(speed), this.text);
+        transition.setInterpolator(Interpolator.LINEAR);
+        transition.setCycleCount(Animation.INDEFINITE);
         transition.setAutoReverse(true);
 
         transition.setOnFinished((ActionEvent actionEvent) -> {

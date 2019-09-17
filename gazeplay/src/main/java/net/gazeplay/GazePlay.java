@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -57,7 +56,6 @@ public class GazePlay extends Application {
     @Getter
     private Scene primaryScene;
 
-    @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
     public GazePlay() {
         instance = this;
     }

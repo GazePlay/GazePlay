@@ -2,7 +2,7 @@
 
 set -e
 
-MAIN_JAR_FILE=gazeplay-${project.version}.jar
+MAIN_JAR_FILE=@NAME@-@VERSION@.jar
 
 export JAVA_OPTS="-Xms256m -Xmx1g"
 
