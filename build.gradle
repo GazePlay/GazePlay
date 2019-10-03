@@ -1,6 +1,7 @@
 plugins {
     id 'application'
     id 'distribution'
+    id 'jacoco'
     id 'org.openjfx.javafxplugin' version '0.0.8'
     id 'io.freefair.lombok' version '4.0.1'
     id 'com.github.hierynomus.license-report' version '0.15.0'
@@ -36,6 +37,7 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'maven-publish'
+    apply plugin: 'jacoco'
     apply plugin: 'org.openjfx.javafxplugin'
     apply plugin: 'io.freefair.lombok'
     apply plugin: 'com.github.hierynomus.license-report'
@@ -59,7 +61,12 @@ subprojects {
         includeProjectDependencies = true
     }
 
-    dependencies {}
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+        testImplementation "org.testfx:testfx-core:4.0.16-alpha"
+        testImplementation "org.testfx:testfx-junit5:4.0.16-alpha"
+        testImplementation "org.testfx:openjfx-monocle:jdk-11+26"
+    }
 
     sourceCompatibility = '11'
 
@@ -74,6 +81,12 @@ subprojects {
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
     }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    tasks.jacocoTestReport.dependsOn('test')
 }
 
 apply from: "${rootDir}/gradle/package.gradle"
@@ -82,7 +95,6 @@ apply from: "${rootDir}/gazeplay-dist/build.gradle"
 dependencies {
     runtime project(':gazeplay')
     runtime project(':gazeplay-commons')
-    runtime project(':gazeplay-data')
     runtime project(':gazeplay-melordi')
     runtime project(':gazeplay-picto-pick')
 
@@ -96,7 +108,7 @@ distributions {
             from("build/scripts") {
                 into 'bin'
             }
-            from("gazeplay-data/src/main/resources")
+            from("gazeplay/src/main/resources")
             from("gazeplay-dist/src/jre") {
                 into 'lib/jre'
             }

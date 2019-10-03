@@ -27,13 +27,14 @@ public class ImageUtils {
                 .locateImagesDirectoryInUnpackedDistDirectory("data/common/default/images/");
 
         if (defaultImageDirectory == null) {
-            defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(
-                    "gazeplay-data/src/main/resources/data/common/default/images/");
-        }
-
-        if (defaultImageDirectory == null) {
             defaultImageDirectory = ImageDirectoryLocator
                     .locateImagesDirectoryInExplodedClassPath("data/common/default/images/");
+        }
+
+        // Checking this location as a last resort - should only get this far if running the program from Gradle.
+        if (!defaultImageDirectory.isDirectory()) {
+            defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(
+                    "gazeplay/src/main/resources/data/common/default/images/");
         }
 
         return new LazyImageLibrary(defaultImageDirectory, fallbackImageLibrary);
@@ -43,12 +44,12 @@ public class ImageUtils {
         File defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory("data/" + path);
 
         if (defaultImageDirectory == null) {
-            defaultImageDirectory = ImageDirectoryLocator
-                    .locateImagesDirectoryInUnpackedDistDirectory("gazeplay-data/src/main/resources/data/" + path);
+            defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInExplodedClassPath("data/" + path);
         }
 
-        if (defaultImageDirectory == null) {
-            defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInExplodedClassPath("data/" + path);
+        if (!defaultImageDirectory.isDirectory()) {
+            defaultImageDirectory = ImageDirectoryLocator
+                    .locateImagesDirectoryInUnpackedDistDirectory("gazeplay/src/main/resources/data/" + path);
         }
 
         return new LazyImageLibrary(defaultImageDirectory, fallbackImageLibrary);

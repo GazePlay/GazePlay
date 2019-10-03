@@ -1,22 +1,25 @@
 dist: bionic
-sudo: false
+sudo: true
 language: java
 jdk: openjdk11
+
+services:
+  - xvfb
+
 matrix:
   include:
     - dist: bionic
       jdk: openjdk11
       sudo: false
       env: JENV=openjdk11
-    #- dist: xenial
-    #  jdk: openjdk8
-    #  sudo: false
-    #  env: JENV=xenial_openjdk8
-    #- dist: trusty
-    #  jdk: openjdk8
-    #  sudo: required
-    #  env: JENV=trusty_openjdk8
-#before_install:
-#  - if [[ "$JENV" == "xenial_openjdk8" ]]; then sudo apt-get update -q && sudo apt-get install openjfx -y            ; fi
+
+before_install:
+  - sudo apt update
+  - sudo apt install openjfx
+  - chmod +x ./gradlew
+  - export DISPLAY=:99.0
+
+install: true
+
 script:
-- ./gradlew -x test
+  - ./gradlew

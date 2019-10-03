@@ -22,11 +22,13 @@ import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.games.ImageDirectoryLocator;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.io.File;
 
 /**
  * Created by schwab on 17/12/2016.
@@ -64,7 +66,11 @@ public class GazePlay extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
 
-        this.primaryStage.getIcons().add(new Image("data/common/images/gazeplayicone.png"));
+        String iconUrl = "data/common/images/gazeplayicone.png";
+        Image icon = findApplicationIcon(iconUrl);
+        
+        if (icon != null)
+            this.primaryStage.getIcons().add(icon);
 
         Screen screen = Screen.getPrimary();
 
@@ -208,6 +214,27 @@ public class GazePlay extends Application {
 
     public ReadOnlyBooleanProperty getFullScreenProperty() {
         return primaryStage.fullScreenProperty();
+    }
+
+    Image findApplicationIcon(String iconLocation) {
+        Image icon = null;
+
+        try {
+            icon = new Image(iconLocation);
+            log.debug("Icon found at location : {}", iconLocation);
+        } catch (IllegalArgumentException ie) {
+            log.debug("Icon not be found at location : {}", iconLocation);
+
+            File iconImageDirectory = ImageDirectoryLocator
+                    .locateImagesDirectoryInUnpackedDistDirectory(
+                            "data/common/images/");
+            if(iconImageDirectory != null) {
+                log.debug("Looking for icon in directory : " + iconImageDirectory.getAbsolutePath());
+                icon = new Image(iconImageDirectory.getAbsolutePath() + Utils.FILESEPARATOR + "gazeplayicone.png");
+            }
+        }
+
+        return icon;
     }
 
 }
