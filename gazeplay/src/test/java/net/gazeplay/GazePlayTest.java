@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(ApplicationExtension.class)
 class GazePlayTest {
 
@@ -14,7 +12,7 @@ class GazePlayTest {
     void canFindTheApplicationIcon() {
         GazePlay gazePlay = new GazePlay();
 
-        String iconUrl = "data/common/images/gazeplayicone.png";
+        String iconUrl = "data/common/images/gazeplayicon.png";
         Image icon = gazePlay.findApplicationIcon(iconUrl);
 
         assert(icon != null);
