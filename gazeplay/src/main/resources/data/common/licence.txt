@@ -60,7 +60,7 @@ Vietnamien ()
 
 Images :
 
-Les images par défaut (gazeplay-data/src/main/resources/data/common/default/images) proviennent des sources suivantes
+Les images par défaut (gazeplay/src/main/resources/data/common/default/images) proviennent des sources suivantes
 
 <a href="https://www.freepik.com/free-photos-vectors/dog">Dog vector created by ddraw - www.freepik.com</a> https://www.freepik.com/free-vector/fun-pack-smiley-wild-animals_1229176.htm#position=19&page=1&query=animals hippo.jpg, lion.jpg, elephant.jpg, giraffe.jpg
 <a href="https://www.freepik.com/free-photos-vectors/design">Design vector created by freepik - www.freepik.com</a> https://www.freepik.com/free-vector/coloured-animals-collection_955964.htm#position=24&page=1&query=animals fox.jpg, turtle.jpg, bear.jpg

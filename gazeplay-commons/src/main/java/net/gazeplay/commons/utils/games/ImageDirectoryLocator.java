@@ -23,31 +23,32 @@ public class ImageDirectoryLocator {
         }
         log.info("locateImagesDirectoryInUnpackedDistDirectory : workingDirectoryName = {}", workingDirectoryName);
 
-        log.info("locateImagesDirectoryInUnpackedDistDirectory : parentImagesPackageResourceLocation = {}",
-                parentImagesPackageResourceLocation);
+        File imagesDirectory = new File(workingDirectory, parentImagesPackageResourceLocation);
+        boolean checked = checkImageDirectory(imagesDirectory);
 
-        {
-            final File imagesDirectory = new File(workingDirectory, parentImagesPackageResourceLocation);
+        if (checked) {
             log.info("locateImagesDirectoryInUnpackedDistDirectory : imagesDirectory = {}",
                     imagesDirectory.getAbsolutePath());
-            boolean checked = checkImageDirectory(imagesDirectory);
+            return imagesDirectory;
+        } else {
+            log.debug("locateImagesDirectoryInUnpackedDistDirectory : could not locate images directory at {}", imagesDirectory.getAbsolutePath());
+
+            // Checking this location as a last resort - should only get this far if running the program from Gradle.
+            imagesDirectory = new File(workingDirectory,
+                    "/gazeplay/src/main/resources/" + parentImagesPackageResourceLocation);
+            checked = checkImageDirectory(imagesDirectory);
             if (checked) {
+                log.info("locateImagesDirectoryInUnpackedDistDirectory : imagesDirectory = {}",
+                        imagesDirectory.getAbsolutePath());
                 return imagesDirectory;
-            } else {
-                final File imagesDirectoryRessource = new File(workingDirectory,
-                        "/gazeplay-data/src/main/resources/" + parentImagesPackageResourceLocation);
-                checked = checkImageDirectory(imagesDirectoryRessource);
-                if (checked) {
-                    return imagesDirectoryRessource;
-                }
             }
         }
 
         if (workingDirectoryName.equals("bin")) {
-            final File imagesDirectory = new File(workingDirectory, "../" + parentImagesPackageResourceLocation);
+            imagesDirectory = new File(workingDirectory, "../" + parentImagesPackageResourceLocation);
             log.info("locateImagesDirectoryInUnpackedDistDirectory : imagesDirectory = {}",
                     imagesDirectory.getAbsolutePath());
-            boolean checked = checkImageDirectory(imagesDirectory);
+            checked = checkImageDirectory(imagesDirectory);
             if (checked) {
                 return imagesDirectory;
             }

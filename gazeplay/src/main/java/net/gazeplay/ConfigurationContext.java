@@ -7,8 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -16,7 +16,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
@@ -38,6 +41,11 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Optional;
@@ -971,14 +979,17 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         String musicFolder = newMusicFolder;
 
-        if (newMusicFolder == "") {
-            // TODO find a way to access to this files in a "cleaner" way
-            musicFolder = (new File(".")).getAbsolutePath() + "/gazeplay-data/src/main/resources/data" + File.separator
-                    + "home" + File.separator + "sounds";
-            config.getMusicFolderProperty().setValue(Configuration.DEFAULT_VALUE_MUSIC_FOLDER);
-        } else {
-            config.getMusicFolderProperty().setValue(musicFolder);
+        if (musicFolder.isBlank()) {
+            File gazePlayFolder = new File(Utils.getGazePlayFolder());
+            File gazePlayMusicFolder = new File(gazePlayFolder.getAbsolutePath() + Utils.FILESEPARATOR + "music");
+
+            String songName = "songidea(copycat)_0.mp3";
+            setupNewMusicFolder(gazePlayMusicFolder, songName);
+
+            musicFolder = gazePlayMusicFolder.getAbsolutePath();
         }
+
+        config.getMusicFolderProperty().setValue(musicFolder);
 
         config.saveConfigIgnoringExceptions();
 
@@ -987,6 +998,31 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         musicManager.emptyPlaylist();
         musicManager.getAudioFromFolder(musicFolder);
         musicManager.play();
+    }
+
+    static void setupNewMusicFolder(File gazePlayMusicFolder, String defaultSong) {
+        // Copy resource into users root folder, and set that to be the new default music folder. Then the user
+        // can easily add their own songs to it without having to change configurations.
+
+        if (!gazePlayMusicFolder.exists()) {
+            boolean musicFolderCreated = gazePlayMusicFolder.mkdir();
+            log.debug("musicFolderCreated = " + musicFolderCreated);
+        }
+
+        String resourcePath = "data/home/sounds/" + defaultSong;
+
+        try {
+            InputStream defaultMusicTrack = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
+            if (gazePlayMusicFolder.exists()) {
+                Files.copy(defaultMusicTrack,
+                        Paths.get(gazePlayMusicFolder.getAbsolutePath() + Utils.FILESEPARATOR + defaultSong),
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (NullPointerException ne) {
+            log.debug(String.format("Could not find %s: %s", resourcePath, ne.toString()));
+        } catch (IOException ie) {
+            log.debug(String.format("Could not copy file at %s to %s: %s", resourcePath, gazePlayMusicFolder, ie.toString()));
+        }
     }
 
     private static HBox buildVideoFolderChooser(Configuration config) {

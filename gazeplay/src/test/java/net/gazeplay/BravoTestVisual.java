@@ -1,4 +1,4 @@
-package net.gazeplay.commons.utils;
+package net.gazeplay;
 
 import com.sun.glass.ui.Screen;
 import javafx.application.Application;
@@ -9,15 +9,19 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.utils.Bravo;
 import org.junit.Before;
 import org.junit.Test;
+import org.testfx.api.FxRobot;
+import org.testfx.api.FxToolkit;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeoutException;
 
 import static junit.framework.TestCase.assertTrue;
 
 @Slf4j
-public class BravoTestVisual {
+public class BravoTestVisual extends FxRobot {
 
 	private static CountDownLatch finishedAnimation;
 
@@ -29,11 +33,12 @@ public class BravoTestVisual {
 	}
 
 	@Test
-	public void shouldRunBravo() throws InterruptedException {
-		Application.launch(BravoTestApp.class, null);
+	public void shouldRunBravo() throws InterruptedException, TimeoutException {
+		FxToolkit.registerPrimaryStage();
+		FxToolkit.setupApplication(BravoTestApp.class);
+
 		finishedAnimation.await();
 
-		//assertTrue(duration > 13000);
 		assertTrue(duration < 14000);
 	}
 
