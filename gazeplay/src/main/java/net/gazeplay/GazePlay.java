@@ -29,6 +29,7 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by schwab on 17/12/2016.
@@ -66,7 +67,7 @@ public class GazePlay extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
 
-        String iconUrl = "data/common/images/gazeplayicone.png";
+        String iconUrl = "data/common/images/gazeplayicon.png";
         Image icon = findApplicationIcon(iconUrl);
         
         if (icon != null)
@@ -221,16 +222,25 @@ public class GazePlay extends Application {
 
         try {
             icon = new Image(iconLocation);
-            log.debug("Icon found at location : {}", iconLocation);
+            log.debug("findApplicationIcon : icon found at location : {}", iconLocation);
         } catch (IllegalArgumentException ie) {
-            log.debug("Icon not be found at location : {}", iconLocation);
+            log.debug("findApplicationIcon : icon not be found at location : {}", iconLocation);
 
             File iconImageDirectory = ImageDirectoryLocator
                     .locateImagesDirectoryInUnpackedDistDirectory(
                             "data/common/images/");
             if(iconImageDirectory != null) {
-                log.debug("Looking for icon in directory : " + iconImageDirectory.getAbsolutePath());
-                icon = new Image(iconImageDirectory.getAbsolutePath() + Utils.FILESEPARATOR + "gazeplayicone.png");
+                try {
+                    String filePath = iconImageDirectory.getCanonicalPath() + Utils.FILESEPARATOR + "gazeplayicon.png";
+                    log.debug("findApplicationIcon : looking for icon at location = " + filePath);
+                    icon = new Image(filePath);
+                } catch (IOException ioe) {
+                    log.debug("findApplicationIcon : image directory {} is invalid. - {}", iconImageDirectory.getAbsolutePath(), ioe.toString());
+                } catch (IllegalArgumentException iae) {
+                    log.debug("findApplicationIcon : image could not be found. - {}", iae.toString());
+                } catch (Exception e) {
+                    log.debug("findApplicationIcon : something unexpected happened - {}", e.toString());
+                }
             }
         }
 
