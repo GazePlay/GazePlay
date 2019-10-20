@@ -8,7 +8,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.shooter.Shooter;
 import net.gazeplay.games.shooter.ShooterGamesStats;
 
-public class BibouleGameLauncher implements GameSpec.GameLauncher {
+public class ShooterGameLauncher implements GameSpec.GameLauncher {
 	@Override
 	public Stats createNewStats(Scene scene) {
 		return new ShooterGamesStats(scene, "biboule");

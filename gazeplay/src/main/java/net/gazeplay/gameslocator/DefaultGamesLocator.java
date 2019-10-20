@@ -54,7 +54,7 @@ public class DefaultGamesLocator implements GamesLocator {
 		gameList.add(new GameSpec(
 				new GameSummary("Biboule", "data/Thumbnails/biboules.png", GameCategories.Category.SELECTION,
 						"https://opengameart.org/sites/default/files/TalkingCuteChiptune_0.mp3"),
-				new BibouleGameLauncher()));
+				new ShooterGameLauncher()));
 
 		gameList.add(new GameSpec(
 				new GameSummary("Robots", "data/Thumbnails/robots.png", GameCategories.Category.SELECTION,
