@@ -34,6 +34,7 @@ import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.GamePanelDimensionProvider;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.gameslocator.DefaultGamesLocator;
 
 import java.io.File;
 import java.io.FileInputStream;

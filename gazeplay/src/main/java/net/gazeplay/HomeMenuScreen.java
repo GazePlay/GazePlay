@@ -34,6 +34,7 @@ import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.gameslocator.DefaultGamesLocator;
 
 import java.util.ArrayList;
 import java.util.List;
