@@ -5,6 +5,64 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSummary;
 import net.gazeplay.GamesLocator;
+import net.gazeplay.games.biboulejump.BibouleJumpGameLauncher;
+import net.gazeplay.games.biboulejump.BibouleJumpGameVariantGenerator;
+import net.gazeplay.games.blocs.BlocsGameLauncher;
+import net.gazeplay.games.blocs.BlocsGameVariantGenerator;
+import net.gazeplay.games.bubbles.ColoredBubblesGameLauncher;
+import net.gazeplay.games.bubbles.PortraitBubblesGameLauncher;
+import net.gazeplay.games.cakes.CakesGameLauncher;
+import net.gazeplay.games.cakes.CakesGameVariantGenerator;
+import net.gazeplay.games.colors.ColorsGameLauncher;
+import net.gazeplay.games.creampie.CreampieGameLauncher;
+import net.gazeplay.games.cups.CupsBallsGameLauncher;
+import net.gazeplay.games.cups.CupsBallsGameVariantGenerator;
+import net.gazeplay.games.dice.DiceGameLauncher;
+import net.gazeplay.games.dice.DiceGameVariantGenerator;
+import net.gazeplay.games.divisor.DivisorGameLauncher;
+import net.gazeplay.games.divisor.RabbitsGameLauncher;
+import net.gazeplay.games.draw.ScribbleGameLauncher;
+import net.gazeplay.games.goosegame.GooseGameLauncher;
+import net.gazeplay.games.goosegame.GooseGameVariantGenerator;
+import net.gazeplay.games.drawonvideo.VideoPlayerGameLauncher;
+import net.gazeplay.games.drawonvideo.VideoPlayerGameVariantGenerator;
+import net.gazeplay.games.horses.HorsesGameLauncher;
+import net.gazeplay.games.horses.HorsesGameVariantGenerator;
+import net.gazeplay.games.horses.HorsesSimplifiedGameLauncher;
+import net.gazeplay.games.horses.HorsesSimplifiedGameVariantGenerator;
+import net.gazeplay.games.labyrinth.LabyrinthGameLauncher;
+import net.gazeplay.games.labyrinth.LabyrinthGameVariantGenerator;
+import net.gazeplay.games.literacy.LettersGameLauncher;
+import net.gazeplay.games.literacy.LettersGameVariantGenerator;
+import net.gazeplay.games.magicPotions.PotionsGameLauncher;
+import net.gazeplay.games.magiccards.MagicCardsGameLauncher;
+import net.gazeplay.games.magiccards.MagicCardsGameVariantGenerator;
+import net.gazeplay.games.math101.*;
+import net.gazeplay.games.mediaPlayer.MediaPlayerGameLauncher;
+import net.gazeplay.games.memory.*;
+import net.gazeplay.games.moles.WhacAMoleGameLauncher;
+import net.gazeplay.games.ninja.NinjaGameLauncher;
+import net.gazeplay.games.ninja.NinjaGameVariantGenerator;
+import net.gazeplay.games.order.OrderGameLauncher;
+import net.gazeplay.games.order.OrdersGameVariantGenerator;
+import net.gazeplay.games.pet.PetGameLauncher;
+import net.gazeplay.games.pianosight.PianoGameLauncher;
+import net.gazeplay.games.race.FrogsRaceGameLauncher;
+import net.gazeplay.games.room.RoomGameLauncher;
+import net.gazeplay.games.rushHour.RushHourGameLauncher;
+import net.gazeplay.games.scratchcard.ScratchCardGameLauncher;
+import net.gazeplay.games.shooter.RobotsGameLauncher;
+import net.gazeplay.games.shooter.ShooterGameLauncher;
+import net.gazeplay.games.slidingpuzzle.PuzzleGameLauncher;
+import net.gazeplay.games.slidingpuzzle.PuzzleGameVariantGenerator;
+import net.gazeplay.games.soundsoflife.FarmGameLauncher;
+import net.gazeplay.games.soundsoflife.JungleGameLauncher;
+import net.gazeplay.games.soundsoflife.SavannaGameLauncher;
+import net.gazeplay.games.space.SpaceGameLauncher;
+import net.gazeplay.games.spotthedifferences.SpotDifferencesGameLauncher;
+import net.gazeplay.games.videogrid.VideoGridGameLauncher;
+import net.gazeplay.games.videogrid.VideoGridGameVariantGenerator;
+import net.gazeplay.games.whereisit.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +96,7 @@ public class DefaultGamesLocator implements GamesLocator {
 
 		gameList.add(new GameSpec(
 				new GameSummary("Blocks", "data/Thumbnails/block.png", GameCategories.Category.ACTION_REACTION),
-				new BlocksGameVariantGenerator(), new BlockGameLauncher()));
+				new BlocsGameVariantGenerator(), new BlocsGameLauncher()));
 
 		gameList.add(new GameSpec(new GameSummary("ScratchCard", "data/Thumbnails/scratchcard.png",
 				GameCategories.Category.ACTION_REACTION), new ScratchCardGameLauncher()));
