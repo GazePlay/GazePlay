@@ -22,10 +22,10 @@ import net.gazeplay.games.dice.DiceGameVariantGenerator;
 import net.gazeplay.games.divisor.DivisorGameLauncher;
 import net.gazeplay.games.divisor.RabbitsGameLauncher;
 import net.gazeplay.games.draw.ScribbleGameLauncher;
-import net.gazeplay.games.goosegame.GooseGameLauncher;
-import net.gazeplay.games.goosegame.GooseGameVariantGenerator;
 import net.gazeplay.games.drawonvideo.VideoPlayerGameLauncher;
 import net.gazeplay.games.drawonvideo.VideoPlayerGameVariantGenerator;
+import net.gazeplay.games.goosegame.GooseGameLauncher;
+import net.gazeplay.games.goosegame.GooseGameVariantGenerator;
 import net.gazeplay.games.horses.HorsesGameLauncher;
 import net.gazeplay.games.horses.HorsesGameVariantGenerator;
 import net.gazeplay.games.horses.HorsesSimplifiedGameLauncher;
@@ -70,20 +70,8 @@ import java.util.List;
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
 
-	private static List<GameSpec> gameList = null;
-
 	@Override
 	public List<GameSpec> listGames() {
-
-		if (gameList != null) {
-
-			log.debug("Game List already created.");
-			return gameList;
-		} else {
-
-			log.debug("Game List has to be created.");
-		}
-
 		LinkedList<GameSpec> gameList = new LinkedList<>();
 
 		gameList.add(new GameSpec(
@@ -306,12 +294,6 @@ public class DefaultGamesLocator implements GamesLocator {
 		log.info("Games found : {}", gameList.size());
 
 		return gameList;
-	}
-
-	// TODO complete fonction
-	public List<GameSpec> listGames(GameCategories.Category category) {
-
-		return listGames();
 	}
 
 }

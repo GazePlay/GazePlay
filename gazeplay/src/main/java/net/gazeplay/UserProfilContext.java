@@ -34,20 +34,18 @@ import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.GamePanelDimensionProvider;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.gameslocator.CachingGamesLocator;
 import net.gazeplay.gameslocator.DefaultGamesLocator;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
 //@Data
 @Slf4j
 public class UserProfilContext extends GraphicalContext<BorderPane> {
+
+    private final static GamesLocator gamesLocator = new CachingGamesLocator(new DefaultGamesLocator());
 
     private int nbUser = 1;
 
@@ -57,8 +55,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     }
 
     public static UserProfilContext newInstance(final GazePlay gazePlay, final Configuration config) {
-
-        GamesLocator gamesLocator = new DefaultGamesLocator();
         List<GameSpec> games = gamesLocator.listGames();
 
         BorderPane root = new BorderPane();
