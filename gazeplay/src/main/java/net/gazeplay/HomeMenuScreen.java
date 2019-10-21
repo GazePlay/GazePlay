@@ -11,7 +11,10 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -34,6 +37,8 @@ import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.gameslocator.CachingGamesLocator;
+import net.gazeplay.gameslocator.DefaultGamesLocator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +49,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     public final static String LOGO_PATH = "data/common/images/logos/gazeplay1.6.1.png";
     // public final static String LOGO_PATH = "data/common/images/logos/gazeplayClassicLogo.png";
-    private final static GamesLocator gamesLocator = new DefaultGamesLocator();
+    private final static GamesLocator gamesLocator = new CachingGamesLocator(new DefaultGamesLocator());
 
     // private static String currentLanguage;
 

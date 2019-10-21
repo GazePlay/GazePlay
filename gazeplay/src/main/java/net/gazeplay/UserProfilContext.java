@@ -35,12 +35,7 @@ import net.gazeplay.commons.utils.GamePanelDimensionProvider;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,10 +51,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     }
 
     public static UserProfilContext newInstance(final GazePlay gazePlay, final Configuration config) {
-
-        GamesLocator gamesLocator = new DefaultGamesLocator();
-        List<GameSpec> games = gamesLocator.listGames();
-
         BorderPane root = new BorderPane();
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root,

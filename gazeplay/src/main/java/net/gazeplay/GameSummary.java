@@ -1,12 +1,14 @@
 package net.gazeplay;
 
-import lombok.Data;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-@Data
+import java.util.Comparator;
+
+@Builder
 @Slf4j
-public class GameSummary {
+public class GameSummary implements Comparable<GameSummary> {
 
     @Getter
     private final String nameCode;
@@ -23,22 +25,33 @@ public class GameSummary {
     @Getter
     private final String description;
 
+    @Deprecated // use builder instead of constructor
     public GameSummary(String nameCode, String gameThumbnail, GameCategories.Category category) {
         this(nameCode, gameThumbnail, category, null);
     }
 
+    @Deprecated // use builder instead of constructor
     public GameSummary(String nameCode, String gameThumbnail, GameCategories.Category category,
-            final String backgroundMusicUrl) {
+                       final String backgroundMusicUrl) {
         this(nameCode, gameThumbnail, category, backgroundMusicUrl, null);
     }
 
+    @Deprecated // use builder instead of constructor
     public GameSummary(String nameCode, String gameThumbnail, GameCategories.Category category,
-            String backgroundMusicUrl, final String description) {
+                       String backgroundMusicUrl, final String description) {
         this.nameCode = nameCode;
         this.gameThumbnail = gameThumbnail;
         this.category = category;
         this.backgroundMusicUrl = backgroundMusicUrl;
         this.description = description;
+    }
+
+    @Override
+    public int compareTo(GameSummary o) {
+        return Comparator
+            .comparing(GameSummary::getCategory)
+            .thenComparing(GameSummary::getNameCode)
+            .compare(this, o);
     }
 
 }
