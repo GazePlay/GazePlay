@@ -6,9 +6,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.gameslocator.GameSpecSource;
 
 public class ScratchCardGameSpecSource implements GameSpecSource {
-	@Override
-	public GameSpec getGameSpec() {
-		return new GameSpec(new GameSummary("ScratchCard", "data/Thumbnails/scratchcard.png",
-				GameCategories.Category.ACTION_REACTION), new ScratchCardGameLauncher());
-	}
+    @Override
+    public GameSpec getGameSpec() {
+        return new GameSpec(
+            GameSummary.builder().nameCode("ScratchCard").gameThumbnail("data/Thumbnails/scratchcard.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            new ScratchCardGameLauncher());
+    }
 }

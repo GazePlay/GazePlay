@@ -6,9 +6,9 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.gameslocator.GameSpecSource;
 
 public class Math201GameSpecSource implements GameSpecSource {
-	@Override
-	public GameSpec getGameSpec() {
-		return new GameSpec(new GameSummary("Math201", "data/Thumbnails/math101.png",
-				GameCategories.Category.LOGIC, null, "MathDesc"), new Math201GameVariantGenerator(), new Math201GameLauncher());
-	}
+    @Override
+    public GameSpec getGameSpec() {
+        return new GameSpec(new GameSummary("Math201", "data/Thumbnails/math101.png",
+            GameCategories.Category.LOGIC, null, "MathDesc"), new Math201GameVariantGenerator(), new Math201GameLauncher());
+    }
 }

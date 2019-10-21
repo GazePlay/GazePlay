@@ -6,10 +6,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.gameslocator.GameSpecSource;
 
 public class JungleGameSpecSource implements GameSpecSource {
-	@Override
-	public GameSpec getGameSpec() {
-		return new GameSpec(
-				new GameSummary("Jungle", "data/Thumbnails/jungle.png", GameCategories.Category.ACTION_REACTION),
-				new JungleGameLauncher());
-	}
+    @Override
+    public GameSpec getGameSpec() {
+        return new GameSpec(
+            GameSummary.builder().nameCode("Jungle").gameThumbnail("data/Thumbnails/jungle.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            new JungleGameLauncher());
+    }
 }

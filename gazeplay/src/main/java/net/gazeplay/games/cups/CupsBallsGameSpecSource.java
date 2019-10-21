@@ -6,10 +6,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.gameslocator.GameSpecSource;
 
 public class CupsBallsGameSpecSource implements GameSpecSource {
-	@Override
-	public GameSpec getGameSpec() {
-		return new GameSpec(
-				new GameSummary("CupsBalls", "data/Thumbnails/passpass.png", GameCategories.Category.MEMORIZATION),
-				new CupsBallsGameVariantGenerator(), new CupsBallsGameLauncher());
-	}
+    @Override
+    public GameSpec getGameSpec() {
+        return new GameSpec(
+            GameSummary.builder().nameCode("CupsBalls").gameThumbnail("data/Thumbnails/passpass.png").category(GameCategories.Category.MEMORIZATION).build(),
+            new CupsBallsGameVariantGenerator(), new CupsBallsGameLauncher());
+    }
 }

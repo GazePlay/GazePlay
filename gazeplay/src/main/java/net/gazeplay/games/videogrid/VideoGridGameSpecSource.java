@@ -6,10 +6,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.gameslocator.GameSpecSource;
 
 public class VideoGridGameSpecSource implements GameSpecSource {
-	@Override
-	public GameSpec getGameSpec() {
-		return new GameSpec(
-				new GameSummary("VideoGrid", "data/Thumbnails/videogrid.png", GameCategories.Category.SELECTION),
-				new VideoGridGameVariantGenerator(), new VideoGridGameLauncher());
-	}
+    @Override
+    public GameSpec getGameSpec() {
+        return new GameSpec(
+            new GameSummary("VideoGrid", "data/Thumbnails/videogrid.png", GameCategories.Category.SELECTION),
+            new VideoGridGameVariantGenerator(), new VideoGridGameLauncher());
+    }
 }

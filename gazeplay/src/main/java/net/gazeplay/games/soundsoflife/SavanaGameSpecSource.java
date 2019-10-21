@@ -6,10 +6,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.gameslocator.GameSpecSource;
 
 public class SavanaGameSpecSource implements GameSpecSource {
-	@Override
-	public GameSpec getGameSpec() {
-		return new GameSpec(
-				new GameSummary("Savanna", "data/Thumbnails/savana.png", GameCategories.Category.ACTION_REACTION),
-				new SavannaGameLauncher());
-	}
+    @Override
+    public GameSpec getGameSpec() {
+        return new GameSpec(
+            GameSummary.builder().nameCode("Savanna").gameThumbnail("data/Thumbnails/savana.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            new SavannaGameLauncher());
+    }
 }

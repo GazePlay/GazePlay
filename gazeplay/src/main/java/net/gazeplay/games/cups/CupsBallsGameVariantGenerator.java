@@ -7,9 +7,9 @@ import net.gazeplay.GameSpec;
 import java.util.Set;
 
 public class CupsBallsGameVariantGenerator implements GameSpec.GameVariantGenerator {
-	@Override
-	public Set<GameSpec.GameVariant> getVariants() {
-		return Sets.newLinkedHashSet(
-				Lists.newArrayList(new GameSpec.CupsGameVariant(3), new GameSpec.CupsGameVariant(5)));
-	}
+    @Override
+    public Set<GameSpec.GameVariant> getVariants() {
+        return Sets.newLinkedHashSet(
+            Lists.newArrayList(new GameSpec.CupsGameVariant(3), new GameSpec.CupsGameVariant(5)));
+    }
 }

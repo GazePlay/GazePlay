@@ -6,10 +6,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.gameslocator.GameSpecSource;
 
 public class DivisorGameSpecSource implements GameSpecSource {
-	@Override
-	public GameSpec getGameSpec() {
-		return new GameSpec(
-				new GameSummary("Divisor", "data/Thumbnails/divisor.png", GameCategories.Category.SELECTION),
-				new DivisorGameLauncher());
-	}
+    @Override
+    public GameSpec getGameSpec() {
+        return new GameSpec(
+            GameSummary.builder().nameCode("Divisor").gameThumbnail("data/Thumbnails/divisor.png").category(GameCategories.Category.SELECTION).build(),
+            new DivisorGameLauncher());
+    }
 }

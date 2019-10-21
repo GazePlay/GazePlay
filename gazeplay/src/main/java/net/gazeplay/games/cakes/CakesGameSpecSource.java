@@ -6,10 +6,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.gameslocator.GameSpecSource;
 
 public class CakesGameSpecSource implements GameSpecSource {
-	@Override
-	public GameSpec getGameSpec() {
-		return new GameSpec(
-				new GameSummary("Cakes", "data/Thumbnails/cakes.png", GameCategories.Category.MEMORIZATION),
-				new CakesGameVariantGenerator(), new CakesGameLauncher());
-	}
+    @Override
+    public GameSpec getGameSpec() {
+        return new GameSpec(
+            GameSummary.builder().nameCode("Cakes").gameThumbnail("data/Thumbnails/cakes.png").category(GameCategories.Category.MEMORIZATION).build(),
+            new CakesGameVariantGenerator(), new CakesGameLauncher());
+    }
 }

@@ -6,10 +6,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.gameslocator.GameSpecSource;
 
 public class RoomGameSpecSource implements GameSpecSource {
-	@Override
-	public GameSpec getGameSpec() {
-		return new GameSpec(
-				new GameSummary("Room", "data/Thumbnails/home.png", GameCategories.Category.ACTION_REACTION),
-				new RoomGameLauncher());
-	}
+    @Override
+    public GameSpec getGameSpec() {
+        return new GameSpec(
+            GameSummary.builder().nameCode("Room").gameThumbnail("data/Thumbnails/home.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            new RoomGameLauncher());
+    }
 }

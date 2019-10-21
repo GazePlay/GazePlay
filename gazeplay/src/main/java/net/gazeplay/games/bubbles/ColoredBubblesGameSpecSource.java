@@ -6,10 +6,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.gameslocator.GameSpecSource;
 
 public class ColoredBubblesGameSpecSource implements GameSpecSource {
-	@Override
-	public GameSpec getGameSpec() {
-		return new GameSpec(
-				new GameSummary("ColoredBubbles", "data/Thumbnails/bubblecolor.png", GameCategories.Category.SELECTION),
-				new ColoredBubblesGameLauncher());
-	}
+    @Override
+    public GameSpec getGameSpec() {
+        return new GameSpec(
+            GameSummary.builder().nameCode("ColoredBubbles").gameThumbnail("data/Thumbnails/bubblecolor.png").category(GameCategories.Category.SELECTION).build(),
+            new ColoredBubblesGameLauncher());
+    }
 }

@@ -7,14 +7,14 @@ import net.gazeplay.GameSpec;
 import java.util.Set;
 
 public class BibouleJumpGameVariantGenerator implements GameSpec.GameVariantGenerator {
-	@Override
-	public Set<GameSpec.GameVariant> getVariants() {
-		return Sets.newLinkedHashSet(Lists.newArrayList(
+    @Override
+    public Set<GameSpec.GameVariant> getVariants() {
+        return Sets.newLinkedHashSet(Lists.newArrayList(
 
-				new GameSpec.IntGameVariant(0, "With moving platforms"),
+            new GameSpec.IntGameVariant(0, "With moving platforms"),
 
-				new GameSpec.IntGameVariant(1, "Without moving platforms")
+            new GameSpec.IntGameVariant(1, "Without moving platforms")
 
-		));
-	}
+        ));
+    }
 }

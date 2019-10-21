@@ -6,10 +6,10 @@ import net.gazeplay.GameSummary;
 import net.gazeplay.gameslocator.GameSpecSource;
 
 public class PuzzleGameSpecSource implements GameSpecSource {
-	@Override
-	public GameSpec getGameSpec() {
-		return new GameSpec(
-				new GameSummary("puzzle", "data/Thumbnails/slidingpuzzle.png", GameCategories.Category.ACTION_REACTION),
-				new PuzzleGameVariantGenerator(), new PuzzleGameLauncher());
-	}
+    @Override
+    public GameSpec getGameSpec() {
+        return new GameSpec(
+            GameSummary.builder().nameCode("puzzle").gameThumbnail("data/Thumbnails/slidingpuzzle.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            new PuzzleGameVariantGenerator(), new PuzzleGameLauncher());
+    }
 }

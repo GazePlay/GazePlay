@@ -8,14 +8,14 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 public class SpotDifferencesGameLauncher implements GameSpec.GameLauncher {
 
-	@Override
-	public Stats createNewStats(Scene scene) {
-		return new Stats(scene, "spotthedifferences");
-	}
+    @Override
+    public Stats createNewStats(Scene scene) {
+        return new Stats(scene, "spotthedifferences");
+    }
 
-	@Override
-	public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
-									   Stats stats) {
-		return new SpotTheDifferences(gameContext, stats);
-	}
+    @Override
+    public GameLifeCycle createNewGame(GameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats) {
+        return new SpotTheDifferences(gameContext, stats);
+    }
 }
