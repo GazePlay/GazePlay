@@ -34,8 +34,6 @@ import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.GamePanelDimensionProvider;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.gameslocator.CachingGamesLocator;
-import net.gazeplay.gameslocator.DefaultGamesLocator;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -45,8 +43,6 @@ import java.util.List;
 @Slf4j
 public class UserProfilContext extends GraphicalContext<BorderPane> {
 
-    private final static GamesLocator gamesLocator = new CachingGamesLocator(new DefaultGamesLocator());
-
     private int nbUser = 1;
 
     @Override
@@ -55,8 +51,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     }
 
     public static UserProfilContext newInstance(final GazePlay gazePlay, final Configuration config) {
-        List<GameSpec> games = gamesLocator.listGames();
-
         BorderPane root = new BorderPane();
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root,
