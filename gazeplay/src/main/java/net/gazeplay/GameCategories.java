@@ -5,6 +5,8 @@ import lombok.NonNull;
 
 public class GameCategories {
 
+    private static final String categoryThumbnailsPath = "data/common/images/categoriesThumbnails/";
+
     /**
      * Action-Reaction Skill
      * <p>
@@ -15,11 +17,11 @@ public class GameCategories {
      * Logic Skill
      */
     public enum Category {
-        ACTION_REACTION("ActionReaction games", "data/common/images/categoriesThumbnails/searching-magnifying-glass.png"),
-        SELECTION("Selection games", "data/common/images/categoriesThumbnails/target.png"),
-        MEMORIZATION("Memorization games", "data/common/images/categoriesThumbnails/male-brain.png"),
-        LOGIC("Logic games", "data/common/images/categoriesThumbnails/logic_gear.png"),
-        CREATIVITY("Creativity games", "data/common/images/categoriesThumbnails/creativity-icon.png");
+        ACTION_REACTION("ActionReaction games", categoryThumbnailsPath + "searching-magnifying-glass.png"),
+        SELECTION("Selection games", categoryThumbnailsPath + "target.png"),
+        MEMORIZATION("Memorization games", categoryThumbnailsPath + "male-brain.png"),
+        LOGIC("Logic games", categoryThumbnailsPath + "logic_gear.png"),
+        CREATIVITY("Creativity games", categoryThumbnailsPath + "creativity-icon.png");
 
         @NonNull
         @Getter
