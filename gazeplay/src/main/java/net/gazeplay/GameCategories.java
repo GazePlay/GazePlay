@@ -18,7 +18,8 @@ public class GameCategories {
         ACTION_REACTION("ActionReaction games", "data/common/images/categoriesThumbnails/searching-magnifying-glass.png"),
         SELECTION("Selection games", "data/common/images/categoriesThumbnails/target.png"),
         MEMORIZATION("Memorization games", "data/common/images/categoriesThumbnails/male-brain.png"),
-        LOGIC("Logic games", "data/common/images/categoriesThumbnails/logic_gear.png");
+        LOGIC("Logic games", "data/common/images/categoriesThumbnails/logic_gear.png"),
+        CREATIVITY("Creativity games", "data/common/images/categoriesThumbnails/creativity-icon.png");
 
         @NonNull
         @Getter

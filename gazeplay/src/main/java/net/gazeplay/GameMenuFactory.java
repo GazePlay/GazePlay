@@ -61,7 +61,7 @@ public class GameMenuFactory {
         } else {
             heartIcon = new Image("data/common/images/heart_empty.png");
         }
-        
+
         ImageView favGamesIcon = new ImageView(heartIcon);
 
         // can't understand the goal of the following 3 lines
@@ -144,34 +144,38 @@ public class GameMenuFactory {
             }
         }
 
-        GameCategories.Category gameCategory = gameSummary.getCategories().first();
-        if (gameCategory.getThumbnail() != null) {
-            Image buttonGraphics = new Image(gameCategory.getThumbnail());
-            ImageView imageView = new ImageView(buttonGraphics);
-            imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
-            imageView.setPreserveRatio(true);
-
-            final VBox gameCategoryContainer = new VBox();
-            switch (orientation) {
-                case HORIZONTAL:
-                    gameCard.heightProperty().addListener(
-                        (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
-
-                    gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
-                    gameCategoryContainer.getChildren().add(imageView);
-                    gameCard.setBottom(gameCategoryContainer);
-                    VBox favIconContainer = new VBox(favGamesIcon);
-                    gameCard.setTop(favIconContainer);
-
-                    break;
-                case VERTICAL:
-                    gameCard.widthProperty().addListener(
-                        (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
-
-                    gameCategoryContainer.setAlignment(Pos.TOP_RIGHT);
-                    gameCategoryContainer.getChildren().add(imageView);
-                    gameCard.setTop(gameCategoryContainer);
-                    break;
+        final HBox gameCategoryContainer = new HBox();
+        final VBox favIconContainer = new VBox(favGamesIcon);
+        switch (orientation) {
+            case HORIZONTAL:
+                gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
+                gameCard.setBottom(gameCategoryContainer);
+                gameCard.setTop(favIconContainer);
+                break;
+            case VERTICAL:
+                gameCategoryContainer.setAlignment(Pos.TOP_RIGHT);
+                gameCard.setTop(gameCategoryContainer);
+                gameCard.setLeft(favIconContainer);
+                break;
+        }
+        for (GameCategories.Category gameCategory : gameSummary.getCategories()) {
+            if (gameCategory.getThumbnail() != null) {
+                Image buttonGraphics = new Image(gameCategory.getThumbnail());
+                ImageView imageView = new ImageView(buttonGraphics);
+                imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
+                imageView.setPreserveRatio(true);
+                switch (orientation) {
+                    case HORIZONTAL:
+                        gameCard.heightProperty().addListener(
+                            (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
+                        gameCategoryContainer.getChildren().add(imageView);
+                        break;
+                    case VERTICAL:
+                        gameCard.widthProperty().addListener(
+                            (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
+                        gameCategoryContainer.getChildren().add(imageView);
+                        break;
+                }
             }
         }
 
@@ -216,9 +220,6 @@ public class GameMenuFactory {
 
                 gameCard.setBottom(gameDescriptionPane);
                 gameCard.setCenter(thumbnailContainer);
-
-                VBox favIconContainer = new VBox(favGamesIcon);
-                gameCard.setLeft(favIconContainer);
 
                 gameTitleContainer.setAlignment(Pos.TOP_CENTER);
                 gameTitleText.setTextAlignment(TextAlignment.CENTER);
