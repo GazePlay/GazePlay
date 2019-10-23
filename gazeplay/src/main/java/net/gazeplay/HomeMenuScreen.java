@@ -62,7 +62,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return new HomeMenuScreen(gazePlay, games, root, config);
     }
 
-    private List<GameSpec> games;
+    private final List<GameSpec> games;
 
     private GameLifeCycle currentGame;
 
@@ -198,10 +198,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    private ScrollPane createGamePickerChoicePane(List<GameSpec> games, Configuration config,
-            ProgressIndicator indicator) {
+    private ScrollPane createGamePickerChoicePane( List<GameSpec> games, final Configuration config,
+            final ProgressIndicator indicator) {
 
-        int i = 0;
 
         final int flowpaneGap = 20;
         choicePanel = new FlowPane();
@@ -222,9 +221,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         // reorder games by Favourite Filter
 
-        List<GameSpec> favGames = new ArrayList<GameSpec>();
-        List<GameSpec> notFavGames = new ArrayList<GameSpec>();
-        List<BooleanProperty> favorites = new ArrayList<BooleanProperty>();
+        List<GameSpec> favGames = new ArrayList<>();
+        List<GameSpec> notFavGames = new ArrayList<>();
+        List<BooleanProperty> favorites = new ArrayList<>();
 
         for (BooleanProperty p : config.getFavoriteGameProperties()) {
             if (p.getValue()) {
@@ -234,15 +233,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         // identification of favorite games
         for (GameSpec g : games) {
-
             if (isFavorite(favorites, g)) {
-
                 favGames.add(g);
             } else
                 notFavGames.add(g);
         }
 
-        games = new ArrayList((favGames.size() + notFavGames.size()) * 2);
+        games = new ArrayList<>();
 
         // First, we add favorite games, then not favorite games
         games.addAll(favGames);
@@ -251,16 +248,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         log.debug("Favorite Games : {}", favGames);
         log.debug("Other Games : {}", notFavGames);
 
-        BooleanProperty favoriteGameProperty = null;
-
         log.debug("in GameSpec gameSpec : games");
 
         for (GameSpec gameSpec : games) {
-
-            i = 0;
-
+            
+            BooleanProperty favoriteGameProperty = null;
             for (BooleanProperty p : config.getFavoriteGameProperties()) {
-
                 if (p.getName().equals(gameSpec.getGameSummary().getNameCode().toUpperCase() + " Game fav"))
                     favoriteGameProperty = p;
             }
