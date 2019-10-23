@@ -8,7 +8,8 @@ import net.gazeplay.gameslocator.GameSpecSource;
 public class Math104GameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
-        return new GameSpec(new GameSummary("Math104", "data/Thumbnails/math101.png",
-            GameCategories.Category.LOGIC, null, "MathDescDiv"), new Math104GameVariantGenerator(), new Math104GameLauncher());
+        return new GameSpec(
+            GameSummary.builder().nameCode("Math104").gameThumbnail("data/Thumbnails/math101.png").category(GameCategories.Category.LOGIC).description("MathDescDiv").build(),
+            new Math104GameVariantGenerator(), new Math104GameLauncher());
     }
 }

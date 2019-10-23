@@ -9,7 +9,7 @@ public class FlagsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            new GameSummary("flags", "data/Thumbnails/flags.png", GameCategories.Category.MEMORIZATION),
+            GameSummary.builder().nameCode("flags").gameThumbnail("data/Thumbnails/flags.png").category(GameCategories.Category.MEMORIZATION).build(),
             new FlagsGameLauncher());
     }
 }

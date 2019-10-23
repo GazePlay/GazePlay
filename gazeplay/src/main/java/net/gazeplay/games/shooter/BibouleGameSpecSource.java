@@ -9,8 +9,8 @@ public class BibouleGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            new GameSummary("Biboule", "data/Thumbnails/biboules.png", GameCategories.Category.SELECTION,
-                "https://opengameart.org/sites/default/files/TalkingCuteChiptune_0.mp3"),
+            GameSummary.builder().nameCode("Biboule").gameThumbnail("data/Thumbnails/biboules.png").category(GameCategories.Category.SELECTION)
+                .backgroundMusicUrl("https://opengameart.org/sites/default/files/TalkingCuteChiptune_0.mp3").build(),
             new ShooterGameLauncher());
     }
 }

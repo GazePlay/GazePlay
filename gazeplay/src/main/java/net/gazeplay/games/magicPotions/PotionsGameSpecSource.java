@@ -9,7 +9,7 @@ public class PotionsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            new GameSummary("Potions", "data/Thumbnails/potions.jpg", GameCategories.Category.SELECTION),
+            GameSummary.builder().nameCode("Potions").gameThumbnail("data/Thumbnails/potions.jpg").category(GameCategories.Category.SELECTION).build(),
             new PotionsGameLauncher());
     }
 }

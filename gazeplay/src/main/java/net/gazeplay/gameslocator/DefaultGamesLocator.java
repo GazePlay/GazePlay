@@ -55,6 +55,11 @@ public class DefaultGamesLocator implements GamesLocator {
 
         gameList.sort(gameSpecComparator);
 
+        log.info("Here is the list of games : ");
+        for (GameSpec gameSpec : gameList) {
+            log.info("   Game {} : {}", gameSpec.getGameSummary().getNameCode(), gameSpec.getGameSummary().getCategories());
+        }
+
         return gameList;
     }
 

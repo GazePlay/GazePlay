@@ -9,7 +9,7 @@ public class VideoPlayerGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            new GameSummary("VideoPlayer", "data/Thumbnails/youtube.png", GameCategories.Category.ACTION_REACTION),
+            GameSummary.builder().nameCode("VideoPlayer").gameThumbnail("data/Thumbnails/youtube.png").category(GameCategories.Category.ACTION_REACTION).build(),
             new VideoPlayerGameVariantGenerator(), new VideoPlayerGameLauncher());
     }
 }

@@ -8,7 +8,8 @@ import net.gazeplay.gameslocator.GameSpecSource;
 public class MemoryLettersGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
-        return new GameSpec(new GameSummary("MemoryLetters", "data/Thumbnails/memory-letter.png",
-            GameCategories.Category.MEMORIZATION), new MemoryLettersGameVariantGenerator(), new MemoryLettersGameLauncher());
+        return new GameSpec(
+            GameSummary.builder().nameCode("MemoryLetters").gameThumbnail("data/Thumbnails/memory-letter.png").category(GameCategories.Category.MEMORIZATION).build(),
+            new MemoryLettersGameVariantGenerator(), new MemoryLettersGameLauncher());
     }
 }

@@ -8,7 +8,8 @@ import net.gazeplay.gameslocator.GameSpecSource;
 public class PetGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
-        return new GameSpec(new GameSummary("Pet", "data/Thumbnails/pet.png", GameCategories.Category.ACTION_REACTION),
+        return new GameSpec(
+            GameSummary.builder().nameCode("Pet").gameThumbnail("data/Thumbnails/pet.png").category(GameCategories.Category.ACTION_REACTION).build(),
             new PetGameLauncher());
     }
 }

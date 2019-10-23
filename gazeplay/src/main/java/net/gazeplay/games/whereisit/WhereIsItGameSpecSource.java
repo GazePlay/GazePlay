@@ -9,7 +9,7 @@ public class WhereIsItGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            new GameSummary("WhereIsIt", "data/Thumbnails/whereisit.png", GameCategories.Category.MEMORIZATION),
+            GameSummary.builder().nameCode("WhereIsIt").gameThumbnail("data/Thumbnails/whereisit.png").category(GameCategories.Category.MEMORIZATION).build(),
             new WhereIsItGameVariantGenerator(), new WhereIsItGameLauncher());
     }
 }

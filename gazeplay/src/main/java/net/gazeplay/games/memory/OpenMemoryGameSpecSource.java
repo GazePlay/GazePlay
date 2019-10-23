@@ -8,7 +8,8 @@ import net.gazeplay.gameslocator.GameSpecSource;
 public class OpenMemoryGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
-        return new GameSpec(new GameSummary("OpenMemory", "data/Thumbnails/openMemory.png",
-            GameCategories.Category.ACTION_REACTION), new OpenMemoryGameVariantGenerator(), new OpenMemoryGameLauncher());
+        return new GameSpec(
+            GameSummary.builder().nameCode("OpenMemory").gameThumbnail("data/Thumbnails/openMemory.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            new OpenMemoryGameVariantGenerator(), new OpenMemoryGameLauncher());
     }
 }
