@@ -9,8 +9,8 @@ public class RobotsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            new GameSummary("Robots", "data/Thumbnails/robots.png", GameCategories.Category.SELECTION,
-                "https://opengameart.org/sites/default/files/DST-TowerDefenseTheme_1.mp3"),
+            GameSummary.builder().nameCode("Robots").gameThumbnail("data/Thumbnails/robots.png").category(GameCategories.Category.SELECTION)
+                .backgroundMusicUrl("https://opengameart.org/sites/default/files/DST-TowerDefenseTheme_1.mp3").build(),
             new RobotsGameLauncher());
     }
 }

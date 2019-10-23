@@ -9,7 +9,7 @@ public class LettersGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            new GameSummary("letters", "data/Thumbnails/letters.png", GameCategories.Category.ACTION_REACTION),
+            GameSummary.builder().nameCode("letters").gameThumbnail("data/Thumbnails/letters.png").category(GameCategories.Category.ACTION_REACTION).build(),
             new LettersGameVariantGenerator(), new LettersGameLauncher());
     }
 }

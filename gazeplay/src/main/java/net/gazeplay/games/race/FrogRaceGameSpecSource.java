@@ -9,7 +9,7 @@ public class FrogRaceGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            new GameSummary("FrogsRace", "data/Thumbnails/frogsrace.png", GameCategories.Category.SELECTION),
+            GameSummary.builder().nameCode("FrogsRace").gameThumbnail("data/Thumbnails/frogsrace.png").category(GameCategories.Category.SELECTION).build(),
             new FrogsRaceGameLauncher());
     }
 }

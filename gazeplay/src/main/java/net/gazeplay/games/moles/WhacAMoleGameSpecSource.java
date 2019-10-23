@@ -9,7 +9,7 @@ public class WhacAMoleGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            new GameSummary("WhacAmole", "data/Thumbnails/mole.png", GameCategories.Category.ACTION_REACTION),
+            GameSummary.builder().nameCode("WhacAmole").gameThumbnail("data/Thumbnails/mole.png").category(GameCategories.Category.ACTION_REACTION).build(),
             new WhacAMoleGameLauncher());
     }
 }

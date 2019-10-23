@@ -9,7 +9,7 @@ public class OrderGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            new GameSummary("Order", "data/Thumbnails/ordre.png", GameCategories.Category.MEMORIZATION),
+            GameSummary.builder().nameCode("Order").gameThumbnail("data/Thumbnails/ordre.png").category(GameCategories.Category.MEMORIZATION).build(),
             new OrdersGameVariantGenerator(), new OrderGameLauncher());
     }
 }

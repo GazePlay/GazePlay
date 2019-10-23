@@ -8,7 +8,8 @@ import net.gazeplay.gameslocator.GameSpecSource;
 public class HorsesSimplifiedGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
-        return new GameSpec(new GameSummary("Horses Simplified", "data/Thumbnails/horsesSimplified.png",
-            GameCategories.Category.ACTION_REACTION), new HorsesSimplifiedGameVariantGenerator(), new HorsesSimplifiedGameLauncher());
+        return new GameSpec(
+            GameSummary.builder().nameCode("Horses Simplified").gameThumbnail("data/Thumbnails/horsesSimplified.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            new HorsesSimplifiedGameVariantGenerator(), new HorsesSimplifiedGameLauncher());
     }
 }

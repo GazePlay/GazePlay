@@ -8,7 +8,8 @@ import net.gazeplay.gameslocator.GameSpecSource;
 public class NinjaGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
-        return new GameSpec(new GameSummary("Ninja", "data/Thumbnails/ninja.png", GameCategories.Category.SELECTION),
+        return new GameSpec(
+            GameSummary.builder().nameCode("Ninja").gameThumbnail("data/Thumbnails/ninja.png").category(GameCategories.Category.SELECTION).build(),
             new NinjaGameVariantGenerator(), new NinjaGameLauncher());
     }
 }
