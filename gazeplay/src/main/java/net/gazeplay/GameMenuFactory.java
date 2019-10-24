@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -20,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Data;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
@@ -30,9 +30,8 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Date;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static javafx.scene.input.MouseEvent.*;
 
@@ -45,18 +44,25 @@ public class GameMenuFactory {
     private final static double THUMBNAIL_WIDTH_RATIO = 1;
     private final static double THUMBNAIL_HEIGHT_RATIO = 0.4;
 
-    private long lastModificationDate = (new Date()).getTime();
-    private final static long MINLENGTH = 1000; // min time between two modification of favorite
+    private final static long FAVORITE_SWITCH_FIXATION_DURATION_IN_MILLISECONDS = 3000;
 
-    public GameButtonPane createGameButton(GazePlay gazePlay, final Region root, Configuration config,
-                                           Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
-                                           GazeDeviceManager gazeDeviceManager, @Nullable BooleanProperty isFavourite) {
+    public GameButtonPane createGameButton(
+        @NonNull final GazePlay gazePlay,
+        @NonNull final Region root,
+        @NonNull final Configuration config,
+        @NonNull final Multilinguism multilinguism,
+        @NonNull final Translator translator,
+        @NonNull final GameSpec gameSpec,
+        @NonNull final GameButtonOrientation orientation,
+        @NonNull final GazeDeviceManager gazeDeviceManager,
+        @NonNull final boolean isFavorite
+    ) {
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
 
         final Image heartIcon;
-        if (isFavourite != null && isFavourite.getValue()) {
+        if (isFavorite) {
             heartIcon = new Image("data/common/images/heart_filled.png");
         } else {
             heartIcon = new Image("data/common/images/heart_empty.png");
@@ -267,40 +273,46 @@ public class GameMenuFactory {
                 }
             }
         };
+        gameCard.addEventHandler(MOUSE_PRESSED, event);
+
         EventHandler favGameHandler_enter = new EventHandler<MouseEvent>() {
+            private final AtomicLong enteredTime = new AtomicLong(0);
+            private final AtomicLong exitedTime = new AtomicLong(0);
+
             @Override
             public void handle(MouseEvent event) {
-
-                long dateSinceLastModification = (new Date()).getTime() - lastModificationDate;
-                log.debug("{} milliseconds since last modification", dateSinceLastModification);
-
-                if (dateSinceLastModification < MINLENGTH) {
+                if (event.getEventType() == MOUSE_ENTERED) {
+                    enteredTime.set(System.currentTimeMillis());
+                    return;
+                }
+                if (event.getEventType() == MOUSE_EXITED) {
+                    exitedTime.set(System.currentTimeMillis());
+                    return;
+                }
+                if (event.getEventType() != MOUSE_MOVED) {
+                    return;
+                }
+                long fixationDuration = System.currentTimeMillis() - enteredTime.get();
+                if (fixationDuration < FAVORITE_SWITCH_FIXATION_DURATION_IN_MILLISECONDS) {
                     // too early
                     return;
                 }
-
-                switch (isFavourite.getValue().toString()) {
-                    case "true":
-                        favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
-                        isFavourite.setValue(false);
-                        config.saveConfigIgnoringExceptions();
-                        log.info("enter-T: " + isFavourite.getName() + " = " + isFavourite.getValue());
-
-                        break;
-                    case "false":
-                        favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
-                        isFavourite.setValue(true);
-                        config.saveConfigIgnoringExceptions();
-                        log.info("enter-F: " + isFavourite.getName() + " = " + isFavourite.getValue());
-
-                        break;
+                boolean wasFavorite = config.getFavoriteGamesProperty().contains(gameSummary.getNameCode());
+                boolean isFavorite = !wasFavorite;
+                if (isFavorite) {
+                    config.getFavoriteGamesProperty().add(gameSummary.getNameCode());
+                    favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
+                } else {
+                    config.getFavoriteGamesProperty().remove(gameSummary.getNameCode());
+                    favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
                 }
-                lastModificationDate = (new Date()).getTime();
+                config.saveConfigIgnoringExceptions();
             }
         };
-        // favGamesIcon.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler_enter);
-        favGamesIcon.addEventFilter(MOUSE_ENTERED_TARGET, favGameHandler_enter);
-        gameCard.addEventHandler(MOUSE_PRESSED, event);
+        favGamesIcon.addEventFilter(MOUSE_ENTERED, favGameHandler_enter);
+        favGamesIcon.addEventFilter(MOUSE_MOVED, favGameHandler_enter);
+        favGamesIcon.addEventFilter(MOUSE_EXITED, favGameHandler_enter);
+
         // pausedEvents.add(gameCard);
         return gameCard;
     }

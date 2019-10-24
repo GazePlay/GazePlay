@@ -1,5 +1,6 @@
 package net.gazeplay.commons.configuration;
 
+import com.sun.javafx.collections.ObservableSetWrapper;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -8,10 +9,11 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.Utils;
+
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
 @Slf4j
@@ -45,6 +47,9 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
     private static final String PROPERTY_NAME_VIDEO_FOLDER = "VIDEO_FOLDER";
+
+    private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
+
     /**
      * Game Categories Properties
      */
@@ -53,64 +58,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_MEMORIZATION_GAMES = "Memorization games";
     private static final String PROPERTY_NAME_LOGIC_GAMES = "Logic games";
     private static final String PROPERTY_NAME_NO_CATEGORY_GAMES = "No category games";
-    /**
-     * Favourite Games Property
-     */
-    private static final String PROPERTY_NAME_FAVOURITE_POTIONS = "POTIONS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MATH101 = "MATH101 Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MATH102 = "MATH102 Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MATH103 = "MATH103 Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MATH104 = "MATH104 Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MATH201 = "MATH201 Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_CREAMPIE = "CREAMPIE Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_NINJA = "NINJA Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_PUZZLE = "PUZZLE Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MAGICCARDS = "MAGICCARDS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_BLOCKS = "BLOCKS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_LETTERS = "LETTERS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_SCRATCHCARD = "SCRATCHCARD Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_COLOREDBUBBLES = "COLOREDBUBBLES Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_PORTRAITBUBBLES = "PORTRAITBUBBLES Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHEANIMAL = "WHEREISTHEANIMAL Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHECOLOR = "WHEREISTHECOLOR Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_FINDODD = "FINDODD Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHELETTER = "WHEREISTHELETTER Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHEREISTHENUMBER = "WHEREISTHENUMBER Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_FLAGS = "FLAGS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHEREISIT = "WHEREISIT Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_BIBOULES = "BIBOULE Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_ROBOTS = "ROBOTS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_DIVISOR = "DIVISOR Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_LAPINS = "RABBITS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MEMORY = "MEMORY Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MEMORYLETTERS = "MEMORYLETTERS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MEMORYNUMBERS = "MEMORYNUMBERS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_OPENMEMORY = "OPENMEMORY Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_OPENMEMORYLETTERS = "OOPENMEMORYLETTERS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_OPENMEMORYNUMBERS = "OPENMEMORYNUMBERS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_VIDEOPLAYER = "VIDEOPLAYER Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_SCRIBBLE = "SCRIBBLE Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_CUPSBALLS = "CUPSBALLS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_ORDER = "ORDER Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_ROOM = "ROOM Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_PIANO = "PIANO Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_WHACAMOLE = "WHACAMOLE Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_PET = "PET Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_MEDIAPLAYER = "MEDIAPLAYER Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_RUSHHOUR = "RUSHHOUR Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_COLORSSS = "COLORSSS Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_CAKES = "CAKES Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_LABYRINTH = "LABYRINTH Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_FROGSRACE = "FROGSRACE Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_BIBJUMP = "BIBJUMP Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_SPOTDIFFERENCE = "SPOTDIFFERENCE Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_DICE = "DICE Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_SPACEGAME = "SPACEGAME Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_GOOSEGAME = "GOOSEGAME Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_VIDEOGRID = "VIDEOGRID Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_HORSES = "HORSES Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_HORSESSIMPLIFIED = "HORSES SIMPLIFIED Game fav";
-    private static final String PROPERTY_NAME_FAVOURITE_SOUNDOFLIFE = "SOUNDS OF LIFE Game fav";
+    
 
     @Getter
     @Setter
@@ -161,7 +109,7 @@ public class Configuration implements Cloneable {
 
     public static String getFileDirectoryUserValue(String user) {
         return Utils.getGazePlayFolder() + "profiles/" + user + Utils.FILESEPARATOR
-                + "files" /* + Utils.FILESEPARATOR */;
+            + "files" /* + Utils.FILESEPARATOR */;
     }
 
     private static Properties loadProperties(String propertiesFilePath) throws IOException {
@@ -173,27 +121,21 @@ public class Configuration implements Cloneable {
     }
 
     public static Configuration createFromPropertiesResource() {
-        Properties properties;
+        Properties properties = null;
         try {
             log.info("loading new properties from ={}", CONFIGPATH);
             properties = loadProperties(CONFIGPATH);
+            log.info("Properties loaded : {}", properties);
         } catch (FileNotFoundException e) {
             log.warn("Config file not found : {}", CONFIGPATH);
-            properties = null;
         } catch (IOException e) {
             log.error("Failure while loading config file {}", CONFIGPATH, e);
-            properties = null;
         }
         final Configuration config = new Configuration();
         if (properties != null) {
-            log.info("Properties loaded : {}", properties);
             config.populateFromProperties(properties);
         }
         return config;
-    }
-
-    public Configuration reset() {
-        return Configuration.createFromPropertiesResource();
     }
 
     /*
@@ -205,395 +147,135 @@ public class Configuration implements Cloneable {
     private static Configuration instance = Configuration.createFromPropertiesResource();
 
     @Getter
-    private List<BooleanProperty> favoriteGameProperties = new ArrayList<BooleanProperty>();
+    private final SimpleSetProperty<String> favoriteGamesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_FAVORITE_GAMES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
 
     @Getter
-    protected final StringProperty QuitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
-            DEFAULT_VALUE_QUIT_KEY.toString());
+    protected final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
+        DEFAULT_VALUE_QUIT_KEY.toString());
+
     @Getter
     protected final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE,
-            DEFAULT_VALUE_GAZEMODE);
+        DEFAULT_VALUE_GAZEMODE);
 
     @Getter
     protected final BooleanProperty gazeMenuProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MENU,
-            DEFAULT_VALUE_GAZE_MENU);
+        DEFAULT_VALUE_GAZE_MENU);
 
     @Getter
     protected final StringProperty eyetrackerProperty = new SimpleStringProperty(this, PROPERTY_NAME_EYETRACKER,
-            DEFAULT_VALUE_EYETRACKER);
+        DEFAULT_VALUE_EYETRACKER);
 
     @Getter
     protected final StringProperty languageProperty = new SimpleStringProperty(this, PROPERTY_NAME_LANGUAGE,
-            DEFAULT_VALUE_LANGUAGE);
+        DEFAULT_VALUE_LANGUAGE);
 
     @Getter
     protected final StringProperty filedirProperty = new SimpleStringProperty(this, PROPERTY_NAME_FILEDIR,
-            DEFAULT_VALUE_FILE_DIR);
+        DEFAULT_VALUE_FILE_DIR);
 
     @Getter
     protected final IntegerProperty fixationlengthProperty = new SimpleIntegerProperty(this,
-            PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH);
+        PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH);
 
     @Getter
     protected final StringProperty cssfileProperty = new SimpleStringProperty(this, PROPERTY_NAME_CSSFILE,
-            DEFAULT_VALUE_CSS_FILE);
+        DEFAULT_VALUE_CSS_FILE);
 
     @Getter
     protected final StringProperty whereIsItDirProperty = new SimpleStringProperty(this, PROPERTY_NAME_WHEREISIT_DIR,
-            DEFAULT_VALUE_WHEREISIT_DIR);
+        DEFAULT_VALUE_WHEREISIT_DIR);
 
     @Getter
     protected final IntegerProperty questionLengthProperty = new SimpleIntegerProperty(this,
-            PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH);
+        PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH);
 
     @Getter
     protected final BooleanProperty enableRewardSoundProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND);
+        PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND);
 
     @Getter
     protected final StringProperty menuButtonsOrientationProperty = new SimpleStringProperty(this,
-            PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION);
+        PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION);
 
     @Getter
     protected final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
+        PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
     @Getter
     protected final DoubleProperty heatMapOpacityProperty = new SimpleDoubleProperty(this,
-            PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY);
+        PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY);
     @Getter
     protected final StringProperty heatMapColorsProperty = new SimpleStringProperty(this, PROPERTY_NAME_HEATMAP_COLORS,
-            DEFAULT_VALUE_HEATMAP_COLORS);
+        DEFAULT_VALUE_HEATMAP_COLORS);
     @Getter
     protected final BooleanProperty areaOfInterestDisabledProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
+        PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
     @Getter
     protected final BooleanProperty convexHullDisabledProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED);
+        PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED);
     @Getter
     protected final BooleanProperty videoRecordingDisabledProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_VIDEO_RECORDING_DISABLED, DEFAULT_VALUE_VIDEO_RECORDING);
+        PROPERTY_NAME_VIDEO_RECORDING_DISABLED, DEFAULT_VALUE_VIDEO_RECORDING);
     @Getter
     protected final BooleanProperty fixationSequenceDisabledProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED);
+        PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED);
     @Getter
     protected final BooleanProperty gazeMouseProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MOUSE,
-            DEFAULT_VALUE_GAZE_MOUSE);
+        DEFAULT_VALUE_GAZE_MOUSE);
 
     @Getter
     protected final BooleanProperty whiteBackgroundProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD);
+        PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD);
 
     @Getter
     protected final DoubleProperty musicVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_MUSIC_VOLUME,
-            DEFAULT_VALUE_MUSIC_VOLUME);
+        DEFAULT_VALUE_MUSIC_VOLUME);
 
     @Getter
     protected final StringProperty musicFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_MUSIC_FOLDER,
-            DEFAULT_VALUE_MUSIC_FOLDER);
+        DEFAULT_VALUE_MUSIC_FOLDER);
 
     @Getter
     protected final DoubleProperty effectsVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_EFFECTS_VOLUME,
-            DEFAULT_VALUE_EFFECTS_VOLUME);
+        DEFAULT_VALUE_EFFECTS_VOLUME);
 
     @Getter
     protected final DoubleProperty speedEffectsProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_SPEED_EFFECTS,
-            DEFAULT_VALUE_SPEED_EFFECTS);
+        DEFAULT_VALUE_SPEED_EFFECTS);
 
     @Getter
     protected final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER,
-            DEFAULT_VALUE_VIDEO_FOLDER);
+        DEFAULT_VALUE_VIDEO_FOLDER);
 
     @Getter
     protected final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME,
-            DEFAULT_VALUE_USER_NAME);
+        DEFAULT_VALUE_USER_NAME);
     @Getter
     protected final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE,
-            DEFAULT_VALUE_USER_PICTURE);
+        DEFAULT_VALUE_USER_PICTURE);
 
     @Getter
     protected final BooleanProperty selectionCategoryProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_SELECTION_GAMES, DEFAULT_VALUE_SELECTION_GAMES);
+        PROPERTY_NAME_SELECTION_GAMES, DEFAULT_VALUE_SELECTION_GAMES);
 
     @Getter
     protected final BooleanProperty memorizationCategoryProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_MEMORIZATION_GAMES, DEFAULT_VALUE_MEMORIZATION_GAMES);
+        PROPERTY_NAME_MEMORIZATION_GAMES, DEFAULT_VALUE_MEMORIZATION_GAMES);
 
     @Getter
     protected final BooleanProperty actionReactionCategoryProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_ACTION_REACTION_GAMES, DEFAULT_VALUE_ACTION_REACTION_GAMES);
+        PROPERTY_NAME_ACTION_REACTION_GAMES, DEFAULT_VALUE_ACTION_REACTION_GAMES);
 
     @Getter
     protected final BooleanProperty noCategoryProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_NO_CATEGORY_GAMES, DEFAULT_VALUE_NO_CATEGORY_GAMES);
+        PROPERTY_NAME_NO_CATEGORY_GAMES, DEFAULT_VALUE_NO_CATEGORY_GAMES);
 
     @Getter
     protected final BooleanProperty logicCategoryProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_LOGIC_GAMES,
-            DEFAULT_VALUE_LOGIC_GAMES);
+        DEFAULT_VALUE_LOGIC_GAMES);
 
-    @Getter
-    protected final BooleanProperty potionsFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_POTIONS, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty math101FavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_MATH101, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty math102FavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_MATH102, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty math103FavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_MATH103, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty math104FavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_MATH104, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty math201FavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_MATH201, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty creamPieFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_CREAMPIE, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty ninjaFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_NINJA,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty puzzleFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_PUZZLE,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty magicCardsFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_MAGICCARDS, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty blocksFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_BLOCKS,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty lettersFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_LETTERS, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty scratchCardFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_SCRATCHCARD, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty coloredBubblesFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_COLOREDBUBBLES, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty portraitBubblesFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_PORTRAITBUBBLES, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty whereAnimalFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_WHEREISTHEANIMAL, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty whereColorFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_WHEREISTHECOLOR, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty whereLetterFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_WHEREISTHELETTER, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty whereNumberFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_WHEREISTHENUMBER, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty findOddFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_FINDODD, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty flagsFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_FLAGS,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty whereItFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_WHEREISIT, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty biboulesFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_BIBOULES, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty robotsFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_ROBOTS,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty divisorFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_DIVISOR, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty rabbitsFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_LAPINS,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty memoryFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_MEMORY,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty memoryLettersFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_MEMORYLETTERS, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty memoryNumbersFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_MEMORYNUMBERS, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty openMemoryFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_OPENMEMORY, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty openMemoryLettersFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_OPENMEMORYLETTERS, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty openMemoryNumbersFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_OPENMEMORYNUMBERS, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty videoPlayerFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_VIDEOPLAYER, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty scribbleFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_SCRIBBLE, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty cupsBallsFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_CUPSBALLS, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty orderFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_ORDER,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty roomFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_ROOM,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty pianoFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_PIANO,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty whacamoleFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_WHACAMOLE, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty petFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_PET,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty mediaPlayerFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_MEDIAPLAYER, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty rushHourFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_RUSHHOUR, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty colorsFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_COLORSSS, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty cakesFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_CAKES,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty labyrinthFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_LABYRINTH, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty frogsRaceFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_FROGSRACE, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty bibouleJumpFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_BIBJUMP, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty spotDifferenceFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_SPOTDIFFERENCE, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty diceFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_DICE,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    private final BooleanProperty spaceGameFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_SPACEGAME, DEFAULT_VALUE_FAVOURITE_GAMES);
-    @Getter
-    protected final BooleanProperty gooseGameFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_GOOSEGAME, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty videoGridFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_VIDEOGRID, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty horsesFavProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FAVOURITE_HORSES,
-            DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty horsesSimplifiedFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_HORSESSIMPLIFIED, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    @Getter
-    protected final BooleanProperty soundOfLifeFavProperty = new SimpleBooleanProperty(this,
-            PROPERTY_NAME_FAVOURITE_SOUNDOFLIFE, DEFAULT_VALUE_FAVOURITE_GAMES);
-
-    public void FavProperties() {
-
-        favoriteGameProperties.add(bibouleJumpFavProperty);
-        favoriteGameProperties.add(biboulesFavProperty);
-        favoriteGameProperties.add(blocksFavProperty);
-        favoriteGameProperties.add(cakesFavProperty);
-        favoriteGameProperties.add(coloredBubblesFavProperty);
-        favoriteGameProperties.add(colorsFavProperty);
-        favoriteGameProperties.add(creamPieFavProperty);
-        favoriteGameProperties.add(cupsBallsFavProperty);
-        favoriteGameProperties.add(diceFavProperty);
-        favoriteGameProperties.add(divisorFavProperty);
-        favoriteGameProperties.add(findOddFavProperty);
-        favoriteGameProperties.add(flagsFavProperty);
-        favoriteGameProperties.add(frogsRaceFavProperty);
-        favoriteGameProperties.add(gooseGameFavProperty);
-        favoriteGameProperties.add(lettersFavProperty);
-        favoriteGameProperties.add(labyrinthFavProperty);
-        favoriteGameProperties.add(rabbitsFavProperty);
-        favoriteGameProperties.add(math101FavProperty);
-        favoriteGameProperties.add(math102FavProperty);
-        favoriteGameProperties.add(math103FavProperty);
-        favoriteGameProperties.add(math104FavProperty);
-        favoriteGameProperties.add(math201FavProperty);
-        favoriteGameProperties.add(magicCardsFavProperty);
-        favoriteGameProperties.add(mediaPlayerFavProperty);
-        favoriteGameProperties.add(memoryFavProperty);
-        favoriteGameProperties.add(memoryLettersFavProperty);
-        favoriteGameProperties.add(memoryNumbersFavProperty);
-        favoriteGameProperties.add(ninjaFavProperty);
-        favoriteGameProperties.add(openMemoryFavProperty);
-        favoriteGameProperties.add(openMemoryLettersFavProperty);
-        favoriteGameProperties.add(openMemoryNumbersFavProperty);
-        favoriteGameProperties.add(orderFavProperty);
-        favoriteGameProperties.add(petFavProperty);
-        favoriteGameProperties.add(pianoFavProperty);
-        favoriteGameProperties.add(portraitBubblesFavProperty);
-        favoriteGameProperties.add(potionsFavProperty);
-        favoriteGameProperties.add(puzzleFavProperty);
-        favoriteGameProperties.add(robotsFavProperty);
-        favoriteGameProperties.add(roomFavProperty);
-        favoriteGameProperties.add(rushHourFavProperty);
-        favoriteGameProperties.add(scratchCardFavProperty);
-        favoriteGameProperties.add(scribbleFavProperty);
-        favoriteGameProperties.add(spaceGameFavProperty);
-        favoriteGameProperties.add(spotDifferenceFavProperty);
-        favoriteGameProperties.add(videoGridFavProperty);
-        favoriteGameProperties.add(videoPlayerFavProperty);
-        favoriteGameProperties.add(whacamoleFavProperty);
-        favoriteGameProperties.add(whereItFavProperty);
-        favoriteGameProperties.add(whereAnimalFavProperty);
-        favoriteGameProperties.add(whereColorFavProperty);
-        favoriteGameProperties.add(whereLetterFavProperty);
-        favoriteGameProperties.add(whereNumberFavProperty);
-        favoriteGameProperties.add(horsesFavProperty);
-        favoriteGameProperties.add(horsesSimplifiedFavProperty);
-        favoriteGameProperties.add(soundOfLifeFavProperty);
-    }
 
     protected Configuration() {
 
-        FavProperties();
         // Listeners
         musicVolumeProperty.addListener((observable) -> {
             double musicVolume = getMusicVolume();
@@ -618,12 +300,12 @@ public class Configuration implements Cloneable {
         });
     }
 
-    public void populateFromProperties(Properties prop) {
+    private void populateFromProperties(Properties prop) {
         String buffer;
 
         buffer = prop.getProperty(PROPERTY_NAME_QUIT_KEY);
         if (buffer != null) {
-            QuitKeyProperty.setValue(buffer);
+            quitKeyProperty.setValue(buffer);
         }
 
         buffer = prop.getProperty(PROPERTY_NAME_GAZEMODE);
@@ -652,7 +334,7 @@ public class Configuration implements Cloneable {
                 fixationlengthProperty.setValue(Integer.parseInt(buffer));
             } catch (NumberFormatException e) {
                 log.warn("NumberFormatException while parsing value '{}' for property {}", buffer,
-                        PROPERTY_NAME_FIXATIONLENGTH);
+                    PROPERTY_NAME_FIXATIONLENGTH);
             }
         }
 
@@ -672,7 +354,7 @@ public class Configuration implements Cloneable {
                 questionLengthProperty.setValue(Integer.parseInt(buffer));
             } catch (NumberFormatException e) {
                 log.warn("NumberFormatException while parsing value '{}' for property {}", buffer,
-                        PROPERTY_NAME_QUESTION_LENGTH);
+                    PROPERTY_NAME_QUESTION_LENGTH);
             }
         }
 
@@ -793,225 +475,11 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             logicCategoryProperty.setValue(Boolean.parseBoolean(buffer));
         }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_BIBJUMP);
+
+        buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
         if (buffer != null) {
-            bibouleJumpFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_BIBOULES);
-        if (buffer != null) {
-            biboulesFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_BLOCKS);
-        if (buffer != null) {
-            blocksFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_CAKES);
-        if (buffer != null) {
-            cakesFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_COLOREDBUBBLES);
-        if (buffer != null) {
-            coloredBubblesFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_COLORSSS);
-        if (buffer != null) {
-            colorsFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_CREAMPIE);
-        if (buffer != null) {
-            creamPieFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_CUPSBALLS);
-        if (buffer != null) {
-            cupsBallsFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_DICE);
-        if (buffer != null) {
-            diceFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_DIVISOR);
-        if (buffer != null) {
-            divisorFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_FINDODD);
-        if (buffer != null) {
-            findOddFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_FLAGS);
-        if (buffer != null) {
-            flagsFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_FROGSRACE);
-        if (buffer != null) {
-            frogsRaceFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_GOOSEGAME);
-        if (buffer != null) {
-            gooseGameFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_LABYRINTH);
-        if (buffer != null) {
-            labyrinthFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_LAPINS);
-        if (buffer != null) {
-            rabbitsFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_LETTERS);
-        if (buffer != null) {
-            lettersFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_MAGICCARDS);
-        if (buffer != null) {
-            magicCardsFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_MATH101);
-        if (buffer != null) {
-            math101FavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_MATH102);
-        if (buffer != null) {
-            math102FavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_MATH103);
-        if (buffer != null) {
-            math102FavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_MATH104);
-        if (buffer != null) {
-            math104FavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_MATH201);
-        if (buffer != null) {
-            math201FavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_MEDIAPLAYER);
-        if (buffer != null) {
-            mediaPlayerFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_MEMORY);
-        if (buffer != null) {
-            memoryFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_MEMORYLETTERS);
-        if (buffer != null) {
-            memoryLettersFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_MEMORYNUMBERS);
-        if (buffer != null) {
-            memoryNumbersFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_NINJA);
-        if (buffer != null) {
-            ninjaFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_OPENMEMORY);
-        if (buffer != null) {
-            openMemoryFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_OPENMEMORYLETTERS);
-        if (buffer != null) {
-            openMemoryLettersFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_OPENMEMORYNUMBERS);
-        if (buffer != null) {
-            openMemoryNumbersFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_ORDER);
-        if (buffer != null) {
-            orderFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_PET);
-        if (buffer != null) {
-            petFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_PIANO);
-        if (buffer != null) {
-            pianoFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_PORTRAITBUBBLES);
-        if (buffer != null) {
-            portraitBubblesFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_POTIONS);
-        if (buffer != null) {
-            potionsFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_PUZZLE);
-        if (buffer != null) {
-            puzzleFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_ROBOTS);
-        if (buffer != null) {
-            robotsFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_ROOM);
-        if (buffer != null) {
-            roomFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_RUSHHOUR);
-        if (buffer != null) {
-            rushHourFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_SCRATCHCARD);
-        if (buffer != null) {
-            scratchCardFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_SCRIBBLE);
-        if (buffer != null) {
-            scribbleFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_SPACEGAME);
-        if (buffer != null) {
-            spaceGameFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_SPOTDIFFERENCE);
-        if (buffer != null) {
-            spotDifferenceFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_VIDEOGRID);
-        if (buffer != null) {
-            videoGridFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_VIDEOPLAYER);
-        if (buffer != null) {
-            videoPlayerFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_WHACAMOLE);
-        if (buffer != null) {
-            whacamoleFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_WHEREISIT);
-        if (buffer != null) {
-            whereItFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_WHEREISTHEANIMAL);
-        if (buffer != null) {
-            whereAnimalFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_WHEREISTHECOLOR);
-        if (buffer != null) {
-            whereColorFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_WHEREISTHELETTER);
-        if (buffer != null) {
-            whereLetterFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_WHEREISTHENUMBER);
-        if (buffer != null) {
-            whereNumberFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_HORSES);
-        if (buffer != null) {
-            horsesFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_HORSESSIMPLIFIED);
-        if (buffer != null) {
-            horsesSimplifiedFavProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_FAVOURITE_SOUNDOFLIFE);
-        if (buffer != null) {
-            soundOfLifeFavProperty.setValue(Boolean.parseBoolean(buffer));
+            Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
+            favoriteGamesProperty.get().addAll(values);
         }
     }
 
@@ -1033,27 +501,27 @@ public class Configuration implements Cloneable {
 
         properties.setProperty(PROPERTY_NAME_EYETRACKER, this.eyetrackerProperty.getValue());
         properties.setProperty(PROPERTY_NAME_LANGUAGE, this.languageProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_QUIT_KEY, this.QuitKeyProperty.getValue());
+        properties.setProperty(PROPERTY_NAME_QUIT_KEY, this.quitKeyProperty.getValue());
         properties.setProperty(PROPERTY_NAME_FILEDIR, this.filedirProperty.getValue());
         properties.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(this.fixationlengthProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_CSSFILE, this.cssfileProperty.getValue());
         properties.setProperty(PROPERTY_NAME_WHEREISIT_DIR, this.whereIsItDirProperty.getValue());
         properties.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Integer.toString(this.questionLengthProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND,
-                Boolean.toString(this.enableRewardSoundProperty.getValue()));
+            Boolean.toString(this.enableRewardSoundProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, this.menuButtonsOrientationProperty.getValue());
         properties.setProperty(PROPERTY_NAME_HEATMAP_DISABLED,
-                Boolean.toString(this.heatMapDisabledProperty.getValue()));
+            Boolean.toString(this.heatMapDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_HEATMAP_OPACITY, Double.toString(this.heatMapOpacityProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_HEATMAP_COLORS, this.heatMapColorsProperty.getValue());
         properties.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED,
-                Boolean.toString(this.areaOfInterestDisabledProperty.getValue()));
+            Boolean.toString(this.areaOfInterestDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED,
-                Boolean.toString(this.convexHullDisabledProperty.getValue()));
+            Boolean.toString(this.convexHullDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED,
-                Boolean.toString(this.videoRecordingDisabledProperty.getValue()));
+            Boolean.toString(this.videoRecordingDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED,
-                Boolean.toString(this.fixationSequenceDisabledProperty.getValue()));
+            Boolean.toString(this.fixationSequenceDisabledProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MUSIC_VOLUME, Double.toString(this.musicVolumeProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MUSIC_FOLDER, this.musicFolderProperty.getValue());
         properties.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, Double.toString(effectsVolumeProperty.getValue()));
@@ -1067,87 +535,18 @@ public class Configuration implements Cloneable {
          */
         properties.setProperty(PROPERTY_NAME_SELECTION_GAMES, Boolean.toString(selectionCategoryProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MEMORIZATION_GAMES,
-                Boolean.toString(memorizationCategoryProperty.getValue()));
+            Boolean.toString(memorizationCategoryProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_ACTION_REACTION_GAMES,
-                Boolean.toString(actionReactionCategoryProperty.getValue()));
+            Boolean.toString(actionReactionCategoryProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_NO_CATEGORY_GAMES, Boolean.toString(noCategoryProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_LOGIC_GAMES, Boolean.toString(logicCategoryProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_BIBJUMP, Boolean.toString(bibouleJumpFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_BIBOULES, Boolean.toString(biboulesFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_BLOCKS, Boolean.toString(blocksFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_CAKES, Boolean.toString(cakesFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_COLOREDBUBBLES,
-                Boolean.toString(coloredBubblesFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_COLORSSS, Boolean.toString(colorsFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_CREAMPIE, Boolean.toString(creamPieFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_CUPSBALLS, Boolean.toString(cupsBallsFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_DICE, Boolean.toString(diceFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_DIVISOR, Boolean.toString(divisorFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_FINDODD, Boolean.toString(findOddFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_FLAGS, Boolean.toString(flagsFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_FROGSRACE, Boolean.toString(frogsRaceFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_GOOSEGAME, Boolean.toString(gooseGameFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_LABYRINTH, Boolean.toString(labyrinthFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_LAPINS, Boolean.toString(rabbitsFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_LETTERS, Boolean.toString(lettersFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_MAGICCARDS, Boolean.toString(magicCardsFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_MATH101, Boolean.toString(math101FavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_MATH102, Boolean.toString(math102FavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_MATH103, Boolean.toString(math103FavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_MATH104, Boolean.toString(math104FavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_MATH201, Boolean.toString(math201FavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_MEDIAPLAYER,
-                Boolean.toString(mediaPlayerFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_MEMORY, Boolean.toString(memoryFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_MEMORYLETTERS,
-                Boolean.toString(memoryLettersFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_MEMORYNUMBERS,
-                Boolean.toString(memoryNumbersFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_NINJA, Boolean.toString(ninjaFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_OPENMEMORY, Boolean.toString(openMemoryFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_OPENMEMORYLETTERS,
-                Boolean.toString(openMemoryLettersFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_OPENMEMORYNUMBERS,
-                Boolean.toString(openMemoryNumbersFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_ORDER, Boolean.toString(orderFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_PET, Boolean.toString(petFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_PORTRAITBUBBLES,
-                Boolean.toString(portraitBubblesFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_PIANO, Boolean.toString(pianoFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_POTIONS, Boolean.toString(potionsFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_PUZZLE, Boolean.toString(puzzleFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_ROBOTS, Boolean.toString(robotsFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_ROOM, Boolean.toString(roomFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_RUSHHOUR, Boolean.toString(rushHourFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_SCRATCHCARD,
-                Boolean.toString(scratchCardFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_SCRIBBLE, Boolean.toString(scribbleFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_SPACEGAME, Boolean.toString(spaceGameFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_SPOTDIFFERENCE,
-                Boolean.toString(spotDifferenceFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_VIDEOPLAYER,
-                Boolean.toString(videoPlayerFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_VIDEOGRID, Boolean.toString(videoGridFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_WHACAMOLE, Boolean.toString(whacamoleFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_WHEREISIT, Boolean.toString(whereItFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_WHEREISTHEANIMAL,
-                Boolean.toString(whereAnimalFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_WHEREISTHECOLOR,
-                Boolean.toString(whereColorFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_WHEREISTHELETTER,
-                Boolean.toString(whereLetterFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_WHEREISTHENUMBER,
-                Boolean.toString(whereNumberFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_HORSES, Boolean.toString(horsesFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_HORSESSIMPLIFIED,
-                Boolean.toString(horsesSimplifiedFavProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FAVOURITE_SOUNDOFLIFE,
-                Boolean.toString(soundOfLifeFavProperty.getValue()));
-
+        
+        properties.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
+        
         return properties;
     }
 
-    public void saveConfig() throws IOException {
+    private void saveConfig() throws IOException {
         Properties properties = toProperties();
         try (FileOutputStream fileOutputStream = new FileOutputStream(new File(CONFIGPATH))) {
             String fileComment = "Automatically generated by GazePlay";
@@ -1176,7 +575,7 @@ public class Configuration implements Cloneable {
 
     public String getQuitKey() {
         // System.out.println(QuitKeyProperty.getValue());
-        return QuitKeyProperty.getValue();
+        return quitKeyProperty.getValue();
     }
 
     public String getLanguage() {

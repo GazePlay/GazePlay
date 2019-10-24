@@ -7,15 +7,6 @@ public class GameCategories {
 
     private static final String categoryThumbnailsPath = "data/common/images/categoriesThumbnails/";
 
-    /**
-     * Action-Reaction Skill
-     * <p>
-     * Selection Skill
-     * <p>
-     * Memorization Skill
-     * <p>
-     * Logic Skill
-     */
     public enum Category {
         ACTION_REACTION("ActionReaction games", categoryThumbnailsPath + "searching-magnifying-glass.png"),
         SELECTION("Selection games", categoryThumbnailsPath + "target.png"),

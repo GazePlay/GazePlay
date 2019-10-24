@@ -3,7 +3,6 @@ package net.gazeplay;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.property.BooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -48,10 +47,10 @@ import java.util.List;
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     public final static String LOGO_PATH = "data/common/images/logos/gazeplay1.6.1.png";
-    // public final static String LOGO_PATH = "data/common/images/logos/gazeplayClassicLogo.png";
-    private final static GamesLocator gamesLocator = new CachingGamesLocator(new DefaultGamesLocator());
 
-    // private static String currentLanguage;
+    // public final static String LOGO_PATH = "data/common/images/logos/gazeplayClassicLogo.png";
+
+    private final static GamesLocator gamesLocator = new CachingGamesLocator(new DefaultGamesLocator());
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
@@ -126,28 +125,28 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
          * config, configurationContext); CheckBox actionReactionGames =
          * buildCategoryCheckBox(GameCategories.Category.ACTION_REACTION, config, configurationContext); CheckBox
          * logicGames = buildCategoryCheckBox(GameCategories.Category.LOGIC, config, configurationContext);
-         * 
+         *
          * EventHandler<Event> filterEvent = new EventHandler<javafx.event.Event>() {
-         * 
+         *
          * @Override public void handle(javafx.event.Event e) {
-         * 
+         *
          * filterGames(selectionGames.isSelected(), memoGames.isSelected(), actionReactionGames.isSelected(),
          * logicGames.isSelected());
-         * 
+         *
          * HomeMenuScreen hm = newInstance(gazePlay, config); gazePlay.setHomeMenuScreen(hm); // gazePlay.loading();
          * gazePlay.onReturnToMenu();
-         * 
+         *
          * } };
-         * 
+         *
          * selectionGames.addEventHandler(MouseEvent.MOUSE_CLICKED, filterEvent);
          * actionReactionGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
          * memoGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
          * logicGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
-         * 
+         *
          * HBox categoryFilters = new HBox(10); categoryFilters.setAlignment(Pos.CENTER); categoryFilters.setPadding(new
          * Insets(15, 12, 15, 12)); categoryFilters.getChildren().addAll(selectionGames, memoGames, actionReactionGames,
          * logicGames);
-         * 
+         *
          */
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
@@ -168,28 +167,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setTop(topPane);
         root.setBottom(bottomPane);
         root.setCenter(centerPanel);
-        /*
-         * config.getWhiteBackgroundProperty().addListener((val, oldvalue, newvalue) -> { Color c =
-         * (newvalue.booleanValue()) ? Color.WHITE : Color.BLACK; ((BorderPane) root.getBottom()).setBackground(new
-         * Background(new BackgroundFill(c, null, null))); ((BorderPane) root.getTop()).setBackground(new Background(new
-         * BackgroundFill(c, null, null))); });
-         *
-         * int i = (config.isBackgroundWhite()) ? 1 : 0;
-         *
-         * root.setStyle("-fx-background-color: rgba(" + i + "," + i + "," + i + ", 1); " +
-         * "-fx-background-radius: 8px; " + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " +
-         * "-fx-border-color: rgba(60, 63, 65, 0.7); " +
-         * "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-         *
-         * Color c = (config.isBackgroundWhite()) ? Color.WHITE : Color.BLACK; ((BorderPane)
-         * root.getBottom()).setBackground(new Background(new BackgroundFill(c, null, null))); ((BorderPane)
-         * root.getTop()).setBackground(new Background(new BackgroundFill(c, null, null))); menuBar.setBackground(new
-         * Background(new BackgroundFill(c, null, null)));
-         */
 
         root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+            + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+            + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
     }
 
@@ -198,10 +179,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    private ScrollPane createGamePickerChoicePane( List<GameSpec> games, final Configuration config,
-            final ProgressIndicator indicator) {
-
-
+    private ScrollPane createGamePickerChoicePane(
+        List<GameSpec> games,
+        final Configuration config,
+        final ProgressIndicator indicator
+    ) {
         final int flowpaneGap = 20;
         choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
@@ -220,46 +202,31 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
 
         // reorder games by Favourite Filter
-
         List<GameSpec> favGames = new ArrayList<>();
         List<GameSpec> notFavGames = new ArrayList<>();
-        List<BooleanProperty> favorites = new ArrayList<>();
-
-        for (BooleanProperty p : config.getFavoriteGameProperties()) {
-            if (p.getValue()) {
-                favorites.add(p);
-            }
-        }
-
         // identification of favorite games
-        for (GameSpec g : games) {
-            if (isFavorite(favorites, g)) {
-                favGames.add(g);
+        for (GameSpec game : games) {
+            if (isFavorite(game, config)) {
+                favGames.add(game);
             } else
-                notFavGames.add(g);
+                notFavGames.add(game);
         }
-
         games = new ArrayList<>();
-
         // First, we add favorite games, then not favorite games
         games.addAll(favGames);
         games.addAll(notFavGames);
 
-        log.debug("Favorite Games : {}", favGames);
-        log.debug("Other Games : {}", notFavGames);
-
-        log.debug("in GameSpec gameSpec : games");
-
         for (GameSpec gameSpec : games) {
-            
-            BooleanProperty favoriteGameProperty = null;
-            for (BooleanProperty p : config.getFavoriteGameProperties()) {
-                if (p.getName().equals(gameSpec.getGameSummary().getNameCode().toUpperCase() + " Game fav"))
-                    favoriteGameProperty = p;
-            }
-
-            final GameButtonPane gameCard = gameMenuFactory.createGameButton(getGazePlay(), root, config, multilinguism,
-                    translator, gameSpec, gameButtonOrientation, gazeDeviceManager, favoriteGameProperty);
+            final GameButtonPane gameCard = gameMenuFactory.createGameButton(
+                getGazePlay(),
+                root,
+                config,
+                multilinguism,
+                translator,
+                gameSpec,
+                gameButtonOrientation,
+                gazeDeviceManager,
+                isFavorite(gameSpec, config));
 
             choicePanel.getChildren().add(gameCard);
 
@@ -272,36 +239,36 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                             indicator.setOpacity(1);
                             indicator.toFront();
                             switch (gameButtonOrientation) {
-                            case HORIZONTAL:
-                                ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(indicator);
-                                break;
-                            case VERTICAL:
-                                ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(indicator);
-                                break;
+                                case HORIZONTAL:
+                                    ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(indicator);
+                                    break;
+                                case VERTICAL:
+                                    ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(indicator);
+                                    break;
                             }
                             ((GameButtonPane) e.getSource()).setTimelineProgressBar(new Timeline());
 
                             ((GameButtonPane) e.getSource()).getTimelineProgressBar().setDelay(new Duration(500));
 
                             ((GameButtonPane) e.getSource()).getTimelineProgressBar().getKeyFrames()
-                                    .add(new KeyFrame(new Duration(config.getFixationLength()),
-                                            new KeyValue(indicator.progressProperty(), 1)));
+                                .add(new KeyFrame(new Duration(config.getFixationLength()),
+                                    new KeyValue(indicator.progressProperty(), 1)));
 
                             ((GameButtonPane) e.getSource()).getTimelineProgressBar().onFinishedProperty()
-                                    .set(new EventHandler<ActionEvent>() {
-                                        @Override
-                                        public void handle(ActionEvent actionEvent) {
-                                            indicator.setOpacity(0);
-                                            for (Node n : choicePanel.getChildren()) {
-                                                if (n instanceof GameButtonPane) {
-                                                    if (((GameButtonPane) n).getTimelineProgressBar() != null) {
-                                                        ((GameButtonPane) n).getTimelineProgressBar().stop();
-                                                    }
+                                .set(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent actionEvent) {
+                                        indicator.setOpacity(0);
+                                        for (Node n : choicePanel.getChildren()) {
+                                            if (n instanceof GameButtonPane) {
+                                                if (((GameButtonPane) n).getTimelineProgressBar() != null) {
+                                                    ((GameButtonPane) n).getTimelineProgressBar().stop();
                                                 }
                                             }
-                                            ((GameButtonPane) e.getSource()).getEventhandler().handle(null);
                                         }
-                                    });
+                                        ((GameButtonPane) e.getSource()).getEventhandler().handle(null);
+                                    }
+                                });
                             ((GameButtonPane) e.getSource()).getTimelineProgressBar().play();
                         }
                     }
@@ -317,12 +284,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                             ((GameButtonPane) e.getSource()).getTimelineProgressBar().stop();
                             indicator.setOpacity(0);
                             switch (gameButtonOrientation) {
-                            case HORIZONTAL:
-                                ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(null);
-                                break;
-                            case VERTICAL:
-                                ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(null);
-                                break;
+                                case HORIZONTAL:
+                                    ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(null);
+                                    break;
+                                case VERTICAL:
+                                    ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(null);
+                                    break;
                             }
                         }
                     }
@@ -337,23 +304,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         }
 
-        /*
-         * choicePanel.setBackground(new Background(new BackgroundImage(new Image("data/common/images/back.gif"), null,
-         * null, null, new BackgroundSize(1, 1, true, true, true, true))));
-         */
-
         return choicePanelScroller;
     }
 
-    private boolean isFavorite(List<BooleanProperty> favorites, GameSpec g) {
-
-        int i = 0;
-
-        while (i < favorites.size()
-                && !(favorites.get(i).getName().equals(g.getGameSummary().getNameCode().toUpperCase() + " Game fav")))
-            i++;
-
-        return (i < favorites.size());
+    private boolean isFavorite(GameSpec g, Configuration configuration) {
+        return configuration.getFavoriteGamesProperty().contains(g.getGameSummary().getNameCode());
     }
 
     private CustomButton createExitButton() {
@@ -385,41 +340,41 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildCategoryCheckBox(GameCategories.Category category, Configuration config,
-            ConfigurationContext confContext) {
+                                                  ConfigurationContext confContext) {
 
         I18NText label = new I18NText(confContext.getGazePlay().getTranslator(), category.getGameCategory());
         CheckBox categoryCheckbox = new CheckBox(label.getText());
         categoryCheckbox.setTextFill(Color.WHITE);
 
         switch (category) {
-        case SELECTION:
-            categoryCheckbox.setSelected(config.selectionCategory());
-            categoryCheckbox.selectedProperty().addListener((o) -> {
-                config.getSelectionCategoryProperty().setValue(categoryCheckbox.isSelected());
-                config.saveConfigIgnoringExceptions();
-            });
-            break;
-        case MEMORIZATION:
-            categoryCheckbox.setSelected(config.memorizationCategory());
-            categoryCheckbox.selectedProperty().addListener((o) -> {
-                config.getMemorizationCategoryProperty().setValue(categoryCheckbox.isSelected());
-                config.saveConfigIgnoringExceptions();
-            });
-            break;
-        case ACTION_REACTION:
-            categoryCheckbox.setSelected(config.actionReactionCategory());
-            categoryCheckbox.selectedProperty().addListener((o) -> {
-                config.getActionReactionCategoryProperty().setValue(categoryCheckbox.isSelected());
-                config.saveConfigIgnoringExceptions();
+            case SELECTION:
+                categoryCheckbox.setSelected(config.selectionCategory());
+                categoryCheckbox.selectedProperty().addListener((o) -> {
+                    config.getSelectionCategoryProperty().setValue(categoryCheckbox.isSelected());
+                    config.saveConfigIgnoringExceptions();
+                });
+                break;
+            case MEMORIZATION:
+                categoryCheckbox.setSelected(config.memorizationCategory());
+                categoryCheckbox.selectedProperty().addListener((o) -> {
+                    config.getMemorizationCategoryProperty().setValue(categoryCheckbox.isSelected());
+                    config.saveConfigIgnoringExceptions();
+                });
+                break;
+            case ACTION_REACTION:
+                categoryCheckbox.setSelected(config.actionReactionCategory());
+                categoryCheckbox.selectedProperty().addListener((o) -> {
+                    config.getActionReactionCategoryProperty().setValue(categoryCheckbox.isSelected());
+                    config.saveConfigIgnoringExceptions();
 
-            });
-            break;
-        case LOGIC:
-            categoryCheckbox.setSelected(config.logicCategory());
-            categoryCheckbox.selectedProperty().addListener((o) -> {
-                config.getLogicCategoryProperty().setValue(categoryCheckbox.isSelected());
-                config.saveConfigIgnoringExceptions();
-            });
+                });
+                break;
+            case LOGIC:
+                categoryCheckbox.setSelected(config.logicCategory());
+                categoryCheckbox.selectedProperty().addListener((o) -> {
+                    config.getLogicCategoryProperty().setValue(categoryCheckbox.isSelected());
+                    config.saveConfigIgnoringExceptions();
+                });
         }
 
         return categoryCheckbox;
