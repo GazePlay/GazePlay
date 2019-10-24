@@ -12,7 +12,8 @@ public class GameCategories {
         SELECTION("Selection games", categoryThumbnailsPath + "target.png"),
         MEMORIZATION("Memorization games", categoryThumbnailsPath + "male-brain.png"),
         LOGIC("Logic games", categoryThumbnailsPath + "logic_gear.png"),
-        CREATIVITY("Creativity games", categoryThumbnailsPath + "creativity-icon.png");
+        CREATIVITY("Creativity games", categoryThumbnailsPath + "creativity-icon.png"),
+        UTILITY("Utilities", categoryThumbnailsPath + "utility-icon.png");
 
         @NonNull
         @Getter
