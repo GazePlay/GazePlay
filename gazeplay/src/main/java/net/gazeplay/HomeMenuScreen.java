@@ -280,7 +280,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private static void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, Configuration config) {
         Predicate<Node> gameCardPredicate = new GameCardVisiblePredicate(config);
-        List<Node> filteredList = completeGameCardsList.stream().filter(gameCardPredicate).collect(Collectors.toList());
+        List<Node> filteredList = completeGameCardsList.stream()
+            .filter(gameCardPredicate)
+            .collect(Collectors.toList());
         //
         choicePanel.getChildren().clear();
         choicePanel.getChildren().addAll(filteredList);
