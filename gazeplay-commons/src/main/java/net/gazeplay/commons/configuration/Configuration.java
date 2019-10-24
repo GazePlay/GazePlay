@@ -49,16 +49,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_VIDEO_FOLDER = "VIDEO_FOLDER";
 
     private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
-
-    /**
-     * Game Categories Properties
-     */
-    private static final String PROPERTY_NAME_SELECTION_GAMES = "Selection games";
-    private static final String PROPERTY_NAME_ACTION_REACTION_GAMES = "Action-Reaction games";
-    private static final String PROPERTY_NAME_MEMORIZATION_GAMES = "Memorization games";
-    private static final String PROPERTY_NAME_LOGIC_GAMES = "Logic games";
-    private static final String PROPERTY_NAME_NO_CATEGORY_GAMES = "No category games";
-    
+    private static final String PROPERTY_NAME_HIDDEN_CATEGORIES = "HIDDEN_CATEGORIES";
 
     @Getter
     @Setter
@@ -148,6 +139,9 @@ public class Configuration implements Cloneable {
 
     @Getter
     private final SimpleSetProperty<String> favoriteGamesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_FAVORITE_GAMES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
+
+    @Getter
+    private final SimpleSetProperty<String> hiddenCategoriesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_HIDDEN_CATEGORIES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
 
     @Getter
     protected final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
@@ -252,27 +246,6 @@ public class Configuration implements Cloneable {
     @Getter
     protected final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE,
         DEFAULT_VALUE_USER_PICTURE);
-
-    @Getter
-    protected final BooleanProperty selectionCategoryProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_SELECTION_GAMES, DEFAULT_VALUE_SELECTION_GAMES);
-
-    @Getter
-    protected final BooleanProperty memorizationCategoryProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_MEMORIZATION_GAMES, DEFAULT_VALUE_MEMORIZATION_GAMES);
-
-    @Getter
-    protected final BooleanProperty actionReactionCategoryProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_ACTION_REACTION_GAMES, DEFAULT_VALUE_ACTION_REACTION_GAMES);
-
-    @Getter
-    protected final BooleanProperty noCategoryProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_NO_CATEGORY_GAMES, DEFAULT_VALUE_NO_CATEGORY_GAMES);
-
-    @Getter
-    protected final BooleanProperty logicCategoryProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_LOGIC_GAMES,
-        DEFAULT_VALUE_LOGIC_GAMES);
-
 
     protected Configuration() {
 
@@ -455,31 +428,17 @@ public class Configuration implements Cloneable {
         if (buffer != null) {
             userPictureProperty.setValue(buffer);
         }
-        buffer = prop.getProperty(PROPERTY_NAME_SELECTION_GAMES);
-        if (buffer != null) {
-            selectionCategoryProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_ACTION_REACTION_GAMES);
-        if (buffer != null) {
-            actionReactionCategoryProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_MEMORIZATION_GAMES);
-        if (buffer != null) {
-            memorizationCategoryProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_NO_CATEGORY_GAMES);
-        if (buffer != null) {
-            noCategoryProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_LOGIC_GAMES);
-        if (buffer != null) {
-            logicCategoryProperty.setValue(Boolean.parseBoolean(buffer));
-        }
 
         buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
         if (buffer != null) {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
             favoriteGamesProperty.get().addAll(values);
+        }
+
+        buffer = prop.getProperty(PROPERTY_NAME_HIDDEN_CATEGORIES);
+        if (buffer != null) {
+            Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
+            hiddenCategoriesProperty.get().addAll(values);
         }
     }
 
@@ -533,16 +492,10 @@ public class Configuration implements Cloneable {
         /*
          * properties.setProperty(PROPERTY_NAME_GAZE_MENU, Boolean.toString(this.gazeMenuProperty.getValue()));
          */
-        properties.setProperty(PROPERTY_NAME_SELECTION_GAMES, Boolean.toString(selectionCategoryProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_MEMORIZATION_GAMES,
-            Boolean.toString(memorizationCategoryProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_ACTION_REACTION_GAMES,
-            Boolean.toString(actionReactionCategoryProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_NO_CATEGORY_GAMES, Boolean.toString(noCategoryProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_LOGIC_GAMES, Boolean.toString(logicCategoryProperty.getValue()));
-        
+
         properties.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
-        
+        properties.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
+
         return properties;
     }
 
@@ -699,26 +652,6 @@ public class Configuration implements Cloneable {
 
     public void setUserPicture(String newPicture) {
         userPictureProperty.setValue(newPicture);
-    }
-
-    public Boolean selectionCategory() {
-        return selectionCategoryProperty.getValue();
-    }
-
-    public Boolean memorizationCategory() {
-        return memorizationCategoryProperty.getValue();
-    }
-
-    public Boolean actionReactionCategory() {
-        return actionReactionCategoryProperty.getValue();
-    }
-
-    public Boolean noCategory() {
-        return noCategoryProperty.getValue();
-    }
-
-    public Boolean logicCategory() {
-        return logicCategoryProperty.getValue();
     }
 
 }

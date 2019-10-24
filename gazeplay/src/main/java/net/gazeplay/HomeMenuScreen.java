@@ -41,6 +41,7 @@ import net.gazeplay.gameslocator.DefaultGamesLocator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Slf4j
@@ -117,37 +118,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         VBox leftPanel = new VBox();
         leftPanel.getChildren().add(menuBar);
 
-        // filters for games based on their category
-        // the following lines have to be uncommented to permit category filtering
-        /*
-         * CheckBox selectionGames = buildCategoryCheckBox(GameCategories.Category.SELECTION, config,
-         * configurationContext); CheckBox memoGames = buildCategoryCheckBox(GameCategories.Category.MEMORIZATION,
-         * config, configurationContext); CheckBox actionReactionGames =
-         * buildCategoryCheckBox(GameCategories.Category.ACTION_REACTION, config, configurationContext); CheckBox
-         * logicGames = buildCategoryCheckBox(GameCategories.Category.LOGIC, config, configurationContext);
-         *
-         * EventHandler<Event> filterEvent = new EventHandler<javafx.event.Event>() {
-         *
-         * @Override public void handle(javafx.event.Event e) {
-         *
-         * filterGames(selectionGames.isSelected(), memoGames.isSelected(), actionReactionGames.isSelected(),
-         * logicGames.isSelected());
-         *
-         * HomeMenuScreen hm = newInstance(gazePlay, config); gazePlay.setHomeMenuScreen(hm); // gazePlay.loading();
-         * gazePlay.onReturnToMenu();
-         *
-         * } };
-         *
-         * selectionGames.addEventHandler(MouseEvent.MOUSE_CLICKED, filterEvent);
-         * actionReactionGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
-         * memoGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
-         * logicGames.addEventFilter(MouseEvent.MOUSE_CLICKED, filterEvent);
-         *
-         * HBox categoryFilters = new HBox(10); categoryFilters.setAlignment(Pos.CENTER); categoryFilters.setPadding(new
-         * Insets(15, 12, 15, 12)); categoryFilters.getChildren().addAll(selectionGames, memoGames, actionReactionGames,
-         * logicGames);
-         *
-         */
+
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
         VBox centerCenterPane = new VBox();
@@ -155,7 +126,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         centerCenterPane.setAlignment(Pos.TOP_CENTER);
         centerCenterPane.getChildren().add(gamePickerChoicePane);
         BorderPane centerPanel = new BorderPane();
-        // centerPanel.setTop(categoryFilters);
+        centerPanel.setTop(buildFilterByCategory(gazePlay, config, gazePlay.getTranslator()));
         centerPanel.setCenter(centerCenterPane);
         centerPanel.setLeft(leftPanel);
 
@@ -215,6 +186,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         // First, we add favorite games, then not favorite games
         games.addAll(favGames);
         games.addAll(notFavGames);
+
+        games = games.stream().
+            filter(g -> !config.getHiddenCategoriesProperty().containsAll(g.getGameSummary().getCategories().stream().map(GameCategories.Category::getGameCategory).collect(Collectors.toList())))
+            .collect(Collectors.toList());
 
         for (GameSpec gameSpec : games) {
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(
@@ -307,6 +282,31 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return choicePanelScroller;
     }
 
+    private HBox buildFilterByCategory(GazePlay gazePlay, Configuration config, Translator translator) {
+        EventHandler<Event> filterEvent = new EventHandler<javafx.event.Event>() {
+            @Override
+            public void handle(javafx.event.Event e) {
+                HomeMenuScreen hm = newInstance(gazePlay, config);
+                gazePlay.setHomeMenuScreen(hm); // gazePlay.loading();
+                gazePlay.onReturnToMenu();
+            }
+        };
+
+        List<CheckBox> allCheckBoxes = new ArrayList<>();
+        for (GameCategories.Category category : GameCategories.Category.values()) {
+            CheckBox checkBox = buildCategoryCheckBox(category, config, translator);
+            checkBox.addEventHandler(MouseEvent.MOUSE_CLICKED, filterEvent);
+            allCheckBoxes.add(checkBox);
+        }
+
+        HBox categoryFilters = new HBox(10);
+        categoryFilters.setAlignment(Pos.CENTER);
+        categoryFilters.setPadding(new Insets(15, 12, 15, 12));
+        categoryFilters.getChildren().addAll(allCheckBoxes);
+
+        return categoryFilters;
+    }
+
     private boolean isFavorite(GameSpec g, Configuration configuration) {
         return configuration.getFavoriteGamesProperty().contains(g.getGameSummary().getNameCode());
     }
@@ -339,44 +339,24 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return logoView;
     }
 
-    private static CheckBox buildCategoryCheckBox(GameCategories.Category category, Configuration config,
-                                                  ConfigurationContext confContext) {
-
-        I18NText label = new I18NText(confContext.getGazePlay().getTranslator(), category.getGameCategory());
+    private static CheckBox buildCategoryCheckBox(
+        GameCategories.Category category,
+        Configuration config,
+        Translator translator
+    ) {
+        I18NText label = new I18NText(translator, category.getGameCategory());
         CheckBox categoryCheckbox = new CheckBox(label.getText());
         categoryCheckbox.setTextFill(Color.WHITE);
 
-        switch (category) {
-            case SELECTION:
-                categoryCheckbox.setSelected(config.selectionCategory());
-                categoryCheckbox.selectedProperty().addListener((o) -> {
-                    config.getSelectionCategoryProperty().setValue(categoryCheckbox.isSelected());
-                    config.saveConfigIgnoringExceptions();
-                });
-                break;
-            case MEMORIZATION:
-                categoryCheckbox.setSelected(config.memorizationCategory());
-                categoryCheckbox.selectedProperty().addListener((o) -> {
-                    config.getMemorizationCategoryProperty().setValue(categoryCheckbox.isSelected());
-                    config.saveConfigIgnoringExceptions();
-                });
-                break;
-            case ACTION_REACTION:
-                categoryCheckbox.setSelected(config.actionReactionCategory());
-                categoryCheckbox.selectedProperty().addListener((o) -> {
-                    config.getActionReactionCategoryProperty().setValue(categoryCheckbox.isSelected());
-                    config.saveConfigIgnoringExceptions();
-
-                });
-                break;
-            case LOGIC:
-                categoryCheckbox.setSelected(config.logicCategory());
-                categoryCheckbox.selectedProperty().addListener((o) -> {
-                    config.getLogicCategoryProperty().setValue(categoryCheckbox.isSelected());
-                    config.saveConfigIgnoringExceptions();
-                });
-        }
-
+        categoryCheckbox.setSelected(!config.getHiddenCategoriesProperty().contains(category.getGameCategory()));
+        categoryCheckbox.selectedProperty().addListener((o) -> {
+            if (categoryCheckbox.isSelected()) {
+                config.getHiddenCategoriesProperty().remove(category.getGameCategory());
+            } else {
+                config.getHiddenCategoriesProperty().add(category.getGameCategory());
+            }
+            config.saveConfigIgnoringExceptions();
+        });
         return categoryCheckbox;
     }
 
