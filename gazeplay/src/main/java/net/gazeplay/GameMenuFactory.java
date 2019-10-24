@@ -93,7 +93,7 @@ public class GameMenuFactory {
                 .setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
-        GameButtonPane gameCard = new GameButtonPane();
+        GameButtonPane gameCard = new GameButtonPane(gameSpec);
         switch (orientation) {
             case HORIZONTAL:
                 gameCard.getStyleClass().add("gameChooserButton");

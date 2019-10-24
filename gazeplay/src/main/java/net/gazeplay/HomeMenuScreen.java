@@ -20,9 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
@@ -41,6 +39,8 @@ import net.gazeplay.gameslocator.DefaultGamesLocator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Data
@@ -71,6 +71,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private GazeDeviceManager gazeDeviceManager;
 
     private FlowPane choicePanel;
+
+    private List gameCardsList;
 
     private final GameMenuFactory gameMenuFactory = new GameMenuFactory();
 
@@ -118,7 +120,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         VBox leftPanel = new VBox();
         leftPanel.getChildren().add(menuBar);
 
-
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
         VBox centerCenterPane = new VBox();
@@ -126,7 +127,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         centerCenterPane.setAlignment(Pos.TOP_CENTER);
         centerCenterPane.getChildren().add(gamePickerChoicePane);
         BorderPane centerPanel = new BorderPane();
-        centerPanel.setTop(buildFilterByCategory(gazePlay, config, gazePlay.getTranslator()));
+        centerPanel.setTop(buildFilterByCategory(config, gazePlay.getTranslator()));
         centerPanel.setCenter(centerCenterPane);
         centerPanel.setLeft(leftPanel);
 
@@ -155,6 +156,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Configuration config,
         final ProgressIndicator indicator
     ) {
+        gameCardsList = createGameCardsList(games, config, indicator);
+
         final int flowpaneGap = 20;
         choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
@@ -162,34 +165,27 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.setVgap(flowpaneGap);
         choicePanel.setPadding(new Insets(20, 60, 20, 60));
 
+        choicePanel.getChildren().addAll(gameCardsList);
+
         ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
-        Multilinguism multilinguism = Multilinguism.getSingleton();
+        filterGames(choicePanel, gameCardsList, config);
 
+        return choicePanelScroller;
+    }
+
+    private List createGameCardsList(
+        List<GameSpec> games,
+        final Configuration config,
+        final ProgressIndicator indicator
+    ) {
+        final Multilinguism multilinguism = Multilinguism.getSingleton();
         final Translator translator = getGazePlay().getTranslator();
-
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
 
-        // reorder games by Favourite Filter
-        List<GameSpec> favGames = new ArrayList<>();
-        List<GameSpec> notFavGames = new ArrayList<>();
-        // identification of favorite games
-        for (GameSpec game : games) {
-            if (isFavorite(game, config)) {
-                favGames.add(game);
-            } else
-                notFavGames.add(game);
-        }
-        games = new ArrayList<>();
-        // First, we add favorite games, then not favorite games
-        games.addAll(favGames);
-        games.addAll(notFavGames);
-
-        games = games.stream().
-            filter(g -> !config.getHiddenCategoriesProperty().containsAll(g.getGameSummary().getCategories().stream().map(GameCategories.Category::getGameCategory).collect(Collectors.toList())))
-            .collect(Collectors.toList());
+        final List<GameButtonPane> gameCardsList = new ArrayList<>();
 
         for (GameSpec gameSpec : games) {
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(
@@ -203,7 +199,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 gazeDeviceManager,
                 isFavorite(gameSpec, config));
 
-            choicePanel.getChildren().add(gameCard);
+            gameCardsList.add(gameCard);
 
             gameCard.setEnterhandler(new EventHandler<Event>() {
                 @Override
@@ -279,23 +275,21 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         }
 
-        return choicePanelScroller;
+        return gameCardsList;
     }
 
-    private HBox buildFilterByCategory(GazePlay gazePlay, Configuration config, Translator translator) {
-        EventHandler<Event> filterEvent = new EventHandler<javafx.event.Event>() {
-            @Override
-            public void handle(javafx.event.Event e) {
-                HomeMenuScreen hm = newInstance(gazePlay, config);
-                gazePlay.setHomeMenuScreen(hm); // gazePlay.loading();
-                gazePlay.onReturnToMenu();
-            }
-        };
+    private static void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, Configuration config) {
+        Predicate<Node> gameCardPredicate = new GameCardVisiblePredicate(config);
+        List<Node> filteredList = completeGameCardsList.stream().filter(gameCardPredicate).collect(Collectors.toList());
+        //
+        choicePanel.getChildren().clear();
+        choicePanel.getChildren().addAll(filteredList);
+    }
 
+    private HBox buildFilterByCategory(Configuration config, Translator translator) {
         List<CheckBox> allCheckBoxes = new ArrayList<>();
         for (GameCategories.Category category : GameCategories.Category.values()) {
-            CheckBox checkBox = buildCategoryCheckBox(category, config, translator);
-            checkBox.addEventHandler(MouseEvent.MOUSE_CLICKED, filterEvent);
+            CheckBox checkBox = buildCategoryCheckBox(category, config, translator, choicePanel, gameCardsList);
             allCheckBoxes.add(checkBox);
         }
 
@@ -342,7 +336,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private static CheckBox buildCategoryCheckBox(
         GameCategories.Category category,
         Configuration config,
-        Translator translator
+        Translator translator,
+        FlowPane choicePanel,
+        List<Node> gameCardsList
     ) {
         I18NText label = new I18NText(translator, category.getGameCategory());
         CheckBox categoryCheckbox = new CheckBox(label.getText());
@@ -355,9 +351,26 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             } else {
                 config.getHiddenCategoriesProperty().add(category.getGameCategory());
             }
+            filterGames(choicePanel, gameCardsList, config);
             config.saveConfigIgnoringExceptions();
+
         });
         return categoryCheckbox;
+    }
+
+    @AllArgsConstructor
+    private static class GameCardVisiblePredicate implements Predicate<Node> {
+
+        private final Configuration config;
+
+        @Override
+        public boolean test(Node node) {
+            GameButtonPane gameButtonPane = (GameButtonPane) node;
+            SortedSet<GameCategories.Category> gameCategories = gameButtonPane.getGameSpec().getGameSummary().getCategories();
+            List<@NonNull String> gameCategoriesNames = gameCategories.stream().map(GameCategories.Category::getGameCategory).collect(Collectors.toList());
+            return !config.getHiddenCategoriesProperty().containsAll(gameCategoriesNames);
+        }
+
     }
 
 }
