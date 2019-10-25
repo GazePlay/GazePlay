@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -20,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Data;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
@@ -30,9 +30,8 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static javafx.scene.input.MouseEvent.*;
 
@@ -45,28 +44,36 @@ public class GameMenuFactory {
     private final static double THUMBNAIL_WIDTH_RATIO = 1;
     private final static double THUMBNAIL_HEIGHT_RATIO = 0.4;
 
-    private long lastModificationDate = (new Date()).getTime();
-    private final static long MINLENGTH = 1000; // min time between two modification of favorite
+    private final static long FAVORITE_SWITCH_FIXATION_DURATION_IN_MILLISECONDS = 1000;
 
-    public GameButtonPane createGameButton(GazePlay gazePlay, final Region root, Configuration config,
-                                           Multilinguism multilinguism, Translator translator, GameSpec gameSpec, GameButtonOrientation orientation,
-                                           GazeDeviceManager gazeDeviceManager, @Nullable BooleanProperty isFavourite) {
+    public GameButtonPane createGameButton(
+        @NonNull final GazePlay gazePlay,
+        @NonNull final Region root,
+        @NonNull final Configuration config,
+        @NonNull final Multilinguism multilinguism,
+        @NonNull final Translator translator,
+        @NonNull final GameSpec gameSpec,
+        @NonNull final GameButtonOrientation orientation,
+        @NonNull final GazeDeviceManager gazeDeviceManager,
+        @NonNull final boolean isFavorite
+    ) {
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
 
         final Image heartIcon;
-        if (isFavourite != null && isFavourite.getValue()) {
+        if (isFavorite) {
             heartIcon = new Image("data/common/images/heart_filled.png");
         } else {
             heartIcon = new Image("data/common/images/heart_empty.png");
         }
 
-        ImageView favGamesIcon = new ImageView(heartIcon);
+        ImageView favGamesImageView = new ImageView(heartIcon);
+        //ImagePattern favGamesImagePattern = new ImagePattern(heartIcon);
 
         // can't understand the goal of the following 3 lines
-        // favGamesIcon.imageProperty().addListener((listener) -> {
-        // isFavourite.setValue(favGamesIcon.getImage().equals(new Image("data/common/images/heart_filled.png")));
+        // favGamesImageView.imageProperty().addListener((listener) -> {
+        // isFavourite.setValue(favGamesImageView.getImage().equals(new Image("data/common/images/heart_filled.png")));
         // config.saveConfigIgnoringExceptions();
         // });
 
@@ -87,7 +94,7 @@ public class GameMenuFactory {
                 .setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
-        GameButtonPane gameCard = new GameButtonPane();
+        GameButtonPane gameCard = new GameButtonPane(gameSpec);
         switch (orientation) {
             case HORIZONTAL:
                 gameCard.getStyleClass().add("gameChooserButton");
@@ -145,7 +152,7 @@ public class GameMenuFactory {
         }
 
         final HBox gameCategoryContainer = new HBox();
-        final VBox favIconContainer = new VBox(favGamesIcon);
+        final VBox favIconContainer = new VBox(favGamesImageView);
         switch (orientation) {
             case HORIZONTAL:
                 gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
@@ -267,40 +274,56 @@ public class GameMenuFactory {
                 }
             }
         };
-        EventHandler favGameHandler_enter = new EventHandler<MouseEvent>() {
+        gameCard.addEventHandler(MOUSE_PRESSED, event);
+
+        @Data
+        class EventState {
+            private final long time;
+            private final boolean wasFavorite;
+        }
+
+        EventHandler favoriteGameSwitchEventHandler = new EventHandler<MouseEvent>() {
+
+            private final AtomicReference<EventState> enteredState = new AtomicReference<>();
+            private final AtomicReference<EventState> exitedState = new AtomicReference<>();
+
             @Override
             public void handle(MouseEvent event) {
-
-                long dateSinceLastModification = (new Date()).getTime() - lastModificationDate;
-                log.debug("{} milliseconds since last modification", dateSinceLastModification);
-
-                if (dateSinceLastModification < MINLENGTH) {
+                if (event.getEventType() == MOUSE_ENTERED) {
+                    boolean wasFavorite = config.getFavoriteGamesProperty().contains(gameSummary.getNameCode());
+                    enteredState.set(new EventState(System.currentTimeMillis(), wasFavorite));
+                    log.info("enteredState = {}", enteredState);
+                    return;
+                }
+                if (event.getEventType() == MOUSE_EXITED) {
+                    boolean wasFavorite = config.getFavoriteGamesProperty().contains(gameSummary.getNameCode());
+                    exitedState.set(new EventState(System.currentTimeMillis(), wasFavorite));
+                    log.info("exitedState = {}", exitedState);
+                    //return;
+                }
+                //if (event.getEventType() != MOUSE_MOVED) {
+                //    return;
+                //}
+                long fixationDuration = System.currentTimeMillis() - enteredState.get().time;
+                if (fixationDuration < FAVORITE_SWITCH_FIXATION_DURATION_IN_MILLISECONDS) {
                     // too early
                     return;
                 }
-
-                switch (isFavourite.getValue().toString()) {
-                    case "true":
-                        favGamesIcon.setImage(new Image("data/common/images/heart_empty.png"));
-                        isFavourite.setValue(false);
-                        config.saveConfigIgnoringExceptions();
-                        log.info("enter-T: " + isFavourite.getName() + " = " + isFavourite.getValue());
-
-                        break;
-                    case "false":
-                        favGamesIcon.setImage(new Image("data/common/images/heart_filled.png"));
-                        isFavourite.setValue(true);
-                        config.saveConfigIgnoringExceptions();
-                        log.info("enter-F: " + isFavourite.getName() + " = " + isFavourite.getValue());
-
-                        break;
+                boolean isFavorite = !enteredState.get().wasFavorite;
+                if (isFavorite) {
+                    config.getFavoriteGamesProperty().add(gameSummary.getNameCode());
+                    favGamesImageView.setImage(new Image("data/common/images/heart_filled.png"));
+                } else {
+                    config.getFavoriteGamesProperty().remove(gameSummary.getNameCode());
+                    favGamesImageView.setImage(new Image("data/common/images/heart_empty.png"));
                 }
-                lastModificationDate = (new Date()).getTime();
+                config.saveConfigIgnoringExceptions();
             }
         };
-        // favGamesIcon.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, favGameHandler_enter);
-        favGamesIcon.addEventFilter(MOUSE_ENTERED_TARGET, favGameHandler_enter);
-        gameCard.addEventHandler(MOUSE_PRESSED, event);
+        favIconContainer.addEventFilter(MOUSE_ENTERED, favoriteGameSwitchEventHandler);
+        favIconContainer.addEventFilter(MOUSE_MOVED, favoriteGameSwitchEventHandler);
+        favIconContainer.addEventFilter(MOUSE_EXITED, favoriteGameSwitchEventHandler);
+
         // pausedEvents.add(gameCard);
         return gameCard;
     }

@@ -7,21 +7,13 @@ public class GameCategories {
 
     private static final String categoryThumbnailsPath = "data/common/images/categoriesThumbnails/";
 
-    /**
-     * Action-Reaction Skill
-     * <p>
-     * Selection Skill
-     * <p>
-     * Memorization Skill
-     * <p>
-     * Logic Skill
-     */
     public enum Category {
         ACTION_REACTION("ActionReaction games", categoryThumbnailsPath + "searching-magnifying-glass.png"),
         SELECTION("Selection games", categoryThumbnailsPath + "target.png"),
         MEMORIZATION("Memorization games", categoryThumbnailsPath + "male-brain.png"),
         LOGIC("Logic games", categoryThumbnailsPath + "logic_gear.png"),
-        CREATIVITY("Creativity games", categoryThumbnailsPath + "creativity-icon.png");
+        CREATIVITY("Creativity games", categoryThumbnailsPath + "creativity-icon.png"),
+        UTILITY("Utilities", categoryThumbnailsPath + "utility-icon.png");
 
         @NonNull
         @Getter

@@ -9,7 +9,7 @@ public class VideoGridGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("VideoGrid").gameThumbnail("data/Thumbnails/videogrid.png").category(GameCategories.Category.SELECTION).build(),
+            GameSummary.builder().nameCode("VideoGrid").gameThumbnail("data/Thumbnails/videogrid.png").category(GameCategories.Category.SELECTION).category(GameCategories.Category.UTILITY).build(),
             new VideoGridGameVariantGenerator(), new VideoGridGameLauncher());
     }
 }

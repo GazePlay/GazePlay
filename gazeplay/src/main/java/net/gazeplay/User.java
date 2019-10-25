@@ -1,9 +1,13 @@
 package net.gazeplay;
 
 import javafx.scene.layout.HBox;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@AllArgsConstructor
 public class User extends HBox {
 
-    public String name;
+    @Getter
+    private final String name;
 
 }
