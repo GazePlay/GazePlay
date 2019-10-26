@@ -8,6 +8,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 public class ShootGamesStats extends Stats {
 
@@ -21,7 +22,7 @@ public class ShootGamesStats extends Stats {
         super.saveStats();
 
         final File infoStatsFile = createInfoStatsFile();
-        try (PrintWriter out = new PrintWriter(infoStatsFile, "UTF-8")) {
+        try (PrintWriter out = new PrintWriter(infoStatsFile, StandardCharsets.UTF_8)) {
             out.print("Date");
             out.print(',');
             out.print("Time");

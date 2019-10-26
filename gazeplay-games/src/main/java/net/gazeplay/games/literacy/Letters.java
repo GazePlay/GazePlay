@@ -41,7 +41,7 @@ public class Letters implements GameLifeCycle {
     private final Stats stats;
 
     // Latin Letters!
-    private final String alphabet[] = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
+    private final String[] alphabet = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
             "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
 
     @Getter
@@ -183,8 +183,8 @@ public class Letters implements GameLifeCycle {
 
     }
 
-    private Bloc[][] createCards(String mainLetter, Random r, String alphabet[], double width, double height,
-            Configuration config) {
+    private Bloc[][] createCards(String mainLetter, Random r, String[] alphabet, double width, double height,
+                                 Configuration config) {
         correctCount = 0;
         Bloc[][] blocs = new Bloc[nbLines][nbColomns];
 

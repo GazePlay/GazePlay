@@ -150,7 +150,7 @@ public class Cup {
         revealBallTransition.setByY(-ballRadius * 8);
         ball.getItem().setVisible(true);
 
-        revealBallTransition.setOnFinished((EventHandler<ActionEvent>) (ActionEvent actionEvent) -> {
+        revealBallTransition.setOnFinished((ActionEvent actionEvent) -> {
             gameContext.playWinTransition(2000, (ActionEvent actionEvent1) -> {
                 gameInstance.dispose();
 

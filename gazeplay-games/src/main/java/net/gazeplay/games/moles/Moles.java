@@ -164,7 +164,7 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     private double[][] CreationTableauPlacement(double width, double height, double distTrans) {
-        double tabPlacement[][] = new double[10][2];
+        double[][] tabPlacement = new double[10][2];
 
         tabPlacement[0][0] = 0.05 * width;
         tabPlacement[0][1] = 0.190 * height + distTrans;
@@ -201,7 +201,7 @@ public class Moles extends Parent implements GameLifeCycle {
         double width = gameDimension2D.getWidth();
         double distTrans = computeDistTransMole(gameDimension2D);
 
-        double place[][] = CreationTableauPlacement(width, height, distTrans);
+        double[][] place = CreationTableauPlacement(width, height, distTrans);
 
         /* Creation and placement of moles in the field */
         for (int i = 0; i < place.length; i++) {

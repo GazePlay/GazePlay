@@ -60,9 +60,7 @@ public class MouseV4 extends Mouse {
         if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
                 && isSelectioned) {
             GameBox gb = (GameBox) e.getSource();
-            if (gb.isNextTo(indiceY, indiceX) && gameInstance.isFreeForMouse(gb.numRow, gb.numCol)) {
-                return true;
-            }
+            return gb.isNextTo(indiceY, indiceX) && gameInstance.isFreeForMouse(gb.numRow, gb.numCol);
         }
         return false;
     }
@@ -74,9 +72,7 @@ public class MouseV4 extends Mouse {
             if (gb.isNextTo(indiceY, indiceX)) { // fo comfort with eye tracker
                 return false;
             }
-            if (!(gb.isNextTo(indiceY, indiceX) && gameInstance.isFreeForMouse(gb.numRow, gb.numCol))) {
-                return true;
-            }
+            return !(gb.isNextTo(indiceY, indiceX) && gameInstance.isFreeForMouse(gb.numRow, gb.numCol));
         }
         return false;
     }

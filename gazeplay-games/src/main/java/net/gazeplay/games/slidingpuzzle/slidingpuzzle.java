@@ -323,10 +323,7 @@ public class slidingpuzzle implements GameLifeCycle {
                 counter++;
         }
 
-        if (counter == 9)
-            return true;
-        else
-            return false;
+        return counter == 9;
 
     }
 

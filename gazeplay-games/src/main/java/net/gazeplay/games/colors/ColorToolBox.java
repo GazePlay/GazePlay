@@ -433,12 +433,12 @@ public class ColorToolBox extends StackPane {
         Pane colorizeButtonPane = new StackPane(colorize);
         Pane stopColorizeButtonPane = new StackPane(stopColorize);
 
-        EventHandler enableColorizeButton = (EventHandler) (Event event1) -> {
+        EventHandler enableColorizeButton = (Event event1) -> {
 
             colorsGame.setEnableColorization(false);
         };
 
-        disableColorizeButton = (EventHandler) (Event event1) -> {
+        disableColorizeButton = (Event event1) -> {
 
             colorsGame.setEnableColorization(true);
         };

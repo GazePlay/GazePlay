@@ -133,12 +133,8 @@ public class slidingpuzzlecard extends Parent {
 
         if (this.initX == kingPosX && ((this.initY == kingPosY + initWidth) || (this.initY == kingPosY - initWidth)))
             return true;
-        else if (this.initY == kingPosY
-                && ((this.initX == kingPosX + initWidth) || (this.initX == kingPosX - initWidth)))
-            return true;
-
-        else
-            return false;
+        else return this.initY == kingPosY
+            && ((this.initX == kingPosX + initWidth) || (this.initX == kingPosX - initWidth));
     }
 
     private void isMyNeighborEvent() {

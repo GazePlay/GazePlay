@@ -180,7 +180,7 @@ class Target extends Parent {
                 if (((!lapin) && (gameContext.getChildren().isEmpty()))
                         || ((lapin) && (gameContext.getChildren().size() <= 1))) {
                     long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-                    Label l = new Label("Score : " + Long.toString(totalTime) + "s");
+                    Label l = new Label("Score : " + totalTime + "s");
                     Color color = (Configuration.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
                     l.setTextFill(color);
                     l.setFont(Font.font(50));

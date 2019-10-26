@@ -74,11 +74,7 @@ public class Bloc extends Parent {// Rectangle {
 
         this.letterStr = currentLetter;
 
-        if (currentLetter.equals(mainLetter)) {
-            this.isMainLetter = true;
-        } else {
-            this.isMainLetter = false;
-        }
+        this.isMainLetter = currentLetter.equals(mainLetter);
 
         this.letter = new Text("" + letterStr.toUpperCase());
         this.letter.setFont(new Font("Tsukushi A Round Gothic Bold", 250));

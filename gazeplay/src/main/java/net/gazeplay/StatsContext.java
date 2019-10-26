@@ -142,7 +142,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             final I18NText label;
             if (stats instanceof ShootGamesStats) {
                 label = new I18NText(translator, "HitRate", COLON);
-                Text value = new Text(String.valueOf(stats.getShotRatio() + "%"));
+                Text value = new Text(stats.getShotRatio() + "%");
                 addToGrid(grid, currentFormRow, label, value);
             }
         }
@@ -196,7 +196,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         {
             if (stats instanceof ShootGamesStats && stats.getNbUnCountedShots() != 0) {
                 final I18NText label = new I18NText(translator, "UncountedShot", COLON);
-                final Text value = new Text(String.valueOf(((ShootGamesStats) stats).getNbUnCountedShots()));
+                final Text value = new Text(String.valueOf(stats.getNbUnCountedShots()));
                 addToGrid(grid, currentFormRow, label, value);
             }
         }

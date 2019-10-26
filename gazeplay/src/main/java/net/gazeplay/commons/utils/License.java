@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by schwab on 22/12/2016.
@@ -69,7 +70,7 @@ public class License extends Rectangle {
 
         String content;
         try {
-            content = IOUtils.toString(resource, Charset.forName("UTF-8"));
+            content = IOUtils.toString(resource, StandardCharsets.UTF_8);
         } catch (IOException e) {
             content = "Failed to load license content";
         }

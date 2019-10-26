@@ -63,7 +63,6 @@ public class ScreenCake extends LinkedList {
         if (i == 2) {
             cakef.getButtons()[i].setDisable(!cakef.isNappage());
         }
-        ;
         this.add(bt);
         gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());
 

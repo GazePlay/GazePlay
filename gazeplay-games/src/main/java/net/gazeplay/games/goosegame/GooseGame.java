@@ -34,6 +34,7 @@ import net.gazeplay.components.ProgressButton;
 
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -92,13 +93,9 @@ public class GooseGame implements GameLifeCycle {
 
         // JSON file used to store the position of each square, later used for pawn movement
         JsonParser parser = new JsonParser();
-        try {
-            positions = (JsonArray) parser.parse(new InputStreamReader(
-                    Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("data/goosegame/positions.json")),
-                    "utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        positions = (JsonArray) parser.parse(new InputStreamReader(
+                Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("data/goosegame/positions.json")),
+            StandardCharsets.UTF_8));
 
         boardImage = new ImageView("data/goosegame/gooseboard.png");
         // The board is scaled according to the window size, this influences the position we got above, so we need to

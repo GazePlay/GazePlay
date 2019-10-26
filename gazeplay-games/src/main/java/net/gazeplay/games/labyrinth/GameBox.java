@@ -57,11 +57,7 @@ public class GameBox extends Parent {
     public GameBox(int x, int y, boolean wall, boolean visit) {
         numCol = x;
         numRow = y;
-        if (visit) {
-            visited = true;
-        } else {
-            visited = false;
-        }
+        visited = visit;
         isAWall = wall;
 
     }

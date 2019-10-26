@@ -551,7 +551,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
                                 waterNeeded = 100;
                             }
                         }
-                        ;
                     } else {
                         c.setOpacity(0);
                         t.play();

@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class MediaFileReader {
             File f = new File(f0, "playerList.csv");
             f.createNewFile();
 
-            BufferedReader b = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF8"));
+            BufferedReader b = new BufferedReader(new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8));
 
             String readLine = "";
 
@@ -114,7 +115,7 @@ public class MediaFileReader {
                         + Utils.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
             }
 
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f, true), "UTF8"));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f, true), StandardCharsets.UTF_8));
 
             if (mediaList.size() == 0) {
                 bw.write("" + mf.getType() + "," + mf.getPath() + "," + mf.getName() + "," + mf.getImagepath());

@@ -111,7 +111,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         // Arabic title alignment
         if (!currentLanguageAlignementIsLeftAligned) {
-            root.setAlignment(configTitleText, Pos.BOTTOM_RIGHT);
+            BorderPane.setAlignment(configTitleText, Pos.BOTTOM_RIGHT);
         }
 
         root.setTop(configTitleText);
@@ -405,7 +405,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
                 final int newPropertyValue = (int) (1000
-                    * (double) choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
+                    * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
 
                 configuration.getFixationlengthProperty().setValue(newPropertyValue);
                 configuration.saveConfigIgnoringExceptions();
@@ -439,7 +439,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
                 final int newPropertyValue = (int) (1000
-                    * (double) choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
+                    * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
 
                 configuration.getQuestionLengthProperty().setValue(newPropertyValue);
                 configuration.saveConfigIgnoringExceptions();
@@ -1116,7 +1116,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         hbox.getChildren().addAll(resetButton, plusButton, minusButton);
 
         resetButton.setOnAction((event) -> {
-            config.getHeatMapColorsProperty().setValue(config.DEFAULT_VALUE_HEATMAP_COLORS);
+            config.getHeatMapColorsProperty().setValue(Configuration.DEFAULT_VALUE_HEATMAP_COLORS);
             hbox.getChildren().remove(3, hbox.getChildren().size());
             fillHBoxWithColorPickers(hbox, config);
             minusButton.setDisable(false);

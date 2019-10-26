@@ -30,6 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -239,7 +240,7 @@ class LatestNewPopup {
         String resourceName = "updates-popup/offline-page-" + languageCode + ".html";
         try {
             URL resourceUrl = getClass().getClassLoader().getResource(resourceName);
-            return IOUtils.toString(resourceUrl, "UTF-8");
+            return IOUtils.toString(resourceUrl, StandardCharsets.UTF_8);
         } catch (IOException e) {
             log.warn("Failed to load page", e);
             throw new RuntimeException(e);

@@ -17,7 +17,7 @@ public class Strategy {
 
     private enum Strategies {
         rotation_up_down, rotation_move_closest_in_place
-    };
+    }
 
     public Strategy(int nbCups, int nbExchanges, int maxCellsX, int maxCellsY) {
         this.nbCups = nbCups;

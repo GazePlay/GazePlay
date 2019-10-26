@@ -27,6 +27,7 @@ import net.gazeplay.components.ProgressButton;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Slf4j
@@ -113,15 +114,11 @@ public class SpotTheDifferences implements GameLifeCycle {
         nextButton.active();
 
         JsonParser parser = new JsonParser();
-        try {
-            instances = (JsonArray) parser
-                    .parse(new InputStreamReader(
-                            Objects.requireNonNull(
-                                    ClassLoader.getSystemResourceAsStream("data/spotthedifferences/instances.json")),
-                            "utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        instances = (JsonArray) parser
+                .parse(new InputStreamReader(
+                        Objects.requireNonNull(
+                                ClassLoader.getSystemResourceAsStream("data/spotthedifferences/instances.json")),
+                    StandardCharsets.UTF_8));
     }
 
     private void createDifference(double x, double y, double radius) {

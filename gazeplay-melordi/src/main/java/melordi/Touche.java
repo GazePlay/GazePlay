@@ -24,7 +24,7 @@ public class Touche extends Parent {
     Text lettre_touche;
 
     public Touche(String l, int posX, int posY, int note, Instru instru) {
-        lettre = new String(l);
+        lettre = l;
         positionX = posX;
         positionY = posY;
         this.note = note;

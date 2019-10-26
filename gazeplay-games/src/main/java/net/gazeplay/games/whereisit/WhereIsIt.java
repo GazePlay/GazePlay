@@ -313,7 +313,7 @@ public class WhereIsIt implements GameLifeCycle {
                 // final File[] files = folder.listFiles();
                 final File[] files = getFiles(folder);
 
-                log.info("files = {}", (Object[]) files);
+                log.info("files = {}", files);
 
                 final int numFile = random.nextInt(files.length);
 
@@ -362,7 +362,7 @@ public class WhereIsIt implements GameLifeCycle {
             // final File[] files = folder.listFiles();
             final File[] files = getFiles(folder);
 
-            log.debug("files = {}", (Object[]) files);
+            log.debug("files = {}", files);
 
             final int numFile = random.nextInt(files.length);
 
@@ -412,7 +412,7 @@ public class WhereIsIt implements GameLifeCycle {
                 // final File[] files = folder.listFiles();
                 final File[] files2 = getFiles(folder2);
 
-                log.info("files2 = {}", (Object[]) files2);
+                log.info("files2 = {}", files2);
 
                 final int numFile2 = random.nextInt(files2.length);
 
@@ -465,7 +465,7 @@ public class WhereIsIt implements GameLifeCycle {
                 // final File[] files = folder.listFiles();
                 final File[] files = getFiles(folder);
 
-                log.debug("files = {}", (Object[]) files);
+                log.debug("files = {}", files);
 
                 final int numFile = random.nextInt(files.length);
 

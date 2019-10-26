@@ -25,7 +25,7 @@ public class Memory implements GameLifeCycle {
     public enum MemoryGameType {
 
         LETTERS, NUMBERS, DEFAULT
-    };
+    }
 
     @Data
     @AllArgsConstructor

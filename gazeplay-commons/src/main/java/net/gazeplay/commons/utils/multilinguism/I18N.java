@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class I18N {
                 throw new FileNotFoundException("Resource was not found : " + resourceLocation);
             }
 
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
 
                 Map<Entry, String> traductions = new HashMap<>(1000);
 

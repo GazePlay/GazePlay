@@ -16,6 +16,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -46,12 +47,8 @@ public class SoundsOfLife implements GameLifeCycle {
 
         JsonParser parser = new JsonParser();
         JsonObject jsonRoot = null;
-        try {
-            jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
-                    Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + "elements.json")), "utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
+                Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + "elements.json")), StandardCharsets.UTF_8));
 
         String backgroundPath = path + jsonRoot.get("background").getAsString();
         Image backgroundImage = new Image(backgroundPath);

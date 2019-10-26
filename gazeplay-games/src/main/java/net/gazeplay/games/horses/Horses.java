@@ -30,6 +30,7 @@ import net.gazeplay.components.ProgressButton;
 
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -99,12 +100,8 @@ public class Horses implements GameLifeCycle {
 
         JsonParser parser = new JsonParser();
         JsonObject positions = null;
-        try {
-            positions = (JsonObject) parser.parse(new InputStreamReader(
-                    Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(jsonPath)), "utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        positions = (JsonObject) parser.parse(new InputStreamReader(
+                Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(jsonPath)), StandardCharsets.UTF_8));
 
         nbPawns = positions.get("nbPawns").getAsInt();
         int nbElementsPerSide = positions.get("elementsPerSide").getAsInt();

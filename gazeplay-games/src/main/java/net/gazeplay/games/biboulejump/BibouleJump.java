@@ -29,6 +29,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -239,7 +240,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         try {
             ArrayList<Integer> highscores = new ArrayList();
             if (!f.createNewFile()) {
-                Scanner scanner = new Scanner(f, "utf-8");
+                Scanner scanner = new Scanner(f, StandardCharsets.UTF_8);
                 scanner.useDelimiter(":");
                 while (scanner.hasNextInt()) {
                     highscores.add(scanner.nextInt());
@@ -252,7 +253,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                 highscores = new ArrayList(highscores.subList(highscores.size() - 3, highscores.size()));
             }
 
-            Writer writer = new OutputStreamWriter(new FileOutputStream(f), "utf-8");
+            Writer writer = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8);
             for (int i : highscores)
                 writer.write(i + ":");
             writer.close();

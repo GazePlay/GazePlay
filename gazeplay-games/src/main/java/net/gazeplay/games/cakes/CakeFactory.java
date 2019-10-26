@@ -325,7 +325,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         double cakewidth = ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth();
 
         double Ypos = cake[currentCake]
-                .localToParent(((ImageView) cake[currentCake].getChildren().get(0)).localToParent(0, 0)).getY();
+                .localToParent(cake[currentCake].getChildren().get(0).localToParent(0, 0)).getY();
         double Yppos = Ypos + 7 * cakeheight / 8;
         Ypos = Ypos + 1.9 * cakeheight / 8;
 
@@ -347,16 +347,16 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
         Polygon spray = new Polygon();
         spray.getPoints()
-                .addAll(new Double[] { offset, 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
-                        dimension2D.getWidth() / 2 + cakewidth / 4, Ypos, dimension2D.getWidth() / 2 + cakewidth / 3,
-                        Yppos, dimension2D.getWidth() / 2 - cakewidth / 3, Yppos });
+                .addAll(offset, 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
+                    dimension2D.getWidth() / 2 + cakewidth / 4, Ypos, dimension2D.getWidth() / 2 + cakewidth / 3,
+                    Yppos, dimension2D.getWidth() / 2 - cakewidth / 3, Yppos);
 
         Polygon spray2 = new Polygon();
         spray2.getPoints()
-                .addAll(new Double[] { dimension2D.getWidth() - offset,
-                        9 * height / 11 + aerograph.localToParent(0, 0).getY(),
-                        dimension2D.getWidth() / 2 - cakewidth / 4, Ypos, dimension2D.getWidth() / 2 - cakewidth / 3,
-                        Yppos, dimension2D.getWidth() / 2 + cakewidth / 3, Yppos });
+                .addAll(dimension2D.getWidth() - offset,
+                    9 * height / 11 + aerograph.localToParent(0, 0).getY(),
+                    dimension2D.getWidth() / 2 - cakewidth / 4, Ypos, dimension2D.getWidth() / 2 - cakewidth / 3,
+                    Yppos, dimension2D.getWidth() / 2 + cakewidth / 3, Yppos);
 
         spray.setOpacity(0);
         spray2.setOpacity(0);
@@ -596,7 +596,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             if (i == 2) {
                 k = 4;
             }
-            ;
             cakeheight = 0;
             for (int j = 0; j < k; j++) {
                 ImageView cakemodel = new ImageView(new Image("data/cake/images/" + j + "" + model[i][j] + ".png"));

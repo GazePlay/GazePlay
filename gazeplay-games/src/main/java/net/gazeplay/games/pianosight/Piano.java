@@ -347,7 +347,7 @@ public class Piano extends Parent implements GameLifeCycle {
             @Override
             public void handle(Event e) {
                 log.info("index ={}", index);
-                if ((Color) TilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
+                if (TilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
                     TilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
                 }
 

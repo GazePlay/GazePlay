@@ -55,10 +55,10 @@ public class Math101 implements GameLifeCycle {
         @Getter
         private final String gameName;
         private final Color backgroundColor;
-        private final String operators[];
-        private final int variations[];
+        private final String[] operators;
+        private final int[] variations;
 
-        Math101GameType(String gameName, Color coulour, String operators, int variations[]) {
+        Math101GameType(String gameName, Color coulour, String operators, int[] variations) {
             this.gameName = gameName;
             this.backgroundColor = coulour;
             this.operators = operators.split(",");
@@ -79,7 +79,7 @@ public class Math101 implements GameLifeCycle {
     private final int nbLines;
     private final int nbColumns;
     private final int maxValue;
-    private final int maxVariant[];
+    private final int[] maxVariant;
 
     private final String[] operators;
 

@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,7 +48,7 @@ public class Utils {
 
     private static String loadLicenseFileAsString(ClassLoader classLoader) {
         try (InputStream is = classLoader.getResourceAsStream("data/common/licence.txt")) {
-            return IOUtils.toString(is, Charset.forName("UTF-8"));
+            return IOUtils.toString(is, StandardCharsets.UTF_8);
         } catch (Exception e) {
             return "Failed to load the license file";
         }

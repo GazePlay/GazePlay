@@ -164,7 +164,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                     // log.info("child : "+child+" added !");
                     addEventFilter(child);
                 }
-                ;
                 // log.info("child : "+child+" fired !");
                 GazeInfos gi = shapesEventFilter.get(new IdentityKey<>(child));
                 if (gi != null) {

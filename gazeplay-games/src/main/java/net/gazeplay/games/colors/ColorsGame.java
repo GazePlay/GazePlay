@@ -212,7 +212,7 @@ public class ColorsGame implements GameLifeCycle {
 
         // When size will be calculated, update size of rectangle, but do this only
         // once
-        ChangeListener listener = (ChangeListener) new ChangeListener() {
+        ChangeListener listener = new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 updateRectangle();
@@ -512,7 +512,7 @@ public class ColorsGame implements GameLifeCycle {
         int pixelY = (int) (y * writableImg.getHeight() / rectangle.getHeight());
         // log.info("pixel at x= {}, y = {}", pixelX, pixelY);
 
-        Color color = pixelReader.getColor((int) pixelX, (int) pixelY);
+        Color color = pixelReader.getColor(pixelX, pixelY);
         // log.info("R = {}, G = {}, B = {}, A = {}", color.getRed(), color.getGreen(), color.getBlue(),
         // color.getOpacity());
 

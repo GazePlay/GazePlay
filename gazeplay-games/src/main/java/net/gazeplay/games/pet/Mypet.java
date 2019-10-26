@@ -50,7 +50,7 @@ public class Mypet extends Pane {
     private final double hratio;
     private final double wratio;
 
-    private int eatingBool = 10;;
+    private int eatingBool = 10;
 
     private boolean[] eyeTouched = { false, false };
     private boolean bodyTouched = false;

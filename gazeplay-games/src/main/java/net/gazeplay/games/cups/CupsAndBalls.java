@@ -24,7 +24,7 @@ public class CupsAndBalls implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     private Ball ball;
-    private Cup cups[];
+    private Cup[] cups;
     private int nbCups;
     private final int nbLines;
     private final int nbColumns;

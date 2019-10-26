@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -374,7 +375,7 @@ public class BackgroundMusicManager {
         // the local cache filename is a Base64 encoding of the URL
         // so that we avoid name clash,
         // and so that we have the same local file for the same resource URL
-        final Charset utf8 = Charset.forName("UTF-8");
+        final Charset utf8 = StandardCharsets.UTF_8;
         byte[] encodedUrl = Base64.getEncoder().encode(resourceUrlExternalForm.getBytes(utf8));
         final String localCacheFileName = new String(encodedUrl, utf8);
 
@@ -464,12 +465,8 @@ public class BackgroundMusicManager {
     public static String getMusicTitle(final String musicPath) {
 
         String title = "unknown";
-        try {
-            String decodedUri = URLDecoder.decode(musicPath, "UTF-8");
-            title = FilenameUtils.getBaseName(decodedUri);
-        } catch (UnsupportedEncodingException ex) {
-            log.warn("Wrong format to get music title: {}", musicPath, ex);
-        }
+        String decodedUri = URLDecoder.decode(musicPath, StandardCharsets.UTF_8);
+        title = FilenameUtils.getBaseName(decodedUri);
 
         return title;
     }
