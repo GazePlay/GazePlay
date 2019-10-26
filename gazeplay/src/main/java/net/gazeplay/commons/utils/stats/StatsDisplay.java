@@ -18,7 +18,7 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.StatsContext;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.games.bubbles.BubblesGamesStats;
+import net.gazeplay.stats.ShootGamesStats;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -70,9 +70,7 @@ public class StatsDisplay {
         // populating the series with data
 
         final List<Long> shoots;
-        if (stats instanceof BubblesGamesStats) {
-            shoots = stats.getSortedDurationsBetweenGoals();
-        } else if (stats instanceof ShootGamesStats) {
+        if (stats instanceof ShootGamesStats) {
             shoots = stats.getSortedDurationsBetweenGoals();
         } else {
             shoots = stats.getOriginalDurationsBetweenGoals();
@@ -191,7 +189,7 @@ public class StatsDisplay {
         SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
         savedStatsInfo.addObserver((o, arg) -> {
             Platform.runLater(
-                    () -> gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString())));
+                () -> gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString())));
         });
 
         gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString()));
@@ -218,7 +216,7 @@ public class StatsDisplay {
     }
 
     private static EventHandler<Event> createZoomOutAreaChartEventHandler(XYChart<Number, Number> chart,
-            final Region root, int originalIndexInParent) {
+                                                                          final Region root, int originalIndexInParent) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -235,7 +233,7 @@ public class StatsDisplay {
     }
 
     private static EventHandler<Event> createZoomOutLineChartEventHandler(XYChart<String, Number> chart,
-            final Region root, int originalIndexInParent) {
+                                                                          final Region root, int originalIndexInParent) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -252,7 +250,7 @@ public class StatsDisplay {
     }
 
     private static EventHandler<Event> createZoomInAreaChartEventHandler(XYChart<Number, Number> chart,
-            final Region root) {
+                                                                         final Region root) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -263,13 +261,13 @@ public class StatsDisplay {
                 zoomInAndCenter(chart, chart.getWidth(), chart.getHeight(), false);
 
                 chart.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOutAreaChartEventHandler(chart, root, originalIndexInParent));
+                    createZoomOutAreaChartEventHandler(chart, root, originalIndexInParent));
             }
         };
     }
 
     private static EventHandler<Event> createZoomInLineChartEventHandler(XYChart<String, Number> chart,
-            final Region root) {
+                                                                         final Region root) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -280,13 +278,13 @@ public class StatsDisplay {
                 zoomInAndCenter(chart, chart.getWidth(), chart.getHeight(), false);
 
                 chart.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOutLineChartEventHandler(chart, root, originalIndexInParent));
+                    createZoomOutLineChartEventHandler(chart, root, originalIndexInParent));
             }
         };
     }
 
     private static EventHandler<Event> createZoomOutGazeMetricsEventHandler(ImageView gazeMetrics, final Region root,
-            int originalIndexInParent) {
+                                                                            int originalIndexInParent) {
         return new EventHandler<Event>() {
             @Override
             public void handle(Event e) {
@@ -297,7 +295,7 @@ public class StatsDisplay {
                 resetToOriginalIndexInParent(gazeMetrics, originalIndexInParent);
 
                 gazeMetrics.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomInGazeMetricsEventHandler(gazeMetrics, root));
+                    createZoomInGazeMetricsEventHandler(gazeMetrics, root));
             }
         };
     }
@@ -313,7 +311,7 @@ public class StatsDisplay {
                 zoomInAndCenter(gazeMetrics, gazeMetrics.getFitWidth(), gazeMetrics.getFitHeight(), true);
 
                 gazeMetrics.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        createZoomOutGazeMetricsEventHandler(gazeMetrics, root, originalIndexInParent));
+                    createZoomOutGazeMetricsEventHandler(gazeMetrics, root, originalIndexInParent));
             }
         };
     }

@@ -453,7 +453,7 @@ public class Stats implements GazeMotionListener {
         return nameOfVideo;
     }
 
-    File createInfoStatsFile() {
+    protected File createInfoStatsFile() {
         File outputDirectory = getGameStatsOfTheDayDirectory();
 
         final String fileName = Utils.now() + "-info-game.csv";
@@ -461,7 +461,7 @@ public class Stats implements GazeMotionListener {
         return new File(outputDirectory, fileName);
     }
 
-    File getGameStatsOfTheDayDirectory() {
+    protected File getGameStatsOfTheDayDirectory() {
         File statsDirectory = new File(Utils.getUserStatsFolder(Configuration.getInstance().getUserName()));
         File gameDirectory = new File(statsDirectory, gameName);
         File todayDirectory = new File(gameDirectory, Utils.today());
@@ -471,7 +471,7 @@ public class Stats implements GazeMotionListener {
         return todayDirectory;
     }
 
-    void printLengthBetweenGoalsToString(PrintWriter out) {
+    protected void printLengthBetweenGoalsToString(PrintWriter out) {
         this.roundsDurationReport.printLengthBetweenGoalsToString(out);
     }
 

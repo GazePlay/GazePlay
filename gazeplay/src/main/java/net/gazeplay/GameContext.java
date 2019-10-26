@@ -35,10 +35,12 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.RandomPositionGenerator;
+
 import java.io.IOException;
 
 @Slf4j
-public class GameContext extends GraphicalContext<Pane> {
+public class GameContext extends GraphicalContext<Pane> implements IGameContext {
 
     public static boolean menuOpen = false;
 
@@ -461,6 +463,17 @@ public class GameContext extends GraphicalContext<Pane> {
         gazePlay.onDisplayStats(statsContext);
     }
 
+    @Override
+    public Stage getPrimaryStage() {
+        return getGazePlay().getPrimaryStage();
+    }
+    
+    @Override
+    public Scene getPrimaryScene() {
+        return getGazePlay().getPrimaryScene();
+    }
+
+    @Override
     public void showRoundStats(Stats stats, GameLifeCycle currentGame) throws IOException {
         stats.stop();
 
@@ -492,6 +505,7 @@ public class GameContext extends GraphicalContext<Pane> {
         stats.reset();
     }
 
+    @Override
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
         getChildren().add(bravo);
         bravo.toFront();
@@ -499,8 +513,14 @@ public class GameContext extends GraphicalContext<Pane> {
         bravo.playWinTransition(root, delay, onFinishedEventHandler);
     }
 
+    @Override
     public void endWinTransition() {
         getChildren().remove(bravo);
+    }
+    
+    @Override
+    public Translator getTranslator() {
+        return getGazePlay().getTranslator();
     }
 
     @Override

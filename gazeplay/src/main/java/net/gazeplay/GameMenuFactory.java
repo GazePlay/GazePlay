@@ -25,7 +25,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.CssUtil;
+import net.gazeplay.components.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -55,7 +55,7 @@ public class GameMenuFactory {
         @NonNull final GameSpec gameSpec,
         @NonNull final GameButtonOrientation orientation,
         @NonNull final GazeDeviceManager gazeDeviceManager,
-        @NonNull final boolean isFavorite
+        final boolean isFavorite
     ) {
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
