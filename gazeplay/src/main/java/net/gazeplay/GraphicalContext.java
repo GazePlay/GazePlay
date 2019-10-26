@@ -20,10 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Screen;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NButton;
@@ -32,15 +29,9 @@ import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.utils.MarqueeText;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
-@Data
 @Slf4j
+@RequiredArgsConstructor
 public abstract class GraphicalContext<T extends Parent> {
-
-    @Getter
-    private final GazePlay gazePlay;
-
-    @Getter
-    protected final T root;
 
     public static final String RESOURCES_PATH = "data" + "/" + "common";
     public static final String IMAGES_PATH = RESOURCES_PATH + "/" + "images";
@@ -92,6 +83,13 @@ public abstract class GraphicalContext<T extends Parent> {
      */
     public static boolean firstMusicSetUp = true;
 
+
+    @Getter
+    private final GazePlay gazePlay;
+
+    @Getter
+    protected final T root;
+    
     /**
      * Fields with listeners from music controler. When need those because when the volume controle is not on stage
      * (i.e. when configuration is shown), it doesn't receive any event from listener (no idea why). Then when it comes

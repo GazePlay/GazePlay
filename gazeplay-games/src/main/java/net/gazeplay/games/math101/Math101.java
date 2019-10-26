@@ -3,25 +3,20 @@ package net.gazeplay.games.math101;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.IGameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.ImageLibrary;
-import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
@@ -48,14 +43,14 @@ public class Math101 implements GameLifeCycle {
     private static Color pastelBlue = Color.rgb(227, 227, 255);
 
     public enum Math101GameType {
-        ADDITION("math-101-addition", pastelBlue, "+", new int[] { 8, 12, 20 }), SUBTRACTIONPOS(
-                "math-101-subtraction-pos", pastelBlue, "-", new int[] { 8, 12, 20 }), MULTIPLICATION(
-                        "math-101-multiplication", pastelGreen, "*", new int[] { 3, 5, 7, 9, 11, 12 }), DIVISION(
-                                "math-101-division", pastelGreen, "/", new int[] { 10, 15, 20, 30 }), ADDSUB(
-                                        "math-101-addition-subtraction", light_pastelRed, "+,-",
-                                        new int[] { 8, 12, 20 }), MULTDIV("math-101-multiplication-division", pastelRed,
-                                                "*,/", new int[] { 5, 10, 15, 20, 30 }), MATHALL("math-101-all",
-                                                        pastelRed, "+,-,/,*", new int[] { 5, 10, 15, 20 });
+        ADDITION("math-101-addition", pastelBlue, "+", new int[]{8, 12, 20}), SUBTRACTIONPOS(
+            "math-101-subtraction-pos", pastelBlue, "-", new int[]{8, 12, 20}), MULTIPLICATION(
+            "math-101-multiplication", pastelGreen, "*", new int[]{3, 5, 7, 9, 11, 12}), DIVISION(
+            "math-101-division", pastelGreen, "/", new int[]{10, 15, 20, 30}), ADDSUB(
+            "math-101-addition-subtraction", light_pastelRed, "+,-",
+            new int[]{8, 12, 20}), MULTDIV("math-101-multiplication-division", pastelRed,
+            "*,/", new int[]{5, 10, 15, 20, 30}), MATHALL("math-101-all",
+            pastelRed, "+,-,/,*", new int[]{5, 10, 15, 20});
 
         @Getter
         private final String gameName;
@@ -310,8 +305,7 @@ public class Math101 implements GameLifeCycle {
                 double positionX = computePositionX(boxWidth, cardWidth, currentColumnIndex);
                 double positionY = computePositionY(boxHeight, cardHeight, currentLineIndex);
 
-                Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue,
-                        gameContext, stats, this, fixationlength);
+                Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue, gameContext, stats, this, fixationlength);
 
                 result.add(card);
                 currentCardIndex++;

@@ -36,7 +36,7 @@ public class ScreenCake extends LinkedList {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         for (int i = 0; i < 6; i++) { // HomePage of the game
             ProgressButton bt = new ProgressButton();
-            bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
+            bt.getButton().setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
             bt.setLayoutX((i + 1) * dimension2D.getWidth() / 6 - buttonSize / 2);
@@ -56,7 +56,7 @@ public class ScreenCake extends LinkedList {
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
         bt.setImage(iv);
-        bt.button.setRadius(buttonSize / 2);
+        bt.getButton().setRadius(buttonSize / 2);
         bt.assignIndicator(buttonHandler, cakef.getFixationLength());
         bt.active();
         cakef.getButtons()[i] = bt;
@@ -65,7 +65,7 @@ public class ScreenCake extends LinkedList {
         }
         ;
         this.add(bt);
-        gameContext.getGazeDeviceManager().addEventFilter(bt.button);
+        gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());
 
     }
 
@@ -76,7 +76,7 @@ public class ScreenCake extends LinkedList {
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
         bt.setImage(iv);
-        bt.button.setRadius(buttonSize / 2);
+        bt.getButton().setRadius(buttonSize / 2);
         bt.setLayoutX(dimension2D.getWidth() - buttonSize);
         bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
         buttonHandler = new EventHandler<Event>() {
@@ -89,7 +89,7 @@ public class ScreenCake extends LinkedList {
         bt.active();
         cakef.getButtons()[i] = bt;
         this.add(bt);
-        gameContext.getGazeDeviceManager().addEventFilter(bt.button);
+        gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());
     }
 
     public EventHandler<Event> createprogessButtonHandler(int i, CakeFactory cakef) {

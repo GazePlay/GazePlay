@@ -42,24 +42,19 @@ import java.io.IOException;
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
 
+    private static final double BUTTON_MIN_HEIGHT = 64;
+    
     public static boolean menuOpen = false;
-
-    @Getter
-    private static String currentLanguage;
-
-    @Getter
-    private static Translator translator;
 
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
-
-    private static final double BUTTON_MIN_HEIGHT = 64;
-
+    
+    @Getter
+    private Translator translator;
+    
     private Slider getSpeedSlider;
 
     public static GameContext newInstance(GazePlay gazePlay) {
-        translator = gazePlay.getTranslator();
-        currentLanguage = gazePlay.getTranslator().currentLanguage();
 
         Pane root = new Pane();
 
@@ -173,8 +168,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
         GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
-
-        currentLanguage = gazePlay.getTranslator().currentLanguage();
 
         return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
                 randomPositionGenerator, gazeDeviceManager, root2);
@@ -516,11 +509,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Override
     public void endWinTransition() {
         getChildren().remove(bravo);
-    }
-    
-    @Override
-    public Translator getTranslator() {
-        return getGazePlay().getTranslator();
     }
 
     @Override

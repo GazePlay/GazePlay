@@ -13,24 +13,25 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
-@Data
 @Slf4j
 public class ProgressButton extends StackPane {
 
-    public Circle button;
-    ProgressIndicator indicator;
-    Timeline timelineProgressBar;
-    double buttonWidth;
-    double buttonHeight;
-    EventHandler<Event> enterbuttonHandler;
-    EventHandler<Event> exitbuttonHandler;
-    boolean inuse = false;
+    @Getter
+    private Circle button;
+    private ProgressIndicator indicator;
+    private Timeline timelineProgressBar;
+    private double buttonWidth;
+    private double buttonHeight;
+    private EventHandler<Event> enterbuttonHandler;
+    private EventHandler<Event> exitbuttonHandler;
+    private boolean inuse = false;
 
-    ImageView image;
+    @Getter
+    private ImageView image;
 
     public ProgressButton() {
         super();
@@ -119,7 +120,7 @@ public class ProgressButton extends StackPane {
                     timelineProgressBar.setDelay(new Duration(300));
 
                     timelineProgressBar.getKeyFrames().add(
-                            new KeyFrame(new Duration(fixationLength), new KeyValue(indicator.progressProperty(), 1)));
+                        new KeyFrame(new Duration(fixationLength), new KeyValue(indicator.progressProperty(), 1)));
 
                     timelineProgressBar.onFinishedProperty().set(new EventHandler<ActionEvent>() {
                         @Override

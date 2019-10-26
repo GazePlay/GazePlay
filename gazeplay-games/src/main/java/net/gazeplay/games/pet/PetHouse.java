@@ -390,7 +390,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         double buttonSize = dimension2D.getHeight() / 4;
         for (int i = 0; i < 4; i++) {
             ProgressButton bt = new ProgressButton();
-            bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
+            bt.getButton().setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
             ImageView iv = new ImageView(new Image("data/pet/images/menu" + i + ".png"));
@@ -398,7 +398,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             iv.setFitWidth(2 * buttonSize / 3);
             iv.setPreserveRatio(true);
             bt.setImage(iv);
-            bt.button.setRadius(buttonSize / 2);
+            bt.getButton().setRadius(buttonSize / 2);
             bt.setLayoutY((((i % 2) + 1) * (dimension2D.getHeight() / 2.5)) - (buttonSize * 1.5));
 
             EventHandler<Event> buttonHandler = createprogessButtonHandler(i);
@@ -412,7 +412,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             bt.assignIndicator(buttonHandler, Configuration.getInstance().getFixationLength());
             bt.active();
             this.getChildren().add(bt);
-            gameContext.getGazeDeviceManager().addEventFilter(bt.button);
+            gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());
             bt.toFront();
         }
     }

@@ -43,7 +43,6 @@ import java.util.SortedSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@Data
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 

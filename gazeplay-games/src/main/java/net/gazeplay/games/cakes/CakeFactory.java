@@ -429,7 +429,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         // Other pages
         for (int i = 0; i < k; i++) { // HomePage of the game
             ProgressButton bt = new ProgressButton();
-            bt.button.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
+            bt.getButton().setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                     + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                     + "-fx-max-height: " + buttonSize + "px;");
             if (i < k - 1) {
@@ -449,7 +449,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         ImageView iv = new ImageView(new Image("data/cake/images/" + (j - 1) + "" + (i + 1) + ".png"));
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
-        bt.button.setRadius(buttonSize / 2);
+        bt.getButton().setRadius(buttonSize / 2);
         bt.setImage(iv);
         buttonHandler = new EventHandler<Event>() {
             @Override
@@ -463,7 +463,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         };
         bt.assignIndicator(buttonHandler, fixationLength);
         bt.active();
-        gameContext.getGazeDeviceManager().addEventFilter(bt.button);
+        gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());
         p[j].add(bt);
     }
 
@@ -472,7 +472,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         ImageView iv = new ImageView(new Image("data/cake/images/return.png"));
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
-        bt.button.setRadius(buttonSize / 2);
+        bt.getButton().setRadius(buttonSize / 2);
         bt.setImage(iv);
         bt.setLayoutX(dimension2D.getWidth() - buttonSize);
         bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
@@ -496,7 +496,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         };
         bt.assignIndicator(buttonHandler, fixationLength);
         bt.active();
-        gameContext.getGazeDeviceManager().addEventFilter(bt.button);
+        gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());
         p[j].add(bt);
     }
 
