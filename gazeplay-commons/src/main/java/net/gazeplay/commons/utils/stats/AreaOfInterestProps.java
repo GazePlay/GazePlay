@@ -1,9 +1,7 @@
 package net.gazeplay.commons.utils.stats;
 
 import javafx.geometry.Point2D;
-import javafx.scene.layout.GridPane;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class AreaOfInterestProps {

@@ -2,7 +2,6 @@ package net.gazeplay.games.mediaPlayer;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.IGameContext;
 
 @Slf4j
 public class MediaFile {

@@ -2,8 +2,8 @@ package net.gazeplay.games.math101;
 
 import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
-import net.gazeplay.GameSummary;
 import net.gazeplay.GameSpecSource;
+import net.gazeplay.GameSummary;
 
 public class Math101GameSpecSource implements GameSpecSource {
     @Override

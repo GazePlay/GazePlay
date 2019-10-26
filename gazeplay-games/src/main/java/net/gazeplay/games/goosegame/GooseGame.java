@@ -33,7 +33,6 @@ import net.gazeplay.components.Position;
 import net.gazeplay.components.ProgressButton;
 
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;

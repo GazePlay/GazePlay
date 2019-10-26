@@ -29,10 +29,10 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
-import net.gazeplay.components.CssUtil;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.components.CssUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;

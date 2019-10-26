@@ -5,8 +5,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
-import net.gazeplay.IGameContext;
 import net.gazeplay.GameLifeCycle;
+import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**

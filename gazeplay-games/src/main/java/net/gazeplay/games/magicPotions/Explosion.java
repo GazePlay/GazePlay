@@ -1,9 +1,9 @@
 package net.gazeplay.games.magicPotions;
 
+import javafx.geometry.Dimension2D;
+import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.image.Image;
-import javafx.geometry.Dimension2D;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;

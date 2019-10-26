@@ -4,7 +4,6 @@ import javafx.animation.*;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 public class Boss extends Rectangle {
     @Getter

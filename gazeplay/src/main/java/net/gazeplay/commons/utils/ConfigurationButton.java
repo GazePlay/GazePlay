@@ -2,9 +2,7 @@ package net.gazeplay.commons.utils;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.ConfigurationContext;
 

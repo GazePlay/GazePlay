@@ -2,8 +2,8 @@ package net.gazeplay.games.horses;
 
 import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
-import net.gazeplay.GameSummary;
 import net.gazeplay.GameSpecSource;
+import net.gazeplay.GameSummary;
 
 public class HorsesSimplifiedGameSpecSource implements GameSpecSource {
     @Override

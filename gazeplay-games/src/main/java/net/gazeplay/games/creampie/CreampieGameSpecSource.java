@@ -2,8 +2,8 @@ package net.gazeplay.games.creampie;
 
 import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
-import net.gazeplay.GameSummary;
 import net.gazeplay.GameSpecSource;
+import net.gazeplay.GameSummary;
 
 public class CreampieGameSpecSource implements GameSpecSource {
     @Override
