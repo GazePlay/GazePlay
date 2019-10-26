@@ -219,15 +219,16 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                                     ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(indicator);
                                     break;
                             }
-                            ((GameButtonPane) e.getSource()).setTimelineProgressBar(new Timeline());
+                            final Timeline timelineProgressBar = new Timeline();
+                            ((GameButtonPane) e.getSource()).setTimelineProgressBar(timelineProgressBar);
 
-                            ((GameButtonPane) e.getSource()).getTimelineProgressBar().setDelay(new Duration(500));
+                            timelineProgressBar.setDelay(new Duration(500));
 
-                            ((GameButtonPane) e.getSource()).getTimelineProgressBar().getKeyFrames()
+                            timelineProgressBar.getKeyFrames()
                                 .add(new KeyFrame(new Duration(config.getFixationLength()),
                                     new KeyValue(indicator.progressProperty(), 1)));
 
-                            ((GameButtonPane) e.getSource()).getTimelineProgressBar().onFinishedProperty()
+                            timelineProgressBar.onFinishedProperty()
                                 .set(new EventHandler<ActionEvent>() {
                                     @Override
                                     public void handle(ActionEvent actionEvent) {
@@ -242,7 +243,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                                         ((GameButtonPane) e.getSource()).getEventhandler().handle(null);
                                     }
                                 });
-                            ((GameButtonPane) e.getSource()).getTimelineProgressBar().play();
+                            timelineProgressBar.play();
                         }
                     }
                 }

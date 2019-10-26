@@ -130,7 +130,7 @@ public abstract class GraphicalContext<T extends Parent> {
             }
         };
 
-        I18NButton button = new I18NButton(gazePlay.getTranslator(), null);
+        I18NButton button = new I18NButton(gazePlay.getTranslator(), (String[]) null);
         configureFullScreenToggleButton(gazePlay.isFullScreen(), button);
 
         gazePlay.getFullScreenProperty().addListener(new ChangeListener<Boolean>() {
