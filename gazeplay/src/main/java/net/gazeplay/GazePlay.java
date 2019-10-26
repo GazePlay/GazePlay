@@ -67,9 +67,11 @@ public class GazePlay extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
 
+        LatestNewPopup.displayIfNeeded();
+
         String iconUrl = "data/common/images/gazeplayicon.png";
         Image icon = findApplicationIcon(iconUrl);
-        
+
         if (icon != null)
             this.primaryStage.getIcons().add(icon);
 
@@ -89,10 +91,8 @@ public class GazePlay extends Application {
 
         homeMenuScreen = HomeMenuScreen.newInstance(this, config);
 
-        new OpeningPopUp();
-
         this.primaryScene = new Scene(homeMenuScreen.getRoot(), primaryStage.getWidth(), primaryStage.getHeight(),
-                Color.BLACK);
+            Color.BLACK);
 
         CssUtil.setPreferredStylesheets(config, primaryScene);
 
@@ -227,9 +227,9 @@ public class GazePlay extends Application {
             log.debug("findApplicationIcon : icon not be found at location : {}", iconLocation);
 
             File iconImageDirectory = ImageDirectoryLocator
-                    .locateImagesDirectoryInUnpackedDistDirectory(
-                            "data/common/images/");
-            if(iconImageDirectory != null) {
+                .locateImagesDirectoryInUnpackedDistDirectory(
+                    "data/common/images/");
+            if (iconImageDirectory != null) {
                 try {
                     String filePath = iconImageDirectory.getCanonicalPath() + Utils.FILESEPARATOR + "gazeplayicon.png";
                     log.debug("findApplicationIcon : looking for icon at location = " + filePath);

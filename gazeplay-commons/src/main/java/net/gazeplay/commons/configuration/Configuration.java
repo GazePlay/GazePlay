@@ -48,6 +48,8 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
     private static final String PROPERTY_NAME_VIDEO_FOLDER = "VIDEO_FOLDER";
 
+    private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
+
     private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
     private static final String PROPERTY_NAME_HIDDEN_CATEGORIES = "HIDDEN_CATEGORIES";
 
@@ -142,6 +144,9 @@ public class Configuration implements Cloneable {
 
     @Getter
     private final SimpleSetProperty<String> hiddenCategoriesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_HIDDEN_CATEGORIES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
+
+    @Getter
+    private final LongProperty latestNewsPopupShownTime = new SimpleLongProperty(this, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0);
 
     @Getter
     protected final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
@@ -440,6 +445,15 @@ public class Configuration implements Cloneable {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
             hiddenCategoriesProperty.get().addAll(values);
         }
+
+        buffer = prop.getProperty(PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME);
+        if (buffer != null) {
+            try {
+                latestNewsPopupShownTime.setValue(Long.parseLong(buffer));
+            } catch (NumberFormatException e) {
+                log.warn("Malformed property");
+            }
+        }
     }
 
     public Properties toProperties() {
@@ -495,6 +509,8 @@ public class Configuration implements Cloneable {
 
         properties.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         properties.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
+
+        properties.setProperty(PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, Long.toString(latestNewsPopupShownTime.getValue()));
 
         return properties;
     }

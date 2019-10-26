@@ -10,19 +10,12 @@ import net.gazeplay.commons.utils.games.Utils;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Enumeration;
 import java.util.concurrent.ThreadFactory;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 @Slf4j
 public class GazePlayLauncher {
-
-    private static final String artifactId = "gazeplay";
 
     @Setter
     public static boolean doStartBootstrapThread = true;
@@ -38,12 +31,7 @@ public class GazePlayLauncher {
 
                 SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
 
-                String versionInfo;
-                try {
-                    versionInfo = findVersionInfo(artifactId);
-                } catch (IOException e) {
-                    throw new RuntimeException("Failed to load the version info", e);
-                }
+                final String versionInfo = VersionInfo.findVersionInfo();
 
                 for (int i = 0; i < 5; i++) {
                     log.info("***********************");
@@ -75,7 +63,7 @@ public class GazePlayLauncher {
                 Runnable runnable = () -> Application.launch(GazePlay.class, args);
 
                 ThreadFactory threadFactory = new CustomThreadFactory("javafx-bootsrap",
-                        new GroupingThreadFactory("javafx-bootsrap-group"));
+                    new GroupingThreadFactory("javafx-bootsrap-group"));
                 Thread bootstrapThread = threadFactory.newThread(runnable);
 
                 if (doStartBootstrapThread) {
@@ -91,26 +79,9 @@ public class GazePlayLauncher {
         };
 
         ThreadFactory threadFactory = new CustomThreadFactory("application-bootsrap",
-                new GroupingThreadFactory("application-bootsrap-group"));
+            new GroupingThreadFactory("application-bootsrap-group"));
         Thread bootstrapThread = threadFactory.newThread(runnable);
         bootstrapThread.start();
-    }
-
-    private static String findVersionInfo(String applicationName) throws IOException {
-        Enumeration<URL> resources = Thread.currentThread().getContextClassLoader()
-                .getResources("META-INF/MANIFEST.MF");
-        while (resources.hasMoreElements()) {
-            URL manifestUrl = resources.nextElement();
-            Manifest manifest = new Manifest(manifestUrl.openStream());
-            Attributes mainAttributes = manifest.getMainAttributes();
-            String implementationTitle = mainAttributes.getValue("Implementation-Title");
-            if (implementationTitle != null && implementationTitle.equals(applicationName)) {
-                String implementationVersion = mainAttributes.getValue("Implementation-Version");
-                String buildTime = mainAttributes.getValue("Build-Time");
-                return implementationVersion + " (" + buildTime + ")";
-            }
-        }
-        return "Current Version";
     }
 
 }
