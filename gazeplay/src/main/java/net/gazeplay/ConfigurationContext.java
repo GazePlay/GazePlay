@@ -38,6 +38,7 @@ import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 
 import java.io.File;
@@ -46,8 +47,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -62,9 +62,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static Translator translator;
 
-    private static Boolean ALIGN_LEFT = true;
-
-    private static String currentLanguage;
+    private static boolean currentLanguageAlignementIsLeftAligned = true;
 
     public static ConfigurationContext newInstance(GazePlay gazePlay) {
         BorderPane root = new BorderPane();
@@ -77,12 +75,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         translator = gazePlay.getTranslator();
 
-        currentLanguage = translator.currentLanguage();
-
-        // Align right for Arabic Language
-        if (currentLanguage.equals("ara")) {
-            ALIGN_LEFT = false;
-        }
+        String currentLanguage = translator.currentLanguage();
+        LanguageDetails languageDetails = Languages.getLanguage(currentLanguage);
+        currentLanguageAlignementIsLeftAligned = languageDetails.isLeftAligned();
 
         // Bottom Pane
         HomeButton homeButton = createHomeButtonInConfigurationManagementScreen(gazePlay);
@@ -90,7 +85,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
         rightControlPane.setAlignment(Pos.CENTER_RIGHT);
-        if (ALIGN_LEFT) {
+        if (currentLanguageAlignementIsLeftAligned) {
             rightControlPane.getChildren().add(homeButton);
         }
 
@@ -98,7 +93,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.setAlignment(Pos.CENTER_LEFT);
         // HomeButton on the Left for Arabic Language
-        if (!ALIGN_LEFT) {
+        if (!currentLanguageAlignementIsLeftAligned) {
             leftControlPane.getChildren().add(homeButton);
         }
 
@@ -115,7 +110,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         configTitleText.setTextAlignment(TextAlignment.CENTER);
 
         // Arabic title alignment
-        if (!ALIGN_LEFT) {
+        if (!currentLanguageAlignementIsLeftAligned) {
             root.setAlignment(configTitleText, Pos.BOTTOM_RIGHT);
         }
 
@@ -135,7 +130,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         centerCenterPane.setSpacing(40);
         centerCenterPane.setAlignment(Pos.TOP_CENTER);
         // Arabic title alignment
-        if (!ALIGN_LEFT) {
+        if (!currentLanguageAlignementIsLeftAligned) {
             gridPane.setAlignment(Pos.TOP_RIGHT);
         } else {
             gridPane.setAlignment(Pos.TOP_LEFT);
@@ -147,7 +142,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         root.setCenter(centerCenterPane);
 
         root.setStyle(
-                "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+            "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
     }
 
@@ -371,7 +366,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         label.setId("item");
         // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
 
-        if (ALIGN_LEFT) {
+        if (currentLanguageAlignementIsLeftAligned) {
             grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
             grid.add(input, COLUMN_INDEX_INPUT_LEFT, currentRowIndex);
 
@@ -388,7 +383,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static ChoiceBox<Double> buildFixLengthChooserMenu(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                               ConfigurationContext configurationContext) {
 
         ChoiceBox<Double> choiceBox = new ChoiceBox<>();
 
@@ -410,7 +405,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
                 final int newPropertyValue = (int) (1000
-                        * (double) choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
+                    * (double) choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
 
                 configuration.getFixationlengthProperty().setValue(newPropertyValue);
                 configuration.saveConfigIgnoringExceptions();
@@ -422,7 +417,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static ChoiceBox<Double> buildQuestionLengthChooserMenu(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                                    ConfigurationContext configurationContext) {
 
         ChoiceBox<Double> choiceBox = new ChoiceBox<>();
 
@@ -444,7 +439,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
                 final int newPropertyValue = (int) (1000
-                        * (double) choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
+                    * (double) choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
 
                 configuration.getQuestionLengthProperty().setValue(newPropertyValue);
                 configuration.saveConfigIgnoringExceptions();
@@ -459,7 +454,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
      * Function to use to permit to user to select between several theme
      */
     private static ChoiceBox<BuiltInUiTheme> buildStyleThemeChooser(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                                    ConfigurationContext configurationContext) {
         ChoiceBox<BuiltInUiTheme> themesBox = new ChoiceBox<>();
 
         final String cssfile = configuration.getCssFile();
@@ -490,7 +485,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         themesBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BuiltInUiTheme>() {
             @Override
             public void changed(ObservableValue<? extends BuiltInUiTheme> observable, BuiltInUiTheme oldValue,
-                    BuiltInUiTheme newValue) {
+                                BuiltInUiTheme newValue) {
                 String newPropertyValue = newValue.getPreferredConfigPropertyValue();
 
                 configuration.getCssfileProperty().setValue(newPropertyValue);
@@ -516,7 +511,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
      * Function to use to permit to user to choose his/her own css file
      */
     private static Button buildStyleFileChooser(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                ConfigurationContext configurationContext) {
 
         Button buttonLoad = new Button(configuration.getCssFile());
 
@@ -595,12 +590,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static Node buildWhereIsItDirectoryChooser(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                       ConfigurationContext configurationContext) {
 
         final HBox pane = new HBox(5);
 
         // Arabic Alignment
-        if (!ALIGN_LEFT) {
+        if (!currentLanguageAlignementIsLeftAligned) {
             pane.setAlignment(Pos.BASELINE_RIGHT);
         }
 
@@ -645,26 +640,21 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static MenuButton buildLanguageChooser(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                   ConfigurationContext configurationContext) {
 
         String currentCodeLanguage = configuration.getLanguage();
+        LanguageDetails currentLanguageDetails = Languages.getLanguage(currentCodeLanguage);
 
-        String currentLanguage = Languages.getLanguage(currentCodeLanguage);
-
-        Image currentFlag = new Image(Languages.getFlags(currentCodeLanguage).get(0));
+        Image currentFlag = new Image(currentLanguageDetails.getFlags().get(0));
         ImageView currentFlagImageView = new ImageView(currentFlag);
         currentFlagImageView.setPreserveRatio(true);
         currentFlagImageView.setFitHeight(25);
 
-        MenuButton LanguageBox = new MenuButton(currentLanguage, currentFlagImageView);
+        MenuButton languageBox = new MenuButton(currentLanguageDetails.getLabel(), currentFlagImageView);
 
-        ArrayList<String> CodeLanguages = Languages.getCodes();
+        for (LanguageDetails language : Languages.getAllLanguageDetails()) {
 
-        CodeLanguages.sort(Comparator.comparing(String::toString));
-
-        for (String codeLanguage : CodeLanguages) {
-
-            ArrayList<String> flags = Languages.getFlags(codeLanguage);
+            List<String> flags = language.getFlags();
 
             for (String flag : flags) {
 
@@ -673,62 +663,52 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 imageView.setPreserveRatio(true);
                 imageView.setFitHeight(25);
 
-                String language = Languages.getLanguage(codeLanguage);
 
-                MenuItem LanguagesItem = new MenuItem(language, imageView);
+                MenuItem LanguagesItem = new MenuItem(language.getLabel(), imageView);
 
                 LanguagesItem.setOnAction(eventMenuLanguages -> {
 
-                    configuration.getLanguageProperty().setValue(codeLanguage);
+                    configuration.getLanguageProperty().setValue(language.getCode());
 
                     configuration.saveConfigIgnoringExceptions();
 
                     configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
 
-                    LanguageBox.setText(Languages.getLanguage(codeLanguage));
+                    languageBox.setText(language.getLabel());
 
                     ImageView newImage = new ImageView(image);
                     newImage.setPreserveRatio(true);
                     newImage.setFitHeight(25);
-                    LanguageBox.setGraphic(newImage);
+                    languageBox.setGraphic(newImage);
 
-                    if (codeLanguage.equals("ell")) {
-
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Language information");
-                        alert.setHeaderText("Translations have been provided by MK Prossopsis Ltd.");
-                        alert.show();
-                    } else if (!ALIGN_LEFT || (codeLanguage.equals("ara") && !currentLanguage.equals("ara"))) {
-
+                    if (language.isLeftAligned() != currentLanguageAlignementIsLeftAligned) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Language information");
                         alert.setHeaderText(
-                                "Alignment settings have just changed for your language, please restart the game for the new changes to take effect. \n\n If you believe there are problems with the translations in your language, please contact us to propose better ones (gazeplay.net) and they will be in the next version.");
-                        alert.show();
-                    } else if (!codeLanguage.equals("fra") && !codeLanguage.equals("eng")
-                            && !codeLanguage.equals("deu")) {
-
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Language information");
-                        alert.setHeaderText(
-                                "Translation has just been performed for your language. If you think that some words sound odd in the games, it is maybe a problem of translation. \nPlease contact us to propose better ones (gazeplay.net) and they will be in the next version.");
+                            "Alignment settings have just changed for your language, please restart the game for the new changes to take effect.");
                         alert.show();
                     }
-
+                    if (!language.isStableTranslationAvailable()) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Language information");
+                        alert.setHeaderText(
+                            "Translation has just been performed for your language. If you think that some words sound odd in the games, it is maybe a problem of translation. \nPlease contact us to propose better ones (gazeplay.net) and they will be in the next version.");
+                        alert.show();
+                    }
                 });
 
-                LanguageBox.getItems().add(LanguagesItem);
+                languageBox.getItems().add(LanguagesItem);
             }
         }
 
-        LanguageBox.setPrefWidth(PREF_WIDTH);
-        LanguageBox.setPrefHeight(PREF_HEIGHT);
+        languageBox.setPrefWidth(PREF_WIDTH);
+        languageBox.setPrefHeight(PREF_HEIGHT);
 
-        return LanguageBox;
+        return languageBox;
     }
 
     private static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                                      ConfigurationContext configurationContext) {
         ChoiceBox<EyeTracker> choiceBox = new ChoiceBox<>();
 
         choiceBox.getItems().addAll(EyeTracker.values());
@@ -742,7 +722,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<EyeTracker>() {
             @Override
             public void changed(ObservableValue<? extends EyeTracker> observable, EyeTracker oldValue,
-                    EyeTracker newValue) {
+                                EyeTracker newValue) {
                 final String newPropertyValue = newValue.name();
                 configuration.getEyetrackerProperty().setValue(newPropertyValue);
                 configuration.saveConfigIgnoringExceptions();
@@ -762,7 +742,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildEnableRewardSoundBox(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                      ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
         checkBox.setSelected(configuration.isEnableRewardSound());
@@ -777,7 +757,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableHeatMapSoundBox(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                        ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
         checkBox.setSelected(configuration.isHeatMapDisabled());
@@ -792,7 +772,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableAreaOfInterest(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                       ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
         checkBox.setSelected(configuration.isAreaOfInterestEnabled());
@@ -807,7 +787,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableConvexHull(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                   ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
         checkBox.setSelected(configuration.isConvexHullEnabled());
@@ -822,7 +802,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildVideoRecording(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
         checkBox.setSelected(configuration.isVideoRecordingEnabled());
@@ -836,7 +816,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableFixationSequenceCheckBox(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                                 ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
         checkBox.setSelected(configuration.isFixationSequenceDisabled());
@@ -851,7 +831,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private CheckBox buildEnabledWhiteBackground(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                 ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
 
         checkBox.setSelected(configuration.isBackgroundWhite());
@@ -897,7 +877,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                                                      ConfigurationContext configurationContext) {
         ChoiceBox<GameButtonOrientation> choiceBox = new ChoiceBox<>();
 
         choiceBox.getItems().addAll(GameButtonOrientation.values());
@@ -911,7 +891,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<GameButtonOrientation>() {
             @Override
             public void changed(ObservableValue<? extends GameButtonOrientation> observable,
-                    GameButtonOrientation oldValue, GameButtonOrientation newValue) {
+                                GameButtonOrientation oldValue, GameButtonOrientation newValue) {
                 final String newPropertyValue = newValue.name();
                 configuration.getMenuButtonsOrientationProperty().setValue(newPropertyValue);
                 configuration.saveConfigIgnoringExceptions();
@@ -928,7 +908,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final HBox pane = new HBox(5);
 
         // Arabic Alignment
-        if (!ALIGN_LEFT) {
+        if (!currentLanguageAlignementIsLeftAligned) {
             pane.setAlignment(Pos.BASELINE_RIGHT);
         }
 
@@ -1015,8 +995,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             InputStream defaultMusicTrack = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
             if (gazePlayMusicFolder.exists()) {
                 Files.copy(defaultMusicTrack,
-                        Paths.get(gazePlayMusicFolder.getAbsolutePath() + Utils.FILESEPARATOR + defaultSong),
-                        StandardCopyOption.REPLACE_EXISTING);
+                    Paths.get(gazePlayMusicFolder.getAbsolutePath() + Utils.FILESEPARATOR + defaultSong),
+                    StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (NullPointerException ne) {
             log.debug(String.format("Could not find %s: %s", resourcePath, ne.toString()));
@@ -1075,7 +1055,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private ChoiceBox<String> buildQuitKeyChooser(Configuration configuration,
-            ConfigurationContext configurationContext) {
+                                                  ConfigurationContext configurationContext) {
 
         ChoiceBox<String> KeyBox = new ChoiceBox<>();
         KeyBox.getItems().addAll("Q", "W", "E", "R", "T", "Y");
@@ -1118,7 +1098,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         for (Color color : config.getHeatMapColors()) {
             ColorPicker colorPicker = new ColorPicker(color);
             colorPicker.valueProperty()
-                    .addListener((observableValue, color1, t1) -> updateHeatMapColorProperty(hbox, config));
+                .addListener((observableValue, color1, t1) -> updateHeatMapColorProperty(hbox, config));
             hbox.getChildren().add(colorPicker);
         }
     }
@@ -1158,7 +1138,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (hbox.getChildren().size() < 10) {
                 ColorPicker colorPicker = new ColorPicker(Color.RED);
                 colorPicker.valueProperty()
-                        .addListener((observableValue, color1, t1) -> updateHeatMapColorProperty(hbox, config));
+                    .addListener((observableValue, color1, t1) -> updateHeatMapColorProperty(hbox, config));
                 hbox.getChildren().add(colorPicker);
                 updateHeatMapColorProperty(hbox, config);
                 minusButton.setDisable(false);
