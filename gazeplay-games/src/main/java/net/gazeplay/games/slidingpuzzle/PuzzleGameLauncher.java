@@ -15,6 +15,6 @@ public class PuzzleGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
                                        Stats stats) {
-        return new slidingpuzzle(stats, gameContext, 3, 3, gameVariant.getNumber());
+        return new SlidingPuzzle(stats, gameContext, 3, 3, gameVariant.getNumber());
     }
 }

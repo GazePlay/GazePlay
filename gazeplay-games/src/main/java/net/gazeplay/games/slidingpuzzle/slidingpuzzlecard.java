@@ -37,8 +37,8 @@ import java.util.logging.Logger;
 public class slidingpuzzlecard extends Parent {
 
     public slidingpuzzlecard(int id, double positionX, double positionY, double width, double height, String fileName,
-            double fixationlength, IGameContext gameContext, slidingpuzzle gameInstance, Stats stats, double kingPosX,
-            double kingPosY) {
+                             double fixationlength, IGameContext gameContext, SlidingPuzzle gameInstance, Stats stats, double kingPosX,
+                             double kingPosY) {
         this.fixationlength = fixationlength;
         this.CardId = id;
         this.card = new Rectangle(positionX, positionY, width, height);
@@ -100,7 +100,7 @@ public class slidingpuzzlecard extends Parent {
     @Setter
     private boolean isKing;
 
-    private final slidingpuzzle gameInstance;
+    private final SlidingPuzzle gameInstance;
 
     private final ProgressIndicator progressIndicator;
 

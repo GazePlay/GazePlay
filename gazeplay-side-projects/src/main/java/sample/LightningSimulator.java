@@ -109,7 +109,7 @@ public class LightningSimulator extends Application {
         }
     }
 
-    private class StrikeEventHandler implements EventHandler<LightningEvent> {
+    private static class StrikeEventHandler implements EventHandler<LightningEvent> {
         @Override
         public void handle(LightningEvent event) {
             LightningReactor reactor = (LightningReactor) event.getTarget();

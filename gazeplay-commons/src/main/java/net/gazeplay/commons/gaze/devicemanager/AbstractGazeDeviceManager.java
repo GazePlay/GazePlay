@@ -63,8 +63,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     public void add() {
         synchronized (shapesEventFilter) {
-            List<Node> temp = new LinkedList<>();
-            temp.addAll(toAdd);
+            List<Node> temp = new LinkedList<>(toAdd);
             for (Node node : temp) {
                 shapesEventFilter.put(new IdentityKey<>(node), new GazeInfos(node));
                 toAdd.remove(node);
@@ -91,8 +90,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     public void delete() {
         synchronized (shapesEventFilter) {
-            List<Node> temp = new LinkedList<>();
-            temp.addAll(toRemove);
+            List<Node> temp = new LinkedList<>(toRemove);
             for (Node node : temp) {
                 GazeInfos removed = shapesEventFilter.remove(new IdentityKey<>(node));
                 if (removed == null) {

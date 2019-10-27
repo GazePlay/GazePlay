@@ -439,7 +439,6 @@ public class BackgroundMusicManager {
     }
 
     public static String getMusicTitle(final MediaPlayer music) {
-
         if (music == null) {
             return "None";
         }
@@ -449,6 +448,7 @@ public class BackgroundMusicManager {
         try {
             title = (String) metaData.get("title");
         } catch (Throwable e) {
+            log.warn("Failed to get title from metadata", e);
         }
 
         if (title == null) {

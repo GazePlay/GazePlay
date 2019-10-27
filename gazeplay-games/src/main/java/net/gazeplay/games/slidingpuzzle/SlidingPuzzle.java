@@ -27,24 +27,23 @@ import java.util.Random;
  */
 
 @Slf4j
-public class slidingpuzzle implements GameLifeCycle {
+public class SlidingPuzzle implements GameLifeCycle {
 
     @Data
     @AllArgsConstructor
-
-    public static class RoundDetails {
+    private static class RoundDetails {
         private final List<slidingpuzzlecard> cardList;
         private final int winnerImageIndexAmongDisplayedImages;
     }
 
     @Data
     @AllArgsConstructor
-    public static class Coord {
+    private static class Coord {
         private final int x;
         private final int y;
     }
 
-    public slidingpuzzle(Stats stats, IGameContext gameContext, int nbLines, int nbColumns, int GameVariant) {
+    SlidingPuzzle(Stats stats, IGameContext gameContext, int nbLines, int nbColumns, int GameVariant) {
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.boxWidth = computeCardBoxWidth(gameDimension2D, nbColumns);
         this.boxHeight = computeCardBoxHeight(gameDimension2D, nbLines);
@@ -77,7 +76,7 @@ public class slidingpuzzle implements GameLifeCycle {
 
     private final int nbColumns;
 
-    private List<Coord> CoordList = new ArrayList<>();
+    private List<Coord> coordList = new ArrayList<>();
 
     private Random randomGenerator;
 
@@ -89,40 +88,40 @@ public class slidingpuzzle implements GameLifeCycle {
 
     private String PicPath;
 
-    private slidingpuzzle.RoundDetails currentRoundDetails;
+    private SlidingPuzzle.RoundDetails currentRoundDetails;
 
     private javafx.geometry.Dimension2D gameDimension2D;
 
     @Override
     public void launch() {
         final Configuration config = Configuration.getInstance();
-        slidingpuzzle.Coord c1 = new slidingpuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 1),
+        SlidingPuzzle.Coord c1 = new SlidingPuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 1),
                 (int) computePositionY(boxHeight, cardHeight, 1));
-        CoordList.add(c1);
-        slidingpuzzle.Coord c2 = new slidingpuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 2),
+        coordList.add(c1);
+        SlidingPuzzle.Coord c2 = new SlidingPuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 2),
                 (int) computePositionY(boxHeight, cardHeight, 1));
-        CoordList.add(c2);
-        slidingpuzzle.Coord c3 = new slidingpuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 3),
+        coordList.add(c2);
+        SlidingPuzzle.Coord c3 = new SlidingPuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 3),
                 (int) computePositionY(boxHeight, cardHeight, 1));
-        CoordList.add(c3);
-        slidingpuzzle.Coord c4 = new slidingpuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 1),
+        coordList.add(c3);
+        SlidingPuzzle.Coord c4 = new SlidingPuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 1),
                 (int) computePositionY(boxHeight, cardHeight, 2));
-        CoordList.add(c4);
-        slidingpuzzle.Coord c5 = new slidingpuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 2),
+        coordList.add(c4);
+        SlidingPuzzle.Coord c5 = new SlidingPuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 2),
                 (int) computePositionY(boxHeight, cardHeight, 2));
-        CoordList.add(c5);
-        slidingpuzzle.Coord c6 = new slidingpuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 3),
+        coordList.add(c5);
+        SlidingPuzzle.Coord c6 = new SlidingPuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 3),
                 (int) computePositionY(boxHeight, cardHeight, 2));
-        CoordList.add(c6);
-        slidingpuzzle.Coord c7 = new slidingpuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 1),
+        coordList.add(c6);
+        SlidingPuzzle.Coord c7 = new SlidingPuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 1),
                 (int) computePositionY(boxHeight, cardHeight, 3));
-        CoordList.add(c7);
-        slidingpuzzle.Coord c8 = new slidingpuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 2),
+        coordList.add(c7);
+        SlidingPuzzle.Coord c8 = new SlidingPuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 2),
                 (int) computePositionY(boxHeight, cardHeight, 3));
-        CoordList.add(c8);
-        slidingpuzzle.Coord c9 = new slidingpuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 3),
+        coordList.add(c8);
+        SlidingPuzzle.Coord c9 = new SlidingPuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 3),
                 (int) computePositionY(boxHeight, cardHeight, 3));
-        CoordList.add(c9);
+        coordList.add(c9);
         // Background Color
         Rectangle imageRectangle = new Rectangle(0, 0, gameDimension2D.getWidth(), gameDimension2D.getHeight());
         imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
@@ -132,7 +131,7 @@ public class slidingpuzzle implements GameLifeCycle {
         gameContext.getChildren().add(imageRectangle);
 
         List<slidingpuzzlecard> cardList = createCards(config);
-        currentRoundDetails = new slidingpuzzle.RoundDetails(cardList, 1);
+        currentRoundDetails = new SlidingPuzzle.RoundDetails(cardList, 1);
 
         gameContext.getChildren().addAll(cardList);
 
@@ -142,12 +141,7 @@ public class slidingpuzzle implements GameLifeCycle {
     @Override
     public void dispose() {
         // Collect all items to be removed from the User Interface
-        List<slidingpuzzlecard> cardsToHide = new ArrayList<>();
-        for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
-
-            cardsToHide.add(pictureCard);
-
-        }
+        List<slidingpuzzlecard> cardsToHide = new ArrayList<>(this.currentRoundDetails.cardList);
 
         // remove all at once, in order to update the UserInterface only once
         gameContext.getChildren().removeAll(cardsToHide);
@@ -189,10 +183,10 @@ public class slidingpuzzle implements GameLifeCycle {
         List<slidingpuzzlecard> result = new ArrayList<>();
         int counter = 1;
         // Initialize KingPos
-        int index = randomGenerator.nextInt(CoordList.size());
-        double kingPosX = CoordList.get(index).getX();
-        double kingPosY = CoordList.get(index).getY();
-        CoordList.remove(index);
+        int index = randomGenerator.nextInt(coordList.size());
+        double kingPosX = coordList.get(index).getX();
+        double kingPosY = coordList.get(index).getY();
+        coordList.remove(index);
 
         for (int i = 1; i <= 3; i++) {
             for (int j = 1; j <= 3; j++) {
@@ -205,11 +199,11 @@ public class slidingpuzzle implements GameLifeCycle {
                     result.add(card);
                 } else {
 
-                    index = randomGenerator.nextInt(CoordList.size());
+                    index = randomGenerator.nextInt(coordList.size());
 
-                    double positionX = CoordList.get(index).getX();
-                    double positionY = CoordList.get(index).getY();
-                    CoordList.remove(index);
+                    double positionX = coordList.get(index).getX();
+                    double positionY = coordList.get(index).getY();
+                    coordList.remove(index);
 
                     slidingpuzzlecard card = new slidingpuzzlecard(counter, positionX, positionY, cardWidth, cardHeight,
                             PicPath + counter + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY);
@@ -281,7 +275,7 @@ public class slidingpuzzle implements GameLifeCycle {
         int counter = 0;
         for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
 
-            slidingpuzzle.Coord c1 = new slidingpuzzle.Coord(pictureCard.getInitX(), pictureCard.getInitY());
+            SlidingPuzzle.Coord c1 = new SlidingPuzzle.Coord(pictureCard.getInitX(), pictureCard.getInitY());
 
             if (pictureCard.getCardId() == 1 && pictureCard.getInitX() == (int) computePositionX(boxWidth, cardWidth, 1)
                     && pictureCard.getInitY() == (int) computePositionY(boxHeight, cardHeight, 1))
