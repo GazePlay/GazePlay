@@ -1,8 +1,6 @@
 package net.gazeplay;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;

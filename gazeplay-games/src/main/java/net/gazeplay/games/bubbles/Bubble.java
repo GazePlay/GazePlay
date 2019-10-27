@@ -1,7 +1,6 @@
 package net.gazeplay.games.bubbles;
 
 import javafx.animation.*;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;

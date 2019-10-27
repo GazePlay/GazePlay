@@ -2,8 +2,6 @@ package net.gazeplay;
 
 import javafx.animation.FadeTransition;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;

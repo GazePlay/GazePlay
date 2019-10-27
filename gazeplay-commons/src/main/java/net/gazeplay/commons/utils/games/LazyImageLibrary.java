@@ -6,7 +6,6 @@ import javafx.scene.image.Image;
 
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 public class LazyImageLibrary extends AbstractImageLibrary {

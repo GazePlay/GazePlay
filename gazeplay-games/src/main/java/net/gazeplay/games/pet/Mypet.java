@@ -1,8 +1,6 @@
 package net.gazeplay.games.pet;
 
 import javafx.animation.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;

@@ -3,8 +3,6 @@ package net.gazeplay.games.literacy;
 import javafx.animation.TranslateTransition;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
