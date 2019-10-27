@@ -49,30 +49,40 @@ public abstract class Mouse extends Parent {
     }
 
     public void putInBold() {
-        if (orientation.equals("back")) {
-            this.mouse
+        switch (orientation) {
+            case "back":
+                this.mouse
                     .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBackBold.png"), 5, 5, 1, 1, true));
-        } else if (orientation.equals("front")) {
-            this.mouse
+                break;
+            case "front":
+                this.mouse
                     .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFrontBold.png"), 5, 5, 1, 1, true));
-        } else if (orientation.equals("left")) {
-            this.mouse
+                break;
+            case "left":
+                this.mouse
                     .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseLeftBold.png"), 5, 5, 1, 1, true));
-        } else if (orientation.equals("right")) {
-            this.mouse
+                break;
+            case "right":
+                this.mouse
                     .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseRightBold.png"), 5, 5, 1, 1, true));
+                break;
         }
     }
 
     public void putInLight() {
-        if (orientation.equals("back")) {
-            this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBack.png"), 5, 5, 1, 1, true));
-        } else if (orientation.equals("front")) {
-            this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 5, 5, 1, 1, true));
-        } else if (orientation.equals("left")) {
-            this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseLeft.png"), 5, 5, 1, 1, true));
-        } else if (orientation.equals("right")) {
-            this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseRight.png"), 5, 5, 1, 1, true));
+        switch (orientation) {
+            case "back":
+                this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBack.png"), 5, 5, 1, 1, true));
+                break;
+            case "front":
+                this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 5, 5, 1, 1, true));
+                break;
+            case "left":
+                this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseLeft.png"), 5, 5, 1, 1, true));
+                break;
+            case "right":
+                this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseRight.png"), 5, 5, 1, 1, true));
+                break;
         }
     }
 

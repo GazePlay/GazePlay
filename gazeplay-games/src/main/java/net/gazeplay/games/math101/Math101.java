@@ -130,42 +130,47 @@ public class Math101 implements GameLifeCycle {
         }
 
         final int correctAnswer;
-        if (operatorStr.equals("+")) {
-            // operator is +
-            correctAnswer = number1 + number2;
-        } else if (operatorStr.equals("*")) {
-            // operator is *
-            correctAnswer = number1 * number2;
-        } else if (operatorStr.equals("-")) {
-            // operator is -
-            if (number2 > number1) {
-                // To make sure we only have positive answers
-                int temp = number2;
-                number2 = number1;
-                number1 = temp;
-            }
-            correctAnswer = number1 - number2;
-        } else {
-            // operator is /
-            while ((number2 == 0 && number1 == 0) || (number1 % number2 != 0)) {
-                // both cannot be 0
-                number1 = r.nextInt(maxValue + 1);
-                number2 = r.nextInt(maxValue + 1);
-
+        switch (operatorStr) {
+            case "+":
+                // operator is +
+                correctAnswer = number1 + number2;
+                break;
+            case "*":
+                // operator is *
+                correctAnswer = number1 * number2;
+                break;
+            case "-":
+                // operator is -
                 if (number2 > number1) {
+                    // To make sure we only have positive answers
                     int temp = number2;
                     number2 = number1;
                     number1 = temp;
                 }
+                correctAnswer = number1 - number2;
+                break;
+            default:
+                // operator is /
+                while ((number2 == 0 && number1 == 0) || (number1 % number2 != 0)) {
+                    // both cannot be 0
+                    number1 = r.nextInt(maxValue + 1);
+                    number2 = r.nextInt(maxValue + 1);
 
-                if (number2 == 0) {
-                    int temp = number2;
-                    number2 = number1;
-                    number1 = temp;
+                    if (number2 > number1) {
+                        int temp = number2;
+                        number2 = number1;
+                        number1 = temp;
+                    }
+
+                    if (number2 == 0) {
+                        int temp = number2;
+                        number2 = number1;
+                        number1 = temp;
+                    }
+
                 }
-
-            }
-            correctAnswer = number1 / number2;
+                correctAnswer = number1 / number2;
+                break;
         }
 
         // Create Question

@@ -70,12 +70,12 @@ public class HeatMap {
         minValue = Double.MAX_VALUE;
         maxValue = Double.MIN_VALUE;
         for (double[] datum : data) {
-            for (int y = 0; y < datum.length; y++) {
-                if (datum[y] > maxValue) {
-                    maxValue = datum[y];
+            for (double v : datum) {
+                if (v > maxValue) {
+                    maxValue = v;
                 }
-                if (datum[y] < minValue && datum[y] != 0) {
-                    minValue = datum[y];
+                if (v < minValue && v != 0) {
+                    minValue = v;
                 }
             }
         }
