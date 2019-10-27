@@ -65,9 +65,6 @@ public class CssUtil {
         }
     }
 
-    /**
-     * @return CSS files found in the styles folder
-     */
     public static void addStylesheets(ObservableList<String> styleSheets) {
         final File styleFolder = new File(getStylesFolder());
         if (styleFolder.exists()) {

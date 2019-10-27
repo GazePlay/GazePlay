@@ -542,12 +542,12 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * Objects used internally that represents a horizontal line of pixels
      */
-    private class HorizontalZone {
-        public int leftX;
-        public int rightX;
-        public int y;
+    private static class HorizontalZone {
+        int leftX;
+        int rightX;
+        int y;
 
-        public HorizontalZone(int lX, int rX, int y) {
+        HorizontalZone(int lX, int rX, int y) {
             this.leftX = lX;
             this.rightX = rX;
             this.y = y;

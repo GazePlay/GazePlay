@@ -1,9 +1,5 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
-/**
- * Created by schwab on 14/08/2016.
- */
-
 import javafx.event.EventTarget;
 import javafx.event.EventType;
 import javafx.scene.input.InputEvent;

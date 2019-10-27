@@ -226,7 +226,7 @@ public class Pictos extends Parent {
 
     }
 
-    class Picto {
+    static class Picto {
 
         Rectangle rectangle;
 

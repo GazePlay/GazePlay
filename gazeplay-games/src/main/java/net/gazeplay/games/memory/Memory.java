@@ -29,7 +29,7 @@ public class Memory implements GameLifeCycle {
 
     @Data
     @AllArgsConstructor
-    public class RoundDetails {
+    public static class RoundDetails {
         public final List<MemoryCard> cardList;
     }
 

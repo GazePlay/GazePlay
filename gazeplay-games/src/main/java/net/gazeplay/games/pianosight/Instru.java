@@ -1,9 +1,5 @@
 package net.gazeplay.games.pianosight;
 
-/**
- * Created by schwab on 09/08/2016.
- */
-
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sound.midi.MidiChannel;

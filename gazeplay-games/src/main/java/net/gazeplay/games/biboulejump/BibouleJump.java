@@ -37,6 +37,7 @@ import java.util.*;
  * rather do literally anything else than get back into this mess. But if you are courageous (or stupid?) enough, and
  * still want to tinker with the abominable physics involved, then please come on in, I applaud your bravery.
  */
+@SuppressWarnings("ALL")
 @Slf4j
 public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
@@ -335,7 +336,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
      * separated so they are not too far and reachable, and not too close and overlapping. At random times, a moving
      * platform is created, a bouncepad can also added to the platform
      * 
-     * @param bottomLimit
      */
     private void generatePlatforms(double bottomLimit) {
         double top = -dimensions.getHeight();
@@ -365,8 +365,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
      * Takes a list of platforms, and pushes them down to create the scrolling effect If the platform has left the
      * window, it is removed
      * 
-     * @param rects
-     * @param difference
      */
     private void scrollList(ArrayList<Platform> rects, double difference) {
         Iterator<Platform> rectIter = rects.iterator();
@@ -462,7 +460,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     /**
      * Updates the score according to the pixel difference scrolled upwards by the player
      * 
-     * @param difference
      */
     private void updateScore(double difference) {
         int inc = (int) (difference / dimensions.getHeight() * 100);

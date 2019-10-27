@@ -26,7 +26,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
     @Data
     @AllArgsConstructor
-    public class RoundDetails {
+    public static class RoundDetails {
         public final List<MolesChar> molesList;
     }
 

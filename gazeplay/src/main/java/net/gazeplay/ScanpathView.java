@@ -65,9 +65,6 @@ public class ScanpathView extends GraphicalContext<Pane> {
 
         for (int i = 0; i < Points.size() - 1; i++) {
             int index = i;
-            /**
-             * to add a labelBox in the top left corner uncomment the code and make the necessary modifications
-             */
             // HBox labelBox = new HBox();
             Text label = new Text();
             Points.get(index).setOnMouseEntered(s -> {

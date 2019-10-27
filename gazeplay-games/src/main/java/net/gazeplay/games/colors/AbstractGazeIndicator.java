@@ -98,7 +98,6 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
     private class OnFinishIndicatorEvent implements EventHandler<ActionEvent> {
 
         private Timer timer;
-        private TimerTask timerTask;
         private final AbstractGazeIndicator thisIndicator;
 
         private final Lock lock;
@@ -123,7 +122,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
 
             lock.lock();
             try {
-                timerTask = new TimerTask() {
+                TimerTask timerTask = new TimerTask() {
                     @Override
                     public void run() {
                         thisIndicator.stop();

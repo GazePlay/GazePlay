@@ -1,9 +1,5 @@
 package net.gazeplay.games.blocs;
 
-/**
- * Created by schwab on 29/10/2016.
- */
-
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.Event;

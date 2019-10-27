@@ -1,6 +1,4 @@
-package utils.arduino; /**
-                       * Created by schwab on 16/10/2016.
-                       */
+package utils.arduino;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;

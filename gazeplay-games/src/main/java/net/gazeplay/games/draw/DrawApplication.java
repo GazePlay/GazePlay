@@ -10,7 +10,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
- * @web http://java-buddy.blogspot.fr/2013/04/free-draw-on-javafx-canvas.html
+ * @see http://java-buddy.blogspot.fr/2013/04/free-draw-on-javafx-canvas.html
  */
 public class DrawApplication implements GameLifeCycle {
 

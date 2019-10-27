@@ -215,14 +215,8 @@ public class Potion extends Parent {
                             potion.removeEventFilter(GazeEvent.ANY, enterEvent);
 
                             if (!gameInstance.currentRoundDetails.getPotionsToMix().contains(potionColor)) {
-                                /**
-                                 * this color is not part of the mixture
-                                 */
                                 onWrongPotionSelected();
                             } else if (mixture.containsAll(gameInstance.currentRoundDetails.getPotionsToMix())) {
-                                /**
-                                 * we have achieved the correct mixture
-                                 */
                                 onMixAchieved();
                             } else {
                                 stats.incNbGoals();

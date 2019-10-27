@@ -340,8 +340,6 @@ public class GooseGame implements GameLifeCycle {
     /***
      * Show a message on screen, the messages are in a vertical queue. The message is translated, not the values
      * 
-     * @param message
-     * @param values
      */
     public void showMessage(String message, Object... values) {
         Text messageText = new Text(0, dimensions.getHeight() / 3,

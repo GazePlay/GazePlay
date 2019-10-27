@@ -73,7 +73,7 @@ public class LightningSimulator extends Application {
         return field;
     }
 
-    private class LightningReactor extends Rectangle {
+    private static class LightningReactor extends Rectangle {
         private static final int SIZE = 20;
         private final int i;
         private final int j;
