@@ -1377,14 +1377,14 @@ public class HeatChart {
         int heatMapHeight = (zValues.length * cellSize.height);
         heatMapSize = new Dimension(heatMapWidth, heatMapHeight);
 
-        int yValuesHorizontalSize = 0;
+        int yValuesHorizontalSize;
         if (yValuesHorizontal) {
             yValuesHorizontalSize = yAxisValuesWidthMax;
         } else {
             yValuesHorizontalSize = yAxisValuesHeight;
         }
 
-        int xValuesVerticalSize = 0;
+        int xValuesVerticalSize;
         if (xValuesHorizontal) {
             xValuesVerticalSize = xAxisValuesHeight;
         } else {
@@ -1691,7 +1691,7 @@ public class HeatChart {
         double max = 0;
         for (double[] value : values) {
             for (double v : value) {
-                max = (v > max) ? v : max;
+                max = Math.max(v, max);
             }
         }
         return max;
@@ -1706,7 +1706,7 @@ public class HeatChart {
         double min = Double.MAX_VALUE;
         for (double[] value : values) {
             for (double v : value) {
-                min = (v < min) ? v : min;
+                min = Math.min(v, min);
             }
         }
         return min;

@@ -564,13 +564,12 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         randomCake = new Pane();
         double originX = 0;
         double originY = 0;
-        double cakeheight = 0;
+        double cakeheight;
         for (int i = 0; i < 3; i++) {
             int k = 3;
             if (i == 2) {
                 k = 4;
             }
-            cakeheight = 0;
             for (int j = 0; j < k; j++) {
                 ImageView cakemodel = new ImageView(new Image("data/cake/images/" + j + "" + model[i][j] + ".png"));
                 cakemodel.setFitWidth(dimension2D.getWidth() / (2 * (4 + i)));

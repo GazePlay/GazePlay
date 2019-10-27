@@ -41,11 +41,11 @@ public class I18N {
 
                 Map<Entry, String> traductions = new HashMap<>(1000);
 
-                String ligne = null;
+                String ligne;
 
                 boolean firstline = true;
 
-                String[] languages = null, data = null;
+                String[] languages = null, data;
 
                 while ((ligne = br.readLine()) != null) {
                     if (firstline) {

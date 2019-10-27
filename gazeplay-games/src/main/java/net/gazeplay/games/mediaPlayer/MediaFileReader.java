@@ -39,7 +39,7 @@ public class MediaFileReader {
 
             BufferedReader b = new BufferedReader(new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8));
 
-            String readLine = "";
+            String readLine;
 
             while ((readLine = b.readLine()) != null) {
                 String[] split = readLine.split(",");

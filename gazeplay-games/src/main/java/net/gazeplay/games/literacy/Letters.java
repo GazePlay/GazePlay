@@ -198,15 +198,12 @@ public class Letters implements GameLifeCycle {
                 Boolean isMainLetter;
 
                 if (i == rowTrue && j == colTrue) {
-                    isMainLetter = true;
                     currentLetter = mainLetter;
 
                 } else if (f < (0.6 - (1 / (nbColomns * nbLines)))) {
-                    isMainLetter = true;
                     currentLetter = mainLetter;
 
                 } else {
-                    isMainLetter = false;
                     currentLetter = alphabet[(r.nextInt(alphabet.length))];
                 }
 

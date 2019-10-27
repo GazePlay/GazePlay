@@ -23,7 +23,6 @@ public class MouseTransparentArrows extends MouseArrows {
 
     @Override
     protected void updateArrowsColor() {
-        return;
     }
 
     @Override

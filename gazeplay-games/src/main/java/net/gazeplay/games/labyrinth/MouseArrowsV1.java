@@ -24,7 +24,6 @@ public class MouseArrowsV1 extends MouseArrows {
 
     @Override
     protected void recomputeArrowsPositions() {
-        return;
     }
 
     protected void placementFleche() {

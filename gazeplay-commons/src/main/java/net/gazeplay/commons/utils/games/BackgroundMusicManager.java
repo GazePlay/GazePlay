@@ -459,7 +459,7 @@ public class BackgroundMusicManager {
 
     public static String getMusicTitle(final String musicPath) {
 
-        String title = "unknown";
+        String title;
         String decodedUri = URLDecoder.decode(musicPath, StandardCharsets.UTF_8);
         title = FilenameUtils.getBaseName(decodedUri);
 

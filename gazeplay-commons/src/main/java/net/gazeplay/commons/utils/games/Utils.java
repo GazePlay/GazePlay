@@ -59,7 +59,7 @@ public class Utils {
 
         URL url = ClassLoader.getSystemResource(ressource);
 
-        String path = null;
+        String path;
 
         if (url == null) {
             final File file = new File(ressource);

@@ -13,9 +13,9 @@ public class Touche extends Parent {
 
     public String lettre;// lettre de la touche, c'est une variable public pour qu'elle puisse être lue depuis les
                          // autres classes
-    private int positionX = 0;// abscisse
-    private int positionY = 0;// ordonnée de la touche
-    private int note = 0;// note correspond au numéro MIDI de la note qui doit être jouée quand on appuie sur la touche
+    private int positionX;// abscisse
+    private int positionY;// ordonnée de la touche
+    private int note;// note correspond au numéro MIDI de la note qui doit être jouée quand on appuie sur la touche
     private Instru instru;
 
     Rectangle fond_touche;

@@ -403,7 +403,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         setMode(number);
 
         background.setFill(color[number % 4]);
-        int j = 1;
+        int j;
         switch (number) {
         case INIT_MODE:
             j = 2;

@@ -22,7 +22,6 @@ public class MouseArrowsV3 extends MouseArrows {
 
     @Override
     protected void recomputeArrowsPositions() {
-        return;
     }
 
     @Override

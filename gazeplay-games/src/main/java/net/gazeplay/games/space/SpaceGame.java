@@ -573,7 +573,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     public double getGameSpeed() {
         double speed = configuration.getSpeedEffects();
-        return speed <= 1.0 ? 1.0 : speed;
+        return Math.max(speed, 1.0);
     }
 
     private int getsetHighscore(int score) {

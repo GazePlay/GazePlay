@@ -70,7 +70,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private double combinationThreshHold = 0.70;
     private int[] areaMap;
     private boolean playing = false;
-    private double highestFixationTime = 0;
+    private double highestFixationTime;
     private Stats stats;
     private ArrayList<Polygon> targetArea;
 

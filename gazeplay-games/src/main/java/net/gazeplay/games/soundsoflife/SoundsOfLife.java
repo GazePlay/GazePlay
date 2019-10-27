@@ -45,7 +45,7 @@ public class SoundsOfLife implements GameLifeCycle {
         }
 
         JsonParser parser = new JsonParser();
-        JsonObject jsonRoot = null;
+        JsonObject jsonRoot;
         jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
                 Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + "elements.json")), StandardCharsets.UTF_8));
 

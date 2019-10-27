@@ -144,7 +144,7 @@ public class FixationSequence {
     public static LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
 
         int accepted = 0;
-        double distance = 0.0;
+        double distance;
         FixationPoint pivotVertex = allPoints.get(accepted);
 
         LinkedList<FixationPoint> reducedPolyline = new LinkedList<>();

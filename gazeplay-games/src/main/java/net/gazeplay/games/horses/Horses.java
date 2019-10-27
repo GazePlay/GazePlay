@@ -98,7 +98,7 @@ public class Horses implements GameLifeCycle {
         }
 
         JsonParser parser = new JsonParser();
-        JsonObject positions = null;
+        JsonObject positions;
         positions = (JsonObject) parser.parse(new InputStreamReader(
                 Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(jsonPath)), StandardCharsets.UTF_8));
 
@@ -182,7 +182,7 @@ public class Horses implements GameLifeCycle {
                 JsonObject object = (JsonObject) commonPath.get(i);
                 Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio,
                         yOffset + object.get("y").getAsDouble() * scaleRatio);
-                Square square = null;
+                Square square;
                 if (i == 0) {
                     square = new FinalPathStart(position, this, team, firstFromFinal);
                     firstFromFinal.setPreviousSquare(square);

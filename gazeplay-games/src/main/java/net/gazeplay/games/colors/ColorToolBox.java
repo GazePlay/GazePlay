@@ -303,7 +303,6 @@ public class ColorToolBox extends StackPane {
 
                     if (!checkFormat(extension)) {
                         extension = "png";
-                        name += extension;
                         imageFile = new File(imageFile.getAbsolutePath() + "." + extension);
                     }
 

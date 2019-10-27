@@ -268,8 +268,6 @@ public class WhereIsIt implements GameLifeCycle {
 
         final File[] imagesFolders = imagesDirectory.listFiles();
 
-        log.debug("imagesFolders " + imagesFolders);
-
         final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
 
         if (filesCount == 0) {
@@ -546,7 +544,7 @@ public class WhereIsIt implements GameLifeCycle {
 
     private File locateImagesDirectory(Configuration config) {
 
-        File result = null;
+        File result;
 
         if (this.gameType == CUSTOMIZED) {
 
@@ -670,7 +668,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         StringTokenizer st = new StringTokenizer(traduction, ";");
 
-        String token = null;
+        String token;
 
         List<Image> L = new ArrayList<>(20);
 
