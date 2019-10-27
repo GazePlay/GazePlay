@@ -40,7 +40,6 @@ public class Target extends Portrait {
     private final ImageLibrary imageLibrary;
 
     private ArrayList<TargetAOI> targetAOIList;
-    private TargetAOI targetAOI;
 
     private static final String SOUNDS_MISSILE = "data/creampie/sounds/missile.mp3";
 
@@ -109,8 +108,8 @@ public class Target extends Portrait {
 
         Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
         // System.out.println("The radius is "+ getInitialRadius());
-        targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius(),
-                System.currentTimeMillis());
+        TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius(),
+            System.currentTimeMillis());
         targetAOIList.add(targetAOI);
         timeline2.getKeyFrames()
                 .add(new KeyFrame(new Duration(1), new KeyValue(centerXProperty(), newPosition.getX())));

@@ -274,9 +274,9 @@ public abstract class MouseArrows extends Mouse {
         };
     }
 
-    protected void creationButton(Rectangle b, double x, double y, double width, double height, String s,
-            EventHandler<Event> e) {
-        b = new Rectangle(x, y, width, height);
+    protected void creationButton(double x, double y, double width, double height, String s,
+                                  EventHandler<Event> e) {
+        Rectangle b = new Rectangle(x, y, width, height);
         b.setFill(new ImagePattern(new Image("data/labyrinth/images/" + s + "Arrow.png"), 5, 5, 1, 1, true));
         b.addEventHandler(MouseEvent.ANY, e);
         b.addEventHandler(GazeEvent.ANY, e);

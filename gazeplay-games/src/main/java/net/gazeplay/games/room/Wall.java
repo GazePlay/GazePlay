@@ -9,22 +9,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Wall {
 
-    // The short size of a side of the cube (this is the thickness of each side)
-    private double wallThickness;
-
-    // The positions of the sides compared to the origin
-    private double positionWall;
-
     Box box;
     String name;
 
     public Wall(String moveDirection, int positiveAxisMultiplier, String name, double xLength, double yLength) {
-        wallThickness = 0.1;
+        // The short size of a side of the cube (this is the thickness of each side)
+        double wallThickness = 0.1;
         this.name = name;
         switch (moveDirection) {
         case "X":
             this.box = new Box(wallThickness, yLength, xLength);
-            this.positionWall = xLength / 2;
+            // The positions of the sides compared to the origin
+            double positionWall = xLength / 2;
             if (positiveAxisMultiplier == 1) {
                 Image rightImage = new Image("data/room/right.jpg");
                 this.box.setMaterial(
@@ -37,7 +33,7 @@ public class Wall {
             break;
         case "Y":
             this.box = new Box(xLength, wallThickness, xLength);
-            this.positionWall = yLength / 2;
+            positionWall = yLength / 2;
             Image top_bottomImage = new Image("data/room/top_bottom.jpg");
             this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, top_bottomImage, top_bottomImage, top_bottomImage,
                     top_bottomImage));
@@ -45,7 +41,7 @@ public class Wall {
             break;
         case "Z":
             this.box = new Box(xLength, yLength, wallThickness);
-            this.positionWall = xLength / 2;
+            positionWall = xLength / 2;
             if (positiveAxisMultiplier == 1) {
                 Image frontImage = new Image("data/room/front.jpg");
                 this.box.setMaterial(

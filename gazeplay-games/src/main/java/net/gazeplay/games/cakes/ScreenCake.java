@@ -44,7 +44,7 @@ public class ScreenCake extends LinkedList {
             if (i != 5) {
                 createButton(i, bt, buttonHandler, cakef);
             } else {
-                createValidationButton(i, bt, buttonHandler, cakef);
+                createValidationButton(i, bt, cakef);
             }
 
         }
@@ -68,7 +68,7 @@ public class ScreenCake extends LinkedList {
 
     }
 
-    public void createValidationButton(int i, ProgressButton bt, EventHandler<Event> buttonHandler, CakeFactory cakef) {
+    public void createValidationButton(int i, ProgressButton bt, CakeFactory cakef) {
         double buttonSize = cakef.getButtonSize();
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         ImageView iv = new ImageView(new Image("data/cake/images/validate.png"));
@@ -78,7 +78,7 @@ public class ScreenCake extends LinkedList {
         bt.getButton().setRadius(buttonSize / 2);
         bt.setLayoutX(dimension2D.getWidth() - buttonSize);
         bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
-        buttonHandler = e -> cakef.winFunction();
+        EventHandler<Event> buttonHandler = e -> cakef.winFunction();
         bt.assignIndicator(buttonHandler, cakef.getFixationLength());
         bt.active();
         cakef.getButtons()[i] = bt;
