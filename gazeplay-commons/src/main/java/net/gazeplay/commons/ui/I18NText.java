@@ -22,11 +22,11 @@ public class I18NText extends Text implements Translator.LanguageChangeListener 
     public void languageChanged() {
         if (textKeys != null && "EnableGazeMouse".equals(textKeys[0])) {
             String[] labelParts = translator.translate(textKeys).split(";");
-            String concatenateLabel = "";
+            StringBuilder concatenateLabel = new StringBuilder();
             for (String labels : labelParts) {
-                concatenateLabel = concatenateLabel + labels + "\n\t";
+                concatenateLabel.append(labels).append("\n\t");
             }
-            this.setText(concatenateLabel);
+            this.setText(concatenateLabel.toString());
         } else {
             setText(translator.translate(textKeys));
         }

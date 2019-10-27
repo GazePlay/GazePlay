@@ -119,7 +119,7 @@ public class MemoryCard extends Parent {
 
         for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
             gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = -1;
-            if (gameInstance.currentRoundDetails.cardList.get(i).turned == true) {
+            if (gameInstance.currentRoundDetails.cardList.get(i).turned) {
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(MouseEvent.ANY, enterEvent);
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(GazeEvent.ANY, enterEvent);
                 gameContext.getGazeDeviceManager()
@@ -158,7 +158,7 @@ public class MemoryCard extends Parent {
 
         /* No cards are turned now */
         for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
-            if (gameInstance.currentRoundDetails.cardList.get(i).turned == true) {
+            if (gameInstance.currentRoundDetails.cardList.get(i).turned) {
                 gameInstance.currentRoundDetails.cardList.get(i).turned = false;
                 gameInstance.currentRoundDetails.cardList.get(i).progressIndicator.setOpacity(0);
                 if (!isOpen) {

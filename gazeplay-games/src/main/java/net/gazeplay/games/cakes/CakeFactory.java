@@ -112,9 +112,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (layers[i][j] == model[i][j]) {
-                    win = win && true;
+                    win = win;
                     if (i == currentCake) {
-                        currentOk = currentOk && true;
+                        currentOk = currentOk;
                     }
                 } else {
                     win = false;
@@ -125,9 +125,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             }
         }
         if (layers[2][3] == model[2][3]) {
-            win = win && true;
+            win = win;
             if (2 == currentCake) {
-                currentOk = currentOk && true;
+                currentOk = currentOk;
             }
         } else {
             win = false;

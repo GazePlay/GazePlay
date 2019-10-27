@@ -418,7 +418,7 @@ public class Mypet extends Pane {
                 Shape intersect2 = Shape.intersect(ph.hand, getRightEye());
 
                 if ((intersect.getBoundsInLocal().getWidth() == -1) && (intersect2.getBoundsInLocal().getWidth() == -1)
-                        && (eyeTouched[0] == true) && (eyeTouched[1] == true)) {
+                        && (eyeTouched[0]) && (eyeTouched[1])) {
                     getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
                     getRightEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
                     t.play();

@@ -320,11 +320,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             I18NText label = new I18NText(translator, "EnableGazeMouse", COLON);
             CheckBox input = buildGazeMouse(config, configurationContext);
             String[] labelParts = label.getText().split(";");
-            String concatenateLabel = "";
+            StringBuilder concatenateLabel = new StringBuilder();
             for (String labels : labelParts) {
-                concatenateLabel = concatenateLabel + labels + "\n\t";
+                concatenateLabel.append(labels).append("\n\t");
             }
-            label.setText(concatenateLabel);
+            label.setText(concatenateLabel.toString());
             addToGrid(grid, currentFormRow, label, input);
         }
         {

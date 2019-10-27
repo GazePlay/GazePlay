@@ -56,7 +56,7 @@ public class Order implements GameLifeCycle {
         stats.incNbGoals();
 
         Circle c = new Circle(t.getPos().getX(), t.getPos().getY(), t.getRadius());
-        if (correct == true) {
+        if (correct) {
             c.setFill(new ImagePattern(new Image("data/order/images/success.png"), 0, 0, 1, 1, true));
         } else {
             c.setFill(new ImagePattern(new Image("data/order/images/fail.png"), 0, 0, 1, 1, true));
@@ -67,7 +67,7 @@ public class Order implements GameLifeCycle {
         pause.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
         pause.setOnFinished(actionEvent -> {
             Order.this.gameContext.getChildren().remove(c);
-            if (correct == false) {
+            if (!correct) {
                 Order.this.restart();
             }
         });

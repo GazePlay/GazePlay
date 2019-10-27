@@ -358,7 +358,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         if (bibouleValue == 300) {
             for (Biboule b : biboules) {
                 boolean lower = random.nextBoolean();
-                if (lower == true) {
+                if (lower) {
                     b.moveToLower(biboulesPos.get(0).getX(), biboulesPos.get(0).getY());
                 } else {
                     b.moveToUpper(biboulesPos.get(0).getX(), biboulesPos.get(0).getY());
@@ -419,7 +419,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                         }
                         // bulletListRec.remove(r);
                         // biboules.remove(b);
-                        if (bibouleBoolean == true) {
+                        if (bibouleBoolean) {
                             // bibouleDisappear = new FadeTransition(Duration.millis(1000), b);
                             // bibouleDisappear.setFromValue(1);
                             // bibouleDisappear.setToValue(0);
@@ -502,7 +502,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             deathBoolean = true;
                         }
 
-                        if (deathBoolean == true) {
+                        if (deathBoolean) {
                             bulletBibouleListRec.remove(rb);
 
                             // spaceshipDisappear = new FadeTransition(Duration.millis(1000), spaceship);
@@ -718,7 +718,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                 }
                                 bulletListRec.remove(r);
                                 biboules.remove(b);
-                                if (bibouleBoolean == true) {
+                                if (bibouleBoolean) {
                                     bibouleDisappear = new FadeTransition(Duration.millis(1000), b);
                                     bibouleDisappear.setFromValue(1);
                                     bibouleDisappear.setToValue(0);
@@ -802,7 +802,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                     deathBoolean = true;
                                 }
 
-                                if (deathBoolean == true) {
+                                if (deathBoolean) {
                                     bulletBibouleListRec.remove(rb);
 
                                     spaceshipDisappear = new FadeTransition(Duration.millis(1000), spaceship);
@@ -885,7 +885,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                     deathBoolean = true;
                                 }
 
-                                if (deathBoolean == true) {
+                                if (deathBoolean) {
                                     bulletBossListRec.remove(rboss);
 
                                     spaceshipDisappear = new FadeTransition(Duration.millis(1000), spaceship);
@@ -965,7 +965,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                         bossHitBoolean = true;
                                     }
 
-                                    if (bossHitBoolean == true) {
+                                    if (bossHitBoolean) {
                                         bossHit += 1;
                                         bossFade = new FadeTransition(Duration.millis(250), b);
                                         bossFade.setFromValue(1);
@@ -998,7 +998,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                     }
                                     bosses.remove(b);
 
-                                    if (bossKilledBoolean == true) {
+                                    if (bossKilledBoolean) {
                                         bossDisappear = new FadeTransition(Duration.millis(1000), b);
                                         bossDisappear.setFromValue(1);
                                         bossDisappear.setToValue(0);

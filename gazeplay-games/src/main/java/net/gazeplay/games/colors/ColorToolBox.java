@@ -346,14 +346,7 @@ public class ColorToolBox extends StackPane {
     }
 
     private static boolean checkFormat(final String format) {
-
-        switch (format) {
-        case "png":
-            return true;
-
-        default:
-            return false;
-        }
+        return "png".equals(format);
     }
 
     private void updatePallet(Button previousPallet, Button nextPallet) {
