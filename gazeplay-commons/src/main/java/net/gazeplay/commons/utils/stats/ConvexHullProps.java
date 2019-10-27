@@ -1,7 +1,5 @@
 package net.gazeplay.commons.utils.stats;
 
-import java.awt.*;
-
 public class ConvexHullProps {
     private final int centerX;
     private final int centerY;

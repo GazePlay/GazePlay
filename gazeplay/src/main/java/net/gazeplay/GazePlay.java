@@ -3,7 +3,6 @@ package net.gazeplay;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -20,11 +19,11 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.ImageDirectoryLocator;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.components.CssUtil;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -112,28 +111,24 @@ public class GazePlay extends Application {
         primaryStage.centerOnScreen();
         primaryStage.show();
 
-        this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent ke) {
-                if (ke.getCode() == KeyCode.SPACE && Configuration.getInstance().isGazeMouseEnable()) {
-                    Platform.runLater(() -> {
-                        try {
-                            Robot robot = new Robot();
-                            robot.mousePress(InputEvent.BUTTON1_MASK);
-                            robot.mouseRelease(InputEvent.BUTTON1_MASK);
-                        } catch (AWTException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    });
-                }
+        this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
+            if (ke.getCode() == KeyCode.SPACE && Configuration.getInstance().isGazeMouseEnable()) {
+                Platform.runLater(() -> {
+                    try {
+                        Robot robot = new Robot();
+                        robot.mousePress(InputEvent.BUTTON1_MASK);
+                        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+                    } catch (AWTException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                });
             }
         });
 
-        this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent ke) {
-                if (ke.getCode() == KeyCode.S && Configuration.getInstance().isGazeMouseEnable()) {
-                    Configuration.getInstance().isMouseFree = !Configuration.getInstance().isMouseFree;
-                }
+        this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
+            if (ke.getCode() == KeyCode.S && Configuration.getInstance().isGazeMouseEnable()) {
+                Configuration.setMouseFree(!Configuration.isMouseFree());
             }
         });
     }

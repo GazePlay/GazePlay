@@ -16,11 +16,11 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -41,9 +41,9 @@ public class BackgroundMusicManager {
     private static BackgroundMusicManager instance = new BackgroundMusicManager();
 
     @Getter
-    private final List<MediaPlayer> playlist = new ArrayList<MediaPlayer>();
+    private final List<MediaPlayer> playlist = new ArrayList<>();
 
-    private final List<MediaPlayer> defaultPlayList = new ArrayList<MediaPlayer>();
+    private final List<MediaPlayer> defaultPlayList = new ArrayList<>();
     @Getter
     private MediaPlayer currentMusic;
 
@@ -374,7 +374,7 @@ public class BackgroundMusicManager {
         // the local cache filename is a Base64 encoding of the URL
         // so that we avoid name clash,
         // and so that we have the same local file for the same resource URL
-        final Charset utf8 = Charset.forName("UTF-8");
+        final Charset utf8 = StandardCharsets.UTF_8;
         byte[] encodedUrl = Base64.getEncoder().encode(resourceUrlExternalForm.getBytes(utf8));
         final String localCacheFileName = new String(encodedUrl, utf8);
 
@@ -409,13 +409,9 @@ public class BackgroundMusicManager {
         try {
             final Media media = new Media(source);
             final MediaPlayer player = new MediaPlayer(media);
-            player.setOnError(() -> {
-                log.error("error on audio media loading : " + player.getError());
-            });
+            player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
             player.volumeProperty().bind(config.getMusicVolumeProperty());
-            player.setOnEndOfMedia(() -> {
-                next();
-            });
+            player.setOnEndOfMedia(this::next);
 
             return player;
         } catch (MediaException e) {
@@ -443,7 +439,6 @@ public class BackgroundMusicManager {
     }
 
     public static String getMusicTitle(final MediaPlayer music) {
-
         if (music == null) {
             return "None";
         }
@@ -453,6 +448,7 @@ public class BackgroundMusicManager {
         try {
             title = (String) metaData.get("title");
         } catch (Throwable e) {
+            log.warn("Failed to get title from metadata", e);
         }
 
         if (title == null) {
@@ -463,13 +459,9 @@ public class BackgroundMusicManager {
 
     public static String getMusicTitle(final String musicPath) {
 
-        String title = "unknown";
-        try {
-            String decodedUri = URLDecoder.decode(musicPath, "UTF-8");
-            title = FilenameUtils.getBaseName(decodedUri);
-        } catch (UnsupportedEncodingException ex) {
-            log.warn("Wrong format to get music title: {}", musicPath, ex);
-        }
+        String title;
+        String decodedUri = URLDecoder.decode(musicPath, StandardCharsets.UTF_8);
+        title = FilenameUtils.getBaseName(decodedUri);
 
         return title;
     }

@@ -1,7 +1,5 @@
 package net.gazeplay;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -34,12 +32,12 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
-import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
+import net.gazeplay.components.CssUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,7 +109,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         // Arabic title alignment
         if (!currentLanguageAlignementIsLeftAligned) {
-            root.setAlignment(configTitleText, Pos.BOTTOM_RIGHT);
+            BorderPane.setAlignment(configTitleText, Pos.BOTTOM_RIGHT);
         }
 
         root.setTop(configTitleText);
@@ -150,18 +148,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         HomeButton homeButton = new HomeButton();
 
-        EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
-            @Override
-            public void handle(javafx.event.Event e) {
+        EventHandler<Event> homeEvent = e -> {
 
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+            if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    root.setCursor(Cursor.WAIT); // Change cursor to wait style
+                root.setCursor(Cursor.WAIT); // Change cursor to wait style
 
-                    gazePlay.onReturnToMenu();
+                gazePlay.onReturnToMenu();
 
-                    root.setCursor(Cursor.DEFAULT); // Change cursor to default style
-                }
+                root.setCursor(Cursor.DEFAULT); // Change cursor to default style
             }
         };
 
@@ -325,11 +320,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             I18NText label = new I18NText(translator, "EnableGazeMouse", COLON);
             CheckBox input = buildGazeMouse(config, configurationContext);
             String[] labelParts = label.getText().split(";");
-            String concatenateLabel = "";
+            StringBuilder concatenateLabel = new StringBuilder();
             for (String labels : labelParts) {
-                concatenateLabel = concatenateLabel + labels + "\n\t";
+                concatenateLabel.append(labels).append("\n\t");
             }
-            label.setText(concatenateLabel);
+            label.setText(concatenateLabel.toString());
             addToGrid(grid, currentFormRow, label, input);
         }
         {
@@ -400,17 +395,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.setPrefWidth(PREF_WIDTH);
         choiceBox.setPrefHeight(PREF_HEIGHT);
 
-        choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+        choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
 
-                final int newPropertyValue = (int) (1000
-                    * (double) choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
+            final int newPropertyValue = (int) (1000
+                * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
 
-                configuration.getFixationlengthProperty().setValue(newPropertyValue);
-                configuration.saveConfigIgnoringExceptions();
+            configuration.getFixationlengthProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
 
-            }
         });
 
         return choiceBox;
@@ -434,17 +426,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.setPrefWidth(PREF_WIDTH);
         choiceBox.setPrefHeight(PREF_HEIGHT);
 
-        choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+        choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
 
-                final int newPropertyValue = (int) (1000
-                    * (double) choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
+            final int newPropertyValue = (int) (1000
+                * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
 
-                configuration.getQuestionLengthProperty().setValue(newPropertyValue);
-                configuration.saveConfigIgnoringExceptions();
+            configuration.getQuestionLengthProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
 
-            }
         });
 
         return choiceBox;
@@ -465,7 +454,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         BuiltInUiTheme selected = configuredTheme.orElse(BuiltInUiTheme.DEFAULT_THEME);
 
-        themesBox.setConverter(new StringConverter<BuiltInUiTheme>() {
+        themesBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(BuiltInUiTheme object) {
                 return object.getLabel();
@@ -482,26 +471,22 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         themesBox.setPrefWidth(PREF_WIDTH);
         themesBox.setPrefHeight(PREF_HEIGHT);
 
-        themesBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BuiltInUiTheme>() {
-            @Override
-            public void changed(ObservableValue<? extends BuiltInUiTheme> observable, BuiltInUiTheme oldValue,
-                                BuiltInUiTheme newValue) {
-                String newPropertyValue = newValue.getPreferredConfigPropertyValue();
+        themesBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            String newPropertyValue = newValue.getPreferredConfigPropertyValue();
 
-                configuration.getCssfileProperty().setValue(newPropertyValue);
-                configuration.saveConfigIgnoringExceptions();
+            configuration.getCssfileProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
 
-                final GazePlay gazePlay = GazePlay.getInstance();
-                // final Scene scene = gazePlay.getPrimaryScene();
+            final GazePlay gazePlay = GazePlay.getInstance();
+            // final Scene scene = gazePlay.getPrimaryScene();
 
-                CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
+            CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
 
-                /*
-                 * scene.getStylesheets().removeAll(scene.getStylesheets()); String styleSheetPath =
-                 * newValue.getStyleSheetPath(); if (styleSheetPath != null) {
-                 * scene.getStylesheets().add(styleSheetPath); }
-                 */
-            }
+            /*
+             * scene.getStylesheets().removeAll(scene.getStylesheets()); String styleSheetPath =
+             * newValue.getStyleSheetPath(); if (styleSheetPath != null) {
+             * scene.getStylesheets().add(styleSheetPath); }
+             */
         });
 
         return themesBox;
@@ -515,28 +500,25 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         Button buttonLoad = new Button(configuration.getCssFile());
 
-        buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                FileChooser fileChooser = new FileChooser();
-                final GazePlay gazePlay = GazePlay.getInstance();
-                final Scene scene = gazePlay.getPrimaryScene();
-                File file = fileChooser.showOpenDialog(scene.getWindow());
-                buttonLoad.setText(file.toString());
+        buttonLoad.setOnAction(arg0 -> {
+            FileChooser fileChooser = new FileChooser();
+            final GazePlay gazePlay = GazePlay.getInstance();
+            final Scene scene = gazePlay.getPrimaryScene();
+            File file = fileChooser.showOpenDialog(scene.getWindow());
+            buttonLoad.setText(file.toString());
 
-                String newPropertyValue = file.toString();
-                if (Utils.isWindows()) {
-                    newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-                }
-
-                configuration.getCssfileProperty().setValue(newPropertyValue);
-                configuration.saveConfigIgnoringExceptions();
-
-                scene.getStylesheets().remove(0);
-                scene.getStylesheets().add("file://" + newPropertyValue);
-
-                log.info(scene.getStylesheets().toString());
+            String newPropertyValue = file.toString();
+            if (Utils.isWindows()) {
+                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
+
+            configuration.getCssfileProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
+
+            scene.getStylesheets().remove(0);
+            scene.getStylesheets().add("file://" + newPropertyValue);
+
+            log.info(scene.getStylesheets().toString());
         });
 
         return buttonLoad;
@@ -551,38 +533,33 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         Button buttonLoad = new Button(filedir);
         buttonLoad.textProperty().bind(configuration.getFiledirProperty());
 
-        buttonLoad.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                DirectoryChooser directoryChooser = new DirectoryChooser();
-                final File currentFolder = new File(configuration.getFileDir());
-                if (currentFolder.isDirectory()) {
-                    directoryChooser.setInitialDirectory(currentFolder);
-                }
-                final GazePlay gazePlay = GazePlay.getInstance();
-                final Scene scene = gazePlay.getPrimaryScene();
-                File file = directoryChooser.showDialog(scene.getWindow());
-                if (file == null) {
-                    return;
-                }
-
-                String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
-
-                if (Utils.isWindows()) {
-                    newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-                }
-
-                configuration.getFiledirProperty().setValue(newPropertyValue);
-                configuration.saveConfigIgnoringExceptions();
+        buttonLoad.setOnAction(arg0 -> {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            final File currentFolder = new File(configuration.getFileDir());
+            if (currentFolder.isDirectory()) {
+                directoryChooser.setInitialDirectory(currentFolder);
             }
+            final GazePlay gazePlay = GazePlay.getInstance();
+            final Scene scene = gazePlay.getPrimaryScene();
+            File file = directoryChooser.showDialog(scene.getWindow());
+            if (file == null) {
+                return;
+            }
+
+            String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
+
+            if (Utils.isWindows()) {
+                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
+            }
+
+            configuration.getFiledirProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
         });
 
         pane.getChildren().add(buttonLoad);
 
         final I18NButton resetButton = new I18NButton(translator, "reset");
-        resetButton.setOnAction((event) -> {
-            configuration.getFiledirProperty().setValue(Configuration.DEFAULT_VALUE_FILE_DIR);
-        });
+        resetButton.setOnAction((event) -> configuration.getFiledirProperty().setValue(Configuration.DEFAULT_VALUE_FILE_DIR));
 
         pane.getChildren().add(resetButton);
 
@@ -630,9 +607,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         pane.getChildren().add(buttonLoad);
 
         final I18NButton resetButton = new I18NButton(translator, "reset");
-        resetButton.setOnAction((event) -> {
-            configuration.getWhereIsItDirProperty().setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR);
-        });
+        resetButton.setOnAction((event) -> configuration.getWhereIsItDirProperty().setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR));
 
         pane.getChildren().add(resetButton);
 
@@ -719,14 +694,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.setPrefWidth(PREF_WIDTH);
         choiceBox.setPrefHeight(PREF_HEIGHT);
 
-        choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<EyeTracker>() {
-            @Override
-            public void changed(ObservableValue<? extends EyeTracker> observable, EyeTracker oldValue,
-                                EyeTracker newValue) {
-                final String newPropertyValue = newValue.name();
-                configuration.getEyetrackerProperty().setValue(newPropertyValue);
-                configuration.saveConfigIgnoringExceptions();
-            }
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            final String newPropertyValue = newValue.name();
+            configuration.getEyetrackerProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
         });
 
         return choiceBox;
@@ -888,14 +859,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.setPrefWidth(PREF_WIDTH);
         choiceBox.setPrefHeight(PREF_HEIGHT);
 
-        choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<GameButtonOrientation>() {
-            @Override
-            public void changed(ObservableValue<? extends GameButtonOrientation> observable,
-                                GameButtonOrientation oldValue, GameButtonOrientation newValue) {
-                final String newPropertyValue = newValue.name();
-                configuration.getMenuButtonsOrientationProperty().setValue(newPropertyValue);
-                configuration.saveConfigIgnoringExceptions();
-            }
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            final String newPropertyValue = newValue.name();
+            configuration.getMenuButtonsOrientationProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
         });
 
         return choiceBox;
@@ -946,9 +913,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         pane.getChildren().add(buttonLoad);
 
         final I18NButton resetButton = new I18NButton(translator, "reset");
-        resetButton.setOnAction((event) -> {
-            changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER, config);
-        });
+        resetButton.setOnAction((event) -> changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER, config));
 
         pane.getChildren().add(resetButton);
 
@@ -1066,13 +1031,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         KeyBox.setPrefWidth(PREF_WIDTH);
         KeyBox.setPrefHeight(PREF_HEIGHT);
 
-        KeyBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                final String newPropertyValue = newValue;
-                configuration.getQuitKeyProperty().setValue(newPropertyValue);
-                configuration.saveConfigIgnoringExceptions();
-            }
+        KeyBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            final String newPropertyValue = newValue;
+            configuration.getQuitKeyProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
         });
 
         return KeyBox;
@@ -1116,7 +1078,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         hbox.getChildren().addAll(resetButton, plusButton, minusButton);
 
         resetButton.setOnAction((event) -> {
-            config.getHeatMapColorsProperty().setValue(config.DEFAULT_VALUE_HEATMAP_COLORS);
+            config.getHeatMapColorsProperty().setValue(Configuration.DEFAULT_VALUE_HEATMAP_COLORS);
             hbox.getChildren().remove(3, hbox.getChildren().size());
             fillHBoxWithColorPickers(hbox, config);
             minusButton.setDisable(false);

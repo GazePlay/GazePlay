@@ -26,14 +26,13 @@ public class CustomThreadFactory implements ThreadFactory {
 
         Class<? extends Runnable> runnableClass = runnable.getClass();
 
-        StringBuilder nameBuilder = new StringBuilder();
-        nameBuilder.append(namePrefix);
-        nameBuilder.append("-");
-        nameBuilder.append(runnableClass.getSimpleName());
-        nameBuilder.append("-");
-        // original name
-        nameBuilder.append(result.getName());
-        result.setName(nameBuilder.toString());
+        String nameBuilder = namePrefix +
+            "-" +
+            runnableClass.getSimpleName() +
+            "-" +
+            // original name
+            result.getName();
+        result.setName(nameBuilder);
 
         return result;
     }

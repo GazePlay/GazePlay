@@ -94,7 +94,9 @@ public class Configuration implements Cloneable {
     public static final String DEFAULT_VALUE_USER_PICTURE = "";
     public static final String DEFAULT_VALUE_VIDEO_FOLDER = getFileDirectoryDefaultValue() + "/videos";
 
-    public static boolean isMouseFree = false;
+    @Getter
+    @Setter
+    private static boolean mouseFree = false;
 
     private static String getFileDirectoryDefaultValue() {
         return Utils.getGazePlayFolder() + "files" /* + Utils.FILESEPARATOR */;

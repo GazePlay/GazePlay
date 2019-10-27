@@ -1,6 +1,4 @@
-package melordi;/**
-                * Created by schwab on 09/08/2016.
-                */
+package melordi;
 
 import javafx.application.Application;
 import javafx.scene.Group;

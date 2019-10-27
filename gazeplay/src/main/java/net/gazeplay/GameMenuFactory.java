@@ -25,10 +25,10 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.CssUtil;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicReference;
@@ -55,7 +55,7 @@ public class GameMenuFactory {
         @NonNull final GameSpec gameSpec,
         @NonNull final GameButtonOrientation orientation,
         @NonNull final GazeDeviceManager gazeDeviceManager,
-        @NonNull final boolean isFavorite
+        final boolean isFavorite
     ) {
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
@@ -144,9 +144,7 @@ public class GameMenuFactory {
                         double preferredWidth = newValue.doubleValue() * THUMBNAIL_WIDTH_RATIO;
                         imageView.setFitWidth(preferredWidth);
                     });
-                    gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-                        imageView.setFitHeight(newValue.doubleValue() * THUMBNAIL_HEIGHT_RATIO);
-                    });
+                    gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() * THUMBNAIL_HEIGHT_RATIO));
                     break;
             }
         }
@@ -244,33 +242,30 @@ public class GameMenuFactory {
                 break;
         }
 
-        EventHandler event = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        EventHandler event = (EventHandler<Event>) e -> {
 
-                Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
+            Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
-                if (variants.size() > 1) {
-                    log.debug("variants = {}", variants);
-                    root.setEffect(new BoxBlur());
-                    root.setDisable(true);
-                    Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), gameSpec, root);
+            if (variants.size() > 1) {
+                log.debug("variants = {}", variants);
+                root.setEffect(new BoxBlur());
+                root.setDisable(true);
+                Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), gameSpec, root);
 
-                    String dialogTitle = gameName + " : "
-                        + multilinguism.getTrad("Choose Game Variant", config.getLanguage());
-                    dialog.setTitle(dialogTitle);
-                    dialog.show();
+                String dialogTitle = gameName + " : "
+                    + multilinguism.getTrad("Choose Game Variant", config.getLanguage());
+                dialog.setTitle(dialogTitle);
+                dialog.show();
 
-                    dialog.toFront();
-                    dialog.setAlwaysOnTop(true);
+                dialog.toFront();
+                dialog.setAlwaysOnTop(true);
 
+            } else {
+                if (variants.size() == 1) {
+                    GameSpec.GameVariant onlyGameVariant = variants.iterator().next();
+                    chooseGame(gazePlay, gameSpec, onlyGameVariant, config);
                 } else {
-                    if (variants.size() == 1) {
-                        GameSpec.GameVariant onlyGameVariant = variants.iterator().next();
-                        chooseGame(gazePlay, gameSpec, onlyGameVariant, config);
-                    } else {
-                        chooseGame(gazePlay, gameSpec, null, config);
-                    }
+                    chooseGame(gazePlay, gameSpec, null, config);
                 }
             }
         };
@@ -372,13 +367,10 @@ public class GameMenuFactory {
             button.setMinWidth(primaryStage.getWidth() / 10);
             choicePane.getChildren().add(button);
 
-            EventHandler<Event> event = new EventHandler<Event>() {
-                @Override
-                public void handle(Event mouseEvent) {
-                    dialog.close();
-                    root.setDisable(false);
-                    chooseGame(gazePlay, gameSpec, variant, config);
-                }
+            EventHandler<Event> event = mouseEvent -> {
+                dialog.close();
+                root.setDisable(false);
+                chooseGame(gazePlay, gameSpec, variant, config);
             };
             button.addEventHandler(MOUSE_CLICKED, event);
 

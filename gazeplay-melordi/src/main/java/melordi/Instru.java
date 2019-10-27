@@ -1,9 +1,5 @@
 package melordi;
 
-/**
- * Created by schwab on 09/08/2016.
- */
-
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;

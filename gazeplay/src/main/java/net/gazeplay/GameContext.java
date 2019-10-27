@@ -7,17 +7,17 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TitledPane;
-import javafx.scene.input.KeyEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -35,29 +35,26 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.RandomPositionGenerator;
+
 import java.io.IOException;
 
 @Slf4j
-public class GameContext extends GraphicalContext<Pane> {
+public class GameContext extends GraphicalContext<Pane> implements IGameContext {
 
+    private static final double BUTTON_MIN_HEIGHT = 64;
+    
     public static boolean menuOpen = false;
-
-    @Getter
-    private static String currentLanguage;
-
-    @Getter
-    private static Translator translator;
 
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
-
-    private static final double BUTTON_MIN_HEIGHT = 64;
-
+    
+    @Getter
+    private Translator translator;
+    
     private Slider getSpeedSlider;
 
     public static GameContext newInstance(GazePlay gazePlay) {
-        translator = gazePlay.getTranslator();
-        currentLanguage = gazePlay.getTranslator().currentLanguage();
 
         Pane root = new Pane();
 
@@ -106,15 +103,9 @@ public class GameContext extends GraphicalContext<Pane> {
         final HBox root2 = new HBox(2);
         root2.setAlignment(Pos.CENTER_LEFT);
         // Pane root2 = new Pane();
-        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            updateConfigPane(root2);
-        });
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            updateConfigButton(bt, buttonImg);
-        });
-        root2.heightProperty().addListener((observable) -> {
-            updateConfigPane(root2);
-        });
+        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(root2));
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg));
+        root2.heightProperty().addListener((observable) -> updateConfigPane(root2));
 
         EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
             double from = 0;
@@ -138,12 +129,9 @@ public class GameContext extends GraphicalContext<Pane> {
             controlPanel.setMouseTransparent(menuOpen);
             controlPanel.setVisible(true);
             menuOpen = !menuOpen;
-            pt.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    if (!menuOpen) {
-                        root2.getChildren().remove(controlPanel);
-                    }
+            pt.setOnFinished(actionEvent -> {
+                if (!menuOpen) {
+                    root2.getChildren().remove(controlPanel);
                 }
             });
             pt.play();
@@ -171,8 +159,6 @@ public class GameContext extends GraphicalContext<Pane> {
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
         GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
-
-        currentLanguage = gazePlay.getTranslator().currentLanguage();
 
         return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
                 randomPositionGenerator, gazeDeviceManager, root2);
@@ -461,6 +447,17 @@ public class GameContext extends GraphicalContext<Pane> {
         gazePlay.onDisplayStats(statsContext);
     }
 
+    @Override
+    public Stage getPrimaryStage() {
+        return getGazePlay().getPrimaryStage();
+    }
+    
+    @Override
+    public Scene getPrimaryScene() {
+        return getGazePlay().getPrimaryScene();
+    }
+
+    @Override
     public void showRoundStats(Stats stats, GameLifeCycle currentGame) throws IOException {
         stats.stop();
 
@@ -492,6 +489,7 @@ public class GameContext extends GraphicalContext<Pane> {
         stats.reset();
     }
 
+    @Override
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
         getChildren().add(bravo);
         bravo.toFront();
@@ -499,6 +497,7 @@ public class GameContext extends GraphicalContext<Pane> {
         bravo.playWinTransition(root, delay, onFinishedEventHandler);
     }
 
+    @Override
     public void endWinTransition() {
         getChildren().remove(bravo);
     }

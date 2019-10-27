@@ -1,13 +1,12 @@
 package net.gazeplay.commons.ui;
 
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultTranslator implements Translator {

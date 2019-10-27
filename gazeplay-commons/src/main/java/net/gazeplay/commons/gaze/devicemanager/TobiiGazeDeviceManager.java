@@ -32,11 +32,11 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
         final int screenWidth = mainScreen.getWidth();
         final int screenHeight = mainScreen.getHeight();
 
-        calculateService = new Service<Void>() {
+        calculateService = new Service<>() {
 
             @Override
             protected Task<Void> createTask() {
-                return new Task<Void>() {
+                return new Task<>() {
 
                     @Override
                     protected Void call() {
@@ -49,7 +49,7 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
                             final double positionX = xRatio * screenWidth;
                             final double positionY = yRatio * screenHeight;
 
-                            if (config.isGazeMouseEnable() && !config.isMouseFree) {
+                            if (config.isGazeMouseEnable() && !Configuration.isMouseFree()) {
                                 Platform.runLater(() -> {
                                     try {
                                         Robot robot = new Robot();

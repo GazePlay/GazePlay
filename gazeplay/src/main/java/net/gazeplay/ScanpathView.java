@@ -8,7 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Font;
@@ -16,7 +16,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.FixationPoint;
-import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -47,7 +46,7 @@ public class ScanpathView extends GraphicalContext<Pane> {
         // this.points = FixationSequence.getSequence();
         this.points = stats.getFixationSequence();
 
-        List<Ellipse> Points = new LinkedList<Ellipse>();
+        List<Ellipse> Points = new LinkedList<>();
         for (FixationPoint p : this.points) {
             Ellipse newPoint = new Ellipse();
             // newPoint.setFill(Color.RED); // uncomment and increase opacity for "debug"/ to see if the ellipses are
@@ -66,9 +65,6 @@ public class ScanpathView extends GraphicalContext<Pane> {
 
         for (int i = 0; i < Points.size() - 1; i++) {
             int index = i;
-            /**
-             * to add a labelBox in the top left corner uncomment the code and make the necessary modifications
-             */
             // HBox labelBox = new HBox();
             Text label = new Text();
             Points.get(index).setOnMouseEntered(s -> {
@@ -87,9 +83,7 @@ public class ScanpathView extends GraphicalContext<Pane> {
                 root.getChildren().add(label);
             });
 
-            Points.get(index).setOnMouseExited(s -> {
-                root.getChildren().remove(label);
-            });
+            Points.get(index).setOnMouseExited(s -> root.getChildren().remove(label));
         }
 
         EventHandler<Event> ExitScanpathView = e -> {

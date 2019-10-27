@@ -5,6 +5,7 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameSpec;
+import net.gazeplay.GameSpecSource;
 import net.gazeplay.GamesLocator;
 
 import java.lang.reflect.Constructor;

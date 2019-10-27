@@ -1,21 +1,12 @@
 package net.gazeplay;
 
-import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -83,14 +74,11 @@ public class LoadingScreen extends GraphicalContext<Pane> {
             transitionLetters[i][0] = new FadeTransition(Duration.millis(500), letter);
             transitionLetters[i][0].setToValue(1);
             int index = i;
-            transitionLetters[i][0].setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if (index == letters.getChildren().size() - 1) {
-                        transitionLetters[0][1].play();
-                    } else {
-                        transitionLetters[(index + 1) % letters.getChildren().size()][0].play();
-                    }
+            transitionLetters[i][0].setOnFinished(event -> {
+                if (index == letters.getChildren().size() - 1) {
+                    transitionLetters[0][1].play();
+                } else {
+                    transitionLetters[(index + 1) % letters.getChildren().size()][0].play();
                 }
             });
         }
@@ -100,14 +88,11 @@ public class LoadingScreen extends GraphicalContext<Pane> {
             transitionLetters[i][1] = new FadeTransition(Duration.millis(500), letter);
             transitionLetters[i][1].setToValue(0);
             int index = i;
-            transitionLetters[i][1].setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if (index == letters.getChildren().size() - 1) {
-                        transitionLetters[0][0].play();
-                    } else {
-                        transitionLetters[(index + 1) % letters.getChildren().size()][1].play();
-                    }
+            transitionLetters[i][1].setOnFinished(event -> {
+                if (index == letters.getChildren().size() - 1) {
+                    transitionLetters[0][0].play();
+                } else {
+                    transitionLetters[(index + 1) % letters.getChildren().size()][1].play();
                 }
             });
         }

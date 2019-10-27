@@ -6,7 +6,6 @@ import javafx.scene.image.Image;
 
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 public class LazyImageLibrary extends AbstractImageLibrary {
@@ -41,12 +40,9 @@ public class LazyImageLibrary extends AbstractImageLibrary {
     @Override
     protected Image loadImageAtIndex(int index) {
         try {
-            return imageCache.get(index, new Callable<Image>() {
-                @Override
-                public Image call() throws Exception {
-                    File file = allFiles.get(index);
-                    return ImageUtils.loadImage(file);
-                }
+            return imageCache.get(index, () -> {
+                File file = allFiles.get(index);
+                return ImageUtils.loadImage(file);
             });
         } catch (ExecutionException e) {
             throw new RuntimeException(e);

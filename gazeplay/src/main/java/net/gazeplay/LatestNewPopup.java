@@ -1,8 +1,6 @@
 package net.gazeplay;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
@@ -30,6 +28,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -151,17 +150,15 @@ class LatestNewPopup {
         // Get WebEngine via WebView
         webEngine = browser.getEngine();
         webEngine.setUserAgent(userAgentString);
-        webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
-            public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
-                log.info("ov = {}, oldState = {}, newState = {}", ov, oldState, newState);
-                if (newState == Worker.State.FAILED) {
-                    String html = getOfflinePageContent();
-                    webEngine.loadContent(html, "text/html");
-                } else {
-                    markDisplayedNow(config);
-                }
-                locationUrlLabel.setText(webEngine.getLocation());
+        webEngine.getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+            log.info("ov = {}, oldState = {}, newState = {}", ov, oldState, newState);
+            if (newState == Worker.State.FAILED) {
+                String html = getOfflinePageContent();
+                webEngine.loadContent(html, "text/html");
+            } else {
+                markDisplayedNow(config);
             }
+            locationUrlLabel.setText(webEngine.getLocation());
         });
 
         stage.titleProperty().bind(new SimpleStringProperty() {
@@ -185,9 +182,7 @@ class LatestNewPopup {
             }
         });
 
-        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            stage.close();
-        });
+        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> stage.close());
     }
 
 
@@ -239,7 +234,7 @@ class LatestNewPopup {
         String resourceName = "updates-popup/offline-page-" + languageCode + ".html";
         try {
             URL resourceUrl = getClass().getClassLoader().getResource(resourceName);
-            return IOUtils.toString(resourceUrl, "UTF-8");
+            return IOUtils.toString(resourceUrl, StandardCharsets.UTF_8);
         } catch (IOException e) {
             log.warn("Failed to load page", e);
             throw new RuntimeException(e);

@@ -1,25 +1,20 @@
 package net.gazeplay;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
-
 import javafx.scene.control.RadioButton;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
@@ -29,8 +24,11 @@ import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
-import net.gazeplay.commons.utils.stats.*;
-import net.gazeplay.games.bubbles.BubblesGamesStats;
+import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.StatsDisplay;
+import net.gazeplay.stats.ExplorationGamesStats;
+import net.gazeplay.stats.HiddenItemsGamesStats;
+import net.gazeplay.stats.ShootGamesStats;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,7 +49,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats,
-            CustomButton continueButton) throws IOException {
+                                           CustomButton continueButton) throws IOException {
         BorderPane root = new BorderPane();
 
         return new StatsContext(gazePlay, root, stats, continueButton);
@@ -93,7 +91,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton)
-            throws IOException {
+        throws IOException {
         super(gazePlay, root);
         this.stats = stats;
 
@@ -125,41 +123,32 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         {
             final I18NText label;
-            if (stats instanceof BubblesGamesStats) {
-                label = new I18NText(translator, "BubbleShot", COLON);
-            } else if (stats instanceof ShootGamesStats) {
+            if (stats instanceof ShootGamesStats) {
                 label = new I18NText(translator, "Shots", COLON);
             } else if (stats instanceof HiddenItemsGamesStats) {
                 label = new I18NText(translator, "HiddenItemsShot", COLON);
             } else {
                 label = new I18NText(translator, "Score", COLON);
             }
-            Text value;
-            if (stats instanceof BubblesGamesStats) {
-                value = new Text(String.valueOf(stats.getNbGoals() / 2));
 
-            } else {
-                value = new Text(String.valueOf(stats.getNbGoals()));
-            }
+            Text value;
+            value = new Text(String.valueOf(stats.getNbGoals()));
+
             if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value);
             }
         }
         {
             final I18NText label;
-            if (stats instanceof ShootGamesStats || stats instanceof BubblesGamesStats) {
+            if (stats instanceof ShootGamesStats) {
                 label = new I18NText(translator, "HitRate", COLON);
-                Text value = new Text(String.valueOf(stats.getShotRatio() + "%"));
-                if (!(stats instanceof ExplorationGamesStats)) {
-                    addToGrid(grid, currentFormRow, label, value);
-                }
+                Text value = new Text(stats.getShotRatio() + "%");
+                addToGrid(grid, currentFormRow, label, value);
             }
         }
         {
             I18NText label = new I18NText(translator, "Length", COLON);
-
             Text value = new Text(StatsDisplay.convert(stats.getRoundsTotalAdditiveDuration()));
-
             if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value);
             }
@@ -205,15 +194,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            if (stats instanceof ShootGamesStats && !(stats instanceof BubblesGamesStats)
-                    && ((ShootGamesStats) stats).getNbUnCountedShots() != 0) {
-
+            if (stats instanceof ShootGamesStats && stats.getNbUnCountedShots() != 0) {
                 final I18NText label = new I18NText(translator, "UncountedShot", COLON);
-
-                final Text value = new Text(String.valueOf(((ShootGamesStats) stats).getNbUnCountedShots()));
-                if (!(stats instanceof ExplorationGamesStats)) {
-                    addToGrid(grid, currentFormRow, label, value);
-                }
+                final Text value = new Text(String.valueOf(stats.getNbUnCountedShots()));
+                addToGrid(grid, currentFormRow, label, value);
             }
         }
 
@@ -221,14 +205,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         centerPane.setAlignment(Pos.CENTER);
 
         ImageView gazeMetrics = StatsDisplay.buildGazeMetrics(stats, root);
-        root.widthProperty().addListener((observable, oldValue, newValue) -> {
-
-            gazeMetrics.setFitWidth(newValue.doubleValue() * RATIO);
-        });
-        root.heightProperty().addListener((observable, oldValue, newValue) -> {
-
-            gazeMetrics.setFitHeight(newValue.doubleValue() * RATIO);
-        });
+        root.widthProperty().addListener((observable, oldValue, newValue) -> gazeMetrics.setFitWidth(newValue.doubleValue() * RATIO));
+        root.heightProperty().addListener((observable, oldValue, newValue) -> gazeMetrics.setFitHeight(newValue.doubleValue() * RATIO));
 
         gazeMetrics.setFitWidth(root.getWidth() * RATIO);
         gazeMetrics.setFitHeight(root.getHeight() * RATIO);
@@ -247,18 +225,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             colorBands.setTextFill(Color.WHITE);
             colorBands.getStylesheets().add("data/common/radio.css");
 
-            colorBands.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if (colorBands.isSelected()) {
-                        centerPane.getChildren().remove(lineChart);
-                        centerPane.getChildren().add(areaChart);
-                        centerPane.getStylesheets().add("data/common/chart.css");
+            colorBands.setOnAction(event -> {
+                if (colorBands.isSelected()) {
+                    centerPane.getChildren().remove(lineChart);
+                    centerPane.getChildren().add(areaChart);
+                    centerPane.getStylesheets().add("data/common/chart.css");
 
-                    } else {
-                        centerPane.getChildren().remove(areaChart);
-                        centerPane.getChildren().add(lineChart);
-                    }
+                } else {
+                    centerPane.getChildren().remove(areaChart);
+                    centerPane.getChildren().add(lineChart);
                 }
             });
         }
@@ -320,7 +295,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         root.setCenter(centerStackPane);
         root.setBottom(controlButtonPane);
         root.setStyle(
-                "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+            "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
     @Override

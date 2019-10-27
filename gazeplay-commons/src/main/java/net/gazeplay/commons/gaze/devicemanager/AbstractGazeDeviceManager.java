@@ -21,14 +21,14 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     @Getter
     private final Map<IdentityKey<Node>, GazeInfos> shapesEventFilter = Collections
-            .synchronizedMap(new HashMap<IdentityKey<Node>, GazeInfos>());
+            .synchronizedMap(new HashMap<>());
 
     @Getter
     private final Map<IdentityKey<Node>, GazeInfos> shapesEventHandler = Collections
-            .synchronizedMap(new HashMap<IdentityKey<Node>, GazeInfos>());
+            .synchronizedMap(new HashMap<>());
 
-    private final List<Node> toRemove = new LinkedList<Node>();
-    private final List<Node> toAdd = new LinkedList<Node>();
+    private final List<Node> toRemove = new LinkedList<>();
+    private final List<Node> toAdd = new LinkedList<>();
 
     public AbstractGazeDeviceManager() {
 
@@ -63,8 +63,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     public void add() {
         synchronized (shapesEventFilter) {
-            List<Node> temp = new LinkedList<Node>();
-            temp.addAll(toAdd);
+            List<Node> temp = new LinkedList<>(toAdd);
             for (Node node : temp) {
                 shapesEventFilter.put(new IdentityKey<>(node), new GazeInfos(node));
                 toAdd.remove(node);
@@ -91,8 +90,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     public void delete() {
         synchronized (shapesEventFilter) {
-            List<Node> temp = new LinkedList<Node>();
-            temp.addAll(toRemove);
+            List<Node> temp = new LinkedList<>(toRemove);
             for (Node node : temp) {
                 GazeInfos removed = shapesEventFilter.remove(new IdentityKey<>(node));
                 if (removed == null) {
@@ -141,11 +139,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         Collection<GazeInfos> c = shapesEventFilter.values();
 
         synchronized (shapesEventFilter) {
-            Iterator<GazeInfos> i = c.iterator();
 
-            while (i.hasNext()) {
-                GazeInfos gi = i.next();
-
+            for (GazeInfos gi : c) {
                 final Node node = gi.getNode();
 
                 EventFire(positionX, positionY, gi, node);
@@ -164,7 +159,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                     // log.info("child : "+child+" added !");
                     addEventFilter(child);
                 }
-                ;
                 // log.info("child : "+child+" fired !");
                 GazeInfos gi = shapesEventFilter.get(new IdentityKey<>(child));
                 if (gi != null) {

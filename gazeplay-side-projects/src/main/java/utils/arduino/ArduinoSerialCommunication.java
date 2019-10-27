@@ -1,6 +1,4 @@
-package utils.arduino; /**
-                       * Created by schwab on 16/10/2016.
-                       */
+package utils.arduino;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
@@ -12,13 +10,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 
 @Slf4j
 public class ArduinoSerialCommunication implements SerialPortEventListener {
     SerialPort serialPort;
     /** The port we're normally going to use. */
-    private static final String PORT_NAMES[] = { "/dev/tty.HC-06-DevB", // bluetooth
+    private static final String[] PORT_NAMES = { "/dev/tty.HC-06-DevB", // bluetooth
             "/dev/tty.usbserial-A9007UX1", // Mac OS X
             "/dev/ttyACM0", // Raspberry Pi
             "/dev/ttyUSB0", // Linux
@@ -74,7 +73,7 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
                     SerialPort.PARITY_NONE);
 
             // open the streams
-            input = new BufferedReader(new InputStreamReader(serialPort.getInputStream(), "UTF-8"));
+            input = new BufferedReader(new InputStreamReader(serialPort.getInputStream(), StandardCharsets.UTF_8));
             output = serialPort.getOutputStream();
 
             // add event listeners
@@ -100,7 +99,7 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
 
         try {
             log.info("Envoi : " + s);
-            output.write(s.getBytes("UTF-8"));
+            output.write(s.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             log.error("Exception", e);
         }

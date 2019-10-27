@@ -20,7 +20,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
@@ -35,11 +36,11 @@ import ws.schild.jave.Encoder;
 import ws.schild.jave.EncodingAttributes;
 import ws.schild.jave.MultimediaObject;
 import ws.schild.jave.VideoAttributes;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AreaOfInterest extends GraphicalContext<BorderPane> {
@@ -69,7 +70,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private double combinationThreshHold = 0.70;
     private int[] areaMap;
     private boolean playing = false;
-    private double highestFixationTime = 0;
+    private double highestFixationTime;
     private Stats stats;
     private ArrayList<Polygon> targetArea;
 

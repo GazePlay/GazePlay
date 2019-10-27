@@ -29,11 +29,10 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
-import net.gazeplay.commons.utils.CssUtil;
 import net.gazeplay.commons.utils.CustomButton;
-import net.gazeplay.commons.utils.GamePanelDimensionProvider;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.components.CssUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -368,9 +367,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(primaryStage);
         dialog.initStyle(StageStyle.UTILITY);
-        dialog.setOnCloseRequest(windowEvent -> {
-            primaryStage.getScene().getRoot().setEffect(null);
-        });
+        dialog.setOnCloseRequest(windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
 
 
         Button yes = new Button(getGazePlay().getTranslator().translate("YesRemove"));
@@ -421,9 +418,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(primaryStage);
         dialog.initStyle(StageStyle.UTILITY);
-        dialog.setOnCloseRequest(windowEvent -> {
-            primaryStage.getScene().getRoot().setEffect(null);
-        });
+        dialog.setOnCloseRequest(windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
 
         VBox choicePane = new VBox();
         choicePane.setSpacing(20);
@@ -496,90 +491,84 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         EventHandler<Event> event;
 
         if (newUser) {
-            event = new EventHandler<Event>() {
-                @Override
-                public void handle(Event mouseEvent) {
-                    ImagePattern imagePattern = null;
-                    if (chooseImageButton.getGraphic() != null) {
-                        imagePattern = new ImagePattern(((ImageView) chooseImageButton.getGraphic()).getImage());
-                    }
-                    if (imagePattern == null) {
-                        imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
-                    }
-
-                    final User newUser = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, false, false);
-
-                    if (checkNewName(newUser.getName())) {
-
-                        choicePanel.getChildren().remove(user);
-                        choicePanel.getChildren().add(newUser);
-                        choicePanel.getChildren().add(user);
-
-                        Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
-                            + newUser.getName() + Utils.FILESEPARATOR + "GazePlay.properties");
-                        Configuration.setInstance(Configuration.createFromPropertiesResource());
-                        Configuration conf2 = Configuration.getInstance();
-                        File userDirectory = new File(
-                            Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + newUser.getName());
-                        userDirectory.mkdirs();
-
-                        conf2.setUserName(newUser.getName());
-
-                        log.info("THE NAME OF THE NEW USER IS = {}", conf2.getUserName());
-
-                        if (!chooseImageButton.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
-
-                            File src = new File(chooseImageButton.getText());
-                            File dst = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
-                                + newUser.getName() + Utils.FILESEPARATOR + src.getName());
-                            copyFile(src, dst);
-
-                            conf2.setUserPicture(dst.getAbsolutePath());
-                        }
-
-                        conf2.setFileDir(Configuration.getFileDirectoryUserValue(newUser.getName()));
-
-                        conf2.saveConfigIgnoringExceptions();
-
-                        dialog.close();
-                        primaryStage.getScene().getRoot().setEffect(null);
-
-                    } else {
-                        Text error = new Text(getGazePlay().getTranslator().translate("AlreadyUsed"));
-                        error.setFill(Color.RED);
-                        choicePane.getChildren().add(error);
-                    }
-
+            event = mouseEvent -> {
+                ImagePattern imagePattern = null;
+                if (chooseImageButton.getGraphic() != null) {
+                    imagePattern = new ImagePattern(((ImageView) chooseImageButton.getGraphic()).getImage());
                 }
-            };
-        } else {
-            event = new EventHandler<Event>() {
-                @Override
-                public void handle(Event mouseEvent) {
-                    ImagePattern ip = null;
-                    if (chooseImageButton.getGraphic() != null) {
-                        ip = new ImagePattern(((ImageView) chooseImageButton.getGraphic()).getImage());
-                    }
-                    modifUser(user, choicePanel, gazePlay, user.getName(), ip);
+                if (imagePattern == null) {
+                    imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
+                }
 
-                    Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.getName()
-                        + Utils.FILESEPARATOR + "GazePlay.properties");
-                    Configuration conf2 = Configuration.createFromPropertiesResource();
+                final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, false, false);
+
+                if (checkNewName(newUser1.getName())) {
+
+                    choicePanel.getChildren().remove(user);
+                    choicePanel.getChildren().add(newUser1);
+                    choicePanel.getChildren().add(user);
+
+                    Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
+                        + newUser1.getName() + Utils.FILESEPARATOR + "GazePlay.properties");
+                    Configuration.setInstance(Configuration.createFromPropertiesResource());
+                    Configuration conf2 = Configuration.getInstance();
+                    File userDirectory = new File(
+                        Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + newUser1.getName());
+                    userDirectory.mkdirs();
+
+                    conf2.setUserName(newUser1.getName());
+
+                    log.info("THE NAME OF THE NEW USER IS = {}", conf2.getUserName());
 
                     if (!chooseImageButton.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
 
                         File src = new File(chooseImageButton.getText());
-                        File dst = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.getName()
-                            + Utils.FILESEPARATOR + src.getName());
+                        File dst = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
+                            + newUser1.getName() + Utils.FILESEPARATOR + src.getName());
                         copyFile(src, dst);
 
                         conf2.setUserPicture(dst.getAbsolutePath());
                     }
+
+                    conf2.setFileDir(Configuration.getFileDirectoryUserValue(newUser1.getName()));
+
                     conf2.saveConfigIgnoringExceptions();
 
                     dialog.close();
                     primaryStage.getScene().getRoot().setEffect(null);
+
+                } else {
+                    Text error = new Text(getGazePlay().getTranslator().translate("AlreadyUsed"));
+                    error.setFill(Color.RED);
+                    choicePane.getChildren().add(error);
                 }
+
+            };
+        } else {
+            event = mouseEvent -> {
+                ImagePattern ip = null;
+                if (chooseImageButton.getGraphic() != null) {
+                    ip = new ImagePattern(((ImageView) chooseImageButton.getGraphic()).getImage());
+                }
+                modifUser(user, choicePanel, gazePlay, user.getName(), ip);
+
+                Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.getName()
+                    + Utils.FILESEPARATOR + "GazePlay.properties");
+                Configuration conf2 = Configuration.createFromPropertiesResource();
+
+                if (!chooseImageButton.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
+
+                    File src = new File(chooseImageButton.getText());
+                    File dst = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.getName()
+                        + Utils.FILESEPARATOR + src.getName());
+                    copyFile(src, dst);
+
+                    conf2.setUserPicture(dst.getAbsolutePath());
+                }
+                conf2.saveConfigIgnoringExceptions();
+
+                dialog.close();
+                primaryStage.getScene().getRoot().setEffect(null);
             };
         }
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
