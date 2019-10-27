@@ -49,7 +49,7 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
                             final double positionX = xRatio * screenWidth;
                             final double positionY = yRatio * screenHeight;
 
-                            if (config.isGazeMouseEnable() && !Configuration.isMouseFree) {
+                            if (config.isGazeMouseEnable() && !Configuration.isMouseFree()) {
                                 Platform.runLater(() -> {
                                     try {
                                         Robot robot = new Robot();
