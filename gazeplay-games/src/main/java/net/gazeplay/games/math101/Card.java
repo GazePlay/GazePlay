@@ -166,27 +166,17 @@ public class Card extends Parent {
 
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), 0)));
 
-        currentTimeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
+        currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
+            gameInstance.dispose();
 
-                gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+            gameContext.clear();
 
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        gameInstance.dispose();
+            gameInstance.launch();
 
-                        gameContext.clear();
+            stats.notifyNewRoundReady();
 
-                        gameInstance.launch();
-
-                        stats.notifyNewRoundReady();
-
-                        gameContext.onGameStarted();
-                    }
-                });
-            }
-        });
+            gameContext.onGameStarted();
+        }));
 
         currentTimeline.play();
     }
@@ -206,85 +196,78 @@ public class Card extends Parent {
 
     private EventHandler<Event> buildEvent() {
 
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return e -> {
 
-                if (turned)
-                    return;
+            if (turned)
+                return;
 
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    progressIndicator.setOpacity(1);
-                    progressIndicator.setProgress(0);
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
 
-                    currentTimeline.stop();
-                    currentTimeline = new Timeline();
+                currentTimeline.stop();
+                currentTimeline = new Timeline();
 
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(card.xProperty(), card.getX() - (initWidth * zoom_factor - initWidth) / 2)));
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(card.yProperty(), card.getY() - (initHeight * zoom_factor - initHeight) / 2)));
-                    currentTimeline.getKeyFrames().add(
-                            new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth * zoom_factor)));
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(card.heightProperty(), initHeight * zoom_factor)));
+                currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+                    new KeyValue(card.xProperty(), card.getX() - (initWidth * zoom_factor - initWidth) / 2)));
+                currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+                    new KeyValue(card.yProperty(), card.getY() - (initHeight * zoom_factor - initHeight) / 2)));
+                currentTimeline.getKeyFrames().add(
+                    new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth * zoom_factor)));
+                currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+                    new KeyValue(card.heightProperty(), initHeight * zoom_factor)));
 
-                    timelineProgressBar = new Timeline();
+                timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
-                            new KeyValue(progressIndicator.progressProperty(), 1)));
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                    currentTimeline.play();
+                currentTimeline.play();
 
-                    timelineProgressBar.play();
+                timelineProgressBar.play();
 
-                    timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
+                timelineProgressBar.setOnFinished(actionEvent -> {
 
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
+                    turned = true;
 
-                            turned = true;
+                    card.setFill(new ImagePattern(image, 0, 100, 1, 1, true));
 
-                            card.setFill(new ImagePattern(image, 0, 100, 1, 1, true));
+                    card.removeEventFilter(MouseEvent.ANY, enterEvent);
+                    card.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-                            card.removeEventFilter(MouseEvent.ANY, enterEvent);
-                            card.removeEventFilter(GazeEvent.ANY, enterEvent);
+                    if (winner) {
+                        onCorrectCardSelected();
+                    } else {// bad card
+                        onWrongCardSelected();
+                    }
+                });
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                            if (winner) {
-                                onCorrectCardSelected();
-                            } else {// bad card
-                                onWrongCardSelected();
-                            }
-                        }
-                    });
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                currentTimeline.stop();
+                currentTimeline = new Timeline();
 
-                    currentTimeline.stop();
-                    currentTimeline = new Timeline();
+                currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+                    new KeyValue(card.xProperty(), card.getX() + (initWidth * zoom_factor - initWidth) / 2)));
+                currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+                    new KeyValue(card.yProperty(), card.getY() + (initHeight * zoom_factor - initHeight) / 2)));
+                currentTimeline.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth)));
+                currentTimeline.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight)));
 
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(card.xProperty(), card.getX() + (initWidth * zoom_factor - initWidth) / 2)));
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                            new KeyValue(card.yProperty(), card.getY() + (initHeight * zoom_factor - initHeight) / 2)));
-                    currentTimeline.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth)));
-                    currentTimeline.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(card.heightProperty(), initHeight)));
+                // Be sure that the card is properly positionned at the end
+                currentTimeline.setOnFinished((event) -> {
+                    card.setX(initX);
+                    card.setY(initY);
+                });
 
-                    // Be sure that the card is properly positionned at the end
-                    currentTimeline.setOnFinished((event) -> {
-                        card.setX(initX);
-                        card.setY(initY);
-                    });
+                currentTimeline.play();
 
-                    currentTimeline.play();
+                timelineProgressBar.stop();
 
-                    timelineProgressBar.stop();
-
-                    progressIndicator.setOpacity(0);
-                    progressIndicator.setProgress(0);
-                }
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
             }
         };
     }

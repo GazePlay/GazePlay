@@ -36,15 +36,12 @@ public class Lighting extends Parent {
         pixel.setFill(Color.BLACK);
         this.getChildren().add(pixel);
 
-        enterEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        enterEvent = e -> {
 
-                if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED
-                        || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)) {
+            if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED
+                || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)) {
 
-                    enter();
-                }
+                enter();
             }
         };
 

@@ -105,49 +105,46 @@ public class MolesChar extends Parent {
     }
 
     public EventHandler<Event> buildEvent() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return e -> {
 
-                if (!canTouched || !out || touched) // If the mole is not out or already touched: nothing append
-                    return;
+            if (!canTouched || !out || touched) // If the mole is not out or already touched: nothing append
+                return;
 
-                /* If the mole is out and touched */
-                if (out && canTouched
-                        && (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED
-                                || e.getEventType() == MouseEvent.MOUSE_ENTERED
-                                || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
+            /* If the mole is out and touched */
+            if (out && canTouched
+                && (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED
+                || e.getEventType() == MouseEvent.MOUSE_ENTERED
+                || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
 
-                    canTouched = false;
-                    if (!touched && out) {
-                        gameInstance.OneMoleWhacked();
-                        touched = true;
-                        goIn();
-                    }
-
-                    /*
-                     * progressIndicator.setOpacity(0); progressIndicator.setProgress(0); timeMinToWhackTheMole = new
-                     * Timeline(); timeMinToWhackTheMole.getKeyFrames().add(new KeyFrame(new
-                     * Duration(timeMinToWhackMole), new KeyValue(progressIndicator.progressProperty(), 1)));
-                     * timeMinToWhackTheMole.play(); timeMinToWhackTheMole.setOnFinished(new EventHandler<ActionEvent>()
-                     * { // If the user watch the mole enough time (timeMinToWhackMole)
-                     * 
-                     * @Override public void handle(ActionEvent actionEvent) { canTouched = false; if (!touched && out)
-                     * { gameInstance.OneMoleWacked(); touched = true; goIn(); }
-                     * 
-                     * } });
-                     */
-
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                    Timeline timeline = new Timeline();
-
-                    timeline.play();
-                    if (timeMinToWhackTheMole != null)
-                        timeMinToWhackTheMole.stop();
-                    progressIndicator.setOpacity(0);
-                    progressIndicator.setProgress(0);
+                canTouched = false;
+                if (!touched && out) {
+                    gameInstance.OneMoleWhacked();
+                    touched = true;
+                    goIn();
                 }
+
+                /*
+                 * progressIndicator.setOpacity(0); progressIndicator.setProgress(0); timeMinToWhackTheMole = new
+                 * Timeline(); timeMinToWhackTheMole.getKeyFrames().add(new KeyFrame(new
+                 * Duration(timeMinToWhackMole), new KeyValue(progressIndicator.progressProperty(), 1)));
+                 * timeMinToWhackTheMole.play(); timeMinToWhackTheMole.setOnFinished(new EventHandler<ActionEvent>()
+                 * { // If the user watch the mole enough time (timeMinToWhackMole)
+                 *
+                 * @Override public void handle(ActionEvent actionEvent) { canTouched = false; if (!touched && out)
+                 * { gameInstance.OneMoleWacked(); touched = true; goIn(); }
+                 *
+                 * } });
+                 */
+
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                Timeline timeline = new Timeline();
+
+                timeline.play();
+                if (timeMinToWhackTheMole != null)
+                    timeMinToWhackTheMole.stop();
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
             }
         };
     }
@@ -165,40 +162,33 @@ public class MolesChar extends Parent {
         translation.play();
         this.mole.opacityProperty().set(1);
 
-        translation.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
+        translation.setOnFinished(actionEvent -> {
 
-                canTouched = true;
+            canTouched = true;
 
-                gameInstance.gameContext.getChildren().add(moleMoved);
-                gameContext.getGazeDeviceManager().addEventFilter(moleMoved);
+            gameInstance.gameContext.getChildren().add(moleMoved);
+            gameContext.getGazeDeviceManager().addEventFilter(moleMoved);
 
-                mole.opacityProperty().set(0);
+            mole.opacityProperty().set(0);
 
-                out = true;
+            out = true;
 
-                timeMoleOut = new Timeline(); // New time this mole go out
-                Random r = new Random();
-                int time = r.nextInt(timeMoleStayOut) + 2000;
+            timeMoleOut = new Timeline(); // New time this mole go out
+            Random r = new Random();
+            int time = r.nextInt(timeMoleStayOut) + 2000;
 
-                timeMoleOut.getKeyFrames()
-                        .add(new KeyFrame(new Duration(Configuration.getInstance().getSpeedEffects() * time),
-                                new KeyValue(progressIndicator.progressProperty(), 1)));
-                timeMoleOut.play();
-                timeMoleOut.setOnFinished(new EventHandler<ActionEvent>() {
+            timeMoleOut.getKeyFrames()
+                .add(new KeyFrame(new Duration(Configuration.getInstance().getSpeedEffects() * time),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
+            timeMoleOut.play();
+            /* If the Mole is stay out without being touching */
+            timeMoleOut.setOnFinished(actionEvent1 -> {
+                if (!touched && out) {
 
-                    /* If the Mole is stay out without being touching */
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        if (!touched && out) {
+                    goIn(); // Go back in the hole
+                }
+            });
 
-                            goIn(); // Go back in the hole
-                        }
-                    }
-                });
-
-            }
         });
     }
 
@@ -219,13 +209,10 @@ public class MolesChar extends Parent {
         translation.setByX(0);
         translation.setByY(this.distTranslation);
         translation.play();
-        translation.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                gameInstance.nbMolesOut--;
-                mole.opacityProperty().set(0);
-                canGoOut = true;
-            }
+        translation.setOnFinished(actionEvent -> {
+            gameInstance.nbMolesOut--;
+            mole.opacityProperty().set(0);
+            canGoOut = true;
         });
     }
 

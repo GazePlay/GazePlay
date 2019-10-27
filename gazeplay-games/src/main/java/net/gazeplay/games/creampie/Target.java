@@ -124,14 +124,10 @@ public class Target extends Portrait {
 
         SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
 
-        sequence.setOnFinished(new EventHandler<ActionEvent>() {
+        sequence.setOnFinished(actionEvent -> {
 
-            @Override
-            public void handle(ActionEvent actionEvent) {
-
-                anniOff = true;
-                stats.notifyNewRoundReady();
-            }
+            anniOff = true;
+            stats.notifyNewRoundReady();
         });
 
         return sequence;

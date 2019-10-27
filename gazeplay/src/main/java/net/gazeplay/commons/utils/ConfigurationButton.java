@@ -21,9 +21,7 @@ public class ConfigurationButton extends CustomButton {
          * @Override public void handle(KeyEvent ke) { if (ke.getCode() == KeyCode.SPACE) {
          * configurationContext.getGazePlay().onReturnToMenu(); } } });
          */
-        configurationButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
-            configurationContext.getGazePlay().onDisplayConfigurationManagement(configurationContext);
-        });
+        configurationButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> configurationContext.getGazePlay().onDisplayConfigurationManagement(configurationContext));
         return configurationButton;
     }
 

@@ -29,19 +29,16 @@ public class StatsDisplay {
 
     public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
 
-        EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
-            @Override
-            public void handle(javafx.event.Event e) {
+        EventHandler<Event> homeEvent = e -> {
 
-                // if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+            // if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                statsContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
+            statsContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
 
-                gazePlay.onReturnToMenu();
+            gazePlay.onReturnToMenu();
 
-                statsContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
-                // }
-            }
+            statsContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
+            // }
         };
 
         HomeButton homeButton = new HomeButton();
@@ -55,7 +52,7 @@ public class StatsDisplay {
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
 
-        LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
+        LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);
 
         // lineChart.setTitle("Réaction");
         // defining a series
@@ -119,14 +116,8 @@ public class StatsDisplay {
 
         lineChart.setLegendVisible(false);
 
-        root.widthProperty().addListener((observable, oldValue, newValue) -> {
-
-            lineChart.setMaxWidth(newValue.doubleValue() * 0.4);
-        });
-        root.heightProperty().addListener((observable, oldValue, newValue) -> {
-
-            lineChart.setMaxHeight(newValue.doubleValue() * 0.4);
-        });
+        root.widthProperty().addListener((observable, oldValue, newValue) -> lineChart.setMaxWidth(newValue.doubleValue() * 0.4));
+        root.heightProperty().addListener((observable, oldValue, newValue) -> lineChart.setMaxHeight(newValue.doubleValue() * 0.4));
         lineChart.setMaxWidth(root.getWidth() * 0.4);
         lineChart.setMaxHeight(root.getHeight() * 0.4);
 
@@ -139,7 +130,7 @@ public class StatsDisplay {
         final NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Coordinates");
 
-        AreaChart<Number, Number> colorBands = new AreaChart<Number, Number>(xAxis, yAxis);
+        AreaChart<Number, Number> colorBands = new AreaChart<>(xAxis, yAxis);
         colorBands.setTitle("Color Bands");
 
         colorBands.setCreateSymbols(true);
@@ -166,14 +157,8 @@ public class StatsDisplay {
 
             colorBands.addEventHandler(MouseEvent.MOUSE_CLICKED, openAreaChartEvent);
 
-            root.widthProperty().addListener((observable, oldValue, newValue) -> {
-
-                colorBands.setMaxWidth(newValue.doubleValue() * 0.4);
-            });
-            root.heightProperty().addListener((observable, oldValue, newValue) -> {
-
-                colorBands.setMaxHeight(newValue.doubleValue() * 0.4);
-            });
+            root.widthProperty().addListener((observable, oldValue, newValue) -> colorBands.setMaxWidth(newValue.doubleValue() * 0.4));
+            root.heightProperty().addListener((observable, oldValue, newValue) -> colorBands.setMaxHeight(newValue.doubleValue() * 0.4));
             colorBands.setMaxWidth(root.getWidth() * 0.4);
             colorBands.setMaxHeight(root.getHeight() * 0.4);
 
@@ -187,10 +172,8 @@ public class StatsDisplay {
         gazeMetrics.setPreserveRatio(true);
 
         SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-        savedStatsInfo.addObserver((o, arg) -> {
-            Platform.runLater(
-                () -> gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString())));
-        });
+        savedStatsInfo.addObserver((o, arg) -> Platform.runLater(
+            () -> gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString()))));
 
         gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString()));
 
@@ -217,7 +200,7 @@ public class StatsDisplay {
 
     private static EventHandler<Event> createZoomOutAreaChartEventHandler(XYChart<Number, Number> chart,
                                                                           final Region root, int originalIndexInParent) {
-        return new EventHandler<Event>() {
+        return new EventHandler<>() {
             @Override
             public void handle(Event e) {
                 chart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
@@ -234,7 +217,7 @@ public class StatsDisplay {
 
     private static EventHandler<Event> createZoomOutLineChartEventHandler(XYChart<String, Number> chart,
                                                                           final Region root, int originalIndexInParent) {
-        return new EventHandler<Event>() {
+        return new EventHandler<>() {
             @Override
             public void handle(Event e) {
                 chart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
@@ -251,7 +234,7 @@ public class StatsDisplay {
 
     private static EventHandler<Event> createZoomInAreaChartEventHandler(XYChart<Number, Number> chart,
                                                                          final Region root) {
-        return new EventHandler<Event>() {
+        return new EventHandler<>() {
             @Override
             public void handle(Event e) {
                 chart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
@@ -268,7 +251,7 @@ public class StatsDisplay {
 
     private static EventHandler<Event> createZoomInLineChartEventHandler(XYChart<String, Number> chart,
                                                                          final Region root) {
-        return new EventHandler<Event>() {
+        return new EventHandler<>() {
             @Override
             public void handle(Event e) {
                 chart.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
@@ -285,7 +268,7 @@ public class StatsDisplay {
 
     private static EventHandler<Event> createZoomOutGazeMetricsEventHandler(ImageView gazeMetrics, final Region root,
                                                                             int originalIndexInParent) {
-        return new EventHandler<Event>() {
+        return new EventHandler<>() {
             @Override
             public void handle(Event e) {
                 gazeMetrics.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
@@ -301,7 +284,7 @@ public class StatsDisplay {
     }
 
     private static EventHandler<Event> createZoomInGazeMetricsEventHandler(ImageView gazeMetrics, final Region root) {
-        return new EventHandler<Event>() {
+        return new EventHandler<>() {
             @Override
             public void handle(Event e) {
                 gazeMetrics.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);

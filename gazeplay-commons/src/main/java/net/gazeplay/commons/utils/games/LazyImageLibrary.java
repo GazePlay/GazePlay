@@ -41,12 +41,9 @@ public class LazyImageLibrary extends AbstractImageLibrary {
     @Override
     protected Image loadImageAtIndex(int index) {
         try {
-            return imageCache.get(index, new Callable<Image>() {
-                @Override
-                public Image call() throws Exception {
-                    File file = allFiles.get(index);
-                    return ImageUtils.loadImage(file);
-                }
+            return imageCache.get(index, () -> {
+                File file = allFiles.get(index);
+                return ImageUtils.loadImage(file);
             });
         } catch (ExecutionException e) {
             throw new RuntimeException(e);

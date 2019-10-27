@@ -37,34 +37,20 @@ public class DrawBuilder {
         final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         initDraw(graphicsContext);
 
-        canvas.addEventHandler(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent event) {
-                graphicsContext.lineTo(event.getX(), event.getY());
-                // graphicsContext.setStroke(colorPicker.pickColor());
-                graphicsContext.stroke();
-            }
+        canvas.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
+            graphicsContext.lineTo(event.getX(), event.getY());
+            // graphicsContext.setStroke(colorPicker.pickColor());
+            graphicsContext.stroke();
         });
 
-        canvas.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent event) {
-                graphicsContext.setStroke(colorPicker.pickColor());
-                graphicsContext.beginPath();
-            }
+        canvas.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+            graphicsContext.setStroke(colorPicker.pickColor());
+            graphicsContext.beginPath();
         });
 
-        canvas.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+        canvas.addEventHandler(MouseEvent.MOUSE_EXITED, event -> graphicsContext.closePath());
 
-            @Override
-            public void handle(MouseEvent event) {
-                graphicsContext.closePath();
-            }
-        });
-
-        canvas.addEventFilter(GazeEvent.GAZE_MOVED, new EventHandler<GazeEvent>() {
+        canvas.addEventFilter(GazeEvent.GAZE_MOVED, new EventHandler<>() {
 
             AtomicInteger rateLimiter = new AtomicInteger(0);
 
@@ -84,20 +70,12 @@ public class DrawBuilder {
             }
         });
 
-        canvas.addEventFilter(GazeEvent.GAZE_ENTERED, new EventHandler<GazeEvent>() {
-            @Override
-            public void handle(GazeEvent event) {
-                graphicsContext.setStroke(colorPicker.pickColor());
-                graphicsContext.beginPath();
-            }
+        canvas.addEventFilter(GazeEvent.GAZE_ENTERED, event -> {
+            graphicsContext.setStroke(colorPicker.pickColor());
+            graphicsContext.beginPath();
         });
 
-        canvas.addEventFilter(GazeEvent.GAZE_EXITED, new EventHandler<GazeEvent>() {
-            @Override
-            public void handle(GazeEvent event) {
-                graphicsContext.closePath();
-            }
-        });
+        canvas.addEventFilter(GazeEvent.GAZE_EXITED, event -> graphicsContext.closePath());
 
         return canvas;
     }

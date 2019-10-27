@@ -136,7 +136,7 @@ public class ColorToolBox extends StackPane {
 
         // COLORS
 
-        List<Color> colors = new ArrayList<Color>();
+        List<Color> colors = new ArrayList<>();
         colors.add(Color.RED);
         colors.add(Color.BLUE);
         colors.add(Color.GREEN);
@@ -145,7 +145,7 @@ public class ColorToolBox extends StackPane {
         // 5
 
         // Build color boxes
-        colorBoxes = new ArrayList<ColorBox>();
+        colorBoxes = new ArrayList<>();
         ToggleGroup group = new ToggleGroup();
         firstColorDisplayed = 0;
         Color color;
@@ -216,9 +216,7 @@ public class ColorToolBox extends StackPane {
 
         });
 
-        colorPicker.setOnAction((event) -> {
-            customBox.setColor(colorPicker.getValue());
-        });
+        colorPicker.setOnAction((event) -> customBox.setColor(colorPicker.getValue()));
         colorPicker.prefWidthProperty().bind(customBox.widthProperty());
         customColorPickerButton.prefWidthProperty().bind(customBox.widthProperty());
 
@@ -433,15 +431,9 @@ public class ColorToolBox extends StackPane {
         Pane colorizeButtonPane = new StackPane(colorize);
         Pane stopColorizeButtonPane = new StackPane(stopColorize);
 
-        EventHandler enableColorizeButton = (Event event1) -> {
+        EventHandler enableColorizeButton = (Event event1) -> colorsGame.setEnableColorization(false);
 
-            colorsGame.setEnableColorization(false);
-        };
-
-        disableColorizeButton = (Event event1) -> {
-
-            colorsGame.setEnableColorization(true);
-        };
+        disableColorizeButton = (Event event1) -> colorsGame.setEnableColorization(true);
 
         colorsGame.getDrawingEnable().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {

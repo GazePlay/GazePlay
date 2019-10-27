@@ -72,7 +72,7 @@ public class Piano extends Parent implements GameLifeCycle {
         centerY = dimension2D.getHeight() / 2.2;
         this.fragments = buildFragments();
         this.getChildren().addAll(fragments);
-        TilesTab = new ArrayList<Tile>();
+        TilesTab = new ArrayList<>();
         instru = new Instru();
         gameContext.getChildren().add(this);
         Jukebox = new Jukebox(gameContext);
@@ -162,8 +162,8 @@ public class Piano extends Parent implements GameLifeCycle {
         log.info("you loaded the song : " + fileName);
         midiReader = new midiReader(inputStream);
         FirstNote = midiReader.nextNote();
-        for (int i = 0; i < TilesTab.size(); i++) {
-            TilesTab.get(i).arc.setFill(TilesTab.get(i).color1);
+        for (Tile tile : TilesTab) {
+            tile.arc.setFill(tile.color1);
         }
 
         if (FirstNote != -1) {
@@ -190,42 +190,39 @@ public class Piano extends Parent implements GameLifeCycle {
 
         this.getChildren().remove(circ);
 
-        EventHandler<Event> circleEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (circleTemp.getFill() == Color.YELLOW) {
-                    if (FirstNote != -1) {
-                        int precNote = FirstNote;
-                        int precKey = midiReader.key;
+        EventHandler<Event> circleEvent = e -> {
+            if (circleTemp.getFill() == Color.YELLOW) {
+                if (FirstNote != -1) {
+                    int precNote = FirstNote;
+                    int precKey = midiReader.key;
 
-                        int index = midiReader.nextNote();
-                        if (index > -1) {
-                            FirstNote = NOTE_NAMES[index];
-                        } else {
-                            FirstNote = index;
-                        }
-
-                        instru.note_on(precKey);
-                        stats.incNbGoals();
-                        stats.notifyNewRoundReady();
-
-                        if (FirstNote != -1) {
-                            TilesTab.get(precNote).arc.setFill(TilesTab.get(precNote).color1);
-                            circleTemp.setFill(Color.BLACK);
-                            circleTemp.setOpacity(0);
-                            if (FirstNote != -1) {
-                                TilesTab.get(FirstNote).arc.setFill(Color.YELLOW);
-                            } else {
-                                TilesTab.get(FirstNote).arc.setFill(TilesTab.get(precNote).color1);
-                            }
-
-                        } else {
-                            TilesTab.get(precNote).arc.setFill(TilesTab.get(precNote).color1);
-                            circleTemp.setFill(Color.BLACK);
-                            circleTemp.setOpacity(0);
-                        }
-
+                    int index = midiReader.nextNote();
+                    if (index > -1) {
+                        FirstNote = NOTE_NAMES[index];
+                    } else {
+                        FirstNote = index;
                     }
+
+                    instru.note_on(precKey);
+                    stats.incNbGoals();
+                    stats.notifyNewRoundReady();
+
+                    if (FirstNote != -1) {
+                        TilesTab.get(precNote).arc.setFill(TilesTab.get(precNote).color1);
+                        circleTemp.setFill(Color.BLACK);
+                        circleTemp.setOpacity(0);
+                        if (FirstNote != -1) {
+                            TilesTab.get(FirstNote).arc.setFill(Color.YELLOW);
+                        } else {
+                            TilesTab.get(FirstNote).arc.setFill(TilesTab.get(precNote).color1);
+                        }
+
+                    } else {
+                        TilesTab.get(precNote).arc.setFill(TilesTab.get(precNote).color1);
+                        circleTemp.setFill(Color.BLACK);
+                        circleTemp.setOpacity(0);
+                    }
+
                 }
             }
         };
@@ -279,79 +276,72 @@ public class Piano extends Parent implements GameLifeCycle {
         a3.arc.setStrokeWidth(10);
         a3.setVisible(true);
 
-        EventHandler<Event> tileEventEnter = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        EventHandler<Event> tileEventEnter = e -> {
 
-                if (((Tile) e.getTarget()).note == FirstNote) {
+            if (((Tile) e.getTarget()).note == FirstNote) {
 
-                    int precNote = FirstNote;
-                    int precKey = midiReader.key;
+                int precNote = FirstNote;
+                int precKey = midiReader.key;
 
-                    int index = midiReader.nextNote();
-                    if (index > -1) {
-                        FirstNote = NOTE_NAMES[index];
+                int index1 = midiReader.nextNote();
+                if (index1 > -1) {
+                    FirstNote = NOTE_NAMES[index1];
+                } else {
+                    FirstNote = index1;
+                }
+
+                if (precNote != -1 && TilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
+                    instru.note_on(precKey);
+                    stats.incNbGoals();
+                    stats.notifyNewRoundReady();
+                    double x;
+                    double y;
+
+                    if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                        MouseEvent me = (MouseEvent) e;
+                        x = me.getX();
+                        y = me.getY();
+                    } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                        GazeEvent ge = (GazeEvent) e;
+                        x = ge.getX();
+                        y = ge.getY();
                     } else {
-                        FirstNote = index;
-                    }
-
-                    if (precNote != -1 && TilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
-                        instru.note_on(precKey);
-                        stats.incNbGoals();
-                        stats.notifyNewRoundReady();
-                        double x;
-                        double y;
-
-                        if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                            MouseEvent me = (MouseEvent) e;
-                            x = me.getX();
-                            y = me.getY();
-                        } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                            GazeEvent ge = (GazeEvent) e;
-                            x = ge.getX();
-                            y = ge.getY();
-                        } else {
-                            x = centerX + size * Math.cos(Math.toRadians(-theta));
-                            y = centerY + size * Math.sin(Math.toRadians(-theta));
-                            explose(x, y);
-                            double theta = (((index + 1) * 360) / 7 - origin);
-                            x = centerX + size * Math.cos(Math.toRadians(-theta));
-                            y = centerY + size * Math.sin(Math.toRadians(-theta));
-                        }
+                        x = centerX + size * Math.cos(Math.toRadians(-theta));
+                        y = centerY + size * Math.sin(Math.toRadians(-theta));
                         explose(x, y);
-                        if (FirstNote != -1) {
-                            if (TilesTab.get(FirstNote).arc.getFill() == Color.YELLOW) {
-                                TilesTab.get(precNote).arc.setFill(color2);
-                                circleTemp.setFill(Color.YELLOW);
-                                circleTemp.setOpacity(1);
-                            } else {
-                                TilesTab.get(precNote).arc.setFill(color2);
-                                TilesTab.get(FirstNote).arc.setFill(Color.YELLOW);
-                            }
-
+                        double theta1 = (((index1 + 1) * 360) / 7 - origin);
+                        x = centerX + size * Math.cos(Math.toRadians(-theta1));
+                        y = centerY + size * Math.sin(Math.toRadians(-theta1));
+                    }
+                    explose(x, y);
+                    if (FirstNote != -1) {
+                        if (TilesTab.get(FirstNote).arc.getFill() == Color.YELLOW) {
+                            TilesTab.get(precNote).arc.setFill(color2);
+                            circleTemp.setFill(Color.YELLOW);
+                            circleTemp.setOpacity(1);
                         } else {
                             TilesTab.get(precNote).arc.setFill(color2);
+                            TilesTab.get(FirstNote).arc.setFill(Color.YELLOW);
                         }
+
+                    } else {
+                        TilesTab.get(precNote).arc.setFill(color2);
                     }
-
-                } else {
-                    TilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color2);
-
                 }
+
+            } else {
+                TilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color2);
 
             }
 
         };
 
-        EventHandler<Event> tileEventExited = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                log.info("index ={}", index);
-                if (TilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
-                    TilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
-                }
-
+        EventHandler<Event> tileEventExited = e -> {
+            log.info("index ={}", index);
+            if (TilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
+                TilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
             }
+
         };
 
         if ((origin != 0) && (index == 8 || index == 12)) {

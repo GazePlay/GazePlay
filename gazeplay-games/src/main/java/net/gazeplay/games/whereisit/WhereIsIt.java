@@ -182,28 +182,25 @@ public class WhereIsIt implements GameLifeCycle {
                 + questionText.getBoundsInParent().getHeight() * 3;
         fullAnimation.setToY(bottomCenter);
 
-        fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                // gameContext.getChildren().remove(questionText);
+        fullAnimation.setOnFinished(actionEvent -> {
+            // gameContext.getChildren().remove(questionText);
 
-                gameContext.getChildren().removeAll(pictogramesList);
+            gameContext.getChildren().removeAll(pictogramesList);
 
-                log.debug("Adding {} pictures", currentRoundDetails.pictureCardList.size());
-                gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
+            log.debug("Adding {} pictures", currentRoundDetails.pictureCardList.size());
+            gameContext.getChildren().addAll(currentRoundDetails.pictureCardList);
 
-                for (PictureCard p : currentRoundDetails.pictureCardList) {
-                    log.debug("p = {}", p);
-                    p.toFront();
-                    p.setOpacity(1);
-                }
-
-                questionText.toFront();
-
-                stats.notifyNewRoundReady();
-
-                gameContext.onGameStarted();
+            for (PictureCard p : currentRoundDetails.pictureCardList) {
+                log.debug("p = {}", p);
+                p.toFront();
+                p.setOpacity(1);
             }
+
+            questionText.toFront();
+
+            stats.notifyNewRoundReady();
+
+            gameContext.onGameStarted();
         });
 
         return fullAnimation;
@@ -585,7 +582,7 @@ public class WhereIsIt implements GameLifeCycle {
                     log.debug("file " + file);
                     log.debug("folder " + folder);
 
-                    if (file.indexOf(folder) >= 0) {
+                    if (file.contains(folder)) {
 
                         File f = new File(path + file);
 
@@ -777,25 +774,21 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(WhereIsIt gameInstance) {
-            return new EventHandler<ActionEvent>() {
+            return actionEvent -> {
 
-                @Override
-                public void handle(ActionEvent actionEvent) {
+                log.debug("FINISHED");
 
-                    log.debug("FINISHED");
+                selected = true;
 
-                    selected = true;
+                imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandler);
+                imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandler);
+                gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
 
-                    imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandler);
-                    imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandler);
-                    gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
-
-                    if (winner) {
-                        onCorrectCardSelected(gameInstance);
-                    } else {
-                        // bad card
-                        onWrongCardSelected(gameInstance);
-                    }
+                if (winner) {
+                    onCorrectCardSelected(gameInstance);
+                } else {
+                    // bad card
+                    onWrongCardSelected(gameInstance);
                 }
             };
         }
@@ -830,26 +823,17 @@ public class WhereIsIt implements GameLifeCycle {
             fullAnimation.getChildren().add(translateToCenterTransition);
             fullAnimation.getChildren().add(scaleToFullScreenTransition);
 
-            fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
+            fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
+                gameInstance.dispose();
+                gameContext.clear();
 
-                    gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            gameInstance.dispose();
-                            gameContext.clear();
+                gameInstance.launch();
+                // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
+                // gameInstance.stats);
 
-                            gameInstance.launch();
-                            // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
-                            // gameInstance.stats);
+                gameContext.onGameStarted();
 
-                            gameContext.onGameStarted();
-
-                        }
-                    });
-                }
-            });
+            }));
 
             fullAnimation.play();
         }
@@ -875,12 +859,9 @@ public class WhereIsIt implements GameLifeCycle {
             ParallelTransition fullAnimation = new ParallelTransition();
             fullAnimation.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
 
-            fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    gameInstance.playQuestionSound();
-                    customInputEventHandler.ignoreAnyInput = false;
-                }
+            fullAnimation.setOnFinished(actionEvent -> {
+                gameInstance.playQuestionSound();
+                customInputEventHandler.ignoreAnyInput = false;
             });
 
             fullAnimation.play();

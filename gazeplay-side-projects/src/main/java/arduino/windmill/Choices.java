@@ -60,7 +60,7 @@ public class Choices extends Parent {
 
         enterEvent = buildEvent();
 
-        currentChoice = new ArrayList<Choice>(2);
+        currentChoice = new ArrayList<>(2);
 
         Choice R1 = choices.get("oui");
 
@@ -94,7 +94,7 @@ public class Choices extends Parent {
 
     private void buildPictos() {
 
-        choices = new HashMap<String, Choice>(10);
+        choices = new HashMap<>(10);
 
         choices.put("oui", new Choice("oui"));
 
@@ -102,67 +102,64 @@ public class Choices extends Parent {
     }
 
     private EventHandler<Event> buildEvent() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return e -> {
 
-                Rectangle target = (Rectangle) e.getTarget();
+            Rectangle target = (Rectangle) e.getTarget();
 
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    entry = (new Date()).getTime();
+                entry = (new Date()).getTime();
 
-                    int i;
-                    for (i = 0; i < currentChoice.size() && !target.equals(currentChoice.get(i).rectangle); i++)
-                        ;
+                int i;
+                for (i = 0; i < currentChoice.size() && !target.equals(currentChoice.get(i).rectangle); i++)
+                    ;
 
-                    if (i < currentChoice.size())
-                        currentChoice.get(i).sound.play();
+                if (i < currentChoice.size())
+                    currentChoice.get(i).sound.play();
 
-                    Timeline timeline = new Timeline();
+                Timeline timeline = new Timeline();
 
-                    timeline.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.RED)));
+                timeline.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.RED)));
 
-                    timeline.play();
+                timeline.play();
 
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                    Timeline timeline = new Timeline();
+                Timeline timeline = new Timeline();
 
-                    timeline.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.BLACK)));
+                timeline.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.BLACK)));
 
-                    timeline.play();
+                timeline.play();
 
-                    entry = -1;
-                } else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                entry = -1;
+            } else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
 
-                    // log.info("MOVE");
+                // log.info("MOVE");
 
-                    long now = (new Date()).getTime();
+                long now = (new Date()).getTime();
 
-                    if (entry != -1 && (now - entry) > min_time) {
+                if (entry != -1 && (now - entry) > min_time) {
 
-                        for (Choice P : currentChoice) {
+                    for (Choice P : currentChoice) {
 
-                            if (P.rectangle.equals(target)) {
+                        if (P.rectangle.equals(target)) {
 
-                                if (P.name.equals("oui")) {
+                            if (P.name.equals("oui")) {
 
-                                    if (!current.equals("oui")) {
+                                if (!current.equals("oui")) {
 
-                                        arduino.sendArduino("M");
-                                        current = "oui";
-                                    }
-                                } else if (!current.equals("non")) {
-
-                                    arduino.sendArduino("L");
-                                    current = "non";
+                                    arduino.sendArduino("M");
+                                    current = "oui";
                                 }
-                            }
+                            } else if (!current.equals("non")) {
 
+                                arduino.sendArduino("L");
+                                current = "non";
+                            }
                         }
+
                     }
                 }
             }

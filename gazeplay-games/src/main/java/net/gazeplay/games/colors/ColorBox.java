@@ -162,10 +162,7 @@ public class ColorBox extends StackPane {
             } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED
                     || event.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                progressIndicator.setOnFinish((ActionEvent event1) -> {
-
-                    action();
-                });
+                progressIndicator.setOnFinish((ActionEvent event1) -> action());
 
                 colorBox.progressIndicator.start();
 

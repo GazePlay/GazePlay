@@ -85,9 +85,7 @@ public class CustomColorPicker extends Pane {
         mainNode.getChildren().add(colorGrid);
 
         // Send a close request on the window
-        EventHandler<ActionEvent> closeEvent = (ActionEvent event) -> {
-            stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
-        };
+        EventHandler<ActionEvent> closeEvent = (ActionEvent event) -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
 
         // Close button
         Image buttonImg = null;

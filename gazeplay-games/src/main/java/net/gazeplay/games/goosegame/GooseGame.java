@@ -357,9 +357,7 @@ public class GooseGame implements GameLifeCycle {
                 new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
                 new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0)));
 
-        showMessage.setOnFinished(e -> {
-            messages.getChildren().remove(messageText);
-        });
+        showMessage.setOnFinished(e -> messages.getChildren().remove(messageText));
 
         showMessage.playFromStart();
     }
@@ -372,9 +370,7 @@ public class GooseGame implements GameLifeCycle {
      */
     void winner(Pawn pawn) {
         showMessage("Player %d wins the game", pawn.getNumber());
-        gameContext.playWinTransition(200, actionEvent -> {
-            dispose();
-        });
+        gameContext.playWinTransition(200, actionEvent -> dispose());
     }
 
     public void playMovementSound() {

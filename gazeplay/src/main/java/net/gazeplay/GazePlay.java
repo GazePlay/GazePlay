@@ -112,28 +112,24 @@ public class GazePlay extends Application {
         primaryStage.centerOnScreen();
         primaryStage.show();
 
-        this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent ke) {
-                if (ke.getCode() == KeyCode.SPACE && Configuration.getInstance().isGazeMouseEnable()) {
-                    Platform.runLater(() -> {
-                        try {
-                            Robot robot = new Robot();
-                            robot.mousePress(InputEvent.BUTTON1_MASK);
-                            robot.mouseRelease(InputEvent.BUTTON1_MASK);
-                        } catch (AWTException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    });
-                }
+        this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
+            if (ke.getCode() == KeyCode.SPACE && Configuration.getInstance().isGazeMouseEnable()) {
+                Platform.runLater(() -> {
+                    try {
+                        Robot robot = new Robot();
+                        robot.mousePress(InputEvent.BUTTON1_MASK);
+                        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+                    } catch (AWTException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                });
             }
         });
 
-        this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent ke) {
-                if (ke.getCode() == KeyCode.S && Configuration.getInstance().isGazeMouseEnable()) {
-                    Configuration.setMouseFree(!Configuration.isMouseFree());
-                }
+        this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
+            if (ke.getCode() == KeyCode.S && Configuration.getInstance().isGazeMouseEnable()) {
+                Configuration.setMouseFree(!Configuration.isMouseFree());
             }
         });
     }

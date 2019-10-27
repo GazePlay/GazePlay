@@ -149,27 +149,24 @@ public class Letters implements GameLifeCycle {
                 + questionText.getBoundsInParent().getHeight() * 3;
         fullAnimation.setToY(bottomCenter);
 
-        fullAnimation.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
+        fullAnimation.setOnFinished(actionEvent -> {
 
-                questionText.toFront();
-                questionText.setOpacity(0);
+            questionText.toFront();
+            questionText.setOpacity(0);
 
-                setHiddenPicture(gameContext);
+            setHiddenPicture(gameContext);
 
-                double width = dimension2D.getWidth() / nbColomns;
-                double height = dimension2D.getHeight() / nbLines;
+            double width = dimension2D.getWidth() / nbColomns;
+            double height = dimension2D.getHeight() / nbLines;
 
-                Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
-                currentRoundDetails.remainingCount = correctCount;
+            Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
+            currentRoundDetails.remainingCount = correctCount;
 
-                stats.notifyNewRoundReady();
+            stats.notifyNewRoundReady();
 
-                stats.notifyNewRoundReady();
+            stats.notifyNewRoundReady();
 
-                gameContext.onGameStarted();
-            }
+            gameContext.onGameStarted();
         });
 
         fullAnimation.play();
@@ -251,18 +248,18 @@ public class Letters implements GameLifeCycle {
         int maxX = blocs.length;
         int maxY = blocs[0].length;
 
-        final Service<Void> calculateService = new Service<Void>() {
+        final Service<Void> calculateService = new Service<>() {
 
             @Override
             protected Task<Void> createTask() {
-                return new Task<Void>() {
+                return new Task<>() {
 
                     @Override
                     protected Void call() throws Exception {
-                        for (int i = 0; i < maxX; i++) {
+                        for (Bloc[] bloc : blocs) {
                             for (int j = 0; j < maxY; j++) {
 
-                                removeBloc(blocs[i][j]);
+                                removeBloc(bloc[j]);
 
                             }
                         }

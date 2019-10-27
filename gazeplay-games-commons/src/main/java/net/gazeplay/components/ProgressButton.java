@@ -107,44 +107,35 @@ public class ProgressButton extends StackPane {
         ProgressButton pb = this;
         Event e1 = new Event(pb, pb, GazeEvent.ANY);
 
-        enterbuttonHandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (inuse) {
-                    indicator.setProgress(0);
-                    indicator.setOpacity(0.5);
+        enterbuttonHandler = e -> {
+            if (inuse) {
+                indicator.setProgress(0);
+                indicator.setOpacity(0.5);
 
-                    timelineProgressBar.stop();
-                    timelineProgressBar.getKeyFrames().clear();
+                timelineProgressBar.stop();
+                timelineProgressBar.getKeyFrames().clear();
 
-                    timelineProgressBar.setDelay(new Duration(300));
+                timelineProgressBar.setDelay(new Duration(300));
 
-                    timelineProgressBar.getKeyFrames().add(
-                        new KeyFrame(new Duration(fixationLength), new KeyValue(indicator.progressProperty(), 1)));
+                timelineProgressBar.getKeyFrames().add(
+                    new KeyFrame(new Duration(fixationLength), new KeyValue(indicator.progressProperty(), 1)));
 
-                    timelineProgressBar.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            indicator.setOpacity(0);
-                            if (enterEvent != null) {
-                                enterEvent.handle(e1);
-                            }
-                        }
-                    });
-                    timelineProgressBar.play();
-                }
+                timelineProgressBar.onFinishedProperty().set(actionEvent -> {
+                    indicator.setOpacity(0);
+                    if (enterEvent != null) {
+                        enterEvent.handle(e1);
+                    }
+                });
+                timelineProgressBar.play();
             }
         };
 
-        exitbuttonHandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (inuse) {
+        exitbuttonHandler = e -> {
+            if (inuse) {
 
-                    timelineProgressBar.stop();
-                    indicator.setOpacity(0);
-                    indicator.setProgress(0);
-                }
+                timelineProgressBar.stop();
+                indicator.setOpacity(0);
+                indicator.setProgress(0);
             }
         };
 

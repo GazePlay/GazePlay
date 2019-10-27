@@ -362,7 +362,7 @@ public class ColorsGame implements GameLifeCycle {
 
         final ColorsGame game = this;
 
-        return new EventHandler<Event>() {
+        return new EventHandler<>() {
 
             private Double gazeXOrigin = 0.;
             private Double gazeYOrigin = 0.;
@@ -402,10 +402,7 @@ public class ColorsGame implements GameLifeCycle {
                     gazeXOrigin = currentX;
                     gazeYOrigin = currentY;
 
-                    gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
-
-                        colorize(currentX, currentY);
-                    });
+                    gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
 
                     gazeProgressIndicator.start();
                 } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
@@ -425,8 +422,8 @@ public class ColorsGame implements GameLifeCycle {
 
                     // If gaze still around first point
                     if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
-                            && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
-                            && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
+                        && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
+                        && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
 
                         // Do nothing
                     }
@@ -437,10 +434,7 @@ public class ColorsGame implements GameLifeCycle {
                         gazeYOrigin = currentY;
 
                         gazeProgressIndicator.stop();
-                        gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
-
-                            colorize(currentX, currentY);
-                        });
+                        gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
 
                         gazeProgressIndicator.start();
                     }
@@ -456,10 +450,7 @@ public class ColorsGame implements GameLifeCycle {
                     currentX = gazeXOrigin;
                     currentY = gazeYOrigin;
 
-                    gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
-
-                        colorize(currentX, currentY);
-                    });
+                    gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
 
                     gazeProgressIndicator.start();
                 } else if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
@@ -470,8 +461,8 @@ public class ColorsGame implements GameLifeCycle {
 
                     // If mouse still around first point
                     if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
-                            && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
-                            && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
+                        && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
+                        && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
 
                         // Do nothin
                     }
@@ -482,10 +473,7 @@ public class ColorsGame implements GameLifeCycle {
                         gazeYOrigin = currentY;
 
                         gazeProgressIndicator.stop();
-                        gazeProgressIndicator.setOnFinish((ActionEvent event1) -> {
-
-                            colorize(currentX, currentY);
-                        });
+                        gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
 
                         gazeProgressIndicator.start();
                     }
@@ -559,7 +547,7 @@ public class ColorsGame implements GameLifeCycle {
         }
     }
 
-    private final Deque<HorizontalZone> horiZones = new ArrayDeque<HorizontalZone>();
+    private final Deque<HorizontalZone> horiZones = new ArrayDeque<>();
 
     private void floodInColumnAndLine(final PixelWriter pixelWriter, final PixelReader pixelReader,
             final Color newColor, final int x, final int y, final int width, final int height, final Color oldColor) {

@@ -46,18 +46,15 @@ public class Target extends Parent {
         this.progressIndicator = createProgressIndicator(100);
         this.getChildren().add(this.progressIndicator);
 
-        enterEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    enter();
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                    if (timelineProgressBar != null)
-                        timelineProgressBar.stop();
+        enterEvent = (EventHandler<Event>) e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                enter();
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                if (timelineProgressBar != null)
+                    timelineProgressBar.stop();
 
-                    progressIndicator.setOpacity(0);
-                    progressIndicator.setProgress(0);
-                }
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
             }
         };
     }
@@ -68,12 +65,9 @@ public class Target extends Parent {
         timelineProgressBar = new Timeline();
         timelineProgressBar.getKeyFrames()
                 .add(new KeyFrame(new Duration(1000), new KeyValue(progressIndicator.progressProperty(), 1)));
-        timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                progressIndicator.setOpacity(0);
-                Target.this.gameInstance.enter(Target.this);
-            }
+        timelineProgressBar.setOnFinished(actionEvent -> {
+            progressIndicator.setOpacity(0);
+            Target.this.gameInstance.enter(Target.this);
         });
         timelineProgressBar.play();
     }

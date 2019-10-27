@@ -149,27 +149,17 @@ public class Bloc extends Parent {// Rectangle {
 
         // currentTimeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
         if (gameInstance.currentRoundDetails.remainingCount == 0) {
-            currentTimeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
+            currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
+                gameInstance.dispose();
 
-                    gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+                gameContext.clear();
 
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            gameInstance.dispose();
+                gameInstance.launch();
 
-                            gameContext.clear();
+                stats.notifyNewRoundReady();
 
-                            gameInstance.launch();
-
-                            stats.notifyNewRoundReady();
-
-                            gameContext.onGameStarted();
-                        }
-                    });
-                }
-            });
+                gameContext.onGameStarted();
+            }));
         }
 
         currentTimeline.play();
@@ -211,82 +201,75 @@ public class Bloc extends Parent {// Rectangle {
 
     private EventHandler<Event> buildEvent() {
 
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return e -> {
 
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    progressIndicator.setOpacity(1);
-                    progressIndicator.setProgress(0);
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
 
-                    currentTimeline.stop();
-                    currentTimeline = new Timeline();
+                currentTimeline.stop();
+                currentTimeline = new Timeline();
 
-                    // currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    // new KeyValue(bloc.xProperty(), bloc.getX() - (width * zoom_factor - width) / 2)));
-                    // currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    // new KeyValue(bloc.yProperty(), bloc.getY() - (height * zoom_factor - height) / 2)));
-                    // currentTimeline.getKeyFrames().add(
-                    // new KeyFrame(new Duration(1), new KeyValue(bloc.widthProperty(), width * zoom_factor)));
-                    // currentTimeline.getKeyFrames().add(
-                    // new KeyFrame(new Duration(1), new KeyValue(bloc.heightProperty(), height * zoom_factor)));
+                // currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+                // new KeyValue(bloc.xProperty(), bloc.getX() - (width * zoom_factor - width) / 2)));
+                // currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+                // new KeyValue(bloc.yProperty(), bloc.getY() - (height * zoom_factor - height) / 2)));
+                // currentTimeline.getKeyFrames().add(
+                // new KeyFrame(new Duration(1), new KeyValue(bloc.widthProperty(), width * zoom_factor)));
+                // currentTimeline.getKeyFrames().add(
+                // new KeyFrame(new Duration(1), new KeyValue(bloc.heightProperty(), height * zoom_factor)));
 
-                    // timelineProgressBar = new Timeline();
+                // timelineProgressBar = new Timeline();
 
-                    // timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
-                    // new KeyValue(progressIndicator.progressProperty(), 1)));
+                // timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                // new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                    currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
-                            new KeyValue(progressIndicator.progressProperty(), 1)));
+                currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                    currentTimeline.play();
+                currentTimeline.play();
 
-                    // timelineProgressBar.play();
+                // timelineProgressBar.play();
 
-                    // timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
-                    currentTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+                // timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
+                currentTimeline.setOnFinished(actionEvent -> {
 
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
+                    bloc.removeEventFilter(MouseEvent.ANY, enterEvent);
+                    bloc.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-                            bloc.removeEventFilter(MouseEvent.ANY, enterEvent);
-                            bloc.removeEventFilter(GazeEvent.ANY, enterEvent);
+                    if (isMainLetter) {
+                        onCorrectBlocSelected();
+                    } else {// bad card
+                        onWrongBlocSelected();
+                    }
+                });
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                            if (isMainLetter) {
-                                onCorrectBlocSelected();
-                            } else {// bad card
-                                onWrongBlocSelected();
-                            }
-                        }
-                    });
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                currentTimeline.stop();
+                currentTimeline = new Timeline();
 
-                    currentTimeline.stop();
-                    currentTimeline = new Timeline();
+                currentTimeline.getKeyFrames().add(
+                    new KeyFrame(new Duration(1), new KeyValue(bloc.xProperty(), bloc.getX() + (width) / 2)));
+                currentTimeline.getKeyFrames().add(
+                    new KeyFrame(new Duration(1), new KeyValue(bloc.yProperty(), bloc.getY() + (height) / 2)));
+                currentTimeline.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1), new KeyValue(bloc.widthProperty(), width)));
+                currentTimeline.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1), new KeyValue(bloc.heightProperty(), height)));
 
-                    currentTimeline.getKeyFrames().add(
-                            new KeyFrame(new Duration(1), new KeyValue(bloc.xProperty(), bloc.getX() + (width) / 2)));
-                    currentTimeline.getKeyFrames().add(
-                            new KeyFrame(new Duration(1), new KeyValue(bloc.yProperty(), bloc.getY() + (height) / 2)));
-                    currentTimeline.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(bloc.widthProperty(), width)));
-                    currentTimeline.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(bloc.heightProperty(), height)));
+                // Be sure that the card is properly positionned at the end
+                // currentTimeline.setOnFinished((event) -> {
+                // bloc.setX(posX);
+                // bloc.setY(posY);
+                // });
 
-                    // Be sure that the card is properly positionned at the end
-                    // currentTimeline.setOnFinished((event) -> {
-                    // bloc.setX(posX);
-                    // bloc.setY(posY);
-                    // });
+                currentTimeline.play();
 
-                    currentTimeline.play();
+                // timelineProgressBar.stop();
 
-                    // timelineProgressBar.stop();
-
-                    progressIndicator.setOpacity(0);
-                    progressIndicator.setProgress(0);
-                }
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
             }
         };
     }

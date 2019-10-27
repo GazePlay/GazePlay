@@ -51,7 +51,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
         final Configuration config = Configuration.getInstance();
         this.duration = config.getFixationLength();
         this.animation = new Timeline();
-        this.nodedToListenTo = new HashMap<Node, EventHandler>();
+        this.nodedToListenTo = new HashMap<>();
 
         onFinishHandler = buildOnFinishEventHandler();
     }

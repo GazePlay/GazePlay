@@ -120,13 +120,10 @@ public class Target extends Portrait {
                 new Duration(Configuration.getInstance().getSpeedEffects() * length), this);
         translation.setByX(-this.getCenterX() + newPosition.getX());
         translation.setByY(-this.getCenterY() + newPosition.getY());
-        translation.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                resetTargetAtPosition(newPosition);
+        translation.setOnFinished(actionEvent -> {
+            resetTargetAtPosition(newPosition);
 
-                move();
-            }
+            move();
         });
 
         currentTranslation = translation;
@@ -283,14 +280,10 @@ public class Target extends Portrait {
         SequentialTransition sequence = new SequentialTransition(transition1, transition2, childrenTimelineStart,
                 childrenTimelineEnd, selfTimeLine, transition4);
 
-        sequence.setOnFinished(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                animationStopped = true;
-                stats.notifyNewRoundReady();
-                move();
-            }
+        sequence.setOnFinished(actionEvent -> {
+            animationStopped = true;
+            stats.notifyNewRoundReady();
+            move();
         });
 
         sequence.play();

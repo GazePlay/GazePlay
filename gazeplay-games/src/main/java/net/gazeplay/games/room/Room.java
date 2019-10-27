@@ -164,19 +164,11 @@ public class Room implements GameLifeCycle {
             }
         });
 
-        rectangleArrowWest.setOnMouseMoved((event) -> {
-            rotateY.setAngle(rotateY.getAngle() % 360 - 0.25);
-        });
-        rectangleArrowWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateY.setAngle(rotateY.getAngle() % 360 - 0.1);
-        });
+        rectangleArrowWest.setOnMouseMoved((event) -> rotateY.setAngle(rotateY.getAngle() % 360 - 0.25));
+        rectangleArrowWest.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> rotateY.setAngle(rotateY.getAngle() % 360 - 0.1));
 
-        rectangleArrowEast.setOnMouseMoved((event) -> {
-            rotateY.setAngle(rotateY.getAngle() % 360 + 0.25);
-        });
-        rectangleArrowEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> {
-            rotateY.setAngle(rotateY.getAngle() % 360 + 0.1);
-        });
+        rectangleArrowEast.setOnMouseMoved((event) -> rotateY.setAngle(rotateY.getAngle() % 360 + 0.25));
+        rectangleArrowEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> rotateY.setAngle(rotateY.getAngle() % 360 + 0.1));
     }
 
     @Override

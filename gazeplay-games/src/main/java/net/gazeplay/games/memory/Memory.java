@@ -155,7 +155,7 @@ public class Memory implements GameLifeCycle {
         List<MemoryCard> result = new ArrayList<>();
 
         // HashMap <index, number of times the index was used >
-        HashMap<Integer, Integer> indUsed = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> indUsed = new HashMap<>();
         indUsed.clear();
 
         final int fixationlength = config.getFixationLength();

@@ -78,12 +78,7 @@ public class ScreenCake extends LinkedList {
         bt.getButton().setRadius(buttonSize / 2);
         bt.setLayoutX(dimension2D.getWidth() - buttonSize);
         bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
-        buttonHandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                cakef.winFunction();
-            }
-        };
+        buttonHandler = e -> cakef.winFunction();
         bt.assignIndicator(buttonHandler, cakef.getFixationLength());
         bt.active();
         cakef.getButtons()[i] = bt;
@@ -94,43 +89,37 @@ public class ScreenCake extends LinkedList {
     public EventHandler<Event> createprogessButtonHandler(int i, CakeFactory cakef) {
         EventHandler<Event> buttonHandler;
         if (i != 4) {
-            buttonHandler = new EventHandler<Event>() {
-                @Override
-                public void handle(Event e) {
-                    for (Node child : cakef.getP()[i + 1]) {
-                        child.toFront();
-                    }
-                    for (int c = 0; c <= cakef.getMaxCake(); c++) {
-                        cakef.getCake()[c].toFront();
-                    }
-                    cakef.active(i + 1);
-                    cakef.r.setFill(cakef.col[i + 1]);
+            buttonHandler = e -> {
+                for (Node child : cakef.getP()[i + 1]) {
+                    child.toFront();
                 }
+                for (int c = 0; c <= cakef.getMaxCake(); c++) {
+                    cakef.getCake()[c].toFront();
+                }
+                cakef.active(i + 1);
+                cakef.r.setFill(cakef.col[i + 1]);
             };
         } else {
-            buttonHandler = new EventHandler<Event>() {
-                @Override
-                public void handle(Event e) {
-                    if (cakef.getMode() != 0) {
-                        cakef.winButton(false);
-                    }
-                    if (cakef.getMaxCake() < 2) {
-                        cakef.setMaxCake(cakef.getMaxCake() + 1);
-                        cakef.setCurrentCake(cakef.getMaxCake());
-                        cakef.createCake(cakef.getMaxCake());
-                    }
-                    if (cakef.getMode() != 0) {
-                        cakef.winButton(false);
-                    }
-                    if (cakef.getMaxCake() >= 2) {
-                        if (e.getSource() instanceof ProgressButton) {
-                            ((ProgressButton) e.getSource()).setDisable(true);
-                        } else if (e.getSource() instanceof Button) {
-                            ((Button) e.getSource()).setDisable(true);
-                        }
-                    }
-
+            buttonHandler = e -> {
+                if (cakef.getMode() != 0) {
+                    cakef.winButton(false);
                 }
+                if (cakef.getMaxCake() < 2) {
+                    cakef.setMaxCake(cakef.getMaxCake() + 1);
+                    cakef.setCurrentCake(cakef.getMaxCake());
+                    cakef.createCake(cakef.getMaxCake());
+                }
+                if (cakef.getMode() != 0) {
+                    cakef.winButton(false);
+                }
+                if (cakef.getMaxCake() >= 2) {
+                    if (e.getSource() instanceof ProgressButton) {
+                        ((ProgressButton) e.getSource()).setDisable(true);
+                    } else if (e.getSource() instanceof Button) {
+                        ((Button) e.getSource()).setDisable(true);
+                    }
+                }
+
             };
         }
         return buttonHandler;

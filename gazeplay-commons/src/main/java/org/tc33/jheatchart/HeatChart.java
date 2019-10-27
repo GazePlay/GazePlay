@@ -1689,9 +1689,9 @@ public class HeatChart {
      */
     public static double max(double[][] values) {
         double max = 0;
-        for (int i = 0; i < values.length; i++) {
-            for (int j = 0; j < values[i].length; j++) {
-                max = (values[i][j] > max) ? values[i][j] : max;
+        for (double[] value : values) {
+            for (int j = 0; j < value.length; j++) {
+                max = (value[j] > max) ? value[j] : max;
             }
         }
         return max;
@@ -1704,9 +1704,9 @@ public class HeatChart {
      */
     public static double min(double[][] values) {
         double min = Double.MAX_VALUE;
-        for (int i = 0; i < values.length; i++) {
-            for (int j = 0; j < values[i].length; j++) {
-                min = (values[i][j] < min) ? values[i][j] : min;
+        for (double[] value : values) {
+            for (int j = 0; j < value.length; j++) {
+                min = (value[j] < min) ? value[j] : min;
             }
         }
         return min;

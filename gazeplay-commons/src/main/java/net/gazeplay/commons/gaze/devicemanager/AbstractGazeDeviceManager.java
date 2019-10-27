@@ -21,14 +21,14 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     @Getter
     private final Map<IdentityKey<Node>, GazeInfos> shapesEventFilter = Collections
-            .synchronizedMap(new HashMap<IdentityKey<Node>, GazeInfos>());
+            .synchronizedMap(new HashMap<>());
 
     @Getter
     private final Map<IdentityKey<Node>, GazeInfos> shapesEventHandler = Collections
-            .synchronizedMap(new HashMap<IdentityKey<Node>, GazeInfos>());
+            .synchronizedMap(new HashMap<>());
 
-    private final List<Node> toRemove = new LinkedList<Node>();
-    private final List<Node> toAdd = new LinkedList<Node>();
+    private final List<Node> toRemove = new LinkedList<>();
+    private final List<Node> toAdd = new LinkedList<>();
 
     public AbstractGazeDeviceManager() {
 
@@ -63,7 +63,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     public void add() {
         synchronized (shapesEventFilter) {
-            List<Node> temp = new LinkedList<Node>();
+            List<Node> temp = new LinkedList<>();
             temp.addAll(toAdd);
             for (Node node : temp) {
                 shapesEventFilter.put(new IdentityKey<>(node), new GazeInfos(node));
@@ -91,7 +91,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     public void delete() {
         synchronized (shapesEventFilter) {
-            List<Node> temp = new LinkedList<Node>();
+            List<Node> temp = new LinkedList<>();
             temp.addAll(toRemove);
             for (Node node : temp) {
                 GazeInfos removed = shapesEventFilter.remove(new IdentityKey<>(node));
@@ -141,11 +141,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         Collection<GazeInfos> c = shapesEventFilter.values();
 
         synchronized (shapesEventFilter) {
-            Iterator<GazeInfos> i = c.iterator();
 
-            while (i.hasNext()) {
-                GazeInfos gi = i.next();
-
+            for (GazeInfos gi : c) {
                 final Node node = gi.getNode();
 
                 EventFire(positionX, positionY, gi, node);

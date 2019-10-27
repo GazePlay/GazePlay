@@ -184,25 +184,22 @@ public class Mypet extends Pane {
         eat.getKeyFrames().add(new KeyFrame(Duration.millis(200),
                 new KeyValue(getMouth().fillProperty(), new ImagePattern(new Image("data/pet/images/mouth.png")))));
 
-        eat.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                if ((eatingBool > 0) && (eatingBool % 2 == 0)) {
-                    eat.getKeyFrames().clear();
-                    eat.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getMouth().fillProperty(),
-                            new ImagePattern(new Image("data/pet/images/smile.png")))));
-                    eat.play();
-                } else if ((eatingBool > 0) && (eatingBool % 2 == 1)) {
-                    eat.getKeyFrames().clear();
-                    eat.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getMouth().fillProperty(),
-                            new ImagePattern(new Image("data/pet/images/mouth.png")))));
-                    eat.play();
-                } else {
-                    setBasic();
-                    setBlinkingEnabled(true);
-                }
-                eatingBool--;
+        eat.setOnFinished(e -> {
+            if ((eatingBool > 0) && (eatingBool % 2 == 0)) {
+                eat.getKeyFrames().clear();
+                eat.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getMouth().fillProperty(),
+                    new ImagePattern(new Image("data/pet/images/smile.png")))));
+                eat.play();
+            } else if ((eatingBool > 0) && (eatingBool % 2 == 1)) {
+                eat.getKeyFrames().clear();
+                eat.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getMouth().fillProperty(),
+                    new ImagePattern(new Image("data/pet/images/mouth.png")))));
+                eat.play();
+            } else {
+                setBasic();
+                setBlinkingEnabled(true);
             }
+            eatingBool--;
         });
 
         eat.play();
@@ -247,26 +244,23 @@ public class Mypet extends Pane {
         t.getKeyFrames().add(new KeyFrame(Duration.millis(200),
                 new KeyValue(getRightEye().fillProperty(), new ImagePattern(new Image("data/pet/images/eye.png")))));
 
-        t.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                double time = Math.random() * 10000;
-                t.getKeyFrames().clear();
-                if (eyesAreOpen) {
-                    t.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getLeftEye().fillProperty(),
-                            new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
-                    t.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getRightEye().fillProperty(),
-                            new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
-                } else {
-                    t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getLeftEye().fillProperty(),
-                            new ImagePattern(new Image("data/pet/images/eye.png")))));
-                    t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getRightEye().fillProperty(),
-                            new ImagePattern(new Image("data/pet/images/eye.png")))));
-                }
-                eyesAreOpen = !eyesAreOpen;
-                t.play();
-
+        t.setOnFinished(e -> {
+            double time = Math.random() * 10000;
+            t.getKeyFrames().clear();
+            if (eyesAreOpen) {
+                t.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getLeftEye().fillProperty(),
+                    new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
+                t.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getRightEye().fillProperty(),
+                    new ImagePattern(new Image("data/pet/images/eyeclosed.png")))));
+            } else {
+                t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getLeftEye().fillProperty(),
+                    new ImagePattern(new Image("data/pet/images/eye.png")))));
+                t.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getRightEye().fillProperty(),
+                    new ImagePattern(new Image("data/pet/images/eye.png")))));
             }
+            eyesAreOpen = !eyesAreOpen;
+            t.play();
+
         });
 
     }
@@ -391,12 +385,7 @@ public class Mypet extends Pane {
 
                     st.getChildren().addAll(tt, t2);
 
-                    tt.setOnFinished(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent e) {
-                            setSmiling();
-                        }
-                    });
+                    tt.setOnFinished(e -> setSmiling());
 
                     RotateTransition rt = new RotateTransition(Duration.millis(500), baloon);
                     rt.setByAngle(360);
@@ -404,17 +393,14 @@ public class Mypet extends Pane {
 
                     ParallelTransition pt = new ParallelTransition();
                     pt.getChildren().addAll(st, rt);
-                    st.setOnFinished(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent e) {
-                            ph.rd.play();
-                            pt.stop();
-                            ph.getGameContext().getChildren().remove(baloon);
-                            ph.setBaloonGone(false);
-                            setBasic();
-                            setBlinkingEnabled(true);
-                            ph.refill(2);
-                        }
+                    st.setOnFinished(e -> {
+                        ph.rd.play();
+                        pt.stop();
+                        ph.getGameContext().getChildren().remove(baloon);
+                        ph.setBaloonGone(false);
+                        setBasic();
+                        setBlinkingEnabled(true);
+                        ph.refill(2);
                     });
                     pt.play();
                 }

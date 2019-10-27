@@ -55,7 +55,7 @@ public class Pictos extends Parent {
 
         enterEvent = buildEvent();
 
-        currentPictos = new ArrayList<Picto>(2);
+        currentPictos = new ArrayList<>(2);
 
         // Picto R1 = pictos.get("compote");
         Picto R1 = pictos.get("minnie");
@@ -110,7 +110,7 @@ public class Pictos extends Parent {
 
     private void buildPictos() {
 
-        pictos = new HashMap<String, Picto>(10);
+        pictos = new HashMap<>(10);
 
         // R1.setFill(new ImagePattern(new Image("file:images/bulles.jpg"), 0, 0, 1, 1, true));
 
@@ -126,86 +126,68 @@ public class Pictos extends Parent {
     }
 
     private EventHandler<Event> buildEvent() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return e -> {
 
-                Rectangle target = (Rectangle) e.getTarget();
+            Rectangle target = (Rectangle) e.getTarget();
 
-                // log.debug("Rectangle " + Target.getTranslateX());
-                // log.debug(e.getEventType());
+            // log.debug("Rectangle " + Target.getTranslateX());
+            // log.debug(e.getEventType());
 
-                if (found) {
+            if (found) {
 
-                    return;
-                }
+                return;
+            }
 
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    // log.debug("ENTRÉE");
-                    entry = (new Date()).getTime();
+                // log.debug("ENTRÉE");
+                entry = (new Date()).getTime();
 
-                    int i;
-                    for (i = 0; i < currentPictos.size() && !target.equals(currentPictos.get(i).rectangle); i++)
-                        ;
+                int i;
+                for (i = 0; i < currentPictos.size() && !target.equals(currentPictos.get(i).rectangle); i++)
+                    ;
 
-                    if (i < currentPictos.size())
-                        currentPictos.get(i).sound.play();
+                if (i < currentPictos.size())
+                    currentPictos.get(i).sound.play();
 
-                } else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
+            } else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
 
-                    // log.debug("MOVE");
+                // log.debug("MOVE");
 
-                    long now = (new Date()).getTime();
+                long now = (new Date()).getTime();
 
-                    if (entry != -1 && (now - entry) > min_time) {
+                if (entry != -1 && (now - entry) > min_time) {
 
-                        // log.debug("GAGNÉ");
+                    // log.debug("GAGNÉ");
 
-                        found = true;
+                    found = true;
 
-                        double finalWidth = target.getWidth() * zoom_factor;
+                    double finalWidth = target.getWidth() * zoom_factor;
 
-                        double finalHeight = target.getHeight() * zoom_factor;
+                    double finalHeight = target.getHeight() * zoom_factor;
 
-                        Timeline timeline = new Timeline();
+                    Timeline timeline = new Timeline();
 
-                        timeline.getKeyFrames().add(
-                                new KeyFrame(new Duration(1000), new KeyValue(target.heightProperty(), finalHeight)));
-                        timeline.getKeyFrames().add(
-                                new KeyFrame(new Duration(1000), new KeyValue(target.widthProperty(), finalWidth)));
-                        timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                                new KeyValue(target.translateXProperty(), (scene.getWidth() - finalWidth) / 2)));
-                        timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                                new KeyValue(target.translateYProperty(), (scene.getHeight() - finalHeight) / 2)));
+                    timeline.getKeyFrames().add(
+                        new KeyFrame(new Duration(1000), new KeyValue(target.heightProperty(), finalHeight)));
+                    timeline.getKeyFrames().add(
+                        new KeyFrame(new Duration(1000), new KeyValue(target.widthProperty(), finalWidth)));
+                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
+                        new KeyValue(target.translateXProperty(), (scene.getWidth() - finalWidth) / 2)));
+                    timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
+                        new KeyValue(target.translateYProperty(), (scene.getHeight() - finalHeight) / 2)));
 
-                        for (Picto P : currentPictos) {
+                    for (Picto P : currentPictos) {
 
-                            if (!P.rectangle.equals(target))
-                                timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                                        new KeyValue(P.rectangle.opacityProperty(), 0)));
-
-                        }
-
-                        timeline.play();
-
-                    } else {
-
-                        Timeline timeline = new Timeline();
-
-                        // timeline.getKeyFrames().add(new KeyFrame(new Duration(500),new KeyValue(R1.heightProperty(),
-                        // R1.getHeight() * zoom_factor)));
-                        // timeline.getKeyFrames().add(new KeyFrame(new Duration(500),new KeyValue(R1.widthProperty(),
-                        // R1.getWidth() * zoom_factor)));
-                        timeline.getKeyFrames()
-                                .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.RED)));
-
-                        timeline.play();
-
-                        // log.debug("DESSUS " + (now - entry));
+                        if (!P.rectangle.equals(target))
+                            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
+                                new KeyValue(P.rectangle.opacityProperty(), 0)));
 
                     }
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                    timeline.play();
+
+                } else {
 
                     Timeline timeline = new Timeline();
 
@@ -214,13 +196,28 @@ public class Pictos extends Parent {
                     // timeline.getKeyFrames().add(new KeyFrame(new Duration(500),new KeyValue(R1.widthProperty(),
                     // R1.getWidth() * zoom_factor)));
                     timeline.getKeyFrames()
-                            .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.BLACK)));
+                        .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.RED)));
 
                     timeline.play();
 
-                    // log.debug("SORTIE");
-                    entry = -1;
+                    // log.debug("DESSUS " + (now - entry));
+
                 }
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                Timeline timeline = new Timeline();
+
+                // timeline.getKeyFrames().add(new KeyFrame(new Duration(500),new KeyValue(R1.heightProperty(),
+                // R1.getHeight() * zoom_factor)));
+                // timeline.getKeyFrames().add(new KeyFrame(new Duration(500),new KeyValue(R1.widthProperty(),
+                // R1.getWidth() * zoom_factor)));
+                timeline.getKeyFrames()
+                    .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.BLACK)));
+
+                timeline.play();
+
+                // log.debug("SORTIE");
+                entry = -1;
             }
         };
 

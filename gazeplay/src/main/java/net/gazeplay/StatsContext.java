@@ -206,14 +206,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         centerPane.setAlignment(Pos.CENTER);
 
         ImageView gazeMetrics = StatsDisplay.buildGazeMetrics(stats, root);
-        root.widthProperty().addListener((observable, oldValue, newValue) -> {
-
-            gazeMetrics.setFitWidth(newValue.doubleValue() * RATIO);
-        });
-        root.heightProperty().addListener((observable, oldValue, newValue) -> {
-
-            gazeMetrics.setFitHeight(newValue.doubleValue() * RATIO);
-        });
+        root.widthProperty().addListener((observable, oldValue, newValue) -> gazeMetrics.setFitWidth(newValue.doubleValue() * RATIO));
+        root.heightProperty().addListener((observable, oldValue, newValue) -> gazeMetrics.setFitHeight(newValue.doubleValue() * RATIO));
 
         gazeMetrics.setFitWidth(root.getWidth() * RATIO);
         gazeMetrics.setFitHeight(root.getHeight() * RATIO);
@@ -232,18 +226,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             colorBands.setTextFill(Color.WHITE);
             colorBands.getStylesheets().add("data/common/radio.css");
 
-            colorBands.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if (colorBands.isSelected()) {
-                        centerPane.getChildren().remove(lineChart);
-                        centerPane.getChildren().add(areaChart);
-                        centerPane.getStylesheets().add("data/common/chart.css");
+            colorBands.setOnAction(event -> {
+                if (colorBands.isSelected()) {
+                    centerPane.getChildren().remove(lineChart);
+                    centerPane.getChildren().add(areaChart);
+                    centerPane.getStylesheets().add("data/common/chart.css");
 
-                    } else {
-                        centerPane.getChildren().remove(areaChart);
-                        centerPane.getChildren().add(lineChart);
-                    }
+                } else {
+                    centerPane.getChildren().remove(areaChart);
+                    centerPane.getChildren().add(lineChart);
                 }
             });
         }

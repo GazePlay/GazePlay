@@ -204,9 +204,9 @@ public class Moles extends Parent implements GameLifeCycle {
         double[][] place = CreationTableauPlacement(width, height, distTrans);
 
         /* Creation and placement of moles in the field */
-        for (int i = 0; i < place.length; i++) {
-            result.add(new MolesChar(place[i][0], place[i][1], moleWidth, moleHeight, distTrans, gameContext, stats,
-                    this));
+        for (double[] doubles : place) {
+            result.add(new MolesChar(doubles[0], doubles[1], moleWidth, moleHeight, distTrans, gameContext, stats,
+                this));
         }
 
         return result;

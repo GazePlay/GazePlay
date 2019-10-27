@@ -203,68 +203,59 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
             gameCardsList.add(gameCard);
 
-            gameCard.setEnterhandler(new EventHandler<Event>() {
-                @Override
-                public void handle(Event e) {
-                    if (config.isGazeMenuEnable()) {
-                        if (e.getSource() == gameCard /* && !gameCard.isActive() */) {
-                            indicator.setProgress(0);
-                            indicator.setOpacity(1);
-                            indicator.toFront();
-                            switch (gameButtonOrientation) {
-                                case HORIZONTAL:
-                                    ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(indicator);
-                                    break;
-                                case VERTICAL:
-                                    ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(indicator);
-                                    break;
-                            }
-                            final Timeline timelineProgressBar = new Timeline();
-                            ((GameButtonPane) e.getSource()).setTimelineProgressBar(timelineProgressBar);
-
-                            timelineProgressBar.setDelay(new Duration(500));
-
-                            timelineProgressBar.getKeyFrames()
-                                .add(new KeyFrame(new Duration(config.getFixationLength()),
-                                    new KeyValue(indicator.progressProperty(), 1)));
-
-                            timelineProgressBar.onFinishedProperty()
-                                .set(new EventHandler<ActionEvent>() {
-                                    @Override
-                                    public void handle(ActionEvent actionEvent) {
-                                        indicator.setOpacity(0);
-                                        for (Node n : choicePanel.getChildren()) {
-                                            if (n instanceof GameButtonPane) {
-                                                if (((GameButtonPane) n).getTimelineProgressBar() != null) {
-                                                    ((GameButtonPane) n).getTimelineProgressBar().stop();
-                                                }
-                                            }
-                                        }
-                                        ((GameButtonPane) e.getSource()).getEventhandler().handle(null);
-                                    }
-                                });
-                            timelineProgressBar.play();
+            gameCard.setEnterhandler(e -> {
+                if (config.isGazeMenuEnable()) {
+                    if (e.getSource() == gameCard /* && !gameCard.isActive() */) {
+                        indicator.setProgress(0);
+                        indicator.setOpacity(1);
+                        indicator.toFront();
+                        switch (gameButtonOrientation) {
+                            case HORIZONTAL:
+                                ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(indicator);
+                                break;
+                            case VERTICAL:
+                                ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(indicator);
+                                break;
                         }
+                        final Timeline timelineProgressBar = new Timeline();
+                        ((GameButtonPane) e.getSource()).setTimelineProgressBar(timelineProgressBar);
+
+                        timelineProgressBar.setDelay(new Duration(500));
+
+                        timelineProgressBar.getKeyFrames()
+                            .add(new KeyFrame(new Duration(config.getFixationLength()),
+                                new KeyValue(indicator.progressProperty(), 1)));
+
+                        timelineProgressBar.onFinishedProperty()
+                            .set(actionEvent -> {
+                                indicator.setOpacity(0);
+                                for (Node n : choicePanel.getChildren()) {
+                                    if (n instanceof GameButtonPane) {
+                                        if (((GameButtonPane) n).getTimelineProgressBar() != null) {
+                                            ((GameButtonPane) n).getTimelineProgressBar().stop();
+                                        }
+                                    }
+                                }
+                                ((GameButtonPane) e.getSource()).getEventhandler().handle(null);
+                            });
+                        timelineProgressBar.play();
                     }
                 }
             });
 
-            gameCard.setExithandler(new EventHandler<Event>() {
-                @Override
-                public void handle(Event e) {
-                    if (config.isGazeMenuEnable()) {
-                        if (e.getSource() == gameCard /* && gameCard.isActive() */) {
-                            indicator.setProgress(0);
-                            ((GameButtonPane) e.getSource()).getTimelineProgressBar().stop();
-                            indicator.setOpacity(0);
-                            switch (gameButtonOrientation) {
-                                case HORIZONTAL:
-                                    ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(null);
-                                    break;
-                                case VERTICAL:
-                                    ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(null);
-                                    break;
-                            }
+            gameCard.setExithandler(e -> {
+                if (config.isGazeMenuEnable()) {
+                    if (e.getSource() == gameCard /* && gameCard.isActive() */) {
+                        indicator.setProgress(0);
+                        ((GameButtonPane) e.getSource()).getTimelineProgressBar().stop();
+                        indicator.setOpacity(0);
+                        switch (gameButtonOrientation) {
+                            case HORIZONTAL:
+                                ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(null);
+                                break;
+                            case VERTICAL:
+                                ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(null);
+                                break;
                         }
                     }
                 }

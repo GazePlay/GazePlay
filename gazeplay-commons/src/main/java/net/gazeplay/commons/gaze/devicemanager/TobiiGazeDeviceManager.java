@@ -32,11 +32,11 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
         final int screenWidth = mainScreen.getWidth();
         final int screenHeight = mainScreen.getHeight();
 
-        calculateService = new Service<Void>() {
+        calculateService = new Service<>() {
 
             @Override
             protected Task<Void> createTask() {
-                return new Task<Void>() {
+                return new Task<>() {
 
                     @Override
                     protected Void call() {

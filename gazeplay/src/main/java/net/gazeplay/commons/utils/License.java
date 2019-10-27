@@ -31,16 +31,13 @@ public class License extends Rectangle {
 
         this.setFill(new ImagePattern(new Image("data/common/images/license.png"), 0, 0, 1, 1, true));
 
-        EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
-            @Override
-            public void handle(javafx.event.Event e) {
+        EventHandler<Event> homeEvent = e -> {
 
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+            if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
-                    root.getChildren().add(licence(width, height));
+                root.getChildren().add(licence(width, height));
 
-                    gazePlay.getHomeMenuScreen();
-                }
+                gazePlay.getHomeMenuScreen();
             }
         };
 

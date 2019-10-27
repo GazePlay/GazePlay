@@ -83,77 +83,68 @@ public class MouseV4 extends Mouse {
     }
 
     public EventHandler<Event> buildEventBox() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return e -> {
 
-                if (isCurrentBox(e)) {
-                    return;
-                }
+            if (isCurrentBox(e)) {
+                return;
+            }
 
-                if (conditionToMove(e)) {
-                    GameBox gb = (GameBox) e.getSource();
-                    gb.indicator.setOpacity(0);
-                    reOrientateMouse(indiceX, indiceY, gb.numCol, gb.numRow);
-                    putInBold();
-                    indiceX = gb.numCol;
-                    indiceY = gb.numRow;
-                    double coordX = gameInstance.positionX(indiceX);
-                    double coordY = gameInstance.positionY(indiceY);
-                    mouse.setX(coordX);
-                    mouse.setY(coordY);
-                    indicator.setTranslateX(coordX);
-                    indicator.setTranslateY(coordY);
-                    gameInstance.testIfCheese(indiceY, indiceX);
+            if (conditionToMove(e)) {
+                GameBox gb = (GameBox) e.getSource();
+                gb.indicator.setOpacity(0);
+                reOrientateMouse(indiceX, indiceY, gb.numCol, gb.numRow);
+                putInBold();
+                indiceX = gb.numCol;
+                indiceY = gb.numRow;
+                double coordX = gameInstance.positionX(indiceX);
+                double coordY = gameInstance.positionY(indiceY);
+                mouse.setX(coordX);
+                mouse.setY(coordY);
+                indicator.setTranslateX(coordX);
+                indicator.setTranslateY(coordY);
+                gameInstance.testIfCheese(indiceY, indiceX);
 
-                } else if (conditionToStop(e)) {
-                    putInLight();
-                    isSelectioned = false;
+            } else if (conditionToStop(e)) {
+                putInLight();
+                isSelectioned = false;
 
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                    Timeline timeline = new Timeline();
-                    timeline.play();
-                    if (timelineProgressBar != null)
-                        timelineProgressBar.stop();
-                }
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                Timeline timeline = new Timeline();
+                timeline.play();
+                if (timelineProgressBar != null)
+                    timelineProgressBar.stop();
             }
         };
 
     }
 
     public EventHandler<Event> buildEventMouse() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return e -> {
 
-                if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
-                        && !isSelectioned) {
-                    indicator.setOpacity(1);
-                    indicator.setProgress(0);
+            if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
+                && !isSelectioned) {
+                indicator.setOpacity(1);
+                indicator.setProgress(0);
 
-                    timelineProgressBar = new Timeline();
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
-                            new KeyValue(indicator.progressProperty(), 1)));
-                    timelineProgressBar.play();
+                timelineProgressBar = new Timeline();
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
+                    new KeyValue(indicator.progressProperty(), 1)));
+                timelineProgressBar.play();
 
-                    timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            isSelectioned = true;
-                            putInBold();
-                            indicator.setOpacity(0);
-                        }
-                    });
-
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                    Timeline timeline = new Timeline();
-                    timeline.play();
-                    if (timelineProgressBar != null)
-                        timelineProgressBar.stop();
-
+                timelineProgressBar.setOnFinished(actionEvent -> {
+                    isSelectioned = true;
+                    putInBold();
                     indicator.setOpacity(0);
-                    indicator.setProgress(0);
-                }
+                });
+
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                Timeline timeline = new Timeline();
+                timeline.play();
+                if (timelineProgressBar != null)
+                    timelineProgressBar.stop();
+
+                indicator.setOpacity(0);
+                indicator.setProgress(0);
             }
         };
 

@@ -65,23 +65,13 @@ class Target extends Parent {
         this.cercle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
         this.getChildren().add(cercle);
 
-        enterEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                enter();
-            }
-        };
+        enterEvent = e -> enter();
 
         if (level != 0) {
             Timeline waitbeforestart = new Timeline();
 
             waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(0.6)));
-            waitbeforestart.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    addEvent();
-                }
-            });
+            waitbeforestart.setOnFinished(actionEvent -> addEvent());
             waitbeforestart.play();
         } else {
             addEvent();
@@ -99,33 +89,33 @@ class Target extends Parent {
 
     private void move() {
         timeline = new Timeline(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects() * 10),
-                new EventHandler<ActionEvent>() {
-                    int dx = randomDirection();
-                    int dy = randomDirection();
+            new EventHandler<>() {
+                int dx = randomDirection();
+                int dy = randomDirection();
 
-                    double height = dimension.getHeight();
-                    double width = dimension.getWidth();
+                double height = dimension.getHeight();
+                double width = dimension.getWidth();
 
-                    @Override
-                    public void handle(ActionEvent t) {
-                        double newCenterX = Target.this.pos.getX() + dx;
-                        double newCenterY = Target.this.pos.getY() + dy;
+                @Override
+                public void handle(ActionEvent t) {
+                    double newCenterX = Target.this.pos.getX() + dx;
+                    double newCenterY = Target.this.pos.getY() + dy;
 
-                        Position newPos = new Position(newCenterX, newCenterY);
-                        Target.this.pos = newPos;
+                    Position newPos = new Position(newCenterX, newCenterY);
+                    Target.this.pos = newPos;
 
-                        Target.this.cercle.setCenterX(newCenterX);
-                        Target.this.cercle.setCenterY(newCenterY);
+                    Target.this.cercle.setCenterX(newCenterX);
+                    Target.this.cercle.setCenterY(newCenterY);
 
-                        if (newCenterX <= (Target.this.radius) || newCenterX >= (width - Target.this.radius)) {
-                            dx = -dx;
-                        }
-
-                        if (newCenterY <= (Target.this.radius) || newCenterY >= (height - Target.this.radius)) {
-                            dy = -dy;
-                        }
+                    if (newCenterX <= (Target.this.radius) || newCenterX >= (width - Target.this.radius)) {
+                        dx = -dx;
                     }
-                }));
+
+                    if (newCenterY <= (Target.this.radius) || newCenterY >= (height - Target.this.radius)) {
+                        dy = -dy;
+                    }
+                }
+            }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
@@ -173,29 +163,20 @@ class Target extends Parent {
                     .add(new KeyFrame(new Duration(1000), new KeyValue(particles.get(i).opacityProperty(), 0.0)));
         }
 
-        timelineParticle.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Target.this.gameContext.getChildren().removeAll(particles);
-                if (((!lapin) && (gameContext.getChildren().isEmpty()))
-                        || ((lapin) && (gameContext.getChildren().size() <= 1))) {
-                    long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-                    Label l = new Label("Score : " + totalTime + "s");
-                    Color color = (Configuration.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
-                    l.setTextFill(color);
-                    l.setFont(Font.font(50));
-                    l.setLineSpacing(10);
-                    l.setLayoutX(15);
-                    l.setLayoutY(14);
-                    gameContext.getChildren().add(l);
-                    gameContext.playWinTransition(30, new EventHandler<ActionEvent>() {
-
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            gameInstance.restart();
-                        }
-                    });
-                }
+        timelineParticle.setOnFinished(actionEvent -> {
+            Target.this.gameContext.getChildren().removeAll(particles);
+            if (((!lapin) && (gameContext.getChildren().isEmpty()))
+                || ((lapin) && (gameContext.getChildren().size() <= 1))) {
+                long totalTime = (System.currentTimeMillis() - startTime) / 1000;
+                Label l = new Label("Score : " + totalTime + "s");
+                Color color = (Configuration.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+                l.setTextFill(color);
+                l.setFont(Font.font(50));
+                l.setLineSpacing(10);
+                l.setLayoutX(15);
+                l.setLayoutY(14);
+                gameContext.getChildren().add(l);
+                gameContext.playWinTransition(30, actionEvent1 -> gameInstance.restart());
             }
         });
         timelineParticle.play();

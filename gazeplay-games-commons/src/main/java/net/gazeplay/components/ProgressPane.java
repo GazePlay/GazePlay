@@ -85,39 +85,30 @@ public class ProgressPane extends StackPane {
         indicator.setMouseTransparent(true);
 
         indicator.setOpacity(0);
-        enterbuttonHandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                indicator.toFront();
-                indicator.setOpacity(1);
-                timelineProgressBar = new Timeline();
+        enterbuttonHandler = e -> {
+            indicator.toFront();
+            indicator.setOpacity(1);
+            timelineProgressBar = new Timeline();
 
-                timelineProgressBar.getKeyFrames()
-                        .add(new KeyFrame(new Duration(2000), new KeyValue(indicator.progressProperty(), 1)));
+            timelineProgressBar.getKeyFrames()
+                .add(new KeyFrame(new Duration(2000), new KeyValue(indicator.progressProperty(), 1)));
 
-                timelineProgressBar.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        enterEvent.handle(null);
-                        exitbuttonHandler.handle(null);
+            timelineProgressBar.onFinishedProperty().set(actionEvent -> {
+                enterEvent.handle(null);
+                exitbuttonHandler.handle(null);
 
-                    }
-                });
-                timelineProgressBar.play();
+            });
+            timelineProgressBar.play();
 
-            }
         };
         // this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
 
-        exitbuttonHandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                timelineProgressBar.stop();
-                indicator.setOpacity(0);
-                indicator.setProgress(0);
+        exitbuttonHandler = e -> {
+            timelineProgressBar.stop();
+            indicator.setOpacity(0);
+            indicator.setProgress(0);
 
-            }
         };
         // this.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
         this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);

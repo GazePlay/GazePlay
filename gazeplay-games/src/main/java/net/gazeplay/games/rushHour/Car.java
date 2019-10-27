@@ -91,66 +91,54 @@ public class Car extends Rectangle {
 
         log.debug("" + x + " " + y + " " + l + " " + h + " " + c);
 
-        EventHandler<Event> enterEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                pi.setLayoutX(getX() + getWidth() / 2 - pi.getWidth() / 2);
-                pi.setLayoutY(getY() + getHeight() / 2 - pi.getHeight() / 2);
-                pi.setOpacity(1);
-                pi.toFront();
-                timelineProgressBar = new Timeline();
-                timelineProgressBar.getKeyFrames()
-                        .add(new KeyFrame(new Duration(Configuration.getInstance().getFixationLength()),
-                                new KeyValue(pi.progressProperty(), 1)));
-                timelineProgressBar.play();
-                timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
-
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        setSelected(true);
-                    }
-                });
-            }
+        EventHandler<Event> enterEvent = e -> {
+            pi.setLayoutX(getX() + getWidth() / 2 - pi.getWidth() / 2);
+            pi.setLayoutY(getY() + getHeight() / 2 - pi.getHeight() / 2);
+            pi.setOpacity(1);
+            pi.toFront();
+            timelineProgressBar = new Timeline();
+            timelineProgressBar.getKeyFrames()
+                .add(new KeyFrame(new Duration(Configuration.getInstance().getFixationLength()),
+                    new KeyValue(pi.progressProperty(), 1)));
+            timelineProgressBar.play();
+            timelineProgressBar.setOnFinished(actionEvent -> setSelected(true));
         };
 
         this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterEvent);
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
 
-        EventHandler<Event> exitEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                Point mouse = MouseInfo.getPointerInfo().getLocation();
-                if (e.getEventType() == GazeEvent.GAZE_EXITED) {
-                    Screen mainScreen = Screen.getMainScreen();
+        EventHandler<Event> exitEvent = e -> {
+            Point mouse = MouseInfo.getPointerInfo().getLocation();
+            if (e.getEventType() == GazeEvent.GAZE_EXITED) {
+                Screen mainScreen = Screen.getMainScreen();
 
-                    double screenWidth = mainScreen.getWidth();
-                    double screenHeight = mainScreen.getHeight();
+                double screenWidth = mainScreen.getWidth();
+                double screenHeight = mainScreen.getHeight();
 
-                    float[] pointAsFloatArray = Tobii.gazePosition();
+                float[] pointAsFloatArray = Tobii.gazePosition();
 
-                    final float xRatio = pointAsFloatArray[0];
-                    final float yRatio = pointAsFloatArray[1];
+                final float xRatio = pointAsFloatArray[0];
+                final float yRatio = pointAsFloatArray[1];
 
-                    final double positionX = xRatio * screenWidth;
-                    final double positionY = yRatio * screenHeight;
+                final double positionX = xRatio * screenWidth;
+                final double positionY = yRatio * screenHeight;
 
-                    mouse = new Point();
-                    mouse.setLocation(positionX, positionY);
-                }
+                mouse = new Point();
+                mouse.setLocation(positionX, positionY);
+            }
 
-                int way = checkPos(mouse);
-                if (selected && !endOfGame && !intersect && !onMouse(mouse)) {
-                    // moveToMouse(mouse);
-                    moveTo(way, mouse);
-                }
-                intersect = false;
-                // }
+            int way = checkPos(mouse);
+            if (selected && !endOfGame && !intersect && !onMouse(mouse)) {
+                // moveToMouse(mouse);
+                moveTo(way, mouse);
+            }
+            intersect = false;
+            // }
 
-                if (!selected) {
-                    timelineProgressBar.stop();
-                    pi.setProgress(0);
-                    pi.setOpacity(0);
-                }
+            if (!selected) {
+                timelineProgressBar.stop();
+                pi.setProgress(0);
+                pi.setOpacity(0);
             }
         };
 

@@ -22,12 +22,7 @@ public class Son extends Parent {
         slider = new Slider(0, 127, 60);
         slider.setOrientation(Orientation.VERTICAL);
         slider.setTranslateY(35);
-        slider.valueProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue o, Object oldVal, Object newVal) {
-                clavier.requestFocus();
-            }
-        });
+        slider.valueProperty().addListener((ChangeListener) (o, oldVal, newVal) -> clavier.requestFocus());
 
         ProgressIndicator indicateur = new ProgressIndicator(0.0);
         indicateur.progressProperty().bind(slider.valueProperty().divide(127.0));

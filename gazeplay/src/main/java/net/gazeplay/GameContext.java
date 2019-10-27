@@ -103,15 +103,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         final HBox root2 = new HBox(2);
         root2.setAlignment(Pos.CENTER_LEFT);
         // Pane root2 = new Pane();
-        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            updateConfigPane(root2);
-        });
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            updateConfigButton(bt, buttonImg);
-        });
-        root2.heightProperty().addListener((observable) -> {
-            updateConfigPane(root2);
-        });
+        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(root2));
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg));
+        root2.heightProperty().addListener((observable) -> updateConfigPane(root2));
 
         EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
             double from = 0;
@@ -135,12 +129,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             controlPanel.setMouseTransparent(menuOpen);
             controlPanel.setVisible(true);
             menuOpen = !menuOpen;
-            pt.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    if (!menuOpen) {
-                        root2.getChildren().remove(controlPanel);
-                    }
+            pt.setOnFinished(actionEvent -> {
+                if (!menuOpen) {
+                    root2.getChildren().remove(controlPanel);
                 }
             });
             pt.play();

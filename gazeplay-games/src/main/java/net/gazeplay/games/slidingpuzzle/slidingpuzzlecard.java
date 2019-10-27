@@ -169,33 +169,23 @@ public class slidingpuzzlecard extends Parent {
         // currentTimeline.stop();
         // currentTimeline = new Timeline();
 
-        currentTimeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
+        currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
+            gameInstance.dispose();
 
-                gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+            gameContext.clear();
 
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        gameInstance.dispose();
+            gameInstance.launch();
 
-                        gameContext.clear();
-
-                        gameInstance.launch();
-
-                        try {
-                            stats.saveStats();
-                        } catch (IOException ex) {
-                            Logger.getLogger(slidingpuzzlecard.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
-                        stats.notifyNewRoundReady();
-
-                        gameContext.onGameStarted();
-                    }
-                });
+            try {
+                stats.saveStats();
+            } catch (IOException ex) {
+                Logger.getLogger(slidingpuzzlecard.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
+
+            stats.notifyNewRoundReady();
+
+            gameContext.onGameStarted();
+        }));
 
         if (!currentTimeline.getStatus().equals(Timeline.Status.RUNNING))
             currentTimeline.playFromStart();
@@ -203,68 +193,58 @@ public class slidingpuzzlecard extends Parent {
 
     private EventHandler<Event> buildEvent() {
 
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return e -> {
 
-                if (!(currentTimeline.getStatus() == Animation.Status.RUNNING)
-                        && (e.getEventType() == MouseEvent.MOUSE_ENTERED
-                                || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
+            if (!(currentTimeline.getStatus() == Animation.Status.RUNNING)
+                && (e.getEventType() == MouseEvent.MOUSE_ENTERED
+                || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
 
-                    progressIndicator.setOpacity(1);
-                    progressIndicator.setProgress(0);
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
 
-                    // currentTimeline.stop();
-                    currentTimeline = new Timeline();
+                // currentTimeline.stop();
+                currentTimeline = new Timeline();
 
-                    timelineProgressBar = new Timeline();
+                timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
-                            new KeyValue(progressIndicator.progressProperty(), 1)));
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                    currentTimeline.play();
+                currentTimeline.play();
 
-                    timelineProgressBar.play();
+                timelineProgressBar.play();
 
-                    timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
+                timelineProgressBar.setOnFinished(actionEvent -> {
 
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
+                    if (checkIfNeighbor()) {
+                        progressIndicator.setTranslateX(kingPosX);
+                        progressIndicator.setTranslateY(kingPosY);
 
-                            if (checkIfNeighbor()) {
-                                progressIndicator.setTranslateX(kingPosX);
-                                progressIndicator.setTranslateY(kingPosY);
+                        // gameInstance.showCards();
 
-                                // gameInstance.showCards();
+                        gameInstance.replaceCards(fixationlength, initX, initY, CardId);
 
-                                gameInstance.replaceCards(fixationlength, initX, initY, CardId);
+                        isMyNeighborEvent();
 
-                                isMyNeighborEvent();
+                        gameInstance.fixCoord(CardId, initX, initY, kingPosX, kingPosY);
+                        // gameInstance.showCards();
 
-                                gameInstance.fixCoord(CardId, initX, initY, kingPosX, kingPosY);
-                                // gameInstance.showCards();
+                        if (gameInstance.isGameOver())
+                            onGameOver();
+                    }
 
-                                if (gameInstance.isGameOver())
-                                    onGameOver();
-                            }
-
-                        }
-                    });
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                    timelineProgressBar.stop();
-                    progressIndicator.setOpacity(0);
-                    progressIndicator.setProgress(0);
-                }
+                });
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                timelineProgressBar.stop();
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
             }
         };
     }
 
     private EventHandler<Event> buildEvent2() {
 
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-            }
+        return e -> {
         };
     }
 }

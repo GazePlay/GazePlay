@@ -50,26 +50,10 @@ public class Touche extends Parent {
         this.setTranslateX(positionX);// positionnement de la touche sur le clavier
         this.setTranslateY(positionY);
 
-        this.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                fond_touche.setFill(Color.LIGHTGREY);
-            }
-        });
-        this.setOnMouseExited(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                fond_touche.setFill(Color.WHITE);
-            }
-        });
-        this.setOnMousePressed(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                appuyer();
-            }
-        });
-        this.setOnMouseReleased(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                relacher();
-            }
-        });
+        this.setOnMouseEntered(me -> fond_touche.setFill(Color.LIGHTGREY));
+        this.setOnMouseExited(me -> fond_touche.setFill(Color.WHITE));
+        this.setOnMousePressed(me -> appuyer());
+        this.setOnMouseReleased(me -> relacher());
     }
 
     public void appuyer() {

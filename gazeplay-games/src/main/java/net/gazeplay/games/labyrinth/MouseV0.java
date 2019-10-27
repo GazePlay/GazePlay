@@ -58,48 +58,41 @@ public class MouseV0 extends Mouse {
     }
 
     public EventHandler<Event> buildEvent() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return e -> {
 
-                if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
-                    GameBox gb = (GameBox) e.getSource();
+            if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
+                GameBox gb = (GameBox) e.getSource();
 
-                    gb.indicator.setOpacity(1);
-                    gb.indicator.setProgress(0);
+                gb.indicator.setOpacity(1);
+                gb.indicator.setProgress(0);
 
-                    timelineProgressBar = new Timeline();
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
-                            new KeyValue(gb.indicator.progressProperty(), 1)));
-                    timelineProgressBar.play();
+                timelineProgressBar = new Timeline();
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
+                    new KeyValue(gb.indicator.progressProperty(), 1)));
+                timelineProgressBar.play();
 
-                    timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            gb.indicator.setOpacity(0);
-                            reOrientateMouse(indiceX, indiceY, gb.numCol, gb.numRow);
-                            indiceX = gb.numCol;
-                            indiceY = gb.numRow;
-                            mouse.setX(gameInstance.positionX(indiceX));
-                            mouse.setY(gameInstance.positionY(indiceY));
-                            gameInstance.testIfCheese(indiceY, indiceX);
-                            mettreAJourLesEventHandler();
-                        }
-
-                    });
-
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-
-                    GameBox gb = (GameBox) e.getSource();
-
-                    Timeline timeline = new Timeline();
-                    timeline.play();
-                    if (timelineProgressBar != null)
-                        timelineProgressBar.stop();
-
+                timelineProgressBar.setOnFinished(actionEvent -> {
                     gb.indicator.setOpacity(0);
-                    gb.indicator.setProgress(0);
-                }
+                    reOrientateMouse(indiceX, indiceY, gb.numCol, gb.numRow);
+                    indiceX = gb.numCol;
+                    indiceY = gb.numRow;
+                    mouse.setX(gameInstance.positionX(indiceX));
+                    mouse.setY(gameInstance.positionY(indiceY));
+                    gameInstance.testIfCheese(indiceY, indiceX);
+                    mettreAJourLesEventHandler();
+                });
+
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                GameBox gb = (GameBox) e.getSource();
+
+                Timeline timeline = new Timeline();
+                timeline.play();
+                if (timelineProgressBar != null)
+                    timelineProgressBar.stop();
+
+                gb.indicator.setOpacity(0);
+                gb.indicator.setProgress(0);
             }
         };
 

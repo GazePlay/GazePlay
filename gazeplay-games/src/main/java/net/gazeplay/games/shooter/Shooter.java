@@ -93,24 +93,18 @@ public class Shooter extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
 
-        EventHandler<Event> handEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                    double x = ((MouseEvent) e).getX();
-                    double y = ((MouseEvent) e).getY();
-                    hand.setRotate(getAngle(new Point(x, y)));
-                }
+        EventHandler<Event> handEvent = e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                double x = ((MouseEvent) e).getX();
+                double y = ((MouseEvent) e).getY();
+                hand.setRotate(getAngle(new Point(x, y)));
             }
         };
 
-        handEventGaze = new EventHandler<GazeEvent>() {
-            @Override
-            public void handle(GazeEvent e) {
-                double x = e.getX();
-                double y = e.getY();
-                hand.setRotate(getAngle(new Point(x, y)));
-            }
+        handEventGaze = e -> {
+            double x = e.getX();
+            double y = e.getY();
+            hand.setRotate(getAngle(new Point(x, y)));
         };
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
         this.addEventFilter(GazeEvent.ANY, handEventGaze);
@@ -134,24 +128,17 @@ public class Shooter extends Parent implements GameLifeCycle {
         // then update them
         updatePoints(imageRectangle);
 
-        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
-            updatePoints(imageRectangle);
-        });
-        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> {
-            updatePoints(imageRectangle);
-        });
+        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> updatePoints(imageRectangle));
+        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> updatePoints(imageRectangle));
 
-        enterEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-                if (e.getTarget() instanceof Target) {
-                    if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                        if (!((Target) e.getTarget()).done) {
-                            ((Target) e.getTarget()).done = true;
-                            enter((Target) e.getTarget());
-                            stats.incNbGoals();
-                            stats.notifyNewRoundReady();
-                        }
+        enterEvent = e -> {
+            if (e.getTarget() instanceof Target) {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    if (!((Target) e.getTarget()).done) {
+                        ((Target) e.getTarget()).done = true;
+                        enter((Target) e.getTarget());
+                        stats.incNbGoals();
+                        stats.notifyNewRoundReady();
                     }
                 }
             }
@@ -195,14 +182,11 @@ public class Shooter extends Parent implements GameLifeCycle {
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(new KeyFrame(new Duration(8000)));
 
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                if (moveCage(left)) {
-                    left = !left;
-                }
-                magicCage();
+        timeline.setOnFinished(actionEvent -> {
+            if (moveCage(left)) {
+                left = !left;
             }
+            magicCage();
         });
         timeline.play();
 
@@ -409,17 +393,13 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         Timeline waitbeforestart = new Timeline();
         waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
-        waitbeforestart.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
+        waitbeforestart.setOnFinished(actionEvent -> {
 
-                for (int i = 0; i < 5; i++) {
-                    newCircle();
-                }
-
-                magicCage();
+            for (int i = 0; i < 5; i++) {
+                newCircle();
             }
 
+            magicCage();
         });
         waitbeforestart.play();
 
@@ -503,12 +483,7 @@ public class Shooter extends Parent implements GameLifeCycle {
             st2.setToY(1);
             SequentialTransition seqt = new SequentialTransition();
             seqt.getChildren().addAll(st, st2);
-            seqt.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    t.animDone = true;
-                }
-            });
+            seqt.setOnFinished(actionEvent -> t.animDone = true);
             seqt.play();
         }
 
@@ -516,14 +491,11 @@ public class Shooter extends Parent implements GameLifeCycle {
         pt.getChildren().addAll(ft, ft2);
         pt.play();
 
-        pt.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                int i = getChildren().indexOf(t);
-                if (i != -1)
-                    getChildren().remove(i);
-                newCircle();
-            }
+        pt.setOnFinished(actionEvent -> {
+            int i = getChildren().indexOf(t);
+            if (i != -1)
+                getChildren().remove(i);
+            newCircle();
         });
 
     }
@@ -633,14 +605,11 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         pt.play();
 
-        pt.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                int index = (getChildren().indexOf(sp));
-                if (index != -1) {
-                    getChildren().remove(index);
-                    newCircle();
-                }
+        pt.setOnFinished(actionEvent -> {
+            int index = (getChildren().indexOf(sp));
+            if (index != -1) {
+                getChildren().remove(index);
+                newCircle();
             }
         });
 
@@ -650,17 +619,14 @@ public class Shooter extends Parent implements GameLifeCycle {
         Transition pt = restartTransition(sp);
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
-        pt.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                sp.getChildren().get(2).setOpacity(0);
-                sp.getChildren().get(3).setOpacity(0);
-                sp.getChildren().get(4).setOpacity(0);
-                sp.getChildren().get(5).setOpacity(0);
+        pt.setOnFinished(actionEvent -> {
+            sp.getChildren().get(2).setOpacity(0);
+            sp.getChildren().get(3).setOpacity(0);
+            sp.getChildren().get(4).setOpacity(0);
+            sp.getChildren().get(5).setOpacity(0);
 
-                sp.getChildren().get(0).setOpacity(0);
-                moveCircle(sp);
-            }
+            sp.getChildren().get(0).setOpacity(0);
+            moveCircle(sp);
         });
         pt.play();
 

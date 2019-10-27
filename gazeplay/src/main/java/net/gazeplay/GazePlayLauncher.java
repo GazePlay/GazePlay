@@ -25,55 +25,52 @@ public class GazePlayLauncher {
         Thread.currentThread().setName(GazePlayLauncher.class.getSimpleName() + "-main");
         Thread.currentThread().setUncaughtExceptionHandler(new LoggingUncaughtExceptionHandler());
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
+        Runnable runnable = () -> {
 
-                SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
+            SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
 
-                final String versionInfo = VersionInfo.findVersionInfo();
+            final String versionInfo = VersionInfo.findVersionInfo();
 
-                for (int i = 0; i < 5; i++) {
-                    log.info("***********************");
-                }
-                log.info("GazePlay");
-                log.info("Version : " + versionInfo);
-                Utils.logSystemProperties();
-                log.info("Max Memory: " + Runtime.getRuntime().maxMemory());
+            for (int i = 0; i < 5; i++) {
+                log.info("***********************");
+            }
+            log.info("GazePlay");
+            log.info("Version : " + versionInfo);
+            Utils.logSystemProperties();
+            log.info("Max Memory: " + Runtime.getRuntime().maxMemory());
 
+            try {
+                System.setProperty("file.encoding", "UTF-8");
+                Field charset = Charset.class.getDeclaredField("defaultCharset");
+                charset.setAccessible(true);
+                charset.set(null, null);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                log.error("Exception", e);
+            }
+
+            File workingDirectory = new File(".").getAbsoluteFile();
+            log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
+
+            // creation of GazePlay default folder if it does not exist.
+            File gazePlayFolder = new File(Utils.getGazePlayFolder());
+            if (!gazePlayFolder.exists()) {
+                boolean gazePlayFolderCreated = gazePlayFolder.mkdir();
+                log.debug("gazePlayFolderCreated = " + gazePlayFolderCreated);
+            }
+
+            Runnable runnable1 = () -> Application.launch(GazePlay.class, args);
+
+            ThreadFactory threadFactory = new CustomThreadFactory("javafx-bootsrap",
+                new GroupingThreadFactory("javafx-bootsrap-group"));
+            Thread bootstrapThread = threadFactory.newThread(runnable1);
+
+            if (doStartBootstrapThread) {
+                bootstrapThread.start();
+            } else {
                 try {
-                    System.setProperty("file.encoding", "UTF-8");
-                    Field charset = Charset.class.getDeclaredField("defaultCharset");
-                    charset.setAccessible(true);
-                    charset.set(null, null);
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    log.error("Exception", e);
-                }
-
-                File workingDirectory = new File(".").getAbsoluteFile();
-                log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
-
-                // creation of GazePlay default folder if it does not exist.
-                File gazePlayFolder = new File(Utils.getGazePlayFolder());
-                if (!gazePlayFolder.exists()) {
-                    boolean gazePlayFolderCreated = gazePlayFolder.mkdir();
-                    log.debug("gazePlayFolderCreated = " + gazePlayFolderCreated);
-                }
-
-                Runnable runnable = () -> Application.launch(GazePlay.class, args);
-
-                ThreadFactory threadFactory = new CustomThreadFactory("javafx-bootsrap",
-                    new GroupingThreadFactory("javafx-bootsrap-group"));
-                Thread bootstrapThread = threadFactory.newThread(runnable);
-
-                if (doStartBootstrapThread) {
-                    bootstrapThread.start();
-                } else {
-                    try {
-                        Thread.sleep(1000 * 60 * 10);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    Thread.sleep(1000 * 60 * 10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
         };

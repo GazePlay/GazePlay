@@ -54,7 +54,7 @@ public class Client extends Rectangle {
     }
 
     public LinkedList<Color> toMix(PotionMix potionRequest) {
-        LinkedList<Color> colorsToMix = new LinkedList<Color>();
+        LinkedList<Color> colorsToMix = new LinkedList<>();
         if (potionRequest.color == Color.RED || potionRequest.color == Color.YELLOW
                 || potionRequest.color == Color.BLUE) {
             colorsToMix.add(potionRequest.color);

@@ -152,17 +152,15 @@ class LatestNewPopup {
         // Get WebEngine via WebView
         webEngine = browser.getEngine();
         webEngine.setUserAgent(userAgentString);
-        webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
-            public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
-                log.info("ov = {}, oldState = {}, newState = {}", ov, oldState, newState);
-                if (newState == Worker.State.FAILED) {
-                    String html = getOfflinePageContent();
-                    webEngine.loadContent(html, "text/html");
-                } else {
-                    markDisplayedNow(config);
-                }
-                locationUrlLabel.setText(webEngine.getLocation());
+        webEngine.getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+            log.info("ov = {}, oldState = {}, newState = {}", ov, oldState, newState);
+            if (newState == Worker.State.FAILED) {
+                String html = getOfflinePageContent();
+                webEngine.loadContent(html, "text/html");
+            } else {
+                markDisplayedNow(config);
             }
+            locationUrlLabel.setText(webEngine.getLocation());
         });
 
         stage.titleProperty().bind(new SimpleStringProperty() {
@@ -186,9 +184,7 @@ class LatestNewPopup {
             }
         });
 
-        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            stage.close();
-        });
+        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> stage.close());
     }
 
 

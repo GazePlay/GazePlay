@@ -55,15 +55,13 @@ public class ChangeInstru extends Parent {
         rb_piano.setSelected(true);// le piano est l'instrument sélectionné par défaut
 
         // ajout d'un ChangeListener au groupe de boutons radio
-        groupe.selectedToggleProperty().addListener(new ChangeListener() {
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                if (newValue.equals(rb_piano))
-                    instru.set_instrument(0);// numéro MIDI du piano = 0
-                else if (newValue.equals(rb_guitare))
-                    instru.set_instrument(26);// numéro MIDI de la guitare = 26
-                else
-                    instru.set_instrument(16);// numéro MIDI de l'orgue = 16
-            }
+        groupe.selectedToggleProperty().addListener((ChangeListener) (observable, oldValue, newValue) -> {
+            if (newValue.equals(rb_piano))
+                instru.set_instrument(0);// numéro MIDI du piano = 0
+            else if (newValue.equals(rb_guitare))
+                instru.set_instrument(26);// numéro MIDI de la guitare = 26
+            else
+                instru.set_instrument(16);// numéro MIDI de l'orgue = 16
         });
 
         // on ajoute les boutons radio au layout

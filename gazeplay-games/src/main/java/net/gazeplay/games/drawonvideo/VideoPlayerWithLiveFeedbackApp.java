@@ -68,22 +68,16 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
         List<Canvas> canvasList = new ArrayList<>();
 
-        EventHandler<Event> exitedEventHandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event mouseEvent) {
-                for (Canvas canvas : canvasList) {
-                    canvas.setOpacity(canvasOpacityWhileOutside);
-                }
+        EventHandler<Event> exitedEventHandler = mouseEvent -> {
+            for (Canvas canvas : canvasList) {
+                canvas.setOpacity(canvasOpacityWhileOutside);
             }
         };
-        EventHandler<Event> enteredEventHandler = new EventHandler<Event>() {
-            @Override
-            public void handle(Event mouseEvent) {
-                for (Canvas canvas : canvasList) {
-                    drawBuilder.clear(canvas);
-                    canvas.setOpacity(canvasOpacityWhilePlaying);
-                    canvas.setVisible(true);
-                }
+        EventHandler<Event> enteredEventHandler = mouseEvent -> {
+            for (Canvas canvas : canvasList) {
+                drawBuilder.clear(canvas);
+                canvas.setOpacity(canvasOpacityWhilePlaying);
+                canvas.setVisible(true);
             }
         };
 
@@ -106,15 +100,12 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
             canvas.setOpacity(canvasOpacityWhilePlaying);
         }
 
-        root.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                // set the canvas to invisible
-                // in order to allow mouse interaction with the WebView (YouTube controls)
-                // the canvas will be set visible when the mouse exit then re-enter the scene
-                for (Canvas canvas : canvasList) {
-                    canvas.setVisible(false);
-                }
+        root.setOnMouseClicked(mouseEvent -> {
+            // set the canvas to invisible
+            // in order to allow mouse interaction with the WebView (YouTube controls)
+            // the canvas will be set visible when the mouse exit then re-enter the scene
+            for (Canvas canvas : canvasList) {
+                canvas.setVisible(false);
             }
         });
 
@@ -159,18 +150,15 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
                     activeCanvas = canvasList.get(activeCanvasIndex);
                     nextCanvas = canvasList.get(nextCanvasIndex);
 
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            activeCanvas.toFront();
-                            if (previousCanvas != null) {
-                                gameContext.getGazeDeviceManager().removeEventFilter(previousCanvas);
-                            }
-                            gameContext.getGazeDeviceManager().addEventFilter(activeCanvas);
-                            if (nextCanvas != null) {
-                                if (nextCanvas != activeCanvas) {
-                                    drawBuilder.clear(nextCanvas);
-                                }
+                    Platform.runLater(() -> {
+                        activeCanvas.toFront();
+                        if (previousCanvas != null) {
+                            gameContext.getGazeDeviceManager().removeEventFilter(previousCanvas);
+                        }
+                        gameContext.getGazeDeviceManager().addEventFilter(activeCanvas);
+                        if (nextCanvas != null) {
+                            if (nextCanvas != activeCanvas) {
+                                drawBuilder.clear(nextCanvas);
                             }
                         }
                     });

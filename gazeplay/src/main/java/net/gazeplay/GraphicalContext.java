@@ -123,23 +123,12 @@ public abstract class GraphicalContext<T extends Parent> {
 
     public I18NButton createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
 
-        EventHandler<Event> eventHandler = new EventHandler<javafx.event.Event>() {
-            @Override
-            public void handle(javafx.event.Event e) {
-                gazePlay.toggleFullScreen();
-            }
-        };
+        EventHandler<Event> eventHandler = e -> gazePlay.toggleFullScreen();
 
         I18NButton button = new I18NButton(gazePlay.getTranslator(), (String[]) null);
         configureFullScreenToggleButton(gazePlay.isFullScreen(), button);
 
-        gazePlay.getFullScreenProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean wasFullScreen,
-                    Boolean isFullScreen) {
-                configureFullScreenToggleButton(isFullScreen, button);
-            }
-        });
+        gazePlay.getFullScreenProperty().addListener((observable, wasFullScreen, isFullScreen) -> configureFullScreenToggleButton(isFullScreen, button));
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
@@ -160,12 +149,7 @@ public abstract class GraphicalContext<T extends Parent> {
         ImageView imageView = new ImageView(buttonGraphics);
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(Screen.getPrimary().getBounds().getWidth() / 40);
-        button.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                imageView.setFitHeight(newValue.doubleValue() / 2d);
-            }
-        });
+        button.heightProperty().addListener((observable, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() / 2d));
         button.setGraphic(imageView);
         button.setTooltip(new I18NTooltip(gazePlay.getTranslator(), label));
     }
@@ -214,10 +198,7 @@ public abstract class GraphicalContext<T extends Parent> {
         } else {
             previousTrack = new Button("", new ImageView(buttonImg));
         }
-        previousTrack.setOnAction((event) -> {
-
-            backgroundMusicManager.previous();
-        });
+        previousTrack.setOnAction((event) -> backgroundMusicManager.previous());
 
         buttonImg = null;
         try {
@@ -231,9 +212,7 @@ public abstract class GraphicalContext<T extends Parent> {
         } else {
             pauseTrack = new Button("", new ImageView(buttonImg));
         }
-        pauseTrack.setOnAction((event) -> {
-            backgroundMusicManager.pause();
-        });
+        pauseTrack.setOnAction((event) -> backgroundMusicManager.pause());
 
         buttonImg = null;
         try {
@@ -247,9 +226,7 @@ public abstract class GraphicalContext<T extends Parent> {
         } else {
             playTrack = new Button("", new ImageView(buttonImg));
         }
-        playTrack.setOnAction((event) -> {
-            backgroundMusicManager.play();
-        });
+        playTrack.setOnAction((event) -> backgroundMusicManager.play());
 
         if (backgroundMusicManager.isPlaying()) {
             playTrack.setVisible(false);
@@ -285,10 +262,7 @@ public abstract class GraphicalContext<T extends Parent> {
         } else {
             nextTrack = new Button("", new ImageView(buttonImg));
         }
-        nextTrack.setOnAction((event) -> {
-
-            backgroundMusicManager.next();
-        });
+        nextTrack.setOnAction((event) -> backgroundMusicManager.next());
 
         grid.add(previousTrack, 0, 2);
         grid.add(stackPane, 1, 2);
@@ -360,9 +334,7 @@ public abstract class GraphicalContext<T extends Parent> {
             volumeSlider.setValue(0);
         });
 
-        unmuteButton.setOnAction((event) -> {
-            volumeSlider.setValue(beforeMutedValue);
-        });
+        unmuteButton.setOnAction((event) -> volumeSlider.setValue(beforeMutedValue));
 
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             final boolean localMuted = newValue.doubleValue() == 0;
@@ -403,9 +375,7 @@ public abstract class GraphicalContext<T extends Parent> {
         slider.setSnapToTicks(false);
         slider.setValue(config.getMusicVolume());
         config.getMusicVolumeProperty().bindBidirectional(slider.valueProperty());
-        slider.valueProperty().addListener((observable) -> {
-            config.saveConfigIgnoringExceptions();
-        });
+        slider.valueProperty().addListener((observable) -> config.saveConfigIgnoringExceptions());
         return slider;
     }
 
@@ -420,9 +390,7 @@ public abstract class GraphicalContext<T extends Parent> {
         slider.setSnapToTicks(false);
         slider.setValue(config.getEffectsVolume());
         config.getEffectsVolumeProperty().bindBidirectional(slider.valueProperty());
-        slider.valueProperty().addListener((observable) -> {
-            config.saveConfigIgnoringExceptions();
-        });
+        slider.valueProperty().addListener((observable) -> config.saveConfigIgnoringExceptions());
         return slider;
     }
 

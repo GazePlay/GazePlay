@@ -81,17 +81,14 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         this.getChildren().addAll(fragments);
 
-        enterEvent = new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        enterEvent = e -> {
 
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    // log.debug(e.getEventType());
-                    enter((Circle) e.getTarget());
-                    stats.incNbGoals();
-                    stats.notifyNewRoundReady();
-                }
+                // log.debug(e.getEventType());
+                enter((Circle) e.getTarget());
+                stats.incNbGoals();
+                stats.notifyNewRoundReady();
             }
         };
 
@@ -172,13 +169,9 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         // ObservableList<Node> nodes = this.getChildren();
 
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
+        timeline.setOnFinished(actionEvent -> {
 
-            @Override
-            public void handle(ActionEvent actionEvent) {
-
-                // nodes.removeAll(fragments);
-            }
+            // nodes.removeAll(fragments);
         });
 
         if (Math.random() > 0.5) {
@@ -275,14 +268,10 @@ public class Bubble extends Parent implements GameLifeCycle {
                 .add(new KeyFrame(new Duration(Configuration.getInstance().getSpeedEffects() * timelength),
                         new KeyValue(circle.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
 
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
+        timeline.setOnFinished(actionEvent -> {
 
-            @Override
-            public void handle(ActionEvent actionEvent) {
-
-                // moveCircle(circle);
-                newCircle();
-            }
+            // moveCircle(circle);
+            newCircle();
         });
 
         timeline.play();

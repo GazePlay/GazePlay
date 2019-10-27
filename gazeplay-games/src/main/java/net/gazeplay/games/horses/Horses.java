@@ -366,9 +366,7 @@ public class Horses implements GameLifeCycle {
                 new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
                 new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0)));
 
-        showMessage.setOnFinished(e -> {
-            messages.getChildren().remove(messageText);
-        });
+        showMessage.setOnFinished(e -> messages.getChildren().remove(messageText));
 
         showMessage.playFromStart();
     }

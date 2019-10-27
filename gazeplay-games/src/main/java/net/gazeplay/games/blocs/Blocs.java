@@ -145,18 +145,18 @@ public class Blocs implements GameLifeCycle {
         int maxX = blocs.length;
         int maxY = blocs[0].length;
 
-        final Service<Void> calculateService = new Service<Void>() {
+        final Service<Void> calculateService = new Service<>() {
 
             @Override
             protected Task<Void> createTask() {
-                return new Task<Void>() {
+                return new Task<>() {
 
                     @Override
                     protected Void call() throws Exception {
-                        for (int i = 0; i < maxX; i++) {
+                        for (Bloc[] bloc : blocs) {
                             for (int j = 0; j < maxY; j++) {
 
-                                removeBloc(blocs[i][j]);
+                                removeBloc(bloc[j]);
                             }
                         }
                         return null;
@@ -182,57 +182,54 @@ public class Blocs implements GameLifeCycle {
     }
 
     private EventHandler<Event> buildEvent(IGameContext gameContext, Stats stats, boolean useTrail) {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
+        return e -> {
 
-                if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
-                        || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
+            if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
+                || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
-                    if (!useTrail) {
+                if (!useTrail) {
 
-                        Bloc bloc = (Bloc) e.getTarget();
-                        removeBloc(bloc);
-                    } else {
+                    Bloc bloc = (Bloc) e.getTarget();
+                    removeBloc(bloc);
+                } else {
 
-                        Bloc bloc = (Bloc) e.getTarget();
+                    Bloc bloc = (Bloc) e.getTarget();
 
-                        int posX = bloc.posX;
-                        int posY = bloc.posY;
+                    int posX = bloc.posX;
+                    int posY = bloc.posY;
 
-                        final Bloc[][] blocs = currentRoundDetails.blocs;
+                    final Bloc[][] blocs = currentRoundDetails.blocs;
 
-                        int maxX = blocs.length;
-                        int maxY = blocs[0].length;
+                    int maxX = blocs.length;
+                    int maxY = blocs[0].length;
 
-                        for (int i = -trail; i < trail; i++) {
-                            for (int j = -trail; j < trail; j++) {
+                    for (int i = -trail; i < trail; i++) {
+                        for (int j = -trail; j < trail; j++) {
 
-                                if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0
-                                        && posX + i < maxX && posY + j < maxY) {
+                            if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0
+                                && posX + i < maxX && posY + j < maxY) {
 
-                                    removeBloc(blocs[posX + i][posY + j]);
-                                    blocs[posX + i][posY + j] = null;
-                                }
+                                removeBloc(blocs[posX + i][posY + j]);
+                                blocs[posX + i][posY + j] = null;
                             }
                         }
                     }
+                }
 
-                    if (((float) initCount - currentRoundDetails.remainingCount) / initCount >= percents4Win
-                            && !currentRoundDetails.finished) {
+                if (((float) initCount - currentRoundDetails.remainingCount) / initCount >= percents4Win
+                    && !currentRoundDetails.finished) {
 
-                        currentRoundDetails.finished = true;
+                    currentRoundDetails.finished = true;
 
-                        stats.incNbGoals();
+                    stats.incNbGoals();
 
-                        removeAllBlocs();
+                    removeAllBlocs();
 
-                        gameContext.playWinTransition(0, event -> {
-                            gameContext.clear();
-                            Blocs.this.launch();
-                            gameContext.onGameStarted();
-                        });
-                    }
+                    gameContext.playWinTransition(0, event -> {
+                        gameContext.clear();
+                        Blocs.this.launch();
+                        gameContext.onGameStarted();
+                    });
                 }
             }
         };

@@ -39,12 +39,8 @@ public class CreamPie implements GameLifeCycle {
     public void launch() {
         hand.recomputePosition();
 
-        gameContext.getRoot().widthProperty().addListener((obs, oldVal, newVal) -> {
-            hand.recomputePosition();
-        });
-        gameContext.getRoot().heightProperty().addListener((obs, oldVal, newVal) -> {
-            hand.recomputePosition();
-        });
+        gameContext.getRoot().widthProperty().addListener((obs, oldVal, newVal) -> hand.recomputePosition());
+        gameContext.getRoot().heightProperty().addListener((obs, oldVal, newVal) -> hand.recomputePosition());
 
     }
 

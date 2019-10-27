@@ -17,7 +17,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 @Slf4j
@@ -35,7 +34,7 @@ public class FixationSequence {
 
     public FixationSequence(int width, int height, LinkedList<FixationPoint> fixSeq) {
 
-        sequence = new LinkedList<FixationPoint>();
+        sequence = new LinkedList<>();
         this.image = new WritableImage(width, height);
         Canvas canvas = new Canvas(width, height);
 
@@ -117,11 +116,7 @@ public class FixationSequence {
             log.error("Can\'t make properly Snapshot in Fixation Sequence");
         }
 
-        Iterator<FixationPoint> it = fixSeq.iterator();
-        while (it.hasNext()) {
-            if (it.next().getGazeDuration() == -1)
-                it.remove();
-        }
+        fixSeq.removeIf(fixationPoint -> fixationPoint.getGazeDuration() == -1);
         sequence = fixSeq;
     }
 
@@ -152,7 +147,7 @@ public class FixationSequence {
         double distance = 0.0;
         FixationPoint pivotVertex = allPoints.get(accepted);
 
-        LinkedList<FixationPoint> reducedPolyline = new LinkedList<FixationPoint>();
+        LinkedList<FixationPoint> reducedPolyline = new LinkedList<>();
         reducedPolyline.add(pivotVertex);
 
         for (int i = 1; i < allPoints.size() - 1; i++) {

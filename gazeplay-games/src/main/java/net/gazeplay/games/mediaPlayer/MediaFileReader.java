@@ -25,7 +25,7 @@ public class MediaFileReader {
     int playing;
 
     public MediaFileReader() {
-        mediaList = new ArrayList<MediaFile>();
+        mediaList = new ArrayList<>();
         index = -1;
         playing = -1;
         try {

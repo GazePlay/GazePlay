@@ -48,12 +48,7 @@ public class Order implements GameLifeCycle {
         handleAnswer(t, this.currentNum == t.getNum() - 1);
 
         if (this.currentNum == nbTarget) {
-            gameContext.playWinTransition(20, new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    Order.this.restart();
-                }
-            });
+            gameContext.playWinTransition(20, actionEvent -> Order.this.restart());
         }
     }
 
@@ -70,13 +65,10 @@ public class Order implements GameLifeCycle {
 
         Timeline pause = new Timeline();
         pause.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
-        pause.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Order.this.gameContext.getChildren().remove(c);
-                if (correct == false) {
-                    Order.this.restart();
-                }
+        pause.setOnFinished(actionEvent -> {
+            Order.this.gameContext.getChildren().remove(c);
+            if (correct == false) {
+                Order.this.restart();
             }
         });
 
@@ -89,7 +81,7 @@ public class Order implements GameLifeCycle {
         Target[] tabTarget = new Target[nbTarget];
         Timeline timer = new Timeline();
 
-        timer.setOnFinished(new EventHandler<ActionEvent>() {
+        timer.setOnFinished(new EventHandler<>() {
             int i = 0;
 
             @Override
@@ -100,7 +92,7 @@ public class Order implements GameLifeCycle {
                 i++;
                 if (i < nbTarget) {
                     timer.getKeyFrames()
-                            .add(new KeyFrame(Duration.seconds(Configuration.getInstance().getSpeedEffects() * 1)));
+                        .add(new KeyFrame(Duration.seconds(Configuration.getInstance().getSpeedEffects() * 1)));
                     timer.play();
                 } else {
                     for (int j = 0; j < nbTarget; j++) {

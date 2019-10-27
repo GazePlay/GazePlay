@@ -46,7 +46,7 @@ public class ScanpathView extends GraphicalContext<Pane> {
         // this.points = FixationSequence.getSequence();
         this.points = stats.getFixationSequence();
 
-        List<Ellipse> Points = new LinkedList<Ellipse>();
+        List<Ellipse> Points = new LinkedList<>();
         for (FixationPoint p : this.points) {
             Ellipse newPoint = new Ellipse();
             // newPoint.setFill(Color.RED); // uncomment and increase opacity for "debug"/ to see if the ellipses are
@@ -83,9 +83,7 @@ public class ScanpathView extends GraphicalContext<Pane> {
                 root.getChildren().add(label);
             });
 
-            Points.get(index).setOnMouseExited(s -> {
-                root.getChildren().remove(label);
-            });
+            Points.get(index).setOnMouseExited(s -> root.getChildren().remove(label));
         }
 
         EventHandler<Event> ExitScanpathView = e -> {

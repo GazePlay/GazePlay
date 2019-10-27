@@ -48,9 +48,7 @@ public class Pawn {
         Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(pawnDisplay.layoutXProperty(), targetX, Interpolator.EASE_BOTH),
                 new KeyValue(pawnDisplay.layoutYProperty(), targetY, Interpolator.EASE_BOTH)));
-        newTimeline.setOnFinished(e -> {
-            move();
-        });
+        newTimeline.setOnFinished(e -> move());
 
         newTimeline.playFromStart();
     }

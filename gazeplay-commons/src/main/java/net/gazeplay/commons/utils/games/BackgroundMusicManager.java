@@ -41,9 +41,9 @@ public class BackgroundMusicManager {
     private static BackgroundMusicManager instance = new BackgroundMusicManager();
 
     @Getter
-    private final List<MediaPlayer> playlist = new ArrayList<MediaPlayer>();
+    private final List<MediaPlayer> playlist = new ArrayList<>();
 
-    private final List<MediaPlayer> defaultPlayList = new ArrayList<MediaPlayer>();
+    private final List<MediaPlayer> defaultPlayList = new ArrayList<>();
     @Getter
     private MediaPlayer currentMusic;
 
@@ -409,13 +409,9 @@ public class BackgroundMusicManager {
         try {
             final Media media = new Media(source);
             final MediaPlayer player = new MediaPlayer(media);
-            player.setOnError(() -> {
-                log.error("error on audio media loading : " + player.getError());
-            });
+            player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
             player.volumeProperty().bind(config.getMusicVolumeProperty());
-            player.setOnEndOfMedia(() -> {
-                next();
-            });
+            player.setOnEndOfMedia(this::next);
 
             return player;
         } catch (MediaException e) {

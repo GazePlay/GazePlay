@@ -126,22 +126,12 @@ public class Potion extends Parent {
         currentTimeline.stop();
         currentTimeline = new Timeline();
 
-        currentTimeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-                gameContext.playWinTransition(0, new EventHandler<ActionEvent>() {
-
-                    @Override
-                    public void handle(ActionEvent event) {
-                        gameInstance.dispose();
-                        gameContext.clear();
-                        gameInstance.launch();
-                        stats.notifyNewRoundReady();
-                    }
-                });
-            }
-        });
+        currentTimeline.onFinishedProperty().set(event -> gameContext.playWinTransition(0, event1 -> {
+            gameInstance.dispose();
+            gameContext.clear();
+            gameInstance.launch();
+            stats.notifyNewRoundReady();
+        }));
         currentTimeline.play();
     }
 
@@ -168,83 +158,74 @@ public class Potion extends Parent {
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(4000), new KeyValue(exp.opacityProperty(), 0)));
 
         currentTimeline.play();
-        currentTimeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                gameInstance.dispose();
-                gameContext.clear();
-                gameInstance.launch();
-                try {
-                    stats.saveStats();
-                } catch (IOException ex) {
-                    log.info("Io exception");
-                }
-
-                stats.notifyNewRoundReady();
+        currentTimeline.onFinishedProperty().set(event -> {
+            gameInstance.dispose();
+            gameContext.clear();
+            gameInstance.launch();
+            try {
+                stats.saveStats();
+            } catch (IOException ex) {
+                log.info("Io exception");
             }
+
+            stats.notifyNewRoundReady();
         });
     }
 
     private EventHandler<Event> buildEvent() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event event) {
-                if (chosen)
-                    return;
-                if (event.getEventType() == MouseEvent.MOUSE_ENTERED
-                        || event.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    progressIndicator.setOpacity(1);
-                    progressIndicator.setProgress(0);
+        return event -> {
+            if (chosen)
+                return;
+            if (event.getEventType() == MouseEvent.MOUSE_ENTERED
+                || event.getEventType() == GazeEvent.GAZE_ENTERED) {
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
 
-                    timelineProgressBar = new Timeline();
+                timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationLength),
-                            new KeyValue(progressIndicator.progressProperty(), 1)));
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationLength),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                    timelineProgressBar.play();
+                timelineProgressBar.play();
 
-                    timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            chosen = true;
-                            mixture.add(potionColor); // we add the color of the potion to our mixture
-                            // change opacity of potion when it has been selected once
-                            potion.setOpacity(.3);
+                timelineProgressBar.setOnFinished(event1 -> {
+                    chosen = true;
+                    mixture.add(potionColor); // we add the color of the potion to our mixture
+                    // change opacity of potion when it has been selected once
+                    potion.setOpacity(.3);
 
-                            potion.removeEventFilter(MouseEvent.ANY, enterEvent); // we cannot select anymore this color
-                            potion.removeEventFilter(GazeEvent.ANY, enterEvent);
+                    potion.removeEventFilter(MouseEvent.ANY, enterEvent); // we cannot select anymore this color
+                    potion.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-                            if (!gameInstance.currentRoundDetails.getPotionsToMix().contains(potionColor)) {
-                                onWrongPotionSelected();
-                            } else if (mixture.containsAll(gameInstance.currentRoundDetails.getPotionsToMix())) {
-                                onMixAchieved();
-                            } else {
-                                stats.incNbGoals();
-                            }
-                            switch (mixture.size()) {
-                            case 1:
-                                MagicPotions.getMixPotColor().setFill(mixture.get(0));
-                                break;
-                            case 2:
-                                if (gameInstance.currentRoundDetails.getPotionsToMix().size() == 2)
-                                    MagicPotions.getMixPotColor()
-                                            .setFill(gameInstance.currentRoundDetails.getRequest().getColor());
-                                else
-                                    MagicPotions.getMixPotColor().setFill(mixture.get(1));
-                                break;
-                            case 3:
-                                MagicPotions.getMixPotColor().setFill(Color.BLACK);
-                                break;
+                    if (!gameInstance.currentRoundDetails.getPotionsToMix().contains(potionColor)) {
+                        onWrongPotionSelected();
+                    } else if (mixture.containsAll(gameInstance.currentRoundDetails.getPotionsToMix())) {
+                        onMixAchieved();
+                    } else {
+                        stats.incNbGoals();
+                    }
+                    switch (mixture.size()) {
+                        case 1:
+                            MagicPotions.getMixPotColor().setFill(mixture.get(0));
+                            break;
+                        case 2:
+                            if (gameInstance.currentRoundDetails.getPotionsToMix().size() == 2)
+                                MagicPotions.getMixPotColor()
+                                    .setFill(gameInstance.currentRoundDetails.getRequest().getColor());
+                            else
+                                MagicPotions.getMixPotColor().setFill(mixture.get(1));
+                            break;
+                        case 3:
+                            MagicPotions.getMixPotColor().setFill(Color.BLACK);
+                            break;
 
-                            }
-                        }
-                    });
-                } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
-                        || event.getEventType() == GazeEvent.GAZE_EXITED) {
-                    timelineProgressBar.stop();
-                    progressIndicator.setOpacity(0);
-                    progressIndicator.setProgress(0);
-                }
+                    }
+                });
+            } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
+                || event.getEventType() == GazeEvent.GAZE_EXITED) {
+                timelineProgressBar.stop();
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
             }
         };
     }

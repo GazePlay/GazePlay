@@ -70,7 +70,7 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     public void setLevel(int i) {
 
-        garage = new LinkedList<Car>();
+        garage = new LinkedList<>();
 
         size = new SimpleIntegerProperty();
 
@@ -2440,15 +2440,11 @@ public class RushHour extends Parent implements GameLifeCycle {
         toWin.xProperty().addListener((o) -> {
             if (!endOfGame && Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
                 endOfGame = true;
-                gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+                gameContext.playWinTransition(500, actionEvent -> {
 
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-
-                        log.debug("you won !");
-                        dispose();
-                        launch();
-                    }
+                    log.debug("you won !");
+                    dispose();
+                    launch();
                 });
             }
         });
@@ -2456,12 +2452,8 @@ public class RushHour extends Parent implements GameLifeCycle {
         toWin.yProperty().addListener((o) -> {
             if (!endOfGame && Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
                 endOfGame = true;
-                gameContext.playWinTransition(500, new EventHandler<ActionEvent>() {
+                gameContext.playWinTransition(500, actionEvent -> {
 
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-
-                    }
                 });
             }
         });
@@ -2470,13 +2462,9 @@ public class RushHour extends Parent implements GameLifeCycle {
     public void setIntersections() {
         for (Car car : garage) {
             if (car.isDirection()) {
-                car.xProperty().addListener((o) -> {
-                    checkIntersections(car);
-                });
+                car.xProperty().addListener((o) -> checkIntersections(car));
             } else {
-                car.yProperty().addListener((o) -> {
-                    checkIntersections(car);
-                });
+                car.yProperty().addListener((o) -> checkIntersections(car));
             }
         }
     }

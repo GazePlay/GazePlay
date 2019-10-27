@@ -33,9 +33,7 @@ public class midiReader {
             tickIndex = -1;
             prevTick = -1;
             key = -1;
-        } catch (InvalidMidiDataException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidMidiDataException | IOException e) {
             e.printStackTrace();
         }
 

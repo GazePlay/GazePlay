@@ -88,9 +88,7 @@ public class DiceRoller extends MeshView {
                 new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.EASE_OUT),
                 new KeyValue(rotations.get(1).angleProperty(), angleY, Interpolator.EASE_OUT)));
 
-        rollTimeline.setOnFinished(e -> {
-            squareUpTimeline.play();
-        });
+        rollTimeline.setOnFinished(e -> squareUpTimeline.play());
 
         if (onFinishedEventHandler != null) {
             squareUpTimeline.setOnFinished(onFinishedEventHandler);

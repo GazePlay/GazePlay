@@ -94,16 +94,14 @@ public class Dice implements GameLifeCycle {
             pp.button.setCenter(dr);
             gridpane.add(pp, i, 0);
             int finalI = i;
-            pp.assignIndicator(e -> {
-                rolls[finalI] = dr.roll(action -> addUp());
-            });
+            pp.assignIndicator(e -> rolls[finalI] = dr.roll(action -> addUp()));
         }
     }
 
     private void addUp() {
         int total = 0;
-        for (int i = 0; i < rolls.length; i++) {
-            total += rolls[i];
+        for (int roll : rolls) {
+            total += roll;
         }
         totalText.setText("" + total);
         totalText.setOpacity(0);
