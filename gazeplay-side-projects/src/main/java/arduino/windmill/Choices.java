@@ -27,9 +27,9 @@ import java.util.HashMap;
  */
 public class Choices extends Parent {
 
-    private final int min_X = 100;
-    private final int min_Y = 50;
-    private final int sep = 100;
+    private final double min_X = 100d;
+    private final double min_Y = 50d;
+    private final double sep = 100d;
 
     private final double min_time = 500;// Math.sqrt(2) * 1000;
     private final float zoom_factor = 1.1f;
@@ -69,8 +69,8 @@ public class Choices extends Parent {
         currentChoice.add(R1);
         currentChoice.add(R2);
 
-        double imagesWidth = scene.getWidth() / 2 - min_X / 2 - sep / 2;
-        double imagesHeight = scene.getHeight() - min_Y * 2;
+        double imagesWidth = scene.getWidth() / 2 - min_X / 2d - sep / 2d;
+        double imagesHeight = scene.getHeight() - min_Y * 2d;
 
         for (int i = 0; i < currentChoice.size(); i++) {
 

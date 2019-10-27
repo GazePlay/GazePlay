@@ -614,10 +614,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         shade.setOpacity(1);
         int highscore = getsetHighscore(score);
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(translate.getTrad("Score", configuration.getLanguage())
-                + translate.getTrad("Colon", configuration.getLanguage()) + " " + score + "\n");
-        stringBuilder.append(translate.getTrad("Highscore", configuration.getLanguage())
-                + translate.getTrad("Colon", configuration.getLanguage()) + " " + highscore + "\n");
+        stringBuilder.append(translate.getTrad("Score", configuration.getLanguage())).append(translate.getTrad("Colon", configuration.getLanguage())).append(" ").append(score).append("\n");
+        stringBuilder.append(translate.getTrad("Highscore", configuration.getLanguage())).append(translate.getTrad("Colon", configuration.getLanguage())).append(" ").append(highscore).append("\n");
         if (highscore <= score)
             stringBuilder.append(translate.getTrad("New highscore!", configuration.getLanguage()));
         finalScoreText.setText(stringBuilder.toString());

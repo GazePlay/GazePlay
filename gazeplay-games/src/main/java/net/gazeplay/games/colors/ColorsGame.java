@@ -71,7 +71,7 @@ public class ColorsGame implements GameLifeCycle {
      * On a [0, 1] scale, used to determine the threshold in the difference between two colors to consider that they are
      * equals.
      */
-    public static final double COLOR_EQUALITY_THRESHOLD = 10 / 255;
+    public static final double COLOR_EQUALITY_THRESHOLD = 10d / 255d;
 
     /**
      * Distance in pixel between two gaze event to consider that the gaze is moving.
