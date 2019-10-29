@@ -72,7 +72,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private boolean playing = false;
     private double highestFixationTime;
     private Stats stats;
-    private ArrayList<Polygon> targetArea;
 
     @Override
     public ObservableList<Node> getChildren() {
@@ -88,8 +87,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         // treating the data, post processing to take performance constraint of during the data collection
         movementHistory.get(0).setDistance(0);
         for (int i = 1; i < movementHistory.size(); i++) {
-            double x = Math.pow(movementHistory.get(i).getxValue() - movementHistory.get(i - 1).getxValue(), 2);
-            double y = Math.pow(movementHistory.get(i).getyValue() - movementHistory.get(i - 1).getyValue(), 2);
+            double x = Math.pow(movementHistory.get(i).getXValue() - movementHistory.get(i - 1).getXValue(), 2);
+            double y = Math.pow(movementHistory.get(i).getYValue() - movementHistory.get(i - 1).getYValue(), 2);
             double distance = Math.sqrt(x + y);
             movementHistory.get(i).setDistance(distance);
         }
@@ -103,20 +102,20 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 Circle circle;
                 if (movementHistory.get(movementIndex).getIntervalTime() > 11
                         && movementHistory.get(movementIndex).getDistance() < 20) {
-                    circle = new Circle(coordinatesTracker.getxValue(), coordinatesTracker.getyValue(), 4);
+                    circle = new Circle(coordinatesTracker.getXValue(), coordinatesTracker.getYValue(), 4);
                     circle.setStroke(Color.LIGHTYELLOW);
                     circle.setFill(Color.ORANGERED);
                 } else {
-                    circle = new Circle(coordinatesTracker.getxValue(), coordinatesTracker.getyValue(), 3);
+                    circle = new Circle(coordinatesTracker.getXValue(), coordinatesTracker.getYValue(), 3);
                     circle.setStroke(Color.LIGHTGREEN);
                     circle.setFill(Color.GREEN);
                 }
                 Platform.runLater(() -> {
                     if (intereatorAOI < allAOIList.size()) {
                         if (movementIndex == allAOIList.get(intereatorAOI).getStartingIndex()) {
-                            currentInfoBox = allAOIList.get(intereatorAOI).getInfoBoxProp().getInfoBox();
+                            currentInfoBox = allAOIList.get(intereatorAOI).getInfoBoxProps().getInfoBox();
                             currentAreaDisplay = allAOIList.get(intereatorAOI).getAreaOfInterest();
-                            currentLineToInfoBox = allAOIList.get(intereatorAOI).getInfoBoxProp().getLineToInfoBox();
+                            currentLineToInfoBox = allAOIList.get(intereatorAOI).getInfoBoxProps().getLineToInfoBox();
                             graphicsPane.getChildren().add(currentAreaDisplay);
                             graphicsPane.getChildren().add(currentInfoBox);
                             graphicsPane.getChildren().add(currentLineToInfoBox);
@@ -159,10 +158,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
     private void calculateAreaOfInterest(int index, double startTime) {
         if (index != 0) {
-            double x1 = movementHistory.get(index).getxValue();
-            double y1 = movementHistory.get(index).getyValue();
-            double x2 = movementHistory.get(index - 1).getxValue();
-            double y2 = movementHistory.get(index - 1).getyValue();
+            double x1 = movementHistory.get(index).getXValue();
+            double y1 = movementHistory.get(index).getYValue();
+            double x2 = movementHistory.get(index - 1).getXValue();
+            double y2 = movementHistory.get(index - 1).getYValue();
             double eDistance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
             if (eDistance < 120 && movementHistory.get(index).getIntervalTime() > 10) {
                 if (index == 1)
@@ -184,10 +183,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     int movementHistoryStartingIndex = movementHistoryEndingIndex - areaOfInterestList.size();
                     Point2D[] point2DS = new Point2D[areaOfInterestList.size()];
                     for (int i = 0; i < areaOfInterestList.size(); i++) {
-                        centerX += areaOfInterestList.get(i).getxValue();
-                        centerY += areaOfInterestList.get(i).getyValue();
-                        point2DS[i] = new Point2D(areaOfInterestList.get(i).getxValue(),
-                                areaOfInterestList.get(i).getyValue());
+                        centerX += areaOfInterestList.get(i).getXValue();
+                        centerY += areaOfInterestList.get(i).getYValue();
+                        point2DS[i] = new Point2D(areaOfInterestList.get(i).getXValue(),
+                                areaOfInterestList.get(i).getYValue());
                     }
                     Double[] polygonPoints;
                     if (config.isConvexHullEnabled()) {
@@ -344,7 +343,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         combinedAreaList = computeConnectedArea();
         if (highestFixationTime != 0) {
             for (AreaOfInterestProps areaOfInterestProps : allAOIList) {
-                double priority = areaOfInterestProps.getInfoBoxProp().getTimeSpent() / highestFixationTime * 0.6
+                double priority = areaOfInterestProps.getInfoBoxProps().getTimeSpent() / highestFixationTime * 0.6
                         + 0.10;
                 areaOfInterestProps.getAreaOfInterest().setFill(Color.rgb(255, 0, 0, priority));
                 areaOfInterestProps.setPriority(priority);
@@ -534,12 +533,12 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         Polygon targetArea;
         ArrayList<Polygon> listOfPolygon = new ArrayList<>();
         for (TargetAOI targetAOI : targetAOIArrayList) {
-            System.out.println("The target is at " + targetAOI.getxValue() + " Y " + targetAOI.getyValue());
+            System.out.println("The target is at " + targetAOI.getXValue() + " Y " + targetAOI.getYValue());
             int radius = targetAOI.getAreaRadius();
-            Point2D[] point2D = { new Point2D(targetAOI.getxValue() - 100, targetAOI.getyValue()),
-                    new Point2D(targetAOI.getxValue() + radius, targetAOI.getyValue() + 100),
-                    new Point2D(targetAOI.getxValue(), targetAOI.getyValue() - radius),
-                    new Point2D(targetAOI.getxValue() + radius, targetAOI.getyValue() - radius) };
+            Point2D[] point2D = { new Point2D(targetAOI.getXValue() - 100, targetAOI.getYValue()),
+                    new Point2D(targetAOI.getXValue() + radius, targetAOI.getYValue() + 100),
+                    new Point2D(targetAOI.getXValue(), targetAOI.getYValue() - radius),
+                    new Point2D(targetAOI.getXValue() + radius, targetAOI.getYValue() - radius) };
             Double[] polygonPoints;
             polygonPoints = calculateRectangle(point2D);
             targetArea = new Polygon();
@@ -642,22 +641,22 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
             if (areaMap[i] == -1) {
                 tempPolygon = allAOIList.get(i).getAreaOfInterest();
-                infoBox = allAOIList.get(i).getInfoBoxProp().getInfoBox();
+                infoBox = allAOIList.get(i).getInfoBoxProps().getInfoBox();
             }
             if (areaMap[i] == i) {
                 tempPolygon = allAOIList.get(i).getAreaOfInterest();
-                String aoiID = allAOIList.get(i).getInfoBoxProp().getAoiID();
-                double TTFF = allAOIList.get(i).getInfoBoxProp().getTTFF();
-                double TimeSpent = allAOIList.get(i).getInfoBoxProp().getTimeSpent();
+                String aoiID = allAOIList.get(i).getInfoBoxProps().getAoiID();
+                double TTFF = allAOIList.get(i).getInfoBoxProps().getTTFF();
+                double TimeSpent = allAOIList.get(i).getInfoBoxProps().getTimeSpent();
                 int Fixation = allAOIList.get(i).getFixations();
                 int revisit = 1;
                 // Double ratioDouble = 0.0;
                 for (int j = i + 1; j < allAOIList.size(); j++) {
                     if (areaMap[j] == i) {
-                        TTFF += allAOIList.get(j).getInfoBoxProp().getTTFF();
+                        TTFF += allAOIList.get(j).getInfoBoxProps().getTTFF();
                         revisit++;
-                        TimeSpent += allAOIList.get(j).getInfoBoxProp().getTimeSpent();
-                        Fixation += allAOIList.get(j).getInfoBoxProp().getTimeSpent();
+                        TimeSpent += allAOIList.get(j).getInfoBoxProps().getTimeSpent();
+                        Fixation += allAOIList.get(j).getInfoBoxProps().getTimeSpent();
                         tempPolygon = Shape.union(tempPolygon, allAOIList.get(j).getAreaOfInterest());
                         tempPolygon.setFill(Color.rgb(249, 166, 2, 0.15));
                     }
