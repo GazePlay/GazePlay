@@ -150,36 +150,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         EventHandler<Event> handevent = e -> {
             Cursor.setVisible(true);
             inside = true;
-            double offsetx = 0;
-            double offsety = 0;
-            if (mode == EAT_MODE) {
-                offsetx = hand.getWidth() / 4;
-                offsety = -hand.getHeight() / 4;
-            }
-
-            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
-                    - gameContext.getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
-                    - gameContext.getPrimaryStage().getY() - hand.getHeight() / 2);
-            } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
-                float[] pointAsFloatArray = Tobii.gazePosition();
-
-                final float xRatio = pointAsFloatArray[0];
-                final float yRatio = pointAsFloatArray[1];
-
-                final double positionX = xRatio * screenWidth;
-                final double positionY = yRatio * screenHeight;
-
-                hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
-                    - hand.getWidth() / 2);
-                hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY()
-                    - hand.getHeight() / 2);
-            }
-
-            hand.toFront();
-            hand.setVisible(true);
-
+            onEvent(e);
         };
 
         pet.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
@@ -192,6 +163,37 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
 
+    }
+
+    private void onEvent(Event e) {
+        double offsetx = 0;
+        double offsety = 0;
+        if (mode == EAT_MODE) {
+            offsetx = hand.getWidth() / 4;
+            offsety = -hand.getHeight() / 4;
+        }
+        if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+            hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
+                - gameContext.getPrimaryStage().getX() - hand.getWidth() / 2);
+            hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
+                - gameContext.getPrimaryStage().getY() - hand.getHeight() / 2);
+        } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
+            float[] pointAsFloatArray = Tobii.gazePosition();
+
+            final float xRatio = pointAsFloatArray[0];
+            final float yRatio = pointAsFloatArray[1];
+
+            final double positionX = xRatio * screenWidth;
+            final double positionY = yRatio * screenHeight;
+
+            hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
+                - hand.getWidth() / 2);
+            hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY()
+                - hand.getHeight() / 2);
+        }
+
+        hand.toFront();
+        hand.setVisible(true);
     }
 
     @Override
@@ -604,35 +606,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         bowl.setX(zone.getX());
 
         EventHandler<Event> handevent = e -> {
-            double offsetx = 0;
-            double offsety = 0;
-            if (mode == EAT_MODE) {
-                offsetx = hand.getWidth() / 4;
-                offsety = -hand.getHeight() / 4;
-            }
-            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
-                    - gameContext.getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
-                    - gameContext.getPrimaryStage().getY() - hand.getHeight() / 2);
-
-            } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
-                float[] pointAsFloatArray = Tobii.gazePosition();
-
-                final float xRatio = pointAsFloatArray[0];
-                final float yRatio = pointAsFloatArray[1];
-
-                final double positionX = xRatio * screenWidth;
-                final double positionY = yRatio * screenHeight;
-
-                hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
-                    - hand.getWidth() / 2);
-                hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY()
-                    - hand.getHeight() / 2);
-            }
-
-            hand.toFront();
-            hand.setVisible(true);
+            onEvent(e);
 
         };
 
