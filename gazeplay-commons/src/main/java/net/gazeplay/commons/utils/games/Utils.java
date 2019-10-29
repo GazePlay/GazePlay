@@ -53,7 +53,7 @@ public class Utils {
         }
     }
 
-    public static MediaPlayer playSound(String ressource) throws Exception {
+    public static MediaPlayer playSound(String ressource) {
 
         log.debug("Try to play " + ressource);
 

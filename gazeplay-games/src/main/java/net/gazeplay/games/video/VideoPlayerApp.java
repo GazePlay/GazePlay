@@ -18,7 +18,7 @@ public class VideoPlayerApp extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
 
         String videoUrl = "http://www.youtube.com/embed/" + videoId + "?autoplay=1";
 

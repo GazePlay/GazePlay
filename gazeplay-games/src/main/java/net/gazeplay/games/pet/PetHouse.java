@@ -605,10 +605,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         bowl.setY(zone.getY() + 4 * zone.getHeight() / 5);
         bowl.setX(zone.getX());
 
-        EventHandler<Event> handevent = e -> {
-            onEvent(e);
-
-        };
+        EventHandler<Event> handevent = this::onEvent;
 
         EventHandler<Event> handenter = e -> {
             pet.setBasic();

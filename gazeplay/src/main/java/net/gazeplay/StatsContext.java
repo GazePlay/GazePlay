@@ -90,8 +90,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         this(gazePlay, root, stats, null);
     }
 
-    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton)
-        throws IOException {
+    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
         super(gazePlay, root);
         this.stats = stats;
 
