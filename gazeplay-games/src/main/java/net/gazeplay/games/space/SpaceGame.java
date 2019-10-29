@@ -115,8 +115,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private ArrayList<Rectangle> bulletBibouleListRec;
     private ArrayList<Rectangle> bulletBossListRec;
     private ArrayList<Rectangle> spaceshipDestroyed;
-    private ArrayList<Timeline> timelineList;
-    private HashMap<Rectangle, TranslateTransition> hashMap;
 
     private ExecutorService ex;
     private int bossHit;
@@ -253,8 +251,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.bosses = new ArrayList<>();
         this.bossKilled = new ArrayList<>();
         this.bulletBossListRec = new ArrayList<>();
-        this.timelineList = new ArrayList<>();
-        this.hashMap = new HashMap<>();
 
         this.ex = Executors.newWorkStealingPool();
         // this.ex = Executors.newFixedThreadPool(10);
@@ -280,8 +276,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         bulletBossListRec.clear();
         bosses.clear();
         bossKilled.clear();
-        timelineList.clear();
-        hashMap.clear();
         // for (Timeline t : timelineList){
         // t.stop();
         // }
@@ -387,10 +381,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bulletTransition.setOnFinished(event -> {
                 bulletListRec.remove(bulletRec);
                 middleLayer.getChildren().remove(bulletRec);
-                hashMap.remove(bulletRec);
             });
 
-            hashMap.put(bulletRec, bulletTransition);
             bulletTransition.play();
             bulletValue = 0;
         }
@@ -437,7 +429,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
                             bulletListRec.remove(r);
                             biboules.remove(b);
-                            hashMap.remove(r);
                             backgroundLayer.getChildren().remove(b);
                             middleLayer.getChildren().remove(r);
                             updateScore();
@@ -480,9 +471,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                 timeline.setOnFinished(event -> {
                     bulletBibouleListRec.remove(bulletBibouleRec);
                     backgroundLayer.getChildren().remove(bulletBibouleRec);
-                    timelineList.remove(timeline);
                 });
-                timelineList.add(timeline);
                 timeline.play();
 
             }
@@ -524,7 +513,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             middleLayer.getChildren().remove(spaceship);
                             backgroundLayer.getChildren().remove(rb);
                             death();
-                            timelineList.clear();
                         }
 
                     } else {
