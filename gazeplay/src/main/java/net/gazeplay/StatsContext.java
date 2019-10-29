@@ -49,7 +49,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats,
-                                           CustomButton continueButton) throws IOException {
+                                           CustomButton continueButton) {
         BorderPane root = new BorderPane();
 
         return new StatsContext(gazePlay, root, stats, continueButton);
@@ -86,7 +86,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) throws IOException {
+    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) {
         this(gazePlay, root, stats, null);
     }
 
