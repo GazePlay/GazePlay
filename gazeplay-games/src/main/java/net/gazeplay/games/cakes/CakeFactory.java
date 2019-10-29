@@ -36,19 +36,19 @@ import java.util.List;
 @Slf4j
 public class CakeFactory extends Parent implements GameLifeCycle {
 
-    final int NB_BASES = 4;
-    final int NB_NAPPAGES = 5;
-    final int NB_BONBONS = 3;
-    final int NB_DECORS = 2;
+    private final int NB_BASES = 4;
+    private final int NB_NAPPAGES = 5;
+    private final int NB_BONBONS = 3;
+    private final int NB_DECORS = 2;
     @Getter
     private final IGameContext gameContext;
     private final Stats stats;
-    public FadeTransition ft;
+    private FadeTransition ft;
     @Getter
     public Rectangle r;
     Color[] col = { Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL };
-    int[][] layers = new int[3][4];
-    int[][] model = new int[3][4];
+    private int[][] layers = new int[3][4];
+    private int[][] model = new int[3][4];
     @Getter
     private double buttonSize;
     private double centerX;
@@ -80,7 +80,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     @Setter
     private ProgressButton[] buttons;
 
-    public CakeFactory(IGameContext gameContext, Stats stats, int mode) {
+    CakeFactory(IGameContext gameContext, Stats stats, int mode) {
         this.gameContext = gameContext;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.debug("dimension2D = {}", dimension2D);
@@ -106,17 +106,12 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     }
 
-    public void winButton(boolean winOnly) {
+    void winButton(boolean winOnly) {
         boolean win = true;
         boolean currentOk = true;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (layers[i][j] == model[i][j]) {
-                    win = win;
-                    if (i == currentCake) {
-                        currentOk = currentOk;
-                    }
-                } else {
+                if (layers[i][j] != model[i][j]) {
                     win = false;
                     if (i == currentCake) {
                         currentOk = false;
@@ -124,12 +119,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                 }
             }
         }
-        if (layers[2][3] == model[2][3]) {
-            win = win;
-            if (2 == currentCake) {
-                currentOk = currentOk;
-            }
-        } else {
+        if (layers[2][3] != model[2][3]) {
             win = false;
             if (2 == currentCake) {
                 currentOk = false;
@@ -213,7 +203,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         return buttonHandler;
     }
 
-    public void winFunction() {
+    void winFunction() {
         active(-1);
         if (mode != 0) {
             FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
@@ -243,7 +233,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         }
     }
 
-    public void playWin() {
+    private void playWin() {
         gameContext.playWinTransition(500, actionEvent -> {
 
             dispose();
@@ -260,7 +250,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         });
     }
 
-    public void createStack() {
+    private void createStack() {
         p = new List[6];
         for (int i = 0; i < 6; i++) {
             p[i] = new LinkedList<>();
@@ -290,7 +280,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     }
 
-    public void execAnim(int i, int j) {
+    private void execAnim(int i, int j) {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         if (j == 1) {
             aerographAnimation(i, j, dimension2D);
@@ -304,7 +294,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         layers[currentCake][j - 1] = i + 1;
     }
 
-    public void aerographAnimation(int i, int j, Dimension2D dimension2D) {
+    private void aerographAnimation(int i, int j, Dimension2D dimension2D) {
         double cakeheight = (((ImageView) cake[currentCake].getChildren().get(0)).getImage().getHeight()
                 * ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth())
                 / ((ImageView) cake[currentCake].getChildren().get(0)).getImage().getWidth();
@@ -406,7 +396,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         });
     }
 
-    public void otherPages(int j, int k) {
+    private void otherPages(int j, int k) {
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         // Other pages
@@ -424,7 +414,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         }
     }
 
-    public void createSelectionButton(ProgressButton bt, int i, int j, int k, Dimension2D dimension2D) {
+    private void createSelectionButton(ProgressButton bt, int i, int j, int k, Dimension2D dimension2D) {
         EventHandler<Event> buttonHandler;
         bt.setLayoutX((i + 1) * dimension2D.getWidth() / k - buttonSize / 2);
         int index = i;
@@ -447,7 +437,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         p[j].add(bt);
     }
 
-    public void createReturnButton(ProgressButton bt, int j, Dimension2D dimension2D) {
+    private void createReturnButton(ProgressButton bt, int j, Dimension2D dimension2D) {
         EventHandler<Event> buttonHandler;
         ImageView iv = new ImageView(new Image("data/cake/images/return.png"));
         iv.setFitWidth(2 * buttonSize / 3);
@@ -477,7 +467,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         p[j].add(bt);
     }
 
-    public void createCake(int i) {
+    void createCake(int i) {
         layers[i][0] = 1;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         setNappage(false);
@@ -552,7 +542,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         sq.play();
     }
 
-    public void generateRandomCake() {
+    private void generateRandomCake() {
         for (int i = 0; i < 3; i++) {
             model[i][0] = 1 + (int) (Math.random() * 4);
             model[i][1] = 1 + (int) (Math.random() * 5);
