@@ -246,10 +246,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     }
 
     private Double[] calculateRectangle(Point2D[] point2D) {
-        Double leftPoint = point2D[0].getX();
-        Double rightPoint = point2D[0].getX();
-        Double topPoint = point2D[0].getY();
-        Double bottomPoint = point2D[0].getY();
+        double leftPoint = point2D[0].getX();
+        double rightPoint = point2D[0].getX();
+        double topPoint = point2D[0].getY();
+        double bottomPoint = point2D[0].getY();
         for (int i = 1; i < point2D.length; i++) {
             if (point2D[i].getX() < leftPoint)
                 leftPoint = point2D[i].getX();
