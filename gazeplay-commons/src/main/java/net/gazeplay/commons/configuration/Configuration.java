@@ -76,12 +76,6 @@ public class Configuration implements Cloneable {
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
-    private static final boolean DEFAULT_VALUE_SELECTION_GAMES = true;
-    private static final boolean DEFAULT_VALUE_MEMORIZATION_GAMES = true;
-    private static final boolean DEFAULT_VALUE_ACTION_REACTION_GAMES = true;
-    private static final boolean DEFAULT_VALUE_NO_CATEGORY_GAMES = true;
-    private static final boolean DEFAULT_VALUE_FAVOURITE_GAMES = false;
-    private static final boolean DEFAULT_VALUE_LOGIC_GAMES = true;
 
     @Setter
     @Getter
