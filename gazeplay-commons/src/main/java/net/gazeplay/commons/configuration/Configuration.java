@@ -93,12 +93,11 @@ public class Configuration implements Cloneable {
     private static boolean mouseFree = false;
 
     private static String getFileDirectoryDefaultValue() {
-        return Utils.getGazePlayFolder() + "files" /* + Utils.FILESEPARATOR */;
+        return Utils.getGazePlayFolder() + "files";
     }
 
     public static String getFileDirectoryUserValue(String user) {
-        return Utils.getGazePlayFolder() + "profiles/" + user + Utils.FILESEPARATOR
-            + "files" /* + Utils.FILESEPARATOR */;
+        return Utils.getGazePlayFolder() + "profiles/" + user + Utils.FILESEPARATOR + "files";
     }
 
     private static Properties loadProperties(String propertiesFilePath) throws IOException {
