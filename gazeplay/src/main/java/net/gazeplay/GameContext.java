@@ -458,7 +458,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     @Override
-    public void showRoundStats(Stats stats, GameLifeCycle currentGame) throws IOException {
+    public void showRoundStats(Stats stats, GameLifeCycle currentGame) {
         stats.stop();
 
         Runnable asynchronousStatsPersistTask = () -> {

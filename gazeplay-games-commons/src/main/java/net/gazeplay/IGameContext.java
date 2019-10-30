@@ -30,7 +30,7 @@ public interface IGameContext {
     
     void clear();
 
-    void showRoundStats(Stats stats, GameLifeCycle currentGame) throws IOException;
+    void showRoundStats(Stats stats, GameLifeCycle currentGame);
 
     void onGameStarted();
     
