@@ -12,8 +12,6 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
 
-import java.io.IOException;
-
 public interface IGameContext {
 
     RandomPositionGenerator getRandomPositionGenerator();
@@ -21,19 +19,19 @@ public interface IGameContext {
     GamePanelDimensionProvider getGamePanelDimensionProvider();
 
     GazeDeviceManager getGazeDeviceManager();
-    
+
     Translator getTranslator();
-    
+
     Stage getPrimaryStage();
 
     Scene getPrimaryScene();
-    
+
     void clear();
 
     void showRoundStats(Stats stats, GameLifeCycle currentGame);
 
     void onGameStarted();
-    
+
     void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler);
 
     void endWinTransition();
@@ -43,5 +41,5 @@ public interface IGameContext {
     Pane getRoot();
 
     void resetBordersToFront();
-    
+
 }
