@@ -20,7 +20,6 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -89,11 +88,7 @@ public class ScanpathView extends GraphicalContext<Pane> {
         EventHandler<Event> ExitScanpathView = e -> {
 
             StatsContext statsContext = null;
-            try {
-                statsContext = StatsContext.newInstance(gazePlay, stats);
-            } catch (IOException er) {
-                er.printStackTrace();
-            }
+            statsContext = StatsContext.newInstance(gazePlay, stats);
             this.clear();
             gazePlay.onDisplayStats(statsContext);
         };

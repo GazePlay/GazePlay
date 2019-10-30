@@ -80,7 +80,7 @@ public class ProgressPane extends StackPane {
         });
     }
 
-    public ProgressIndicator assignIndicator(EventHandler<Event> enterEvent) {
+    public void assignIndicator(EventHandler<Event> enterEvent) {
         indicator.setMouseTransparent(true);
 
         indicator.setOpacity(0);
@@ -112,7 +112,6 @@ public class ProgressPane extends StackPane {
         // this.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
         this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
 
-        return indicator;
     }
 
 }

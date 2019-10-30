@@ -17,7 +17,7 @@ import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Random;
@@ -179,7 +179,7 @@ public class Bloc extends Parent {// Rectangle {
     private void playSound(String path) {
         try {
             // log.debug("Letter sound path {}", path);
-            Utils.playSound(path);
+            ForegroundSoundsUtils.playSound(path);
         } catch (Exception e) {
             // log.warn("Can't play sound: no associated sound : " + e.toString());
         }

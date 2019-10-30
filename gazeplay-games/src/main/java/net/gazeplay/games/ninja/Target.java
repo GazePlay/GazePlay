@@ -11,8 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
 import net.gazeplay.components.Position;
@@ -288,9 +288,8 @@ public class Target extends Portrait {
         sequence.play();
 
         try {
-            Utils.playSound(audioClipResourceLocation);
+            ForegroundSoundsUtils.playSound(audioClipResourceLocation);
         } catch (Exception exp) {
-
             log.warn("file doesn't exist : {}", audioClipResourceLocation);
             log.warn(exp.getMessage());
         }

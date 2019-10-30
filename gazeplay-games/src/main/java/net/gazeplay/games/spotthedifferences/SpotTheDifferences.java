@@ -19,12 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -93,7 +92,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         findText.setWrappingWidth(dimensions.getWidth());
 
         Text foundText = new Text(0, 50,
-                translate.getTrad("Differences found", language) + translate.getTrad("Colon", language));
+            translate.getTrad("Differences found", language) + translate.getTrad("Colon", language));
         foundText.setTextAlignment(TextAlignment.CENTER);
         foundText.setFill(Color.WHITE);
         foundText.setFont(new Font(50));
@@ -114,10 +113,10 @@ public class SpotTheDifferences implements GameLifeCycle {
 
         JsonParser parser = new JsonParser();
         instances = (JsonArray) parser
-                .parse(new InputStreamReader(
-                        Objects.requireNonNull(
-                                ClassLoader.getSystemResourceAsStream("data/spotthedifferences/instances.json")),
-                    StandardCharsets.UTF_8));
+            .parse(new InputStreamReader(
+                Objects.requireNonNull(
+                    ClassLoader.getSystemResourceAsStream("data/spotthedifferences/instances.json")),
+                StandardCharsets.UTF_8));
     }
 
     private void createDifference(double x, double y, double radius) {
@@ -131,17 +130,11 @@ public class SpotTheDifferences implements GameLifeCycle {
         numberDiffFound++;
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
         if (numberDiffFound == totalNumberDiff) {
-            gameContext.playWinTransition(200, actionEvent -> {
-                try {
-                    gameContext.showRoundStats(stats, this);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+            gameContext.playWinTransition(200, actionEvent -> gameContext.showRoundStats(stats, this));
         }
         stats.incNbGoals();
         try {
-            Utils.playSound("data/spotthedifferences/ding.wav");
+            ForegroundSoundsUtils.playSound("data/spotthedifferences/ding.wav");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -174,7 +167,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         for (JsonElement diff : diffs) {
             JsonObject obj = (JsonObject) diff;
             createDifference(ratio * obj.get("x").getAsDouble(), ratio * obj.get("y").getAsDouble(),
-                    ratio * obj.get("radius").getAsDouble());
+                ratio * obj.get("radius").getAsDouble());
         }
 
         numberDiffFound = 0;

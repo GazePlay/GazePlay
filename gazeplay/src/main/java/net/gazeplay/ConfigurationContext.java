@@ -34,6 +34,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
@@ -546,7 +547,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 return;
             }
 
-            String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
+            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
 
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
@@ -594,7 +595,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 return;
             }
 
-            String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
+            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
 
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
@@ -901,7 +902,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
             // buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
 
-            String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
+            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
 
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
@@ -925,8 +926,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         String musicFolder = newMusicFolder;
 
         if (musicFolder.isBlank()) {
-            File gazePlayFolder = new File(Utils.getGazePlayFolder());
-            File gazePlayMusicFolder = new File(gazePlayFolder.getAbsolutePath() + Utils.FILESEPARATOR + "music");
+            File gazePlayFolder = new File(GazePlayDirectories.getGazePlayFolder());
+            File gazePlayMusicFolder = new File(gazePlayFolder.getAbsolutePath() + GazePlayDirectories.FILESEPARATOR + "music");
 
             String songName = "songidea(copycat)_0.mp3";
             setupNewMusicFolder(gazePlayMusicFolder, songName);
@@ -960,7 +961,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             InputStream defaultMusicTrack = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
             if (gazePlayMusicFolder.exists()) {
                 Files.copy(defaultMusicTrack,
-                    Paths.get(gazePlayMusicFolder.getAbsolutePath() + Utils.FILESEPARATOR + defaultSong),
+                    Paths.get(gazePlayMusicFolder.getAbsolutePath() + GazePlayDirectories.FILESEPARATOR + defaultSong),
                     StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (NullPointerException ne) {
@@ -990,7 +991,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (file == null) {
                 return;
             }
-            String newPropertyValue = file.toString() + Utils.FILESEPARATOR;
+            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }

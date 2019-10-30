@@ -16,6 +16,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import org.monte.media.Format;
 import org.monte.media.FormatKeys;
@@ -462,7 +463,7 @@ public class Stats implements GazeMotionListener {
     }
 
     protected File getGameStatsOfTheDayDirectory() {
-        File statsDirectory = new File(Utils.getUserStatsFolder(Configuration.getInstance().getUserName()));
+        File statsDirectory = new File(GazePlayDirectories.getUserStatsFolder(Configuration.getInstance().getUserName()));
         File gameDirectory = new File(statsDirectory, gameName);
         File todayDirectory = new File(gameDirectory, Utils.today());
         boolean outputDirectoryCreated = todayDirectory.mkdirs();

@@ -30,7 +30,6 @@ import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -42,14 +41,14 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     private static String currentLanguage;
     private static final double RATIO = 0.35;
 
-    public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats) throws IOException {
+    public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
         BorderPane root = new BorderPane();
 
         return new StatsContext(gazePlay, root, stats);
     }
 
     public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats,
-                                           CustomButton continueButton) throws IOException {
+                                           CustomButton continueButton) {
         BorderPane root = new BorderPane();
 
         return new StatsContext(gazePlay, root, stats, continueButton);
@@ -86,12 +85,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) throws IOException {
+    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) {
         this(gazePlay, root, stats, null);
     }
 
-    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton)
-        throws IOException {
+    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
         super(gazePlay, root);
         this.stats = stats;
 

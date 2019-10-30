@@ -17,10 +17,8 @@ public class TobiiDllUtils {
 
     private static final String DLL2_NAME = "GazePlayTobiiLibrary2.dll";
 
-    private final DllUtils dllUtils = DllUtils.getSingleton();
-
     public void loadTobiiDlls() {
-        if (!dllUtils.isWindowsOperatingSystem()) {
+        if (!DllUtils.getSingleton().isWindowsOperatingSystem()) {
             log.warn("DLL would only work on Windows Operation System");
             return;
         }
@@ -43,26 +41,26 @@ public class TobiiDllUtils {
         ClassLoader classLoader = TobiiDllUtils.class.getClassLoader();
         //
         boolean success;
-        success = dllUtils.loadDllAsResource(classLoader, DLL1_NAME);
+        success = DllUtils.getSingleton().loadDllAsResource(classLoader, DLL1_NAME);
         if (success) {
-            success = dllUtils.loadDllAsResource(classLoader, DLL2_NAME);
+            success = DllUtils.getSingleton().loadDllAsResource(classLoader, DLL2_NAME);
         }
         return success;
     }
 
     public boolean loadTobiiDllsFromDLLDirectoryUnderWorkingDirectory() {
-        File dllDirectory = dllUtils.locateDLLDirectoryInDist();
+        File dllDirectory = DllUtils.getSingleton().locateDLLDirectoryInDist();
         //
         boolean success;
-        success = dllUtils.loadDllAsFile(dllDirectory, DLL1_NAME);
+        success = DllUtils.getSingleton().loadDllAsFile(dllDirectory, DLL1_NAME);
         if (success) {
-            success = dllUtils.loadDllAsFile(dllDirectory, DLL2_NAME);
+            success = DllUtils.getSingleton().loadDllAsFile(dllDirectory, DLL2_NAME);
         }
         return success;
     }
 
     protected void printWarningMessage() {
-        File dllDirectory = dllUtils.locateDLLDirectoryInDist();
+        File dllDirectory = DllUtils.getSingleton().locateDLLDirectoryInDist();
 
         log.info("******************************************************");
         log.info("If you wish to Use a Tobii 4C or a Tobii EyeX");

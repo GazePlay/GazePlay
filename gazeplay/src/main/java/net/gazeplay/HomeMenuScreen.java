@@ -34,7 +34,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.LicenseUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.gameslocator.CachingGamesLocator;
 import net.gazeplay.gameslocator.DefaultGamesLocator;
@@ -106,7 +106,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         bottomPane.setLeft(leftControlPane);
         bottomPane.setRight(rightControlPane);
 
-        MenuBar menuBar = Utils.buildLicence();
+        MenuBar menuBar = LicenseUtils.buildLicenceMenuBar();
 
         Node logo = createLogo();
 

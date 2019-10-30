@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class BackgroundMusicManager {
 
-    public static final List<String> SUPPORTED_FILE_EXTENSIONS = Arrays.asList(".aif", ".aiff", ".fxm", ".flv", ".m3u8",
+    private static final List<String> SUPPORTED_FILE_EXTENSIONS = Arrays.asList(".aif", ".aiff", ".fxm", ".flv", ".m3u8",
             ".mp3", ".mp4", ".m4v", ".m4a", ".mp4", ".wav");
 
     @Setter

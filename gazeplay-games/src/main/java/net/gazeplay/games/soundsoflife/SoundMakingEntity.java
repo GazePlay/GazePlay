@@ -12,7 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class SoundMakingEntity extends Parent {
 
         movetimeline.playFromStart();
         try {
-            Utils.playSound(audioClips.get(soundIter));
+            ForegroundSoundsUtils.playSound(audioClips.get(soundIter));
         } catch (Exception e) {
             e.printStackTrace();
         }

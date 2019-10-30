@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -31,8 +31,8 @@ public class MediaFileReader {
         try {
             c = Configuration.getInstance();
 
-            File f0 = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + c.getUserName()
-                    + Utils.FILESEPARATOR + "/data/mediaPlayer");
+            File f0 = new File(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + c.getUserName()
+                    + GazePlayDirectories.FILESEPARATOR + "/data/mediaPlayer");
             f0.mkdirs();
             File f = new File(f0, "playerList.csv");
             f.createNewFile();
@@ -97,10 +97,10 @@ public class MediaFileReader {
             File f;
 
             if (c.getUserName() == null || c.getUserName().equals("")) {
-                f = new File(Utils.getGazePlayFolder() + "data/mediaPlayer/playerList.csv");
+                f = new File(GazePlayDirectories.getGazePlayFolder() + "data/mediaPlayer/playerList.csv");
             } else {
-                f = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + c.getUserName()
-                        + Utils.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
+                f = new File(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + c.getUserName()
+                        + GazePlayDirectories.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
             }
 
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f, true), StandardCharsets.UTF_8));

@@ -1,17 +1,10 @@
 package net.gazeplay.commons.utils.games;
 
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,102 +16,14 @@ import java.util.Enumeration;
 @Slf4j
 public class Utils {
 
-    public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
-    public static final String LINESEPARATOR = System.getProperties().getProperty("line.separator");
-    private static MediaPlayer soundPlayer;
-    private static final String tempFolder = "temp";
-
-    public static MenuBar buildLicence() {
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        String licenseFileAsString = loadLicenseFileAsString(classLoader);
-
-        MenuItem licenseMenuItem = new MenuItem(licenseFileAsString);
-
-        Menu menu = new Menu("GazePlay");
-        menu.getItems().add(licenseMenuItem);
-
-        MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(menu);
-        menuBar.setPrefHeight(40);
-        menuBar.setPrefWidth(80);
-
-        return menuBar;
-    }
-
-    private static String loadLicenseFileAsString(ClassLoader classLoader) {
-        try (InputStream is = classLoader.getResourceAsStream("data/common/licence.txt")) {
-            return IOUtils.toString(is, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            return "Failed to load the license file";
-        }
-    }
-
-    public static MediaPlayer playSound(String ressource) throws Exception {
-
-        log.debug("Try to play " + ressource);
-
-        URL url = ClassLoader.getSystemResource(ressource);
-
-        String path;
-
-        if (url == null) {
-            final File file = new File(ressource);
-            log.debug("using file");
-            if (!file.exists()) {
-                log.warn("file doesn't exist : {}", ressource);
-            }
-            path = file.toURI().toString();
-        } else {
-            log.debug("using url");
-            path = url.toString();
-        }
-
-        log.debug("path " + path);
-        if (soundPlayer != null)
-            soundPlayer.stop();
-        Media media = new Media(path);
-        soundPlayer = new MediaPlayer(media);
-        final Configuration configuration = Configuration.getInstance();
-        soundPlayer.setVolume(configuration.getEffectsVolume());
-        soundPlayer.volumeProperty().bind(configuration.getEffectsVolumeProperty());
-        soundPlayer.play();
-        return soundPlayer;
-    }
-
-    public static void stopSound() {
-
-        if (soundPlayer != null)
-            soundPlayer.stop();
-
-    }
-
     public static InputStream getInputStream(String ressource) {
-
         log.debug("Try to play " + ressource);
-
         return ClassLoader.getSystemResourceAsStream(ressource);
-
-    }
-
-    /**
-     * @return Default directory for GazePlay : in user's home directory, in a folder called GazePlay
-     */
-    public static String getGazePlayFolder() {
-
-        return System.getProperties().getProperty("user.home") + FILESEPARATOR + "GazePlay" + FILESEPARATOR;
-    }
-
-    /**
-     * @return Temp directory for GazePlay : in the default directory of GazePlay, a folder called Temp
-     */
-    public static String getTempFolder() {
-
-        return getGazePlayFolder() + tempFolder + FILESEPARATOR;
     }
 
     /**
      * @return images directory for GazePlay : by default in the default directory of GazePlay, in a folder called files
-     *         but can be configured through option interface and/or GazePlay.properties file
+     * but can be configured through option interface and/or GazePlay.properties file
      */
 
     private static String getFilesFolder() {
@@ -152,26 +57,7 @@ public class Utils {
 
     public static String getSoundsFolder() {
 
-        return getFilesFolder() + "sounds" + FILESEPARATOR;
-    }
-
-    /**
-     * @return statistics directory for GazePlay : in the default directory of GazePlay, in a folder called statistics
-     */
-
-    public static String getStatsFolder() {
-
-        return getGazePlayFolder() + "statistics" + FILESEPARATOR;
-    }
-
-    public static String getUserStatsFolder(String user) {
-
-        if (!user.equals("")) {
-            return getGazePlayFolder() + "profiles" + FILESEPARATOR + user + FILESEPARATOR + "statistics"
-                    + FILESEPARATOR;
-        } else {
-            return getStatsFolder();
-        }
+        return getFilesFolder() + "sounds" + GazePlayDirectories.FILESEPARATOR;
     }
 
     /**

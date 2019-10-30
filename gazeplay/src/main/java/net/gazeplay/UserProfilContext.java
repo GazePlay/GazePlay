@@ -31,7 +31,7 @@ import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import org.apache.commons.io.FileUtils;
 
@@ -54,7 +54,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     }
 
     private static List<String> findAllUsersProfiles() {
-        File directory = new File(Utils.getGazePlayFolder() + "profiles");
+        File directory = new File(GazePlayDirectories.getGazePlayFolder() + "profiles");
         log.info("directory = {}", directory);
         //
         File[] directoryContent = directory.listFiles();
@@ -152,21 +152,21 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         for (final String currentUserProfile : allUsersProfiles) {
             log.info("Profile founded : {}", currentUserProfile);
-            Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + currentUserProfile + Utils.FILESEPARATOR + "GazePlay.properties");
+            Configuration.setCONFIGPATH(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + currentUserProfile + GazePlayDirectories.FILESEPARATOR + "GazePlay.properties");
             Configuration currentUserProfileConfiguration = Configuration.createFromPropertiesResource();
             ImagePattern imagePattern = lookupForProfilePicture(currentUserProfileConfiguration);
             HBox userCard = createUser(gazePlay, choicePanel, currentUserProfile, imagePattern, true, false);
             choicePanel.getChildren().add(userCard);
         }
 
-        Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "GazePlay.properties");
+        Configuration.setCONFIGPATH(GazePlayDirectories.getGazePlayFolder() + "GazePlay.properties");
 
         HBox newUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("AddUser"), new ImagePattern(new Image("data/common/images/AddUser.png")), false, true);
         choicePanel.getChildren().add(newUserCard);
 
         return choicePanelScroller;
     }
-    
+
     private static ImagePattern lookupForProfilePicture(Configuration currentUserProfileConfiguration) {
         ImagePattern imagePattern = null;
         final String userPicture = currentUserProfileConfiguration.getUserPicture();
@@ -244,8 +244,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         } else {
             mouseClickedEventHandler = event -> {
                 if (!user.getName().equals(getGazePlay().getTranslator().translate("DefaultUser"))) {
-                    Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.getName()
-                        + Utils.FILESEPARATOR + "GazePlay.properties");
+                    Configuration.setCONFIGPATH(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + user.getName()
+                        + GazePlayDirectories.FILESEPARATOR + "GazePlay.properties");
                     Configuration.setInstance(Configuration.createFromPropertiesResource());
                     config = Configuration.getInstance();
                 }
@@ -379,7 +379,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         yes.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
             dialog.close();
             choicePanel.getChildren().remove(user);
-            File userDirectory = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.getName());
+            File userDirectory = GazePlayDirectories.getUserProfileDirectory(user.getName());
             deleteDirectoryRecursivly(userDirectory);
             log.info("Profile: " + user.getName() + " deleted");
         });
@@ -508,12 +508,11 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     choicePanel.getChildren().add(newUser1);
                     choicePanel.getChildren().add(user);
 
-                    Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
-                        + newUser1.getName() + Utils.FILESEPARATOR + "GazePlay.properties");
+                    Configuration.setCONFIGPATH(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR
+                        + newUser1.getName() + GazePlayDirectories.FILESEPARATOR + "GazePlay.properties");
                     Configuration.setInstance(Configuration.createFromPropertiesResource());
                     Configuration conf2 = Configuration.getInstance();
-                    File userDirectory = new File(
-                        Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + newUser1.getName());
+                    File userDirectory = GazePlayDirectories.getUserProfileDirectory(newUser1.getName());
                     userDirectory.mkdirs();
 
                     conf2.setUserName(newUser1.getName());
@@ -523,14 +522,13 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     if (!chooseImageButton.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
 
                         File src = new File(chooseImageButton.getText());
-                        File dst = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR
-                            + newUser1.getName() + Utils.FILESEPARATOR + src.getName());
+                        File dst = new File(GazePlayDirectories.getUserProfileDirectory(newUser1.getName()), src.getName());
                         copyFile(src, dst);
 
                         conf2.setUserPicture(dst.getAbsolutePath());
                     }
 
-                    conf2.setFileDir(Configuration.getFileDirectoryUserValue(newUser1.getName()));
+                    conf2.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(newUser1.getName()));
 
                     conf2.saveConfigIgnoringExceptions();
 
@@ -552,15 +550,14 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                 }
                 modifUser(user, choicePanel, gazePlay, user.getName(), ip);
 
-                Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.getName()
-                    + Utils.FILESEPARATOR + "GazePlay.properties");
+                Configuration.setCONFIGPATH(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + user.getName()
+                    + GazePlayDirectories.FILESEPARATOR + "GazePlay.properties");
                 Configuration conf2 = Configuration.createFromPropertiesResource();
 
                 if (!chooseImageButton.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
 
                     File src = new File(chooseImageButton.getText());
-                    File dst = new File(Utils.getGazePlayFolder() + "profiles" + Utils.FILESEPARATOR + user.getName()
-                        + Utils.FILESEPARATOR + src.getName());
+                    File dst = new File(GazePlayDirectories.getUserProfileDirectory(user.getName()), src.getName());
                     copyFile(src, dst);
 
                     conf2.setUserPicture(dst.getAbsolutePath());

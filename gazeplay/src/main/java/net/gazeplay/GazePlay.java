@@ -20,8 +20,8 @@ import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageDirectoryLocator;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.components.CssUtil;
 
@@ -175,7 +175,7 @@ public class GazePlay extends Application {
 
     public void goToUserPage() {
 
-        Configuration.setCONFIGPATH(Utils.getGazePlayFolder() + "GazePlay.properties");
+        Configuration.setCONFIGPATH(GazePlayDirectories.getGazePlayFolder() + "GazePlay.properties");
         Configuration.setInstance(Configuration.createFromPropertiesResource());
 
         Configuration config = Configuration.getInstance();
@@ -226,7 +226,7 @@ public class GazePlay extends Application {
                     "data/common/images/");
             if (iconImageDirectory != null) {
                 try {
-                    String filePath = iconImageDirectory.getCanonicalPath() + Utils.FILESEPARATOR + "gazeplayicon.png";
+                    String filePath = iconImageDirectory.getCanonicalPath() + GazePlayDirectories.FILESEPARATOR + "gazeplayicon.png";
                     log.debug("findApplicationIcon : looking for icon at location = " + filePath);
                     icon = new Image(filePath);
                 } catch (IOException ioe) {

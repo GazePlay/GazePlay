@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.EyeTracker;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.io.*;
 import java.util.*;
@@ -55,7 +55,7 @@ public class Configuration implements Cloneable {
 
     @Getter
     @Setter
-    private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
+    private static String CONFIGPATH = GazePlayDirectories.getGazePlayFolder() + "GazePlay.properties";
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final boolean DEFAULT_VALUE_GAZEMODE = true;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
@@ -76,36 +76,21 @@ public class Configuration implements Cloneable {
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
-    private static final boolean DEFAULT_VALUE_SELECTION_GAMES = true;
-    private static final boolean DEFAULT_VALUE_MEMORIZATION_GAMES = true;
-    private static final boolean DEFAULT_VALUE_ACTION_REACTION_GAMES = true;
-    private static final boolean DEFAULT_VALUE_NO_CATEGORY_GAMES = true;
-    private static final boolean DEFAULT_VALUE_FAVOURITE_GAMES = false;
-    private static final boolean DEFAULT_VALUE_LOGIC_GAMES = true;
 
     @Setter
     @Getter
-    public static String DEFAULT_VALUE_FILE_DIR = getFileDirectoryDefaultValue();
-    public static final boolean DEFAULT_VALUE_GAZE_MENU = false;
-    public static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
-    public static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
-    public static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
+    public static String DEFAULT_VALUE_FILE_DIR = GazePlayDirectories.getFileDirectoryDefaultValue();
+    private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
+    private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
+    private static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
+    private static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
     private static final String DEFAULT_VALUE_USER_NAME = "";
-    public static final String DEFAULT_VALUE_USER_PICTURE = "";
-    public static final String DEFAULT_VALUE_VIDEO_FOLDER = getFileDirectoryDefaultValue() + "/videos";
+    private static final String DEFAULT_VALUE_USER_PICTURE = "";
+    public static final String DEFAULT_VALUE_VIDEO_FOLDER = GazePlayDirectories.getFileDirectoryDefaultValue() + "/videos";
 
     @Getter
     @Setter
     private static boolean mouseFree = false;
-
-    private static String getFileDirectoryDefaultValue() {
-        return Utils.getGazePlayFolder() + "files" /* + Utils.FILESEPARATOR */;
-    }
-
-    public static String getFileDirectoryUserValue(String user) {
-        return Utils.getGazePlayFolder() + "profiles/" + user + Utils.FILESEPARATOR
-            + "files" /* + Utils.FILESEPARATOR */;
-    }
 
     private static Properties loadProperties(String propertiesFilePath) throws IOException {
         try (InputStream inputStream = new FileInputStream(propertiesFilePath)) {

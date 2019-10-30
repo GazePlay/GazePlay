@@ -14,7 +14,7 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -100,7 +100,7 @@ public class DiceRoller extends MeshView {
 
         rollTimeline.play();
         try {
-            Utils.playSound("data/common/sounds/diceRollSound.wav");
+            ForegroundSoundsUtils.playSound("data/common/sounds/diceRollSound.wav");
         } catch (Exception e) {
             e.printStackTrace();
         }

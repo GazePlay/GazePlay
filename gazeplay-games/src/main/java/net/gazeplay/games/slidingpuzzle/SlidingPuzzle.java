@@ -164,18 +164,6 @@ public class SlidingPuzzle implements GameLifeCycle {
     }
 
     private List<slidingpuzzlecard> createCards(Configuration config) {
-
-        List<Integer> indexList = new ArrayList<>();
-        indexList.add(0);
-        indexList.add(1);
-        indexList.add(2);
-        indexList.add(3);
-        indexList.add(4);
-        indexList.add(5);
-        indexList.add(6);
-        indexList.add(7);
-        indexList.add(8);
-
         randomGenerator = new Random();
 
         final int fixationlength = config.getFixationLength();

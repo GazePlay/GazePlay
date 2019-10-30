@@ -21,9 +21,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ImageLibrary;
-import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.*;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
@@ -169,7 +167,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         velocity = new Point2D(velocity.getX(), -terminalVelocity * intensity);
 
         try {
-            Utils.playSound(DATA_PATH + "/sounds/" + soundName);
+            ForegroundSoundsUtils.playSound(DATA_PATH + "/sounds/" + soundName);
         } catch (Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
         }
@@ -236,7 +234,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
      */
     private int getsetHighscore(int score) {
 
-        File f = new File(Utils.getUserStatsFolder(config.getUserName()) + "/biboule-jump/highscores.dat");
+        File f = new File(GazePlayDirectories.getUserStatsFolder(config.getUserName()) + "/biboule-jump/highscores.dat");
         log.info("Highscore file: " + f.getAbsolutePath());
         try {
             ArrayList<Integer> highscores = new ArrayList();

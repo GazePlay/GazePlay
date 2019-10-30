@@ -13,8 +13,6 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.io.IOException;
-
 /**
  * Created by givaudan on 15/02/2018.
  */
@@ -52,23 +50,19 @@ public class Divisor implements GameLifeCycle {
             this.gameContext.resetBordersToFront();
 
             target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
-                    this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
+                this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         } else {
 
             ImageLibrary imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("divisor/basic"));
             target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
-                    this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
+                this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         }
         gameContext.getChildren().add(target);
     }
 
     public void restart() {
         this.dispose();
-        try {
-            gameContext.showRoundStats(stats, this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        gameContext.showRoundStats(stats, this);
     }
 
     @Override

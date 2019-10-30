@@ -152,7 +152,7 @@ public class Blocs implements GameLifeCycle {
                 return new Task<>() {
 
                     @Override
-                    protected Void call() throws Exception {
+                    protected Void call() {
                         for (Bloc[] bloc : blocs) {
                             for (int j = 0; j < maxY; j++) {
 

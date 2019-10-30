@@ -9,8 +9,8 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 import net.gazeplay.components.Portrait;
@@ -83,7 +83,7 @@ public class Target extends Portrait {
         hand.onTargetHit(this);
 
         try {
-            Utils.playSound(SOUNDS_MISSILE);
+            ForegroundSoundsUtils.playSound(SOUNDS_MISSILE);
         } catch (Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
         }
