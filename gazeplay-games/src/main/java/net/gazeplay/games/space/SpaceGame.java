@@ -26,9 +26,9 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
@@ -565,7 +565,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     }
 
     private int getsetHighscore(int score) {
-        File f = new File(Utils.getUserStatsFolder(configuration.getUserName()) + "/space-game/highscore.dat");
+        File f = new File(GazePlayDirectories.getUserStatsFolder(configuration.getUserName()) + "/space-game/highscore.dat");
         try {
             ArrayList<Integer> highscores = new ArrayList();
             if (!f.createNewFile()) {

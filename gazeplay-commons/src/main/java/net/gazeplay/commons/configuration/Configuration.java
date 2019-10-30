@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.EyeTracker;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.io.*;
 import java.util.*;
@@ -55,7 +55,7 @@ public class Configuration implements Cloneable {
 
     @Getter
     @Setter
-    private static String CONFIGPATH = Utils.getGazePlayFolder() + "GazePlay.properties";
+    private static String CONFIGPATH = GazePlayDirectories.getGazePlayFolder() + "GazePlay.properties";
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final boolean DEFAULT_VALUE_GAZEMODE = true;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
@@ -79,26 +79,18 @@ public class Configuration implements Cloneable {
 
     @Setter
     @Getter
-    public static String DEFAULT_VALUE_FILE_DIR = getFileDirectoryDefaultValue();
+    public static String DEFAULT_VALUE_FILE_DIR = GazePlayDirectories.getFileDirectoryDefaultValue();
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     private static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
     private static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
-    public static final String DEFAULT_VALUE_VIDEO_FOLDER = getFileDirectoryDefaultValue() + "/videos";
+    public static final String DEFAULT_VALUE_VIDEO_FOLDER = GazePlayDirectories.getFileDirectoryDefaultValue() + "/videos";
 
     @Getter
     @Setter
     private static boolean mouseFree = false;
-
-    private static String getFileDirectoryDefaultValue() {
-        return Utils.getGazePlayFolder() + "files";
-    }
-
-    public static String getFileDirectoryUserValue(String user) {
-        return Utils.getGazePlayFolder() + "profiles/" + user + Utils.FILESEPARATOR + "files";
-    }
 
     private static Properties loadProperties(String propertiesFilePath) throws IOException {
         try (InputStream inputStream = new FileInputStream(propertiesFilePath)) {

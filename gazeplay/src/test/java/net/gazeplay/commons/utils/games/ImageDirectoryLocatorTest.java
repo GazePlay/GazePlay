@@ -16,21 +16,21 @@ class ImageDirectoryLocatorTest {
     static void createMockImageFolder() throws IOException {
         new File(folderName).mkdir();
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folderName + Utils.FILESEPARATOR + i + ".jpg").createNewFile();
+            new File(folderName + GazePlayDirectories.FILESEPARATOR + i + ".jpg").createNewFile();
         }
     }
 
     @AfterAll
     static void removeMockImageFolder() {
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folderName + Utils.FILESEPARATOR + i + ".jpg").delete();
+            new File(folderName + GazePlayDirectories.FILESEPARATOR + i + ".jpg").delete();
         }
         new File(folderName).delete();
     }
 
     @Test
     void canLocateImagesDirectoryInUnpackedDistDirectory() {
-        File expected = new File("." + Utils.FILESEPARATOR, folderName);
+        File expected = new File("." + GazePlayDirectories.FILESEPARATOR, folderName);
         File result = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(folderName);
         assert (result.equals(expected));
     }
@@ -39,6 +39,6 @@ class ImageDirectoryLocatorTest {
     void canLocateImagesDirectoryInExplodedClassPath() {
         String pathName = "data/common/default";
         File result = ImageDirectoryLocator.locateImagesDirectoryInExplodedClassPath(pathName);
-        assert (result.getAbsolutePath().contains("data" + Utils.FILESEPARATOR + "common" + Utils.FILESEPARATOR + "default"));
+        assert (result.getAbsolutePath().contains("data" + GazePlayDirectories.FILESEPARATOR + "common" + GazePlayDirectories.FILESEPARATOR + "default"));
     }
 }

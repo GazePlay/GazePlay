@@ -6,12 +6,12 @@ import javafx.stage.Screen;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.io.File;
 import java.util.Optional;
 
-import static net.gazeplay.commons.utils.games.Utils.FILESEPARATOR;
+import static net.gazeplay.commons.utils.games.GazePlayDirectories.FILESEPARATOR;
 
 @Slf4j
 public class CssUtil {
@@ -82,7 +82,7 @@ public class CssUtil {
      * @return styles directory for GazePlay : in the default directory of GazePlay, a folder called styles
      */
     public static String getStylesFolder() {
-        return Utils.getGazePlayFolder() + "styles" + FILESEPARATOR;
+        return GazePlayDirectories.getGazePlayFolder() + "styles" + FILESEPARATOR;
     }
 
 }

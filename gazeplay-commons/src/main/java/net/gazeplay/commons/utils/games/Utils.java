@@ -16,27 +16,9 @@ import java.util.Enumeration;
 @Slf4j
 public class Utils {
 
-    public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
-
-    private static final String tempFolder = "temp";
-
     public static InputStream getInputStream(String ressource) {
         log.debug("Try to play " + ressource);
         return ClassLoader.getSystemResourceAsStream(ressource);
-    }
-
-    /**
-     * @return Default directory for GazePlay : in user's home directory, in a folder called GazePlay
-     */
-    public static String getGazePlayFolder() {
-        return System.getProperties().getProperty("user.home") + FILESEPARATOR + "GazePlay" + FILESEPARATOR;
-    }
-
-    /**
-     * @return Temp directory for GazePlay : in the default directory of GazePlay, a folder called Temp
-     */
-    public static String getTempFolder() {
-        return getGazePlayFolder() + tempFolder + FILESEPARATOR;
     }
 
     /**
@@ -75,26 +57,7 @@ public class Utils {
 
     public static String getSoundsFolder() {
 
-        return getFilesFolder() + "sounds" + FILESEPARATOR;
-    }
-
-    /**
-     * @return statistics directory for GazePlay : in the default directory of GazePlay, in a folder called statistics
-     */
-
-    public static String getStatsFolder() {
-
-        return getGazePlayFolder() + "statistics" + FILESEPARATOR;
-    }
-
-    public static String getUserStatsFolder(String user) {
-
-        if (!user.equals("")) {
-            return getGazePlayFolder() + "profiles" + FILESEPARATOR + user + FILESEPARATOR + "statistics"
-                + FILESEPARATOR;
-        } else {
-            return getStatsFolder();
-        }
+        return getFilesFolder() + "sounds" + GazePlayDirectories.FILESEPARATOR;
     }
 
     /**

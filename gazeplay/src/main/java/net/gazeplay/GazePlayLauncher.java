@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.threads.CustomThreadFactory;
 import net.gazeplay.commons.threads.GroupingThreadFactory;
 import net.gazeplay.commons.threads.LoggingUncaughtExceptionHandler;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
@@ -52,7 +53,7 @@ public class GazePlayLauncher {
             log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
 
             // creation of GazePlay default folder if it does not exist.
-            File gazePlayFolder = new File(Utils.getGazePlayFolder());
+            File gazePlayFolder = new File(GazePlayDirectories.getGazePlayFolder());
             if (!gazePlayFolder.exists()) {
                 boolean gazePlayFolderCreated = gazePlayFolder.mkdir();
                 log.debug("gazePlayFolderCreated = " + gazePlayFolderCreated);
