@@ -18,6 +18,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -176,7 +177,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         if (Math.random() > 0.5) {
             String soundResource = "data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3";
             try {
-                Utils.playSound(soundResource);
+                ForegroundSoundsUtils.playSound(soundResource);
             } catch (Exception e) {
 
                 log.warn("file doesn't exist : {}", soundResource);
@@ -185,7 +186,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         } else {
             String soundResource = "data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3";
             try {
-                Utils.playSound(soundResource);
+                ForegroundSoundsUtils.playSound(soundResource);
             } catch (Exception e) {
 
                 log.warn("file doesn't exist : {}", soundResource);

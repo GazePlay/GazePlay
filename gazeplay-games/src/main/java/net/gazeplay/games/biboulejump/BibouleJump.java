@@ -21,6 +21,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -169,7 +170,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         velocity = new Point2D(velocity.getX(), -terminalVelocity * intensity);
 
         try {
-            Utils.playSound(DATA_PATH + "/sounds/" + soundName);
+            ForegroundSoundsUtils.playSound(DATA_PATH + "/sounds/" + soundName);
         } catch (Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
         }

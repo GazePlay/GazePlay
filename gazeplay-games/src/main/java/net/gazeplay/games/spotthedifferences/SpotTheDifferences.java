@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
@@ -136,7 +136,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         }
         stats.incNbGoals();
         try {
-            Utils.playSound("data/spotthedifferences/ding.wav");
+            ForegroundSoundsUtils.playSound("data/spotthedifferences/ding.wav");
         } catch (Exception e) {
             e.printStackTrace();
         }

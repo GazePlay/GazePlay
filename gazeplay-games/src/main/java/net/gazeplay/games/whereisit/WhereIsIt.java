@@ -27,8 +27,8 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageDirectoryLocator;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -207,11 +207,9 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     private void playQuestionSound() {
-
         try {
             log.debug("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.questionSoundPath);
-
-            Utils.playSound(currentRoundDetails.questionSoundPath);
+            ForegroundSoundsUtils.playSound(currentRoundDetails.questionSoundPath);
         } catch (Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
         }

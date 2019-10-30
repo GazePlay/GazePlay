@@ -22,7 +22,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.time.LocalDate;
@@ -393,7 +393,7 @@ public class Race extends Parent implements GameLifeCycle {
 
         String soundResource = "data/race/sounds/frog.WAV";
         try {
-            Utils.playSound(soundResource);
+            ForegroundSoundsUtils.playSound(soundResource);
         } catch (Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
         }

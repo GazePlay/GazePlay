@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.AsyncUiTaskExecutor;
 import net.gazeplay.GameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 
 /**
  * Created by schwab on 30/10/2016.
@@ -148,7 +148,7 @@ public class Bravo extends Rectangle {
             if (this.enableRewardSound) {
                 log.debug("Playing sound animation ...");
                 try {
-                    Utils.playSound(soundResource);
+                    ForegroundSoundsUtils.playSound(soundResource);
                 } catch (Exception e) {
 
                     log.warn("file doesn't exist : {}", soundResource);

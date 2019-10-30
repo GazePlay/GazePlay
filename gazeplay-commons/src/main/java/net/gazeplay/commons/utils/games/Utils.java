@@ -3,14 +3,11 @@ package net.gazeplay.commons.utils.games;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,7 +22,7 @@ public class Utils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
     public static final String LINESEPARATOR = System.getProperties().getProperty("line.separator");
-    private static MediaPlayer lastSoundPlayer;
+
     private static final String tempFolder = "temp";
 
     public static MenuBar buildLicence() {
@@ -50,38 +47,6 @@ public class Utils {
             return IOUtils.toString(is, StandardCharsets.UTF_8);
         } catch (Exception e) {
             return "Failed to load the license file";
-        }
-    }
-
-    public static synchronized void playSound(String resource) {
-        log.debug("Try to play " + resource);
-        URL url = ClassLoader.getSystemResource(resource);
-        String path;
-        if (url == null) {
-            final File file = new File(resource);
-            log.debug("using file");
-            if (!file.exists()) {
-                log.warn("file doesn't exist : {}", resource);
-            }
-            path = file.toURI().toString();
-        } else {
-            log.debug("using url");
-            path = url.toString();
-        }
-        stopSound();
-        final Configuration configuration = Configuration.getInstance();
-        Media media = new Media(path);
-        MediaPlayer soundPlayer = new MediaPlayer(media);
-        soundPlayer.setVolume(configuration.getEffectsVolume());
-        soundPlayer.volumeProperty().bind(configuration.getEffectsVolumeProperty());
-        soundPlayer.play();
-        lastSoundPlayer = soundPlayer;
-    }
-
-    public static synchronized void stopSound() {
-        MediaPlayer activeSoundPlayer = lastSoundPlayer;
-        if (activeSoundPlayer != null) {
-            activeSoundPlayer.stop();
         }
     }
 
