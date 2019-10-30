@@ -1,11 +1,13 @@
 package net.gazeplay.commons.utils.games;
 
+import java.io.File;
+
 public class GazePlayDirectories {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
 
     private static final String tempFolder = "temp";
-    
+
     /**
      * @return Default directory for GazePlay : in user's home directory, in a folder called GazePlay
      */
@@ -19,6 +21,10 @@ public class GazePlayDirectories {
 
     public static String getFileDirectoryUserValue(String user) {
         return getGazePlayFolder() + "profiles/" + user + FILESEPARATOR + "files";
+    }
+
+    public static File getUserProfileDirectory(String user) {
+        return new File(new File(getGazePlayFolder(), "profiles"), user);
     }
 
     /**
