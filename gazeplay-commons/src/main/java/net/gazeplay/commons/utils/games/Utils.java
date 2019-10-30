@@ -53,15 +53,15 @@ public class Utils {
         }
     }
 
-    public static synchronized void playSound(String ressource) {
-        log.debug("Try to play " + ressource);
-        URL url = ClassLoader.getSystemResource(ressource);
+    public static synchronized void playSound(String resource) {
+        log.debug("Try to play " + resource);
+        URL url = ClassLoader.getSystemResource(resource);
         String path;
         if (url == null) {
-            final File file = new File(ressource);
+            final File file = new File(resource);
             log.debug("using file");
             if (!file.exists()) {
-                log.warn("file doesn't exist : {}", ressource);
+                log.warn("file doesn't exist : {}", resource);
             }
             path = file.toURI().toString();
         } else {
