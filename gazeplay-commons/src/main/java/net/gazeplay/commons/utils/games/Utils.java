@@ -25,7 +25,7 @@ public class Utils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
     public static final String LINESEPARATOR = System.getProperties().getProperty("line.separator");
-    private static MediaPlayer soundPlayer;
+    private static MediaPlayer lastSoundPlayer;
     private static final String tempFolder = "temp";
 
     public static MenuBar buildLicence() {
@@ -53,14 +53,10 @@ public class Utils {
         }
     }
 
-    public static MediaPlayer playSound(String ressource) {
-
+    public static synchronized void playSound(String ressource) {
         log.debug("Try to play " + ressource);
-
         URL url = ClassLoader.getSystemResource(ressource);
-
         String path;
-
         if (url == null) {
             final File file = new File(ressource);
             log.debug("using file");
@@ -72,30 +68,25 @@ public class Utils {
             log.debug("using url");
             path = url.toString();
         }
-
-        log.debug("path " + path);
-        if (soundPlayer != null)
-            soundPlayer.stop();
-        Media media = new Media(path);
-        soundPlayer = new MediaPlayer(media);
+        stopSound();
         final Configuration configuration = Configuration.getInstance();
+        Media media = new Media(path);
+        MediaPlayer soundPlayer = new MediaPlayer(media);
         soundPlayer.setVolume(configuration.getEffectsVolume());
         soundPlayer.volumeProperty().bind(configuration.getEffectsVolumeProperty());
         soundPlayer.play();
-        return soundPlayer;
+        lastSoundPlayer = soundPlayer;
     }
 
-    public static void stopSound() {
-
-        if (soundPlayer != null)
-            soundPlayer.stop();
-
+    public static synchronized void stopSound() {
+        MediaPlayer activeSoundPlayer = lastSoundPlayer;
+        if (activeSoundPlayer != null) {
+            activeSoundPlayer.stop();
+        }
     }
 
     public static InputStream getInputStream(String ressource) {
-
         log.debug("Try to play " + ressource);
-
         return ClassLoader.getSystemResourceAsStream(ressource);
 
     }
@@ -104,7 +95,6 @@ public class Utils {
      * @return Default directory for GazePlay : in user's home directory, in a folder called GazePlay
      */
     public static String getGazePlayFolder() {
-
         return System.getProperties().getProperty("user.home") + FILESEPARATOR + "GazePlay" + FILESEPARATOR;
     }
 
@@ -112,13 +102,12 @@ public class Utils {
      * @return Temp directory for GazePlay : in the default directory of GazePlay, a folder called Temp
      */
     public static String getTempFolder() {
-
         return getGazePlayFolder() + tempFolder + FILESEPARATOR;
     }
 
     /**
      * @return images directory for GazePlay : by default in the default directory of GazePlay, in a folder called files
-     *         but can be configured through option interface and/or GazePlay.properties file
+     * but can be configured through option interface and/or GazePlay.properties file
      */
 
     private static String getFilesFolder() {
@@ -168,7 +157,7 @@ public class Utils {
 
         if (!user.equals("")) {
             return getGazePlayFolder() + "profiles" + FILESEPARATOR + user + FILESEPARATOR + "statistics"
-                    + FILESEPARATOR;
+                + FILESEPARATOR;
         } else {
             return getStatsFolder();
         }
