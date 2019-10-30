@@ -130,9 +130,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         numberDiffFound++;
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
         if (numberDiffFound == totalNumberDiff) {
-            gameContext.playWinTransition(200, actionEvent -> {
-                gameContext.showRoundStats(stats, this);
-            });
+            gameContext.playWinTransition(200, actionEvent -> gameContext.showRoundStats(stats, this));
         }
         stats.incNbGoals();
         try {
