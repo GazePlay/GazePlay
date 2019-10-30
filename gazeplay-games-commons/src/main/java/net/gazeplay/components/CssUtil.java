@@ -11,12 +11,10 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import java.io.File;
 import java.util.Optional;
 
-import static net.gazeplay.commons.utils.games.GazePlayDirectories.FILESEPARATOR;
-
 @Slf4j
 public class CssUtil {
 
-    private static int[] supportedWidth = { 2560, 1920, 1600, 1440, 1280, 1024, 800 };
+    private static int[] supportedWidth = {2560, 1920, 1600, 1440, 1280, 1024, 800};
 
     public static void setPreferredStylesheets(Configuration config, Scene scene) {
         ObservableList<String> stylesheets = scene.getStylesheets();
@@ -66,7 +64,7 @@ public class CssUtil {
     }
 
     public static void addStylesheets(ObservableList<String> styleSheets) {
-        final File styleFolder = new File(getStylesFolder());
+        final File styleFolder = getStylesFolder();
         if (styleFolder.exists()) {
             File[] filesInStyleFolder = styleFolder.listFiles();
             assert filesInStyleFolder != null;
@@ -81,8 +79,8 @@ public class CssUtil {
     /**
      * @return styles directory for GazePlay : in the default directory of GazePlay, a folder called styles
      */
-    public static String getStylesFolder() {
-        return GazePlayDirectories.getGazePlayFolder() + "styles" + FILESEPARATOR;
+    public static File getStylesFolder() {
+        return new File(GazePlayDirectories.getGazePlayFolder(), "styles");
     }
 
 }
