@@ -1,14 +1,10 @@
 package net.gazeplay.commons.utils.games;
 
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,39 +17,12 @@ import java.util.Enumeration;
 public class Utils {
 
     public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
-    public static final String LINESEPARATOR = System.getProperties().getProperty("line.separator");
 
     private static final String tempFolder = "temp";
-
-    public static MenuBar buildLicence() {
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        String licenseFileAsString = loadLicenseFileAsString(classLoader);
-
-        MenuItem licenseMenuItem = new MenuItem(licenseFileAsString);
-
-        Menu menu = new Menu("GazePlay");
-        menu.getItems().add(licenseMenuItem);
-
-        MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(menu);
-        menuBar.setPrefHeight(40);
-        menuBar.setPrefWidth(80);
-
-        return menuBar;
-    }
-
-    private static String loadLicenseFileAsString(ClassLoader classLoader) {
-        try (InputStream is = classLoader.getResourceAsStream("data/common/licence.txt")) {
-            return IOUtils.toString(is, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            return "Failed to load the license file";
-        }
-    }
 
     public static InputStream getInputStream(String ressource) {
         log.debug("Try to play " + ressource);
         return ClassLoader.getSystemResourceAsStream(ressource);
-
     }
 
     /**
