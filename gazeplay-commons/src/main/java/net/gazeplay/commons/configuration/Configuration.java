@@ -80,12 +80,12 @@ public class Configuration implements Cloneable {
     @Setter
     @Getter
     public static String DEFAULT_VALUE_FILE_DIR = getFileDirectoryDefaultValue();
-    public static final boolean DEFAULT_VALUE_GAZE_MENU = false;
-    public static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
-    public static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
-    public static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
+    private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
+    private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
+    private static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
+    private static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
     private static final String DEFAULT_VALUE_USER_NAME = "";
-    public static final String DEFAULT_VALUE_USER_PICTURE = "";
+    private static final String DEFAULT_VALUE_USER_PICTURE = "";
     public static final String DEFAULT_VALUE_VIDEO_FOLDER = getFileDirectoryDefaultValue() + "/videos";
 
     @Getter
