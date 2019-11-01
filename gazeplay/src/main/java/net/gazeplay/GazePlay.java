@@ -129,8 +129,9 @@ public class GazePlay extends Application {
         });
 
         this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
-            if (ke.getCode() == KeyCode.S && ActiveConfigurationContext.getInstance().isGazeMouseEnable()) {
-                Configuration.setMouseFree(!Configuration.isMouseFree());
+            final Configuration activeConfig = ActiveConfigurationContext.getInstance();
+            if (ke.getCode() == KeyCode.S && activeConfig.isGazeMouseEnable()) {
+                activeConfig.setMouseFree(!activeConfig.isMouseFree());
             }
         });
     }

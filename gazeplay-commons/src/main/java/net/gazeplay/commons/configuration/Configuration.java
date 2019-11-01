@@ -90,7 +90,7 @@ public class Configuration implements Cloneable {
 
     @Getter
     @Setter
-    private static boolean mouseFree = false;
+    private boolean mouseFree = false;
 
     @Getter
     private final SimpleSetProperty<String> favoriteGamesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_FAVORITE_GAMES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
