@@ -190,7 +190,6 @@ public class Stats implements GazeMotionListener {
             }
 
             protected void finished() {
-                ScreenRecorder.State state = r.getState();
                 // File source;
                 // File target;
                 // try {
@@ -539,7 +538,6 @@ public class Stats implements GazeMotionListener {
                         - fixationSequence.get(fixationSequence.size() - 1).getX()) <= fixationTrail)
                 && (Math.abs(newGazePoint.getY()
                         - fixationSequence.get(fixationSequence.size() - 1).getY()) <= fixationTrail)) {
-            long gDuration = fixationSequence.get(fixationSequence.size() - 1).getGazeDuration();
             fixationSequence.get(fixationSequence.size() - 1)
                     .setGazeDuration(newGazePoint.getGazeDuration() + newGazePoint.getGazeDuration()); //
 
