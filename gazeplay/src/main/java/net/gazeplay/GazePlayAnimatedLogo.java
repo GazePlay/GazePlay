@@ -52,14 +52,15 @@ public class GazePlayAnimatedLogo {
 
     public static GazePlayAnimatedLogo newInstance() {
         final HBox letters = new HBox();
+        String imageType = "fixed-size";
         for (int i = 0; i <= 3; i++) {
-            StackPane letter = createLetterView(i);
+            StackPane letter = createLetterView(i, imageType);
             //
             letters.getChildren().add(letter);
         }
         letters.getChildren().add(createSpacingView());
         for (int i = 4; i <= 7; i++) {
-            StackPane letter = createLetterView(i);
+            StackPane letter = createLetterView(i, imageType);
             //
             letters.getChildren().add(letter);
         }
@@ -88,9 +89,9 @@ public class GazePlayAnimatedLogo {
         return letter;
     }
 
-    private static LetterPane createLetterView(int i) {
-        ImageView backImageView = new ImageView(new Image(IMAGES_PATH + i + "1.png"));
-        ImageView frontImageView = new ImageView(new Image(IMAGES_PATH + i + "0.png"));
+    private static LetterPane createLetterView(int i, String type) {
+        ImageView backImageView = new ImageView(new Image(IMAGES_PATH + type + "/" + i + "1.png"));
+        ImageView frontImageView = new ImageView(new Image(IMAGES_PATH + type + "/" + i + "0.png"));
         //
         backImageView.setPreserveRatio(true);
         frontImageView.setPreserveRatio(true);
