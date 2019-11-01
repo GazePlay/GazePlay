@@ -8,7 +8,6 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -102,10 +101,10 @@ public class Bravo extends Rectangle {
 
     public void setConfetiOnStart(GameContext gc) {
         Dimension2D dim = gc.getGamePanelDimensionProvider().getDimension2D();
-
+        final RandomColorGenerator randomColorGenerator = RandomColorGenerator.getInstance();
         for (int i = 0; i <= 100; i++) {
             Rectangle r = new Rectangle(-100, -100, dim.getHeight() / 30, dim.getHeight() / 15);
-            r.setFill(Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+            r.setFill(randomColorGenerator.randomColor());
             gc.getChildren().add(r);
 
             Duration duration = Duration.millis(1500 + (Math.random() * 5000));
