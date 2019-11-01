@@ -1,56 +1,37 @@
 package net.gazeplay;
 
 import javafx.animation.FadeTransition;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class LoadingScreen extends GraphicalContext<Pane> {
+@RequiredArgsConstructor
+public class GazePlayAnimatedLogo {
 
-    private static HBox letters;
-    private FadeTransition[][] transitionLetters;
-
-    public LoadingScreen(GazePlay gazePlay, Pane root) {
-
-        super(gazePlay, root);
-
-        loadingAnimation();
-    }
-
-    public static LoadingScreen newInstance(GazePlay gazePlay) {
-        Pane root = new Pane();
-        final Stage primaryStage = gazePlay.getPrimaryStage();
-
-        root.prefWidthProperty().bind(primaryStage.widthProperty());
-        root.prefHeightProperty().bind(primaryStage.heightProperty());
-        root.minWidthProperty().bind(primaryStage.widthProperty());
-        root.minHeightProperty().bind(primaryStage.heightProperty());
-
+    public static GazePlayAnimatedLogo newInstance() {
         BorderPane gamingRoot = new BorderPane();
-        gamingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
-        gamingRoot.prefHeightProperty().bind(primaryStage.heightProperty());
-        gamingRoot.minWidthProperty().bind(primaryStage.widthProperty());
-        gamingRoot.minHeightProperty().bind(primaryStage.heightProperty());
 
-        letters = new HBox();
+        HBox letters = new HBox();
         for (int i = 0; i < 8; i++) {
+            ImageView backImageView = new ImageView(new Image("data/common/images/GazePlayLetters/" + i + 0 + ".png"));
+            ImageView frontImageView = new ImageView(new Image("data/common/images/GazePlayLetters/" + i + 1 + ".png"));
+            //
+            backImageView.setPreserveRatio(true);
+            frontImageView.setPreserveRatio(true);
+            //
+            //backImageView.setFitHeight(primaryStage.getHeight() / 10);
+            //frontImageView.setFitHeight(primaryStage.getHeight() / 10);
+            //
             StackPane letter = new StackPane();
-            ImageView Back = new ImageView(new Image("data/common/images/GazePlayLetters/" + i + 0 + ".png"));
-            ImageView Front = new ImageView(new Image("data/common/images/GazePlayLetters/" + i + 1 + ".png"));
-            Back.setPreserveRatio(true);
-            Front.setPreserveRatio(true);
-            Back.setFitHeight(primaryStage.getHeight() / 10);
-            Front.setFitHeight(primaryStage.getHeight() / 10);
-            letter.getChildren().addAll(Front, Back);
-            letter.setOpacity(0);
+            letter.getChildren().addAll(frontImageView, backImageView);
+            //letter.setOpacity(0);
             letters.getChildren().add(letter);
         }
 
@@ -61,12 +42,16 @@ public class LoadingScreen extends GraphicalContext<Pane> {
         letters.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
         gamingRoot.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
-        root.getChildren().add(gamingRoot);
-
-        return new LoadingScreen(gazePlay, root);
+        return new GazePlayAnimatedLogo(gamingRoot, letters);
     }
 
-    public void loadingAnimation() {
+    @Getter
+    private final Pane root;
+    
+    private final HBox letters;
+
+    public void runAnimation() {
+        FadeTransition[][] transitionLetters;
         transitionLetters = new FadeTransition[letters.getChildren().size()][2];
 
         for (int i = 0; i < letters.getChildren().size(); i++) {
@@ -98,12 +83,6 @@ public class LoadingScreen extends GraphicalContext<Pane> {
         }
 
         transitionLetters[0][0].play();
-
     }
 
-    @Override
-    public ObservableList<Node> getChildren() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }

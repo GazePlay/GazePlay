@@ -13,8 +13,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -48,10 +46,6 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
-
-    public final static String LOGO_PATH = "data/common/images/logos/gazeplay1.6.1.png";
-
-    // public final static String LOGO_PATH = "data/common/images/logos/gazeplayClassicLogo.png";
 
     private final static GamesLocator gamesLocator = new CachingGamesLocator(new DefaultGamesLocator());
 
@@ -109,7 +103,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         MenuBar menuBar = LicenseUtils.buildLicenceMenuBar();
 
-        Node logo = createLogo();
+        Node logo = LogoFactory.getInstance().createLogo(root);
 
         StackPane topLogoPane = new StackPane();
         topLogoPane.getChildren().add(logo);
@@ -311,22 +305,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton logoutButton = new CustomButton("data/common/images/logout.png");
         logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
         return logoutButton;
-    }
-
-    private Node createLogo() {
-        double width = root.getWidth() * 0.5;
-        double height = root.getHeight() * 0.2;
-
-        log.info(LOGO_PATH);
-        final Image logoImage = new Image(LOGO_PATH, width, height, true, true);
-        final ImageView logoView = new ImageView(logoImage);
-        root.heightProperty().addListener((observable, oldValue, newValue) -> {
-            final double newHeight = newValue.doubleValue() * 0.2;
-            final Image newLogoImage = new Image(LOGO_PATH, width, newHeight, true, true);
-            logoView.setImage(newLogoImage);
-        });
-
-        return logoView;
     }
 
     private static CheckBox buildCategoryCheckBox(
