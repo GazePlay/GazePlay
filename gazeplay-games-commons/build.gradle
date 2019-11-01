@@ -25,3 +25,5 @@ dependencies {
 //        }
 //    }
 //}
+
+spotbugsMain.enabled = true

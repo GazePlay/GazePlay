@@ -113,14 +113,17 @@ public class GameSpec {
     @NonNull
     private final GameLauncher gameLauncher;
 
-    public GameSpec(@NonNull GameSummary gameSummary, @NonNull GameVariantGenerator gameVariantGenerator,
-            @NonNull GameLauncher gameLauncher) {
+    public GameSpec(
+        GameSummary gameSummary,
+        GameVariantGenerator gameVariantGenerator,
+        GameLauncher gameLauncher
+    ) {
         this.gameSummary = gameSummary;
         this.gameVariantGenerator = gameVariantGenerator;
         this.gameLauncher = gameLauncher;
     }
 
-    public GameSpec(@NonNull GameSummary gameSummary, @NonNull GameLauncher gameLauncher) {
+    public GameSpec(GameSummary gameSummary, GameLauncher gameLauncher) {
         this(gameSummary, new NoVariantGenerator(), gameLauncher);
     }
 

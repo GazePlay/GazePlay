@@ -1,6 +1,7 @@
 package net.gazeplay;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Singular;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import java.util.SortedSet;
 
 @Builder
 @Slf4j
+@EqualsAndHashCode
 public class GameSummary implements Comparable<GameSummary> {
 
     private static final CategoriesCollectionComparator categoriesCollectionComparator = new CategoriesCollectionComparator();
