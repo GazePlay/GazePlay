@@ -37,10 +37,10 @@ import java.util.List;
 @Slf4j
 public class PetHouse extends Parent implements GameLifeCycle {
 
-    public final static int INIT_MODE = 1;
-    public final static int BATH_MODE = 3;
-    public final static int EAT_MODE = 2;
-    public final static int SPORT_MODE = 0;
+    final static int INIT_MODE = 1;
+    private final static int BATH_MODE = 3;
+    final static int EAT_MODE = 2;
+    final static int SPORT_MODE = 0;
 
     @Getter
     private final IGameContext gameContext;
@@ -59,7 +59,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private Integer waterNeeded = 100;
 
     public int[] it = { LIFE_SIZE, LIFE_SIZE, LIFE_SIZE };
-    public Timeline[] timelines = { new Timeline(), new Timeline(), new Timeline() };
+    private Timeline[] timelines = { new Timeline(), new Timeline(), new Timeline() };
     private final Color[] color = { Color.DARKSEAGREEN, Color.ALICEBLUE, Color.DARKSALMON, Color.LAVENDER };
     private final String[] screen = { "park.jpg", "room.jpg", "kitchen.jpg", "shower.jpg" };
     private final String[] cursor = { "glove.png", "hand.png", "emptyspoon.png", "pommeau.png" };
@@ -70,7 +70,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     @Setter
     private Boolean baloonGone = false;
 
-    public Timeline rd;
+    Timeline rd;
 
     @Getter
     @Setter
@@ -90,7 +90,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     private boolean enterZone = false;
 
-    public Rectangle hand;
+    Rectangle hand;
 
     private final int screenWidth;
     private final int screenHeight;
@@ -109,7 +109,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         this.background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         this.background.setFill(Color.BEIGE /* new ImagePattern(new Image("background.jpg")) */);
         gameContext.getChildren().add(this.background);
-        water = new ArrayList();
+        water = new ArrayList<>();
         rd = new Timeline();
 
         double facteur = (2 / 2.5) + (1 - 2 / 2.5) / 3;
@@ -513,7 +513,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
                             pet.setHappy();
                         }
 
-                        synchronized (waterNeeded) {
+                        synchronized (PetHouse.this) {
                             waterNeeded--;
                             if (waterNeeded <= 0) {
                                 refill(0);
