@@ -505,7 +505,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     ActiveConfigurationContext.setInstance(ConfigurationSource.createFromProfile(newUser1.getName()));
                     Configuration conf2 = ActiveConfigurationContext.getInstance();
                     File userDirectory = GazePlayDirectories.getUserProfileDirectory(newUser1.getName());
-                    userDirectory.mkdirs();
+                    final boolean userDirectoryCreated = userDirectory.mkdirs();
+                    log.debug("userDirectoryCreated = {}", userDirectoryCreated);
 
                     conf2.setUserName(newUser1.getName());
 
