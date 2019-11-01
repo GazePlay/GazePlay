@@ -19,8 +19,12 @@ public class GazePlayDirectories {
         return getGazePlayFolder() + "files";
     }
 
+    public static String getProfilesDirectory() {
+        return getGazePlayFolder() + "profiles";
+    }
+
     public static String getFileDirectoryUserValue(String user) {
-        return getGazePlayFolder() + "profiles/" + user + FILESEPARATOR + "files";
+        return getProfilesDirectory() + FILESEPARATOR + user + FILESEPARATOR + "files";
     }
 
     public static File getUserProfileDirectory(String user) {
@@ -44,10 +48,10 @@ public class GazePlayDirectories {
 
     public static String getUserStatsFolder(String user) {
         if (!user.equals("")) {
-            return getGazePlayFolder() + "profiles" + FILESEPARATOR + user + FILESEPARATOR + "statistics"
-                + FILESEPARATOR;
+            return getUserProfileDirectory(user) + FILESEPARATOR + "statistics" + FILESEPARATOR;
         } else {
             return getStatsFolder();
         }
     }
+
 }

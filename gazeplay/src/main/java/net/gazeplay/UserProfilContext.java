@@ -55,7 +55,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     }
 
     private static List<String> findAllUsersProfiles() {
-        File directory = new File(GazePlayDirectories.getGazePlayFolder() + "profiles");
+        File directory = new File(GazePlayDirectories.getProfilesDirectory());
         log.info("directory = {}", directory);
         //
         File[] directoryContent = directory.listFiles();

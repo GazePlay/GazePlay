@@ -12,7 +12,7 @@ public class ConfigurationSource {
     private static final String defaultProfileConfigPath = GazePlayDirectories.getGazePlayFolder() + "GazePlay.properties";
 
     private static String getSpecificProfileConfigPath(String profileId) {
-        return GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + profileId + GazePlayDirectories.FILESEPARATOR + "GazePlay.properties";
+        return GazePlayDirectories.getProfilesDirectory() + GazePlayDirectories.FILESEPARATOR + profileId + GazePlayDirectories.FILESEPARATOR + "GazePlay.properties";
     }
 
     public static Configuration createFromDefaultProfile() {
