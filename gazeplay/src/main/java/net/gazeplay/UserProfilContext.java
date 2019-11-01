@@ -349,7 +349,10 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                 deleteDirectoryRecursivly(f);
             }
         }
-        file.delete();
+        boolean deleted = file.delete();
+        if (deleted) {
+            log.debug("File {} was deleted", file.getAbsolutePath());
+        }
     }
 
     private Stage createRemoveDialog(Stage primaryStage, FlowPane choicePanel, User user) {
