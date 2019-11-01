@@ -10,6 +10,6 @@ public class OpenMemoryGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("OpenMemory").gameThumbnail("data/Thumbnails/openMemory.png").category(GameCategories.Category.ACTION_REACTION).build(),
-            new OpenMemoryGameVariantGenerator(), new OpenMemoryGameLauncher());
+            new MemoryGameVariantGenerator(), new OpenMemoryGameLauncher());
     }
 }
