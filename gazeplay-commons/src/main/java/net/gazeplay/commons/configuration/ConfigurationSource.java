@@ -9,18 +9,18 @@ import java.util.Properties;
 @Slf4j
 public class ConfigurationSource {
 
-    private static final String defaultProfileConfigPath = GazePlayDirectories.getGazePlayFolder() + "GazePlay.properties";
+    private static final File defaultProfileConfigFile = new File(GazePlayDirectories.getGazePlayFolder(), "GazePlay.properties");
 
-    private static String getSpecificProfileConfigPath(String profileId) {
-        return GazePlayDirectories.getUserProfileDirectory(profileId) + GazePlayDirectories.FILESEPARATOR + "GazePlay.properties";
+    private static File getSpecificProfileConfigPath(String profileId) {
+        return new File(GazePlayDirectories.getUserProfileDirectory(profileId), "GazePlay.properties");
     }
 
     public static Configuration createFromDefaultProfile() {
-        return createFromPropertiesResource(new File(defaultProfileConfigPath));
+        return createFromPropertiesResource(defaultProfileConfigFile);
     }
 
     public static Configuration createFromProfile(String profileId) {
-        return createFromPropertiesResource(new File(getSpecificProfileConfigPath(profileId)));
+        return createFromPropertiesResource(getSpecificProfileConfigPath(profileId));
     }
 
     public static Configuration createFromPropertiesResource(File propertiesFile) {

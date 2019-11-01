@@ -548,7 +548,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 return;
             }
 
-            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
+            String newPropertyValue = file.getAbsolutePath();
 
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
@@ -561,7 +561,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         pane.getChildren().add(buttonLoad);
 
         final I18NButton resetButton = new I18NButton(translator, "reset");
-        resetButton.setOnAction((event) -> configuration.getFiledirProperty().setValue(Configuration.DEFAULT_VALUE_FILE_DIR));
+        resetButton.setOnAction((event) -> configuration.getFiledirProperty().setValue(GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath()));
 
         pane.getChildren().add(resetButton);
 
@@ -596,7 +596,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 return;
             }
 
-            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
+            String newPropertyValue = file.getAbsolutePath();
 
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
@@ -903,7 +903,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
             // buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
 
-            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
+            String newPropertyValue = file.getAbsolutePath();
 
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
@@ -927,8 +927,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         String musicFolder = newMusicFolder;
 
         if (musicFolder.isBlank()) {
-            File gazePlayFolder = new File(GazePlayDirectories.getGazePlayFolder());
-            File gazePlayMusicFolder = new File(gazePlayFolder.getAbsolutePath() + GazePlayDirectories.FILESEPARATOR + "music");
+            File gazePlayFolder = GazePlayDirectories.getGazePlayFolder();
+            File gazePlayMusicFolder = new File(gazePlayFolder, "music");
 
             String songName = "songidea(copycat)_0.mp3";
             setupNewMusicFolder(gazePlayMusicFolder, songName);
@@ -962,7 +962,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             InputStream defaultMusicTrack = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
             if (gazePlayMusicFolder.exists()) {
                 Files.copy(defaultMusicTrack,
-                    Paths.get(gazePlayMusicFolder.getAbsolutePath() + GazePlayDirectories.FILESEPARATOR + defaultSong),
+                    Paths.get(new File(gazePlayMusicFolder, defaultSong).getAbsolutePath()),
                     StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (NullPointerException ne) {
@@ -992,7 +992,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (file == null) {
                 return;
             }
-            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
+            String newPropertyValue = file.getAbsolutePath();
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
@@ -1001,7 +1001,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         });
 
         buttonReset.setOnAction(e -> {
-            config.getVideoFolderProperty().setValue(Configuration.DEFAULT_VALUE_VIDEO_FOLDER);
+            config.getVideoFolderProperty().setValue(GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
             config.saveConfigIgnoringExceptions();
         });
 

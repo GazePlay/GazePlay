@@ -53,19 +53,9 @@ public class Utils {
     }
 
     /**
-     * @return sounds directory for GazePlay : in the files directory another folder called sounds
-     */
-
-    public static String getSoundsFolder() {
-
-        return getFilesFolder() + "sounds" + GazePlayDirectories.FILESEPARATOR;
-    }
-
-    /**
      * @return current date with respect to the format yyyy-MM-dd
      */
     public static String today() {
-
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         return dateFormat.format(date);
@@ -75,18 +65,15 @@ public class Utils {
      * @return current date with respect to the format dd/MM/yyyy
      */
     public static String todayCSV() {
-
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
         return dateFormat.format(date);
-
     }
 
     /**
      * @return current time with respect to the format HH:MM:ss
      */
     public static String time() {
-
         DateFormat dateFormat = new SimpleDateFormat("HH:MM:ss");
         Date date = new Date();
         return dateFormat.format(date);
@@ -96,11 +83,9 @@ public class Utils {
      * @return current time with respect to the format yyyy-MM-dd-HH-MM-ss
      */
     public static String now() {
-
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         Date date = new Date();
         return dateFormat.format(date);
-
     }
 
     public static boolean copyFromJar(String filePath, String destinationPath) {
@@ -124,10 +109,8 @@ public class Utils {
     }
 
     public static String convertWindowsPath(String path) {
-
         path = path.replace("\\", "/");
         path = path.replaceAll("\\\\", "/");
-
         return path;
     }
 
@@ -135,12 +118,10 @@ public class Utils {
      * @return true if the operating system is a Windows
      */
     public static boolean isWindows() {
-
         return System.getProperty("os.name").indexOf("indow") > 0;
     }
 
     public static void logSystemProperties() {
-
         Enumeration<?> E = System.getProperties().propertyNames();
         while (E.hasMoreElements()) {
             String element = (String) E.nextElement();

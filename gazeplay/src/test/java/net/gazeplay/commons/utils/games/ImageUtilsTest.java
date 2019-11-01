@@ -19,16 +19,18 @@ class ImageUtilsTest {
 
     @BeforeAll
     static void createMockImageFolder() throws IOException {
-        new File(folderName).mkdir();
+        File folder = new File(folderName);
+        folder.mkdirs();
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folderName + GazePlayDirectories.FILESEPARATOR + i + ".jpg").createNewFile();
+            new File(folder, i + ".jpg").createNewFile();
         }
     }
 
     @AfterAll
     static void removeMockImageFolder() {
+        File folder = new File(folderName);
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folderName + GazePlayDirectories.FILESEPARATOR + i + ".jpg").delete();
+            new File(folder, i + ".jpg").delete();
         }
         new File(folderName).delete();
     }
@@ -36,13 +38,13 @@ class ImageUtilsTest {
     void createMockDataFolder() throws IOException {
         new File("data/" + folderName).mkdirs();
         for (int i = 0; i < numberOfFiles; i++) {
-            new File("data/" + folderName + GazePlayDirectories.FILESEPARATOR + i + ".jpg").createNewFile();
+            new File("data/" + folderName + "/" + i + ".jpg").createNewFile();
         }
     }
 
     void removeMockDataFolder() {
         for (int i = 0; i < numberOfFiles; i++) {
-            new File("data/" + folderName + GazePlayDirectories.FILESEPARATOR + i + ".jpg").delete();
+            new File("data/" + folderName + "/" + i + ".jpg").delete();
         }
         new File("data/" + folderName).delete();
     }

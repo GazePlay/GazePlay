@@ -55,10 +55,10 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     }
 
     private static List<String> findAllUsersProfiles() {
-        File directory = new File(GazePlayDirectories.getProfilesDirectory());
-        log.info("directory = {}", directory);
+        File profilesDirectory = GazePlayDirectories.getProfilesDirectory();
+        log.info("profilesDirectory = {}", profilesDirectory);
         //
-        File[] directoryContent = directory.listFiles();
+        File[] directoryContent = profilesDirectory.listFiles();
         if (directoryContent == null) {
             return new ArrayList<>();
         }
@@ -517,7 +517,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                         conf2.setUserPicture(dst.getAbsolutePath());
                     }
 
-                    conf2.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(newUser1.getName()));
+                    conf2.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(newUser1.getName()).getAbsolutePath());
 
                     conf2.saveConfigIgnoringExceptions();
 

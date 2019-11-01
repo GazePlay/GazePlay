@@ -53,7 +53,7 @@ public class GazePlayLauncher {
             log.info("workingDirectory = {}", workingDirectory.getAbsolutePath());
 
             // creation of GazePlay default folder if it does not exist.
-            File gazePlayFolder = new File(GazePlayDirectories.getGazePlayFolder());
+            File gazePlayFolder = GazePlayDirectories.getGazePlayFolder();
             if (!gazePlayFolder.exists()) {
                 boolean gazePlayFolderCreated = gazePlayFolder.mkdir();
                 log.debug("gazePlayFolderCreated = " + gazePlayFolderCreated);

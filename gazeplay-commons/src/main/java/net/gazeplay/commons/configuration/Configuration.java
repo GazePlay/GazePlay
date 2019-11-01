@@ -77,16 +77,13 @@ public class Configuration implements Cloneable {
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
 
-    @Setter
-    @Getter
-    public static String DEFAULT_VALUE_FILE_DIR = GazePlayDirectories.getFileDirectoryDefaultValue();
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     private static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
     private static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
-    public static final String DEFAULT_VALUE_VIDEO_FOLDER = GazePlayDirectories.getFileDirectoryDefaultValue() + "/videos";
+
 
     @Getter
     @Setter
@@ -123,7 +120,7 @@ public class Configuration implements Cloneable {
 
     @Getter
     protected final StringProperty filedirProperty = new SimpleStringProperty(this, PROPERTY_NAME_FILEDIR,
-        DEFAULT_VALUE_FILE_DIR);
+        GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath());
 
     @Getter
     protected final IntegerProperty fixationlengthProperty = new SimpleIntegerProperty(this,
@@ -196,7 +193,7 @@ public class Configuration implements Cloneable {
 
     @Getter
     protected final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER,
-        DEFAULT_VALUE_VIDEO_FOLDER);
+        GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
 
     @Getter
     protected final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME,
@@ -204,7 +201,7 @@ public class Configuration implements Cloneable {
     @Getter
     protected final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE,
         DEFAULT_VALUE_USER_PICTURE);
-    
+
     private final File configFile;
 
     protected Configuration(File configFile) {
