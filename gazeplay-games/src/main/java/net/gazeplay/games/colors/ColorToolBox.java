@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
@@ -259,7 +260,7 @@ public class ColorToolBox extends StackPane {
         thisRoot.setTop(colorziationPane);
         root.getChildren().add(customColorButtonIndic);
 
-        if (!Configuration.getInstance().isBackgroundWhite()) {
+        if (!ActiveConfigurationContext.getInstance().isBackgroundWhite()) {
 
             this.getStyleClass().add("bg-colored");
         }
@@ -416,8 +417,6 @@ public class ColorToolBox extends StackPane {
             stopColorize = new Button("S");
         }
 
-        Configuration config = this.getColorsGame().getConfig();
-
         AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(root);
 
         Pane colorizeButtonPane = new StackPane(colorize);
@@ -472,7 +471,7 @@ public class ColorToolBox extends StackPane {
 
         final Scene scene = new Scene(CustomColorPicker, Color.TRANSPARENT);
 
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
 
         dialog.setScene(scene);

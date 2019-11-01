@@ -19,6 +19,7 @@ import lombok.Data;
 import lombok.Getter;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
@@ -108,7 +109,7 @@ public class Letters implements GameLifeCycle {
     @Override
     public void launch() {
 
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -142,8 +143,8 @@ public class Letters implements GameLifeCycle {
         gameContext.getChildren().add(questionText);
 
         TranslateTransition fullAnimation = new TranslateTransition(
-                Duration.millis(Configuration.getInstance().getQuestionLength() / 2), questionText);
-        fullAnimation.setDelay(Duration.millis(Configuration.getInstance().getQuestionLength()));
+                Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength() / 2), questionText);
+        fullAnimation.setDelay(Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength()));
         double bottomCenter = (0.9 * dimension2D.getHeight()) - questionText.getY()
                 + questionText.getBoundsInParent().getHeight() * 3;
         fullAnimation.setToY(bottomCenter);

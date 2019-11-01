@@ -4,50 +4,54 @@ import java.io.File;
 
 public class GazePlayDirectories {
 
-    public static final String FILESEPARATOR = System.getProperties().getProperty("file.separator");
-
-    private static final String tempFolder = "temp";
-
     /**
      * @return Default directory for GazePlay : in user's home directory, in a folder called GazePlay
      */
-    public static String getGazePlayFolder() {
-        return System.getProperties().getProperty("user.home") + FILESEPARATOR + "GazePlay" + FILESEPARATOR;
+    public static File getGazePlayFolder() {
+        return new File(System.getProperties().getProperty("user.home"), "GazePlay");
     }
 
-    public static String getFileDirectoryDefaultValue() {
-        return getGazePlayFolder() + "files";
+    public static File getDefaultFileDirectoryDefaultValue() {
+        return new File(getGazePlayFolder(), "files");
     }
 
-    public static String getFileDirectoryUserValue(String user) {
-        return getGazePlayFolder() + "profiles/" + user + FILESEPARATOR + "files";
+    public static File getVideosFilesDirectory() {
+        return new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "videos");
+    }
+
+    public static File getProfilesDirectory() {
+        return new File(getGazePlayFolder(), "profiles");
+    }
+
+    public static File getFileDirectoryUserValue(String user) {
+        return new File(getUserProfileDirectory(user), "files");
     }
 
     public static File getUserProfileDirectory(String user) {
-        return new File(new File(getGazePlayFolder(), "profiles"), user);
+        return new File(getProfilesDirectory(), user);
     }
 
     /**
      * @return Temp directory for GazePlay : in the default directory of GazePlay, a folder called Temp
      */
-    public static String getTempFolder() {
-        return getGazePlayFolder() + tempFolder + FILESEPARATOR;
+    public static File getTempFolder() {
+        return new File(getGazePlayFolder(), "temp");
     }
 
     /**
      * @return statistics directory for GazePlay : in the default directory of GazePlay, in a folder called statistics
      */
 
-    public static String getStatsFolder() {
-        return getGazePlayFolder() + "statistics" + FILESEPARATOR;
+    public static File getStatsFolder() {
+        return new File(getGazePlayFolder(), "statistics");
     }
 
-    public static String getUserStatsFolder(String user) {
+    public static File getUserStatsFolder(String user) {
         if (!user.equals("")) {
-            return getGazePlayFolder() + "profiles" + FILESEPARATOR + user + FILESEPARATOR + "statistics"
-                + FILESEPARATOR;
+            return new File(getUserProfileDirectory(user), "statistics");
         } else {
             return getStatsFolder();
         }
     }
+
 }

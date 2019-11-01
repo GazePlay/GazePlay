@@ -7,3 +7,5 @@ dependencies {
     runtime 'org.slf4j:jcl-over-slf4j:1.7.25'
     runtime 'org.slf4j:log4j-over-slf4j:1.7.25'
 }
+
+spotbugsMain.enabled = false

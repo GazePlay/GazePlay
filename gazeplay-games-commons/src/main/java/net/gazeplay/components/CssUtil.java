@@ -35,7 +35,7 @@ public class CssUtil {
             }
         }
 
-        stylesheets.removeAll(stylesheets);
+        stylesheets.clear();
 
         stylesheets.add("data/stylesheets/base.css");
 

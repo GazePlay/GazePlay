@@ -18,17 +18,19 @@ import java.util.List;
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
 
-    private final List<GameSpecSource> sources;
-
-    public DefaultGamesLocator() {
-        sources = new ArrayList<>();
+    private static List<GameSpecSource> scanGames() {
+        final List<GameSpecSource> sources = new ArrayList<>();
 
         String pkg = "net.gazeplay.games";
         Class<GameSpecSource> searchedInterface = GameSpecSource.class;
-        try (ScanResult scanResult =
-                 new ClassGraph()
-                     .whitelistPackages(pkg)      // Scan com.xyz and subpackages (omit to scan all packages)
-                     .scan()) {                   // Start the scan
+        ClassGraph classGraph = new ClassGraph()
+            .whitelistPackages(pkg) // Scan com.xyz and subpackages (omit to scan all packages)
+            ;
+
+        // Start the scan
+        ScanResult scanResult = null;
+        try {
+            scanResult = classGraph.scan();
             for (ClassInfo routeClassInfo : scanResult.getClassesImplementing(searchedInterface.getName())) {
                 Class<GameSpecSource> gameClass = routeClassInfo.loadClass(searchedInterface);
                 log.info("Found {} class : {}", searchedInterface.getSimpleName(), gameClass);
@@ -40,8 +42,15 @@ public class DefaultGamesLocator implements GamesLocator {
                     throw new RuntimeException("Failed to create new instance of class " + gameClass, e);
                 }
             }
+        } finally {
+            if (scanResult != null) {
+                scanResult.close();
+            }
         }
+        return sources;
     }
+
+    private final List<GameSpecSource> sources = scanGames();
 
     @Override
     public List<GameSpec> listGames() {

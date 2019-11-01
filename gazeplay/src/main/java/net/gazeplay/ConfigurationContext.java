@@ -25,6 +25,7 @@ import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
@@ -59,8 +60,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static final double PREF_HEIGHT = 25;
 
-    private static Translator translator;
-
     private static boolean currentLanguageAlignementIsLeftAligned = true;
 
     public static ConfigurationContext newInstance(GazePlay gazePlay) {
@@ -72,7 +71,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private ConfigurationContext(GazePlay gazePlay, BorderPane root) {
         super(gazePlay, root);
 
-        translator = gazePlay.getTranslator();
+        Translator translator = gazePlay.getTranslator();
 
         String currentLanguage = translator.currentLanguage();
         LanguageDetails languageDetails = Languages.getLanguage(currentLanguage);
@@ -117,7 +116,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         // Center Pane
 
-        GridPane gridPane = buildConfigGridPane(this, gazePlay);
+        GridPane gridPane = buildConfigGridPane(this, translator);
 
         ScrollPane settingsPanelScroller = new ScrollPane(gridPane);
 
@@ -171,9 +170,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    private GridPane buildConfigGridPane(ConfigurationContext configurationContext, GazePlay gazePlay) {
+    private GridPane buildConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
 
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -211,7 +210,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "FileDir", COLON);
 
-            Node input = buildDirectoryChooser(config, configurationContext);
+            Node input = buildDirectoryChooser(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -235,7 +234,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "WhereIsItDirectory", COLON);
 
-            Node input = buildWhereIsItDirectoryChooser(config, configurationContext);
+            Node input = buildWhereIsItDirectoryChooser(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -278,7 +277,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         {
             I18NText label = new I18NText(translator, "HeatMapColors", COLON);
-            HBox input = buildHeatMapColorHBox(config);
+            HBox input = buildHeatMapColorHBox(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -298,14 +297,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         {
             I18NText label = new I18NText(translator, "MusicFolder", COLON);
-            final Node input = buildMusicInput(config, configurationContext);
+            final Node input = buildMusicInput(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
 
         {
             I18NText label = new I18NText(translator, "VideoFolder", COLON);
-            final Node input = buildVideoFolderChooser(config);
+            final Node input = buildVideoFolderChooser(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -443,8 +442,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     /**
      * Function to use to permit to user to select between several theme
      */
-    private static ChoiceBox<BuiltInUiTheme> buildStyleThemeChooser(Configuration configuration,
-                                                                    ConfigurationContext configurationContext) {
+    private static ChoiceBox<BuiltInUiTheme> buildStyleThemeChooser(Configuration configuration, ConfigurationContext configurationContext) {
         ChoiceBox<BuiltInUiTheme> themesBox = new ChoiceBox<>();
 
         final String cssfile = configuration.getCssFile();
@@ -478,7 +476,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             configuration.getCssfileProperty().setValue(newPropertyValue);
             configuration.saveConfigIgnoringExceptions();
 
-            final GazePlay gazePlay = GazePlay.getInstance();
+            final GazePlay gazePlay = configurationContext.getGazePlay();
             // final Scene scene = gazePlay.getPrimaryScene();
 
             CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
@@ -503,7 +501,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         buttonLoad.setOnAction(arg0 -> {
             FileChooser fileChooser = new FileChooser();
-            final GazePlay gazePlay = GazePlay.getInstance();
+            final GazePlay gazePlay = configurationContext.getGazePlay();
             final Scene scene = gazePlay.getPrimaryScene();
             File file = fileChooser.showOpenDialog(scene.getWindow());
             buttonLoad.setText(file.toString());
@@ -525,7 +523,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return buttonLoad;
     }
 
-    private static Node buildDirectoryChooser(Configuration configuration, ConfigurationContext configurationContext) {
+    private static Node buildDirectoryChooser(Configuration configuration, ConfigurationContext configurationContext, Translator translator) {
 
         final HBox pane = new HBox(5);
 
@@ -540,14 +538,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (currentFolder.isDirectory()) {
                 directoryChooser.setInitialDirectory(currentFolder);
             }
-            final GazePlay gazePlay = GazePlay.getInstance();
+            final GazePlay gazePlay = configurationContext.getGazePlay();
             final Scene scene = gazePlay.getPrimaryScene();
             File file = directoryChooser.showDialog(scene.getWindow());
             if (file == null) {
                 return;
             }
 
-            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
+            String newPropertyValue = file.getAbsolutePath();
 
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
@@ -560,7 +558,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         pane.getChildren().add(buttonLoad);
 
         final I18NButton resetButton = new I18NButton(translator, "reset");
-        resetButton.setOnAction((event) -> configuration.getFiledirProperty().setValue(Configuration.DEFAULT_VALUE_FILE_DIR));
+        resetButton.setOnAction((event) -> configuration.getFiledirProperty().setValue(GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath()));
 
         pane.getChildren().add(resetButton);
 
@@ -568,7 +566,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static Node buildWhereIsItDirectoryChooser(Configuration configuration,
-                                                       ConfigurationContext configurationContext) {
+                                                       ConfigurationContext configurationContext,
+                                                       Translator translator) {
 
         final HBox pane = new HBox(5);
 
@@ -588,14 +587,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (currentFolder.isDirectory()) {
                 directoryChooser.setInitialDirectory(currentFolder);
             }
-            final GazePlay gazePlay = GazePlay.getInstance();
+            final GazePlay gazePlay = configurationContext.getGazePlay();
             final Scene scene = gazePlay.getPrimaryScene();
             File file = directoryChooser.showDialog(scene.getWindow());
             if (file == null) {
                 return;
             }
 
-            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
+            String newPropertyValue = file.getAbsolutePath();
 
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
@@ -869,7 +868,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
-    private static Node buildMusicInput(Configuration config, ConfigurationContext configurationContext) {
+    private static Node buildMusicInput(Configuration config, ConfigurationContext configurationContext, Translator translator) {
 
         changeMusicFolder(config.getMusicFolder(), config);
 
@@ -886,7 +885,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         buttonLoad.textProperty().bind(config.getMusicFolderProperty());
 
         buttonLoad.setOnAction((ActionEvent arg0) -> {
-            final Configuration configuration = Configuration.getInstance();
+            final Configuration configuration = ActiveConfigurationContext.getInstance();
 
             DirectoryChooser directoryChooser = new DirectoryChooser();
 
@@ -894,7 +893,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (currentMusicFolder.isDirectory()) {
                 directoryChooser.setInitialDirectory(currentMusicFolder);
             }
-            final GazePlay gazePlay = GazePlay.getInstance();
+            final GazePlay gazePlay = configurationContext.getGazePlay();
             final Scene scene = gazePlay.getPrimaryScene();
             File file = directoryChooser.showDialog(scene.getWindow());
             if (file == null) {
@@ -902,7 +901,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
             // buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
 
-            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
+            String newPropertyValue = file.getAbsolutePath();
 
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
@@ -926,8 +925,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         String musicFolder = newMusicFolder;
 
         if (musicFolder.isBlank()) {
-            File gazePlayFolder = new File(GazePlayDirectories.getGazePlayFolder());
-            File gazePlayMusicFolder = new File(gazePlayFolder.getAbsolutePath() + GazePlayDirectories.FILESEPARATOR + "music");
+            File gazePlayFolder = GazePlayDirectories.getGazePlayFolder();
+            File gazePlayMusicFolder = new File(gazePlayFolder, "music");
 
             String songName = "songidea(copycat)_0.mp3";
             setupNewMusicFolder(gazePlayMusicFolder, songName);
@@ -961,7 +960,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             InputStream defaultMusicTrack = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
             if (gazePlayMusicFolder.exists()) {
                 Files.copy(defaultMusicTrack,
-                    Paths.get(gazePlayMusicFolder.getAbsolutePath() + GazePlayDirectories.FILESEPARATOR + defaultSong),
+                    Paths.get(new File(gazePlayMusicFolder, defaultSong).getAbsolutePath()),
                     StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (NullPointerException ne) {
@@ -971,7 +970,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private static HBox buildVideoFolderChooser(Configuration config) {
+    private static HBox buildVideoFolderChooser(Configuration config, ConfigurationContext configurationContext, Translator translator) {
         HBox hbox = new HBox(5);
 
         Button buttonFolder = new Button(config.getVideoFolder());
@@ -985,13 +984,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (currentVideoFolder.isDirectory()) {
                 directoryChooser.setInitialDirectory(currentVideoFolder);
             }
-            final GazePlay gazePlay = GazePlay.getInstance();
+            final GazePlay gazePlay = configurationContext.getGazePlay();
             final Scene scene = gazePlay.getPrimaryScene();
             File file = directoryChooser.showDialog(scene.getWindow());
             if (file == null) {
                 return;
             }
-            String newPropertyValue = file.toString() + GazePlayDirectories.FILESEPARATOR;
+            String newPropertyValue = file.getAbsolutePath();
             if (Utils.isWindows()) {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
@@ -1000,7 +999,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         });
 
         buttonReset.setOnAction(e -> {
-            config.getVideoFolderProperty().setValue(Configuration.DEFAULT_VALUE_VIDEO_FOLDER);
+            config.getVideoFolderProperty().setValue(GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
             config.saveConfigIgnoringExceptions();
         });
 
@@ -1066,7 +1065,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private HBox buildHeatMapColorHBox(Configuration config) {
+    private HBox buildHeatMapColorHBox(Configuration config, Translator translator) {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 

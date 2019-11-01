@@ -12,7 +12,7 @@ plugins {
 
 // Add -PSpotBugs=true to the Gradle Command Line to run spotbugs.
 String value = project.getProperties().get('SpotBugs')
-boolean SpotBugs = Boolean.parseBoolean(value) ?: false
+boolean SpotBugs = Boolean.parseBoolean(value) ?: true
 
 String javafxVersion = "11.0.2"
 
@@ -51,6 +51,11 @@ subprojects {
 
     spotbugs {
         toolVersion = '4.0.0-beta3'
+
+        //ignoreFailures = false
+        //effort = "max"
+        //reportLevel = "high"
+        excludeFilter = file("spotbugs-exclude.xml")
     }
 
     spotbugsMain.enabled = SpotBugs

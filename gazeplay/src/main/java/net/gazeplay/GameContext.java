@@ -27,6 +27,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
@@ -43,15 +44,15 @@ import java.io.IOException;
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
 
     private static final double BUTTON_MIN_HEIGHT = 64;
-    
+
     public static boolean menuOpen = false;
 
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
-    
+
     @Getter
     private Translator translator;
-    
+
     private Slider getSpeedSlider;
 
     public static GameContext newInstance(GazePlay gazePlay) {
@@ -73,7 +74,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         gamingRoot.minWidthProperty().bind(primaryStage.widthProperty());
         gamingRoot.minHeightProperty().bind(primaryStage.heightProperty());
 
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
         Color color = (config.isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
         gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
 
@@ -82,7 +83,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         controlPanel.maxWidthProperty().bind(root.widthProperty());
         controlPanel.toFront();
 
-        double buttonSize = getButtonSize();
+        double buttonSize = getButtonSize(gazePlay);
 
         // Button bt = new Button();
         ImageView buttonImg = new ImageView(new Image("data/common/images/configuration-button-alt4.png"));
@@ -93,7 +94,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         bt.setMinHeight(BUTTON_MIN_HEIGHT);
         bt.setGraphic(buttonImg);
         bt.setStyle("-fx-background-color: transparent;");
-        updateConfigButton(bt, buttonImg);
+        updateConfigButton(bt, buttonImg, gazePlay);
         /*
          * bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; " +
          * "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; " + "-fx-max-height: " +
@@ -103,9 +104,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         final HBox root2 = new HBox(2);
         root2.setAlignment(Pos.CENTER_LEFT);
         // Pane root2 = new Pane();
-        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(root2));
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg));
-        root2.heightProperty().addListener((observable) -> updateConfigPane(root2));
+        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(root2, gazePlay));
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg, gazePlay));
+        root2.heightProperty().addListener((observable) -> updateConfigPane(root2, gazePlay));
 
         EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
             double from = 0;
@@ -154,14 +155,14 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         root.getChildren().add(root2);
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root,
-                gazePlay.getPrimaryScene());
+            gazePlay.getPrimaryScene());
 
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
         GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
         return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
-                randomPositionGenerator, gazeDeviceManager, root2);
+            randomPositionGenerator, gazeDeviceManager, root2);
     }
 
     private static void buttonTransparentHandler(Button bt) {
@@ -196,9 +197,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     }
 
-    private static void updateConfigButton(Button button, ImageView btnImg) {
-
-        final GazePlay gazePlay = GazePlay.getInstance();
+    private static void updateConfigButton(Button button, ImageView btnImg, GazePlay gazePlay) {
         double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
 
         if (buttonSize < BUTTON_MIN_HEIGHT) {
@@ -212,10 +211,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         button.setPrefWidth(buttonSize);
     }
 
-    private static void updateConfigPane(final Pane configPane) {
-
-        final GazePlay gazePlay = GazePlay.getInstance();
-
+    private static void updateConfigPane(final Pane configPane, GazePlay gazePlay) {
         double mainHeight = gazePlay.getPrimaryStage().getHeight();
 
         final double newY = mainHeight - configPane.getHeight() - 30;
@@ -223,8 +219,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         configPane.setTranslateY(newY);
     }
 
-    private static double getButtonSize() {
-        final GazePlay gazePlay = GazePlay.getInstance();
+    private static double getButtonSize(GazePlay gazePlay) {
         double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
         return buttonSize;
     }
@@ -237,8 +232,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         hbox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 
         hbox.setStyle("-fx-background-color: rgba(0, 0, 0, 1);" + " -fx-background-radius: 8px;"
-                + " -fx-border-radius: 8px;" + " -fx-border-width: 5px;" + " -fx-border-color: rgba(60, 63, 65, 0.7);"
-                + " -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+            + " -fx-border-radius: 8px;" + " -fx-border-width: 5px;" + " -fx-border-color: rgba(60, 63, 65, 0.7);"
+            + " -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
         return hbox;
     }
@@ -262,8 +257,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     private final Pane gamingRoot;
 
     private GameContext(GazePlay gazePlay, final Pane root, Pane gamingRoot, Bravo bravo, HBox menuHBox,
-            GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
-            GazeDeviceManager gazeDeviceManager, final Pane configPane) {
+                        GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
+                        GazeDeviceManager gazeDeviceManager, final Pane configPane) {
         super(gazePlay, root);
         this.gamingRoot = gamingRoot;
         this.bravo = bravo;
@@ -280,7 +275,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         super.setUpOnStage(scene);
 
         log.info("SETTING UP");
-        updateConfigPane(configPane);
+        updateConfigPane(configPane, getGazePlay());
     }
 
     public void resetBordersToFront() {
@@ -289,7 +284,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
         final Scene scene = gazePlay.getPrimaryScene();
 
         // gamingRoot.getChildren().add(scene);
@@ -308,15 +303,15 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         };
         // scene.addEventHandler(KeyEvent.KEY_PRESSED, buttonHandler);
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
-            if (key.getCode().toString() == config.getQuitKey()) {
-                log.info("Key Value : {} ; quitkey: {}", key.getCode().toString(), config.getQuitKey());
+            if (key.getCode().getChar().equals(config.getQuitKey())) {
+                log.info("Key Value : {} ; quitkey: {}", key.getCode().getChar(), config.getQuitKey());
                 scene.addEventHandler(KeyEvent.KEY_RELEASED, buttonHandler);
             }
         });
     }
 
     public void speedAdjust(@NonNull GazePlay gp) {
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
         final Scene scene = gp.getPrimaryScene();
 
         Node outerNode = menuHBox.getChildren().get(2); // get SpeedEffectsPane
@@ -344,9 +339,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
                 if (sliderSpeedValue < getSpeedSlider.getMax()) {
                     getSpeedSlider.setValue(sliderSpeedValue + 1);
                     config.getSpeedEffectsProperty().bind(getSpeedSlider.valueProperty());
-                }
-
-                else
+                } else
                     log.info("max speed for effects reached !");
                 config.saveConfigIgnoringExceptions();
 
@@ -400,7 +393,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
-            @NonNull GameLifeCycle currentGame) {
+                                                   @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> homeEvent = e -> {
             root.setCursor(Cursor.WAIT); // Change cursor to wait style
@@ -419,7 +412,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     private void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
-            throws IOException {
+        throws IOException {
         currentGame.dispose();
         ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
         stats.stop();
@@ -451,7 +444,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public Stage getPrimaryStage() {
         return getGazePlay().getPrimaryStage();
     }
-    
+
     @Override
     public Scene getPrimaryScene() {
         return getGazePlay().getPrimaryScene();

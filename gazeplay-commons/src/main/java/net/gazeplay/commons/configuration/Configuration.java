@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,9 +55,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
     private static final String PROPERTY_NAME_HIDDEN_CATEGORIES = "HIDDEN_CATEGORIES";
 
-    @Getter
-    @Setter
-    private static String CONFIGPATH = GazePlayDirectories.getGazePlayFolder() + "GazePlay.properties";
+
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final boolean DEFAULT_VALUE_GAZEMODE = true;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
@@ -77,54 +77,17 @@ public class Configuration implements Cloneable {
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
 
-    @Setter
-    @Getter
-    public static String DEFAULT_VALUE_FILE_DIR = GazePlayDirectories.getFileDirectoryDefaultValue();
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     private static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
     private static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
-    public static final String DEFAULT_VALUE_VIDEO_FOLDER = GazePlayDirectories.getFileDirectoryDefaultValue() + "/videos";
+
 
     @Getter
     @Setter
-    private static boolean mouseFree = false;
-
-    private static Properties loadProperties(String propertiesFilePath) throws IOException {
-        try (InputStream inputStream = new FileInputStream(propertiesFilePath)) {
-            final Properties properties = new Properties();
-            properties.load(inputStream);
-            return properties;
-        }
-    }
-
-    public static Configuration createFromPropertiesResource() {
-        Properties properties = null;
-        try {
-            log.info("loading new properties from ={}", CONFIGPATH);
-            properties = loadProperties(CONFIGPATH);
-            log.info("Properties loaded : {}", properties);
-        } catch (FileNotFoundException e) {
-            log.warn("Config file not found : {}", CONFIGPATH);
-        } catch (IOException e) {
-            log.error("Failure while loading config file {}", CONFIGPATH, e);
-        }
-        final Configuration config = new Configuration();
-        if (properties != null) {
-            config.populateFromProperties(properties);
-        }
-        return config;
-    }
-
-    /*
-     * public static final Configuration getInstance() { return Configuration.createFromPropertiesResource(); }
-     */
-
-    @Getter
-    @Setter
-    private static Configuration instance = Configuration.createFromPropertiesResource();
+    private boolean mouseFree = false;
 
     @Getter
     private final SimpleSetProperty<String> favoriteGamesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_FAVORITE_GAMES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
@@ -157,7 +120,7 @@ public class Configuration implements Cloneable {
 
     @Getter
     protected final StringProperty filedirProperty = new SimpleStringProperty(this, PROPERTY_NAME_FILEDIR,
-        DEFAULT_VALUE_FILE_DIR);
+        GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath());
 
     @Getter
     protected final IntegerProperty fixationlengthProperty = new SimpleIntegerProperty(this,
@@ -230,7 +193,7 @@ public class Configuration implements Cloneable {
 
     @Getter
     protected final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER,
-        DEFAULT_VALUE_VIDEO_FOLDER);
+        GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
 
     @Getter
     protected final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME,
@@ -239,7 +202,10 @@ public class Configuration implements Cloneable {
     protected final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE,
         DEFAULT_VALUE_USER_PICTURE);
 
-    protected Configuration() {
+    private final File configFile;
+
+    protected Configuration(File configFile) {
+        this.configFile = configFile;
 
         // Listeners
         musicVolumeProperty.addListener((observable) -> {
@@ -265,7 +231,7 @@ public class Configuration implements Cloneable {
         });
     }
 
-    private void populateFromProperties(Properties prop) {
+    void populateFromProperties(Properties prop) {
         String buffer;
 
         buffer = prop.getProperty(PROPERTY_NAME_QUIT_KEY);
@@ -504,7 +470,7 @@ public class Configuration implements Cloneable {
 
     private void saveConfig() throws IOException {
         Properties properties = toProperties();
-        try (FileOutputStream fileOutputStream = new FileOutputStream(new File(CONFIGPATH))) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(configFile)) {
             String fileComment = "Automatically generated by GazePlay";
             properties.store(fileOutputStream, fileComment);
         }
@@ -515,7 +481,7 @@ public class Configuration implements Cloneable {
         try {
             saveConfig();
         } catch (IOException e) {
-            log.error("Exception while writing configuration to file {}", CONFIGPATH, e);
+            log.error("Exception while writing configuration to file {}", configFile, e);
         }
     }
 

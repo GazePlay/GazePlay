@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -59,11 +60,11 @@ public class Moles extends Parent implements GameLifeCycle {
     public void launch() {
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         Rectangle imageFond = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageFond.setFill(new ImagePattern(new Image("data/whackmole/images/molesGround.jpg")));
-        int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
+        int coef = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? 1 : 0;
 
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setBrightness(coef * 0.9);
@@ -90,7 +91,7 @@ public class Moles extends Parent implements GameLifeCycle {
         lab = new Label();
         String s = "Score:" + nbMolesWhacked;
         lab.setText(s);
-        Color col = (Configuration.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+        Color col = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
         lab.setTextFill(col);
         lab.setFont(Font.font(dimension2D.getHeight() / 14));
         lab.setLineSpacing(10);

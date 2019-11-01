@@ -26,23 +26,14 @@ import java.nio.charset.StandardCharsets;
 public class License extends Rectangle {
 
     public License(double X, double Y, double width, double height, GazePlay gazePlay, Scene scene, Group root) {
-
         super(X, Y, width, height);
-
         this.setFill(new ImagePattern(new Image("data/common/images/license.png"), 0, 0, 1, 1, true));
-
         EventHandler<Event> homeEvent = e -> {
-
             if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
                 root.getChildren().add(licence(width, height));
-
-                gazePlay.getHomeMenuScreen();
             }
         };
-
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-
     }
 
     private Text licence(double width, double height) {
@@ -63,12 +54,14 @@ public class License extends Rectangle {
 
     private String loadLicenseContentAsString() {
         URL resource = getClass().getClassLoader().getResource("data/common/licence.txt");
-
+        if (resource == null) {
+            return null;
+        }
         String content;
         try {
             content = IOUtils.toString(resource, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            content = "Failed to load license content";
+            throw new RuntimeException(e);
         }
         return content;
     }

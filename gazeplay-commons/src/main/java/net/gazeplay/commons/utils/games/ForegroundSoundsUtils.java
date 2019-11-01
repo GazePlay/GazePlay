@@ -3,6 +3,7 @@ package net.gazeplay.commons.utils.games;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 
 import java.io.File;
@@ -29,7 +30,7 @@ public class ForegroundSoundsUtils {
             path = url.toString();
         }
         stopSound();
-        final Configuration configuration = Configuration.getInstance();
+        final Configuration configuration = ActiveConfigurationContext.getInstance();
         Media media = new Media(path);
         MediaPlayer soundPlayer = new MediaPlayer(media);
         soundPlayer.setVolume(configuration.getEffectsVolume());

@@ -29,6 +29,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -54,7 +55,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private List<AreaOfInterestProps> allAOIList;
     private ArrayList<CoordinatesTracker> areaOfInterestList;
     private Color[] colors;
-    private Configuration config;
+    private final Configuration config;
     private int intereatorAOI;
     private Polygon currentAreaDisplay;
     private GridPane currentInfoBox;
@@ -316,7 +317,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         this.stats = stats;
         colors = new Color[]{Color.PURPLE, Color.WHITE, Color.PINK, Color.ORANGE, Color.BLUE, Color.RED,
             Color.CHOCOLATE};
-        config = Configuration.getInstance();
+        config = ActiveConfigurationContext.getInstance();
         GridPane grid = new GridPane();
         StackPane stackPane = new StackPane();
         grid.setAlignment(Pos.CENTER);

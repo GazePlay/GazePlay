@@ -3,6 +3,7 @@ package net.gazeplay.games.mediaPlayer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
@@ -14,30 +15,26 @@ import java.util.List;
 @Slf4j
 public class MediaFileReader {
 
-    Configuration c;
+    @Getter
+    private final List<MediaFile> mediaList;
 
-    List<MediaFile> mediaList;
-
-    int index;
+    private int index;
 
     @Getter
     @Setter
-    int playing;
+    private int playing;
 
     public MediaFileReader() {
         mediaList = new ArrayList<>();
         index = -1;
         playing = -1;
         try {
-            c = Configuration.getInstance();
+            File mediaPlayerDirectory = new File(GazePlayDirectories.getUserProfileDirectory(ActiveConfigurationContext.getInstance().getUserName()), "/data/mediaPlayer");
+            mediaPlayerDirectory.mkdirs();
+            File playlistFile = new File(mediaPlayerDirectory, "playerList.csv");
+            playlistFile.createNewFile();
 
-            File f0 = new File(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + c.getUserName()
-                    + GazePlayDirectories.FILESEPARATOR + "/data/mediaPlayer");
-            f0.mkdirs();
-            File f = new File(f0, "playerList.csv");
-            f.createNewFile();
-
-            BufferedReader b = new BufferedReader(new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8));
+            BufferedReader b = new BufferedReader(new InputStreamReader(new FileInputStream(playlistFile), StandardCharsets.UTF_8));
 
             String readLine;
 
@@ -92,15 +89,14 @@ public class MediaFileReader {
 
     public void addMedia(MediaFile mf) {
         try {
-            c = Configuration.getInstance();
+            Configuration config = ActiveConfigurationContext.getInstance();
 
             File f;
 
-            if (c.getUserName() == null || c.getUserName().equals("")) {
-                f = new File(GazePlayDirectories.getGazePlayFolder() + "data/mediaPlayer/playerList.csv");
+            if (config.getUserName() == null || config.getUserName().equals("")) {
+                f = new File(GazePlayDirectories.getGazePlayFolder(), "data/mediaPlayer/playerList.csv");
             } else {
-                f = new File(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + c.getUserName()
-                        + GazePlayDirectories.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
+                f = new File(GazePlayDirectories.getUserProfileDirectory(config.getUserName()), "/data/mediaPlayer/playerList.csv");
             }
 
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f, true), StandardCharsets.UTF_8));

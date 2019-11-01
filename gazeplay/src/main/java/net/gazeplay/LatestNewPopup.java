@@ -17,6 +17,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.I18NLabel;
@@ -44,8 +45,6 @@ class LatestNewPopup {
     private static final String serviceBaseUrl = "https://gazeplayreleases.wordpress.com";
 
     private final Configuration config;
-
-    private final Multilinguism multilinguism = Multilinguism.getSingleton();
 
     private final WebEngine webEngine;
 
@@ -76,7 +75,7 @@ class LatestNewPopup {
     }
 
     static void displayIfNeeded() {
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         if (wasDisplayRecently(config)) {
             // popup was already show recently
@@ -84,7 +83,9 @@ class LatestNewPopup {
             return;
         }
 
-        LatestNewPopup latestNewPopup = new LatestNewPopup(config);
+        Translator translator = new DefaultTranslator(config, Multilinguism.getSingleton());
+
+        LatestNewPopup latestNewPopup = new LatestNewPopup(config, translator);
         latestNewPopup.loadPage();
         latestNewPopup.showAndWait();
     }
@@ -98,10 +99,8 @@ class LatestNewPopup {
         config.saveConfigIgnoringExceptions();
     }
 
-    private LatestNewPopup(Configuration config) {
+    private LatestNewPopup(Configuration config, Translator translator) {
         this.config = config;
-
-        Translator translator = new DefaultTranslator(config, multilinguism);
 
         final Dimension2D preferredDimension = computePreferedDimension();
 

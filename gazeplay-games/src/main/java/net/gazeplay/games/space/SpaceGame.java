@@ -24,6 +24,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -35,7 +36,10 @@ import net.gazeplay.components.ProgressButton;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -124,7 +128,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.spaceGameStats = (SpaceGameStats) stats;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.random = new Random();
-        this.configuration = Configuration.getInstance();
+        this.configuration = ActiveConfigurationContext.getInstance();
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship");
         bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule");
@@ -281,7 +285,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         // }
 
         spaceship = new Rectangle(dimension2D.getWidth() / 2, 6 * dimension2D.getHeight() / 7,
-                dimension2D.getWidth() / 8, dimension2D.getHeight() / 7);
+            dimension2D.getWidth() / 8, dimension2D.getHeight() / 7);
         this.middleLayer.getChildren().add(spaceship);
         // spaceship.setFill(new ImagePattern(new Image("data/space/spaceship/spaceship.gif")));
         spaceship.setFill(new ImagePattern(spaceshipImage.pickRandomImage()));
@@ -328,7 +332,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         /// Lateral movement: Mouse Moved
         double distance = Math.abs(gazeTarget.getX() - (spaceship.getX() + spaceship.getWidth() / 2));
         double direction = distance == 0 ? 1
-                : (gazeTarget.getX() - (spaceship.getX() + spaceship.getWidth() / 2)) / distance;
+            : (gazeTarget.getX() - (spaceship.getX() + spaceship.getWidth() / 2)) / distance;
         if (distance > maxSpeed) {
             velocity = new Point2D(maxSpeed * direction, velocity.getY());
         } else {
@@ -368,7 +372,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         bulletValue += 1;
         if (bulletValue == 20) {
             Rectangle bulletRec = new Rectangle(spaceship.getX() + spaceship.getWidth() / 2,
-                    spaceship.getY() - spaceship.getHeight() / 3, 10, 20);
+                spaceship.getY() - spaceship.getHeight() / 3, 10, 20);
             bulletRec.setFill(new ImagePattern(new Image("data/space/bullet/laserBlue01.png")));
             middleLayer.getChildren().add(bulletRec);
             bulletListRec.add(bulletRec);
@@ -448,7 +452,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         // bibouleBulletValue += 1;
         // if (bibouleBulletValue == 120) {
         Rectangle spaceshipCollider = new Rectangle(spaceship.getX() + spaceship.getWidth() / 3,
-                spaceship.getY() + spaceship.getHeight() * 2 / 3, spaceship.getWidth() / 3, spaceship.getHeight() / 3);
+            spaceship.getY() + spaceship.getHeight() * 2 / 3, spaceship.getWidth() / 3, spaceship.getHeight() / 3);
         backgroundLayer.getChildren().add(spaceshipCollider);
         spaceshipCollider.setFill(Color.TRANSPARENT);
 
@@ -465,8 +469,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                 Timeline timeline = new Timeline();
                 timeline.setCycleCount(1);
                 timeline.getKeyFrames()
-                        .add(new KeyFrame(Duration.seconds(15), new KeyValue(bulletBibouleRec.translateYProperty(),
-                                dimension2D.getHeight(), Interpolator.LINEAR)));
+                    .add(new KeyFrame(Duration.seconds(15), new KeyValue(bulletBibouleRec.translateYProperty(),
+                        dimension2D.getHeight(), Interpolator.LINEAR)));
                 // timeline.setOnFinished(event -> bulletBibouleListRec.remove(bulletBibouleRec));
                 timeline.setOnFinished(event -> {
                     bulletBibouleListRec.remove(bulletBibouleRec);
@@ -478,7 +482,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
             for (Rectangle rb : bulletBibouleListRec) {
                 ObservableBooleanValue collidingBulletBibSpaceship = Bindings
-                        .createBooleanBinding(() -> rb.getBoundsInParent().intersects(spaceshipCollider.getBoundsInParent()), rb.boundsInParentProperty(), spaceshipCollider.boundsInParentProperty());
+                    .createBooleanBinding(() -> rb.getBoundsInParent().intersects(spaceshipCollider.getBoundsInParent()), rb.boundsInParentProperty(), spaceshipCollider.boundsInParentProperty());
 
                 collidingBulletBibSpaceship.addListener((obs, oldValue, newValue) -> {
                     if (newValue) {
@@ -565,7 +569,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     }
 
     private int getsetHighscore(int score) {
-        File f = new File(GazePlayDirectories.getUserStatsFolder(configuration.getUserName()) + "/space-game/highscore.dat");
+        File f = new File(GazePlayDirectories.getUserStatsFolder(configuration.getUserName()), "/space-game/highscore.dat");
         try {
             ArrayList<Integer> highscores = new ArrayList();
             if (!f.createNewFile()) {
@@ -677,7 +681,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bulletValue += 1;
             if (bulletValue == 30) {
                 Rectangle bulletRec = new Rectangle(spaceship.getX() + spaceship.getWidth() / 2,
-                        spaceship.getY() - spaceship.getHeight() / 3, 10, 20);
+                    spaceship.getY() - spaceship.getHeight() / 3, 10, 20);
                 bulletRec.setFill(new ImagePattern(new Image("data/space/bullet/laserBlue01.png")));
 
                 bulletTransition = new TranslateTransition(Duration.seconds(3), bulletRec);
@@ -749,8 +753,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bibouleBulletValue += 1;
             if (bibouleBulletValue == 120) {
                 Rectangle spaceshipCollider = new Rectangle(spaceship.getX() + spaceship.getWidth() / 3,
-                        spaceship.getY() + spaceship.getHeight() * 2 / 3, spaceship.getWidth() / 3,
-                        spaceship.getHeight() / 3);
+                    spaceship.getY() + spaceship.getHeight() * 2 / 3, spaceship.getWidth() / 3,
+                    spaceship.getHeight() / 3);
                 backgroundLayer.getChildren().add(spaceshipCollider);
                 spaceshipCollider.setFill(Color.TRANSPARENT);
 
@@ -767,17 +771,17 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                         Timeline timeline = new Timeline();
                         timeline.setCycleCount(1);
                         timeline.getKeyFrames()
-                                .add(new KeyFrame(Duration.seconds(15),
-                                        new KeyValue(bulletBibouleRec.translateYProperty(), dimension2D.getHeight(),
-                                                Interpolator.LINEAR)));
+                            .add(new KeyFrame(Duration.seconds(15),
+                                new KeyValue(bulletBibouleRec.translateYProperty(), dimension2D.getHeight(),
+                                    Interpolator.LINEAR)));
                         timeline.play();
 
                     }
 
                     for (Rectangle rb : bulletBibouleListRec) {
                         ObservableBooleanValue collidingBulletBibSpaceship = Bindings
-                                .createBooleanBinding(() -> rb.getBoundsInParent()
-                                    .intersects(spaceshipCollider.getBoundsInParent()), rb.boundsInParentProperty(), spaceshipCollider.boundsInParentProperty());
+                            .createBooleanBinding(() -> rb.getBoundsInParent()
+                                .intersects(spaceshipCollider.getBoundsInParent()), rb.boundsInParentProperty(), spaceshipCollider.boundsInParentProperty());
 
                         collidingBulletBibSpaceship.addListener((obs, oldValue, newValue) -> {
                             if (newValue) {
@@ -834,8 +838,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bossBulletValue += 1;
             if (bossBulletValue == 120) {
                 Rectangle spaceshipCollider = new Rectangle(spaceship.getX() + spaceship.getWidth() / 3,
-                        spaceship.getY() + spaceship.getHeight() * 2 / 3, spaceship.getWidth() / 3,
-                        spaceship.getHeight() / 3);
+                    spaceship.getY() + spaceship.getHeight() * 2 / 3, spaceship.getWidth() / 3,
+                    spaceship.getHeight() / 3);
                 backgroundLayer.getChildren().add(spaceshipCollider);
                 spaceshipCollider.setFill(Color.TRANSPARENT);
 
@@ -852,15 +856,15 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                         Timeline timeline = new Timeline();
                         timeline.setCycleCount(1);
                         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(15), new KeyValue(
-                                bulletBossRec.translateYProperty(), dimension2D.getHeight(), Interpolator.LINEAR)));
+                            bulletBossRec.translateYProperty(), dimension2D.getHeight(), Interpolator.LINEAR)));
                         timeline.play();
 
                     }
 
                     for (Rectangle rboss : bulletBossListRec) {
                         ObservableBooleanValue collidingBulletBibSpaceship = Bindings
-                                .createBooleanBinding(() -> rboss.getBoundsInParent()
-                                    .intersects(spaceshipCollider.getBoundsInParent()), rboss.boundsInParentProperty(), spaceshipCollider.boundsInParentProperty());
+                            .createBooleanBinding(() -> rboss.getBoundsInParent()
+                                .intersects(spaceshipCollider.getBoundsInParent()), rboss.boundsInParentProperty(), spaceshipCollider.boundsInParentProperty());
 
                         collidingBulletBibSpaceship.addListener((obs, oldValue, newValue) -> {
                             if (newValue) {
@@ -920,7 +924,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bulletValue += 1;
             if (bulletValue == 30) {
                 Rectangle bulletRec = new Rectangle(spaceship.getX() + spaceship.getWidth() / 2,
-                        spaceship.getY() - spaceship.getHeight() / 3, 10, 20);
+                    spaceship.getY() - spaceship.getHeight() / 3, 10, 20);
                 bulletRec.setFill(new ImagePattern(new Image("data/space/bullet/laserBlue01.png")));
 
                 bulletTransition = new TranslateTransition(Duration.seconds(3), bulletRec);

@@ -18,17 +18,11 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
  */
 public class Lighting extends Parent {
 
-    private int X;
-    private int Y;
-    private EventHandler<Event> enterEvent;
-    private Rectangle pixel;
-    private int lightingLength;
-    private Color lightingColor;
+    private final Rectangle pixel;
+    private final int lightingLength;
+    private final Color lightingColor;
 
-    public Lighting(int x, int y, int pixelWidth, int lightingLength, Color lightingColor) {
-
-        X = x;
-        Y = y;
+    Lighting(int x, int y, int pixelWidth, int lightingLength, Color lightingColor) {
         this.lightingLength = lightingLength * 1000;
         this.lightingColor = lightingColor;
         pixel = new Rectangle(x, y, pixelWidth, pixelWidth);
@@ -36,19 +30,14 @@ public class Lighting extends Parent {
         pixel.setFill(Color.BLACK);
         this.getChildren().add(pixel);
 
-        enterEvent = e -> {
-
+        EventHandler<Event> enterEvent = e -> {
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED
                 || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)) {
-
                 enter();
             }
         };
-
         this.addEventFilter(MouseEvent.ANY, enterEvent);
-
         this.addEventHandler(GazeEvent.ANY, enterEvent);
-
     }
 
     public void enter() {

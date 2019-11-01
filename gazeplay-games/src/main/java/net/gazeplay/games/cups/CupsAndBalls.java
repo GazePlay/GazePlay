@@ -8,7 +8,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.cups.utils.Action;
 import net.gazeplay.games.cups.utils.PositionCup;
@@ -155,7 +155,7 @@ public class CupsAndBalls implements GameLifeCycle {
         }
 
         TranslateTransition movementTransition = new TranslateTransition(
-                Duration.millis(Configuration.getInstance().getSpeedEffects() * exchangeCupDuration), cupToMove);
+                Duration.millis(ActiveConfigurationContext.getInstance().getSpeedEffects() * exchangeCupDuration), cupToMove);
         movementTransition.setByX(newPos.getX() - initPos.getX());
         movementTransition.setByY(newPos.getY() - initPos.getY());
 

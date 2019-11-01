@@ -25,7 +25,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
@@ -94,7 +94,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         setNappage(false);
         this.mode = mode;
         buttons = new ProgressButton[6];
-        this.fixationLength = Configuration.getInstance().getFixationLength();
+        this.fixationLength = ActiveConfigurationContext.getInstance().getFixationLength();
 
         r = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         r.setFill(col[0]);

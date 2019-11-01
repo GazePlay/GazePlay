@@ -15,7 +15,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -81,14 +81,14 @@ class Target extends Parent {
 
         this.stats.notifyNewRoundReady();
 
-        Configuration.getInstance().getSpeedEffectsProperty().addListener((o) -> {
+        ActiveConfigurationContext.getInstance().getSpeedEffectsProperty().addListener((o) -> {
             timeline.stop();
             move();
         });
     }
 
     private void move() {
-        timeline = new Timeline(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects() * 10),
+        timeline = new Timeline(new KeyFrame(Duration.millis(ActiveConfigurationContext.getInstance().getSpeedEffects() * 10),
             new EventHandler<>() {
                 int dx = randomDirection();
                 int dy = randomDirection();
@@ -169,7 +169,7 @@ class Target extends Parent {
                 || ((lapin) && (gameContext.getChildren().size() <= 1))) {
                 long totalTime = (System.currentTimeMillis() - startTime) / 1000;
                 Label l = new Label("Score : " + totalTime + "s");
-                Color color = (Configuration.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+                Color color = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
                 l.setTextFill(color);
                 l.setFont(Font.font(50));
                 l.setLineSpacing(10);

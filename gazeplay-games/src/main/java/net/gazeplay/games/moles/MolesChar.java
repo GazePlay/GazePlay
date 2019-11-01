@@ -15,7 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -177,7 +177,7 @@ public class MolesChar extends Parent {
             int time = r.nextInt(timeMoleStayOut) + 2000;
 
             timeMoleOut.getKeyFrames()
-                .add(new KeyFrame(new Duration(Configuration.getInstance().getSpeedEffects() * time),
+                .add(new KeyFrame(new Duration(ActiveConfigurationContext.getInstance().getSpeedEffects() * time),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
             timeMoleOut.play();
             /* If the Mole is stay out without being touching */

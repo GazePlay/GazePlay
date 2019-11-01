@@ -2,6 +2,7 @@ package net.gazeplay.commons.gaze.devicemanager;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 
@@ -18,7 +19,7 @@ public class GazeDeviceManagerFactory {
     }
 
     public GazeDeviceManager createNewGazeListener() {
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         final String eyetrackerConfigValue = config.getEyeTracker();
         final EyeTracker eyeTracker = EyeTracker.valueOf(eyetrackerConfigValue);

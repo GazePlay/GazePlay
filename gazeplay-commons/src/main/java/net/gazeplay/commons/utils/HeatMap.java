@@ -129,11 +129,11 @@ public class HeatMap {
         }
         LinearGradient heatGradient = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
 
-        double margin = height / 20;
+        double margin = height / 20d;
         double barHeight = height - 2 * margin;
         gc.setFont(new Font(margin));
         gc.setFill(heatGradient);
-        gc.fillRect(0, margin, width / 3, barHeight);
+        gc.fillRect(0, margin, width / 3d, barHeight);
 
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.WHITE);
@@ -142,10 +142,10 @@ public class HeatMap {
 
         for (int i = 0; i < colors.size(); i++) {
             double y = margin + (double) i / (double) (colors.size() - 1) * barHeight;
-            gc.strokeLine(0, y, width / 3, y);
+            gc.strokeLine(0, y, width / 3d, y);
             gc.setTextBaseline(VPos.CENTER);
-            gc.fillText(numberFormat.format(maxValue - (i * subdivisionValue)) + "", width / 3 + 5, y,
-                    2 * width / 3 - 5);
+            gc.fillText(numberFormat.format(maxValue - (i * subdivisionValue)) + "", width / 3d + 5, y,
+                    2 * width / 3d - 5);
         }
 
         SnapshotParameters params = new SnapshotParameters();

@@ -6,6 +6,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import tobii.Tobii;
 
@@ -17,12 +18,9 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
     private Service<Void> calculateService;
 
     private transient boolean stopRequested = false;
-    private Configuration config;
 
     public TobiiGazeDeviceManager() {
         super();
-        config = Configuration.getInstance();
-
     }
 
     public void init() {
@@ -48,8 +46,10 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
 
                             final double positionX = xRatio * screenWidth;
                             final double positionY = yRatio * screenHeight;
+                            
+                            Configuration config = ActiveConfigurationContext.getInstance();
 
-                            if (config.isGazeMouseEnable() && !Configuration.isMouseFree()) {
+                            if (config.isGazeMouseEnable() && !config.isMouseFree()) {
                                 Platform.runLater(() -> {
                                     try {
                                         Robot robot = new Robot();

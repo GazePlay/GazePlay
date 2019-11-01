@@ -503,7 +503,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 refresh();
                 String name = title.getText();
                 if (name == null || name.equals("")) {
-                    name = "media" + musicList.mediaList.size();
+                    name = "media" + musicList.getMediaList().size();
                 }
 
                 MediaFile mf;
@@ -528,7 +528,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 refresh();
                 String name = title.getText();
                 if (name == null || name.equals("")) {
-                    name = "media" + musicList.mediaList.size();
+                    name = "media" + musicList.getMediaList().size();
                 }
                 MediaFile mf;
                 if (tfi.getText().equals(gameContext.getTranslator().translate("ChooseImage"))) {
@@ -600,7 +600,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 ((StackPane) videoRoot.getCenter()).getChildren().set(1, webview);
                 play = true;
 
-                musicList.setPlaying(musicList.mediaList.indexOf(mf));
+                musicList.setPlaying(musicList.getMediaList().indexOf(mf));
 
                 musicTitle.setText(mf.getName());
             };
@@ -631,7 +631,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 player.play();
                 play = true;
 
-                musicList.setPlaying(musicList.mediaList.indexOf(mf));
+                musicList.setPlaying(musicList.getMediaList().indexOf(mf));
                 musicTitle.setText(mf.getName());
             };
 

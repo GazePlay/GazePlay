@@ -143,7 +143,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
             for (GazeInfos gi : c) {
                 final Node node = gi.getNode();
 
-                EventFire(positionX, positionY, gi, node);
+                eventFire(positionX, positionY, gi, node);
                 // log.info("Fire : "+node+" then recursion !");
                 recursiveEventFire(positionX, positionY, node);
 
@@ -162,7 +162,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                 // log.info("child : "+child+" fired !");
                 GazeInfos gi = shapesEventFilter.get(new IdentityKey<>(child));
                 if (gi != null) {
-                    EventFire(positionX, positionY, gi, child);
+                    eventFire(positionX, positionY, gi, child);
                 }
                 recursiveEventFire(positionX, positionY, child);
 
@@ -170,7 +170,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         }
     }
 
-    public void EventFire(double positionX, double positionY, GazeInfos gi, Node node) {
+    public void eventFire(double positionX, double positionY, GazeInfos gi, Node node) {
         // log.info("GazeInfo: " + gi);
         if (!node.isDisable()) {
 

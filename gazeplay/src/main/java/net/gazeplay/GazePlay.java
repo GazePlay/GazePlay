@@ -15,12 +15,13 @@ import javafx.stage.WindowEvent;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageDirectoryLocator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.components.CssUtil;
@@ -35,9 +36,6 @@ import java.io.IOException;
  */
 @Slf4j
 public class GazePlay extends Application {
-
-    @Getter
-    private static GazePlay instance;
 
     @Getter
     @Setter
@@ -59,7 +57,7 @@ public class GazePlay extends Application {
     private Scene primaryScene;
 
     public GazePlay() {
-        instance = this;
+        
     }
 
     @Override
@@ -83,7 +81,7 @@ public class GazePlay extends Application {
 
         primaryStage.setMaximized(false);
 
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
         final Multilinguism multilinguism = Multilinguism.getSingleton();
 
         translator = new DefaultTranslator(config, multilinguism);
@@ -112,7 +110,7 @@ public class GazePlay extends Application {
         primaryStage.show();
 
         this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
-            if (ke.getCode() == KeyCode.SPACE && Configuration.getInstance().isGazeMouseEnable()) {
+            if (ke.getCode() == KeyCode.SPACE && ActiveConfigurationContext.getInstance().isGazeMouseEnable()) {
                 Platform.runLater(() -> {
                     try {
                         Robot robot = new Robot();
@@ -127,8 +125,9 @@ public class GazePlay extends Application {
         });
 
         this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
-            if (ke.getCode() == KeyCode.S && Configuration.getInstance().isGazeMouseEnable()) {
-                Configuration.setMouseFree(!Configuration.isMouseFree());
+            final Configuration activeConfig = ActiveConfigurationContext.getInstance();
+            if (ke.getCode() == KeyCode.S && activeConfig.isGazeMouseEnable()) {
+                activeConfig.setMouseFree(!activeConfig.isMouseFree());
             }
         });
     }
@@ -175,14 +174,11 @@ public class GazePlay extends Application {
 
     public void goToUserPage() {
 
-        Configuration.setCONFIGPATH(GazePlayDirectories.getGazePlayFolder() + "GazePlay.properties");
-        Configuration.setInstance(Configuration.createFromPropertiesResource());
+        ActiveConfigurationContext.setInstance(ConfigurationSource.createFromDefaultProfile());
 
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
 
-        if (getTranslator() instanceof DefaultTranslator) {
-            ((DefaultTranslator) getTranslator()).setConfig(config);
-        }
+        getTranslator().notifyLanguageChanged();
 
         CssUtil.setPreferredStylesheets(config, getPrimaryScene());
 
@@ -226,7 +222,7 @@ public class GazePlay extends Application {
                     "data/common/images/");
             if (iconImageDirectory != null) {
                 try {
-                    String filePath = iconImageDirectory.getCanonicalPath() + GazePlayDirectories.FILESEPARATOR + "gazeplayicon.png";
+                    String filePath = new File(iconImageDirectory, "gazeplayicon.png").getCanonicalPath();
                     log.debug("findApplicationIcon : looking for icon at location = " + filePath);
                     icon = new Image(filePath);
                 } catch (IOException ioe) {

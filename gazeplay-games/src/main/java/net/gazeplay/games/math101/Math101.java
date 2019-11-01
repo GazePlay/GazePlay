@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -110,7 +111,7 @@ public class Math101 implements GameLifeCycle {
 
     @Override
     public void launch() {
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         Random r = new Random();
         final int winnerCardIndex = r.nextInt(cardsCount); // index in the list between 0 and 2
@@ -190,7 +191,7 @@ public class Math101 implements GameLifeCycle {
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
         imageRectangle.setFill(gameType.backgroundColor);
 
-        int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
+        int coef = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? 1 : 0;
         imageRectangle.setOpacity(1 - coef * 0.9);
         gameContext.getChildren().add(imageRectangle);
 

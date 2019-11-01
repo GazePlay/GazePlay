@@ -9,7 +9,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -116,7 +116,7 @@ public class Target extends Portrait {
         log.debug("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
 
         TranslateTransition translation = new TranslateTransition(
-                new Duration(Configuration.getInstance().getSpeedEffects() * length), this);
+                new Duration(ActiveConfigurationContext.getInstance().getSpeedEffects() * length), this);
         translation.setByX(-this.getCenterX() + newPosition.getX());
         translation.setByY(-this.getCenterY() + newPosition.getY());
         translation.setOnFinished(actionEvent -> {
@@ -142,7 +142,7 @@ public class Target extends Portrait {
     }
 
     private void createBackAndForthTranlations(Position pos1, Position pos2, int length) {
-        Duration animationLength = new Duration(Configuration.getInstance().getSpeedEffects() * length);
+        Duration animationLength = new Duration(ActiveConfigurationContext.getInstance().getSpeedEffects() * length);
 
         Timeline translation1 = new Timeline(new KeyFrame(animationLength,
                 new KeyValue(this.centerXProperty(), pos1.getX()), new KeyValue(this.centerYProperty(), pos1.getY())));

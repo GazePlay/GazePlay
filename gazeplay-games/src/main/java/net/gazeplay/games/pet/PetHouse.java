@@ -24,7 +24,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
@@ -37,10 +37,10 @@ import java.util.List;
 @Slf4j
 public class PetHouse extends Parent implements GameLifeCycle {
 
-    public final static int INIT_MODE = 1;
-    public final static int BATH_MODE = 3;
-    public final static int EAT_MODE = 2;
-    public final static int SPORT_MODE = 0;
+    final static int INIT_MODE = 1;
+    private final static int BATH_MODE = 3;
+    final static int EAT_MODE = 2;
+    final static int SPORT_MODE = 0;
 
     @Getter
     private final IGameContext gameContext;
@@ -59,7 +59,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private Integer waterNeeded = 100;
 
     public int[] it = { LIFE_SIZE, LIFE_SIZE, LIFE_SIZE };
-    public Timeline[] timelines = { new Timeline(), new Timeline(), new Timeline() };
+    private Timeline[] timelines = { new Timeline(), new Timeline(), new Timeline() };
     private final Color[] color = { Color.DARKSEAGREEN, Color.ALICEBLUE, Color.DARKSALMON, Color.LAVENDER };
     private final String[] screen = { "park.jpg", "room.jpg", "kitchen.jpg", "shower.jpg" };
     private final String[] cursor = { "glove.png", "hand.png", "emptyspoon.png", "pommeau.png" };
@@ -70,7 +70,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     @Setter
     private Boolean baloonGone = false;
 
-    public Timeline rd;
+    Timeline rd;
 
     @Getter
     @Setter
@@ -90,7 +90,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     private boolean enterZone = false;
 
-    public Rectangle hand;
+    Rectangle hand;
 
     private final int screenWidth;
     private final int screenHeight;
@@ -109,7 +109,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         this.background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         this.background.setFill(Color.BEIGE /* new ImagePattern(new Image("background.jpg")) */);
         gameContext.getChildren().add(this.background);
-        water = new ArrayList();
+        water = new ArrayList<>();
         rd = new Timeline();
 
         double facteur = (2 / 2.5) + (1 - 2 / 2.5) / 3;
@@ -321,7 +321,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             HBox Bar = (HBox) Bars.getChildren().get(i);
 
             timelines[i] = new Timeline();
-            timelines[i].setDelay(Duration.seconds(Configuration.getInstance().getSpeedEffects() * regressionTime[i]));
+            timelines[i].setDelay(Duration.seconds(ActiveConfigurationContext.getInstance().getSpeedEffects() * regressionTime[i]));
             timelines[i].getKeyFrames().add(new KeyFrame(Duration.millis(500),
                     new KeyValue(((Rectangle) Bar.getChildren().get(index)).fillProperty(), Color.WHITE)));
 
@@ -331,7 +331,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 if (index1 >= 0) {
                     timelines[number].getKeyFrames().clear();
                     timelines[number].setDelay(Duration
-                        .seconds(Configuration.getInstance().getSpeedEffects() * regressionTime[number]));
+                        .seconds(ActiveConfigurationContext.getInstance().getSpeedEffects() * regressionTime[number]));
                     timelines[number].getKeyFrames().add(new KeyFrame(Duration.millis(500),
                         new KeyValue(((Rectangle) Bar.getChildren().get(index1)).fillProperty(), Color.WHITE)));
                     timelines[number].play();
@@ -383,7 +383,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 bt.setLayoutX(buttonSize * 0.2);
             }
 
-            bt.assignIndicator(buttonHandler, Configuration.getInstance().getFixationLength());
+            bt.assignIndicator(buttonHandler, ActiveConfigurationContext.getInstance().getFixationLength());
             bt.active();
             this.getChildren().add(bt);
             gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());
@@ -513,7 +513,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
                             pet.setHappy();
                         }
 
-                        synchronized (waterNeeded) {
+                        synchronized (PetHouse.this) {
                             waterNeeded--;
                             if (waterNeeded <= 0) {
                                 refill(0);
@@ -559,19 +559,19 @@ public class PetHouse extends Parent implements GameLifeCycle {
         double xpos0 = zone.getX() + Math.random() * coefx;
         double ypos0 = zone.getY() + Math.random() * coefy;
         rd = new Timeline();
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects() * 1000),
+        rd.getKeyFrames().add(new KeyFrame(Duration.millis(ActiveConfigurationContext.getInstance().getSpeedEffects() * 1000),
                 new KeyValue(pet.layoutXProperty(), xpos0)));
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects() * 1000),
+        rd.getKeyFrames().add(new KeyFrame(Duration.millis(ActiveConfigurationContext.getInstance().getSpeedEffects() * 1000),
                 new KeyValue(pet.layoutYProperty(), ypos0)));
         rd.setOnFinished(e -> {
             rd.getKeyFrames().clear();
             double xpos = zone.getX() + Math.random() * coefx;
             double ypos = zone.getY() + Math.random() * coefy;
             rd.getKeyFrames()
-                .add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects() * 1000),
+                .add(new KeyFrame(Duration.millis(ActiveConfigurationContext.getInstance().getSpeedEffects() * 1000),
                     new KeyValue(pet.layoutXProperty(), xpos)));
             rd.getKeyFrames()
-                .add(new KeyFrame(Duration.millis(Configuration.getInstance().getSpeedEffects() * 1000),
+                .add(new KeyFrame(Duration.millis(ActiveConfigurationContext.getInstance().getSpeedEffects() * 1000),
                     new KeyValue(pet.layoutYProperty(), ypos)));
             rd.play();
         });
