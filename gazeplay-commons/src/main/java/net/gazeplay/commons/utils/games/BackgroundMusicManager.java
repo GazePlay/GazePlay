@@ -394,7 +394,8 @@ public class BackgroundMusicManager {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            tempOutputFile.renameTo(outputFile);
+            boolean renamed = tempOutputFile.renameTo(outputFile);
+            log.debug("renamed = {}", renamed);
             log.info("Finished downloading music file {}", resourceURL);
         } else {
             log.info("Found music file in cache for {}", resourceURL);
