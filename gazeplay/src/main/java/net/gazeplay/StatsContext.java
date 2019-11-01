@@ -34,30 +34,30 @@ import net.gazeplay.stats.ShootGamesStats;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-// @Data
 public class StatsContext extends GraphicalContext<BorderPane> {
 
-    public static final String COLON = "Colon";
-    private static Boolean ALIGN_LEFT = true;
-    private static String currentLanguage;
+    private static final String COLON = "Colon";
+
     private static final double RATIO = 0.35;
 
-    public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats) {
+    public static StatsContext newInstance(
+        @NonNull GazePlay gazePlay, 
+        @NonNull Stats stats
+    ) {
         BorderPane root = new BorderPane();
-
         return new StatsContext(gazePlay, root, stats);
     }
 
-    public static StatsContext newInstance(@NonNull GazePlay gazePlay, @NonNull Stats stats,
-                                           CustomButton continueButton) {
+    public static StatsContext newInstance(
+        @NonNull GazePlay gazePlay,
+        @NonNull Stats stats,
+        CustomButton continueButton
+    ) {
         BorderPane root = new BorderPane();
-
         return new StatsContext(gazePlay, root, stats, continueButton);
     }
 
-    private final Stats stats;
-
-    private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, Text value) {
+    private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, Text value, boolean alignLeft) {
 
         final int COLUMN_INDEX_LABEL_LEFT = 0;
         final int COLUMN_INDEX_INPUT_LEFT = 1;
@@ -71,7 +71,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         value.setId("item");
         // value.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); in CSS
-        if (ALIGN_LEFT) {
+        if (alignLeft) {
             grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
             grid.add(value, COLUMN_INDEX_INPUT_LEFT, currentRowIndex);
 
@@ -92,15 +92,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
     private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
         super(gazePlay, root);
-        this.stats = stats;
 
         final Translator translator = gazePlay.getTranslator();
 
-        currentLanguage = translator.currentLanguage();
+        String currentLanguage = translator.currentLanguage();
 
+        boolean alignLeft = true;
         // Align right for Arabic Language
         if (currentLanguage.equals("ara")) {
-            ALIGN_LEFT = false;
+            alignLeft = false;
         }
 
         Configuration config = ActiveConfigurationContext.getInstance();
@@ -117,7 +117,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "TotalLength", COLON);
             Text value = new Text(StatsDisplay.convert(stats.computeTotalElapsedDuration()));
-            addToGrid(grid, currentFormRow, label, value);
+            addToGrid(grid, currentFormRow, label, value, alignLeft);
         }
 
         {
@@ -134,7 +134,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             value = new Text(String.valueOf(stats.getNbGoals()));
 
             if (!(stats instanceof ExplorationGamesStats)) {
-                addToGrid(grid, currentFormRow, label, value);
+                addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
         {
@@ -142,14 +142,14 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             if (stats instanceof ShootGamesStats) {
                 label = new I18NText(translator, "HitRate", COLON);
                 Text value = new Text(stats.getShotRatio() + "%");
-                addToGrid(grid, currentFormRow, label, value);
+                addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
         {
             I18NText label = new I18NText(translator, "Length", COLON);
             Text value = new Text(StatsDisplay.convert(stats.getRoundsTotalAdditiveDuration()));
             if (!(stats instanceof ExplorationGamesStats)) {
-                addToGrid(grid, currentFormRow, label, value);
+                addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
         {
@@ -164,7 +164,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             Text value = new Text(StatsDisplay.convert(stats.computeRoundsDurationAverageDuration()));
 
             if (!(stats instanceof ExplorationGamesStats)) {
-                addToGrid(grid, currentFormRow, label, value);
+                addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
 
@@ -179,7 +179,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             Text value = new Text(StatsDisplay.convert(stats.computeRoundsDurationMedianDuration()));
             if (!(stats instanceof ExplorationGamesStats)) {
-                addToGrid(grid, currentFormRow, label, value);
+                addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
 
@@ -188,7 +188,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             Text value = new Text(StatsDisplay.convert((long) stats.computeRoundsDurationStandardDeviation()));
             if (!(stats instanceof ExplorationGamesStats)) {
-                addToGrid(grid, currentFormRow, label, value);
+                addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
 
@@ -196,7 +196,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             if (stats instanceof ShootGamesStats && stats.getNbUnCountedShots() != 0) {
                 final I18NText label = new I18NText(translator, "UncountedShot", COLON);
                 final Text value = new Text(String.valueOf(stats.getNbUnCountedShots()));
-                addToGrid(grid, currentFormRow, label, value);
+                addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
 
@@ -286,7 +286,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         topPane.getChildren().add(screenTitleText);
 
         root.setTop(topPane);
-        if (ALIGN_LEFT) {
+        if (alignLeft) {
             root.setLeft(grid);
         } else { // Arabic alignment
             root.setRight(grid);
