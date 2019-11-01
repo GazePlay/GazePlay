@@ -12,7 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.AsyncUiTaskExecutor;
 import net.gazeplay.GameContext;
@@ -58,25 +57,21 @@ public class Bravo extends Rectangle {
 
     private final String soundResource;
 
+    private final boolean enableRewardSound;
+
     private AudioClip soundClip;
 
     private SequentialTransition fullTransition;
 
-    @Setter
-    private boolean enableRewardSound;
-
     public Bravo() {
-
         this(defaultPictureResourceLocation, defaultSoundResourceLocation,
-                ActiveConfigurationContext.getInstance().isEnableRewardSound());
+            ActiveConfigurationContext.getInstance().isEnableRewardSound());
     }
 
     public Bravo(String pictureResourceLocation, String soundResourceLocation, boolean enableRewardSound) {
         super(0, 0, 0, 0);
         this.pictureResourceLocation = pictureResourceLocation;
         // this.soundResourceLocation = soundResourceLocation;
-
-        ClassLoader classLoader = this.getClass().getClassLoader();
 
         soundResource = soundResourceLocation;
 
@@ -89,8 +84,11 @@ public class Bravo extends Rectangle {
         playWinTransition(root, 0, onFinishedEventHandler);
     }
 
-    public void playWinTransition(final Region root, long initialDelay,
-            EventHandler<ActionEvent> onFinishedEventHandler) {
+    public void playWinTransition(
+        final Region root,
+        final long initialDelay,
+        final EventHandler<ActionEvent> onFinishedEventHandler
+    ) {
         resetState(root);
 
         fullTransition.setOnFinished(actionEvent -> {
@@ -175,14 +173,14 @@ public class Bravo extends Rectangle {
 
     private SequentialTransition createFullTransition() {
         PauseTransition delayBetweenSoundStartAndAnimationStartTransition = new PauseTransition(
-                Duration.millis(animationDelayDuration));
+            Duration.millis(animationDelayDuration));
         delayBetweenSoundStartAndAnimationStartTransition
-                .setOnFinished(actionEvent -> log.debug("finished delayBetweenSoundStartAndAnimationStartTransition"));
+            .setOnFinished(actionEvent -> log.debug("finished delayBetweenSoundStartAndAnimationStartTransition"));
 
         PauseTransition delayAfterAnimationEndsBeforeStartingNextRoundTransition = new PauseTransition(
-                Duration.millis(delayBeforeNextRoundDuration));
+            Duration.millis(delayBeforeNextRoundDuration));
         delayAfterAnimationEndsBeforeStartingNextRoundTransition.setOnFinished(
-                actionEvent -> log.debug("finished delayAfterAnimationEndsBeforeStartingNextRoundTransition"));
+            actionEvent -> log.debug("finished delayAfterAnimationEndsBeforeStartingNextRoundTransition"));
 
         FadeTransition fadeInTransition = createFadeInTransition();
 
@@ -237,7 +235,7 @@ public class Bravo extends Rectangle {
         // scale to the actual height of the scene
         // so that the image takes the full height of the scene when it is fully scaled
         double scaleRatio = (1 / pictureInitialHeightToSceneHeightRatio) / (1 / pictureFinalHeightToSceneHeightRatio)
-                - 1d;
+            - 1d;
         scaleTransition.setByX(scaleRatio);
         scaleTransition.setByY(scaleRatio);
 
