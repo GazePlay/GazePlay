@@ -176,8 +176,7 @@ public class GazePlay extends Application {
 
     public void goToUserPage() {
 
-        ConfigurationSource.setConfigPath(GazePlayDirectories.getGazePlayFolder() + "GazePlay.properties");
-        Configuration.setInstance(ConfigurationSource.createFromPropertiesResource());
+        Configuration.setInstance(ConfigurationSource.createFromDefaultProfile());
 
         Configuration config = Configuration.getInstance();
 
