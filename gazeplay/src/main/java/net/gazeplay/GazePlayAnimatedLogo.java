@@ -52,7 +52,8 @@ public class GazePlayAnimatedLogo {
 
     public static GazePlayAnimatedLogo newInstance() {
         final HBox letters = new HBox();
-        String imageType = "fixed-size";
+        //String imageType = "fixed-size";
+        String imageType = "flow-size";
         for (int i = 0; i <= 3; i++) {
             StackPane letter = createLetterView(i, imageType);
             //
