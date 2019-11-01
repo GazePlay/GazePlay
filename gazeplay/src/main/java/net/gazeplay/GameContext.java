@@ -44,15 +44,15 @@ import java.io.IOException;
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
 
     private static final double BUTTON_MIN_HEIGHT = 64;
-    
+
     public static boolean menuOpen = false;
 
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
-    
+
     @Getter
     private Translator translator;
-    
+
     private Slider getSpeedSlider;
 
     public static GameContext newInstance(GazePlay gazePlay) {
@@ -155,14 +155,14 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         root.getChildren().add(root2);
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root,
-                gazePlay.getPrimaryScene());
+            gazePlay.getPrimaryScene());
 
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
         GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
         return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
-                randomPositionGenerator, gazeDeviceManager, root2);
+            randomPositionGenerator, gazeDeviceManager, root2);
     }
 
     private static void buttonTransparentHandler(Button bt) {
@@ -238,8 +238,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         hbox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 
         hbox.setStyle("-fx-background-color: rgba(0, 0, 0, 1);" + " -fx-background-radius: 8px;"
-                + " -fx-border-radius: 8px;" + " -fx-border-width: 5px;" + " -fx-border-color: rgba(60, 63, 65, 0.7);"
-                + " -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+            + " -fx-border-radius: 8px;" + " -fx-border-width: 5px;" + " -fx-border-color: rgba(60, 63, 65, 0.7);"
+            + " -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
         return hbox;
     }
@@ -263,8 +263,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     private final Pane gamingRoot;
 
     private GameContext(GazePlay gazePlay, final Pane root, Pane gamingRoot, Bravo bravo, HBox menuHBox,
-            GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
-            GazeDeviceManager gazeDeviceManager, final Pane configPane) {
+                        GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
+                        GazeDeviceManager gazeDeviceManager, final Pane configPane) {
         super(gazePlay, root);
         this.gamingRoot = gamingRoot;
         this.bravo = bravo;
@@ -309,8 +309,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         };
         // scene.addEventHandler(KeyEvent.KEY_PRESSED, buttonHandler);
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
-            if (key.getCode().toString() == config.getQuitKey()) {
-                log.info("Key Value : {} ; quitkey: {}", key.getCode().toString(), config.getQuitKey());
+            if (key.getCode().getChar().equals(config.getQuitKey())) {
+                log.info("Key Value : {} ; quitkey: {}", key.getCode().getChar(), config.getQuitKey());
                 scene.addEventHandler(KeyEvent.KEY_RELEASED, buttonHandler);
             }
         });
@@ -345,9 +345,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
                 if (sliderSpeedValue < getSpeedSlider.getMax()) {
                     getSpeedSlider.setValue(sliderSpeedValue + 1);
                     config.getSpeedEffectsProperty().bind(getSpeedSlider.valueProperty());
-                }
-
-                else
+                } else
                     log.info("max speed for effects reached !");
                 config.saveConfigIgnoringExceptions();
 
@@ -401,7 +399,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
-            @NonNull GameLifeCycle currentGame) {
+                                                   @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> homeEvent = e -> {
             root.setCursor(Cursor.WAIT); // Change cursor to wait style
@@ -420,7 +418,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     private void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
-            throws IOException {
+        throws IOException {
         currentGame.dispose();
         ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
         stats.stop();
@@ -452,7 +450,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public Stage getPrimaryStage() {
         return getGazePlay().getPrimaryStage();
     }
-    
+
     @Override
     public Scene getPrimaryScene() {
         return getGazePlay().getPrimaryScene();
