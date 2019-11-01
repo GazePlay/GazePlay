@@ -74,9 +74,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     @Getter
     private GazeDeviceManager gazeDeviceManager;
 
-    @Setter
-    private Configuration config;
-
     @Getter
     private final GamePanelDimensionProvider gamePanelDimensionProvider;
 
@@ -91,8 +88,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         Configuration config
     ) {
         super(gazePlay, root);
-
-        this.config = config;
 
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
         cardHeight = gamePanelDimensionProvider.getDimension2D().getHeight() / 4;
@@ -245,11 +240,10 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             mouseClickedEventHandler = event -> {
                 if (!user.getName().equals(getGazePlay().getTranslator().translate("DefaultUser"))) {
                     ActiveConfigurationContext.setInstance(ConfigurationSource.createFromProfile(user.getName()));
-                    config = ActiveConfigurationContext.getInstance();
                 }
-
                 gazePlay.getTranslator().notifyLanguageChanged();
 
+                Configuration config = ActiveConfigurationContext.getInstance();
                 CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
 
                 BackgroundMusicManager.getInstance().stop();
@@ -402,6 +396,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToHeight(true);
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
+        Configuration config = ActiveConfigurationContext.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
         dialog.setScene(scene);
         return dialog;
@@ -564,6 +559,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
+        Configuration config = ActiveConfigurationContext.getInstance();
         CssUtil.setPreferredStylesheets(config, scene);
 
         dialog.setScene(scene);
