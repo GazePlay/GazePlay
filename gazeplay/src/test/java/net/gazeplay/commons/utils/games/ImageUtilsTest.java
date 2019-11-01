@@ -22,7 +22,8 @@ class ImageUtilsTest {
     @BeforeAll
     static void createMockImageFolder() throws IOException {
         File folder = new File(folderName);
-        folder.mkdirs();
+        boolean folderCreated = folder.mkdirs();
+        log.debug("folderCreated = {}", folderCreated);
         for (int i = 0; i < numberOfFiles; i++) {
             File file = new File(folder, i + ".jpg");
             boolean created = file.createNewFile();
@@ -57,10 +58,10 @@ class ImageUtilsTest {
         for (int i = 0; i < numberOfFiles; i++) {
             File file = new File("data/" + folderName + "/" + i + ".jpg");
             boolean deleted = file.delete();
-            log.info("deleted = {}", deleted);
+            log.debug("deleted = {}", deleted);
         }
         boolean deleted = new File("data/" + folderName).delete();
-        log.info("deleted = {}", deleted);
+        log.debug("deleted = {}", deleted);
     }
 
     @Test
