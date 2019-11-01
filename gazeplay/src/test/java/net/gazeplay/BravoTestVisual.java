@@ -10,79 +10,73 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.Bravo;
-import org.junit.Before;
 import org.junit.Test;
-import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static junit.framework.TestCase.assertTrue;
 
 @Slf4j
-public class BravoTestVisual extends FxRobot {
+public class BravoTestVisual {
 
-	private static CountDownLatch finishedAnimation;
+    @Test
+    public void shouldRunBravo() throws InterruptedException, TimeoutException {
+        FxToolkit.registerPrimaryStage();
+        BravoTestApp bravoTestApp = (BravoTestApp) FxToolkit.setupApplication(BravoTestApp.class);
 
-	private static long duration;
+        bravoTestApp.finishedAnimation.await();
 
-	@Before
-	public void before() {
-		finishedAnimation = new CountDownLatch(1);
-	}
+        assertTrue(bravoTestApp.duration.get() < 14000);
+    }
 
-	@Test
-	public void shouldRunBravo() throws InterruptedException, TimeoutException {
-		FxToolkit.registerPrimaryStage();
-		FxToolkit.setupApplication(BravoTestApp.class);
+    public static class BravoTestApp extends Application {
 
-		finishedAnimation.await();
+        private final CountDownLatch finishedAnimation = new CountDownLatch(1);
 
-		assertTrue(duration < 14000);
-	}
+        private final AtomicLong duration = new AtomicLong(0);
 
-	public static class BravoTestApp extends Application {
+        @Override
+        public void start(Stage primaryStage) {
 
-		private Scene scene;
-		private Pane root;
+            Scene scene;
+            Pane root;
 
-		@Override
-		public void start(Stage primaryStage) {
+            primaryStage.setTitle(getClass().getSimpleName());
 
-			primaryStage.setTitle(getClass().getSimpleName());
+            primaryStage.setFullScreen(true);
 
-			primaryStage.setFullScreen(true);
+            root = new BorderPane();
 
-			root = new BorderPane();
+            Screen screen = Screen.getMainScreen();
+            scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
 
-			Screen screen = Screen.getMainScreen();
-			scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
+            primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
 
-			primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
+            primaryStage.setScene(scene);
 
-			primaryStage.setScene(scene);
+            Bravo bravo = new Bravo();
 
-			Bravo bravo = new Bravo();
+            root.getChildren().add(bravo);
 
-			root.getChildren().add(bravo);
+            primaryStage.show();
 
-			primaryStage.show();
+            long startTime = System.currentTimeMillis();
 
-			long startTime = System.currentTimeMillis();
+            bravo.playWinTransition(root, 2000, actionEvent -> {
+                long finishedTime = System.currentTimeMillis();
 
-			bravo.playWinTransition(root, 2000, actionEvent -> {
-				long finishedTime = System.currentTimeMillis();
+                duration.set(finishedTime - startTime);
+                log.info("duration = {}", duration);
 
-				duration = finishedTime - startTime;
-				log.info("duration = {}", duration);
+                primaryStage.close();
+                finishedAnimation.countDown();
 
-				primaryStage.close();
-				finishedAnimation.countDown();
-
-			});
-		}
-	}
+            });
+        }
+    }
 
 
 }
