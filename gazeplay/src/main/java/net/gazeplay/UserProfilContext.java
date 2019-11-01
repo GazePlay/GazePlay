@@ -31,6 +31,7 @@ import net.gazeplay.commons.configuration.ConfigurationSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
+import net.gazeplay.commons.utils.FilesUtility;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
@@ -342,19 +343,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return logoView;
     }
 
-    private void deleteDirectoryRecursivly(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDirectoryRecursivly(f);
-            }
-        }
-        boolean deleted = file.delete();
-        if (deleted) {
-            log.debug("File {} was deleted", file.getAbsolutePath());
-        }
-    }
-
     private Stage createRemoveDialog(Stage primaryStage, FlowPane choicePanel, User user) {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -373,7 +361,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             dialog.close();
             choicePanel.getChildren().remove(user);
             File userDirectory = GazePlayDirectories.getUserProfileDirectory(user.getName());
-            deleteDirectoryRecursivly(userDirectory);
+            FilesUtility.deleteDirectoryRecursivly(userDirectory);
             log.info("Profile: " + user.getName() + " deleted");
         });
 

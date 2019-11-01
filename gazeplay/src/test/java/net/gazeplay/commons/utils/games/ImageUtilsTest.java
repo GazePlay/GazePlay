@@ -1,6 +1,7 @@
 package net.gazeplay.commons.utils.games;
 
 import javafx.scene.image.Image;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 @ExtendWith(ApplicationExtension.class)
+@Slf4j
 class ImageUtilsTest {
 
     private static String folderName = "test_music_folder";
@@ -22,7 +24,9 @@ class ImageUtilsTest {
         File folder = new File(folderName);
         folder.mkdirs();
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folder, i + ".jpg").createNewFile();
+            File file = new File(folder, i + ".jpg");
+            boolean created = file.createNewFile();
+            log.debug("created = {}", created);
         }
     }
 
@@ -30,23 +34,33 @@ class ImageUtilsTest {
     static void removeMockImageFolder() {
         File folder = new File(folderName);
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folder, i + ".jpg").delete();
+            File file = new File(folder, i + ".jpg");
+            boolean deleted = file.delete();
+            log.debug("deleted = {}", deleted);
         }
-        new File(folderName).delete();
+        boolean deleted = folder.delete();
+        log.debug("deleted = {}", deleted);
     }
 
     void createMockDataFolder() throws IOException {
-        new File("data/" + folderName).mkdirs();
+        File directory = new File("data/" + folderName);
+        boolean directoryCreated = directory.mkdirs();
+        log.debug("directoryCreated = {}", directoryCreated);
         for (int i = 0; i < numberOfFiles; i++) {
-            new File("data/" + folderName + "/" + i + ".jpg").createNewFile();
+            File file = new File("data/" + folderName + "/" + i + ".jpg");
+            boolean created = file.createNewFile();
+            log.debug("created = {}", created);
         }
     }
 
     void removeMockDataFolder() {
         for (int i = 0; i < numberOfFiles; i++) {
-            new File("data/" + folderName + "/" + i + ".jpg").delete();
+            File file = new File("data/" + folderName + "/" + i + ".jpg");
+            boolean deleted = file.delete();
+            log.info("deleted = {}", deleted);
         }
-        new File("data/" + folderName).delete();
+        boolean deleted = new File("data/" + folderName).delete();
+        log.info("deleted = {}", deleted);
     }
 
     @Test
@@ -58,7 +72,6 @@ class ImageUtilsTest {
     @Test
     void canCreateAnImageLibraryFromResources() {
         LazyImageLibrary result = (LazyImageLibrary) ImageUtils.createDefaultImageLibrary(null);
-
         assert (result.getImagesCount() > 0);
     }
 
