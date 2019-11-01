@@ -24,7 +24,7 @@ public class GazePlayDirectories {
     }
 
     public static String getFileDirectoryUserValue(String user) {
-        return getProfilesDirectory() + FILESEPARATOR + user + FILESEPARATOR + "files";
+        return getUserProfileDirectory(user) + FILESEPARATOR + "files";
     }
 
     public static File getUserProfileDirectory(String user) {
