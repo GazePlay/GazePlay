@@ -60,8 +60,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static final double PREF_HEIGHT = 25;
 
-    private static Translator translator;
-
     private static boolean currentLanguageAlignementIsLeftAligned = true;
 
     public static ConfigurationContext newInstance(GazePlay gazePlay) {
@@ -73,7 +71,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private ConfigurationContext(GazePlay gazePlay, BorderPane root) {
         super(gazePlay, root);
 
-        translator = gazePlay.getTranslator();
+        Translator translator = gazePlay.getTranslator();
 
         String currentLanguage = translator.currentLanguage();
         LanguageDetails languageDetails = Languages.getLanguage(currentLanguage);
@@ -118,7 +116,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         // Center Pane
 
-        GridPane gridPane = buildConfigGridPane(this, gazePlay);
+        GridPane gridPane = buildConfigGridPane(this, translator);
 
         ScrollPane settingsPanelScroller = new ScrollPane(gridPane);
 
@@ -172,7 +170,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    private GridPane buildConfigGridPane(ConfigurationContext configurationContext, GazePlay gazePlay) {
+    private GridPane buildConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -212,7 +210,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "FileDir", COLON);
 
-            Node input = buildDirectoryChooser(config, configurationContext);
+            Node input = buildDirectoryChooser(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -236,7 +234,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "WhereIsItDirectory", COLON);
 
-            Node input = buildWhereIsItDirectoryChooser(config, configurationContext);
+            Node input = buildWhereIsItDirectoryChooser(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -279,7 +277,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         {
             I18NText label = new I18NText(translator, "HeatMapColors", COLON);
-            HBox input = buildHeatMapColorHBox(config);
+            HBox input = buildHeatMapColorHBox(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -299,14 +297,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         {
             I18NText label = new I18NText(translator, "MusicFolder", COLON);
-            final Node input = buildMusicInput(config, configurationContext);
+            final Node input = buildMusicInput(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
 
         {
             I18NText label = new I18NText(translator, "VideoFolder", COLON);
-            final Node input = buildVideoFolderChooser(config);
+            final Node input = buildVideoFolderChooser(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -526,7 +524,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return buttonLoad;
     }
 
-    private static Node buildDirectoryChooser(Configuration configuration, ConfigurationContext configurationContext) {
+    private static Node buildDirectoryChooser(Configuration configuration, Translator translator) {
 
         final HBox pane = new HBox(5);
 
@@ -569,7 +567,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static Node buildWhereIsItDirectoryChooser(Configuration configuration,
-                                                       ConfigurationContext configurationContext) {
+                                                       Translator translator) {
 
         final HBox pane = new HBox(5);
 
@@ -870,7 +868,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
-    private static Node buildMusicInput(Configuration config, ConfigurationContext configurationContext) {
+    private static Node buildMusicInput(Configuration config, Translator translator) {
 
         changeMusicFolder(config.getMusicFolder(), config);
 
@@ -972,7 +970,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private static HBox buildVideoFolderChooser(Configuration config) {
+    private static HBox buildVideoFolderChooser(Configuration config, Translator translator) {
         HBox hbox = new HBox(5);
 
         Button buttonFolder = new Button(config.getVideoFolder());
@@ -1067,7 +1065,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private HBox buildHeatMapColorHBox(Configuration config) {
+    private HBox buildHeatMapColorHBox(Configuration config, Translator translator) {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
