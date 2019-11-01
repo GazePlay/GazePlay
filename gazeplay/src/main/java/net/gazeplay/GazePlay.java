@@ -38,9 +38,6 @@ import java.io.IOException;
 public class GazePlay extends Application {
 
     @Getter
-    private static GazePlay instance;
-
-    @Getter
     @Setter
     private HomeMenuScreen homeMenuScreen;
 
@@ -60,7 +57,7 @@ public class GazePlay extends Application {
     private Scene primaryScene;
 
     public GazePlay() {
-        instance = this;
+        
     }
 
     @Override

@@ -83,7 +83,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         controlPanel.maxWidthProperty().bind(root.widthProperty());
         controlPanel.toFront();
 
-        double buttonSize = getButtonSize();
+        double buttonSize = getButtonSize(gazePlay);
 
         // Button bt = new Button();
         ImageView buttonImg = new ImageView(new Image("data/common/images/configuration-button-alt4.png"));
@@ -94,7 +94,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         bt.setMinHeight(BUTTON_MIN_HEIGHT);
         bt.setGraphic(buttonImg);
         bt.setStyle("-fx-background-color: transparent;");
-        updateConfigButton(bt, buttonImg);
+        updateConfigButton(bt, buttonImg, gazePlay);
         /*
          * bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; " +
          * "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; " + "-fx-max-height: " +
@@ -104,9 +104,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         final HBox root2 = new HBox(2);
         root2.setAlignment(Pos.CENTER_LEFT);
         // Pane root2 = new Pane();
-        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(root2));
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg));
-        root2.heightProperty().addListener((observable) -> updateConfigPane(root2));
+        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(root2, gazePlay));
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg, gazePlay));
+        root2.heightProperty().addListener((observable) -> updateConfigPane(root2, gazePlay));
 
         EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
             double from = 0;
@@ -197,9 +197,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     }
 
-    private static void updateConfigButton(Button button, ImageView btnImg) {
-
-        final GazePlay gazePlay = GazePlay.getInstance();
+    private static void updateConfigButton(Button button, ImageView btnImg, GazePlay gazePlay) {
         double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
 
         if (buttonSize < BUTTON_MIN_HEIGHT) {
@@ -213,10 +211,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         button.setPrefWidth(buttonSize);
     }
 
-    private static void updateConfigPane(final Pane configPane) {
-
-        final GazePlay gazePlay = GazePlay.getInstance();
-
+    private static void updateConfigPane(final Pane configPane, GazePlay gazePlay) {
         double mainHeight = gazePlay.getPrimaryStage().getHeight();
 
         final double newY = mainHeight - configPane.getHeight() - 30;
@@ -224,8 +219,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         configPane.setTranslateY(newY);
     }
 
-    private static double getButtonSize() {
-        final GazePlay gazePlay = GazePlay.getInstance();
+    private static double getButtonSize(GazePlay gazePlay) {
         double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
         return buttonSize;
     }
@@ -281,7 +275,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         super.setUpOnStage(scene);
 
         log.info("SETTING UP");
-        updateConfigPane(configPane);
+        updateConfigPane(configPane, getGazePlay());
     }
 
     public void resetBordersToFront() {

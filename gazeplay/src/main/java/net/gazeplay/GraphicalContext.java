@@ -84,7 +84,6 @@ public abstract class GraphicalContext<T extends Parent> {
      */
     public static boolean firstMusicSetUp = true;
 
-
     @Getter
     private final GazePlay gazePlay;
 
