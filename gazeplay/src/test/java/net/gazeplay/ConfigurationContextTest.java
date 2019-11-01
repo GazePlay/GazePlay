@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class ConfigurationContextTest {
 
     @Test
@@ -14,41 +17,41 @@ class ConfigurationContextTest {
 
         ConfigurationContext.setupNewMusicFolder(testFolder, songName);
 
-        assert (testFolder.isDirectory());
-        assert (expectedFile.exists());
+        assertTrue(testFolder.isDirectory());
+        assertTrue(expectedFile.exists());
 
-        expectedFile.delete();
-        testFolder.delete();
+        assertTrue(expectedFile.delete());
+        assertTrue(testFolder.delete());
     }
 
     @Test
     void canSetupANewMusicFolderIfTheFolderExists() {
         String songName = "songidea(copycat)_0.mp3";
         File testFolder = new File("music_test");
-        assert (testFolder.mkdir());
+        assertTrue(testFolder.mkdir());
         File expectedFile = new File(testFolder, songName);
 
         ConfigurationContext.setupNewMusicFolder(testFolder, songName);
 
-        assert (testFolder.isDirectory());
-        assert (expectedFile.exists());
+        assertTrue(testFolder.isDirectory());
+        assertTrue(expectedFile.exists());
 
-        expectedFile.delete();
-        testFolder.delete();
+        assertTrue(expectedFile.delete());
+        assertTrue(testFolder.delete());
     }
 
     @Test
     void canSetupANewMusicFolderIfTheSongDoesntExist() {
         String songName = "fakesong.mp3";
         File testFolder = new File("music_test");
-        assert (testFolder.mkdir());
+        assertTrue(testFolder.mkdir());
         File expectedFile = new File(testFolder, songName);
 
         ConfigurationContext.setupNewMusicFolder(testFolder, songName);
 
-        assert (testFolder.isDirectory());
-        assert (!expectedFile.exists());
+        assertTrue(testFolder.isDirectory());
+        assertFalse(expectedFile.exists());
 
-        testFolder.delete();
+        assertTrue(testFolder.delete());
     }
 }
