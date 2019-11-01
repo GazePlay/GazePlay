@@ -1,7 +1,9 @@
 package net.gazeplay;
 
-import javafx.animation.FadeTransition;
+import javafx.animation.*;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -15,74 +17,139 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GazePlayAnimatedLogo {
 
-    public static GazePlayAnimatedLogo newInstance() {
-        BorderPane gamingRoot = new BorderPane();
+    public static final String IMAGES_PATH = "data/common/images/GazePlayLetters/";
 
-        HBox letters = new HBox();
-        for (int i = 0; i < 8; i++) {
-            ImageView backImageView = new ImageView(new Image("data/common/images/GazePlayLetters/" + i + 0 + ".png"));
-            ImageView frontImageView = new ImageView(new Image("data/common/images/GazePlayLetters/" + i + 1 + ".png"));
+    public static class LetterPane extends StackPane {
+
+        @Getter
+        private final ImageView backImageView;
+
+        @Getter
+        private final ImageView frontImageView;
+
+        @Getter
+        private final Transition bumpTransition;
+
+        LetterPane(ImageView backImageView, ImageView frontImageView) {
+            this.backImageView = backImageView;
+            this.frontImageView = frontImageView;
+            bumpTransition = createBumpTransition();
+            this.getChildren().addAll(backImageView, frontImageView);
+        }
+
+        private Transition createBumpTransition() {
+            SequentialTransition bumpTransition = new SequentialTransition();
+            int offset = 20;
+            TranslateTransition up = new TranslateTransition(Duration.millis(200), frontImageView);
+            up.setByY(-offset);
+            TranslateTransition down = new TranslateTransition(Duration.millis(100), frontImageView);
+            down.setByY(offset);
+            bumpTransition.getChildren().addAll(up, down);
+            return bumpTransition;
+        }
+
+    }
+
+    public static GazePlayAnimatedLogo newInstance() {
+        final HBox letters = new HBox();
+        for (int i = 0; i <= 3; i++) {
+            StackPane letter = createLetterView(i);
             //
-            backImageView.setPreserveRatio(true);
-            frontImageView.setPreserveRatio(true);
+            letters.getChildren().add(letter);
+        }
+        letters.getChildren().add(createSpacingView());
+        for (int i = 4; i <= 7; i++) {
+            StackPane letter = createLetterView(i);
             //
-            //backImageView.setFitHeight(primaryStage.getHeight() / 10);
-            //frontImageView.setFitHeight(primaryStage.getHeight() / 10);
-            //
-            StackPane letter = new StackPane();
-            letter.getChildren().addAll(frontImageView, backImageView);
-            //letter.setOpacity(0);
             letters.getChildren().add(letter);
         }
 
-        letters.setAlignment(Pos.CENTER);
-        BorderPane.setAlignment(letters, Pos.CENTER);
-        gamingRoot.setCenter(letters);
+        letters.setSpacing(0);
+        letters.setPadding(new Insets(0, 0, 0, 0));
 
+        BorderPane.setAlignment(letters, Pos.CENTER);
+        letters.setAlignment(Pos.CENTER);
         letters.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+
+        final BorderPane gamingRoot = new BorderPane();
+        gamingRoot.setCenter(letters);
         gamingRoot.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
         return new GazePlayAnimatedLogo(gamingRoot, letters);
     }
 
+    private static StackPane createSpacingView() {
+        ImageView imageView = new ImageView(new Image(IMAGES_PATH + "spacing.png"));
+        //
+        imageView.setPreserveRatio(true);
+        //
+        StackPane letter = new StackPane();
+        letter.getChildren().addAll(imageView);
+        return letter;
+    }
+
+    private static LetterPane createLetterView(int i) {
+        ImageView backImageView = new ImageView(new Image(IMAGES_PATH + i + "1.png"));
+        ImageView frontImageView = new ImageView(new Image(IMAGES_PATH + i + "0.png"));
+        //
+        backImageView.setPreserveRatio(true);
+        frontImageView.setPreserveRatio(true);
+        //
+        //backImageView.setFitHeight(primaryStage.getHeight() / 10);
+        //frontImageView.setFitHeight(primaryStage.getHeight() / 10);
+        //
+        return new LetterPane(backImageView, frontImageView);
+    }
+
     @Getter
     private final Pane root;
-    
+
     private final HBox letters;
 
-    public void runAnimation() {
-        FadeTransition[][] transitionLetters;
-        transitionLetters = new FadeTransition[letters.getChildren().size()][2];
-
-        for (int i = 0; i < letters.getChildren().size(); i++) {
-            StackPane letter = (StackPane) letters.getChildren().get(i);
-            transitionLetters[i][0] = new FadeTransition(Duration.millis(500), letter);
-            transitionLetters[i][0].setToValue(1);
-            int index = i;
-            transitionLetters[i][0].setOnFinished(event -> {
-                if (index == letters.getChildren().size() - 1) {
-                    transitionLetters[0][1].play();
-                } else {
-                    transitionLetters[(index + 1) % letters.getChildren().size()][0].play();
-                }
-            });
+    public void runAnimationSequentialFading() {
+        SequentialTransition fadeOutOneByOne = new SequentialTransition();
+        for (Node letter : letters.getChildren()) {
+            FadeTransition transition = new FadeTransition(Duration.millis(200), letter);
+            transition.setToValue(0);
+            fadeOutOneByOne.getChildren().add(transition);
+        }
+        SequentialTransition fadeInOneByOne = new SequentialTransition();
+        for (Node letter : letters.getChildren()) {
+            ParallelTransition transition = new ParallelTransition();
+            fadeInOneByOne.getChildren().add(transition);
+            //
+            FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), letter);
+            fadeTransition.setToValue(1);
+            transition.getChildren().add(fadeTransition);
+            if (letter instanceof LetterPane) {
+                LetterPane letterPane = (LetterPane) letter;
+                transition.getChildren().add(letterPane.getBumpTransition());
+            }
         }
 
-        for (int i = 0; i < letters.getChildren().size(); i++) {
-            StackPane letter = (StackPane) letters.getChildren().get(i);
-            transitionLetters[i][1] = new FadeTransition(Duration.millis(500), letter);
-            transitionLetters[i][1].setToValue(0);
-            int index = i;
-            transitionLetters[i][1].setOnFinished(event -> {
-                if (index == letters.getChildren().size() - 1) {
-                    transitionLetters[0][0].play();
-                } else {
-                    transitionLetters[(index + 1) % letters.getChildren().size()][1].play();
-                }
-            });
+        ParallelTransition showAllTransition = new ParallelTransition();
+        for (Node letter : letters.getChildren()) {
+            FadeTransition transition = new FadeTransition(Duration.millis(500), letter);
+            transition.setToValue(1);
+            showAllTransition.getChildren().add(transition);
+        }
+        ParallelTransition hideAllTransition = new ParallelTransition();
+        for (Node letter : letters.getChildren()) {
+            FadeTransition transition = new FadeTransition(Duration.millis(500), letter);
+            transition.setToValue(0);
+            hideAllTransition.getChildren().add(transition);
         }
 
-        transitionLetters[0][0].play();
+        SequentialTransition sequentialTransition = new SequentialTransition();
+        sequentialTransition.getChildren().add(hideAllTransition);
+        sequentialTransition.getChildren().add(fadeInOneByOne);
+        sequentialTransition.getChildren().add(fadeOutOneByOne);
+        sequentialTransition.getChildren().add(showAllTransition);
+
+        //sequentialTransition.setAutoReverse(true);
+        sequentialTransition.setOnFinished(event -> sequentialTransition.play());
+        sequentialTransition.play();
     }
+
 
 }

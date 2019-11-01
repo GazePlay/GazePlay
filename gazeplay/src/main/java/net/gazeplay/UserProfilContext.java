@@ -95,7 +95,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         cardWidth = gamePanelDimensionProvider.getDimension2D().getWidth() / 8;
 
-        Node logo = LogoFactory.getInstance().createLogo(root);
+        Node logo = LogoFactory.getInstance().createLogoAnimated(root);
         StackPane topLogoPane = new StackPane();
         topLogoPane.getChildren().add(logo);
 

@@ -31,7 +31,7 @@ public class LogoFactory {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            gazePlayAnimatedLogo.runAnimation();
+            gazePlayAnimatedLogo.runAnimationSequentialFading();
         });
         t.start();
         return gazePlayAnimatedLogo.getRoot();

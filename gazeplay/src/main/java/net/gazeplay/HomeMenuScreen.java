@@ -103,7 +103,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         MenuBar menuBar = LicenseUtils.buildLicenceMenuBar();
 
-        Node logo = LogoFactory.getInstance().createLogo(root);
+        Node logo = LogoFactory.getInstance().createLogoStatic(root);
 
         StackPane topLogoPane = new StackPane();
         topLogoPane.getChildren().add(logo);
