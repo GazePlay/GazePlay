@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
@@ -175,8 +176,8 @@ public class GazePlay extends Application {
 
     public void goToUserPage() {
 
-        Configuration.setCONFIGPATH(GazePlayDirectories.getGazePlayFolder() + "GazePlay.properties");
-        Configuration.setInstance(Configuration.createFromPropertiesResource());
+        ConfigurationSource.setConfigPath(GazePlayDirectories.getGazePlayFolder() + "GazePlay.properties");
+        Configuration.setInstance(ConfigurationSource.createFromPropertiesResource());
 
         Configuration config = Configuration.getInstance();
 
