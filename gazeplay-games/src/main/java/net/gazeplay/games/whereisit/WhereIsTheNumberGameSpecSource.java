@@ -10,6 +10,6 @@ public class WhereIsTheNumberGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("WhereIsTheNumber").gameThumbnail("data/Thumbnails/Where-is-the-Number.png").category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsTheNumberGameVariantGenerator(), new WhereIsTheNumberGameLauncher());
+            new WhereIsItGameVariantGenerator(), new WhereIsTheNumberGameLauncher());
     }
 }

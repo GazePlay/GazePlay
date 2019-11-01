@@ -10,6 +10,6 @@ public class FindOddGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("findodd").gameThumbnail("data/Thumbnails/findtheodd.jpg").category(GameCategories.Category.MEMORIZATION).build(),
-            new FindOddGameVariantGenerator(), new FindOddGameLauncher());
+            new WhereIsItGameVariantGenerator(), new FindOddGameLauncher());
     }
 }

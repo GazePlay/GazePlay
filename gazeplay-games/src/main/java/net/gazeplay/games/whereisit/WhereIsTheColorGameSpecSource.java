@@ -10,6 +10,6 @@ public class WhereIsTheColorGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("WhereIsTheColor").gameThumbnail("data/Thumbnails/whereiscolor.png").category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsTheColorGameVariantGenerator(), new WhereIsTheColorGameLauncher());
+            new WhereIsItGameVariantGenerator(), new WhereIsTheColorGameLauncher());
     }
 }
