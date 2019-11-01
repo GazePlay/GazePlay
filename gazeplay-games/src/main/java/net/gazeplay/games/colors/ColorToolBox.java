@@ -417,8 +417,6 @@ public class ColorToolBox extends StackPane {
             stopColorize = new Button("S");
         }
 
-        Configuration config = this.getColorsGame().getConfig();
-
         AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(root);
 
         Pane colorizeButtonPane = new StackPane(colorize);

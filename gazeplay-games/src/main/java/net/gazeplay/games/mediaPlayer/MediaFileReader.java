@@ -15,24 +15,25 @@ import java.util.List;
 @Slf4j
 public class MediaFileReader {
 
-    Configuration c;
+    private Configuration config;
 
-    List<MediaFile> mediaList;
+    @Getter
+    private final List<MediaFile> mediaList;
 
-    int index;
+    private int index;
 
     @Getter
     @Setter
-    int playing;
+    private int playing;
 
     public MediaFileReader() {
         mediaList = new ArrayList<>();
         index = -1;
         playing = -1;
         try {
-            c = ActiveConfigurationContext.getInstance();
+            config = ActiveConfigurationContext.getInstance();
 
-            File f0 = new File(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + c.getUserName()
+            File f0 = new File(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + config.getUserName()
                     + GazePlayDirectories.FILESEPARATOR + "/data/mediaPlayer");
             f0.mkdirs();
             File f = new File(f0, "playerList.csv");
@@ -93,14 +94,14 @@ public class MediaFileReader {
 
     public void addMedia(MediaFile mf) {
         try {
-            c = ActiveConfigurationContext.getInstance();
+            config = ActiveConfigurationContext.getInstance();
 
             File f;
 
-            if (c.getUserName() == null || c.getUserName().equals("")) {
+            if (config.getUserName() == null || config.getUserName().equals("")) {
                 f = new File(GazePlayDirectories.getGazePlayFolder() + "data/mediaPlayer/playerList.csv");
             } else {
-                f = new File(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + c.getUserName()
+                f = new File(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + config.getUserName()
                         + GazePlayDirectories.FILESEPARATOR + "/data/mediaPlayer/playerList.csv");
             }
 

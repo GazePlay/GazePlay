@@ -22,16 +22,10 @@ import java.util.Objects;
 
 @Slf4j
 public class SoundsOfLife implements GameLifeCycle {
-    private final IGameContext gameContext;
-    private final Stats stats;
-    private final Dimension2D dimensions;
-    private final Configuration config;
 
     public SoundsOfLife(IGameContext gameContext, Stats stats, int gameVariant) {
-        this.gameContext = gameContext;
-        this.stats = stats;
-        this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.config = ActiveConfigurationContext.getInstance();
+        Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        Configuration config = ActiveConfigurationContext.getInstance();
 
         String path = "data/soundsoflife/";
         switch (gameVariant) {
