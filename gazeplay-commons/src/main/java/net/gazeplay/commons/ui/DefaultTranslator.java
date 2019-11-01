@@ -1,6 +1,5 @@
 package net.gazeplay.commons.ui;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -14,7 +13,6 @@ public class DefaultTranslator implements Translator {
 
     private final Multilinguism multilinguism;
 
-    @Setter
     private Configuration config;
 
     private final List<LanguageChangeListener> languageChangeListeners = new CopyOnWriteArrayList<>();

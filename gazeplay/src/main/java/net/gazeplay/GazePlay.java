@@ -181,9 +181,7 @@ public class GazePlay extends Application {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if (getTranslator() instanceof DefaultTranslator) {
-            ((DefaultTranslator) getTranslator()).setConfig(config);
-        }
+        getTranslator().notifyLanguageChanged();
 
         CssUtil.setPreferredStylesheets(config, getPrimaryScene());
 
