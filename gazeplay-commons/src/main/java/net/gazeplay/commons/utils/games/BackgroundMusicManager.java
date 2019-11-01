@@ -52,8 +52,6 @@ public class BackgroundMusicManager {
             new LinkedBlockingQueue<>(), new CustomThreadFactory(this.getClass().getSimpleName(),
                     new GroupingThreadFactory(this.getClass().getSimpleName())));
 
-    private final Configuration config;
-
     @Getter
     private final BooleanProperty isPlayingPoperty = new SimpleBooleanProperty(this, "isPlaying", false);
     @Getter
@@ -67,8 +65,6 @@ public class BackgroundMusicManager {
     private final ReadOnlyBooleanWrapper isMusicChanging = new ReadOnlyBooleanWrapper(this, "musicChanged", false);
 
     public BackgroundMusicManager() {
-        config = ActiveConfigurationContext.getInstance();
-
         isPlayingPoperty.addListener((observable) -> {
 
             if (currentMusic != null) {
@@ -266,7 +262,7 @@ public class BackgroundMusicManager {
         if (value > 1) {
             throw new IllegalArgumentException("volume must be between 0 and 1");
         }
-        config.getMusicVolumeProperty().setValue(value);
+        ActiveConfigurationContext.getInstance().getMusicVolumeProperty().setValue(value);
     }
 
     public void playRemoteSound(String resourceUrlAsString) {
@@ -411,7 +407,7 @@ public class BackgroundMusicManager {
             final Media media = new Media(source);
             final MediaPlayer player = new MediaPlayer(media);
             player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
-            player.volumeProperty().bind(config.getMusicVolumeProperty());
+            player.volumeProperty().bind(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
             player.setOnEndOfMedia(this::next);
 
             return player;

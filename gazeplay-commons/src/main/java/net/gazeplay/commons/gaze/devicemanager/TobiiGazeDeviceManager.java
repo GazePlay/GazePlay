@@ -18,12 +18,9 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
     private Service<Void> calculateService;
 
     private transient boolean stopRequested = false;
-    private Configuration config;
 
     public TobiiGazeDeviceManager() {
         super();
-        config = ActiveConfigurationContext.getInstance();
-
     }
 
     public void init() {
@@ -49,6 +46,8 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
 
                             final double positionX = xRatio * screenWidth;
                             final double positionY = yRatio * screenHeight;
+                            
+                            Configuration config = ActiveConfigurationContext.getInstance();
 
                             if (config.isGazeMouseEnable() && !config.isMouseFree()) {
                                 Platform.runLater(() -> {

@@ -60,7 +60,6 @@ public class Stats implements GazeMotionListener {
     protected int nbGoals = 0;
     long startTime;
     int sceneCounter = 0;
-    private Configuration config;
     private EventHandler<MouseEvent> recordMouseMovements;
     private EventHandler<GazeEvent> recordGazeMovements;
     private LifeCycle lifeCycle = new LifeCycle();
@@ -212,7 +211,7 @@ public class Stats implements GazeMotionListener {
     }
 
     public void start() {
-        config = ActiveConfigurationContext.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {
             startVideoRecording();
         }
@@ -289,6 +288,7 @@ public class Stats implements GazeMotionListener {
     }
 
     public void stop() {
+        Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {
             endVideoRecording();
         }
@@ -319,6 +319,7 @@ public class Stats implements GazeMotionListener {
     }
 
     public SavedStatsInfo saveStats() throws IOException {
+        Configuration config = ActiveConfigurationContext.getInstance();
 
         File todayDirectory = getGameStatsOfTheDayDirectory();
         final String heatmapFilePrefix = Utils.now() + "-heatmap";

@@ -55,7 +55,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private List<AreaOfInterestProps> allAOIList;
     private ArrayList<CoordinatesTracker> areaOfInterestList;
     private Color[] colors;
-    private Configuration config;
+    private final Configuration config;
     private int intereatorAOI;
     private Polygon currentAreaDisplay;
     private GridPane currentInfoBox;
