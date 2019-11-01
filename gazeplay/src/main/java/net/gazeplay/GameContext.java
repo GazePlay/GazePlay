@@ -27,6 +27,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
@@ -73,7 +74,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         gamingRoot.minWidthProperty().bind(primaryStage.widthProperty());
         gamingRoot.minHeightProperty().bind(primaryStage.heightProperty());
 
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
         Color color = (config.isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
         gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
 
@@ -289,7 +290,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
         final Scene scene = gazePlay.getPrimaryScene();
 
         // gamingRoot.getChildren().add(scene);
@@ -316,7 +317,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void speedAdjust(@NonNull GazePlay gp) {
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
         final Scene scene = gp.getPrimaryScene();
 
         Node outerNode = menuHBox.getChildren().get(2); // get SpeedEffectsPane

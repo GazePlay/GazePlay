@@ -6,6 +6,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import tobii.Tobii;
 
@@ -21,7 +22,7 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
 
     public TobiiGazeDeviceManager() {
         super();
-        config = Configuration.getInstance();
+        config = ActiveConfigurationContext.getInstance();
 
     }
 

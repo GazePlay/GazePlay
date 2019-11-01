@@ -17,6 +17,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.I18NLabel;
@@ -76,7 +77,7 @@ class LatestNewPopup {
     }
 
     static void displayIfNeeded() {
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         if (wasDisplayRecently(config)) {
             // popup was already show recently

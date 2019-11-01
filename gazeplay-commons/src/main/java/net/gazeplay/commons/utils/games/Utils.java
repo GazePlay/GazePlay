@@ -1,6 +1,7 @@
 package net.gazeplay.commons.utils.games;
 
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 
@@ -28,7 +29,7 @@ public class Utils {
 
     private static String getFilesFolder() {
 
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
         String filesFolder = config.getFileDir();
 
         log.info("filesFolder : " + filesFolder);

@@ -15,6 +15,7 @@ import javafx.stage.WindowEvent;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
@@ -84,7 +85,7 @@ public class GazePlay extends Application {
 
         primaryStage.setMaximized(false);
 
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
         final Multilinguism multilinguism = Multilinguism.getSingleton();
 
         translator = new DefaultTranslator(config, multilinguism);
@@ -113,7 +114,7 @@ public class GazePlay extends Application {
         primaryStage.show();
 
         this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
-            if (ke.getCode() == KeyCode.SPACE && Configuration.getInstance().isGazeMouseEnable()) {
+            if (ke.getCode() == KeyCode.SPACE && ActiveConfigurationContext.getInstance().isGazeMouseEnable()) {
                 Platform.runLater(() -> {
                     try {
                         Robot robot = new Robot();
@@ -128,7 +129,7 @@ public class GazePlay extends Application {
         });
 
         this.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
-            if (ke.getCode() == KeyCode.S && Configuration.getInstance().isGazeMouseEnable()) {
+            if (ke.getCode() == KeyCode.S && ActiveConfigurationContext.getInstance().isGazeMouseEnable()) {
                 Configuration.setMouseFree(!Configuration.isMouseFree());
             }
         });
@@ -176,9 +177,9 @@ public class GazePlay extends Application {
 
     public void goToUserPage() {
 
-        Configuration.setInstance(ConfigurationSource.createFromDefaultProfile());
+        ActiveConfigurationContext.setInstance(ConfigurationSource.createFromDefaultProfile());
 
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
 
         if (getTranslator() instanceof DefaultTranslator) {
             ((DefaultTranslator) getTranslator()).setConfig(config);

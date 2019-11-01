@@ -8,6 +8,7 @@ import javafx.scene.media.MediaPlayer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.threads.CustomThreadFactory;
 import net.gazeplay.commons.threads.GroupingThreadFactory;
@@ -66,7 +67,7 @@ public class BackgroundMusicManager {
     private final ReadOnlyBooleanWrapper isMusicChanging = new ReadOnlyBooleanWrapper(this, "musicChanged", false);
 
     public BackgroundMusicManager() {
-        config = Configuration.getInstance();
+        config = ActiveConfigurationContext.getInstance();
 
         isPlayingPoperty.addListener((observable) -> {
 

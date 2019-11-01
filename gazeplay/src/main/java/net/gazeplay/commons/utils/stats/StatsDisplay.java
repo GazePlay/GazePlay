@@ -308,7 +308,7 @@ public class StatsDisplay {
 
     private static void zoomInAndCenter(Node node, double initialWidth, double initialHeight, boolean preserveRatio) {
 
-        // if(Configuration.getInstance().isFixationSequenceDisabled()) {
+        // if(ActiveConfigurationContext.getInstance().isFixationSequenceDisabled()) {
         Parent parent = node.getParent();
 
         node.toFront();

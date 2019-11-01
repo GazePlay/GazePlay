@@ -19,9 +19,13 @@ import javafx.scene.text.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.*;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
@@ -88,7 +92,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.stats = (BibouleJumpStats) stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.randomGenerator = new Random();
-        this.config = Configuration.getInstance();
+        this.config = ActiveConfigurationContext.getInstance();
         this.version = version;
 
         bibouleImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/biboules");

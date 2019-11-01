@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -30,7 +31,7 @@ public class SoundsOfLife implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.config = Configuration.getInstance();
+        this.config = ActiveConfigurationContext.getInstance();
 
         String path = "data/soundsoflife/";
         switch (gameVariant) {

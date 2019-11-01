@@ -24,6 +24,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -35,7 +36,10 @@ import net.gazeplay.components.ProgressButton;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -124,7 +128,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.spaceGameStats = (SpaceGameStats) stats;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.random = new Random();
-        this.configuration = Configuration.getInstance();
+        this.configuration = ActiveConfigurationContext.getInstance();
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship");
         bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule");

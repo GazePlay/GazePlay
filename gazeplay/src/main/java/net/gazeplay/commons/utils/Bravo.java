@@ -16,7 +16,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.AsyncUiTaskExecutor;
 import net.gazeplay.GameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 
 /**
@@ -68,7 +68,7 @@ public class Bravo extends Rectangle {
     public Bravo() {
 
         this(defaultPictureResourceLocation, defaultSoundResourceLocation,
-                Configuration.getInstance().isEnableRewardSound());
+                ActiveConfigurationContext.getInstance().isEnableRewardSound());
     }
 
     public Bravo(String pictureResourceLocation, String soundResourceLocation, boolean enableRewardSound) {

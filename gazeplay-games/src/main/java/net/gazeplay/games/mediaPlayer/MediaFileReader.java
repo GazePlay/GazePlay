@@ -3,6 +3,7 @@ package net.gazeplay.games.mediaPlayer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
@@ -29,7 +30,7 @@ public class MediaFileReader {
         index = -1;
         playing = -1;
         try {
-            c = Configuration.getInstance();
+            c = ActiveConfigurationContext.getInstance();
 
             File f0 = new File(GazePlayDirectories.getGazePlayFolder() + "profiles" + GazePlayDirectories.FILESEPARATOR + c.getUserName()
                     + GazePlayDirectories.FILESEPARATOR + "/data/mediaPlayer");
@@ -92,7 +93,7 @@ public class MediaFileReader {
 
     public void addMedia(MediaFile mf) {
         try {
-            c = Configuration.getInstance();
+            c = ActiveConfigurationContext.getInstance();
 
             File f;
 

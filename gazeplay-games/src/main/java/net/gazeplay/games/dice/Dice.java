@@ -15,6 +15,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.DiceRoller;
@@ -44,7 +45,7 @@ public class Dice implements GameLifeCycle {
 
         rolls = new int[nbDice];
 
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
 
         // Roll button is used to roll all the dice at once
         rollButton = new ProgressButton();

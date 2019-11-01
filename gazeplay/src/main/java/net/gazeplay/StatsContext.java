@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
@@ -102,7 +103,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             ALIGN_LEFT = false;
         }
 
-        Configuration config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
 
         Multilinguism multilinguism = Multilinguism.getSingleton();
 

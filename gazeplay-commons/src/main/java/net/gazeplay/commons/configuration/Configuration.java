@@ -93,10 +93,6 @@ public class Configuration implements Cloneable {
     private static boolean mouseFree = false;
 
     @Getter
-    @Setter
-    private static Configuration instance = ConfigurationSource.createFromDefaultProfile();
-
-    @Getter
     private final SimpleSetProperty<String> favoriteGamesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_FAVORITE_GAMES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
 
     @Getter

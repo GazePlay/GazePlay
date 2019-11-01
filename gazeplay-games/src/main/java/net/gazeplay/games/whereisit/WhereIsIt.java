@@ -25,6 +25,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
@@ -104,7 +105,7 @@ public class WhereIsIt implements GameLifeCycle {
         final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         currentRoundDetails = pickAndBuildRandomPictures(config, numberOfImagesToDisplayPerRound, random,
                 winnerImageIndexAmongDisplayedImages);
@@ -125,7 +126,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         questionText.setTranslateY(0);
 
-        String color = (Configuration.getInstance().isBackgroundWhite()) ? "titleB" : "titleW";
+        String color = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? "titleB" : "titleW";
         questionText.setId(color);
 
         final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -176,8 +177,8 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         TranslateTransition fullAnimation = new TranslateTransition(
-                Duration.millis(Configuration.getInstance().getQuestionLength() / 2), questionText);
-        fullAnimation.setDelay(Duration.millis(Configuration.getInstance().getQuestionLength()));
+                Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength() / 2), questionText);
+        fullAnimation.setDelay(Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength()));
         double bottomCenter = (0.9 * gamePaneDimension2D.getHeight()) - questionText.getY()
                 + questionText.getBoundsInParent().getHeight() * 3;
         fullAnimation.setToY(bottomCenter);
@@ -564,7 +565,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         if (this.gameType == CUSTOMIZED) {
 
-            final Configuration config = Configuration.getInstance();
+            final Configuration config = ActiveConfigurationContext.getInstance();
 
             try {
 
@@ -628,7 +629,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         if (this.gameType == CUSTOMIZED) {
 
-            final Configuration config = Configuration.getInstance();
+            final Configuration config = ActiveConfigurationContext.getInstance();
 
             File F = new File(config.getWhereIsItDir() + "questions.csv");
 
@@ -654,7 +655,7 @@ public class WhereIsIt implements GameLifeCycle {
             return null;
         }
 
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         File F = new File(config.getWhereIsItDir() + "questions.csv");
 
@@ -720,7 +721,7 @@ public class WhereIsIt implements GameLifeCycle {
 
             log.info("imagePath = {}", imagePath);
 
-            final Configuration config = Configuration.getInstance();
+            final Configuration config = ActiveConfigurationContext.getInstance();
 
             this.minTime = config.getFixationLength();
             this.initialPositionX = posX;

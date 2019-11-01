@@ -25,6 +25,7 @@ import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
@@ -173,7 +174,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private GridPane buildConfigGridPane(ConfigurationContext configurationContext, GazePlay gazePlay) {
 
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -886,7 +887,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         buttonLoad.textProperty().bind(config.getMusicFolderProperty());
 
         buttonLoad.setOnAction((ActionEvent arg0) -> {
-            final Configuration configuration = Configuration.getInstance();
+            final Configuration configuration = ActiveConfigurationContext.getInstance();
 
             DirectoryChooser directoryChooser = new DirectoryChooser();
 

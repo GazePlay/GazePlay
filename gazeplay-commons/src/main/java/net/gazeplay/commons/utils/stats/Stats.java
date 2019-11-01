@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -211,7 +212,7 @@ public class Stats implements GazeMotionListener {
     }
 
     public void start() {
-        config = Configuration.getInstance();
+        config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {
             startVideoRecording();
         }
@@ -463,7 +464,7 @@ public class Stats implements GazeMotionListener {
     }
 
     protected File getGameStatsOfTheDayDirectory() {
-        File statsDirectory = new File(GazePlayDirectories.getUserStatsFolder(Configuration.getInstance().getUserName()));
+        File statsDirectory = new File(GazePlayDirectories.getUserStatsFolder(ActiveConfigurationContext.getInstance().getUserName()));
         File gameDirectory = new File(statsDirectory, gameName);
         File todayDirectory = new File(gameDirectory, Utils.today());
         boolean outputDirectoryCreated = todayDirectory.mkdirs();

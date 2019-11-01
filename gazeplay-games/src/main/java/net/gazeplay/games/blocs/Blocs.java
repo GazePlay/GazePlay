@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
@@ -114,7 +114,7 @@ public class Blocs implements GameLifeCycle {
                 if (colors) {
                     bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
                 } else {
-                    Color c = (Configuration.getInstance().isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
+                    Color c = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
                     bloc.setFill(c);
                 }
                 gameContext.getChildren().add(bloc);

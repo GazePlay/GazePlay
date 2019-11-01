@@ -13,6 +13,7 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -48,7 +49,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
 
         this.setVisible(false);
 
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
         this.duration = config.getFixationLength();
         this.animation = new Timeline();
         this.nodedToListenTo = new HashMap<>();

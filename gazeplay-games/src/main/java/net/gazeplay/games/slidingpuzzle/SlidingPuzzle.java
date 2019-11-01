@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -94,7 +95,7 @@ public class SlidingPuzzle implements GameLifeCycle {
 
     @Override
     public void launch() {
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
         SlidingPuzzle.Coord c1 = new SlidingPuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 1),
                 (int) computePositionY(boxHeight, cardHeight, 1));
         coordList.add(c1);

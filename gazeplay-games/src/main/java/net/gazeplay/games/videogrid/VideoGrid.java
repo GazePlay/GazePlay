@@ -20,6 +20,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -56,7 +57,7 @@ public class VideoGrid implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.config = Configuration.getInstance();
+        this.config = ActiveConfigurationContext.getInstance();
         this.random = new Random();
         this.translate = Multilinguism.getSingleton();
 

@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NTitledPane;
@@ -271,7 +272,7 @@ public abstract class GraphicalContext<T extends Parent> {
         if (GraphicalContext.firstMusicSetUp) {
 
             if (backgroundMusicManager.getPlaylist().isEmpty()) {
-                final Configuration configuration = Configuration.getInstance();
+                final Configuration configuration = ActiveConfigurationContext.getInstance();
                 backgroundMusicManager.getAudioFromFolder(configuration.getMusicFolder());
             }
 
@@ -364,7 +365,7 @@ public abstract class GraphicalContext<T extends Parent> {
 
     public Slider createMediaVolumeSlider(@NonNull GazePlay gazePlay) {
 
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
@@ -379,7 +380,7 @@ public abstract class GraphicalContext<T extends Parent> {
 
     private Slider createEffectsVolumeSlider(@NonNull GazePlay gazePlay) {
 
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(1);
@@ -394,7 +395,7 @@ public abstract class GraphicalContext<T extends Parent> {
 
     private Slider createSpeedEffectSlider(@NonNull GazePlay gazePlay) {
 
-        final Configuration config = Configuration.getInstance();
+        final Configuration config = ActiveConfigurationContext.getInstance();
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(8);

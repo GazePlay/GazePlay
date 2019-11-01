@@ -15,7 +15,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.LinkedList;
@@ -80,7 +80,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         background.heightProperty().bind(gameContext.getRoot().heightProperty());
         background.setFill(new ImagePattern(new Image(image_PATH + "background-potions.jpg")));
 
-        int coef = (Configuration.getInstance().isBackgroundWhite()) ? 1 : 0;
+        int coef = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? 1 : 0;
         background.setOpacity(1 - coef * 0.9);
 
         gameContext.getChildren().add(background);
@@ -111,15 +111,15 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         Image blue = new Image(image_PATH + "potionBlue.png");
         potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (red.getWidth() + red.getWidth()) * 1.5,
                 gameDimension2D.getHeight() - red.getHeight() - 10, red.getWidth(), red.getHeight(), red, Color.RED,
-                gameContext, stats, this, Configuration.getInstance().getFixationLength());
+                gameContext, stats, this, ActiveConfigurationContext.getInstance().getFixationLength());
 
         potionYellow = new Potion(gameDimension2D.getWidth() * 6 / 7 - yellow.getWidth() * 1.5,
                 gameDimension2D.getHeight() - yellow.getHeight() - 10, yellow.getWidth(), yellow.getHeight(), yellow,
-                Color.YELLOW, gameContext, stats, this, Configuration.getInstance().getFixationLength());
+                Color.YELLOW, gameContext, stats, this, ActiveConfigurationContext.getInstance().getFixationLength());
 
         potionBlue = new Potion(gameDimension2D.getWidth() * 6 / 7, gameDimension2D.getHeight() - blue.getHeight() - 10,
                 blue.getWidth(), blue.getHeight(), blue, Color.BLUE, gameContext, stats, this,
-                Configuration.getInstance().getFixationLength());
+                ActiveConfigurationContext.getInstance().getFixationLength());
 
         LinkedList<Potion> potionsOnTable = new LinkedList<>();
         potionsOnTable.add(potionBlue);
