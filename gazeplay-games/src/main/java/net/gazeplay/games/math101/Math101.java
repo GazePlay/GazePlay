@@ -27,55 +27,48 @@ import java.util.Random;
 
 @Slf4j
 public class Math101 implements GameLifeCycle {
-    
+
     private static final float cardRatio = 0.8f;
-    
+
     private static final float zoom_factor = 1.16f;
 
     private static final int minHeight = 30;
-    
+
     private final Math101GameType gameType;
-    
+
     private final IGameContext gameContext;
-    
+
     private final int maxValue;
-    
+
     private final Stats stats;
 
     private final int nbLines;
-    
-    private final int nbColumns;
-    
-    private RoundDetails currentRoundDetails;
 
-    private javafx.geometry.Dimension2D gameDimension2D;
+    private final int nbColumns;
+
+    private final javafx.geometry.Dimension2D gameDimension2D;
+
+    private RoundDetails currentRoundDetails;
 
     public Math101(final Math101GameType gameType, IGameContext gameContext, int maxValue, Stats stats) {
         super();
+        this.gameType = gameType;
         this.gameContext = gameContext;
+        this.maxValue = this.gameType.variations[maxValue];
+        this.stats = stats;
         this.nbLines = 2;
         this.nbColumns = 3;
-        this.stats = stats;
-        this.gameType = gameType;
-
-        this.maxValue = this.gameType.variations[maxValue];
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
     }
-    
-    @Override
-    public void launch() {
-        final Configuration config = ActiveConfigurationContext.getInstance();
 
-        Random r = new Random();
-        // Setup the question parameters
-        int cardsCount = 3;
-        final int winnerCardIndex = r.nextInt(cardsCount); // index in the list between 0 and 2
+    private static Formula generateRandomFormula(Math101GameType gameType, int maxValue) {
+        final Random r = new Random();
 
         // choose numbers
         int number1 = r.nextInt(maxValue + 1);
         int number2 = r.nextInt(maxValue + 1);
 
-        final String operatorStr = this.gameType.chooseOperator();
+        final String operatorStr = gameType.chooseOperator();
 
         final int correctAnswer;
         switch (operatorStr) {
@@ -121,8 +114,27 @@ public class Math101 implements GameLifeCycle {
                 break;
         }
 
+        return Formula.builder()
+            .number1(number1)
+            .number2(number2)
+            .operator(operatorStr)
+            .correctAnswer(correctAnswer)
+            .build();
+    }
+
+    @Override
+    public void launch() {
+        final Configuration config = ActiveConfigurationContext.getInstance();
+
+        final Random r = new Random();
+        // Setup the question parameters
+        final int cardsCount = 3;
+        final int winnerCardIndex = r.nextInt(cardsCount); // index in the list between 0 and 2
+
+        final Formula formula = generateRandomFormula(gameType, maxValue);
+
         // Create Question
-        Text question = createQuestion(number1, number2, operatorStr);
+        final Text question = new Text(formula.createFormulaString());
         question.setX(100);
         question.setY(200);
         question.setFont(new Font("Grinched", 36));
@@ -167,7 +179,7 @@ public class Math101 implements GameLifeCycle {
         boardRectangle.setFill(new ImagePattern(new Image("data/math101/images/blackboard.png"), 0, 0, 1, 1, true));
 
         // Creating the cards
-        List<Card> cardList = createCards(winnerCardIndex, correctAnswer, config, operatorStr);
+        List<Card> cardList = createCards(winnerCardIndex, formula.getCorrectAnswer(), config, formula.getOperator());
         currentRoundDetails = new RoundDetails(cardList, winnerCardIndex);
 
         gameContext.getChildren().addAll(cardList);
@@ -191,7 +203,7 @@ public class Math101 implements GameLifeCycle {
         }
     }
 
-    public void removeAllIncorrectCards() {
+    void removeAllIncorrectCards() {
         if (this.currentRoundDetails == null) {
             return;
         }
@@ -266,10 +278,6 @@ public class Math101 implements GameLifeCycle {
         }
 
         return result;
-    }
-
-    private Text createQuestion(int number1, int number2, String operator) {
-        return new Text(number1 + " " + operator + " " + number2 + " = ? ");
     }
 
     private static double computeCardBoxHeight(Dimension2D gameDimension2D, int nbLines) {
