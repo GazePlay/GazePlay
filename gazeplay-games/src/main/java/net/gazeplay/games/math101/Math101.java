@@ -10,9 +10,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -31,42 +28,6 @@ import java.util.Random;
 @Slf4j
 public class Math101 implements GameLifeCycle {
 
-    @Data
-    @AllArgsConstructor
-    public static class RoundDetails {
-        private final List<Card> cardList;
-        private final int winnerImageIndexAmongDisplayedImages;
-    }
-
-    private static Color pastelRed = Color.rgb(255, 227, 227);
-    private static Color light_pastelRed = Color.rgb(255, 245, 245);
-    private static Color pastelGreen = Color.rgb(227, 255, 227);
-    private static Color pastelBlue = Color.rgb(227, 227, 255);
-
-    public enum Math101GameType {
-        ADDITION("math-101-addition", pastelBlue, "+", new int[]{8, 12, 20}), SUBTRACTIONPOS(
-            "math-101-subtraction-pos", pastelBlue, "-", new int[]{8, 12, 20}), MULTIPLICATION(
-            "math-101-multiplication", pastelGreen, "*", new int[]{3, 5, 7, 9, 11, 12}), DIVISION(
-            "math-101-division", pastelGreen, "/", new int[]{10, 15, 20, 30}), ADDSUB(
-            "math-101-addition-subtraction", light_pastelRed, "+,-",
-            new int[]{8, 12, 20}), MULTDIV("math-101-multiplication-division", pastelRed,
-            "*,/", new int[]{5, 10, 15, 20, 30}), MATHALL("math-101-all",
-            pastelRed, "+,-,/,*", new int[]{5, 10, 15, 20});
-
-        @Getter
-        private final String gameName;
-        private final Color backgroundColor;
-        private final String[] operators;
-        private final int[] variations;
-
-        Math101GameType(String gameName, Color coulour, String operators, int[] variations) {
-            this.gameName = gameName;
-            this.backgroundColor = coulour;
-            this.operators = operators.split(",");
-            this.variations = variations;
-        }
-
-    }
 
     private final Math101GameType gameType;
 
@@ -89,7 +50,7 @@ public class Math101 implements GameLifeCycle {
 
     private final Stats stats;
 
-    private Math101.RoundDetails currentRoundDetails;
+    private RoundDetails currentRoundDetails;
 
     private javafx.geometry.Dimension2D gameDimension2D;
 
@@ -221,7 +182,7 @@ public class Math101 implements GameLifeCycle {
 
         // Creating the cards
         List<Card> cardList = createCards(winnerCardIndex, correctAnswer, config, operatorStr);
-        currentRoundDetails = new Math101.RoundDetails(cardList, winnerCardIndex);
+        currentRoundDetails = new RoundDetails(cardList, winnerCardIndex);
 
         gameContext.getChildren().addAll(cardList);
 

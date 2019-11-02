@@ -15,7 +15,7 @@ public class Math201GameLauncher implements GameSpec.GameLauncher<Stats, GameSpe
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
                                        Stats stats) {
-        return new Math101(Math101.Math101GameType.MATHALL, gameContext, gameVariant.getNumber(),
+        return new Math101(Math101GameType.MATHALL, gameContext, gameVariant.getNumber(),
             stats);
     }
 }
