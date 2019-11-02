@@ -68,19 +68,19 @@ public class Math101 implements GameLifeCycle {
         int number1 = r.nextInt(maxValue + 1);
         int number2 = r.nextInt(maxValue + 1);
 
-        final String operatorStr = gameType.chooseOperator();
+        final MathOperation operator = gameType.chooseOperator();
 
         final int correctAnswer;
-        switch (operatorStr) {
-            case "+":
+        switch (operator) {
+            case PLUS:
                 // operator is +
                 correctAnswer = number1 + number2;
                 break;
-            case "*":
+            case MULTIPLY:
                 // operator is *
                 correctAnswer = number1 * number2;
                 break;
-            case "-":
+            case MINUS:
                 // operator is -
                 if (number2 > number1) {
                     // To make sure we only have positive answers
@@ -90,7 +90,7 @@ public class Math101 implements GameLifeCycle {
                 }
                 correctAnswer = number1 - number2;
                 break;
-            default:
+            case DIVID:
                 // operator is /
                 while ((number2 == 0 && number1 == 0) || (number1 % number2 != 0)) {
                     // both cannot be 0
@@ -112,12 +112,14 @@ public class Math101 implements GameLifeCycle {
                 }
                 correctAnswer = number1 / number2;
                 break;
+            default:
+                throw new UnsupportedOperationException("not implemented " + operator);
         }
 
         return Formula.builder()
             .number1(number1)
             .number2(number2)
-            .operator(operatorStr)
+            .operator(operator)
             .correctAnswer(correctAnswer)
             .build();
     }
@@ -226,7 +228,7 @@ public class Math101 implements GameLifeCycle {
         gameContext.getChildren().removeAll(cardsToHide);
     }
 
-    private List<Card> createCards(int winnerCardIndex, int correctAnswer, Configuration config, String operator) {
+    private List<Card> createCards(int winnerCardIndex, int correctAnswer, Configuration config, MathOperation operator) {
 
         final double boxHeight = computeCardBoxHeight(gameDimension2D, nbLines);
         final double boxWidth = computeCardBoxWidth(gameDimension2D, nbColumns);
@@ -259,7 +261,7 @@ public class Math101 implements GameLifeCycle {
                     int tempCurrent = correctAnswer;
 
                     while (tempCurrent == correctAnswer || resultInt.contains(tempCurrent)) {
-                        if ((operator.equals("*") || operator.equals("/")) && (correctAnswer > maxValue)) {
+                        if ((operator.equals(MathOperation.MULTIPLY) || operator.equals(MathOperation.DIVID)) && (correctAnswer > maxValue)) {
                             tempCurrent = r.nextInt(2 * correctAnswer);
                         } else {
                             tempCurrent = r.nextInt(2 * maxValue);

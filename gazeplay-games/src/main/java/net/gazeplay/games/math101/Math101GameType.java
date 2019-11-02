@@ -7,19 +7,19 @@ import java.util.Random;
 
 public enum Math101GameType {
 
-    ADDITION("math-101-addition", Colors.pastelBlue, "+"),
+    ADDITION("math-101-addition", Colors.pastelBlue, MathOperation.PLUS),
 
-    SUBTRACTIONPOS("math-101-subtraction-pos", Colors.pastelBlue, "-"),
+    SUBTRACTIONPOS("math-101-subtraction-pos", Colors.pastelBlue, MathOperation.MINUS),
 
-    MULTIPLICATION("math-101-multiplication", Colors.pastelGreen, "*"),
+    MULTIPLICATION("math-101-multiplication", Colors.pastelGreen, MathOperation.MULTIPLY),
 
-    DIVISION("math-101-division", Colors.pastelGreen, "/"),
+    DIVISION("math-101-division", Colors.pastelGreen, MathOperation.DIVID),
 
-    ADDSUB("math-101-addition-subtraction", Colors.light_pastelRed, "+,-"),
+    ADDSUB("math-101-addition-subtraction", Colors.light_pastelRed, MathOperation.PLUS, MathOperation.MINUS),
 
-    MULTDIV("math-101-multiplication-division", Colors.pastelRed, "*,/"),
+    MULTDIV("math-101-multiplication-division", Colors.pastelRed, MathOperation.MULTIPLY, MathOperation.DIVID),
 
-    MATHALL("math-101-all", Colors.pastelRed, "+,-,/,*");
+    MATHALL("math-101-all", Colors.pastelRed, MathOperation.values());
 
     @Getter
     private final String gameName;
@@ -27,27 +27,23 @@ public enum Math101GameType {
     @Getter
     private final Color backgroundColor;
 
-    @Getter
-    private final String[] operators;
+    private final MathOperation[] operators;
 
-    Math101GameType(String gameName, Color coulour, String operators) {
+    private final Random random = new Random();
+
+    Math101GameType(String gameName, Color coulour, MathOperation... operators) {
         this.gameName = gameName;
         this.backgroundColor = coulour;
-        this.operators = operators.split(",");
+        this.operators = operators;
     }
 
-    public String chooseOperator() {
-        final String operatorStr;
-        // choose operator
+    public MathOperation chooseOperator() {
         if (operators.length == 1) {
-            // operator is operators[0]
-            operatorStr = operators[0];
+            return operators[0];
         } else {
-            Random r = new Random();
-            int operatorRand = r.nextInt(operators.length);
-            operatorStr = operators[operatorRand];
+            int operatorRand = random.nextInt(operators.length);
+            return operators[operatorRand];
         }
-        return operatorStr;
     }
 
     public static class Colors {
