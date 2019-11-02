@@ -3,6 +3,8 @@ package net.gazeplay.games.math101;
 import javafx.scene.paint.Color;
 import lombok.Getter;
 
+import java.util.Random;
+
 public enum Math101GameType {
 
     ADDITION("math-101-addition", Colors.pastelBlue, "+", new int[]{8, 12, 20}),
@@ -33,6 +35,20 @@ public enum Math101GameType {
         this.backgroundColor = coulour;
         this.operators = operators.split(",");
         this.variations = variations;
+    }
+
+    public String chooseOperator() {
+        final String operatorStr;
+        // choose operator
+        if (operators.length == 1) {
+            // operator is operators[0]
+            operatorStr = operators[0];
+        } else {
+            Random r = new Random();
+            int operatorRand = r.nextInt(operators.length);
+            operatorStr = operators[operatorRand];
+        }
+        return operatorStr;
     }
 
     public static class Colors {

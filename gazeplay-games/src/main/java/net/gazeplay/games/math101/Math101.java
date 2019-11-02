@@ -45,9 +45,7 @@ public class Math101 implements GameLifeCycle {
     private final int nbLines;
     
     private final int nbColumns;
-
-    private final String[] operators;
-
+    
     private RoundDetails currentRoundDetails;
 
     private javafx.geometry.Dimension2D gameDimension2D;
@@ -60,12 +58,10 @@ public class Math101 implements GameLifeCycle {
         this.stats = stats;
         this.gameType = gameType;
 
-        this.operators = this.gameType.operators;
-
         this.maxValue = this.gameType.variations[maxValue];
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
     }
-
+    
     @Override
     public void launch() {
         final Configuration config = ActiveConfigurationContext.getInstance();
@@ -79,15 +75,7 @@ public class Math101 implements GameLifeCycle {
         int number1 = r.nextInt(maxValue + 1);
         int number2 = r.nextInt(maxValue + 1);
 
-        final String operatorStr;
-        // choose operator
-        if (operators.length == 1) {
-            // operator is operators[0]
-            operatorStr = operators[0];
-        } else {
-            int operatorRand = r.nextInt(operators.length);
-            operatorStr = operators[operatorRand];
-        }
+        final String operatorStr = this.gameType.chooseOperator();
 
         final int correctAnswer;
         switch (operatorStr) {
