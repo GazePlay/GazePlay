@@ -36,14 +36,14 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     private Cheese cheese;
     private Mouse mouse;
 
-    private final int gameVariantId;
+    private final LabyrinthGameVariant variant;
 
-    public Labyrinth(IGameContext gameContext, Stats stats, int gameVariantId) {
+    public Labyrinth(IGameContext gameContext, Stats stats, LabyrinthGameVariant variant) {
         super();
 
         this.gameContext = gameContext;
         this.stats = stats;
-        this.gameVariantId = gameVariantId;
+        this.variant = variant;
         Configuration config = ActiveConfigurationContext.getInstance();
         fixationlength = config.getFixationLength();
 
@@ -87,14 +87,14 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     private Mouse createMouse() {
         // Creation of the mouse
-        switch (gameVariantId) {
-            case 0:
+        switch (variant) {
+            case LOOK_DESTINATION:
                 return new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-            case 2:
+            case LOOK_LOCAL_ARROWS:
                 return new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-            case 3:
+            case LOOK_GLOBAL_ARROWS:
                 return new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-            case 4:
+            case SELECT_THEN_LOOK_DESTINATION:
                 return new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
             default:
                 throw new IllegalArgumentException("Unsupported variant ID");

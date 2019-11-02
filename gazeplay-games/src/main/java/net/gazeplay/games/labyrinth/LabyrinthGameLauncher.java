@@ -6,16 +6,15 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-public class LabyrinthGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant> {
+public class LabyrinthGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.EnumGameVariant<LabyrinthGameVariant>> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new LabyrinthStats(scene);
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
-                                       Stats stats) {
-        return new Labyrinth(gameContext, stats, gameVariant.getNumber());
+    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.EnumGameVariant<LabyrinthGameVariant> gameVariant, Stats stats) {
+        return new Labyrinth(gameContext, stats, gameVariant.getEnumValue());
     }
 
 }
