@@ -4,10 +4,12 @@ import javafx.scene.Scene;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
+import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 public class GameSpec {
 
@@ -24,7 +26,7 @@ public class GameSpec {
      */
     public interface GameVariant {
 
-        String getLabel();
+        String getLabel(Translator translator);
 
     }
 
@@ -36,7 +38,7 @@ public class GameSpec {
         private final int height;
 
         @Override
-        public String getLabel() {
+        public String getLabel(Translator translator) {
             return width + "x" + height;
         }
     }
@@ -48,8 +50,8 @@ public class GameSpec {
         private final String label;
 
         @Override
-        public String getLabel() {
-            return label;
+        public String getLabel(Translator translator) {
+            return number + " " + translator.translate(label);
         }
     }
 
@@ -61,31 +63,23 @@ public class GameSpec {
         private final String value;
 
         @Override
-        public String getLabel() {
-            return label;
+        public String getLabel(Translator translator) {
+            return translator.translate(label) + " " + value;
         }
     }
 
     @Data
-    public static class CupsGameVariant implements GameVariant {
-        @Getter
-        private final int noCups;
+    public static class EnumGameVariant<K extends Enum<K>> implements GameVariant {
+
+        private final K enumValue;
+
+        private final Function<K, String> extractLabelCodeFunction;
 
         @Override
-        public String getLabel() {
-            return "cups";
+        public String getLabel(Translator translator) {
+            return translator.translate(extractLabelCodeFunction.apply(enumValue));
         }
-    }
 
-    @Data
-    public static class TargetsGameVariant implements GameVariant {
-
-        private final int noTargets;
-
-        @Override
-        public String getLabel() {
-            return "targets";
-        }
     }
 
     public interface GameVariantGenerator {
@@ -99,6 +93,66 @@ public class GameSpec {
         public Set<GameVariant> getVariants() {
             return new LinkedHashSet<>();
         }
+    }
+
+    @Data
+    public static class EnumGameVariantGenerator<K extends Enum<K>> implements GameVariantGenerator {
+
+        private final K[] enumValues;
+
+        private final Function<K, String> extractLabelCodeFunction;
+
+        @Override
+        public Set<GameVariant> getVariants() {
+            LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
+            for (K value : enumValues) {
+                result.add(new EnumGameVariant<>(value, extractLabelCodeFunction));
+            }
+            return result;
+        }
+    }
+
+    @Data
+    public static class IntRangeVariantGenerator implements GameVariantGenerator {
+
+        private final int min;
+
+        private final int max;
+
+        private final String label;
+
+        @Override
+        public Set<GameVariant> getVariants() {
+            LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
+            for (int i = min; i <= max; i++) {
+                result.add(new IntGameVariant(i, label));
+            }
+            return result;
+        }
+
+    }
+
+    @Data
+    public static class IntListVariantGenerator implements GameVariantGenerator {
+
+        private final String label;
+
+        private final int[] values;
+        
+        public IntListVariantGenerator(String label, int... values) {
+            this.label = label;
+            this.values = values;
+        }
+
+        @Override
+        public Set<GameVariant> getVariants() {
+            LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
+            for (int i : values) {
+                result.add(new IntGameVariant(i, label));
+            }
+            return result;
+        }
+
     }
 
     @Getter

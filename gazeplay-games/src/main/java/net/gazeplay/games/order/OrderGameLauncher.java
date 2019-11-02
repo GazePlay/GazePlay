@@ -6,15 +6,15 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-public class OrderGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.TargetsGameVariant> {
+public class OrderGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new OrderStats(scene);
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.TargetsGameVariant gameVariant,
+    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
                                        Stats stats) {
-        return new Order(gameContext, gameVariant.getNoTargets(), stats);
+        return new Order(gameContext, gameVariant.getNumber(), stats);
     }
 }

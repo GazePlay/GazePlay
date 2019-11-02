@@ -50,7 +50,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private final Dimension2D dimensions;
     private final Random randomGenerator;
     private final Configuration config;
-    private final int version;
+    private final BibouleJumpVariant variant;
 
     private final ImageLibrary bibouleImages;
     private final ImageLibrary cloudImages;
@@ -87,13 +87,13 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     private final Multilinguism translate;
 
-    public BibouleJump(IGameContext gameContext, Stats stats, int version) {
+    public BibouleJump(IGameContext gameContext, Stats stats, BibouleJumpVariant variant) {
         this.gameContext = gameContext;
         this.stats = (BibouleJumpStats) stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.randomGenerator = new Random();
         this.config = ActiveConfigurationContext.getInstance();
-        this.version = version;
+        this.variant = variant;
 
         bibouleImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/biboules");
         cloudImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/clouds");
@@ -343,7 +343,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                     + platformWidth / 2;
                 newPlatY = bottom - randomGenerator.nextInt((int) (dimensions.getHeight() / 4));
             } while (Math.abs(newPlatX - highestPlatform.getX()) >= dimensions.getWidth() / 3);
-            if (version == 0 && randomGenerator.nextInt(4) == 0) {
+            
+            if (variant.equals(BibouleJumpVariant.MOVING) && randomGenerator.nextInt(4) == 0) {
                 createPlatform(newPlatX, newPlatY, true);
             } else {
                 createPlatform(newPlatX, newPlatY, false);
