@@ -6,16 +6,16 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-public class NinjaGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant> {
+public class NinjaGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.EnumGameVariant<NinjaGameVariant>> {
+
     @Override
     public Stats createNewStats(Scene scene) {
         return new NinjaStats(scene);
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       GameSpec.IntGameVariant gameVariant, Stats stats) {
-        return new Ninja(gameContext, stats, gameVariant.getNumber());
+    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.EnumGameVariant<NinjaGameVariant> gameVariant, Stats stats) {
+        return new Ninja(gameContext, stats, gameVariant.getEnumValue());
     }
 
 }
