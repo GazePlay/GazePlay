@@ -1,5 +1,6 @@
 package net.gazeplay;
 
+import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,7 +32,10 @@ public class LogoFactory {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            gazePlayAnimatedLogo.runAnimationSequentialFading();
+            SequentialTransition animation = gazePlayAnimatedLogo.createAnimation();
+            animation.setCycleCount(-1);
+            //animation.setCycleCount(3);
+            animation.play();
         });
         t.start();
         return gazePlayAnimatedLogo.getRoot();

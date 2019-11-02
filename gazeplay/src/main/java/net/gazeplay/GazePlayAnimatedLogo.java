@@ -1,7 +1,6 @@
 package net.gazeplay;
 
 import javafx.animation.*;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -17,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GazePlayAnimatedLogo {
 
-    public static final String IMAGES_PATH = "data/common/images/GazePlayLetters/";
+    private static final String IMAGES_PATH = "data/common/images/GazePlayLetters/";
 
     public static class LetterPane extends StackPane {
 
@@ -27,17 +26,13 @@ public class GazePlayAnimatedLogo {
         @Getter
         private final ImageView frontImageView;
 
-        @Getter
-        private final Transition bumpTransition;
-
         LetterPane(ImageView backImageView, ImageView frontImageView) {
             this.backImageView = backImageView;
             this.frontImageView = frontImageView;
-            bumpTransition = createBumpTransition();
             this.getChildren().addAll(backImageView, frontImageView);
         }
 
-        private Transition createBumpTransition() {
+        public Transition createBumpTransition() {
             SequentialTransition bumpTransition = new SequentialTransition();
             int offset = 20;
             TranslateTransition up = new TranslateTransition(Duration.millis(200), frontImageView);
@@ -46,6 +41,25 @@ public class GazePlayAnimatedLogo {
             down.setByY(offset);
             bumpTransition.getChildren().addAll(up, down);
             return bumpTransition;
+        }
+
+        public Transition createTiltTransition() {
+            SequentialTransition tiltTransition = new SequentialTransition();
+            //
+            int angle = 25;
+            RotateTransition one = new RotateTransition(Duration.millis(200), frontImageView);
+            one.setByAngle(-angle);
+            RotateTransition two = new RotateTransition(Duration.millis(300), frontImageView);
+            two.setByAngle(angle);
+            //
+            int offset = 15;
+            TranslateTransition right = new TranslateTransition(Duration.millis(200), frontImageView);
+            right.setByX(offset);
+            TranslateTransition left = new TranslateTransition(Duration.millis(100), frontImageView);
+            left.setByX(-offset);
+            //
+            tiltTransition.getChildren().addAll(new ParallelTransition(one, left), new ParallelTransition(two, right));
+            return tiltTransition;
         }
 
     }
@@ -66,8 +80,8 @@ public class GazePlayAnimatedLogo {
             letters.getChildren().add(letter);
         }
 
-        letters.setSpacing(0);
-        letters.setPadding(new Insets(0, 0, 0, 0));
+        // we want the letters to overlap a little bit
+        letters.setSpacing(-15);
 
         BorderPane.setAlignment(letters, Pos.CENTER);
         letters.setAlignment(Pos.CENTER);
@@ -108,49 +122,78 @@ public class GazePlayAnimatedLogo {
 
     private final HBox letters;
 
-    public void runAnimationSequentialFading() {
+    public SequentialTransition createAnimation() {
         SequentialTransition fadeOutOneByOne = new SequentialTransition();
         for (Node letter : letters.getChildren()) {
             FadeTransition transition = new FadeTransition(Duration.millis(200), letter);
+            transition.setFromValue(1);
             transition.setToValue(0);
             fadeOutOneByOne.getChildren().add(transition);
         }
         SequentialTransition fadeInOneByOne = new SequentialTransition();
         for (Node letter : letters.getChildren()) {
-            ParallelTransition transition = new ParallelTransition();
-            fadeInOneByOne.getChildren().add(transition);
-            //
-            FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), letter);
-            fadeTransition.setToValue(1);
-            transition.getChildren().add(fadeTransition);
-            if (letter instanceof LetterPane) {
-                LetterPane letterPane = (LetterPane) letter;
-                transition.getChildren().add(letterPane.getBumpTransition());
-            }
+            Transition fadeInAndBumpTransition = createFadeInAndBumpTransition(letter);
+            fadeInOneByOne.getChildren().add(fadeInAndBumpTransition);
+        }
+
+        SequentialTransition fadeInAndOutOneByOne = new SequentialTransition();
+        for (Node letter : letters.getChildren()) {
+            FadeTransition fadeInTransition = new FadeTransition(Duration.millis(500), letter);
+            fadeInTransition.setFromValue(0);
+            fadeInTransition.setToValue(1);
+            FadeTransition fadeOutTransition = new FadeTransition(Duration.millis(200), letter);
+            fadeOutTransition.setFromValue(1);
+            fadeOutTransition.setToValue(0);
+            fadeInAndOutOneByOne.setInterpolator(Interpolator.EASE_BOTH);
+            fadeInAndOutOneByOne.getChildren().add(fadeInTransition);
+            fadeInAndOutOneByOne.getChildren().add(fadeOutTransition);
         }
 
         ParallelTransition showAllTransition = new ParallelTransition();
         for (Node letter : letters.getChildren()) {
             FadeTransition transition = new FadeTransition(Duration.millis(500), letter);
+            transition.setFromValue(0);
             transition.setToValue(1);
             showAllTransition.getChildren().add(transition);
+            if (letter instanceof LetterPane) {
+                LetterPane letterPane = (LetterPane) letter;
+                Transition tiltTransition = letterPane.createTiltTransition();
+                showAllTransition.getChildren().add(tiltTransition);
+            }
         }
         ParallelTransition hideAllTransition = new ParallelTransition();
         for (Node letter : letters.getChildren()) {
             FadeTransition transition = new FadeTransition(Duration.millis(500), letter);
+            transition.setFromValue(1);
             transition.setToValue(0);
             hideAllTransition.getChildren().add(transition);
         }
 
         SequentialTransition sequentialTransition = new SequentialTransition();
         sequentialTransition.getChildren().add(hideAllTransition);
+        sequentialTransition.getChildren().add(fadeInAndOutOneByOne);
         sequentialTransition.getChildren().add(fadeInOneByOne);
+        sequentialTransition.getChildren().add(new PauseTransition(Duration.millis(500)));
         sequentialTransition.getChildren().add(fadeOutOneByOne);
         sequentialTransition.getChildren().add(showAllTransition);
+        sequentialTransition.getChildren().add(new PauseTransition(Duration.millis(2000)));
+        sequentialTransition.setInterpolator(Interpolator.LINEAR);
 
-        //sequentialTransition.setAutoReverse(true);
-        sequentialTransition.setOnFinished(event -> sequentialTransition.play());
-        sequentialTransition.play();
+        return sequentialTransition;
+    }
+
+    private ParallelTransition createFadeInAndBumpTransition(Node letter) {
+        ParallelTransition transition = new ParallelTransition();
+        //
+        FadeTransition fadeInTransition = new FadeTransition(Duration.millis(500), letter);
+        fadeInTransition.setFromValue(0);
+        fadeInTransition.setToValue(1);
+        transition.getChildren().add(fadeInTransition);
+        if (letter instanceof LetterPane) {
+            LetterPane letterPane = (LetterPane) letter;
+            transition.getChildren().add(letterPane.createBumpTransition());
+        }
+        return transition;
     }
 
 
