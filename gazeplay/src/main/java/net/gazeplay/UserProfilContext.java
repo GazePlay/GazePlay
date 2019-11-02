@@ -95,7 +95,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         cardWidth = gamePanelDimensionProvider.getDimension2D().getWidth() / 8;
 
-        Node logo = createLogo();
+        Node logo = LogoFactory.getInstance().createLogoAnimated(root);
         StackPane topLogoPane = new StackPane();
         topLogoPane.getChildren().add(logo);
 
@@ -324,23 +324,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
         return exitButton;
-    }
-
-    private Node createLogo() {
-        double width = root.getWidth() * 0.5;
-        double height = root.getHeight() * 0.2;
-
-        log.info(HomeMenuScreen.LOGO_PATH);
-        final Image logoImage = new Image(HomeMenuScreen.LOGO_PATH, width, height, true, true);
-        final ImageView logoView = new ImageView(logoImage);
-
-        root.heightProperty().addListener((observable, oldValue, newValue) -> {
-            final double newHeight = newValue.doubleValue() * 0.2;
-            final Image newLogoImage = new Image(HomeMenuScreen.LOGO_PATH, width, newHeight, true, true);
-            logoView.setImage(newLogoImage);
-        });
-
-        return logoView;
     }
 
     private Stage createRemoveDialog(Stage primaryStage, FlowPane choicePanel, User user) {

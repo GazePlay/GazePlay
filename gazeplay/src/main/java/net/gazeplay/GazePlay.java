@@ -48,16 +48,13 @@ public class GazePlay extends Application {
     private Stage primaryStage;
 
     @Getter
-    private LoadingScreen lds;
-
-    @Getter
     private Translator translator;
 
     @Getter
     private Scene primaryScene;
 
     public GazePlay() {
-        
+
     }
 
     @Override
@@ -100,8 +97,6 @@ public class GazePlay extends Application {
         primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
 
         userProfileScreen = UserProfilContext.newInstance(this, config);
-
-        lds = LoadingScreen.newInstance(this);
 
         userProfileScreen.setUpOnStage(primaryScene);
 
@@ -164,12 +159,6 @@ public class GazePlay extends Application {
 
     public void onDisplayConfigurationManagement(ConfigurationContext configurationContext) {
         configurationContext.setUpOnStage(primaryScene);
-    }
-
-    public void loading() {
-        lds.setUpOnStage(primaryScene);
-        primaryStage.show();
-
     }
 
     public void goToUserPage() {
