@@ -61,7 +61,7 @@ public class Math101 implements GameLifeCycle {
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
     }
 
-    private static Formula generateRandomFormula(Math101GameType gameType, int maxValue) {
+    private static Formula generateRandomFormula(final Math101GameType gameType, final int maxValue) {
         final Random r = new Random();
 
         // choose numbers
@@ -122,17 +122,7 @@ public class Math101 implements GameLifeCycle {
             .build();
     }
 
-    @Override
-    public void launch() {
-        final Configuration config = ActiveConfigurationContext.getInstance();
-
-        final Random r = new Random();
-        // Setup the question parameters
-        final int cardsCount = 3;
-        final int winnerCardIndex = r.nextInt(cardsCount); // index in the list between 0 and 2
-
-        final Formula formula = generateRandomFormula(gameType, maxValue);
-
+    private Text createQuestionText(Formula formula) {
         // Create Question
         final Text question = new Text(formula.createFormulaString());
         question.setX(100);
@@ -143,6 +133,15 @@ public class Math101 implements GameLifeCycle {
         // question.setfill(Color.WHITE);
         new Scene(new Group(question));
         question.applyCss();
+
+        return question;
+    }
+
+    @Override
+    public void launch() {
+        final Formula formula = generateRandomFormula(gameType, maxValue);
+
+        final Text question = createQuestionText(formula);
 
         // Background Color
         Rectangle imageRectangle = new Rectangle(0, 0, gameDimension2D.getWidth(), gameDimension2D.getHeight());
@@ -177,6 +176,13 @@ public class Math101 implements GameLifeCycle {
         stack.setLayoutY(boardY);
         Rectangle boardRectangle = new Rectangle(boardX, boardY, boardWidth, boardHeight);
         boardRectangle.setFill(new ImagePattern(new Image("data/math101/images/blackboard.png"), 0, 0, 1, 1, true));
+
+        final Random r = new Random();
+        // Setup the question parameters
+        final int cardsCount = 3;
+        final int winnerCardIndex = r.nextInt(cardsCount); // index in the list between 0 and 2
+
+        final Configuration config = ActiveConfigurationContext.getInstance();
 
         // Creating the cards
         List<Card> cardList = createCards(winnerCardIndex, formula.getCorrectAnswer(), config, formula.getOperator());
