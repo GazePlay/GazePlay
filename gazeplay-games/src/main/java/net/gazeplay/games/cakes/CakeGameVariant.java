@@ -1,4 +1,14 @@
 package net.gazeplay.games.cakes;
 
-public class CakeGameVariant {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public enum CakeGameVariant {
+    FREE("free"),
+    NORMAL("normal"),
+    EXTREM("extreme");
+
+    @Getter
+    private final String label;
 }

@@ -101,7 +101,7 @@ public class ScreenCake extends LinkedList {
             };
         } else {
             buttonHandler = e -> {
-                if (cakef.getMode() != 0) {
+                if (!cakef.getVariant().equals(CakeGameVariant.FREE)) {
                     cakef.winButton(false);
                 }
                 if (cakef.getMaxCake() < 2) {
@@ -109,7 +109,7 @@ public class ScreenCake extends LinkedList {
                     cakef.setCurrentCake(cakef.getMaxCake());
                     cakef.createCake(cakef.getMaxCake());
                 }
-                if (cakef.getMode() != 0) {
+                if (!cakef.getVariant().equals(CakeGameVariant.FREE)) {
                     cakef.winButton(false);
                 }
                 if (cakef.getMaxCake() >= 2) {
