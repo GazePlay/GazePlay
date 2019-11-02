@@ -50,11 +50,11 @@ public class Math101 implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
-    public Math101(final Math101GameType gameType, IGameContext gameContext, int maxValue, Stats stats) {
+    public Math101(final Math101GameType gameType, IGameContext gameContext, MathGameVariant gameVariant, Stats stats) {
         super();
         this.gameType = gameType;
         this.gameContext = gameContext;
-        this.maxValue = this.gameType.variations[maxValue];
+        this.maxValue = gameVariant.getVariableRange().getMax();
         this.stats = stats;
         this.nbLines = 2;
         this.nbColumns = 3;
@@ -147,7 +147,7 @@ public class Math101 implements GameLifeCycle {
         Rectangle imageRectangle = new Rectangle(0, 0, gameDimension2D.getWidth(), gameDimension2D.getHeight());
         imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        imageRectangle.setFill(gameType.backgroundColor);
+        imageRectangle.setFill(gameType.getBackgroundColor());
 
         int coef = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? 1 : 0;
         imageRectangle.setOpacity(1 - coef * 0.9);

@@ -9,7 +9,10 @@ import java.util.Set;
 public class Math102GameVariantGenerator implements GameSpec.GameVariantGenerator {
     @Override
     public Set<GameSpec.GameVariant> getVariants() {
-        return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 8"),
-            new GameSpec.IntGameVariant(1, "0 to 12"), new GameSpec.IntGameVariant(2, "0 to 20")));
+        return Sets.newLinkedHashSet(Lists.newArrayList(
+            new MathGameVariant(new VariableRange(0, 8)),
+            new MathGameVariant(new VariableRange(0, 12)),
+            new MathGameVariant(new VariableRange(0, 20))
+        ));
     }
 }

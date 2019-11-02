@@ -6,16 +6,14 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-public class Math101GameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant> {
+public class Math101GameLauncher implements GameSpec.GameLauncher<Stats, MathGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new MathGamesStats(scene);
     }// Need to make customized stats
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
-                                       Stats stats) {
-        return new Math101(Math101GameType.ADDITION, gameContext, gameVariant.getNumber(),
-            stats);
+    public GameLifeCycle createNewGame(IGameContext gameContext, MathGameVariant gameVariant, Stats stats) {
+        return new Math101(Math101GameType.ADDITION, gameContext, gameVariant, stats);
     }
 }

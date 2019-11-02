@@ -7,34 +7,33 @@ import java.util.Random;
 
 public enum Math101GameType {
 
-    ADDITION("math-101-addition", Colors.pastelBlue, "+", new int[]{8, 12, 20}),
+    ADDITION("math-101-addition", Colors.pastelBlue, "+"),
 
-    SUBTRACTIONPOS("math-101-subtraction-pos", Colors.pastelBlue, "-", new int[]{8, 12, 20}),
+    SUBTRACTIONPOS("math-101-subtraction-pos", Colors.pastelBlue, "-"),
 
-    MULTIPLICATION("math-101-multiplication", Colors.pastelGreen, "*", new int[]{3, 5, 7, 9, 11, 12}),
+    MULTIPLICATION("math-101-multiplication", Colors.pastelGreen, "*"),
 
-    DIVISION("math-101-division", Colors.pastelGreen, "/", new int[]{10, 15, 20, 30}),
+    DIVISION("math-101-division", Colors.pastelGreen, "/"),
 
-    ADDSUB("math-101-addition-subtraction", Colors.light_pastelRed, "+,-", new int[]{8, 12, 20}),
+    ADDSUB("math-101-addition-subtraction", Colors.light_pastelRed, "+,-"),
 
-    MULTDIV("math-101-multiplication-division", Colors.pastelRed, "*,/", new int[]{5, 10, 15, 20, 30}),
+    MULTDIV("math-101-multiplication-division", Colors.pastelRed, "*,/"),
 
-    MATHALL("math-101-all", Colors.pastelRed, "+,-,/,*", new int[]{5, 10, 15, 20});
+    MATHALL("math-101-all", Colors.pastelRed, "+,-,/,*");
 
     @Getter
     private final String gameName;
 
-    protected final Color backgroundColor;
+    @Getter
+    private final Color backgroundColor;
 
-    protected final String[] operators;
+    @Getter
+    private final String[] operators;
 
-    protected final int[] variations;
-
-    Math101GameType(String gameName, Color coulour, String operators, int[] variations) {
+    Math101GameType(String gameName, Color coulour, String operators) {
         this.gameName = gameName;
         this.backgroundColor = coulour;
         this.operators = operators.split(",");
-        this.variations = variations;
     }
 
     public String chooseOperator() {
