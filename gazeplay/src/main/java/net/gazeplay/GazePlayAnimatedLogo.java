@@ -81,7 +81,7 @@ public class GazePlayAnimatedLogo {
         }
 
         // we want the letters to overlap a little bit
-        letters.setSpacing(-15);
+        letters.setSpacing(-42);
 
         BorderPane.setAlignment(letters, Pos.CENTER);
         letters.setAlignment(Pos.CENTER);
@@ -171,12 +171,15 @@ public class GazePlayAnimatedLogo {
 
         SequentialTransition sequentialTransition = new SequentialTransition();
         sequentialTransition.getChildren().add(hideAllTransition);
+        sequentialTransition.getChildren().add(new PauseTransition(Duration.millis(100)));
         sequentialTransition.getChildren().add(fadeInAndOutOneByOne);
+        sequentialTransition.getChildren().add(new PauseTransition(Duration.millis(100)));
         sequentialTransition.getChildren().add(fadeInOneByOne);
-        sequentialTransition.getChildren().add(new PauseTransition(Duration.millis(500)));
+        sequentialTransition.getChildren().add(new PauseTransition(Duration.millis(1000)));
         sequentialTransition.getChildren().add(fadeOutOneByOne);
+        sequentialTransition.getChildren().add(new PauseTransition(Duration.millis(300)));
         sequentialTransition.getChildren().add(showAllTransition);
-        sequentialTransition.getChildren().add(new PauseTransition(Duration.millis(2000)));
+        sequentialTransition.getChildren().add(new PauseTransition(Duration.millis(3000)));
         sequentialTransition.setInterpolator(Interpolator.LINEAR);
 
         return sequentialTransition;
