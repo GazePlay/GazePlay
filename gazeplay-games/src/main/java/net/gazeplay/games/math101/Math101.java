@@ -27,28 +27,26 @@ import java.util.Random;
 
 @Slf4j
 public class Math101 implements GameLifeCycle {
-
-
-    private final Math101GameType gameType;
-
+    
     private static final float cardRatio = 0.8f;
+    
     private static final float zoom_factor = 1.16f;
 
     private static final int minHeight = 30;
-
+    
+    private final Math101GameType gameType;
+    
     private final IGameContext gameContext;
+    
+    private final int maxValue;
+    
+    private final Stats stats;
 
     private final int nbLines;
+    
     private final int nbColumns;
-    private final int maxValue;
-    private final int[] maxVariant;
 
     private final String[] operators;
-
-    // Setup the question parameters
-    final int cardsCount = 3;
-
-    private final Stats stats;
 
     private RoundDetails currentRoundDetails;
 
@@ -63,11 +61,9 @@ public class Math101 implements GameLifeCycle {
         this.gameType = gameType;
 
         this.operators = this.gameType.operators;
-        this.maxVariant = this.gameType.variations;
 
-        this.maxValue = maxVariant[maxValue];
+        this.maxValue = this.gameType.variations[maxValue];
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
     }
 
     @Override
@@ -75,6 +71,8 @@ public class Math101 implements GameLifeCycle {
         final Configuration config = ActiveConfigurationContext.getInstance();
 
         Random r = new Random();
+        // Setup the question parameters
+        int cardsCount = 3;
         final int winnerCardIndex = r.nextInt(cardsCount); // index in the list between 0 and 2
 
         // choose numbers
