@@ -67,6 +67,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private FlowPane choicePanel;
 
     private List<Node> gameCardsList;
+    
+    private final GamesStatisticsPane gamesStatisticsPane;
 
     private final GameMenuFactory gameMenuFactory = new GameMenuFactory();
 
@@ -99,7 +101,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         bottomPane.setLeft(leftControlPane);
         bottomPane.setRight(rightControlPane);
 
-        MenuBar menuBar = LicenseUtils.buildLicenceMenuBar();
 
         Node logo = LogoFactory.getInstance().createLogoStatic(root);
 
@@ -111,25 +112,24 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().addAll(logoutButton, exitButton);
 
-        VBox leftPanel = new VBox();
-        leftPanel.getChildren().add(menuBar);
+        gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator());
 
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
-        VBox centerCenterPane = new VBox();
-        centerCenterPane.setSpacing(40);
-        centerCenterPane.setAlignment(Pos.TOP_CENTER);
-        centerCenterPane.getChildren().add(gamePickerChoicePane);
+        
+        VBox centerPanel = new VBox();
+        centerPanel.setSpacing(40);
+        centerPanel.setAlignment(Pos.TOP_CENTER);
+        centerPanel.getChildren().add(gamePickerChoicePane);
 
-        BorderPane centerPanel = new BorderPane();
-        centerPanel.setTop(buildFilterByCategory(config, gazePlay.getTranslator()));
-        centerPanel.setCenter(centerCenterPane);
-        centerPanel.setLeft(leftPanel);
-
+        final MenuBar menuBar = LicenseUtils.buildLicenceMenuBar();
+        
         BorderPane topPane = new BorderPane();
         topPane.setTop(menuBar);
-        topPane.setCenter(topLogoPane);
         topPane.setRight(topRightPane);
+        topPane.setLeft(gamesStatisticsPane);
+        topPane.setCenter(topLogoPane);
+        topPane.setBottom(buildFilterByCategory(config, gazePlay.getTranslator()));
 
         root.setTop(topPane);
         root.setBottom(bottomPane);
@@ -160,6 +160,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.setVgap(flowpaneGap);
         choicePanel.setPadding(new Insets(20, 60, 20, 60));
 
+        gamesStatisticsPane.getGamesCountValueLabel().setText(Integer.toString(gameCardsList.size()));
         choicePanel.getChildren().addAll(gameCardsList);
 
         ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
