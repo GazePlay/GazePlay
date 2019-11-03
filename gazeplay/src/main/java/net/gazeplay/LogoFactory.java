@@ -4,7 +4,7 @@ import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,17 +14,15 @@ public class LogoFactory {
     @Getter
     private static final LogoFactory instance = new LogoFactory();
 
-    final static String staticLogoImagePath = "data/common/images/logos/gazeplay1.6.1.png";
+    final static String staticLogoImagePath = "data/common/images/logos/gazeplay-top-logo.png";
 
     // public final static String LOGO_PATH = "data/common/images/logos/gazeplayClassicLogo.png";
 
-    public Node createLogo(Pane root) {
-        return createLogoAnimated(root);
-        //return createLogoStatic(root);
-    }
+    public Node createLogoAnimated(Stage stage) {
+        final double preferredHeight = stage.getHeight() * 0.1d;
+        log.info("preferredHeight = {}", preferredHeight);
 
-    public Node createLogoAnimated(Pane root) {
-        GazePlayAnimatedLogo gazePlayAnimatedLogo = GazePlayAnimatedLogo.newInstance();
+        GazePlayAnimatedLogo gazePlayAnimatedLogo = GazePlayAnimatedLogo.newInstance((int) preferredHeight);
 
         Thread t = new Thread(() -> {
             try {
@@ -38,22 +36,26 @@ public class LogoFactory {
             animation.play();
         });
         t.start();
-        return gazePlayAnimatedLogo.getRoot();
+        return gazePlayAnimatedLogo.getLetters();
     }
 
-    public Node createLogoStatic(Pane root) {
-        double width = root.getWidth() * 0.5;
-        double height = root.getHeight() * 0.2;
-
-        final Image logoImage = new Image(staticLogoImagePath, width, height, true, true);
+    public Node createLogoStatic(Stage stage) {
+        final Image logoImage = new Image(staticLogoImagePath);
         final ImageView logoView = new ImageView(logoImage);
-        root.heightProperty().addListener((observable, oldValue, newValue) -> {
-            final double newHeight = newValue.doubleValue() * 0.2;
-            final Image newLogoImage = new Image(staticLogoImagePath, width, newHeight, true, true);
-            logoView.setImage(newLogoImage);
+        logoView.setPreserveRatio(true);
+        fitStaticLogo(logoView, stage);
+        //
+        stage.heightProperty().addListener((observable, oldValue, newValue) -> {
+            fitStaticLogo(logoView, stage);
         });
-
         return logoView;
+    }
+
+    private static void fitStaticLogo(ImageView logoView, Stage stage) {
+        final double preferredWidth = stage.getWidth() * 0.5d;
+        final double preferredHeight = stage.getHeight() * 0.1d;
+        logoView.setFitHeight(preferredHeight);
+        logoView.setFitWidth(preferredWidth);
     }
 
 }
