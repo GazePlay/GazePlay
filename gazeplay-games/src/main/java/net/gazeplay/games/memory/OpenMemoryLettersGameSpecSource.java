@@ -10,6 +10,6 @@ public class OpenMemoryLettersGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("OpenMemoryLetters").gameThumbnail("data/Thumbnails/openMemoryLetters.png").category(GameCategories.Category.ACTION_REACTION).build(),
-            new OpenMemoryLettersGameVariantGenerator(), new OpenMemoryLettersGameLauncher());
+            new MemoryGameVariantGenerator(), new OpenMemoryLettersGameLauncher());
     }
 }

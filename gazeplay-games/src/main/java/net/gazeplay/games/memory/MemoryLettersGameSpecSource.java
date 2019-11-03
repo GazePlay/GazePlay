@@ -10,6 +10,6 @@ public class MemoryLettersGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("MemoryLetters").gameThumbnail("data/Thumbnails/memory-letter.png").category(GameCategories.Category.MEMORIZATION).build(),
-            new MemoryLettersGameVariantGenerator(), new MemoryLettersGameLauncher());
+            new MemoryGameVariantGenerator(), new MemoryLettersGameLauncher());
     }
 }

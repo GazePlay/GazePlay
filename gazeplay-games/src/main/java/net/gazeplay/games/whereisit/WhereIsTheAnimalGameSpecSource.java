@@ -10,6 +10,6 @@ public class WhereIsTheAnimalGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("WhereIsTheAnimal").gameThumbnail("data/Thumbnails/whereisanimal.png").category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsTheAnimalGameVariantGenerator(), new WhereIsTheAnimalGameLauncher());
+            new WhereIsItGameVariantGenerator(), new WhereIsTheAnimalGameLauncher());
     }
 }

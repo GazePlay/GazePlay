@@ -10,6 +10,6 @@ public class MemoryNumbersGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("MemoryNumbers").gameThumbnail("data/Thumbnails/memory-numbers.png").category(GameCategories.Category.MEMORIZATION).build(),
-            new MemoryNumbersGameVariantGenerator(), new MemoryNumbersGameLauncher());
+            new MemoryGameVariantGenerator(), new MemoryNumbersGameLauncher());
     }
 }

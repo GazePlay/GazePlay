@@ -10,6 +10,6 @@ public class WhereIsTheLetterGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("WhereIsTheLetter").gameThumbnail("data/Thumbnails/Where-is-the-Letter.png").category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsTheLetterGameVariantGenerator(), new WhereIsTheLetterGameLauncher());
+            new WhereIsItGameVariantGenerator(), new WhereIsTheLetterGameLauncher());
     }
 }
