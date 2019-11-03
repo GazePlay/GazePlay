@@ -68,7 +68,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private FlowPane choicePanel;
 
-    private List gameCardsList;
+    private List<Node> gameCardsList;
 
     private final GameMenuFactory gameMenuFactory = new GameMenuFactory();
 
@@ -122,6 +122,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         centerCenterPane.setSpacing(40);
         centerCenterPane.setAlignment(Pos.TOP_CENTER);
         centerCenterPane.getChildren().add(gamePickerChoicePane);
+
         BorderPane centerPanel = new BorderPane();
         centerPanel.setTop(buildFilterByCategory(config, gazePlay.getTranslator()));
         centerPanel.setCenter(centerCenterPane);
@@ -172,7 +173,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return choicePanelScroller;
     }
 
-    private List createGameCardsList(
+    private List<Node> createGameCardsList(
         List<GameSpec> games,
         final Configuration config,
         final ProgressIndicator indicator
@@ -181,7 +182,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Translator translator = getGazePlay().getTranslator();
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
 
-        final List<GameButtonPane> gameCardsList = new ArrayList<>();
+        final List<Node> gameCardsList = new ArrayList<>();
 
         for (GameSpec gameSpec : games) {
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(
