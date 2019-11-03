@@ -112,7 +112,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().addAll(logoutButton, exitButton);
 
-        gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator());
+        gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
 
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
@@ -131,6 +131,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topPane.setCenter(topLogoPane);
         topPane.setBottom(buildFilterByCategory(config, gazePlay.getTranslator()));
 
+        //gamesStatisticsPane.refreshPreferredSize();
+        
         root.setTop(topPane);
         root.setBottom(bottomPane);
         root.setCenter(centerPanel);
@@ -160,7 +162,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.setVgap(flowpaneGap);
         choicePanel.setPadding(new Insets(20, 60, 20, 60));
 
-        gamesStatisticsPane.getGamesCountValueLabel().setText(Integer.toString(gameCardsList.size()));
         choicePanel.getChildren().addAll(gameCardsList);
 
         ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
