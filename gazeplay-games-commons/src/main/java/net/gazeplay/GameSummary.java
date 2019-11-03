@@ -34,10 +34,27 @@ public class GameSummary implements Comparable<GameSummary> {
     @Getter
     private final String description;
 
+    /**
+     * For games in the same categories, it can happen that the nameCode is not appropriate to order the games as expected.
+     * <p>
+     * We may like that some games are sorted in a specific order, but their nameCode natural order does not match the order we like.
+     * But we don't want to mess with the nameCode just to have a different ordering.
+     * <p>
+     * Introducing priority :
+     * Priority is used in the comparator chain : after the categories, but before the nameCode .
+     * So the priority will be used to sort games in the same categories.
+     * When priorities for multiple games is equal, then the nameCode is used to order them.
+     * 
+     * higher priority means games is sorted first (so comparator will compare on reversed order)
+     */
+    @Getter
+    private final int priority;
+
     @Override
     public int compareTo(GameSummary o) {
         return Comparator
             .comparing(GameSummary::getCategories, categoriesCollectionComparator)
+            .thenComparing(Comparator.comparing(GameSummary::getPriority).reversed())
             .thenComparing(GameSummary::getNameCode)
             .compare(this, o);
     }
