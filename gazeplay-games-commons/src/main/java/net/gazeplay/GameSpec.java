@@ -64,7 +64,7 @@ public class GameSpec {
 
         @Override
         public String getLabel(Translator translator) {
-            return translator.translate(label) + " " + value;
+            return translator.translate(label);
         }
     }
 
@@ -138,7 +138,7 @@ public class GameSpec {
         private final String label;
 
         private final int[] values;
-        
+
         public IntListVariantGenerator(String label, int... values) {
             this.label = label;
             this.values = values;
