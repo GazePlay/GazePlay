@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.commons;
 
 import java.io.IOException;
 import java.net.URL;

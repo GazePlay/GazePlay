@@ -3,11 +3,14 @@ package net.gazeplay.commons.utils.games;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import net.gazeplay.commons.VersionInfo;
 import org.apache.commons.io.IOUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 public class LicenseUtils {
 
@@ -15,9 +18,12 @@ public class LicenseUtils {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         String licenseFileAsString = loadLicenseFileAsString(classLoader);
 
+        @Nullable
+        Optional<String> versionNumber = VersionInfo.findVersionInfo(VersionInfo.artifactId, false);
+
         MenuItem licenseMenuItem = new MenuItem(licenseFileAsString);
 
-        Menu menu = new Menu("GazePlay");
+        Menu menu = new Menu(versionNumber.map(value -> " GazePlay " + value).orElse("GazePlay unreleased version"));
         menu.getItems().add(licenseMenuItem);
 
         MenuBar menuBar = new MenuBar();

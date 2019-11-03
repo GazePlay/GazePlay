@@ -97,22 +97,23 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         rightControlPane.setAlignment(Pos.CENTER);
         rightControlPane.getChildren().add(toggleFullScreenButton);
 
+        gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
+
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);
+        bottomPane.setCenter(gamesStatisticsPane);
         bottomPane.setRight(rightControlPane);
 
-
-        Node logo = LogoFactory.getInstance().createLogoStatic(root);
+        Node logo = LogoFactory.getInstance().createLogoStatic(gazePlay.getPrimaryStage());
 
         StackPane topLogoPane = new StackPane();
+        topLogoPane.setPadding(new Insets(15, 15, 15, 15));
         topLogoPane.getChildren().add(logo);
 
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().addAll(logoutButton, exitButton);
-
-        gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
 
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
@@ -127,7 +128,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         BorderPane topPane = new BorderPane();
         topPane.setTop(menuBar);
         topPane.setRight(topRightPane);
-        topPane.setLeft(gamesStatisticsPane);
         topPane.setCenter(topLogoPane);
         topPane.setBottom(buildFilterByCategory(config, gazePlay.getTranslator()));
 

@@ -64,34 +64,30 @@ public class GazePlayAnimatedLogo {
 
     }
 
-    public static GazePlayAnimatedLogo newInstance() {
+    public static GazePlayAnimatedLogo newInstance(int preferredHeight) {
         final HBox letters = new HBox();
         //String imageType = "fixed-size";
         String imageType = "flow-size";
         for (int i = 0; i <= 3; i++) {
-            StackPane letter = createLetterView(i, imageType);
+            StackPane letter = createLetterView(i, imageType, preferredHeight);
             //
             letters.getChildren().add(letter);
         }
         letters.getChildren().add(createSpacingView());
         for (int i = 4; i <= 7; i++) {
-            StackPane letter = createLetterView(i, imageType);
+            StackPane letter = createLetterView(i, imageType, preferredHeight);
             //
             letters.getChildren().add(letter);
         }
 
         // we want the letters to overlap a little bit
-        letters.setSpacing(-42);
+        letters.setSpacing(-42 * ((double) preferredHeight / 213d));
 
         BorderPane.setAlignment(letters, Pos.CENTER);
         letters.setAlignment(Pos.CENTER);
         letters.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
-        final BorderPane gamingRoot = new BorderPane();
-        gamingRoot.setCenter(letters);
-        gamingRoot.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
-
-        return new GazePlayAnimatedLogo(gamingRoot, letters);
+        return new GazePlayAnimatedLogo(letters);
     }
 
     private static StackPane createSpacingView() {
@@ -104,23 +100,23 @@ public class GazePlayAnimatedLogo {
         return letter;
     }
 
-    private static LetterPane createLetterView(int i, String type) {
+    private static LetterPane createLetterView(int i, String type, int preferredHeight) {
+        log.info("preferredHeight = {}", preferredHeight);
+        //
         ImageView backImageView = new ImageView(new Image(IMAGES_PATH + type + "/" + i + "1.png"));
         ImageView frontImageView = new ImageView(new Image(IMAGES_PATH + type + "/" + i + "0.png"));
         //
         backImageView.setPreserveRatio(true);
         frontImageView.setPreserveRatio(true);
         //
-        //backImageView.setFitHeight(primaryStage.getHeight() / 10);
-        //frontImageView.setFitHeight(primaryStage.getHeight() / 10);
+        backImageView.setFitHeight(preferredHeight);
+        frontImageView.setFitHeight(preferredHeight);
         //
         return new LetterPane(backImageView, frontImageView);
     }
 
     @Getter
-    private final Pane root;
-
-    private final HBox letters;
+    private final Pane letters;
 
     public SequentialTransition createAnimation() {
         SequentialTransition fadeOutOneByOne = new SequentialTransition();

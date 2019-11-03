@@ -92,12 +92,9 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         this.gamePanelDimensionProvider = gamePanelDimensionProvider;
         cardHeight = gamePanelDimensionProvider.getDimension2D().getHeight() / 4;
-
         cardWidth = gamePanelDimensionProvider.getDimension2D().getWidth() / 8;
 
-        Node logo = LogoFactory.getInstance().createLogoAnimated(root);
-        StackPane topLogoPane = new StackPane();
-        topLogoPane.getChildren().add(logo);
+        Node logo = LogoFactory.getInstance().createLogoAnimated(gazePlay.getPrimaryStage());
 
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
@@ -113,7 +110,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         centerCenterPane.getChildren().add(userPickerChoicePane);
 
         BorderPane topPane = new BorderPane();
-        topPane.setCenter(topLogoPane);
+        topPane.setCenter(logo);
         topPane.setRight(topRightPane);
 
         root.setTop(topPane);

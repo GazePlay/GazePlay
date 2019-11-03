@@ -3,6 +3,7 @@ package net.gazeplay;
 import javafx.application.Application;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.VersionInfo;
 import net.gazeplay.commons.threads.CustomThreadFactory;
 import net.gazeplay.commons.threads.GroupingThreadFactory;
 import net.gazeplay.commons.threads.LoggingUncaughtExceptionHandler;
