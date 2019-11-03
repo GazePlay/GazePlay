@@ -10,6 +10,6 @@ public class Math104GameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("Math104").gameThumbnail("data/Thumbnails/math101.png").category(GameCategories.Category.LOGIC).description("MathDescDiv").build(),
-            new Math104GameVariantGenerator(), new Math104GameLauncher());
+            new Math104GameVariantGenerator(), new MathGameLauncher(Math101GameType.DIVISION));
     }
 }

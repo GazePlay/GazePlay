@@ -1,12 +1,17 @@
 package net.gazeplay.games.math101;
 
 import javafx.scene.Scene;
+import lombok.RequiredArgsConstructor;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-public class Math101GameLauncher implements GameSpec.GameLauncher<Stats, MathGameVariant> {
+@RequiredArgsConstructor
+public final class MathGameLauncher implements GameSpec.GameLauncher<Stats, MathGameVariant> {
+    
+    private final Math101GameType math101GameType;
+    
     @Override
     public Stats createNewStats(Scene scene) {
         return new MathGamesStats(scene);
@@ -14,6 +19,6 @@ public class Math101GameLauncher implements GameSpec.GameLauncher<Stats, MathGam
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, MathGameVariant gameVariant, Stats stats) {
-        return new Math101(Math101GameType.ADDITION, gameContext, gameVariant, stats);
+        return new Math101(math101GameType, gameContext, gameVariant, stats);
     }
 }

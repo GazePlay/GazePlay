@@ -10,6 +10,6 @@ public class Math201GameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("Math201").gameThumbnail("data/Thumbnails/math101.png").category(GameCategories.Category.LOGIC).description("MathDesc").build(),
-            new Math201GameVariantGenerator(), new Math201GameLauncher());
+            new Math201GameVariantGenerator(), new MathGameLauncher(Math101GameType.MATHALL));
     }
 }
