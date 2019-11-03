@@ -17,6 +17,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NonNull;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -35,42 +36,49 @@ import java.util.Collections;
 import java.util.Random;
 
 public class Letters implements GameLifeCycle {
-    private final IGameContext gameContext;
-    private final int nbLines;
-    private final int nbColomns;
-    private final Stats stats;
-
-    // Latin Letters!
-    private final String[] alphabet = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
-            "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
-
-    @Getter
-    final String currentLanguage;
-
-    private final ImageLibrary imageLibrary;
-
-    CurrentRoundDetails currentRoundDetails;
-
-    private int correctCount;
-    private final Translator translator;
 
     @Data
     public static class CurrentRoundDetails {
 
-        int remainingCount;
-
         private final Bloc[][] blocs;
 
-        final String mainLetter;
+        private final String mainLetter;
+        
+        protected int remainingCount;
 
-        public CurrentRoundDetails(int nbLines, int nbColumns, String mainLetter) {
-            int initCount = nbColumns * nbLines;
-            this.remainingCount = initCount;
+        CurrentRoundDetails(int nbLines, int nbColumns, String mainLetter) {
+            this.remainingCount = nbColumns * nbLines;
             this.mainLetter = mainLetter;
             this.blocs = new Bloc[nbLines][nbColumns];
         }
 
     }
+
+    // Latin Letters!
+    private final String[] alphabet = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
+        "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+
+    private final IGameContext gameContext;
+    
+    private final int nbLines;
+    
+    private final int nbColomns;
+    
+    private final Stats stats;
+
+    @Getter
+    private final String currentLanguage;
+
+    private final ImageLibrary imageLibrary;
+
+    @NonNull
+    private final Translator translator;
+
+    private final Random random = new Random();
+
+    protected CurrentRoundDetails currentRoundDetails;
+
+    private int correctCount;
 
     public Letters(IGameContext gameContext, int nbLines, int nbColumns, Stats stats) {
         this.gameContext = gameContext;
@@ -113,19 +121,10 @@ public class Letters implements GameLifeCycle {
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        Random r = new Random();
-
-        final String mainLetter = alphabet[(r.nextInt(alphabet.length))];
+        final String mainLetter = pickRandomLetter();
         this.currentRoundDetails = new CurrentRoundDetails(nbLines, nbColomns, mainLetter);
 
-        Text questionText;
-        // if(currentLanguage.equals("fra")){
-        // questionText = new Text("Choisissez la lettre: "+mainLetter.toUpperCase()+"!");
-        // }else{
-        // questionText = new Text("Choose the Letter: "+mainLetter.toUpperCase()+"!");
-        // }
-
-        questionText = new I18NText(this.translator, "Choose the Letter");
+        final Text questionText = new I18NText(this.translator, "Choose the Letter");
 
         questionText.setText(questionText.getText() + ": " + mainLetter.toUpperCase());
 
@@ -159,7 +158,7 @@ public class Letters implements GameLifeCycle {
             double width = dimension2D.getWidth() / nbColomns;
             double height = dimension2D.getHeight() / nbLines;
 
-            Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
+            Bloc[][] blocksList = createCards(mainLetter, alphabet, width, height, config);
             currentRoundDetails.remainingCount = correctCount;
 
             stats.notifyNewRoundReady();
@@ -180,24 +179,25 @@ public class Letters implements GameLifeCycle {
 
     }
 
-    private Bloc[][] createCards(String mainLetter, Random r, String[] alphabet, double width, double height,
+    private String pickRandomLetter() {
+        return alphabet[(random.nextInt(alphabet.length))];
+    }
+
+    private Bloc[][] createCards(String mainLetter, String[] alphabet, double width, double height,
                                  Configuration config) {
         correctCount = 0;
         Bloc[][] blocs = new Bloc[nbLines][nbColomns];
 
         final int fixationlength = config.getFixationLength();
 
-        final int rowTrue = r.nextInt(nbLines);
-        final int colTrue = r.nextInt(nbColomns);
+        final int rowTrue = random.nextInt(nbLines);
+        final int colTrue = random.nextInt(nbColomns);
 
-        System.out.println("YES HERE: " + rowTrue);
-        System.out.println("YES HERE: " + colTrue);
         for (int i = 0; i < nbLines; i++) {
             for (int j = 0; j < nbColomns; j++) {
                 String currentLetter;
 
-                float f = r.nextFloat();
-                Boolean isMainLetter;
+                float f = random.nextFloat();
 
                 if (i == rowTrue && j == colTrue) {
                     currentLetter = mainLetter;
@@ -206,7 +206,7 @@ public class Letters implements GameLifeCycle {
                     currentLetter = mainLetter;
 
                 } else {
-                    currentLetter = alphabet[(r.nextInt(alphabet.length))];
+                    currentLetter = pickRandomLetter();
                 }
 
                 if (currentLetter.equals(mainLetter)) {
@@ -238,7 +238,7 @@ public class Letters implements GameLifeCycle {
         }
     }
 
-    public void removeAllBlocs() {
+    void removeAllBlocs() {
 
         final Bloc[][] blocs = currentRoundDetails.blocs;
 
@@ -269,7 +269,7 @@ public class Letters implements GameLifeCycle {
 
     }
 
-    public void removeBloc(Bloc toRemove) {
+    void removeBloc(Bloc toRemove) {
         if (toRemove == null) {
             return;
         }
@@ -282,9 +282,7 @@ public class Letters implements GameLifeCycle {
     }
 
     private String createQuestionSoundPath(String currentLanguage, String currentLetter) {
-        Random r = new Random();
-        if (r.nextBoolean()) {
-
+        if (random.nextBoolean()) {
             return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/quest/" + currentLetter.toUpperCase()
                     + ".mp3";
         }
