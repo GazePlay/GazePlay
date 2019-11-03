@@ -161,7 +161,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
-        return new GameContext(gazePlay, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
+        return new GameContext(gazePlay, gazePlay.getTranslator(), root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
             randomPositionGenerator, gazeDeviceManager, root2);
     }
 
@@ -256,10 +256,20 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     private final Pane gamingRoot;
 
-    private GameContext(GazePlay gazePlay, final Pane root, Pane gamingRoot, Bravo bravo, HBox menuHBox,
-                        GamePanelDimensionProvider gamePanelDimensionProvider, RandomPositionGenerator randomPositionGenerator,
-                        GazeDeviceManager gazeDeviceManager, final Pane configPane) {
+    private GameContext(
+        @NonNull GazePlay gazePlay,
+        @NonNull Translator translator,
+        @NonNull Pane root,
+        @NonNull Pane gamingRoot,
+        @NonNull Bravo bravo,
+        @NonNull HBox menuHBox,
+        @NonNull GamePanelDimensionProvider gamePanelDimensionProvider,
+        @NonNull RandomPositionGenerator randomPositionGenerator,
+        @NonNull GazeDeviceManager gazeDeviceManager,
+        @NonNull Pane configPane
+    ) {
         super(gazePlay, root);
+        this.translator = translator;
         this.gamingRoot = gamingRoot;
         this.bravo = bravo;
         this.menuHBox = menuHBox;

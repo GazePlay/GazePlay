@@ -133,7 +133,7 @@ public class Bloc extends Parent {// Rectangle {
             gameInstance.currentRoundDetails.remainingCount--;
         }
 
-        playSound(createLetterSoundPath("" + this.gameInstance.currentLanguage, this.letterStr));
+        playSound(createLetterSoundPath("" + this.gameInstance.getCurrentLanguage(), this.letterStr));
 
         currentTimeline.stop();
         currentTimeline = new Timeline();
