@@ -60,8 +60,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private final List<GameSpec> games;
 
-    private GameLifeCycle currentGame;
-
     @Setter
     @Getter
     private GazeDeviceManager gazeDeviceManager;
