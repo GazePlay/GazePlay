@@ -6,7 +6,9 @@ import io.github.classgraph.ScanResult;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
+import net.gazeplay.GameSummaryComparator;
 import net.gazeplay.GamesLocator;
+import net.gazeplay.commons.ui.Translator;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -53,7 +55,7 @@ public class DefaultGamesLocator implements GamesLocator {
     private final List<GameSpecSource> sources = scanGames();
 
     @Override
-    public List<GameSpec> listGames() {
+    public List<GameSpec> listGames(Translator translator) {
         LinkedList<GameSpec> gameList = new LinkedList<>();
         for (GameSpecSource source : sources) {
             gameList.add(source.getGameSpec());
@@ -61,7 +63,7 @@ public class DefaultGamesLocator implements GamesLocator {
         log.info("Games found : {}", gameList.size());
 
         Comparator<GameSpec> gameSpecComparator = Comparator
-            .comparing(GameSpec::getGameSummary);
+            .comparing(GameSpec::getGameSummary, new GameSummaryComparator(translator));
 
         gameList.sort(gameSpecComparator);
 

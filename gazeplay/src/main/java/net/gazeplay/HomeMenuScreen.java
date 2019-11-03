@@ -51,7 +51,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
-        List<GameSpec> games = gamesLocator.listGames();
+        List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
 
         BorderPane root = new BorderPane();
 
