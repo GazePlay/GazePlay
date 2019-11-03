@@ -6,10 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -43,14 +40,19 @@ public class GameVariantDialog extends Stage {
 
         FlowPane choicePane = new FlowPane();
         choicePane.setAlignment(Pos.CENTER);
+        choicePane.setHgap(10);
+        choicePane.setVgap(10);
 
         ScrollPane choicePanelScroller = new ScrollPane(choicePane);
-        choicePanelScroller.setMinHeight(primaryStage.getHeight() / 3);
-        choicePanelScroller.setMinWidth(primaryStage.getWidth() / 3);
+        //choicePanelScroller.setMinHeight(primaryStage.getHeight() / 5);
+        //choicePanelScroller.setMinWidth(primaryStage.getWidth() / 5);
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
+        choicePanelScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
+        final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: black;";
         I18NLabel chooseVariantPromptLabel = new I18NLabel(gazePlay.getTranslator(), chooseVariantPromptLabelTextKey);
+        chooseVariantPromptLabel.setStyle(labelStyle);
 
         VBox topPane = new VBox();
         topPane.setAlignment(Pos.CENTER);
@@ -69,8 +71,18 @@ public class GameVariantDialog extends Stage {
             button.getStyleClass().add("gameChooserButton");
             button.getStyleClass().add("gameVariation");
             button.getStyleClass().add("button");
-            button.setMinHeight(primaryStage.getHeight() / 10);
-            button.setMinWidth(primaryStage.getWidth() / 10);
+            //
+            button.wrapTextProperty().setValue(true);
+            //
+            button.setMinWidth(primaryStage.getWidth() / 15);
+            button.setMinHeight(primaryStage.getHeight() / 15);
+            //
+            button.setPrefWidth(primaryStage.getWidth() / 10);
+            button.setPrefHeight(primaryStage.getHeight() / 10);
+            //
+            button.setMaxWidth(primaryStage.getWidth() / 8);
+            button.setMaxHeight(primaryStage.getHeight() / 8);
+            //
             choicePane.getChildren().add(button);
 
             EventHandler<Event> event = mouseEvent -> {
@@ -80,13 +92,15 @@ public class GameVariantDialog extends Stage {
             };
             button.addEventHandler(MOUSE_CLICKED, event);
 
-        } // end for
+        }
 
         Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
 
         CssUtil.setPreferredStylesheets(config, scene);
 
         setScene(scene);
+        setWidth(primaryStage.getWidth() / 2);
+        setHeight(primaryStage.getHeight() / 2);
         // scene.getStylesheets().add(getClass().getResource("modal-dialog.css").toExternalForm());
     }
 
