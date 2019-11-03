@@ -1,11 +1,12 @@
 package net.gazeplay;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 
-public class CategoriesCollectionComparator implements Comparator<SortedSet<GameCategories.Category>> {
+public class CategoriesCollectionComparator implements Comparator<SortedSet<GameCategories.Category>>, Serializable {
 
     private static final Map<GameCategories.Category, Integer> weightMap = createWeightMap();
 
