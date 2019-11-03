@@ -34,7 +34,7 @@ public class Math101 implements GameLifeCycle {
 
     private static final int minHeight = 30;
 
-    private final Math101GameType gameType;
+    private final MathGameType gameType;
 
     private final IGameContext gameContext;
 
@@ -50,7 +50,7 @@ public class Math101 implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
-    public Math101(final Math101GameType gameType, IGameContext gameContext, MathGameVariant gameVariant, Stats stats) {
+    public Math101(final MathGameType gameType, IGameContext gameContext, MathGameVariant gameVariant, Stats stats) {
         super();
         this.gameType = gameType;
         this.gameContext = gameContext;
@@ -61,7 +61,7 @@ public class Math101 implements GameLifeCycle {
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
     }
 
-    private static Formula generateRandomFormula(final Math101GameType gameType, final int maxValue) {
+    private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue) {
         final Random r = new Random();
 
         // choose numbers

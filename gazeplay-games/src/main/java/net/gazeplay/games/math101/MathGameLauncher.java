@@ -10,7 +10,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 @RequiredArgsConstructor
 public final class MathGameLauncher implements GameSpec.GameLauncher<Stats, MathGameVariant> {
     
-    private final Math101GameType math101GameType;
+    private final MathGameType mathGameType;
     
     @Override
     public Stats createNewStats(Scene scene) {
@@ -19,6 +19,6 @@ public final class MathGameLauncher implements GameSpec.GameLauncher<Stats, Math
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, MathGameVariant gameVariant, Stats stats) {
-        return new Math101(math101GameType, gameContext, gameVariant, stats);
+        return new Math101(mathGameType, gameContext, gameVariant, stats);
     }
 }

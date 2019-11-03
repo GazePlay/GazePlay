@@ -6,7 +6,7 @@ import net.gazeplay.GameSpec;
 
 import java.util.Set;
 
-public class Math201GameVariantGenerator implements GameSpec.GameVariantGenerator {
+public class Math101AllOperationsGameVariantGenerator implements GameSpec.GameVariantGenerator {
     @Override
     public Set<GameSpec.GameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
