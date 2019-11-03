@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -47,11 +48,10 @@ public class GameSpec {
     public static class IntGameVariant implements GameVariant {
 
         private final int number;
-        private final String label;
 
         @Override
         public String getLabel(Translator translator) {
-            return number + " " + translator.translate(label);
+            return Integer.toString(number);
         }
     }
 
@@ -64,7 +64,7 @@ public class GameSpec {
 
         @Override
         public String getLabel(Translator translator) {
-            return translator.translate(label) + " " + value;
+            return translator.translate(label);
         }
     }
 
@@ -84,6 +84,10 @@ public class GameSpec {
 
     public interface GameVariantGenerator {
 
+        default String getVariantChooseText() {
+            return "Choose Game Variant";
+        }
+
         Set<GameVariant> getVariants();
 
     }
@@ -101,6 +105,10 @@ public class GameSpec {
         private final K[] enumValues;
 
         private final Function<K, String> extractLabelCodeFunction;
+        
+        @Getter
+        @Setter
+        private String variantChooseText = "Choose Game Variant";
 
         @Override
         public Set<GameVariant> getVariants() {
@@ -115,17 +123,17 @@ public class GameSpec {
     @Data
     public static class IntRangeVariantGenerator implements GameVariantGenerator {
 
+        private final String variantChooseText;
+        
         private final int min;
 
         private final int max;
-
-        private final String label;
 
         @Override
         public Set<GameVariant> getVariants() {
             LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
             for (int i = min; i <= max; i++) {
-                result.add(new IntGameVariant(i, label));
+                result.add(new IntGameVariant(i));
             }
             return result;
         }
@@ -135,12 +143,12 @@ public class GameSpec {
     @Data
     public static class IntListVariantGenerator implements GameVariantGenerator {
 
-        private final String label;
-
-        private final int[] values;
+        private final String variantChooseText;
         
-        public IntListVariantGenerator(String label, int... values) {
-            this.label = label;
+        private final int[] values;
+
+        public IntListVariantGenerator(String variantChooseText, int... values) {
+            this.variantChooseText = variantChooseText;
             this.values = values;
         }
 
@@ -148,7 +156,7 @@ public class GameSpec {
         public Set<GameVariant> getVariants() {
             LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
             for (int i : values) {
-                result.add(new IntGameVariant(i, label));
+                result.add(new IntGameVariant(i));
             }
             return result;
         }

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 import java.util.Random;
 
-public enum Math101GameType {
+public enum MathGameType {
 
     ADDITION("math-101-addition", Colors.pastelBlue, MathOperation.PLUS),
 
@@ -31,7 +31,7 @@ public enum Math101GameType {
 
     private final Random random = new Random();
 
-    Math101GameType(String gameName, Color coulour, MathOperation... operators) {
+    MathGameType(String gameName, Color coulour, MathOperation... operators) {
         this.gameName = gameName;
         this.backgroundColor = coulour;
         this.operators = operators;

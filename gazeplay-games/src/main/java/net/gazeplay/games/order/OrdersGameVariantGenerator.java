@@ -4,10 +4,8 @@ import net.gazeplay.GameSpec;
 
 public class OrdersGameVariantGenerator extends GameSpec.IntListVariantGenerator {
 
-    private static final String TARGETS = "targets";
-
     public OrdersGameVariantGenerator() {
-        super(TARGETS, 3, 5, 7);
+        super("Choose number of targets", 3, 5, 7);
     }
 
 }

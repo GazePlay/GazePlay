@@ -5,8 +5,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,13 +13,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.I18NText;
@@ -29,7 +23,6 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.components.CssUtil;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicReference;
@@ -248,14 +241,10 @@ public class GameMenuFactory {
             Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
             if (variants.size() > 1) {
-                log.debug("variants = {}", variants);
                 root.setEffect(new BoxBlur());
                 root.setDisable(true);
-                Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), gameSpec, root);
-
-                String dialogTitle = gameName + " : "
-                    + multilinguism.getTrad("Choose Game Variant", config.getLanguage());
-                dialog.setTitle(dialogTitle);
+                GameVariantDialog dialog = new GameVariantDialog(gazePlay, this, gazePlay.getPrimaryStage(), gameSpec, root, gameSpec.getGameVariantGenerator().getVariantChooseText());
+                dialog.setTitle(gameName);
                 dialog.show();
 
                 dialog.toFront();
@@ -324,59 +313,7 @@ public class GameMenuFactory {
         return gameCard;
     }
 
-    private Stage createDialog(GazePlay gazePlay, Stage primaryStage, GameSpec gameSpec, Region root) {
-        // initialize the confirmation dialog
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.initOwner(primaryStage);
-        dialog.initStyle(StageStyle.UTILITY);
-        dialog.setOnCloseRequest(windowEvent -> {
-            primaryStage.getScene().getRoot().setEffect(null);
-            root.setDisable(false);
-        });
-
-        FlowPane choicePane = new FlowPane();
-        choicePane.setAlignment(Pos.CENTER);
-
-        ScrollPane choicePanelScroller = new ScrollPane(choicePane);
-        choicePanelScroller.setMinHeight(primaryStage.getHeight() / 3);
-        choicePanelScroller.setMinWidth(primaryStage.getWidth() / 3);
-        choicePanelScroller.setFitToWidth(true);
-        choicePanelScroller.setFitToHeight(true);
-
-        final Configuration config = ActiveConfigurationContext.getInstance();
-
-        final Translator translator = gazePlay.getTranslator();
-
-        for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
-            Button button = new Button(variant.getLabel(translator));
-            button.getStyleClass().add("gameChooserButton");
-            button.getStyleClass().add("gameVariation");
-            button.getStyleClass().add("button");
-            button.setMinHeight(primaryStage.getHeight() / 10);
-            button.setMinWidth(primaryStage.getWidth() / 10);
-            choicePane.getChildren().add(button);
-
-            EventHandler<Event> event = mouseEvent -> {
-                dialog.close();
-                root.setDisable(false);
-                chooseGame(gazePlay, gameSpec, variant, config);
-            };
-            button.addEventHandler(MOUSE_CLICKED, event);
-
-        } // end for
-
-        Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
-
-        CssUtil.setPreferredStylesheets(config, scene);
-
-        dialog.setScene(scene);
-        // scene.getStylesheets().add(getClass().getResource("modal-dialog.css").toExternalForm());
-
-        return dialog;
-    }
-
-    private void chooseGame(GazePlay gazePlay, GameSpec selectedGameSpec, GameSpec.GameVariant gameVariant,
+    public void chooseGame(GazePlay gazePlay, GameSpec selectedGameSpec, GameSpec.GameVariant gameVariant,
                             Configuration config) {
         GameContext gameContext = GameContext.newInstance(gazePlay);
 

@@ -51,7 +51,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
-        List<GameSpec> games = gamesLocator.listGames();
+        List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
 
         BorderPane root = new BorderPane();
 
@@ -60,15 +60,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private final List<GameSpec> games;
 
-    private GameLifeCycle currentGame;
-
     @Setter
     @Getter
     private GazeDeviceManager gazeDeviceManager;
 
     private FlowPane choicePanel;
 
-    private List gameCardsList;
+    private List<Node> gameCardsList;
+    
+    private final GamesStatisticsPane gamesStatisticsPane;
 
     private final GameMenuFactory gameMenuFactory = new GameMenuFactory();
 
@@ -101,7 +101,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         bottomPane.setLeft(leftControlPane);
         bottomPane.setRight(rightControlPane);
 
-        MenuBar menuBar = LicenseUtils.buildLicenceMenuBar();
 
         Node logo = LogoFactory.getInstance().createLogoStatic(root);
 
@@ -113,25 +112,27 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().addAll(logoutButton, exitButton);
 
-        VBox leftPanel = new VBox();
-        leftPanel.getChildren().add(menuBar);
+        gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
 
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
-        VBox centerCenterPane = new VBox();
-        centerCenterPane.setSpacing(40);
-        centerCenterPane.setAlignment(Pos.TOP_CENTER);
-        centerCenterPane.getChildren().add(gamePickerChoicePane);
-        BorderPane centerPanel = new BorderPane();
-        centerPanel.setTop(buildFilterByCategory(config, gazePlay.getTranslator()));
-        centerPanel.setCenter(centerCenterPane);
-        centerPanel.setLeft(leftPanel);
+        
+        VBox centerPanel = new VBox();
+        centerPanel.setSpacing(40);
+        centerPanel.setAlignment(Pos.TOP_CENTER);
+        centerPanel.getChildren().add(gamePickerChoicePane);
 
+        final MenuBar menuBar = LicenseUtils.buildLicenceMenuBar();
+        
         BorderPane topPane = new BorderPane();
         topPane.setTop(menuBar);
-        topPane.setCenter(topLogoPane);
         topPane.setRight(topRightPane);
+        topPane.setLeft(gamesStatisticsPane);
+        topPane.setCenter(topLogoPane);
+        topPane.setBottom(buildFilterByCategory(config, gazePlay.getTranslator()));
 
+        //gamesStatisticsPane.refreshPreferredSize();
+        
         root.setTop(topPane);
         root.setBottom(bottomPane);
         root.setCenter(centerPanel);
@@ -172,7 +173,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return choicePanelScroller;
     }
 
-    private List createGameCardsList(
+    private List<Node> createGameCardsList(
         List<GameSpec> games,
         final Configuration config,
         final ProgressIndicator indicator
@@ -181,7 +182,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Translator translator = getGazePlay().getTranslator();
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
 
-        final List<GameButtonPane> gameCardsList = new ArrayList<>();
+        final List<Node> gameCardsList = new ArrayList<>();
 
         for (GameSpec gameSpec : games) {
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(
