@@ -346,21 +346,10 @@ public class GameMenuFactory {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
 
+        final Translator translator = gazePlay.getTranslator();
+
         for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
-            Button button;
-
-            if (variant instanceof GameSpec.DimensionGameVariant)
-                button = new Button(variant.getLabel());
-
-            else if (variant instanceof GameSpec.CupsGameVariant)
-                button = new Button(((GameSpec.CupsGameVariant) variant).getNoCups()
-                    + new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
-            else if (variant instanceof GameSpec.TargetsGameVariant)
-                button = new Button(((GameSpec.TargetsGameVariant) variant).getNoTargets()
-                    + new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
-            else
-                button = new Button(new I18NText(gazePlay.getTranslator(), variant.getLabel()).getText());
-
+            Button button = new Button(variant.getLabel(translator));
             button.getStyleClass().add("gameChooserButton");
             button.getStyleClass().add("gameVariation");
             button.getStyleClass().add("button");

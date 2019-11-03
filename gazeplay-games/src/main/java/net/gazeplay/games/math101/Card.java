@@ -142,9 +142,6 @@ public class Card extends Parent {
     }
 
     private void onCorrectCardSelected() {
-
-        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
         stats.incNbGoals();
 
         double final_zoom = 1.15;

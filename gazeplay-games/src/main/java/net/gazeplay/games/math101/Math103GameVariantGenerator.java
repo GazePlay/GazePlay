@@ -9,9 +9,13 @@ import java.util.Set;
 public class Math103GameVariantGenerator implements GameSpec.GameVariantGenerator {
     @Override
     public Set<GameSpec.GameVariant> getVariants() {
-        return Sets.newLinkedHashSet(Lists.newArrayList(new GameSpec.IntGameVariant(0, "0 to 3"),
-            new GameSpec.IntGameVariant(1, "0 to 5"), new GameSpec.IntGameVariant(2, "0 to 7"),
-            new GameSpec.IntGameVariant(3, "0 to 9"), new GameSpec.IntGameVariant(4, "0 to 11"),
-            new GameSpec.IntGameVariant(5, "0 to 12")));
+        return Sets.newLinkedHashSet(Lists.newArrayList(
+            new MathGameVariant(new VariableRange(0, 3)),
+            new MathGameVariant(new VariableRange(0, 5)),
+            new MathGameVariant(new VariableRange(0, 7)),
+            new MathGameVariant(new VariableRange(0, 9)),
+            new MathGameVariant(new VariableRange(0, 11)),
+            new MathGameVariant(new VariableRange(0, 12))
+        ));
     }
 }

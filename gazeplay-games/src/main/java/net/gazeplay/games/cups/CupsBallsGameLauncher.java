@@ -7,14 +7,14 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.cups.utils.CupsAndBallsStats;
 
-public class CupsBallsGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.CupsGameVariant> {
+public class CupsBallsGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new CupsAndBallsStats(scene);
     }
 
-    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.CupsGameVariant gameVariant,
+    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
                                        Stats stats) {
-        return new CupsAndBalls(gameContext, stats, gameVariant.getNoCups(), 3);
+        return new CupsAndBalls(gameContext, stats, gameVariant.getNumber(), 3);
     }
 }

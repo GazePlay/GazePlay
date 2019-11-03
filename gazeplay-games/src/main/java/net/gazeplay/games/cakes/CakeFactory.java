@@ -46,7 +46,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     private FadeTransition ft;
     @Getter
     public Rectangle r;
-    Color[] col = { Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL };
+    Color[] col = {Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL};
     private int[][] layers = new int[3][4];
     private int[][] model = new int[3][4];
     @Getter
@@ -63,7 +63,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     private int maxCake;
     @Getter
     @Setter
-    private int mode;
+    private CakeGameVariant variant;
     @Getter
     @Setter
     private boolean nappage;
@@ -80,7 +80,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     @Setter
     private ProgressButton[] buttons;
 
-    CakeFactory(IGameContext gameContext, Stats stats, int mode) {
+    CakeFactory(IGameContext gameContext, Stats stats, CakeGameVariant variant) {
         this.gameContext = gameContext;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.debug("dimension2D = {}", dimension2D);
@@ -92,7 +92,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         currentCake = 0;
         maxCake = 0;
         setNappage(false);
-        this.mode = mode;
+        this.variant = variant;
         buttons = new ProgressButton[6];
         this.fixationLength = ActiveConfigurationContext.getInstance().getFixationLength();
 
@@ -136,7 +136,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             }
         }
 
-        if (win && (mode != 0)) {
+        if (win && !variant.equals(CakeGameVariant.FREE)) {
             winFunction();
         }
     }
@@ -180,7 +180,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             };
         } else {
             buttonHandler = e -> {
-                if (mode != 0) {
+                if (!variant.equals(CakeGameVariant.FREE)) {
                     winButton(false);
                 }
                 if (maxCake < 2) {
@@ -188,7 +188,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                     currentCake = maxCake;
                     createCake(maxCake);
                 }
-                if (mode != 0) {
+                if (!variant.equals(CakeGameVariant.FREE)) {
                     winButton(false);
                 }
                 if (maxCake >= 2) {
@@ -205,7 +205,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     void winFunction() {
         active(-1);
-        if (mode != 0) {
+        if (!variant.equals(CakeGameVariant.FREE)) {
             FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
             ft.setToValue(1);
             ft.setOnFinished(actionEvent -> {
@@ -296,12 +296,12 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     private void aerographAnimation(int i, int j, Dimension2D dimension2D) {
         double cakeheight = (((ImageView) cake[currentCake].getChildren().get(0)).getImage().getHeight()
-                * ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth())
-                / ((ImageView) cake[currentCake].getChildren().get(0)).getImage().getWidth();
+            * ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth())
+            / ((ImageView) cake[currentCake].getChildren().get(0)).getImage().getWidth();
         double cakewidth = ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth();
 
         double Ypos = cake[currentCake]
-                .localToParent(cake[currentCake].getChildren().get(0).localToParent(0, 0)).getY();
+            .localToParent(cake[currentCake].getChildren().get(0).localToParent(0, 0)).getY();
         double Yppos = Ypos + 7 * cakeheight / 8;
         Ypos = Ypos + 1.9 * cakeheight / 8;
 
@@ -313,7 +313,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         aerograph.setPreserveRatio(true);
         aerograph2.setPreserveRatio(true);
         double height = ((aerograph.getImage().getHeight()) * (dimension2D.getWidth() / 2.5))
-                / aerograph.getImage().getWidth();
+            / aerograph.getImage().getWidth();
         double offset = aerograph.getFitWidth();
         aerograph.setLayoutX(-offset);
         aerograph2.setLayoutX(dimension2D.getWidth());
@@ -323,16 +323,16 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
         Polygon spray = new Polygon();
         spray.getPoints()
-                .addAll(offset, 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
-                    dimension2D.getWidth() / 2 + cakewidth / 4, Ypos, dimension2D.getWidth() / 2 + cakewidth / 3,
-                    Yppos, dimension2D.getWidth() / 2 - cakewidth / 3, Yppos);
+            .addAll(offset, 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
+                dimension2D.getWidth() / 2 + cakewidth / 4, Ypos, dimension2D.getWidth() / 2 + cakewidth / 3,
+                Yppos, dimension2D.getWidth() / 2 - cakewidth / 3, Yppos);
 
         Polygon spray2 = new Polygon();
         spray2.getPoints()
-                .addAll(dimension2D.getWidth() - offset,
-                    9 * height / 11 + aerograph.localToParent(0, 0).getY(),
-                    dimension2D.getWidth() / 2 - cakewidth / 4, Ypos, dimension2D.getWidth() / 2 - cakewidth / 3,
-                    Yppos, dimension2D.getWidth() / 2 + cakewidth / 3, Yppos);
+            .addAll(dimension2D.getWidth() - offset,
+                9 * height / 11 + aerograph.localToParent(0, 0).getY(),
+                dimension2D.getWidth() / 2 - cakewidth / 4, Ypos, dimension2D.getWidth() / 2 - cakewidth / 3,
+                Yppos, dimension2D.getWidth() / 2 + cakewidth / 3, Yppos);
 
         spray.setOpacity(0);
         spray2.setOpacity(0);
@@ -342,8 +342,8 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         TranslateTransition tt2 = new TranslateTransition(Duration.millis(500), aerograph2);
         tt2.setToX(-offset);
 
-        Color[] c = { Color.rgb(232, 193, 136), Color.rgb(255, 114, 113), Color.rgb(113, 171, 255),
-                Color.rgb(128, 70, 50) };
+        Color[] c = {Color.rgb(232, 193, 136), Color.rgb(255, 114, 113), Color.rgb(113, 171, 255),
+            Color.rgb(128, 70, 50)};
 
         spray.setFill(c[i]);
         spray2.setFill(c[i]);
@@ -403,8 +403,8 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         for (int i = 0; i < k; i++) { // HomePage of the game
             ProgressButton bt = new ProgressButton();
             bt.getButton().setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
-                    + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
-                    + "-fx-max-height: " + buttonSize + "px;");
+                + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
+                + "-fx-max-height: " + buttonSize + "px;");
             if (i < k - 1) {
                 createSelectionButton(bt, i, j, k, dimension2D);
             } else {
@@ -451,7 +451,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                 cake[c].toFront();
             }
             active(0);
-            if (mode != 0) {
+            if (!variant.equals(CakeGameVariant.FREE)) {
                 winButton(false);
             }
 
@@ -484,9 +484,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         grabs.setFitWidth(dimension2D.getWidth() / (4 + i));
         grabs.setPreserveRatio(true);
         double height = ((grabs.getImage().getHeight()) * (dimension2D.getWidth() / (4 + i)))
-                / grabs.getImage().getWidth();
+            / grabs.getImage().getWidth();
         double cakeheight = ((cakeGrabed.getImage().getHeight()) * (dimension2D.getWidth() / (4 + i)))
-                / cakeGrabed.getImage().getWidth();
+            / cakeGrabed.getImage().getWidth();
         grabs.setY(cakeheight - height);
         double offset = cakeGrabed.getFitWidth();
         grab.setLayoutX(-cakeGrabed.getFitWidth());
@@ -565,7 +565,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                 cakemodel.setFitWidth(dimension2D.getWidth() / (2 * (4 + i)));
                 cakemodel.setPreserveRatio(true);
                 cakeheight = ((cakemodel.getImage().getHeight()) * (dimension2D.getWidth() / (2 * (4 + i))))
-                        / cakemodel.getImage().getWidth();
+                    / cakemodel.getImage().getWidth();
                 if ((i != 0) && (j == 0)) {
                     originY = originY - cakeheight / 2;
                 }
@@ -578,7 +578,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         randomCake.setLayoutX(3 * dimension2D.getWidth() / 4);
         randomCake.setLayoutY(dimension2D.getHeight() / 2);
         gameContext.getChildren().add(randomCake);
-        if (mode == 2) {
+        if (variant.equals(CakeGameVariant.EXTREM)) {
 
             EventHandler<Event> cakeVanisher = e -> {
                 log.debug("cake is vanishing");
@@ -625,7 +625,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
         active(0);
 
-        if (mode != 0) {
+        if (!variant.equals(CakeGameVariant.FREE)) {
             generateRandomCake();
             winButton(false);
         }

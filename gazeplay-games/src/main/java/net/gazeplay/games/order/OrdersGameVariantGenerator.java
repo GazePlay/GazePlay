@@ -1,17 +1,13 @@
 package net.gazeplay.games.order;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import net.gazeplay.GameSpec;
 
-import java.util.Set;
+public class OrdersGameVariantGenerator extends GameSpec.IntListVariantGenerator {
 
-public class OrdersGameVariantGenerator implements GameSpec.GameVariantGenerator {
-    @Override
-    public Set<GameSpec.GameVariant> getVariants() {
-        return Sets.newLinkedHashSet(Lists.newArrayList(
+    private static final String TARGETS = "targets";
 
-            new GameSpec.TargetsGameVariant(3), new GameSpec.TargetsGameVariant(5),
-            new GameSpec.TargetsGameVariant(7)));
+    public OrdersGameVariantGenerator() {
+        super(TARGETS, 3, 5, 7);
     }
+
 }
