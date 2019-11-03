@@ -6,8 +6,4 @@ import lombok.Data;
 public class VariableRange {
     private final int min;
     private final int max;
-
-    public String asText() {
-        return "" + min + " to " + max;
-    }
 }

@@ -11,7 +11,7 @@ public class MathGameVariant implements GameSpec.GameVariant {
 
     @Override
     public String getLabel(Translator translator) {
-        return variableRange.asText();
+        return translator.translate("From") + " " + variableRange.getMin() + " " + translator.translate("to") + " " + variableRange.getMax();
     }
 
 }
