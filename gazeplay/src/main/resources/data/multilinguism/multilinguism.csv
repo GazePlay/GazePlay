@@ -125,8 +125,12 @@ BibJump,Biboule Jump,بيبول يقذف,Biboule Jump,Biboule Jump,Biboule Jump,
 Score,Pikët,مجموع النقاط,,,,Score,,Score,,,Punteggio,,,,,,,Puntuación,
 Highscore,Rekord ,أعلى نتيجة,,,,Highscore,,Meilleur score,,,Record !,,,,,,,Récord,
 New highscore!,Rekord i ri !,نتيجة عالية جديدة,,,,New highscore!,,Nouveau meilleur score!,,,Nuovo record !,,,,,,,Niuevo récord !,
+
+Choose number of targets,,,,,,Choose number of targets,,Choisis le nombre de cibles,,,,,,,,,,,
 targets, shënjestra,أهداف,,,,  targets,, objectifs,,, bersagli,,,,,,, objetivos,
-cups, tasa,كؤوس,,,, cups,, tasses,,, tazze,,,,,,, tazas,
+
+Choose number of cups,,,,,,Choose number of cups,,Choisis le nombre de gobelets,,,,,,,,,,,
+cups, tasa,كؤوس,,,, cups,, gobelets,,, tazze,,,,,,, tazas,
 
 Math101: Addition,,,,,,Math 101: Addition,, Apprends les Maths : Additions,,,,,,,,,,,
 Math101: Substraction,,,,,,Math 101: Substraction,, Apprends les Maths : Soustractions,,,,,,,,,,,
@@ -163,8 +167,10 @@ Spot the differences,Gjej ndryshimet,,,,,Spot the differences,,Trouvez les diff�
 SpotDifference,Gjej Ndryshimin,,,,,Spot The Difference,,Trouvez les différences,,,,,,,,,,,
 Spot all the differences,Gjej gjithë ndryshimet,,,,,Spot all the differences,,Trouvez toutes les différences,,,Trova tutte le differenze,,,,,,,,
 Differences found,Ndryshimet e gjetura,,,,,Differences found,,Différences trouvées,,,Differenze trovate,,,,,,,,
-Dice,Zara,,,,,Dice,,Dés,,,Dadi ,,,,,,,,
-dices,zara,,,,,dices,,dés,,,dadi ,,,,,,,,
+
+Dice,Zara,,,,,Dice,,Dés,,,Dadi,,,,,,,,
+Choose number of dices,,,,,,Choose number of dices,,Choisis le nombre de dès,,,,,,,,,,,
+
 letters,Gjej shkronjat ,,,,,Identify The Letters,,Identifiez La Lettre,,,Trova la lettera,,,,,,,,
 puzzle,,,,,,Sliding Puzzle,,Jeu de taquin,,,Puzzle scorrevole,,,,,,,,
 Choose the Letter,Zgjidh shkronjën ,,,,,Choose the Letter,,Choisissez la Lettre,,,Scegli la lettera,,,,,,,,
@@ -175,7 +181,10 @@ Biboule,Biboule,,,,,Biboule,,Biboule,,,Biball,,,,,,,,
 Potions,Përzierje Magjike,,,,,Magic Potions,,Potions Magiques,,,Pozioni Magiche ,,,,,,,Pociones Mágicas,
 SpaceGame,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game
 GooseGame,,,,,,Goose Game,,Jeu de l'oie,,,,,,,,,,,
+
 players,,,,,,players,,joueurs,,,,,,,,,,,
+Choose number of players,,,,,,Choose number of players,,Choisis le nombre de joueurs,,,,,,,,,,,
+
 Player %d's turn,,,,,,Player %d's turn,,C'est au tour du joueur %d,,,,,,,,,,,
 Repeat last throw!,,,,,,Repeat last throw!,,Rejoue le dernier lancer!,,,,,,,,,,,
 Player %d takes the bridge to square %d,,,,,,Player %d takes the bridge to square %d,,Le joueur %d prend le pont jusqu'à la case %d,,,,,,,,,,,

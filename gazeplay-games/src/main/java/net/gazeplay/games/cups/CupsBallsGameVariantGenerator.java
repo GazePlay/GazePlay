@@ -4,10 +4,8 @@ import net.gazeplay.GameSpec;
 
 public class CupsBallsGameVariantGenerator extends GameSpec.IntListVariantGenerator {
 
-    private static final String CUPS = "cups";
-
     public CupsBallsGameVariantGenerator() {
-        super(CUPS, 3, 5);
+        super("Choose number of cups", 3, 5);
     }
 
 }

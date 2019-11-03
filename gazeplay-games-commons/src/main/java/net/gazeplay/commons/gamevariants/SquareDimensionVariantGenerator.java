@@ -1,6 +1,8 @@
 package net.gazeplay.commons.gamevariants;
 
 import com.google.common.collect.Sets;
+import lombok.Getter;
+import lombok.Setter;
 import net.gazeplay.GameSpec;
 
 import java.util.Set;
@@ -10,6 +12,10 @@ public class SquareDimensionVariantGenerator implements GameSpec.GameVariantGene
     private final int minSize;
 
     private final int maxSize;
+
+    @Getter
+    @Setter
+    private String variantChooseText = "Choose size";
     
     public SquareDimensionVariantGenerator(int minSize, int maxSize) {
         super();
