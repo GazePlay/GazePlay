@@ -14,11 +14,8 @@ import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
  * @author Johana MARKU
  *
  */
-
 @Slf4j
-public class Explosion extends Rectangle {
-
-    private static final int soundClipDuration = 5000;
+class Explosion extends Rectangle {
 
     private static final String defaultPictureResourceLocation = "data/common/images/explosion.gif";
 
@@ -27,7 +24,7 @@ public class Explosion extends Rectangle {
     @Setter
     private boolean enableRewardSound;
 
-    public Explosion(Dimension2D gameDimension/* , Image expImage */) {
+    Explosion(Dimension2D gameDimension/* , Image expImage */) {
         super(0, 0, 0, 0);
         this.enableRewardSound = ActiveConfigurationContext.getInstance().isEnableRewardSound();
 

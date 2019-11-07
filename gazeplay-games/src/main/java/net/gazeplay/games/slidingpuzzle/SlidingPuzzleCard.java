@@ -34,18 +34,18 @@ import java.util.logging.Logger;
  * @author Peter Bardawil
  */
 @Slf4j
-public class slidingpuzzlecard extends Parent {
+class SlidingPuzzleCard extends Parent {
 
-    public slidingpuzzlecard(int id, double positionX, double positionY, double width, double height, String fileName,
-                             double fixationlength, IGameContext gameContext, SlidingPuzzle gameInstance, Stats stats, double kingPosX,
-                             double kingPosY) {
+    SlidingPuzzleCard(int id, double positionX, double positionY, double width, double height, String fileName,
+                      double fixationlength, IGameContext gameContext, SlidingPuzzle gameInstance, Stats stats, double kingPosX,
+                      double kingPosY) {
         this.fixationlength = fixationlength;
         this.CardId = id;
         this.card = new Rectangle(positionX, positionY, width, height);
         this.card.setFill(new ImagePattern(new Image(fileName), 0, 0, 1, 1, true));
         this.gameContext = gameContext;
         this.initWidth = (int) width;
-        this.initHeight = (int) height;
+        int initHeight = (int) height;
         this.initX = (int) positionX;
         this.initY = (int) positionY;
         this.gameInstance = gameInstance;
@@ -70,8 +70,6 @@ public class slidingpuzzlecard extends Parent {
         currentTimeline = new Timeline();
     }
 
-    private static final float zoom_factor = 1.05f;
-
     private final double fixationlength;
 
     private final Rectangle card;
@@ -82,7 +80,6 @@ public class slidingpuzzlecard extends Parent {
     private final IGameContext gameContext;
 
     private final int initWidth;
-    private final int initHeight;
 
     @Getter
     @Setter
@@ -106,9 +103,9 @@ public class slidingpuzzlecard extends Parent {
 
     private Timeline timelineProgressBar;
 
-    final Stats stats;
+    private final Stats stats;
 
-    final EventHandler<Event> enterEvent;
+    private final EventHandler<Event> enterEvent;
 
     /**
      * Use a comma Timeline object so we can stop the current animation to prevent overlapses.
@@ -146,7 +143,7 @@ public class slidingpuzzlecard extends Parent {
 
     }
 
-    public void isKingCardEvent(double x, double y) {
+    void isKingCardEvent(double x, double y) {
         progressIndicator.setOpacity(0);
         // currentTimeline.stop();
         currentTimeline = new Timeline();
@@ -158,9 +155,6 @@ public class slidingpuzzlecard extends Parent {
     }
 
     private void onGameOver() {
-
-        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
         stats.incNbGoals();
 
         progressIndicator.setOpacity(0);
@@ -178,7 +172,7 @@ public class slidingpuzzlecard extends Parent {
             try {
                 stats.saveStats();
             } catch (IOException ex) {
-                Logger.getLogger(slidingpuzzlecard.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SlidingPuzzleCard.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             stats.notifyNewRoundReady();

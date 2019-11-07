@@ -31,7 +31,6 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
-import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
 import java.io.*;
@@ -40,14 +39,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Slf4j
 public class SpaceGame extends AnimationTimer implements GameLifeCycle {
-    private static String DATA_PATH = "data/space";
 
-    private final IGameContext gameContext;
     private final SpaceGameStats spaceGameStats;
     private final Dimension2D dimension2D;
     private final Random random;
@@ -58,13 +53,10 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     private final Group backgroundLayer;
     private final Group middleLayer;
-    private final Group foregroundLayer;
     private final Rectangle interactionOverlay;
-    private final StackPane sp;
 
     private Point2D gazeTarget;
     private Point2D velocity;
-    private final double maxSpeed = 0.7;
 
     private final double bibouleWidth;
     private final double bibouleHeight;
@@ -75,7 +67,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private long minFPS = 1000;
 
     private Rectangle spaceship;
-    private Label onScreenText;
     private Text scoreText;
     private ArrayList<Biboule> biboules;
     private ArrayList<Biboule> biboulesKilled;
@@ -88,7 +79,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private final Rectangle shade;
     private final ProgressButton restartButton;
     private Text finalScoreText;
-    private final int fixationLength;
 
     private final Multilinguism translate;
 
@@ -97,14 +87,11 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private ParallelTransition parallelTransition2;
     private ParallelTransition parallelTransition3;
     private ParallelTransition parallelTransition4;
-    private SequentialTransition sequentialTransition;
     private SequentialTransition sequentialTransition2;
     private FadeTransition bibouleDisappear;
     private FadeTransition bulletDisappear;
     private FadeTransition spaceshipDisappear;
     private FadeTransition bulletBibouleDisappear;
-    private FadeTransition bibouleAppear;
-    private FadeTransition bossAppear;
     private FadeTransition bossDisappear;
     private FadeTransition bossFade;
     private FadeTransition bossFade2;
@@ -114,18 +101,15 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private int bibouleValue;
     private int bibouleBulletValue;
     private int bossBulletValue;
-    private int bossValue;
     private ArrayList<Rectangle> bulletListRec;
     private ArrayList<Rectangle> bulletBibouleListRec;
     private ArrayList<Rectangle> bulletBossListRec;
     private ArrayList<Rectangle> spaceshipDestroyed;
 
-    private ExecutorService ex;
     private int bossHit;
 
-    public SpaceGame(IGameContext gameContext, Stats stats) {
-        this.gameContext = gameContext;
-        this.spaceGameStats = (SpaceGameStats) stats;
+    public SpaceGame(IGameContext gameContext, SpaceGameStats stats) {
+        this.spaceGameStats = stats;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.random = new Random();
         this.configuration = ActiveConfigurationContext.getInstance();
@@ -135,11 +119,11 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
-        this.foregroundLayer = new Group();
-        this.sp = new StackPane();
-        this.gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
+        Group foregroundLayer = new Group();
+        StackPane sp = new StackPane();
+        gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
 
-        this.biboules = new ArrayList();
+        this.biboules = new ArrayList<>();
         this.bibouleWidth = dimension2D.getWidth() / 20;
         this.bibouleHeight = dimension2D.getHeight() / 10;
         this.bossWidth = dimension2D.getWidth() / 8;
@@ -183,11 +167,11 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         translateTransition2.setToY(dimension2D.getHeight());
         translateTransition2.setInterpolator(Interpolator.LINEAR);
 
-        sequentialTransition = new SequentialTransition(translateTransition, translateTransition2);
+        SequentialTransition sequentialTransition = new SequentialTransition(translateTransition, translateTransition2);
         sequentialTransition.setCycleCount(Animation.INDEFINITE);
         sequentialTransition.play();
 
-        onScreenText = new Label();
+        Label onScreenText = new Label();
         foregroundLayer.getChildren().add(onScreenText);
 
         scoreText = new Text(0, 50, "0");
@@ -198,12 +182,13 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         foregroundLayer.getChildren().add(scoreText);
 
         // Menu
-        fixationLength = configuration.getFixationLength();
+        int fixationLength = configuration.getFixationLength();
 
         shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));
 
         restartButton = new ProgressButton();
+        String DATA_PATH = "data/space";
         ImageView restartImage = new ImageView(DATA_PATH + "/menu/restart.png");
         restartImage.setFitHeight(dimension2D.getHeight() / 6);
         restartImage.setFitWidth(dimension2D.getHeight() / 6);
@@ -219,7 +204,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         finalScoreText.setWrappingWidth(dimension2D.getWidth());
         foregroundLayer.getChildren().addAll(shade, finalScoreText, restartButton);
 
-        this.gameContext.getGazeDeviceManager().addEventFilter(restartButton);
+        gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
         // Interaction
         gazeTarget = new Point2D(dimension2D.getWidth() / 2, dimension2D.getHeight() / 2);
@@ -239,11 +224,10 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         interactionOverlay.setFill(Color.TRANSPARENT);
         foregroundLayer.getChildren().add(interactionOverlay);
 
-        this.gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
+        gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
 
         this.bulletValue = 0;
         this.bibouleValue = 0;
-        this.bossValue = 0;
         this.bossBulletValue = 0;
         this.bibouleBulletValue = 0;
         this.bossHit = 0;
@@ -255,10 +239,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.bosses = new ArrayList<>();
         this.bossKilled = new ArrayList<>();
         this.bulletBossListRec = new ArrayList<>();
-
-        this.ex = Executors.newWorkStealingPool();
-        // this.ex = Executors.newFixedThreadPool(10);
-        // this.ex = Executors.newCachedThreadPool();
     }
 
     @Override
@@ -333,6 +313,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         double distance = Math.abs(gazeTarget.getX() - (spaceship.getX() + spaceship.getWidth() / 2));
         double direction = distance == 0 ? 1
             : (gazeTarget.getX() - (spaceship.getX() + spaceship.getWidth() / 2)) / distance;
+        double maxSpeed = 0.7;
         if (distance > maxSpeed) {
             velocity = new Point2D(maxSpeed * direction, velocity.getY());
         } else {
@@ -563,7 +544,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     }
 
-    public double getGameSpeed() {
+    private double getGameSpeed() {
         double speed = configuration.getSpeedEffects();
         return Math.max(speed, 1.0);
     }
@@ -631,7 +612,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         b.setFill(new ImagePattern(bibouleImage.pickRandomImage()));
         // b.setFill(new ImagePattern(new Image("data/space/enemy/boss.gif")));
         backgroundLayer.getChildren().add(b);
-        bibouleAppear = new FadeTransition(Duration.seconds(1), b);
+        FadeTransition bibouleAppear = new FadeTransition(Duration.seconds(1), b);
         bibouleAppear.setInterpolator(Interpolator.LINEAR);
         bibouleAppear.setCycleCount(1);
         bibouleAppear.setFromValue(0);
@@ -645,7 +626,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         boss.setFill(new ImagePattern(new Image("data/space/enemy/boss.gif")));
         bosses.add(boss);
         backgroundLayer.getChildren().add(boss);
-        bossAppear = new FadeTransition(Duration.seconds(1), boss);
+        FadeTransition bossAppear = new FadeTransition(Duration.seconds(1), boss);
         bossAppear.setInterpolator(Interpolator.LINEAR);
         bossAppear.setCycleCount(1);
         bossAppear.setFromValue(0);

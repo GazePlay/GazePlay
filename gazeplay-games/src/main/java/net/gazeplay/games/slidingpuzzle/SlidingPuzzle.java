@@ -32,7 +32,7 @@ public class SlidingPuzzle implements GameLifeCycle {
     @Data
     @AllArgsConstructor
     private static class RoundDetails {
-        private final List<slidingpuzzlecard> cardList;
+        private final List<SlidingPuzzleCard> cardList;
         private final int winnerImageIndexAmongDisplayedImages;
     }
 
@@ -51,8 +51,6 @@ public class SlidingPuzzle implements GameLifeCycle {
         this.cardWidth = cardHeight;
         this.stats = stats;
         this.gameContext = gameContext;
-        this.nbLines = nbLines;
-        this.nbColumns = nbColumns;
 
         this.picPath = gameVariant.getEnumValue().getResourcesPath();
     }
@@ -65,13 +63,7 @@ public class SlidingPuzzle implements GameLifeCycle {
 
     private final IGameContext gameContext;
 
-    private final int nbLines;
-
-    private final int nbColumns;
-
     private List<Coord> coordList = new ArrayList<>();
-
-    private Random randomGenerator;
 
     private final double boxHeight;
     private final double boxWidth;
@@ -123,7 +115,7 @@ public class SlidingPuzzle implements GameLifeCycle {
 
         gameContext.getChildren().add(imageRectangle);
 
-        List<slidingpuzzlecard> cardList = createCards(config);
+        List<SlidingPuzzleCard> cardList = createCards(config);
         currentRoundDetails = new SlidingPuzzle.RoundDetails(cardList, 1);
 
         gameContext.getChildren().addAll(cardList);
@@ -134,7 +126,7 @@ public class SlidingPuzzle implements GameLifeCycle {
     @Override
     public void dispose() {
         // Collect all items to be removed from the User Interface
-        List<slidingpuzzlecard> cardsToHide = new ArrayList<>(this.currentRoundDetails.cardList);
+        List<SlidingPuzzleCard> cardsToHide = new ArrayList<>(this.currentRoundDetails.cardList);
 
         // remove all at once, in order to update the UserInterface only once
         gameContext.getChildren().removeAll(cardsToHide);
@@ -156,12 +148,12 @@ public class SlidingPuzzle implements GameLifeCycle {
         }
     }
 
-    private List<slidingpuzzlecard> createCards(Configuration config) {
-        randomGenerator = new Random();
+    private List<SlidingPuzzleCard> createCards(Configuration config) {
+        Random randomGenerator = new Random();
 
         final int fixationlength = config.getFixationLength();
 
-        List<slidingpuzzlecard> result = new ArrayList<>();
+        List<SlidingPuzzleCard> result = new ArrayList<>();
         int counter = 1;
         // Initialize KingPos
         int index = randomGenerator.nextInt(coordList.size());
@@ -173,7 +165,7 @@ public class SlidingPuzzle implements GameLifeCycle {
             for (int j = 1; j <= 3; j++) {
 
                 if (i == 3 && j == 3) {
-                    slidingpuzzlecard card = new slidingpuzzlecard(counter, kingPosX, kingPosY, cardWidth, cardHeight,
+                    SlidingPuzzleCard card = new SlidingPuzzleCard(counter, kingPosX, kingPosY, cardWidth, cardHeight,
                         picPath + counter + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY);
                     counter++;
                     card.setKing(true);
@@ -186,7 +178,7 @@ public class SlidingPuzzle implements GameLifeCycle {
                     double positionY = coordList.get(index).getY();
                     coordList.remove(index);
 
-                    slidingpuzzlecard card = new slidingpuzzlecard(counter, positionX, positionY, cardWidth, cardHeight,
+                    SlidingPuzzleCard card = new SlidingPuzzleCard(counter, positionX, positionY, cardWidth, cardHeight,
                         picPath + counter + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY);
                     counter++;
 
@@ -203,7 +195,7 @@ public class SlidingPuzzle implements GameLifeCycle {
         if (this.currentRoundDetails == null) {
             return;
         }
-        for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
+        for (SlidingPuzzleCard pictureCard : this.currentRoundDetails.cardList) {
             if (pictureCard.getCardId() == 9) {
                 pictureCard.setInitX(initX);
                 pictureCard.setInitY(initY);
@@ -227,7 +219,7 @@ public class SlidingPuzzle implements GameLifeCycle {
             return;
         }
 
-        for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
+        for (SlidingPuzzleCard pictureCard : this.currentRoundDetails.cardList) {
 
             if (pictureCard.getCardId() == 9) {
 
@@ -243,7 +235,7 @@ public class SlidingPuzzle implements GameLifeCycle {
 
     void showCards() {
 
-        for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
+        for (SlidingPuzzleCard pictureCard : this.currentRoundDetails.cardList) {
             log.info("index :" + pictureCard.getCardId());
             log.info("x Coordinate :" + pictureCard.getInitX());
             log.info("Y Coordinate :" + pictureCard.getInitY());
@@ -254,7 +246,7 @@ public class SlidingPuzzle implements GameLifeCycle {
 
     boolean isGameOver() {
         int counter = 0;
-        for (slidingpuzzlecard pictureCard : this.currentRoundDetails.cardList) {
+        for (SlidingPuzzleCard pictureCard : this.currentRoundDetails.cardList) {
 
             SlidingPuzzle.Coord c1 = new SlidingPuzzle.Coord(pictureCard.getInitX(), pictureCard.getInitY());
 
