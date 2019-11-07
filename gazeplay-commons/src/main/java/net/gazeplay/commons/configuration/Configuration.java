@@ -63,7 +63,7 @@ public class Configuration implements Cloneable {
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
-    private static final int DEFAULT_VALUE_QUESTION_LENGTH = 5000;
+    private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
@@ -135,7 +135,7 @@ public class Configuration implements Cloneable {
         DEFAULT_VALUE_WHEREISIT_DIR);
 
     @Getter
-    protected final IntegerProperty questionLengthProperty = new SimpleIntegerProperty(this,
+    protected final LongProperty questionLengthProperty = new SimpleLongProperty(this,
         PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH);
 
     @Getter
@@ -282,7 +282,7 @@ public class Configuration implements Cloneable {
         buffer = prop.getProperty(PROPERTY_NAME_QUESTION_LENGTH);
         if (buffer != null) {
             try {
-                questionLengthProperty.setValue(Integer.parseInt(buffer));
+                questionLengthProperty.setValue(Long.parseLong(buffer));
             } catch (NumberFormatException e) {
                 log.warn("NumberFormatException while parsing value '{}' for property {}", buffer,
                     PROPERTY_NAME_QUESTION_LENGTH);
@@ -432,7 +432,7 @@ public class Configuration implements Cloneable {
         properties.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(this.fixationlengthProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_CSSFILE, this.cssfileProperty.getValue());
         properties.setProperty(PROPERTY_NAME_WHEREISIT_DIR, this.whereIsItDirProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Integer.toString(this.questionLengthProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Long.toString(this.questionLengthProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND,
             Boolean.toString(this.enableRewardSoundProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, this.menuButtonsOrientationProperty.getValue());
@@ -524,7 +524,7 @@ public class Configuration implements Cloneable {
         return whereIsItDirProperty.getValue();
     }
 
-    public Integer getQuestionLength() {
+    public long getQuestionLength() {
         return questionLengthProperty.getValue();
     }
 

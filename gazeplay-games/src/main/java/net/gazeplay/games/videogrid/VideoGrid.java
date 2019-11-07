@@ -30,6 +30,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 @Slf4j
@@ -47,7 +48,7 @@ public class VideoGrid implements GameLifeCycle {
     private final GridPane grid;
     private final File videoFolder;
     private final Random random;
-    private final ArrayList<String> compatibleFileTypes;
+    private final List<String> compatibleFileTypes;
 
     private final ColorAdjust greyscale;
 
@@ -76,22 +77,25 @@ public class VideoGrid implements GameLifeCycle {
     public void launch() {
 
         if (videoFolder.isDirectory()) {
-            ArrayList<File> files = new ArrayList(Arrays.asList(videoFolder.listFiles()));
-            // Filter out non compatible files
-            files.removeIf(f -> !f.isFile() || !f.canRead() || f.isDirectory()
-                    || !compatibleFileTypes.contains(FilenameUtils.getExtension(f.getName())));
-            log.info("nb files: " + files.size());
-            if (files.size() == 0)
-                noVideosFound();
+
+            final File[] files = videoFolder.listFiles(f -> {
+                // Filter out non compatible files
+                return f.isFile() && f.canRead() && !f.isDirectory()
+                    && compatibleFileTypes.contains(FilenameUtils.getExtension(f.getName()));
+            });
+            if (files == null || files.length == 0) {
+                noVideoFound();
+                return;
+            }
 
             // Separate list where we will pick files from randomly. To reduce the number of duplicates
-            ArrayList<File> filesChooseFrom = new ArrayList<>(files);
+            List<File> filesChooseFrom = Arrays.asList(files);
 
             for (int i = 0; i < nbColumns; i++) {
                 for (int j = 0; j < nbLines; j++) {
                     // If there aren't enough videos to fill the grid, we use duplicates
                     if (filesChooseFrom.size() == 0) {
-                        filesChooseFrom.addAll(files);
+                        filesChooseFrom.addAll(Arrays.asList(files));
                     }
                     // Picking a random file from the array, and removing it
                     int index = random.nextInt(filesChooseFrom.size());
@@ -132,13 +136,13 @@ public class VideoGrid implements GameLifeCycle {
                     StackPane pane = new StackPane();
                     pane.setAlignment(Pos.CENTER);// j == 0?Pos.BOTTOM_CENTER:j==nbLines-1?Pos.TOP_CENTER:Pos.CENTER);
                     pane.getChildren().addAll(new Rectangle(dimensions.getWidth() / nbColumns - GAP,
-                            dimensions.getHeight() / nbLines - GAP, Color.grayRgb(50)), mediaView);
+                        dimensions.getHeight() / nbLines - GAP, Color.grayRgb(50)), mediaView);
                     grid.add(pane, i, j);
 
                     // When a video is larger than 1920x1080, it won't work, and sends an error
                     mediaPlayer.setOnError(() -> {
                         Text errorText = new Text((String.format(
-                                translate.getTrad("File %s is not supported", config.getLanguage()), file.getName())));
+                            translate.getTrad("File %s is not supported", config.getLanguage()), file.getName())));
                         errorText.setFill(Color.WHITE);
                         errorText.setTextAlignment(TextAlignment.CENTER);
                         errorText.setWrappingWidth(dimensions.getWidth() / nbColumns);
@@ -148,13 +152,14 @@ public class VideoGrid implements GameLifeCycle {
             }
             gameContext.getChildren().add(grid);
         } else {
-            noVideosFound();
+            noVideoFound();
+            return;
         }
         stats.notifyNewRoundReady();
     }
 
-    private void noVideosFound() {
-        Text errorText = new Text(translate.getTrad("No videos found", config.getLanguage()));
+    private void noVideoFound() {
+        Text errorText = new Text(translate.getTrad("No video found", config.getLanguage()));
         errorText.setY(dimensions.getHeight() / 2);
         errorText.setTextAlignment(TextAlignment.CENTER);
         errorText.setFill(config.isBackgroundWhite() ? Color.BLACK : Color.WHITE);
