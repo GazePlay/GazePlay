@@ -23,25 +23,25 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     public IGameContext gameContext;
     public IntegerProperty size;
-    public Rectangle ground;
-    public boolean endOfGame = false;
+    private Rectangle ground;
+    private boolean endOfGame = false;
 
-    public int garageHeight;
-    public int garageWidth;
+    private int garageHeight;
+    private int garageWidth;
     private Pane p;
 
-    Rectangle up;
-    Rectangle down;
-    Rectangle left;
-    Rectangle right;
-    Rectangle door;
+    private Rectangle up;
+    private Rectangle down;
+    private Rectangle left;
+    private Rectangle right;
+    private Rectangle door;
 
-    public Car toWin;
+    private Car toWin;
 
-    public List<Car> garage;
+    private List<Car> garage;
 
-    int level;
-    int numberLevels = 33;
+    private int level;
+    private int numberLevels = 33;
 
     public RushHour(IGameContext gameContext) {
         this.gameContext = gameContext;
@@ -66,7 +66,7 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     }
 
-    public void setLevel(int i) {
+    private void setLevel(int i) {
 
         garage = new LinkedList<>();
 
@@ -175,7 +175,7 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     }
 
-    public void setLevel0(Pane p, ProgressIndicator pi) {
+    private void setLevel0(Pane p, ProgressIndicator pi) {
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -221,7 +221,7 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     }
 
-    public void setLevel1(Pane p, ProgressIndicator pi) {
+    private void setLevel1(Pane p, ProgressIndicator pi) {
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -2434,7 +2434,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         gameContext.getChildren().clear();
     }
 
-    public void toWinListener() {
+    private void toWinListener() {
         toWin.xProperty().addListener((o) -> {
             if (!endOfGame && Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
                 endOfGame = true;
@@ -2457,7 +2457,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         });
     }
 
-    public void setIntersections() {
+    private void setIntersections() {
         for (Car car : garage) {
             if (car.isDirection()) {
                 car.xProperty().addListener((o) -> checkIntersections(car));
@@ -2467,7 +2467,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         }
     }
 
-    public void checkIntersections(Car car) {
+    private void checkIntersections(Car car) {
         for (Car car2 : garage) {
             if (car2 != car) {
                 if (Shape.intersect(car, car2).getBoundsInLocal().getWidth() != -1) {
@@ -2490,7 +2490,7 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     }
 
-    public void createGarage(Pane p) {
+    private void createGarage(Pane p) {
         int longueur = garageWidth;
         int hauteur = garageHeight;
 

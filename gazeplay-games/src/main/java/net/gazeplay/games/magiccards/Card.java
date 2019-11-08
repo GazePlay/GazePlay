@@ -53,9 +53,9 @@ public class Card extends Parent {
     private final ProgressIndicator progressIndicator;
 
     private Timeline timelineProgressBar;
-    final Stats stats;
+    private final Stats stats;
 
-    final EventHandler<Event> enterEvent;
+    private final EventHandler<Event> enterEvent;
 
     /**
      * Use a comme Timeline object so we can stop the current animation to prevent overlapses.

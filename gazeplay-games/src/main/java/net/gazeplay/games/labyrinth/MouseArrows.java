@@ -21,35 +21,30 @@ import net.gazeplay.commons.utils.stats.Stats;
  */
 public abstract class MouseArrows extends Mouse {
 
-    protected ProgressIndicator indicatorUp;
-    protected ProgressIndicator indicatorDown;
-    protected ProgressIndicator indicatorRight;
-    protected ProgressIndicator indicatorLeft;
+    ProgressIndicator indicatorUp;
+    ProgressIndicator indicatorDown;
+    ProgressIndicator indicatorRight;
+    ProgressIndicator indicatorLeft;
 
-    protected Rectangle buttonUp;
-    protected Rectangle buttonDown;
-    protected Rectangle buttonRight;
-    protected Rectangle buttonLeft;
-
-    protected final EventHandler<Event> buttonUpEvent;
-    protected final EventHandler<Event> buttonDownEvent;
-    protected final EventHandler<Event> buttonRightEvent;
-    protected final EventHandler<Event> buttonLeftEvent;
+    Rectangle buttonUp;
+    Rectangle buttonDown;
+    Rectangle buttonRight;
+    Rectangle buttonLeft;
 
     private Timeline timelineProgressBar;
 
-    protected double buttonDimHeight;
-    protected double buttonDimWidth;
+    double buttonDimHeight;
+    double buttonDimWidth;
 
-    public MouseArrows(double positionX, double positionY, double width, double height, IGameContext gameContext,
-            Stats stats, Labyrinth gameInstance) {
+    MouseArrows(double positionX, double positionY, double width, double height, IGameContext gameContext,
+                Stats stats, Labyrinth gameInstance) {
 
         super(positionX, positionY, width, height, gameContext, stats, gameInstance);
 
-        this.buttonUpEvent = buildButtonUp();
-        this.buttonDownEvent = buildButtonDownEvent();
-        this.buttonRightEvent = buildButtonRightEvent();
-        this.buttonLeftEvent = buildButtonLeftEvent();
+        EventHandler<Event> buttonUpEvent = buildButtonUp();
+        EventHandler<Event> buttonDownEvent = buildButtonDownEvent();
+        EventHandler<Event> buttonRightEvent = buildButtonRightEvent();
+        EventHandler<Event> buttonLeftEvent = buildButtonLeftEvent();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         buttonDimHeight = dimension2D.getHeight() / gameInstance.nbBoxesLine;
@@ -116,17 +111,17 @@ public abstract class MouseArrows extends Mouse {
     }
 
     /* s = "up" / "down" / "right" / Left */
-    protected void putInBold(String s, Rectangle b) {
+    private void putInBold(String s, Rectangle b) {
         b.setFill(new ImagePattern(new Image("data/labyrinth/images/" + s + "Arrow.png"), 5, 5, 1, 1, true));
         b.setOpacity(1);
     }
 
-    protected void putInLight(String s, Rectangle b) {
+    private void putInLight(String s, Rectangle b) {
         b.setFill(new ImagePattern(new Image("data/labyrinth/images/" + s + "ArrowLight.png"), 5, 5, 1, 1, true));
         b.setOpacity(0.5);
     }
 
-    public EventHandler<Event> buildButtonUp() {
+    private EventHandler<Event> buildButtonUp() {
         return e -> {
 
             if (indiceY - 1 >= 0 && gameInstance.isFreeForMouse(indiceY - 1, indiceX) && isActivated(e)) {
@@ -162,7 +157,7 @@ public abstract class MouseArrows extends Mouse {
         };
     }
 
-    public EventHandler<Event> buildButtonDownEvent() {
+    private EventHandler<Event> buildButtonDownEvent() {
         return e -> {
 
             if (indiceY + 1 < gameInstance.nbBoxesLine && gameInstance.isFreeForMouse(indiceY + 1, indiceX)
@@ -200,7 +195,7 @@ public abstract class MouseArrows extends Mouse {
         };
     }
 
-    public EventHandler<Event> buildButtonRightEvent() {
+    private EventHandler<Event> buildButtonRightEvent() {
         return e -> {
             if (indiceX + 1 < gameInstance.nbBoxesColumns && gameInstance.isFreeForMouse(indiceY, indiceX + 1)
                 && isActivated(e)) {
@@ -237,7 +232,7 @@ public abstract class MouseArrows extends Mouse {
         };
     }
 
-    public EventHandler<Event> buildButtonLeftEvent() {
+    private EventHandler<Event> buildButtonLeftEvent() {
         return e -> {
 
             if (indiceX - 1 >= 0 && gameInstance.isFreeForMouse(indiceY, indiceX - 1) && isActivated(e)) {

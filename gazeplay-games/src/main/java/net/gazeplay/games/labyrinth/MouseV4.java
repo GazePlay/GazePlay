@@ -13,27 +13,26 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /*
- * Mouse V4 
+ * Mouse V4
  * To move the mouse you must first select it,
  * Then the mouse will follow the player's gaze
  * If the player looks too far or out of the labyrinth, the mouse is deselected
  */
 public class MouseV4 extends Mouse {
 
-    private EventHandler<Event> eventMouse;
     private EventHandler<Event> eventBox;
 
     private Timeline timelineProgressBar;
     private ProgressIndicator indicator;
 
-    protected boolean isSelectioned;
+    private boolean isSelectioned;
 
-    public MouseV4(double positionX, double positionY, double width, double height, IGameContext gameContext,
+    MouseV4(double positionX, double positionY, double width, double height, IGameContext gameContext,
             Stats stats, Labyrinth gameInstance) {
         super(positionX, positionY, width, height, gameContext, stats, gameInstance);
 
         isSelectioned = false;
-        eventMouse = buildEventMouse();
+        EventHandler<Event> eventMouse = buildEventMouse();
         eventBox = buildEventBox();
         indicator = createProgressIndicator(mouse.getX(), mouse.getY(), width, height);
         this.mouse.addEventHandler(GazeEvent.ANY, eventMouse);
@@ -57,7 +56,7 @@ public class MouseV4 extends Mouse {
 
     private boolean conditionToMove(Event e) {
         if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
-                && isSelectioned) {
+            && isSelectioned) {
             GameBox gb = (GameBox) e.getSource();
             return gb.isNextTo(indiceY, indiceX) && gameInstance.isFreeForMouse(gb.numRow, gb.numCol);
         }
@@ -66,7 +65,7 @@ public class MouseV4 extends Mouse {
 
     private boolean conditionToStop(Event e) {
         if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
-                && isSelectioned) {
+            && isSelectioned) {
             GameBox gb = (GameBox) e.getSource();
             if (gb.isNextTo(indiceY, indiceX)) { // fo comfort with eye tracker
                 return false;
@@ -81,7 +80,7 @@ public class MouseV4 extends Mouse {
         return (gb.numCol == indiceX && gb.numRow == indiceY);
     }
 
-    public EventHandler<Event> buildEventBox() {
+    private EventHandler<Event> buildEventBox() {
         return e -> {
 
             if (isCurrentBox(e)) {
@@ -117,7 +116,7 @@ public class MouseV4 extends Mouse {
 
     }
 
-    public EventHandler<Event> buildEventMouse() {
+    private EventHandler<Event> buildEventMouse() {
         return e -> {
 
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
