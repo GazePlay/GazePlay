@@ -52,9 +52,9 @@ public class WhereIsIt implements GameLifeCycle {
 
     public enum WhereIsItGameType {
         ANIMALNAME("where-is-the-animal", "where-is-the-animal"), COLORNAME("where-is-the-color",
-                "where-is-the-color"), LETTERS("where-is-the-letter", "where-is-the-letter"), NUMBERS(
-                        "where-is-the-number", "where-is-the-number"), FLAGS("find-flag", "find-flag"), CUSTOMIZED(
-                                "custumized", "custumized"), FINDODD("find-the-odd-one-out", "find-the-odd-one-out");
+            "where-is-the-color"), LETTERS("where-is-the-letter", "where-is-the-letter"), NUMBERS(
+            "where-is-the-number", "where-is-the-number"), FLAGS("find-flag", "find-flag"), CUSTOMIZED(
+            "custumized", "custumized"), FINDODD("find-the-odd-one-out", "find-the-odd-one-out");
 
         @Getter
         private final String gameName;
@@ -86,7 +86,7 @@ public class WhereIsIt implements GameLifeCycle {
     private RoundDetails currentRoundDetails;
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
-            final IGameContext gameContext, final Stats stats) {
+                     final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
@@ -108,7 +108,7 @@ public class WhereIsIt implements GameLifeCycle {
         final Configuration config = ActiveConfigurationContext.getInstance();
 
         currentRoundDetails = pickAndBuildRandomPictures(config, numberOfImagesToDisplayPerRound, random,
-                winnerImageIndexAmongDisplayedImages);
+            winnerImageIndexAmongDisplayedImages);
 
         if (currentRoundDetails != null) {
 
@@ -177,10 +177,10 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         TranslateTransition fullAnimation = new TranslateTransition(
-                Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength() / 2), questionText);
+            Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength() / 2d), questionText);
         fullAnimation.setDelay(Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength()));
         double bottomCenter = (0.9 * gamePaneDimension2D.getHeight()) - questionText.getY()
-                + questionText.getBoundsInParent().getHeight() * 3;
+            + questionText.getBoundsInParent().getHeight() * 3;
         fullAnimation.setToY(bottomCenter);
 
         fullAnimation.setOnFinished(actionEvent -> {
@@ -258,8 +258,8 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     private RoundDetails pickAndBuildRandomPictures(final Configuration config,
-            final int numberOfImagesToDisplayPerRound, final Random random,
-            final int winnerImageIndexAmongDisplayedImages) {
+                                                    final int numberOfImagesToDisplayPerRound, final Random random,
+                                                    final int winnerImageIndexAmongDisplayedImages) {
 
         final File imagesDirectory = locateImagesDirectory(config);
 
@@ -284,7 +284,7 @@ public class WhereIsIt implements GameLifeCycle {
         int posY = 0;
 
         final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree)
-                .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
+            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
         log.debug("gameSizing = {}", gameSizing);
 
         final List<PictureCard> pictureCardList = new ArrayList<>();
@@ -328,8 +328,8 @@ public class WhereIsIt implements GameLifeCycle {
                 }
 
                 PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, false,
-                        randomImageFile + "", stats, this);
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, false,
+                    randomImageFile + "", stats, this);
 
                 pictureCardList.add(pictureCard);
 
@@ -375,8 +375,8 @@ public class WhereIsIt implements GameLifeCycle {
             }
 
             PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, true,
-                    randomImageFile + "", stats, this);
+                gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, true,
+                randomImageFile + "", stats, this);
 
             pictureCardList.add(pictureCard);
 
@@ -423,8 +423,8 @@ public class WhereIsIt implements GameLifeCycle {
                 }
 
                 PictureCard pictureCard2 = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, false,
-                        randomImageFile2 + "", stats, this);
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, false,
+                    randomImageFile2 + "", stats, this);
 
                 pictureCardList.add(pictureCard2);
 
@@ -474,8 +474,8 @@ public class WhereIsIt implements GameLifeCycle {
                 }
 
                 PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                        winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
+                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
 
                 pictureCardList.add(pictureCard);
 
@@ -491,39 +491,14 @@ public class WhereIsIt implements GameLifeCycle {
             }
         }
         return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question,
-                pictograms);
+            pictograms);
     }
 
     /**
      * Return all files which don't start with a point
      */
     private File[] getFiles(File folder) {
-
-        File[] files = folder.listFiles();
-
-        int nbElementsToKeep = 0;
-
-        for (File file : files) {
-            log.debug("{}", file.getName());
-            if (!file.getName().startsWith(".")) {
-
-                nbElementsToKeep++;
-            }
-        }
-
-        File[] list = new File[nbElementsToKeep];
-
-        int i = 0;
-
-        for (File file : files) {
-            log.debug("{}", file.getName());
-            if (!file.getName().startsWith(".")) {
-
-                list[i++] = file;
-            }
-        }
-
-        return list;
+        return folder.listFiles(file -> !file.getName().startsWith("."));
     }
 
     private void error(String language) {
@@ -551,60 +526,49 @@ public class WhereIsIt implements GameLifeCycle {
         } else {
 
             result = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(
-                    "data/" + this.gameType.getResourcesDirectoryName() + "/images/");
+                "data/" + this.gameType.getResourcesDirectoryName() + "/images/");
 
             if (result == null) {
                 result = ImageDirectoryLocator.locateImagesDirectoryInExplodedClassPath(
-                        "data/" + this.gameType.getResourcesDirectoryName() + "/images/");
+                    "data/" + this.gameType.getResourcesDirectoryName() + "/images/");
             }
         }
         return result;
     }
 
-    public String getPathSound(final String folder, String language) {
-
+    private String getPathSound(final String folder, String language) {
         if (this.gameType == CUSTOMIZED) {
-
             final Configuration config = ActiveConfigurationContext.getInstance();
-
             try {
-
                 log.debug("CUSTOMIZED");
-
                 String path = config.getWhereIsItDir() + "sounds/";
-                File F = new File(path);
-
-                for (String file : F.list()) {
-
-                    log.debug("file " + file);
-                    log.debug("folder " + folder);
-
-                    if (file.contains(folder)) {
-
-                        File f = new File(path + file);
-
-                        log.debug("file " + f.getAbsolutePath());
-
-                        return f.getAbsolutePath();
+                File soundsDirectory = new File(path);
+                String[] soundsDirectoryFiles = soundsDirectory.list();
+                if (soundsDirectoryFiles != null) {
+                    for (String file : soundsDirectoryFiles) {
+                        log.debug("file " + file);
+                        log.debug("folder " + folder);
+                        if (file.contains(folder)) {
+                            File f = new File(path + file);
+                            log.debug("file " + f.getAbsolutePath());
+                            return f.getAbsolutePath();
+                        }
                     }
                 }
             } catch (Exception e) {
-
                 log.debug("Problem with customized folder");
                 error(config.getLanguage());
             }
-
             return "";
         }
 
         if (gameType == LETTERS || gameType == NUMBERS || gameType == FLAGS) {// no sound for now
-
             // erase when translation is complete
             return null;
         }
 
-        if (!(language.equals("fra") || language.equals("eng"))) {// sound is only for English and French for animals
-                                                                  // and colors
+        if (!(language.equals("fra") || language.equals("eng"))) {
+            // sound is only for English and French for animals and colors
             // erase when translation is complete
             return null;
         }
@@ -619,7 +583,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + language + "/" + folder + "." + voice
-                + "." + language + ".mp3";
+            + "." + language + ".mp3";
     }
 
     private String getQuestionText(final String folder, String language) {
@@ -717,7 +681,7 @@ public class WhereIsIt implements GameLifeCycle {
         private final WhereIsIt gameInstance;
 
         public PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance) {
+                           boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance) {
 
             log.info("imagePath = {}", imagePath);
 
@@ -760,10 +724,10 @@ public class WhereIsIt implements GameLifeCycle {
             Timeline result = new Timeline();
 
             result.getKeyFrames()
-                    .add(new KeyFrame(new Duration(minTime), new KeyValue(progressIndicator.progressProperty(), 1)));
+                .add(new KeyFrame(new Duration(minTime), new KeyValue(progressIndicator.progressProperty(), 1)));
 
             EventHandler<ActionEvent> progressIndicatorAnimationTimeLineOnFinished = createProgressIndicatorAnimationTimeLineOnFinished(
-                    gameInstance);
+                gameInstance);
 
             result.setOnFinished(progressIndicatorAnimationTimeLineOnFinished);
 
@@ -810,11 +774,11 @@ public class WhereIsIt implements GameLifeCycle {
             scaleToFullScreenTransition.setByY((gamePanelDimension2D.getHeight() / initialHeight) - 1);
 
             TranslateTransition translateToCenterTransition = new TranslateTransition(new Duration(1000),
-                    imageRectangle);
+                imageRectangle);
             translateToCenterTransition
-                    .setByX(-initialPositionX + (gamePanelDimension2D.getWidth() - initialWidth) / 2);
+                .setByX(-initialPositionX + (gamePanelDimension2D.getWidth() - initialWidth) / 2);
             translateToCenterTransition
-                    .setByY(-initialPositionY + (gamePanelDimension2D.getHeight() - initialHeight) / 2);
+                .setByY(-initialPositionY + (gamePanelDimension2D.getHeight() - initialHeight) / 2);
 
             ParallelTransition fullAnimation = new ParallelTransition();
             fullAnimation.getChildren().add(translateToCenterTransition);
@@ -865,7 +829,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         private ImageView createImageView(double posX, double posY, double width, double height,
-                @NonNull String imagePath) {
+                                          @NonNull String imagePath) {
             final Image image = new Image("file:" + imagePath);
 
             ImageView result = new ImageView(image);

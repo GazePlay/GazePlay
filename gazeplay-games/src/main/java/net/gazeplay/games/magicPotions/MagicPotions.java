@@ -36,8 +36,6 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         private final Client.PotionMix request;
     }
 
-    private final String image_PATH = "data/potions/images/";
-
     private final IGameContext gameContext;
 
     private final MagicPotionsStats stats;
@@ -61,10 +59,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     @Setter
     private Potion potionBlue;
 
-    private Client client;
-    private Circle clientColor;
-
-    public MagicPotions(IGameContext gameContext, Stats stats) {
+    MagicPotions(IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = (MagicPotionsStats) stats;
@@ -78,6 +73,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         Rectangle background = new Rectangle(0, 0, (int) gameDimension2D.getWidth(), (int) gameDimension2D.getHeight());
         background.widthProperty().bind(gameContext.getRoot().widthProperty());
         background.heightProperty().bind(gameContext.getRoot().heightProperty());
+        String image_PATH = "data/potions/images/";
         background.setFill(new ImagePattern(new Image(image_PATH + "background-potions.jpg")));
 
         int coef = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? 1 : 0;
@@ -93,11 +89,11 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         // make random potion request
         Client.PotionMix request = Client.PotionMix.getRandomPotionRequest();
         colorRequest = request.getColor();
-        client = new Client(bibX, bibY, bibouleClient.getWidth(), bibouleClient.getHeight(), bibouleClient, request);
+        Client client = new Client(bibX, bibY, bibouleClient.getWidth(), bibouleClient.getHeight(), bibouleClient, request);
 
         // since the background of the image is transparent this color will fill it
-        clientColor = new Circle(gameDimension2D.getWidth() * 3 / 4, bibouleClient.getHeight() / 2.2,
-                bibouleClient.getHeight() / 5);
+        Circle clientColor = new Circle(gameDimension2D.getWidth() * 3 / 4, bibouleClient.getHeight() / 2.2,
+            bibouleClient.getHeight() / 5);
         clientColor.setFill(request.getColor());
 
         gameContext.getChildren().add(clientColor);

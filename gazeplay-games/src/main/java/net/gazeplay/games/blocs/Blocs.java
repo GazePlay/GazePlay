@@ -32,12 +32,9 @@ public class Blocs implements GameLifeCycle {
     private final int nbColomns;
     private final boolean colors;
     private final float percents4Win;
-    private final boolean useTrail;
     private final Stats stats;
 
     private final int initCount;
-
-    private final boolean hasColors;
 
     private final int trail = 10;
     private final ImageLibrary imageLibrary;
@@ -51,7 +48,7 @@ public class Blocs implements GameLifeCycle {
 
         private final Bloc[][] blocs;
 
-        public CurrentRoundDetails(int initCount, int nbLines, int nbColumns) {
+        CurrentRoundDetails(int initCount, int nbLines, int nbColumns) {
             this.remainingCount = initCount;
             this.finished = false;
             this.blocs = new Bloc[nbColumns][nbLines];
@@ -62,18 +59,15 @@ public class Blocs implements GameLifeCycle {
     private CurrentRoundDetails currentRoundDetails;
 
     public Blocs(IGameContext gameContext, int nbLines, int nbColumns, boolean colors, float percents4Win,
-            boolean useTrail, Stats stats) {
+                 boolean useTrail, Stats stats) {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColomns = nbColumns;
         this.colors = colors;
         this.percents4Win = percents4Win;
-        this.useTrail = useTrail;
         this.stats = stats;
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("blocs"));
-
-        hasColors = colors;
 
         enterEvent = buildEvent(gameContext, stats, useTrail);
 
@@ -138,11 +132,8 @@ public class Blocs implements GameLifeCycle {
 
     }
 
-    public void removeAllBlocs() {
-
+    private void removeAllBlocs() {
         final Bloc[][] blocs = currentRoundDetails.blocs;
-
-        int maxX = blocs.length;
         int maxY = blocs[0].length;
 
         final Service<Void> calculateService = new Service<>() {
@@ -237,13 +228,15 @@ public class Blocs implements GameLifeCycle {
 
     private static class Bloc extends Rectangle {
 
-        public final int posX;
-        public final int posY;
+        final int posX;
+        final int posY;
 
-        public Bloc(double x, double y, double width, double height, int posX, int posY) {
+        Bloc(double x, double y, double width, double height, int posX, int posY) {
             super(x, y, width, height);
             this.posX = posX;
             this.posY = posY;
         }
+
     }
+
 }

@@ -25,40 +25,26 @@ import java.util.concurrent.TimeUnit;
 
 public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
-    private final Dimension2D videoDimension = new Dimension2D(1280, 720); // 720p
+    private final static double canvasOpacityWhilePlaying = 0.1d;
 
-    private final Dimension2D canvasDimension = new Dimension2D(videoDimension.getWidth(),
-            videoDimension.getHeight() - 80);
-
-    private final double canvasOpacityWhilePlaying = 0.1d;
-
-    private final double canvasOpacityWhileOutside = 0.7d;
+    private final static double canvasOpacityWhileOutside = 0.7d;
 
     /**
      * configure the frequency of the canvas switch, when using 3 canvas
      */
     private final long canvasSwitchFrequency = 500;
 
-    private final int canvasCount = 12;
-
-    private final IGameContext gameContext;
-
-    private final Stats stats;
-
     private final WebView webview;
 
-    private final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
-            new LinkedBlockingQueue<>(), new GroupingThreadFactory(this.getClass().getSimpleName()));
-
-    public VideoPlayerWithLiveFeedbackApp(IGameContext gameContext, Stats stats, String youtubeVideoId) {
+    VideoPlayerWithLiveFeedbackApp(IGameContext gameContext, Stats stats, String youtubeVideoId) {
         super();
-        this.gameContext = gameContext;
-        this.stats = stats;
 
         String videoUrl = "http://www.youtube.com/embed/" + youtubeVideoId + "?autoplay=1";
 
         webview = new WebView();
         webview.getEngine().load(videoUrl);
+        // 720p
+        Dimension2D videoDimension = new Dimension2D(1280, 720);
         webview.setPrefSize(videoDimension.getWidth(), videoDimension.getHeight());
 
         DrawBuilder drawBuilder = new DrawBuilder();
@@ -81,7 +67,10 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
             }
         };
 
+        int canvasCount = 12;
         for (int i = 0; i < canvasCount; i++) {
+            Dimension2D canvasDimension = new Dimension2D(videoDimension.getWidth(),
+                videoDimension.getHeight() - 80);
             Canvas canvas = drawBuilder.createCanvas(canvasDimension);
             canvas.widthProperty().bind(gameContext.getRoot().widthProperty());
             canvas.heightProperty().bind(gameContext.getRoot().heightProperty());
@@ -166,6 +155,8 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
             }
         };
 
+        ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
+            new LinkedBlockingQueue<>(), new GroupingThreadFactory(this.getClass().getSimpleName()));
         executorService.execute(canvasSwitchingTask);
     }
 
@@ -180,4 +171,5 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
             webview.getEngine().load(null);
         }
     }
+
 }

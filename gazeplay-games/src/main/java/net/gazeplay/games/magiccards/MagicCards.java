@@ -26,7 +26,7 @@ public class MagicCards implements GameLifeCycle {
 
     @Data
     @AllArgsConstructor
-    public static class RoundDetails {
+    private static class RoundDetails {
         private final List<Card> cardList;
         private final int winnerImageIndexAmongDisplayedImages;
     }

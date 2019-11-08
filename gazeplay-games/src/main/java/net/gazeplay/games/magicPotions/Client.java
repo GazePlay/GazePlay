@@ -15,7 +15,7 @@ import java.util.Random;
  *
  */
 
-public class Client extends Rectangle {
+class Client extends Rectangle {
 
     @Getter
     private final Rectangle client;
@@ -45,15 +45,14 @@ public class Client extends Rectangle {
         }
     }
 
-    public Client(double posX, double posY, double width, double height, Image clientImage, PotionMix request) {
-
+    Client(double posX, double posY, double width, double height, Image clientImage, PotionMix request) {
         this.client = new Rectangle(posX, posY, width, height);
         this.client.setFill(new ImagePattern(clientImage, 0, 0, 1, 1, true));
         this.potionRequest = request;
         this.colorsToMix = toMix(request);
     }
 
-    public LinkedList<Color> toMix(PotionMix potionRequest) {
+    private LinkedList<Color> toMix(PotionMix potionRequest) {
         LinkedList<Color> colorsToMix = new LinkedList<>();
         if (potionRequest.color == Color.RED || potionRequest.color == Color.YELLOW
                 || potionRequest.color == Color.BLUE) {

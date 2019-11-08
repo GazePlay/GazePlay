@@ -21,7 +21,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Getter;
@@ -64,25 +63,25 @@ public class ColorsGame implements GameLifeCycle {
      */
     // public static final String DEFAULT_IMAGE =
     // "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
-    public static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
+    private static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
     /**
      * On a [0, 1] scale, used to determine the threshold in the difference between two colors to consider that they are
      * equals.
      */
-    public static final double COLOR_EQUALITY_THRESHOLD = 10d / 255d;
+    private static final double COLOR_EQUALITY_THRESHOLD = 10d / 255d;
 
     /**
      * Distance in pixel between two gaze event to consider that the gaze is moving.
      */
-    public static final double GAZE_MOVING_THRESHOLD = 25;
+    private static final double GAZE_MOVING_THRESHOLD = 25;
 
     /**
      * Distance in pixel of the current cursor or gaze position in x and y for the gaze indicator.
      */
     public static final double GAZE_INDICATOR_DISTANCE = 5;
 
-    public static final double AVG_THRESHOLD = 0.39;
+    private static final double AVG_THRESHOLD = 0.39;
 
     /**
      * The gaze progress indicator to show time before colorization.
@@ -124,10 +123,10 @@ public class ColorsGame implements GameLifeCycle {
     private final ColorsGamesStats stats;
 
     private final TitledPane toolBoxPane;
-    
+
     private final Translator translator;
 
-    public ColorsGame(IGameContext gameContext, final ColorsGamesStats stats, final Translator translator) {
+    ColorsGame(IGameContext gameContext, final ColorsGamesStats stats, final Translator translator) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.translator = translator;
@@ -285,11 +284,9 @@ public class ColorsGame implements GameLifeCycle {
 
     /**
      * Change the current image to display and update everything so it can be colorized.
-     * 
-     * @param image
-     *            The new image to colorize.
-     * @param imageName
-     *            The name of the image
+     *
+     * @param image     The new image to colorize.
+     * @param imageName The name of the image
      */
     public void updateImage(final Image image, final String imageName) {
 
@@ -353,8 +350,6 @@ public class ColorsGame implements GameLifeCycle {
 
     private EventHandler<Event> buildEventHandler() {
 
-        final ColorsGame game = this;
-
         return new EventHandler<>() {
 
             private Double gazeXOrigin = 0.;
@@ -365,21 +360,12 @@ public class ColorsGame implements GameLifeCycle {
 
             @Override
             public void handle(Event event) {
-                double gameWidth = gameContext.getPrimaryStage().getWidth();
-                double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
-                double widthDiff = 0;/* screenWidth - gameWidth; */
 
                 if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
-                    MouseEvent mouseEvent = (MouseEvent) event;
-                    // log.info("clicked at x= {}, y = {}", currentX, currentY);
                     colorize(currentX, currentY);
-
                 } else if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
 
                     GazeEvent gazeEvent = (GazeEvent) event;
-
-                    // log.info("Gaze event : {}", gazeEvent);
 
                     currentX = gazeEvent.getX();
                     currentY = gazeEvent.getY();
@@ -481,13 +467,11 @@ public class ColorsGame implements GameLifeCycle {
 
     /**
      * Fill a zone with the current selected color.
-     * 
-     * @param x
-     *            The x coordinates of the point to fill from.
-     * @param y
-     *            The y coordinates of the point to fill from.
+     *
+     * @param x The x coordinates of the point to fill from.
+     * @param y The y coordinates of the point to fill from.
      */
-    public void colorize(final double x, final double y) {
+    private void colorize(final double x, final double y) {
 
         int pixelX = (int) (x * writableImg.getWidth() / rectangle.getWidth());
         int pixelY = (int) (y * writableImg.getHeight() / rectangle.getHeight());
@@ -501,9 +485,9 @@ public class ColorsGame implements GameLifeCycle {
          * Don't fill the zone if the pixel selected is already of the same color. Also don't fill black zones
          */
         if (!isEqualColors(color, colorToolBox.getSelectedColorBox().getColor()) && !isEqualColors(color, Color.BLACK)
-                && drawingEnable.getValue()) {
+            && drawingEnable.getValue()) {
             javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(), pixelX, pixelY,
-                    (int) writableImg.getWidth(), (int) writableImg.getHeight());
+                (int) writableImg.getWidth(), (int) writableImg.getHeight());
             rectangle.setFill(new ImagePattern(writableImg));
             rectangle.toBack();
 
@@ -512,7 +496,7 @@ public class ColorsGame implements GameLifeCycle {
     }
 
     private void javaFXFloodFill(final PixelWriter pixelWriter, final PixelReader pixelReader, Color newColor, int x,
-            int y, int width, int height) {
+                                 int y, int width, int height) {
 
         final Color oldColor = pixelReader.getColor(x, y);
 
@@ -543,7 +527,7 @@ public class ColorsGame implements GameLifeCycle {
     private final Deque<HorizontalZone> horiZones = new ArrayDeque<>();
 
     private void floodInColumnAndLine(final PixelWriter pixelWriter, final PixelReader pixelReader,
-            final Color newColor, final int x, final int y, final int width, final int height, final Color oldColor) {
+                                      final Color newColor, final int x, final int y, final int width, final int height, final Color oldColor) {
 
         int leftX = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, true, oldColor);
         int rightX = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, false, oldColor);
@@ -560,7 +544,7 @@ public class ColorsGame implements GameLifeCycle {
     }
 
     private void searchZone(final HorizontalZone zone, final Color oldColor, final PixelReader pixelReader,
-            final PixelWriter pixelWriter, final Color newColor, final int width, final int height) {
+                            final PixelWriter pixelWriter, final Color newColor, final int width, final int height) {
 
         // Search for left and right of the zone
         int leftX = floodInLine(pixelWriter, pixelReader, newColor, zone.leftX, zone.y, width, true, oldColor);
@@ -588,7 +572,7 @@ public class ColorsGame implements GameLifeCycle {
     }
 
     private int floodInLine(final PixelWriter pixelWriter, final PixelReader pixelReader, final Color newColor,
-            final int x, final int y, final int width, final boolean isLeftFIll, final Color oldColor) {
+                            final int x, final int y, final int width, final boolean isLeftFIll, final Color oldColor) {
 
         int currentX = x;
 
@@ -615,25 +599,22 @@ public class ColorsGame implements GameLifeCycle {
 
     /**
      * Detect if a color is close enough to another one to be considered the same.
-     * 
-     * @param color1
-     *            The first color to compare
-     * @param color2
-     *            The second color to compare
+     *
+     * @param color1 The first color to compare
+     * @param color2 The second color to compare
      * @return true if considered same, false otherwise.
      */
     private static boolean isEqualColors(final Color color1, final Color color2) {
-
         // Scalar distance calculation
         double dist = Math.sqrt(
-                Math.pow(color1.getRed() - color2.getRed(), 2) + Math.pow(color1.getGreen() - color2.getGreen(), 2)
-                        + Math.pow(color1.getBlue() - color2.getBlue(), 2));
+            Math.pow(color1.getRed() - color2.getRed(), 2) + Math.pow(color1.getGreen() - color2.getGreen(), 2)
+                + Math.pow(color1.getBlue() - color2.getBlue(), 2));
 
         return dist <= COLOR_EQUALITY_THRESHOLD;
     }
 
-    public void setEnableColorization(boolean enable) {
-
+    void setEnableColorization(boolean enable) {
         this.drawingEnable.setValue(enable);
     }
+
 }

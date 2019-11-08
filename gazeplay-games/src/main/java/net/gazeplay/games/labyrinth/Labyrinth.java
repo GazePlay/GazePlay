@@ -155,18 +155,18 @@ public class Labyrinth extends Parent implements GameLifeCycle {
      * }
      */
 
-    public boolean isFreeForMouse(int i, int j) {
+    boolean isFreeForMouse(int i, int j) {
         if (i >= nbBoxesLine || j >= nbBoxesColumns) {
             return false;
         }
         return (!walls[i][j].isAWall());
     }
 
-    public boolean isFreeForCheese(int i, int j) {
+    boolean isFreeForCheese(int i, int j) {
         return (!walls[i][j].isAWall() && !mouse.isTheMouse(i, j));
     }
 
-    public void testIfCheese(int i, int j) {
+    void testIfCheese(int i, int j) {
         if (cheese.isTheCheese(i, j)) {
             stats.incNbGoals();
             stats.notifyNewRoundReady();

@@ -544,11 +544,11 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     private void generateRandomCake() {
         for (int i = 0; i < 3; i++) {
-            model[i][0] = 1 + (int) (Math.random() * 4);
-            model[i][1] = 1 + (int) (Math.random() * 5);
-            model[i][2] = 1 + (int) (Math.random() * 3);
+            model[i][0] = 1 + (int) (Math.random() * 4d);
+            model[i][1] = 1 + (int) (Math.random() * 5d);
+            model[i][2] = 1 + (int) (Math.random() * 3d);
         }
-        model[2][3] = 1 + (int) (Math.random() * 2);
+        model[2][3] = 1 + (int) (Math.random() * 2d);
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         randomCake = new Pane();

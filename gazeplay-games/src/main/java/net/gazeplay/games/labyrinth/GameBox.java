@@ -7,25 +7,20 @@ import javafx.scene.shape.Rectangle;
 
 public class GameBox extends Parent {
 
-    private final Color colorWall = Color.MAROON;
-    private final Color colorBackground = Color.BEIGE;
-
     protected Rectangle r;
 
     protected ProgressIndicator indicator;
 
     private double x;
     private double y;
-    protected int numCol; // j
-    protected int numRow; // i
+    int numCol; // j
+    int numRow; // i
 
     private boolean isAWall;
 
-    public boolean wasNextToTheMouse;
+    boolean wasNextToTheMouse;
 
-    public boolean visited;
-
-    public GameBox(double height, double width, double coordX, double coordY, int wall, int nc, int nr) {
+    GameBox(double height, double width, double coordX, double coordY, int wall, int nc, int nr) {
 
         this.x = coordX;
         this.y = coordY;
@@ -46,27 +41,27 @@ public class GameBox extends Parent {
 
         if (wall == 1) {
             isAWall = true;
+            Color colorWall = Color.MAROON;
             r.setFill(colorWall);
         } else {
             isAWall = false;
+            Color colorBackground = Color.BEIGE;
             r.setFill(colorBackground);
         }
         this.getChildren().addAll(r, indicator);
     }
 
-    public GameBox(int x, int y, boolean wall, boolean visit) {
+    private GameBox(int x, int y, boolean wall, boolean visit) {
         numCol = x;
         numRow = y;
-        visited = visit;
         isAWall = wall;
-
     }
 
-    public boolean isAWall() {
+    boolean isAWall() {
         return isAWall;
     }
 
-    public boolean isNextTo(int i, int j) {
+    boolean isNextTo(int i, int j) {
         boolean nextToInRow = (i == numRow) && (j == numCol - 1 || j == numCol + 1);
         boolean nextToInCol = (j == numCol) && (i == numRow - 1 || i == numRow + 1);
         return (nextToInRow || nextToInCol);

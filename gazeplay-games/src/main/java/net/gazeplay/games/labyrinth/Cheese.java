@@ -7,22 +7,18 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.Random;
 
-public class Cheese extends Parent {
+class Cheese extends Parent {
 
-    public Rectangle cheese;
+    private Rectangle cheese;
     private final Labyrinth gameInstance;
 
-    public int indexY;
-    public int indexX;
+    private int indexY;
+    private int indexX;
 
     private Random r;
 
-    public boolean alreadyCheese;
-
-    public Cheese(double entiereRecX, double entiereRecY, double width, double height, Labyrinth gameInstance) {
-
+    Cheese(double entiereRecX, double entiereRecY, double width, double height, Labyrinth gameInstance) {
         this.gameInstance = gameInstance;
-        alreadyCheese = false;
         cheese = new Rectangle(entiereRecX, entiereRecY, width, height);
         cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/cheese.png"), 5, 5, 1, 1, true));
         indexY = 0;
@@ -30,13 +26,13 @@ public class Cheese extends Parent {
         cheese.setMouseTransparent(true);
     }
 
-    public void beginCheese() {
+    void beginCheese() {
         r = new Random();
         moveCheese();
         this.getChildren().add(cheese);
     }
 
-    public void moveCheese() {
+    void moveCheese() {
         int x, y;
         do {
             y = r.nextInt(gameInstance.nbBoxesLine);
@@ -55,7 +51,7 @@ public class Cheese extends Parent {
 
     }
 
-    public boolean isTheCheese(int i, int j) {
+    boolean isTheCheese(int i, int j) {
         return (i == indexY && j == indexX);
     }
 

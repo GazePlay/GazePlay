@@ -27,7 +27,6 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
-import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
 import java.io.*;
@@ -85,11 +84,9 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private Text finalScoreText;
     private final int fixationLength;
 
-    private final Multilinguism translate;
-
-    public BibouleJump(IGameContext gameContext, Stats stats, BibouleJumpVariant variant) {
+    public BibouleJump(IGameContext gameContext, BibouleJumpStats stats, BibouleJumpVariant variant) {
         this.gameContext = gameContext;
-        this.stats = (BibouleJumpStats) stats;
+        this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.randomGenerator = new Random();
         this.config = ActiveConfigurationContext.getInstance();
@@ -106,8 +103,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.platforms = new ArrayList();
         this.platformHeight = dimensions.getHeight() / 10;
         this.platformWidth = dimensions.getWidth() / 7;
-
-        this.translate = Multilinguism.getSingleton();
 
         Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         backgroundImage.setFill(Color.SKYBLUE);
@@ -278,12 +273,12 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         shade.setOpacity(1);
         int highscore = getsetHighscore(score);
         StringBuilder sb = new StringBuilder();
-        sb.append(translate.getTrad("Score", config.getLanguage()) + translate.getTrad("Colon", config.getLanguage())
+        sb.append(Multilinguism.getSingleton().getTrad("Score", config.getLanguage()) + Multilinguism.getSingleton().getTrad("Colon", config.getLanguage())
             + " " + score + "\n");
-        sb.append(translate.getTrad("Highscore", config.getLanguage())
-            + translate.getTrad("Colon", config.getLanguage()) + " " + highscore + "\n");
+        sb.append(Multilinguism.getSingleton().getTrad("Highscore", config.getLanguage())
+            + Multilinguism.getSingleton().getTrad("Colon", config.getLanguage()) + " " + highscore + "\n");
         if (highscore <= score)
-            sb.append(translate.getTrad("New highscore!", config.getLanguage()));
+            sb.append(Multilinguism.getSingleton().getTrad("New highscore!", config.getLanguage()));
         finalScoreText.setText(sb.toString());
         finalScoreText.setOpacity(1);
         restartButton.active();

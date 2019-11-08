@@ -10,16 +10,14 @@ import java.io.IOException;
 @Slf4j
 public class MagicPotionsStats extends SelectionGamesStats {
 
-    public MagicPotionsStats(Scene gameContextScene) {
+    MagicPotionsStats(Scene gameContextScene) {
         super(gameContextScene);
         this.gameName = "Magic Potions";
     }
 
     @Override
     public SavedStatsInfo saveStats() throws IOException {
-
         SavedStatsInfo statsInfo = super.saveStats();
-
         log.debug("Stats saved");
         return statsInfo;
     }

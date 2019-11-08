@@ -19,9 +19,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 @Slf4j
 public class Room implements GameLifeCycle {
     private final IGameContext gameContext;
-    private final Stats stats;
-
-    private PerspectiveCamera camera;
 
     private final javafx.geometry.Dimension2D dimension2D;
     private final Rotate rotateX;
@@ -32,28 +29,24 @@ public class Room implements GameLifeCycle {
 
     private final double positionCamera;
 
-    Image arrowImNorth;
-    Rectangle rectangleArrowNorth;
+    private Image arrowImNorth;
+    private Rectangle rectangleArrowNorth;
 
-    Image arrowImWest;
-    Rectangle rectangleArrowWest;
+    private Image arrowImWest;
+    private Rectangle rectangleArrowWest;
 
-    Image arrowImEast;
-    Rectangle rectangleArrowEast;
+    private Image arrowImEast;
+    private Rectangle rectangleArrowEast;
 
-    Image arrowImSouth;
-    Rectangle rectangleArrowSouth;
-
-    double imageWidth;
-    double imageHeight;
+    private Image arrowImSouth;
+    private Rectangle rectangleArrowSouth;
 
     public Room(IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
-        this.stats = stats;
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        imageWidth = dimension2D.getWidth() / 12;
-        imageHeight = dimension2D.getHeight() / 12;
+        double imageWidth = dimension2D.getWidth() / 12;
+        double imageHeight = dimension2D.getHeight() / 12;
 
         arrowImNorth = new Image("data/room/arrowNorth.png", imageWidth, imageHeight, true, true);
         rectangleArrowNorth = new Rectangle(arrowImNorth.getWidth(), arrowImNorth.getHeight());
@@ -106,7 +99,7 @@ public class Room implements GameLifeCycle {
                 dimension2D.getWidth() - arrowImWest.getWidth() - arrowImEast.getWidth(),
                 dimension2D.getHeight() - arrowImNorth.getHeight() - arrowImSouth.getHeight());
 
-        camera = new PerspectiveCamera(true);
+        PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setVerticalFieldOfView(false);
 
         camera.setNearClip(0.1);

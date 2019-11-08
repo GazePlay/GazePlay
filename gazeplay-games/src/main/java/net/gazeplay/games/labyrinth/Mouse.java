@@ -14,22 +14,19 @@ public abstract class Mouse extends Parent {
 
     protected final Labyrinth gameInstance;
 
-    final Stats stats;
-
     protected Rectangle mouse;
-    protected String orientation;
+    private String orientation;
 
-    protected int indiceX; // j
-    protected int indiceY; // i
+    int indiceX; // j
+    int indiceY; // i
 
-    public int nbMove;
+    int nbMove;
 
     public Mouse(double positionX, double positionY, double width, double height, IGameContext gameContext, Stats stats,
             Labyrinth gameInstance) {
 
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
-        this.stats = stats;
 
         this.mouse = new Rectangle(positionX, positionY, width, height);
         this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 5, 5, 1, 1, true));
@@ -44,11 +41,11 @@ public abstract class Mouse extends Parent {
 
     }
 
-    public boolean isTheMouse(int i, int j) {
+    boolean isTheMouse(int i, int j) {
         return (i == indiceY && j == indiceX);
     }
 
-    public void putInBold() {
+    void putInBold() {
         switch (orientation) {
             case "back":
                 this.mouse
@@ -69,7 +66,7 @@ public abstract class Mouse extends Parent {
         }
     }
 
-    public void putInLight() {
+    void putInLight() {
         switch (orientation) {
             case "back":
                 this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBack.png"), 5, 5, 1, 1, true));
@@ -86,7 +83,7 @@ public abstract class Mouse extends Parent {
         }
     }
 
-    public void reOrientateMouse(int oldColumn, int oldRow, int newColumn, int newRow) {
+    void reOrientateMouse(int oldColumn, int oldRow, int newColumn, int newRow) {
         putInBold();
         nbMove++;
         if (oldColumn != newColumn) {

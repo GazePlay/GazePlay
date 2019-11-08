@@ -19,7 +19,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -31,7 +30,7 @@ import java.util.LinkedList;
  */
 
 @Slf4j
-public class Potion extends Parent {
+class Potion extends Parent {
 
     private final double fixationLength;
     @Getter
@@ -58,14 +57,14 @@ public class Potion extends Parent {
 
     private final IGameContext gameContext;
 
-    final MagicPotionsStats stats;
+    private final MagicPotionsStats stats;
     @Getter
     final EventHandler<Event> enterEvent;
 
     private Timeline currentTimeline;
 
-    public Potion(double positionX, double positionY, double width, double height, Image image, Color color,
-            IGameContext gameContext, Stats stats, MagicPotions gameInstance, int fixationlength) {
+    Potion(double positionX, double positionY, double width, double height, Image image, Color color,
+           IGameContext gameContext, MagicPotionsStats stats, MagicPotions gameInstance, int fixationlength) {
         this.potion = new Rectangle((int) positionX, (int) positionY, (int) width, (int) height);
         this.potion.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
 
@@ -83,7 +82,7 @@ public class Potion extends Parent {
 
         this.chosen = false;
         this.gameContext = gameContext;
-        this.stats = (MagicPotionsStats) stats;
+        this.stats = stats;
         this.gameInstance = gameInstance;
         this.fixationLength = fixationlength;
 
