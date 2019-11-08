@@ -247,9 +247,6 @@ public class SlidingPuzzle implements GameLifeCycle {
     boolean isGameOver() {
         int counter = 0;
         for (SlidingPuzzleCard pictureCard : this.currentRoundDetails.cardList) {
-
-            SlidingPuzzle.Coord c1 = new SlidingPuzzle.Coord(pictureCard.getInitX(), pictureCard.getInitY());
-
             if (pictureCard.getCardId() == 1 && pictureCard.getInitX() == (int) computePositionX(boxWidth, cardWidth, 1)
                 && pictureCard.getInitY() == (int) computePositionY(boxHeight, cardHeight, 1))
                 counter++;
