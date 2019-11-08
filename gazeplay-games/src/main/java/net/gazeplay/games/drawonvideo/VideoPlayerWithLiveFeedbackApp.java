@@ -25,9 +25,9 @@ import java.util.concurrent.TimeUnit;
 
 public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
-    private final double canvasOpacityWhilePlaying = 0.1d;
+    private final static double canvasOpacityWhilePlaying = 0.1d;
 
-    private final double canvasOpacityWhileOutside = 0.7d;
+    private final static double canvasOpacityWhileOutside = 0.7d;
 
     /**
      * configure the frequency of the canvas switch, when using 3 canvas
