@@ -51,7 +51,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     private static final double BUTTON_MIN_HEIGHT = 64;
 
-    public static boolean menuOpen = false;
+    private static boolean menuOpen = false;
 
     @Setter
     private static boolean runAsynchronousStatsPersist = false;

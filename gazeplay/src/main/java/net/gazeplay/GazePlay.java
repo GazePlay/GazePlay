@@ -8,10 +8,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
@@ -37,6 +35,7 @@ public class GazePlay {
     @Getter
     private Scene primaryScene;
 
+    @Autowired
     @Getter
     private Translator translator;
 
@@ -48,10 +47,6 @@ public class GazePlay {
     private ApplicationContext applicationContext;
     
     public GazePlay() {
-        Configuration config = ActiveConfigurationContext.getInstance();
-        final Multilinguism multilinguism = Multilinguism.getSingleton();
-
-        translator = new DefaultTranslator(config, multilinguism);
     }
 
     public void onGameLaunch(GameContext gameContext) {
