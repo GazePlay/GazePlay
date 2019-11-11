@@ -15,10 +15,10 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.components.CssUtil;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-@SpringBootApplication
+@Component
 public class GazePlay {
 
     @Setter
