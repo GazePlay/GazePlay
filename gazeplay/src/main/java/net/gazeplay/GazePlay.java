@@ -2,6 +2,7 @@ package net.gazeplay;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,8 @@ import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.ui.scenes.userselect.UserProfilContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -56,14 +59,16 @@ public class GazePlay {
     }
 
     public void onReturnToMenu() {
-        Configuration config = ActiveConfigurationContext.getInstance();
 
-        HomeMenuScreen homeMenuScreen = HomeMenuScreen.newInstance(this, config);
+        List<GameSpec> games = gamesLocator.listGames(translator);
+
+        BorderPane root = new BorderPane();
+
+        HomeMenuScreen homeMenuScreen = new HomeMenuScreen(this, games, root, ActiveConfigurationContext.getInstance());
 
         homeMenuScreen.setGazeDeviceManager(GazeDeviceManagerFactory.getInstance().createNewGazeListener());
         homeMenuScreen.setUpOnStage(primaryScene);
-        final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
-        musicMananger.onEndGame();
+        BackgroundMusicManager.getInstance().onEndGame();
     }
 
     public void onDisplayStats(StatsContext statsContext) {

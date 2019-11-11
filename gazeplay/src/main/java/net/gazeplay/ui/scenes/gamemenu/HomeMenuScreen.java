@@ -51,15 +51,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
-    public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
-
-        List<GameSpec> games = gazePlay.getGamesLocator().listGames(gazePlay.getTranslator());
-
-        BorderPane root = new BorderPane();
-
-        return new HomeMenuScreen(gazePlay, games, root, config);
-    }
-
     @Setter
     @Getter
     private GazeDeviceManager gazeDeviceManager;
