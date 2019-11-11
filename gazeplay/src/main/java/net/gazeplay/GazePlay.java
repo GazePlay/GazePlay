@@ -8,7 +8,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
@@ -40,7 +39,7 @@ public class GazePlay {
 
     @Getter
     private Translator translator;
-    
+
     @Autowired
     @Getter
     private GamesLocator gamesLocator;
@@ -84,8 +83,7 @@ public class GazePlay {
     }
 
     public void goToUserPage() {
-
-        ActiveConfigurationContext.setInstance(ConfigurationSource.createFromDefaultProfile());
+        ActiveConfigurationContext.switchToDefaultUser();
 
         Configuration config = ActiveConfigurationContext.getInstance();
 

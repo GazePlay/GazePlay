@@ -30,7 +30,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GamePanelDimensionProvider;
 import net.gazeplay.GazePlay;
-import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -42,6 +41,7 @@ import net.gazeplay.commons.utils.FilesUtility;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.ui.GraphicalContext;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -159,7 +159,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             choicePanel.getChildren().add(userCard);
         }
 
-        ActiveConfigurationContext.setInstance(ConfigurationSource.createFromDefaultProfile());
+        ActiveConfigurationContext.switchToDefaultUser();
 
         HBox newUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("AddUser"), new ImagePattern(new Image("data/common/images/AddUser.png")), false, true);
         choicePanel.getChildren().add(newUserCard);
@@ -244,7 +244,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         } else {
             mouseClickedEventHandler = event -> {
                 if (!user.getName().equals(getGazePlay().getTranslator().translate("DefaultUser"))) {
-                    ActiveConfigurationContext.setInstance(ConfigurationSource.createFromProfile(user.getName()));
+                    ActiveConfigurationContext.switchToUser(user.getName());
                 }
                 gazePlay.getTranslator().notifyLanguageChanged();
 
@@ -473,7 +473,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     choicePanel.getChildren().add(newUser1);
                     choicePanel.getChildren().add(user);
 
-                    ActiveConfigurationContext.setInstance(ConfigurationSource.createFromProfile(newUser1.getName()));
+                    ActiveConfigurationContext.switchToUser(newUser1.getName());
                     Configuration conf2 = ActiveConfigurationContext.getInstance();
                     File userDirectory = GazePlayDirectories.getUserProfileDirectory(newUser1.getName());
                     final boolean userDirectoryCreated = userDirectory.mkdirs();
