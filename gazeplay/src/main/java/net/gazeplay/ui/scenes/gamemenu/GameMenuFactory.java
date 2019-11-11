@@ -25,6 +25,7 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicReference;
@@ -33,6 +34,7 @@ import static javafx.scene.input.MouseEvent.*;
 
 @Slf4j
 @Data
+@Component
 public class GameMenuFactory {
 
     private final boolean useDebuggingBackgrounds = false;

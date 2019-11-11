@@ -18,9 +18,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
@@ -29,7 +27,6 @@ import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
@@ -39,6 +36,7 @@ import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.LicenseUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 
@@ -51,20 +49,27 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
-    @Setter
-    @Getter
-    private GazeDeviceManager gazeDeviceManager;
+    private final GazeDeviceManager gazeDeviceManager;
+
+    private final GameMenuFactory gameMenuFactory;
+
+    private final GamesLocator gamesLocator;
 
     private FlowPane choicePanel;
 
     private List<Node> gameCardsList;
 
-    private final GameMenuFactory gameMenuFactory = new GameMenuFactory();
-
-    public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, BorderPane root, Configuration config) {
-        super(gazePlay, root);
-        this.gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
-
+    public HomeMenuScreen(
+        GazePlay gazePlay,
+        GazeDeviceManager gazeDeviceManager,
+        GameMenuFactory gameMenuFactory,
+        GamesLocator gamesLocator
+    ) {
+        super(gazePlay, new BorderPane());
+        this.gazeDeviceManager = gazeDeviceManager;
+        this.gameMenuFactory = gameMenuFactory;
+        this.gamesLocator = gamesLocator;
+        
         CustomButton exitButton = createExitButton();
         CustomButton logoutButton = createLogoutButton(gazePlay);
 
@@ -85,6 +90,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         rightControlPane.setAlignment(Pos.CENTER);
         rightControlPane.getChildren().add(toggleFullScreenButton);
 
+        final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
+
         GamesStatisticsPane gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
 
         BorderPane bottomPane = new BorderPane();
@@ -103,16 +110,18 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().addAll(logoutButton, exitButton);
 
+        final Configuration config = ActiveConfigurationContext.getInstance();
+
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
-        
+
         VBox centerPanel = new VBox();
         centerPanel.setSpacing(40);
         centerPanel.setAlignment(Pos.TOP_CENTER);
         centerPanel.getChildren().add(gamePickerChoicePane);
 
         final MenuBar menuBar = LicenseUtils.buildLicenceMenuBar();
-        
+
         BorderPane topPane = new BorderPane();
         topPane.setTop(menuBar);
         topPane.setRight(topRightPane);
@@ -120,7 +129,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topPane.setBottom(buildFilterByCategory(config, gazePlay.getTranslator()));
 
         //gamesStatisticsPane.refreshPreferredSize();
-        
+
         root.setTop(topPane);
         root.setBottom(bottomPane);
         root.setCenter(centerPanel);
