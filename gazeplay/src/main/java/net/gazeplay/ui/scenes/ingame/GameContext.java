@@ -1,28 +1,20 @@
 package net.gazeplay.ui.scenes.ingame;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -36,7 +28,10 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.*;
+import net.gazeplay.commons.utils.AsyncUiTaskExecutor;
+import net.gazeplay.commons.utils.Bravo;
+import net.gazeplay.commons.utils.CustomButton;
+import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
@@ -48,176 +43,7 @@ import java.io.IOException;
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
 
-    private static final double BUTTON_MIN_HEIGHT = 64;
-
-    private static boolean menuOpen = false;
-
-    @Setter
-    private static boolean runAsynchronousStatsPersist = false;
-
-    @Getter
-    private Translator translator;
-
-    private Slider getSpeedSlider;
-
-    public static GameContext newInstance(
-        final GazePlay gazePlay,
-        final Stage primaryStage,
-        final Scene primaryScene,
-        final Translator translator,
-        final GazeDeviceManager gazeDeviceManager
-    ) {
-
-        Pane root = new Pane();
-
-        root.prefWidthProperty().bind(primaryStage.widthProperty());
-        root.prefHeightProperty().bind(primaryStage.heightProperty());
-        root.minWidthProperty().bind(primaryStage.widthProperty());
-        root.minHeightProperty().bind(primaryStage.heightProperty());
-
-        Bravo bravo = new Bravo();
-
-        Pane gamingRoot = new Pane();
-        gamingRoot.prefWidthProperty().bind(primaryStage.widthProperty());
-        gamingRoot.prefHeightProperty().bind(primaryStage.heightProperty());
-        gamingRoot.minWidthProperty().bind(primaryStage.widthProperty());
-        gamingRoot.minHeightProperty().bind(primaryStage.heightProperty());
-
-        Configuration config = ActiveConfigurationContext.getInstance();
-        Color color = (config.isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
-        gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
-
-        HBox controlPanel = createControlPanel();
-        // Adapt the size and position of buttons to screen width
-        controlPanel.maxWidthProperty().bind(root.widthProperty());
-        controlPanel.toFront();
-
-        double buttonSize = getButtonSize(primaryStage);
-
-        // Button bt = new Button();
-        ImageView buttonImg = new ImageView(new Image("data/common/images/configuration-button-alt4.png"));
-        buttonImg.setFitWidth(buttonSize);
-        buttonImg.setFitHeight(buttonSize);
-
-        final Button bt = new Button();
-        bt.setMinHeight(BUTTON_MIN_HEIGHT);
-        bt.setGraphic(buttonImg);
-        bt.setStyle("-fx-background-color: transparent;");
-        updateConfigButton(bt, buttonImg, primaryStage);
-        /*
-         * bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; " +
-         * "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; " + "-fx-max-height: " +
-         * buttonSize + "px;");
-         */
-
-        final HBox root2 = new HBox(2);
-        root2.setAlignment(Pos.CENTER_LEFT);
-        // Pane root2 = new Pane();
-        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(root2, primaryStage));
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg, primaryStage));
-        root2.heightProperty().addListener((observable) -> updateConfigPane(root2, primaryStage));
-
-        EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
-            double from = 0;
-            double to = 1;
-            double angle = 360;
-            if (menuOpen) {
-                from = 1;
-                to = 0;
-                angle = -1 * angle;
-            } else {
-                root2.getChildren().add(controlPanel);
-            }
-            RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
-            rt.setByAngle(angle);
-            FadeTransition ft = new FadeTransition(Duration.millis(500), controlPanel);
-            ft.setFromValue(from);
-            ft.setToValue(to);
-            ParallelTransition pt = new ParallelTransition();
-            pt.getChildren().addAll(rt, ft);
-            controlPanel.setDisable(menuOpen);
-            controlPanel.setMouseTransparent(menuOpen);
-            controlPanel.setVisible(true);
-            menuOpen = !menuOpen;
-            pt.setOnFinished(actionEvent -> {
-                if (!menuOpen) {
-                    root2.getChildren().remove(controlPanel);
-                }
-            });
-            pt.play();
-        };
-
-        log.info("the value of the control bar is : =" + controlPanel.getPrefWidth());
-        controlPanel.setPrefWidth(primaryStage.getWidth() / 2.5);
-        controlPanel.setVisible(false);
-        controlPanel.setDisable(true);
-        controlPanel.setMouseTransparent(true);
-        menuOpen = false;
-
-        bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedControlPanelEventHandler);
-        bt.getStyleClass().add("button");
-
-        buttonTransparentHandler(bt);
-
-        root2.getChildren().add(bt);
-        root.getChildren().add(gamingRoot);
-        root.getChildren().add(root2);
-
-        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root, primaryScene);
-
-        RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
-
-        return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
-            randomPositionGenerator, gazeDeviceManager, root2);
-    }
-
-    private static void buttonTransparentHandler(Button bt) {
-        FadeTransition fd = new FadeTransition(Duration.millis(500), bt);
-        fd.setFromValue(1);
-        fd.setToValue(0.1);
-
-        FadeTransition initialFd = new FadeTransition(Duration.seconds(1), bt);
-        initialFd.setFromValue(1);
-        initialFd.setToValue(0.1);
-        initialFd.setDelay(Duration.seconds(2));
-
-        EventHandler<MouseEvent> mouseEnterControlPanelEventHandler = mouseEvent -> {
-            if (!menuOpen) {
-                fd.stop();
-                initialFd.stop();
-                bt.setOpacity(1);
-            }
-        };
-
-        bt.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
-
-        EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent -> {
-            if (!menuOpen) {
-                fd.play();
-            }
-        };
-
-        bt.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
-
-        initialFd.play();
-
-    }
-
-    private static void updateConfigButton(Button button, ImageView btnImg, Stage primaryStage) {
-        double buttonSize = primaryStage.getWidth() / 10;
-
-        if (buttonSize < BUTTON_MIN_HEIGHT) {
-            buttonSize = BUTTON_MIN_HEIGHT;
-        }
-
-        btnImg.setFitWidth(buttonSize);
-        btnImg.setFitHeight(buttonSize);
-
-        button.setPrefHeight(buttonSize);
-        button.setPrefWidth(buttonSize);
-    }
-
-    private static void updateConfigPane(final Pane configPane, Stage primaryStage) {
+    public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
         double mainHeight = primaryStage.getHeight();
 
         final double newY = mainHeight - configPane.getHeight() - 30;
@@ -225,23 +51,13 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         configPane.setTranslateY(newY);
     }
 
-    private static double getButtonSize(Stage primaryStage) {
-        return primaryStage.getWidth() / 10;
-    }
+    @Setter
+    private static boolean runAsynchronousStatsPersist = false;
 
-    public static HBox createControlPanel() {
-        HBox hbox = new HBox();
-        hbox.setAlignment(Pos.CENTER_LEFT);
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(hbox);
+    @Getter
+    private final Translator translator;
 
-        hbox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-
-        hbox.setStyle("-fx-background-color: rgba(0, 0, 0, 1);" + " -fx-background-radius: 8px;"
-            + " -fx-border-radius: 8px;" + " -fx-border-width: 5px;" + " -fx-border-color: rgba(60, 63, 65, 0.7);"
-            + " -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
-        return hbox;
-    }
+    private Slider getSpeedSlider;
 
     private final Bravo bravo;
 
@@ -261,7 +77,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     private final Pane gamingRoot;
 
-    private GameContext(
+    protected GameContext(
         @NonNull GazePlay gazePlay,
         @NonNull Translator translator,
         @NonNull Pane root,
