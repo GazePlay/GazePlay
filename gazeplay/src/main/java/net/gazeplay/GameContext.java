@@ -391,9 +391,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        menuHBox.getChildren().add(createMusicControlPane());
-        menuHBox.getChildren().add(createEffectsVolumePane());
-        menuHBox.getChildren().add(createSpeedEffectsPane());
+        menuHBox.getChildren().add(getMusicControl().createMusicControlPane());
+        menuHBox.getChildren().add(getMusicControl().createEffectsVolumePane());
+        menuHBox.getChildren().add(getMusicControl().createSpeedEffectsPane());
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);

@@ -347,7 +347,7 @@ public class GameMenuFactory {
             if (!musicManager.getIsCustomMusicSet().getValue() || musicManager.getPlaylist().isEmpty()) {
                 musicManager.emptyPlaylist();
                 musicManager.playMusicAlone(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
-                gameContext.updateMusicControler();
+                gameContext.getMusicControl().updateMusicControler();
             }
         }
 

@@ -41,7 +41,6 @@ public class GazePlay {
 
     public void onGameLaunch(GameContext gameContext) {
         gameContext.setUpOnStage(primaryScene);
-        gameContext.updateMusicControler();
     }
 
     public void onReturnToMenu() {
