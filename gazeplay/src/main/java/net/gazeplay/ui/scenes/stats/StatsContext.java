@@ -251,7 +251,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
 
         EventHandler<Event> viewScanpath = s -> {
-            ScanpathView scanpath = new ScanpathView(gazePlay, new BorderPane(), stats);
+            ScanpathView scanpath = new ScanpathView(gazePlay, stats);
             gazePlay.onDisplayScanpath(scanpath);
         };
 

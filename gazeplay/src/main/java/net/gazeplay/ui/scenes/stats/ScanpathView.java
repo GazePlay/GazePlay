@@ -26,21 +26,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
-public class ScanpathView extends GraphicalContext<Pane> {
+public class ScanpathView extends GraphicalContext<BorderPane> {
 
-    public ScanpathView(GazePlay gazePlay, BorderPane root, Stats stats) {
-        super(gazePlay, root);
+    public ScanpathView(GazePlay gazePlay, Stats stats) {
+        super(gazePlay, new BorderPane());
 
         final Pane center = buildCenterPane(stats);
 
-        EventHandler<Event> exitScanpathView = e -> {
+        HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
             StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
             this.clear();
             gazePlay.onDisplayStats(statsContext);
-        };
-
-        HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
-        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, exitScanpathView);
+        });
 
         HBox bottom = new HBox();
         bottom.getChildren().add(homeButton);
@@ -69,22 +67,15 @@ public class ScanpathView extends GraphicalContext<Pane> {
             points.add(newPoint);
 
             Text label = new Text();
+            label.setText(p.getGazeDuration() + " ms");
+            label.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+            label.setStrokeWidth(2);
+            label.setStroke(Color.BLACK);
+            label.setFill(Color.RED);
+            label.setX(newPoint.getCenterX() + newPoint.getRadiusX());
+            label.setY(newPoint.getCenterY() - label.getLayoutY());
 
-            newPoint.setOnMouseEntered(s -> {
-                label.setText(p.getGazeDuration() + " ms");
-                label.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
-                label.setStrokeWidth(2);
-                label.setStroke(Color.BLACK);
-                label.setFill(Color.RED);
-                label.setX(newPoint.getCenterX() + newPoint.getRadiusX());
-                label.setY(newPoint.getCenterY() - label.getLayoutY());
-
-                // labelBox.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY,
-                // Insets.EMPTY)));
-                // labelBox.getChildren().add(label);
-                center.getChildren().add(label);
-            });
-
+            newPoint.setOnMouseEntered(s -> center.getChildren().add(label));
             newPoint.setOnMouseExited(s -> center.getChildren().remove(label));
         });
 
