@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.commons.utils;
 
 import lombok.Getter;
 import net.gazeplay.commons.threads.CustomThreadFactory;

@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.gamemenu;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -22,6 +22,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.*;
+import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
@@ -37,6 +39,9 @@ import net.gazeplay.commons.utils.games.LicenseUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.gameslocator.CachingGamesLocator;
 import net.gazeplay.gameslocator.DefaultGamesLocator;
+import net.gazeplay.gameslocator.GamesLocator;
+import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.gamemenu;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
+import net.gazeplay.GameSpec;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 

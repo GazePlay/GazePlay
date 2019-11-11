@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -14,6 +14,7 @@ import javafx.scene.media.MediaPlayer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NButton;
@@ -89,8 +90,8 @@ public class MusicControl {
     private Button pauseTrack;
     private Button playTrack;
     private double beforeMutedValue;
-    
-    TitledPane createSpeedEffectsPane() {
+
+    public TitledPane createSpeedEffectsPane() {
         I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "SpeedEffects");
         pane.setCollapsible(false);
 
@@ -108,7 +109,7 @@ public class MusicControl {
         return pane;
     }
 
-    void updateMusicControler() {
+    public void updateMusicControler() {
         setMusicTitle(musicName);
         if (playTrack != null && pauseTrack != null) {
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
@@ -123,7 +124,7 @@ public class MusicControl {
         }
     }
 
-    TitledPane createMusicControlPane() {
+    public TitledPane createMusicControlPane() {
         I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Music");
         pane.setCollapsible(false);
 
@@ -327,7 +328,7 @@ public class MusicControl {
         return slider;
     }
 
-    TitledPane createEffectsVolumePane() {
+    public TitledPane createEffectsVolumePane() {
         I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "EffectsVolume");
         pane.setCollapsible(false);
 

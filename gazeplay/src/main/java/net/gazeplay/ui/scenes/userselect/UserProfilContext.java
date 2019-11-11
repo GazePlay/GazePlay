@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.userselect;
 
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -28,6 +28,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GamePanelDimensionProvider;
+import net.gazeplay.GazePlay;
+import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationSource;

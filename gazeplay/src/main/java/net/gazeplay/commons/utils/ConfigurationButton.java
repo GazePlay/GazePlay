@@ -4,7 +4,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.ConfigurationContext;
+import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 
 /**
  * Created by schwab on 28/10/2017.

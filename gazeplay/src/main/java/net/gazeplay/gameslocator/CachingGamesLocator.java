@@ -2,7 +2,6 @@ package net.gazeplay.gameslocator;
 
 import lombok.AllArgsConstructor;
 import net.gazeplay.GameSpec;
-import net.gazeplay.GamesLocator;
 import net.gazeplay.commons.ui.Translator;
 
 import java.util.Collections;

@@ -12,8 +12,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.AsyncUiTaskExecutor;
-import net.gazeplay.GameContext;
+import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 

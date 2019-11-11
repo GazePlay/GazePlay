@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui;
 
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -13,6 +13,7 @@ import javafx.stage.Screen;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GazePlay;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NTooltip;
 
@@ -28,7 +29,7 @@ public abstract class GraphicalContext<T extends Parent> {
     @Getter
     private final MusicControl musicControl;
 
-    GraphicalContext(GazePlay gazePlay, T root) {
+    public GraphicalContext(GazePlay gazePlay, T root) {
         this.gazePlay = gazePlay;
         this.root = root;
         this.musicControl = new MusicControl(gazePlay);
@@ -50,7 +51,7 @@ public abstract class GraphicalContext<T extends Parent> {
         log.warn("Nodes not removed: {}", getChildren().size());
     }
 
-    I18NButton createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
+    public I18NButton createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
         EventHandler<Event> eventHandler = e -> gazePlay.toggleFullScreen();
 
         I18NButton button = new I18NButton(gazePlay.getTranslator(), (String[]) null);

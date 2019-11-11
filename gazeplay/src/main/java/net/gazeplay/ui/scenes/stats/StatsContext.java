@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.stats;
 
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NText;
@@ -30,6 +31,7 @@ import net.gazeplay.commons.utils.stats.StatsDisplay;
 import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
+import net.gazeplay.ui.GraphicalContext;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

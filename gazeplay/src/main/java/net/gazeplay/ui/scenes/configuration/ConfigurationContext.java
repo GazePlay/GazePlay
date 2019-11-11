@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.configuration;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,6 +25,7 @@ import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
@@ -40,6 +41,8 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
 
 import java.io.File;
 import java.io.IOException;

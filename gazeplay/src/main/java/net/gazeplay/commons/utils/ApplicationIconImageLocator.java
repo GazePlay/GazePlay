@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.commons.utils;
 
 import javafx.scene.image.Image;
 import lombok.extern.slf4j.Slf4j;
