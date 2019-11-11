@@ -3,11 +3,12 @@ package net.gazeplay.ui.scenes.stats;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -15,9 +16,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.GazePlay;
-import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -29,84 +28,74 @@ import java.util.List;
 @Slf4j
 public class ScanpathView extends GraphicalContext<Pane> {
 
-    private Stats stats;
-    private ImageView scanPathView;
-    private LinkedList<FixationPoint> points;
-
-    public static ScanpathView newInstance(GazePlay gazePlay, Stats stats) {
-        Pane root = new Pane();
-        return new ScanpathView(gazePlay, root, stats);
-    }
-
-    private ScanpathView(GazePlay gazePlay, Pane root, Stats stats) {
+    public ScanpathView(GazePlay gazePlay, BorderPane root, Stats stats) {
         super(gazePlay, root);
 
-        this.stats = stats;
-        SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-        this.scanPathView = new ImageView(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString()));
-        root.getChildren().add(scanPathView);
-        // this.points = FixationSequence.getSequence();
-        this.points = stats.getFixationSequence();
+        final Pane center = buildCenterPane(stats);
 
-        List<Ellipse> Points = new LinkedList<>();
-        for (FixationPoint p : this.points) {
-            Ellipse newPoint = new Ellipse();
-            // newPoint.setFill(Color.RED); // uncomment and increase opacity for "debug"/ to see if the ellipses are
-            // the same as the
-            // scanpath image
-            newPoint.setOpacity(0);
-
-            newPoint.setCenterX(p.getY());
-            newPoint.setCenterY(p.getX());
-            newPoint.setRadiusX(30 + (int) (p.getGazeDuration() / 1000));
-            newPoint.setRadiusY(newPoint.getRadiusX());
-            Points.add(newPoint);
-        }
-
-        root.getChildren().addAll(Points);
-
-        for (int i = 0; i < Points.size() - 1; i++) {
-            int index = i;
-            // HBox labelBox = new HBox();
-            Text label = new Text();
-            Points.get(index).setOnMouseEntered(s -> {
-
-                label.setText(stats.getFixationSequence().get(index).getGazeDuration() + " ms");
-                label.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
-                label.setStrokeWidth(2);
-                label.setStroke(Color.BLACK);
-                label.setFill(Color.RED);
-                label.setX(Points.get(index).getCenterX() + Points.get(index).getRadiusX());
-                label.setY(Points.get(index).getCenterY() - label.getLayoutY());
-
-                // labelBox.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY,
-                // Insets.EMPTY)));
-                // labelBox.getChildren().add(label);
-                root.getChildren().add(label);
-            });
-
-            Points.get(index).setOnMouseExited(s -> root.getChildren().remove(label));
-        }
-
-        EventHandler<Event> ExitScanpathView = e -> {
-
-            StatsContext statsContext = null;
-            statsContext = StatsContext.newInstance(gazePlay, stats);
+        EventHandler<Event> exitScanpathView = e -> {
+            StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
             this.clear();
             gazePlay.onDisplayStats(statsContext);
         };
 
         HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
-        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ExitScanpathView);
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, exitScanpathView);
 
-        // StackPane homeButtonPane = new StackPane();
-        Dimension2D dimension = GameContext.newInstance(gazePlay).getGamePanelDimensionProvider().getDimension2D();
-        homeButton.relocate(15, dimension.getHeight());
-        root.getChildren().add(homeButton);
+        HBox bottom = new HBox();
+        bottom.getChildren().add(homeButton);
+
+        root.setCenter(center);
+        root.setBottom(bottom);
+    }
+
+    private Pane buildCenterPane(Stats stats) {
+        final Pane center = new Pane();
+
+        SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+        ImageView scanPathView = new ImageView(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString()));
+        center.getChildren().add(scanPathView);
+
+        final List<Ellipse> points = new LinkedList<>();
+
+        stats.getFixationSequence().forEach(p -> {
+            Ellipse newPoint = new Ellipse();
+            newPoint.setOpacity(0);
+            newPoint.setCenterX(p.getY());
+            newPoint.setCenterY(p.getX());
+            newPoint.setRadiusX(30 + (int) (p.getGazeDuration() / 1000));
+            newPoint.setRadiusY(newPoint.getRadiusX());
+
+            points.add(newPoint);
+
+            Text label = new Text();
+
+            newPoint.setOnMouseEntered(s -> {
+                label.setText(p.getGazeDuration() + " ms");
+                label.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+                label.setStrokeWidth(2);
+                label.setStroke(Color.BLACK);
+                label.setFill(Color.RED);
+                label.setX(newPoint.getCenterX() + newPoint.getRadiusX());
+                label.setY(newPoint.getCenterY() - label.getLayoutY());
+
+                // labelBox.setBackground(new Background(new BackgroundFill(Color.BLACK,CornerRadii.EMPTY,
+                // Insets.EMPTY)));
+                // labelBox.getChildren().add(label);
+                center.getChildren().add(label);
+            });
+
+            newPoint.setOnMouseExited(s -> center.getChildren().remove(label));
+        });
+
+        center.getChildren().addAll(points);
+
+        return center;
     }
 
     @Override
     public ObservableList<Node> getChildren() {
         return root.getChildren();
     }
+
 }

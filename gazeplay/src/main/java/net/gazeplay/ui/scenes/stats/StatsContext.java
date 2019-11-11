@@ -43,7 +43,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     private static final double RATIO = 0.35;
 
     public static StatsContext newInstance(
-        @NonNull GazePlay gazePlay, 
+        @NonNull GazePlay gazePlay,
         @NonNull Stats stats
     ) {
         BorderPane root = new BorderPane();
@@ -251,8 +251,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
 
         EventHandler<Event> viewScanpath = s -> {
-
-            ScanpathView scanpath = ScanpathView.newInstance(gazePlay, stats);
+            ScanpathView scanpath = new ScanpathView(gazePlay, new BorderPane(), stats);
             gazePlay.onDisplayScanpath(scanpath);
         };
 
