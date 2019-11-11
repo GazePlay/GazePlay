@@ -39,7 +39,7 @@ public class GazePlayFxApp extends Application {
     public void init() {
         String[] args = getParameters().getRaw().toArray(new String[0]);
 
-        SpringApplicationBuilder builder = new SpringApplicationBuilder(GazePlayFxApp.class);
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(GazePlayFxApp.class, SpringApplication.class);
         context = builder.run(args);
 
         applicationIconImageLocator = context.getBean(ApplicationIconImageLocator.class);

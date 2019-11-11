@@ -8,7 +8,6 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummaryComparator;
 import net.gazeplay.commons.ui.Translator;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
-@Component
 public class DefaultGamesLocator implements GamesLocator {
 
     private static List<GameSpecSource> scanGames() {
