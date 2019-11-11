@@ -18,13 +18,10 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.VersionInfo;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import org.apache.commons.io.IOUtils;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -75,16 +72,12 @@ public class LatestNewPopup {
         return new Dimension2D(width, height);
     }
 
-    public static void displayIfNeeded() {
-        final Configuration config = ActiveConfigurationContext.getInstance();
-
+    public static void displayIfNeeded(Configuration config, Translator translator) {
         if (wasDisplayRecently(config)) {
             // popup was already show recently
             // we do not want to bother the user again with this popup
             return;
         }
-
-        Translator translator = new DefaultTranslator(config, Multilinguism.getSingleton());
 
         LatestNewPopup latestNewPopup = new LatestNewPopup(config, translator);
         latestNewPopup.loadPage();

@@ -55,7 +55,9 @@ public class GazePlayFxApp extends Application {
 
         configurePrimaryStage(primaryStage);
 
-        LatestNewPopup.displayIfNeeded();
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        LatestNewPopup.displayIfNeeded(config, gazePlay.getTranslator());
 
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);
