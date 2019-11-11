@@ -1,6 +1,5 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.configuration;
 
-import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
