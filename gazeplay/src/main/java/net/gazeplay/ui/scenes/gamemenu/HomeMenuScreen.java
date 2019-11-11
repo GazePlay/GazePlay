@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.gamemenu;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -22,6 +22,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GameCategories;
+import net.gazeplay.GameSpec;
+import net.gazeplay.GazePlay;
+import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
@@ -35,8 +39,8 @@ import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.LicenseUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
-import net.gazeplay.gameslocator.CachingGamesLocator;
-import net.gazeplay.gameslocator.DefaultGamesLocator;
+import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,18 +51,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
-    private final static GamesLocator gamesLocator = new CachingGamesLocator(new DefaultGamesLocator());
-
     public static HomeMenuScreen newInstance(final GazePlay gazePlay, final Configuration config) {
 
-        List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
+        List<GameSpec> games = gazePlay.getGamesLocator().listGames(gazePlay.getTranslator());
 
         BorderPane root = new BorderPane();
 
         return new HomeMenuScreen(gazePlay, games, root, config);
     }
-
-    private final List<GameSpec> games;
 
     @Setter
     @Getter
@@ -67,14 +67,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private FlowPane choicePanel;
 
     private List<Node> gameCardsList;
-    
-    private final GamesStatisticsPane gamesStatisticsPane;
 
     private final GameMenuFactory gameMenuFactory = new GameMenuFactory();
 
     public HomeMenuScreen(GazePlay gazePlay, List<GameSpec> games, BorderPane root, Configuration config) {
         super(gazePlay, root);
-        this.games = games;
         this.gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
 
         CustomButton exitButton = createExitButton();
@@ -87,8 +84,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         leftControlPane.setAlignment(Pos.CENTER);
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.getChildren().add(configurationButton);
-        leftControlPane.getChildren().add(createMusicControlPane());
-        leftControlPane.getChildren().add(createEffectsVolumePane());
+        leftControlPane.getChildren().add(getMusicControl().createMusicControlPane());
+        leftControlPane.getChildren().add(getMusicControl().createEffectsVolumePane());
 
         I18NButton toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
 
@@ -97,7 +94,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         rightControlPane.setAlignment(Pos.CENTER);
         rightControlPane.getChildren().add(toggleFullScreenButton);
 
-        gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
+        GamesStatisticsPane gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
 
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);

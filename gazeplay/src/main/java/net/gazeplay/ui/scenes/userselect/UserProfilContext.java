@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.userselect;
 
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -14,7 +14,10 @@ import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -25,6 +28,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GamePanelDimensionProvider;
+import net.gazeplay.GazePlay;
+import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationSource;
@@ -35,6 +41,7 @@ import net.gazeplay.commons.utils.FilesUtility;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.ui.GraphicalContext;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -152,8 +159,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             choicePanel.getChildren().add(userCard);
         }
 
-        ActiveConfigurationContext.setInstance(ConfigurationSource.createFromDefaultProfile());
-
         HBox newUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("AddUser"), new ImagePattern(new Image("data/common/images/AddUser.png")), false, true);
         choicePanel.getChildren().add(newUserCard);
 
@@ -237,23 +242,17 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         } else {
             mouseClickedEventHandler = event -> {
                 if (!user.getName().equals(getGazePlay().getTranslator().translate("DefaultUser"))) {
-                    ActiveConfigurationContext.setInstance(ConfigurationSource.createFromProfile(user.getName()));
+                    ActiveConfigurationContext.switchToUser(user.getName());
                 }
                 gazePlay.getTranslator().notifyLanguageChanged();
 
                 Configuration config = ActiveConfigurationContext.getInstance();
                 CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
 
-                BackgroundMusicManager.getInstance().stop();
-
-                BackgroundMusicManager.setInstance(new BackgroundMusicManager());
-
-                gazePlay.getHomeMenuScreen().clear();
-
-                gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
+                BackgroundMusicManager.onConfigurationChanged();
 
                 choicePanel.getChildren().clear();
-                gazePlay.getHomeMenuScreen().setUpOnStage(gazePlay.getPrimaryScene());
+                gazePlay.onReturnToMenu();
             };
         }
 
@@ -470,7 +469,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     choicePanel.getChildren().add(newUser1);
                     choicePanel.getChildren().add(user);
 
-                    ActiveConfigurationContext.setInstance(ConfigurationSource.createFromProfile(newUser1.getName()));
+                    ActiveConfigurationContext.switchToUser(newUser1.getName());
                     Configuration conf2 = ActiveConfigurationContext.getInstance();
                     File userDirectory = GazePlayDirectories.getUserProfileDirectory(newUser1.getName());
                     final boolean userDirectoryCreated = userDirectory.mkdirs();

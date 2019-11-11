@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.commons.app;
 
 import javafx.animation.SequentialTransition;
 import javafx.scene.Node;

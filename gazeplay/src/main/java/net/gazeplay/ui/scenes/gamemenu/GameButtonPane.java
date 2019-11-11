@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.gamemenu;
 
 import javafx.animation.Timeline;
 import javafx.event.Event;
@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.gazeplay.GameSpec;
 
 @RequiredArgsConstructor
 public class GameButtonPane extends BorderPane {

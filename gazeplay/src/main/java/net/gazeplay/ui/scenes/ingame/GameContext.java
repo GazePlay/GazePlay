@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.ingame;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -27,6 +27,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GameLifeCycle;
+import net.gazeplay.GamePanelDimensionProvider;
+import net.gazeplay.GazePlay;
+import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
@@ -37,6 +41,8 @@ import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
+import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.ui.scenes.stats.StatsContext;
 
 import java.io.IOException;
 
@@ -391,9 +397,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        menuHBox.getChildren().add(createMusicControlPane());
-        menuHBox.getChildren().add(createEffectsVolumePane());
-        menuHBox.getChildren().add(createSpeedEffectsPane());
+        menuHBox.getChildren().add(getMusicControl().createMusicControlPane());
+        menuHBox.getChildren().add(getMusicControl().createEffectsVolumePane());
+        menuHBox.getChildren().add(getMusicControl().createSpeedEffectsPane());
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
@@ -514,4 +520,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public Pane getRoot() {
         return gamingRoot;
     }
+
+    public void onGameStarted() {
+    }
+
 }

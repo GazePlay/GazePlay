@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.stats;
 
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -15,10 +15,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.ui.scenes.ingame.GameContext;
+import net.gazeplay.GazePlay;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.ui.GraphicalContext;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.configuration;
 
 import org.junit.jupiter.api.Test;
 

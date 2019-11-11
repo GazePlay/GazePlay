@@ -60,7 +60,7 @@ public class GazePlayLauncher {
                 log.debug("gazePlayFolderCreated = " + gazePlayFolderCreated);
             }
 
-            Runnable runnable1 = () -> Application.launch(GazePlay.class, args);
+            Runnable runnable1 = () -> Application.launch(GazePlayFxApp.class, args);
 
             ThreadFactory threadFactory = new CustomThreadFactory("javafx-bootsrap",
                 new GroupingThreadFactory("javafx-bootsrap-group"));

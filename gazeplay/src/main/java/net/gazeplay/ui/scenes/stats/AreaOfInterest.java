@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.stats;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -29,11 +29,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
+import net.gazeplay.ui.GraphicalContext;
 import ws.schild.jave.Encoder;
 import ws.schild.jave.EncodingAttributes;
 import ws.schild.jave.MultimediaObject;

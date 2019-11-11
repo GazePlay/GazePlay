@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummaryComparator;
-import net.gazeplay.GamesLocator;
 import net.gazeplay.commons.ui.Translator;
 
 import java.lang.reflect.Constructor;

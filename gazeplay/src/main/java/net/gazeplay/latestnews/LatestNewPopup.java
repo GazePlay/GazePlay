@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.latestnews;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Worker;
@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
  * default HTML page if no connexion
  */
 @Slf4j
-class LatestNewPopup {
+public class LatestNewPopup {
 
     private static final String serviceBaseUrl = "https://gazeplayreleases.wordpress.com";
 
@@ -75,7 +75,7 @@ class LatestNewPopup {
         return new Dimension2D(width, height);
     }
 
-    static void displayIfNeeded() {
+    public static void displayIfNeeded() {
         final Configuration config = ActiveConfigurationContext.getInstance();
 
         if (wasDisplayRecently(config)) {

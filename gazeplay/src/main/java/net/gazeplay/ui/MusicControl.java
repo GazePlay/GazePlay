@@ -1,95 +1,86 @@
-package net.gazeplay;
+package net.gazeplay.ui;
 
-import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.Screen;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NTitledPane;
-import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.utils.MarqueeText;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 @Slf4j
 @RequiredArgsConstructor
-public abstract class GraphicalContext<T extends Parent> {
+public class MusicControl {
 
-    public static final String RESOURCES_PATH = "data" + "/" + "common";
-    public static final String IMAGES_PATH = RESOURCES_PATH + "/" + "images";
-    // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
-    // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
-    // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
-    // BY</a></div>
-    public static final String PREVIOUS_ICON = IMAGES_PATH + "/" + "previous.png";
+    private static final String RESOURCES_PATH = "data" + "/" + "common";
+
+    private static final String IMAGES_PATH = RESOURCES_PATH + "/" + "images";
 
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
-    public static final String NEXT_ICON = IMAGES_PATH + "/" + "skip.png";
+    private static final String PREVIOUS_ICON = IMAGES_PATH + "/" + "previous.png";
 
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
-    public static final String PAUSE_ICON = IMAGES_PATH + "/" + "pause.png";
+    private static final String NEXT_ICON = IMAGES_PATH + "/" + "skip.png";
 
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
-    public static final String PLAY_ICON = IMAGES_PATH + "/" + "play-button.png";
+    private static final String PAUSE_ICON = IMAGES_PATH + "/" + "pause.png";
 
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
-    public static final String SPEAKER_ICON = IMAGES_PATH + "/" + "speaker.png";
+    private static final String PLAY_ICON = IMAGES_PATH + "/" + "play-button.png";
 
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
-    public static final String MUTE_ICON = IMAGES_PATH + "/" + "mute.png";
+    private static final String SPEAKER_ICON = IMAGES_PATH + "/" + "speaker.png";
 
-    public static final int ICON_SIZE = 32;
+    // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
+    // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
+    // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
+    // BY</a></div>
+    private static final String MUTE_ICON = IMAGES_PATH + "/" + "mute.png";
 
-    public static final double MUSIC_GRID_MAX_WIDTH = 200;
-    // @Getter
-    // @Setter
-    // public static Slider speedEffectSlider ;
+    private static final int ICON_SIZE = 32;
+
+    private static final double MUSIC_GRID_MAX_WIDTH = 200;
+
     /**
      * Field used to know if the background music controler has already been built once. This is used to get audio and
      * play it at the beginning.
      */
-    public static boolean firstMusicSetUp = true;
+    private static AtomicBoolean autoplayExecuted = new AtomicBoolean(false);
 
     @Getter
     private final GazePlay gazePlay;
 
-    @Getter
-    protected final T root;
-    
     /**
      * Fields with listeners from music controler. When need those because when the volume controle is not on stage
      * (i.e. when configuration is shown), it doesn't receive any event from listener (no idea why). Then when it comes
@@ -100,56 +91,37 @@ public abstract class GraphicalContext<T extends Parent> {
     private Button playTrack;
     private double beforeMutedValue;
 
-    public void setUpOnStage(final Scene scene) {
+    public TitledPane createSpeedEffectsPane() {
+        I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "SpeedEffects");
+        pane.setCollapsible(false);
 
-        // Make sure we are the root of the scene
-        scene.setRoot(root);
+        final BorderPane mainPane = new BorderPane();
+        pane.setContent(mainPane);
 
-        updateMusicControler();
+        final HBox center = new HBox();
+        mainPane.setCenter(center);
+        center.setSpacing(5);
 
-        log.debug("Finished setup stage with the game scene");
+        Slider speedEffectSlider = createSpeedEffectSlider();
+
+        center.getChildren().add(speedEffectSlider);
+
+        return pane;
     }
 
-    public abstract ObservableList<Node> getChildren();
-
-    public void clear() {
-
-        getChildren().clear();
-
-        log.warn("Nodes not removed: {}", getChildren().size());
-    }
-
-    public I18NButton createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
-
-        EventHandler<Event> eventHandler = e -> gazePlay.toggleFullScreen();
-
-        I18NButton button = new I18NButton(gazePlay.getTranslator(), (String[]) null);
-        configureFullScreenToggleButton(gazePlay.isFullScreen(), button);
-
-        gazePlay.getFullScreenProperty().addListener((observable, wasFullScreen, isFullScreen) -> configureFullScreenToggleButton(isFullScreen, button));
-
-        button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-
-        return button;
-    }
-
-    private void configureFullScreenToggleButton(Boolean isFullScreen, I18NButton button) {
-        final Image buttonGraphics;
-
-        final String label;
-        if (isFullScreen) {
-            buttonGraphics = new Image("data/common/images/fullscreen-exit.png");
-            label = "Exit FullScreen";
-        } else {
-            buttonGraphics = new Image("data/common/images/fullscreen-enter.png");
-            label = "Enter FullScreen";
+    public void updateMusicControler() {
+        setMusicTitle(musicName);
+        if (playTrack != null && pauseTrack != null) {
+            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+            log.info("updating : isPlaying : {}", backgroundMusicManager.isPlaying());
+            if (backgroundMusicManager.isPlaying()) {
+                playTrack.setVisible(false);
+                pauseTrack.setVisible(true);
+            } else {
+                playTrack.setVisible(true);
+                pauseTrack.setVisible(false);
+            }
         }
-        ImageView imageView = new ImageView(buttonGraphics);
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(Screen.getPrimary().getBounds().getWidth() / 40);
-        button.heightProperty().addListener((observable, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() / 2d));
-        button.setGraphic(imageView);
-        button.setTooltip(new I18NTooltip(gazePlay.getTranslator(), label));
     }
 
     public TitledPane createMusicControlPane() {
@@ -160,7 +132,7 @@ public abstract class GraphicalContext<T extends Parent> {
         grid.setHgap(5);
         grid.setVgap(2);
 
-        Slider volumeSlider = createMediaVolumeSlider(gazePlay);
+        Slider volumeSlider = createMediaVolumeSlider();
         grid.add(volumeSlider, 1, 1, 2, 1);
 
         final Node volumeButtons = createVolumeButton(volumeSlider);
@@ -243,7 +215,7 @@ public abstract class GraphicalContext<T extends Parent> {
             log.warn(e.toString() + " : " + NEXT_ICON);
         }
 
-        backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
+        backgroundMusicManager.getIsPlayingProperty().addListener((observable) -> {
 
             if (backgroundMusicManager.isPlaying()) {
                 playTrack.setVisible(false);
@@ -268,16 +240,13 @@ public abstract class GraphicalContext<T extends Parent> {
 
         pane.setContent(grid);
 
-        if (GraphicalContext.firstMusicSetUp) {
-
+        if (autoplayExecuted.compareAndSet(false, true)) {
             if (backgroundMusicManager.getPlaylist().isEmpty()) {
                 final Configuration configuration = ActiveConfigurationContext.getInstance();
                 backgroundMusicManager.getAudioFromFolder(configuration.getMusicFolder());
             }
-
             backgroundMusicManager.changeMusic(0);
             backgroundMusicManager.play();
-            GraphicalContext.setFirstMusicSetip(false);
 
             // We need to manually set the music title for the first set up
             setMusicTitle(musicName);
@@ -344,25 +313,7 @@ public abstract class GraphicalContext<T extends Parent> {
         return volumeStackPane;
     }
 
-    /**
-     * This method only exists because of mavent findbug plugin. Since this class is a singleton, this works.
-     * 
-     * @param value
-     *            The new value to set.
-     */
-    private static void setFirstMusicSetip(boolean value) {
-        GraphicalContext.firstMusicSetUp = value;
-    }
-
-    private void setMusicTitle(final MarqueeText musicLabel) {
-        if (musicLabel != null) {
-            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-            String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
-            musicLabel.getTextProperty().setValue(musicTitle);
-        }
-    }
-
-    public Slider createMediaVolumeSlider(@NonNull GazePlay gazePlay) {
+    private Slider createMediaVolumeSlider() {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
         Slider slider = new Slider();
@@ -377,7 +328,28 @@ public abstract class GraphicalContext<T extends Parent> {
         return slider;
     }
 
-    private Slider createEffectsVolumeSlider(@NonNull GazePlay gazePlay) {
+    public TitledPane createEffectsVolumePane() {
+        I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "EffectsVolume");
+        pane.setCollapsible(false);
+
+        final BorderPane mainPane = new BorderPane();
+        pane.setContent(mainPane);
+
+        final HBox center = new HBox();
+        mainPane.setCenter(center);
+        center.setSpacing(5);
+
+        final Slider effectsVolumeSlider = createEffectsVolumeSlider();
+        final Node volumeButtons = createVolumeButton(effectsVolumeSlider);
+
+        center.getChildren().add(volumeButtons);
+
+        center.getChildren().add(effectsVolumeSlider);
+
+        return pane;
+    }
+
+    private Slider createEffectsVolumeSlider() {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
         Slider slider = new Slider();
@@ -392,7 +364,7 @@ public abstract class GraphicalContext<T extends Parent> {
         return slider;
     }
 
-    private Slider createSpeedEffectSlider(@NonNull GazePlay gazePlay) {
+    private Slider createSpeedEffectSlider() {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
         Slider slider = new Slider();
@@ -411,62 +383,12 @@ public abstract class GraphicalContext<T extends Parent> {
         return slider;
     }
 
-    public void onGameStarted() {
-    }
-
-    public TitledPane createEffectsVolumePane() {
-        I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "EffectsVolume");
-        pane.setCollapsible(false);
-
-        final BorderPane mainPane = new BorderPane();
-        pane.setContent(mainPane);
-
-        final HBox center = new HBox();
-        mainPane.setCenter(center);
-        center.setSpacing(5);
-
-        final Slider effectsVolumeSlider = createEffectsVolumeSlider(gazePlay);
-        final Node volumeButtons = createVolumeButton(effectsVolumeSlider);
-
-        center.getChildren().add(volumeButtons);
-
-        center.getChildren().add(effectsVolumeSlider);
-
-        return pane;
-    }
-
-    public TitledPane createSpeedEffectsPane() {
-        I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "SpeedEffects");
-        pane.setCollapsible(false);
-
-        final BorderPane mainPane = new BorderPane();
-        pane.setContent(mainPane);
-
-        final HBox center = new HBox();
-        mainPane.setCenter(center);
-        center.setSpacing(5);
-
-        Slider speedEffectSlider = createSpeedEffectSlider(gazePlay);
-
-        center.getChildren().add(speedEffectSlider);
-
-        return pane;
-    }
-
-    public void updateMusicControler() {
-
-        setMusicTitle(musicName);
-
-        if (playTrack != null && pauseTrack != null) {
+    private void setMusicTitle(final MarqueeText musicLabel) {
+        if (musicLabel != null) {
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-            log.info("updating : isPlaying : {}", backgroundMusicManager.isPlaying());
-            if (backgroundMusicManager.isPlaying()) {
-                playTrack.setVisible(false);
-                pauseTrack.setVisible(true);
-            } else {
-                playTrack.setVisible(true);
-                pauseTrack.setVisible(false);
-            }
+            String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
+            musicLabel.getTextProperty().setValue(musicTitle);
         }
     }
+
 }

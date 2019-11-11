@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.userselect;
 
 import javafx.scene.layout.HBox;
 import lombok.AllArgsConstructor;

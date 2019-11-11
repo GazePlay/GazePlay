@@ -1,10 +1,18 @@
 package net.gazeplay.commons.configuration;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public class ActiveConfigurationContext {
+
     @Getter
-    @Setter
     private static Configuration instance = ConfigurationSource.createFromDefaultProfile();
+
+    public static void switchToUser(String userId) {
+        instance = ConfigurationSource.createFromProfile(userId);
+    }
+
+    public static void switchToDefaultUser() {
+        instance = ConfigurationSource.createFromDefaultProfile();
+    }
+
 }

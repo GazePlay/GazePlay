@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.ui.scenes.gamemenu;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -16,6 +16,7 @@ import javafx.scene.text.TextAlignment;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.*;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.I18NText;
@@ -23,6 +24,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.ui.scenes.ingame.GameContext;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicReference;
@@ -347,7 +349,7 @@ public class GameMenuFactory {
             if (!musicManager.getIsCustomMusicSet().getValue() || musicManager.getPlaylist().isEmpty()) {
                 musicManager.emptyPlaylist();
                 musicManager.playMusicAlone(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
-                gameContext.updateMusicControler();
+                gameContext.getMusicControl().updateMusicControler();
             }
         }
 
