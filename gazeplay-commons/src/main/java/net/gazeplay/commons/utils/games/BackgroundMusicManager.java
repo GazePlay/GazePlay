@@ -6,7 +6,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -39,14 +38,19 @@ public class BackgroundMusicManager {
     private static final List<String> SUPPORTED_FILE_EXTENSIONS = Arrays.asList(".aif", ".aiff", ".fxm", ".flv", ".m3u8",
         ".mp3", ".mp4", ".m4v", ".m4a", ".mp4", ".wav");
 
-    @Setter
     @Getter
     private static BackgroundMusicManager instance = new BackgroundMusicManager();
+    
+    public static void onConfigurationChanged() {
+        instance.stop();
+        instance = new BackgroundMusicManager();
+    }
 
     @Getter
     private final List<MediaPlayer> playlist = new ArrayList<>();
 
     private final List<MediaPlayer> defaultPlayList = new ArrayList<>();
+
     @Getter
     private MediaPlayer currentMusic;
 
@@ -55,7 +59,8 @@ public class BackgroundMusicManager {
         new GroupingThreadFactory(this.getClass().getSimpleName())));
 
     @Getter
-    private final BooleanProperty isPlayingPoperty = new SimpleBooleanProperty(this, "isPlaying", false);
+    private final BooleanProperty isPlayingProperty = new SimpleBooleanProperty(this, "isPlaying", false);
+
     @Getter
     private final IntegerProperty musicIndexProperty = new SimpleIntegerProperty(this, "musicIndex", 0);
 
@@ -67,10 +72,10 @@ public class BackgroundMusicManager {
     private final ReadOnlyBooleanWrapper isMusicChanging = new ReadOnlyBooleanWrapper(this, "musicChanged", false);
 
     public BackgroundMusicManager() {
-        isPlayingPoperty.addListener((observable) -> {
+        isPlayingProperty.addListener((observable) -> {
 
             if (currentMusic != null) {
-                if (isPlayingPoperty.getValue()) {
+                if (isPlayingProperty.getValue()) {
                     this.currentMusic.play();
                 } else {
                     this.currentMusic.pause();
@@ -182,7 +187,7 @@ public class BackgroundMusicManager {
 
     public boolean isPlaying() {
 
-        return this.isPlayingPoperty.getValue();
+        return this.isPlayingProperty.getValue();
     }
 
     /**
@@ -219,7 +224,7 @@ public class BackgroundMusicManager {
     }
 
     public void pause() {
-        this.isPlayingPoperty.setValue(false);
+        this.isPlayingProperty.setValue(false);
     }
 
     /**
@@ -228,7 +233,7 @@ public class BackgroundMusicManager {
     public void play() {
 
         if (currentMusic != null) {
-            this.isPlayingPoperty.setValue(true);
+            this.isPlayingProperty.setValue(true);
         }
     }
 

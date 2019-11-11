@@ -215,7 +215,7 @@ public class MusicControl {
             log.warn(e.toString() + " : " + NEXT_ICON);
         }
 
-        backgroundMusicManager.getIsPlayingPoperty().addListener((observable) -> {
+        backgroundMusicManager.getIsPlayingProperty().addListener((observable) -> {
 
             if (backgroundMusicManager.isPlaying()) {
                 playTrack.setVisible(false);

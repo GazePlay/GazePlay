@@ -91,9 +91,7 @@ public class GazePlay {
 
         CssUtil.setPreferredStylesheets(config, getPrimaryScene());
 
-        BackgroundMusicManager.getInstance().stop();
-
-        BackgroundMusicManager.setInstance(new BackgroundMusicManager());
+        BackgroundMusicManager.onConfigurationChanged();
 
         UserProfilContext userProfileScreen = UserProfilContext.newInstance(this, config);
         userProfileScreen.setUpOnStage(primaryScene);
