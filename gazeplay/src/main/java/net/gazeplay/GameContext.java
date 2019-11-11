@@ -514,4 +514,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public Pane getRoot() {
         return gamingRoot;
     }
+
+    public void onGameStarted() {
+    }
+
 }

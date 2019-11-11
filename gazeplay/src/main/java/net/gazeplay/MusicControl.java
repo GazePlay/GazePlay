@@ -21,6 +21,8 @@ import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.utils.MarqueeText;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 @Slf4j
 @RequiredArgsConstructor
 public class MusicControl {
@@ -73,7 +75,7 @@ public class MusicControl {
      * Field used to know if the background music controler has already been built once. This is used to get audio and
      * play it at the beginning.
      */
-    private static boolean firstMusicSetUp = true;
+    private static AtomicBoolean autoplayExecuted = new AtomicBoolean(false);
 
     @Getter
     private final GazePlay gazePlay;
@@ -237,16 +239,13 @@ public class MusicControl {
 
         pane.setContent(grid);
 
-        if (firstMusicSetUp) {
-
+        if (autoplayExecuted.compareAndSet(false, true)) {
             if (backgroundMusicManager.getPlaylist().isEmpty()) {
                 final Configuration configuration = ActiveConfigurationContext.getInstance();
                 backgroundMusicManager.getAudioFromFolder(configuration.getMusicFolder());
             }
-
             backgroundMusicManager.changeMusic(0);
             backgroundMusicManager.play();
-            firstMusicSetUp = false;
 
             // We need to manually set the music title for the first set up
             setMusicTitle(musicName);

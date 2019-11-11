@@ -12,13 +12,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NTooltip;
 
 @Slf4j
-@RequiredArgsConstructor
 public abstract class GraphicalContext<T extends Parent> {
 
     @Getter
@@ -30,7 +28,7 @@ public abstract class GraphicalContext<T extends Parent> {
     @Getter
     private final MusicControl musicControl;
 
-    public GraphicalContext(GazePlay gazePlay, T root) {
+    GraphicalContext(GazePlay gazePlay, T root) {
         this.gazePlay = gazePlay;
         this.root = root;
         this.musicControl = new MusicControl(gazePlay);
@@ -52,7 +50,7 @@ public abstract class GraphicalContext<T extends Parent> {
         log.warn("Nodes not removed: {}", getChildren().size());
     }
 
-    public I18NButton createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
+    I18NButton createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
         EventHandler<Event> eventHandler = e -> gazePlay.toggleFullScreen();
 
         I18NButton button = new I18NButton(gazePlay.getTranslator(), (String[]) null);
@@ -81,9 +79,6 @@ public abstract class GraphicalContext<T extends Parent> {
         button.heightProperty().addListener((observable, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() / 2d));
         button.setGraphic(imageView);
         button.setTooltip(new I18NTooltip(gazePlay.getTranslator(), label));
-    }
-
-    public void onGameStarted() {
     }
 
 }
