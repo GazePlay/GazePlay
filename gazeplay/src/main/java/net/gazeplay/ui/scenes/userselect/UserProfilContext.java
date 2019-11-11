@@ -159,8 +159,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             choicePanel.getChildren().add(userCard);
         }
 
-        ActiveConfigurationContext.switchToDefaultUser();
-
         HBox newUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("AddUser"), new ImagePattern(new Image("data/common/images/AddUser.png")), false, true);
         choicePanel.getChildren().add(newUserCard);
 
