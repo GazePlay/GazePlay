@@ -14,7 +14,10 @@ import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -248,12 +251,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                 BackgroundMusicManager.setInstance(new BackgroundMusicManager());
 
-                gazePlay.getHomeMenuScreen().clear();
-
-                gazePlay.setHomeMenuScreen(HomeMenuScreen.newInstance(getGazePlay(), config));
-
                 choicePanel.getChildren().clear();
-                gazePlay.getHomeMenuScreen().setUpOnStage(gazePlay.getPrimaryScene());
+                gazePlay.onReturnToMenu();
             };
         }
 
