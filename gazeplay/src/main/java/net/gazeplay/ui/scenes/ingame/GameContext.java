@@ -34,7 +34,6 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
@@ -61,11 +60,15 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     private Slider getSpeedSlider;
 
-    public static GameContext newInstance(GazePlay gazePlay) {
+    public static GameContext newInstance(
+        final GazePlay gazePlay,
+        final Stage primaryStage,
+        final Scene primaryScene,
+        final Translator translator,
+        final GazeDeviceManager gazeDeviceManager
+    ) {
 
         Pane root = new Pane();
-
-        final Stage primaryStage = gazePlay.getPrimaryStage();
 
         root.prefWidthProperty().bind(primaryStage.widthProperty());
         root.prefHeightProperty().bind(primaryStage.heightProperty());
@@ -89,7 +92,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         controlPanel.maxWidthProperty().bind(root.widthProperty());
         controlPanel.toFront();
 
-        double buttonSize = getButtonSize(gazePlay);
+        double buttonSize = getButtonSize(primaryStage);
 
         // Button bt = new Button();
         ImageView buttonImg = new ImageView(new Image("data/common/images/configuration-button-alt4.png"));
@@ -100,7 +103,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         bt.setMinHeight(BUTTON_MIN_HEIGHT);
         bt.setGraphic(buttonImg);
         bt.setStyle("-fx-background-color: transparent;");
-        updateConfigButton(bt, buttonImg, gazePlay);
+        updateConfigButton(bt, buttonImg, primaryStage);
         /*
          * bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; " +
          * "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; " + "-fx-max-height: " +
@@ -110,9 +113,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         final HBox root2 = new HBox(2);
         root2.setAlignment(Pos.CENTER_LEFT);
         // Pane root2 = new Pane();
-        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(root2, gazePlay));
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg, gazePlay));
-        root2.heightProperty().addListener((observable) -> updateConfigPane(root2, gazePlay));
+        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(root2, primaryStage));
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg, primaryStage));
+        root2.heightProperty().addListener((observable) -> updateConfigPane(root2, primaryStage));
 
         EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
             double from = 0;
@@ -145,7 +148,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         };
 
         log.info("the value of the control bar is : =" + controlPanel.getPrefWidth());
-        controlPanel.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 2.5);
+        controlPanel.setPrefWidth(primaryStage.getWidth() / 2.5);
         controlPanel.setVisible(false);
         controlPanel.setDisable(true);
         controlPanel.setMouseTransparent(true);
@@ -160,14 +163,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         root.getChildren().add(gamingRoot);
         root.getChildren().add(root2);
 
-        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root,
-            gazePlay.getPrimaryScene());
+        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root, primaryScene);
 
         RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
-        GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
-
-        return new GameContext(gazePlay, gazePlay.getTranslator(), root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
+        return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
             randomPositionGenerator, gazeDeviceManager, root2);
     }
 
@@ -203,8 +203,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     }
 
-    private static void updateConfigButton(Button button, ImageView btnImg, GazePlay gazePlay) {
-        double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
+    private static void updateConfigButton(Button button, ImageView btnImg, Stage primaryStage) {
+        double buttonSize = primaryStage.getWidth() / 10;
 
         if (buttonSize < BUTTON_MIN_HEIGHT) {
             buttonSize = BUTTON_MIN_HEIGHT;
@@ -217,17 +217,16 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         button.setPrefWidth(buttonSize);
     }
 
-    private static void updateConfigPane(final Pane configPane, GazePlay gazePlay) {
-        double mainHeight = gazePlay.getPrimaryStage().getHeight();
+    private static void updateConfigPane(final Pane configPane, Stage primaryStage) {
+        double mainHeight = primaryStage.getHeight();
 
         final double newY = mainHeight - configPane.getHeight() - 30;
         log.debug("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
         configPane.setTranslateY(newY);
     }
 
-    private static double getButtonSize(GazePlay gazePlay) {
-        double buttonSize = gazePlay.getPrimaryStage().getWidth() / 10;
-        return buttonSize;
+    private static double getButtonSize(Stage primaryStage) {
+        return primaryStage.getWidth() / 10;
     }
 
     public static HBox createControlPanel() {
@@ -291,7 +290,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         super.setUpOnStage(scene);
 
         log.info("SETTING UP");
-        updateConfigPane(configPane, getGazePlay());
+        updateConfigPane(configPane, getGazePlay().getPrimaryStage());
     }
 
     public void resetBordersToFront() {

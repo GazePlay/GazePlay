@@ -190,7 +190,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 translator,
                 gameSpec,
                 gameButtonOrientation,
-                gazeDeviceManager,
                 isFavorite(gameSpec, config));
 
             gameCardsList.add(gameCard);
