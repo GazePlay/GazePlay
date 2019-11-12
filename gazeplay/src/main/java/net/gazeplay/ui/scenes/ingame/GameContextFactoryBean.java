@@ -15,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GamePanelDimensionProvider;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -23,8 +22,6 @@ import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
-import net.gazeplay.commons.utils.RandomPanePositionGenerator;
-import net.gazeplay.components.RandomPositionGenerator;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -129,12 +126,12 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
          * buttonSize + "px;");
          */
 
-        final HBox root2 = new HBox(2);
-        root2.setAlignment(Pos.CENTER_LEFT);
-        // Pane root2 = new Pane();
-        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(root2, primaryStage));
+        final HBox configPane = new HBox(2);
+        configPane.setAlignment(Pos.CENTER_LEFT);
+        // Pane configPane = new Pane();
+        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(configPane, primaryStage));
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg, primaryStage));
-        root2.heightProperty().addListener((observable) -> updateConfigPane(root2, primaryStage));
+        configPane.heightProperty().addListener((observable) -> updateConfigPane(configPane, primaryStage));
 
         EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
             double from = 0;
@@ -145,7 +142,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
                 to = 0;
                 angle = -1 * angle;
             } else {
-                root2.getChildren().add(controlPanel);
+                configPane.getChildren().add(controlPanel);
             }
             RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
             rt.setByAngle(angle);
@@ -160,7 +157,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
             menuOpen = !menuOpen;
             pt.setOnFinished(actionEvent -> {
                 if (!menuOpen) {
-                    root2.getChildren().remove(controlPanel);
+                    configPane.getChildren().remove(controlPanel);
                 }
             });
             pt.play();
@@ -178,16 +175,11 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
 
         buttonTransparentHandler(bt);
 
-        root2.getChildren().add(bt);
+        configPane.getChildren().add(bt);
         root.getChildren().add(gamingRoot);
-        root.getChildren().add(root2);
+        root.getChildren().add(configPane);
 
-        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root, gazePlay.getPrimaryScene());
-
-        RandomPositionGenerator randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
-
-        return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gamePanelDimensionProvider,
-            randomPositionGenerator, gazeDeviceManager, root2);
+        return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gazeDeviceManager, configPane);
     }
 
     private void buttonTransparentHandler(Button bt) {

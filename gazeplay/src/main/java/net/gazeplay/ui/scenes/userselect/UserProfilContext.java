@@ -56,8 +56,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     public static UserProfilContext newInstance(final GazePlay gazePlay, final Configuration config) {
         BorderPane root = new BorderPane();
 
-        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(root,
-            gazePlay.getPrimaryScene());
+        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root,
+            gazePlay::getPrimaryScene);
 
         return new UserProfilContext(gazePlay, root, gamePanelDimensionProvider, config);
     }

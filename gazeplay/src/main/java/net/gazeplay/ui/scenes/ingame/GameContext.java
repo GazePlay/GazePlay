@@ -28,10 +28,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.AsyncUiTaskExecutor;
-import net.gazeplay.commons.utils.Bravo;
-import net.gazeplay.commons.utils.CustomButton;
-import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
@@ -84,8 +81,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         @NonNull Pane gamingRoot,
         @NonNull Bravo bravo,
         @NonNull HBox menuHBox,
-        @NonNull GamePanelDimensionProvider gamePanelDimensionProvider,
-        @NonNull RandomPositionGenerator randomPositionGenerator,
         @NonNull GazeDeviceManager gazeDeviceManager,
         @NonNull Pane configPane
     ) {
@@ -94,10 +89,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         this.gamingRoot = gamingRoot;
         this.bravo = bravo;
         this.menuHBox = menuHBox;
-        this.gamePanelDimensionProvider = gamePanelDimensionProvider;
-        this.randomPositionGenerator = randomPositionGenerator;
         this.gazeDeviceManager = gazeDeviceManager;
         this.configPane = configPane;
+
+        this.gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
+        this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
     }
 
     @Override

@@ -45,7 +45,7 @@ public class GazePlay {
 
     @Autowired
     private ApplicationContext applicationContext;
-    
+
     public GazePlay() {
     }
 
