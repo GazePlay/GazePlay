@@ -81,13 +81,13 @@ public class GazePlay {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        getTranslator().notifyLanguageChanged();
+        translator.notifyLanguageChanged();
 
         CssUtil.setPreferredStylesheets(config, getPrimaryScene());
 
         BackgroundMusicManager.onConfigurationChanged();
 
-        UserProfilContext userProfileScreen = UserProfilContext.newInstance(this, config);
+        UserProfilContext userProfileScreen = applicationContext.getBean(UserProfilContext.class);
         userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
     }

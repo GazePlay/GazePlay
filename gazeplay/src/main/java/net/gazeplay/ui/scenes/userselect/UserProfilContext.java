@@ -24,9 +24,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.stage.FileChooser.ExtensionFilter;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GamePanelDimensionProvider;
 import net.gazeplay.GazePlay;
@@ -34,7 +32,6 @@ import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationSource;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.FilesUtility;
@@ -53,15 +50,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserProfilContext extends GraphicalContext<BorderPane> {
 
-    public static UserProfilContext newInstance(final GazePlay gazePlay, final Configuration config) {
-        BorderPane root = new BorderPane();
-
-        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root,
-            gazePlay::getPrimaryScene);
-
-        return new UserProfilContext(gazePlay, root, gamePanelDimensionProvider, config);
-    }
-
     private static List<String> findAllUsersProfiles() {
         File profilesDirectory = GazePlayDirectories.getProfilesDirectory();
         log.info("profilesDirectory = {}", profilesDirectory);
@@ -78,26 +66,17 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             .collect(Collectors.toList());
     }
 
-    @Setter
-    @Getter
-    private GazeDeviceManager gazeDeviceManager;
-
-    @Getter
-    private final GamePanelDimensionProvider gamePanelDimensionProvider;
-
     private final double cardHeight;
 
     private final double cardWidth;
 
     public UserProfilContext(
-        GazePlay gazePlay,
-        BorderPane root,
-        GamePanelDimensionProvider gamePanelDimensionProvider,
-        Configuration config
+        GazePlay gazePlay
     ) {
-        super(gazePlay, root);
+        super(gazePlay, new BorderPane());
 
-        this.gamePanelDimensionProvider = gamePanelDimensionProvider;
+        GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
+
         cardHeight = gamePanelDimensionProvider.getDimension2D().getHeight() / 4;
         cardWidth = gamePanelDimensionProvider.getDimension2D().getWidth() / 8;
 
