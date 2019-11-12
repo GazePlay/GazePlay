@@ -63,16 +63,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static final double PREF_HEIGHT = 25;
 
-    private static boolean currentLanguageAlignementIsLeftAligned = true;
+    private final boolean currentLanguageAlignementIsLeftAligned;
 
-    public static ConfigurationContext newInstance(GazePlay gazePlay) {
-        BorderPane root = new BorderPane();
-
-        return new ConfigurationContext(gazePlay, root);
-    }
-
-    private ConfigurationContext(GazePlay gazePlay, BorderPane root) {
-        super(gazePlay, root);
+    ConfigurationContext(GazePlay gazePlay) {
+        super(gazePlay, new BorderPane());
 
         Translator translator = gazePlay.getTranslator();
 
@@ -352,7 +346,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return grid;
     }
 
-    private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
+    private void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
 
         final int COLUMN_INDEX_LABEL_LEFT = 0;
         final int COLUMN_INDEX_INPUT_LEFT = 1;
@@ -568,9 +562,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return pane;
     }
 
-    private static Node buildWhereIsItDirectoryChooser(Configuration configuration,
-                                                       ConfigurationContext configurationContext,
-                                                       Translator translator) {
+    private Node buildWhereIsItDirectoryChooser(Configuration configuration,
+                                                ConfigurationContext configurationContext,
+                                                Translator translator) {
 
         final HBox pane = new HBox(5);
 
@@ -617,8 +611,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return pane;
     }
 
-    private static MenuButton buildLanguageChooser(Configuration configuration,
-                                                   ConfigurationContext configurationContext) {
+    private MenuButton buildLanguageChooser(Configuration configuration,
+                                            ConfigurationContext configurationContext) {
 
         String currentCodeLanguage = configuration.getLanguage();
         LanguageDetails currentLanguageDetails = Languages.getLanguage(currentCodeLanguage);
@@ -871,7 +865,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
-    private static Node buildMusicInput(Configuration config, ConfigurationContext configurationContext, Translator translator) {
+    private Node buildMusicInput(Configuration config, ConfigurationContext configurationContext, Translator translator) {
 
         changeMusicFolder(config.getMusicFolder(), config);
 

@@ -6,18 +6,19 @@ import javafx.scene.layout.Pane;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.function.Supplier;
+
 @AllArgsConstructor
 @Slf4j
 public class GamePanelDimensionProvider {
 
-    private final Pane pane;
+    private final Supplier<Pane> paneSupplier;
 
-    private final Scene scene;
+    private final Supplier<Scene> sceneSupplier;
 
     public Dimension2D getDimension2D() {
-
-        Dimension2D result;
-        result = new Dimension2D(pane.getWidth(), pane.getHeight());
+        final Pane pane = paneSupplier.get();
+        Dimension2D result = new Dimension2D(pane.getWidth(), pane.getHeight());
         log.debug("result = {}", result);
 
         // on the first round, the pane size may not be ready yet
@@ -26,8 +27,9 @@ public class GamePanelDimensionProvider {
 
         // fallback method
         if (result.getWidth() == 0 || result.getHeight() == 0) {
+            final Scene scene = sceneSupplier.get();
             result = new Dimension2D(scene.getWidth(), scene.getHeight() * 0.9 - 24);
-            log.info("result = {}", result);
+            log.debug("result = {}", result);
         }
 
         return result;

@@ -23,6 +23,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.apache.commons.io.FilenameUtils;
@@ -159,7 +160,7 @@ public class VideoGrid implements GameLifeCycle {
     }
 
     private void noVideoFound() {
-        Text errorText = new Text(translate.getTrad("No video found", config.getLanguage()));
+        I18NText errorText = new I18NText(gameContext.getTranslator(), "No video found");
         errorText.setY(dimensions.getHeight() / 2);
         errorText.setTextAlignment(TextAlignment.CENTER);
         errorText.setFill(config.isBackgroundWhite() ? Color.BLACK : Color.WHITE);

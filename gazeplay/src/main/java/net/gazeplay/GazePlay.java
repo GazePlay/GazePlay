@@ -8,11 +8,9 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
-import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
@@ -23,6 +21,7 @@ import net.gazeplay.ui.scenes.stats.ScanpathView;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.ui.scenes.userselect.UserProfilContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -37,6 +36,7 @@ public class GazePlay {
     @Getter
     private Scene primaryScene;
 
+    @Autowired
     @Getter
     private Translator translator;
 
@@ -44,11 +44,10 @@ public class GazePlay {
     @Getter
     private GamesLocator gamesLocator;
 
-    public GazePlay() {
-        Configuration config = ActiveConfigurationContext.getInstance();
-        final Multilinguism multilinguism = Multilinguism.getSingleton();
+    @Autowired
+    private ApplicationContext applicationContext;
 
-        translator = new DefaultTranslator(config, multilinguism);
+    public GazePlay() {
     }
 
     public void onGameLaunch(GameContext gameContext) {
@@ -56,21 +55,18 @@ public class GazePlay {
     }
 
     public void onReturnToMenu() {
-        Configuration config = ActiveConfigurationContext.getInstance();
+        HomeMenuScreen homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
 
-        HomeMenuScreen homeMenuScreen = HomeMenuScreen.newInstance(this, config);
-
-        homeMenuScreen.setGazeDeviceManager(GazeDeviceManagerFactory.getInstance().createNewGazeListener());
         homeMenuScreen.setUpOnStage(primaryScene);
-        final BackgroundMusicManager musicMananger = BackgroundMusicManager.getInstance();
-        musicMananger.onEndGame();
+        BackgroundMusicManager.getInstance().onEndGame();
     }
 
     public void onDisplayStats(StatsContext statsContext) {
         statsContext.setUpOnStage(primaryScene);
     }
 
-    public void onDisplayAOI(AreaOfInterest areaOfInterest) {
+    public void onDisplayAOI(Stats stats) {
+        AreaOfInterest areaOfInterest = new AreaOfInterest(this, stats);
         areaOfInterest.setUpOnStage(primaryScene);
     }
 
@@ -78,7 +74,8 @@ public class GazePlay {
         scanPath.setUpOnStage(primaryScene);
     }
 
-    public void onDisplayConfigurationManagement(ConfigurationContext configurationContext) {
+    public void onDisplayConfigurationManagement() {
+        ConfigurationContext configurationContext = applicationContext.getBean(ConfigurationContext.class);
         configurationContext.setUpOnStage(primaryScene);
     }
 
@@ -87,13 +84,13 @@ public class GazePlay {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        getTranslator().notifyLanguageChanged();
+        translator.notifyLanguageChanged();
 
         CssUtil.setPreferredStylesheets(config, getPrimaryScene());
 
         BackgroundMusicManager.onConfigurationChanged();
 
-        UserProfilContext userProfileScreen = UserProfilContext.newInstance(this, config);
+        UserProfilContext userProfileScreen = applicationContext.getBean(UserProfilContext.class);
         userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
     }

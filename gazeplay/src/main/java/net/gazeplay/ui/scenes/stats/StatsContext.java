@@ -25,7 +25,6 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.StatsDisplay;
 import net.gazeplay.stats.ExplorationGamesStats;
@@ -43,7 +42,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     private static final double RATIO = 0.35;
 
     public static StatsContext newInstance(
-        @NonNull GazePlay gazePlay, 
+        @NonNull GazePlay gazePlay,
         @NonNull Stats stats
     ) {
         BorderPane root = new BorderPane();
@@ -106,8 +105,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         Configuration config = ActiveConfigurationContext.getInstance();
-
-        Multilinguism multilinguism = Multilinguism.getSingleton();
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -242,17 +239,14 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
         EventHandler<Event> AOIEvent = e -> {
-
-            AreaOfInterest areaOfInterest = AreaOfInterest.newInstance(gazePlay, stats);
-            gazePlay.onDisplayAOI(areaOfInterest);
+            gazePlay.onDisplayAOI(stats);
         };
 
         HomeButton aoiButton = new HomeButton("data/common/images/aoibtn.png");
         aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
 
         EventHandler<Event> viewScanpath = s -> {
-
-            ScanpathView scanpath = ScanpathView.newInstance(gazePlay, stats);
+            ScanpathView scanpath = new ScanpathView(gazePlay, stats);
             gazePlay.onDisplayScanpath(scanpath);
         };
 
@@ -279,7 +273,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         StackPane centerStackPane = new StackPane();
         centerStackPane.getChildren().add(centerPane);
 
-        Text screenTitleText = new Text(multilinguism.getTrad("StatsTitle", config.getLanguage()));
+        I18NText screenTitleText = new I18NText(translator, "StatsTitle");
         // screenTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         screenTitleText.setId("title");
         // screenTitleText.setTextAlignment(TextAlignment.CENTER);

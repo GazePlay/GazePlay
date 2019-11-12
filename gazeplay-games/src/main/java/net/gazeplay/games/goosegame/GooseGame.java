@@ -20,14 +20,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.DiceRoller;
 import net.gazeplay.components.Position;
@@ -50,8 +48,6 @@ public class GooseGame implements GameLifeCycle {
     private final Dimension2D dimensions;
     private final Configuration config;
     private final int nbPlayers;
-    @Getter
-    private final Multilinguism translate;
 
     private Rectangle background;
     private ImageView boardImage;
@@ -85,7 +81,6 @@ public class GooseGame implements GameLifeCycle {
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.config = ActiveConfigurationContext.getInstance();
-        this.translate = Multilinguism.getSingleton();
 
         this.random = new Random();
 
@@ -344,7 +339,7 @@ public class GooseGame implements GameLifeCycle {
      */
     public void showMessage(String message, Object... values) {
         Text messageText = new Text(0, dimensions.getHeight() / 3,
-                String.format(translate.getTrad(message, config.getLanguage()), values));
+                String.format(gameContext.getTranslator().translate(message), values));
         messageText.setTextAlignment(TextAlignment.CENTER);
         messageText.setFill(Color.WHITE);
         messageText.setFont(new Font(dimensions.getHeight() / 10));

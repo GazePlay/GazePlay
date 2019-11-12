@@ -18,13 +18,14 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.*;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicReference;
@@ -33,6 +34,7 @@ import static javafx.scene.input.MouseEvent.*;
 
 @Slf4j
 @Data
+@Component
 public class GameMenuFactory {
 
     private final boolean useDebuggingBackgrounds = false;
@@ -42,20 +44,21 @@ public class GameMenuFactory {
 
     private final static long FAVORITE_SWITCH_FIXATION_DURATION_IN_MILLISECONDS = 1000;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     public GameButtonPane createGameButton(
         @NonNull final GazePlay gazePlay,
         @NonNull final Region root,
         @NonNull final Configuration config,
-        @NonNull final Multilinguism multilinguism,
         @NonNull final Translator translator,
         @NonNull final GameSpec gameSpec,
         @NonNull final GameButtonOrientation orientation,
-        @NonNull final GazeDeviceManager gazeDeviceManager,
         final boolean isFavorite
     ) {
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
-        final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
+        final String gameName = translator.translate(gameSummary.getNameCode());
 
         final Image heartIcon;
         if (isFavorite) {
@@ -255,9 +258,9 @@ public class GameMenuFactory {
             } else {
                 if (variants.size() == 1) {
                     GameSpec.GameVariant onlyGameVariant = variants.iterator().next();
-                    chooseGame(gazePlay, gameSpec, onlyGameVariant, config);
+                    chooseGame(gazePlay, gameSpec, onlyGameVariant);
                 } else {
-                    chooseGame(gazePlay, gameSpec, null, config);
+                    chooseGame(gazePlay, gameSpec, null);
                 }
             }
         };
@@ -315,9 +318,12 @@ public class GameMenuFactory {
         return gameCard;
     }
 
-    public void chooseGame(GazePlay gazePlay, GameSpec selectedGameSpec, GameSpec.GameVariant gameVariant,
-                            Configuration config) {
-        GameContext gameContext = GameContext.newInstance(gazePlay);
+    public void chooseGame(
+        GazePlay gazePlay,
+        GameSpec selectedGameSpec,
+        GameSpec.GameVariant gameVariant
+    ) {
+        GameContext gameContext = applicationContext.getBean(GameContext.class);
 
         gazePlay.onGameLaunch(gameContext);
 
