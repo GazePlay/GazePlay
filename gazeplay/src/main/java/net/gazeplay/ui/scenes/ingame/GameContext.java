@@ -268,6 +268,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     @Override
+    public @NonNull Configuration getConfiguration() {
+        return ActiveConfigurationContext.getInstance();
+    }
+
+    @Override
     public Stage getPrimaryStage() {
         return getGazePlay().getPrimaryStage();
     }
