@@ -276,7 +276,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         StackPane centerStackPane = new StackPane();
         centerStackPane.getChildren().add(centerPane);
 
-        Text screenTitleText = new Text(multilinguism.getTrad("StatsTitle", config.getLanguage()));
+        I18NText screenTitleText = new I18NText(translator, "StatsTitle");
         // screenTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         screenTitleText.setId("title");
         // screenTitleText.setTextAlignment(TextAlignment.CENTER);

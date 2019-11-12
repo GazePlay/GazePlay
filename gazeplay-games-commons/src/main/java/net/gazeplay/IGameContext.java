@@ -15,18 +15,29 @@ import net.gazeplay.components.RandomPositionGenerator;
 
 public interface IGameContext {
 
+    @NonNull
     RandomPositionGenerator getRandomPositionGenerator();
 
+    @NonNull
     GamePanelDimensionProvider getGamePanelDimensionProvider();
 
+    @NonNull
     GazeDeviceManager getGazeDeviceManager();
 
     @NonNull
     Translator getTranslator();
 
+    @NonNull
     Stage getPrimaryStage();
 
+    @NonNull
     Scene getPrimaryScene();
+
+    @NonNull
+    ObservableList<Node> getChildren();
+
+    @NonNull
+    Pane getRoot();
 
     void clear();
 
@@ -37,10 +48,6 @@ public interface IGameContext {
     void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler);
 
     void endWinTransition();
-
-    ObservableList<Node> getChildren();
-
-    Pane getRoot();
 
     void resetBordersToFront();
 

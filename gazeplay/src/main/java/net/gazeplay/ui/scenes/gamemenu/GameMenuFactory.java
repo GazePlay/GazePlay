@@ -21,7 +21,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,6 @@ public class GameMenuFactory {
         @NonNull final GazePlay gazePlay,
         @NonNull final Region root,
         @NonNull final Configuration config,
-        @NonNull final Multilinguism multilinguism,
         @NonNull final Translator translator,
         @NonNull final GameSpec gameSpec,
         @NonNull final GameButtonOrientation orientation,
@@ -60,7 +58,7 @@ public class GameMenuFactory {
     ) {
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
-        final String gameName = multilinguism.getTrad(gameSummary.getNameCode(), config.getLanguage());
+        final String gameName = translator.translate(gameSummary.getNameCode());
 
         final Image heartIcon;
         if (isFavorite) {

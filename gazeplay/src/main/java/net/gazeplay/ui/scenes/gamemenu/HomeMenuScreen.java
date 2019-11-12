@@ -35,7 +35,6 @@ import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.LicenseUtils;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
@@ -175,7 +174,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Configuration config,
         final ProgressIndicator indicator
     ) {
-        final Multilinguism multilinguism = Multilinguism.getSingleton();
         final Translator translator = getGazePlay().getTranslator();
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
 
@@ -186,7 +184,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 getGazePlay(),
                 root,
                 config,
-                multilinguism,
                 translator,
                 gameSpec,
                 gameButtonOrientation,

@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
@@ -89,7 +90,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         grid.setPadding(new Insets(50, 50, 50, 50));
         allAOIList = new ArrayList<>();
         Multilinguism multilinguism = Multilinguism.getSingleton();
-        Label screenTitleText = new Label(multilinguism.getTrad("AreaOfInterest", config.getLanguage()));
+        I18NLabel screenTitleText = new I18NLabel(gazePlay.getTranslator(),"AreaOfInterest");
         screenTitleText.setId("title");
         HBox topPane;
         VBox centerPane = new VBox();
