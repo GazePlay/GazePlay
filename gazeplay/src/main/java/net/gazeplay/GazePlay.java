@@ -10,6 +10,7 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
@@ -64,7 +65,8 @@ public class GazePlay {
         statsContext.setUpOnStage(primaryScene);
     }
 
-    public void onDisplayAOI(AreaOfInterest areaOfInterest) {
+    public void onDisplayAOI(Stats stats) {
+        AreaOfInterest areaOfInterest = new AreaOfInterest(this, stats);
         areaOfInterest.setUpOnStage(primaryScene);
     }
 

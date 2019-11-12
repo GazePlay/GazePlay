@@ -49,14 +49,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
-    private List<CoordinatesTracker> movementHistory;
-    private Label timeLabel;
-    private Label scoreLabel;
+    private final List<CoordinatesTracker> movementHistory;
+    private final Label timeLabel;
     private Timeline clock;
     private MediaPlayer player;
-    private List<AreaOfInterestProps> allAOIList;
-    private ArrayList<CoordinatesTracker> areaOfInterestList;
-    private Color[] colors;
+    private final List<AreaOfInterestProps> allAOIList;
+    private List<CoordinatesTracker> areaOfInterestList;
+    private final Color[] colors;
     private final Configuration config;
     private int intereatorAOI;
     private Polygon currentAreaDisplay;
@@ -64,30 +63,239 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private Line currentLineToInfoBox;
     private double score;
     private int colorIterator;
-    private int bias = 15;
-    private Pane graphicsPane;
+    private final Pane graphicsPane;
     private double progressRate = 1;
     private Double previousInfoBoxX;
     private Double previousInfoBoxY;
-    private int targetAOIIterator = 0;
-    private ArrayList<InitialAreaOfInterestProps> combinedAreaList;
-    private double combinationThreshHold = 0.70;
-    private int[] areaMap;
+    private final ArrayList<InitialAreaOfInterestProps> combinedAreaList;
+    private final int[] areaMap;
     private boolean playing = false;
     private double highestFixationTime;
-    private Stats stats;
+    private final Stats stats;
+
+    public AreaOfInterest(GazePlay gazePlay, Stats stats) {
+        super(gazePlay, new BorderPane());
+        this.stats = stats;
+        colors = new Color[]{Color.PURPLE, Color.WHITE, Color.PINK, Color.ORANGE, Color.BLUE, Color.RED,
+            Color.CHOCOLATE};
+        config = ActiveConfigurationContext.getInstance();
+        GridPane grid = new GridPane();
+        StackPane stackPane = new StackPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(100);
+        grid.setVgap(50);
+        highestFixationTime = 0;
+        intereatorAOI = 0;
+        grid.setPadding(new Insets(50, 50, 50, 50));
+        allAOIList = new ArrayList<>();
+        Multilinguism multilinguism = Multilinguism.getSingleton();
+        Label screenTitleText = new Label(multilinguism.getTrad("AreaOfInterest", config.getLanguage()));
+        screenTitleText.setId("title");
+        HBox topPane;
+        VBox centerPane = new VBox();
+        centerPane.setAlignment(Pos.CENTER);
+        graphicsPane = new Pane();
+        areaOfInterestList = new ArrayList<>();
+        movementHistory = stats.getMovementHistoryWithTime();
+        this.dataTreatment();
+        for (int i = 0; i < movementHistory.size(); i++)
+            calculateAreaOfInterest(i, stats.getStartTime());
+
+        areaMap = new int[allAOIList.size()];
+        Arrays.fill(areaMap, -1);
+        combinedAreaList = computeConnectedArea();
+        if (highestFixationTime != 0) {
+            for (AreaOfInterestProps areaOfInterestProps : allAOIList) {
+                double priority = areaOfInterestProps.getInfoBoxProps().getTimeSpent() / highestFixationTime * 0.6
+                    + 0.10;
+                areaOfInterestProps.getAreaOfInterest().setFill(Color.rgb(255, 0, 0, priority));
+                areaOfInterestProps.setPriority(priority);
+            }
+        }
+        for (InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
+            graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
+        }
+
+        if (stats.getTargetAOIList() != null) {
+            calculateTargetAOI(stats.getTargetAOIList());
+            ArrayList<TargetAOI> targetAOIArrayList = stats.getTargetAOIList();
+
+            long timeTargetAreaStart;
+            long timeTargetAreaEnd;
+            score = 0;
+
+            for (AreaOfInterestProps areaOfInterestProps : allAOIList) {
+                int targetAOIIterator = 0;
+                if (targetAOIIterator < targetAOIArrayList.size()) {
+                    timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
+                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeStarted()
+                        + targetAOIArrayList.get(targetAOIIterator).getDuration();
+                    long timeAreaStart = areaOfInterestProps.getAreaStartTime();
+                    long timeAreaEnd = areaOfInterestProps.getAreaEndTime();
+
+                    if (timeTargetAreaStart <= timeAreaStart) {
+
+                        Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),
+                            areaOfInterestProps.getAreaOfInterest());
+                        if (intersect.getBoundsInLocal().getWidth() != -1) {
+
+                            System.out.println("The intersection width is " + intersect.getBoundsInLocal().getWidth());
+                            System.out.println("The width of is "
+                                + areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth());
+                            score += (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
+                                / intersect.getBoundsInLocal().getWidth();
+                        }
+                    }
+
+                    if (timeAreaEnd > timeTargetAreaEnd)
+                        targetAOIIterator++;
+                }
+            }
+            score = score / allAOIList.size();
+        }
+
+        Button slowBtn10 = new Button("10X Slow ");
+        Button slowBtn8 = new Button("8X Slow ");
+        Button slowBtn5 = new Button("5X Slow ");
+        Button playBtn = new Button("Play ");
+        Button stopBtn = new Button("Stop ");
+        Button cancelBtn = new Button("Cancel ");
+
+        playBtn.setPrefSize(100, 20);
+        slowBtn5.setPrefSize(100, 20);
+        slowBtn8.setPrefSize(100, 20);
+        slowBtn10.setPrefSize(100, 20);
+        stopBtn.setPrefSize(100, 20);
+        cancelBtn.setPrefSize(100, 20);
+
+        playBtn.setOnAction(e -> {
+            progressRate = 0.60;
+            // if (config.isVideoRecordingEnabled())
+            // player.setRate(1.0);
+            playButtonPressed();
+        });
+        slowBtn5.setOnAction(e -> {
+            // if (config.isVideoRecordingEnabled())
+            // player.setRate(0.5);
+
+            playButtonPressed();
+        });
+        slowBtn8.setOnAction(e -> {
+            // if (config.isVideoRecordingEnabled())
+            // player.setRate(0.2);
+
+            playButtonPressed();
+        });
+
+        slowBtn10.setOnAction(e -> {
+            // if (config.isVideoRecordingEnabled())
+            // player.setRate(0.1);
+
+            playButtonPressed();
+        });
+        cancelBtn.setOnAction(e -> {
+            if (playing) {
+                playing = false;
+                graphicsPane.getChildren().removeAll();
+                addAllInitialArea();
+            }
+        });
+        if (config.isVideoRecordingEnabled()) {
+            File source;
+            File target;
+            try {
+                System.out.println("The name of the video is " + stats.getDirectoryOfVideo());
+                source = new File(stats.getDirectoryOfVideo() + ".avi");
+                target = new File(stats.getDirectoryOfVideo() + ".mp4");
+                // Audio Attributes
+                VideoAttributes videoAttributes = new VideoAttributes();
+                videoAttributes.setCodec("mpeg4");
+                // Encoding attributes
+                EncodingAttributes attrs = new EncodingAttributes();
+                attrs.setFormat("mp4");
+                attrs.setVideoAttributes(videoAttributes);
+                // Encode
+                Encoder encoder = new Encoder();
+                encoder.encode(new MultimediaObject(source), target, attrs);
+                Media media = new Media(target.toURI().toString());
+                player = new MediaPlayer(media);
+                MediaView mediaView = new MediaView(player);
+                stackPane.getChildren().add(mediaView);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+            javafx.scene.image.ImageView screenshot = new javafx.scene.image.ImageView();
+            screenshot.setPreserveRatio(true);
+            screenshot.setImage(new Image(savedStatsInfo.getScreenshotFile().toURI().toString()));
+            // stackPane.getChildren().add(screenshot);
+        }
+
+        EventHandler<Event> AOIEvent = e -> {
+
+            StatsContext statsContext;
+            statsContext = StatsContext.newInstance(gazePlay, stats);
+
+            if (config.isVideoRecordingEnabled())
+                player.stop();
+            this.clear();
+            gazePlay.onDisplayStats(statsContext);
+        };
+
+        Region region1 = new Region();
+        HBox.setHgrow(region1, Priority.ALWAYS);
+
+        Region region2 = new Region();
+        HBox.setHgrow(region2, Priority.ALWAYS);
+        HBox buttonBox = new HBox(cancelBtn, playBtn, slowBtn5, slowBtn8, slowBtn10);
+        buttonBox.setSpacing(10);
+        buttonBox.setFillHeight(true);
+        buttonBox.setPadding(new Insets(10, 10, 10, 10));
+
+        timeLabel = new Label();
+        timeLabel.setTextFill(Color.web("#FFFFFF"));
+        timeLabel.setMinSize(100, 0);
+        timeLabel.setTextFill(Color.GREEN);
+
+        Label scoreLabel = new Label();
+        scoreLabel.setTextFill(Color.WHITE);
+        scoreLabel.setFont(new Font("Arial", 20));
+        scoreLabel.setText("Score: " + score);
+        if (stats.getTargetAOIList() != null) {
+            topPane = new HBox(scoreLabel, timeLabel, region2, buttonBox);
+
+        } else {
+            topPane = new HBox(timeLabel, region2, buttonBox);
+
+        }
+        topPane.setPadding(new Insets(15, 15, 0, 15));
+        topPane.setSpacing(10);
+        topPane.setStyle("-fx-background-color: transparent; -fx-max-height: 80px;");
+        HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
+
+        HBox homebox = new HBox(homeButton);
+        homebox.setStyle("-fx-background-color: transparent; -fx-max-height: 100px; -fx-max-width: 100px;");
+        homebox.setPadding(new Insets(10, 10, 10, 10));
+        stackPane.getChildren().add(graphicsPane);
+        stackPane.getChildren().add(topPane);
+        stackPane.getChildren().add(homebox);
+        StackPane.setAlignment(homebox, Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(topPane, Pos.TOP_CENTER);
+        graphicsPane.setPickOnBounds(false);
+        graphicsPane.setStyle("-fx-background-color: transparent;");
+        root.setCenter(stackPane);
+        root.setStyle(
+            "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+    }
 
     @Override
     public ObservableList<Node> getChildren() {
         return root.getChildren();
     }
 
-    public static AreaOfInterest newInstance(GazePlay gazePlay, Stats stats) {
-        BorderPane root = new BorderPane();
-        return new AreaOfInterest(gazePlay, root, stats);
-    }
-
-    public void dataTreatment() {
+    private void dataTreatment() {
         // treating the data, post processing to take performance constraint of during the data collection
         movementHistory.get(0).setDistance(0);
         for (int i = 1; i < movementHistory.size(); i++) {
@@ -264,6 +472,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 bottomPoint = point2D[i].getY();
         }
         Double[] squarePoints = new Double[8];
+        int bias = 15;
         squarePoints[0] = leftPoint - bias;
         squarePoints[1] = topPoint + bias;
         squarePoints[2] = rightPoint + bias;
@@ -312,222 +521,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             pointsToReturn[i] = convexHullPoints.get(i);
         }
         return pointsToReturn;
-    }
-
-    private AreaOfInterest(GazePlay gazePlay, BorderPane root, Stats stats) {
-        super(gazePlay, root);
-        this.stats = stats;
-        colors = new Color[]{Color.PURPLE, Color.WHITE, Color.PINK, Color.ORANGE, Color.BLUE, Color.RED,
-            Color.CHOCOLATE};
-        config = ActiveConfigurationContext.getInstance();
-        GridPane grid = new GridPane();
-        StackPane stackPane = new StackPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(100);
-        grid.setVgap(50);
-        highestFixationTime = 0;
-        intereatorAOI = 0;
-        grid.setPadding(new Insets(50, 50, 50, 50));
-        allAOIList = new ArrayList<>();
-        Multilinguism multilinguism = Multilinguism.getSingleton();
-        Label screenTitleText = new Label(multilinguism.getTrad("AreaOfInterest", config.getLanguage()));
-        screenTitleText.setId("title");
-        HBox topPane;
-        VBox centerPane = new VBox();
-        centerPane.setAlignment(Pos.CENTER);
-        graphicsPane = new Pane();
-        areaOfInterestList = new ArrayList<>();
-        movementHistory = stats.getMovementHistoryWithTime();
-        this.dataTreatment();
-        for (int i = 0; i < movementHistory.size(); i++)
-            calculateAreaOfInterest(i, stats.getStartTime());
-
-        areaMap = new int[allAOIList.size()];
-        Arrays.fill(areaMap, -1);
-        combinedAreaList = computeConnectedArea();
-        if (highestFixationTime != 0) {
-            for (AreaOfInterestProps areaOfInterestProps : allAOIList) {
-                double priority = areaOfInterestProps.getInfoBoxProps().getTimeSpent() / highestFixationTime * 0.6
-                    + 0.10;
-                areaOfInterestProps.getAreaOfInterest().setFill(Color.rgb(255, 0, 0, priority));
-                areaOfInterestProps.setPriority(priority);
-            }
-        }
-        for (InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
-            graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
-        }
-
-        if (stats.getTargetAOIList() != null) {
-            calculateTargetAOI(stats.getTargetAOIList());
-            ArrayList<TargetAOI> targetAOIArrayList = stats.getTargetAOIList();
-
-            long timeTargetAreaStart;
-            long timeTargetAreaEnd;
-            score = 0;
-
-            for (AreaOfInterestProps areaOfInterestProps : allAOIList) {
-                if (targetAOIIterator < targetAOIArrayList.size()) {
-                    timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
-                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeStarted()
-                        + targetAOIArrayList.get(targetAOIIterator).getDuration();
-                    long timeAreaStart = areaOfInterestProps.getAreaStartTime();
-                    long timeAreaEnd = areaOfInterestProps.getAreaEndTime();
-
-                    if (timeTargetAreaStart <= timeAreaStart) {
-
-                        Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),
-                            areaOfInterestProps.getAreaOfInterest());
-                        if (intersect.getBoundsInLocal().getWidth() != -1) {
-
-                            System.out.println("The intersection width is " + intersect.getBoundsInLocal().getWidth());
-                            System.out.println("The width of is "
-                                + areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth());
-                            score += (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
-                                / intersect.getBoundsInLocal().getWidth();
-                        }
-                    }
-
-                    if (timeAreaEnd > timeTargetAreaEnd)
-                        targetAOIIterator++;
-                }
-            }
-            score = score / allAOIList.size();
-        }
-
-        Button slowBtn10 = new Button("10X Slow ");
-        Button slowBtn8 = new Button("8X Slow ");
-        Button slowBtn5 = new Button("5X Slow ");
-        Button playBtn = new Button("Play ");
-        Button stopBtn = new Button("Stop ");
-        Button cancelBtn = new Button("Cancel ");
-
-        playBtn.setPrefSize(100, 20);
-        slowBtn5.setPrefSize(100, 20);
-        slowBtn8.setPrefSize(100, 20);
-        slowBtn10.setPrefSize(100, 20);
-        stopBtn.setPrefSize(100, 20);
-        cancelBtn.setPrefSize(100, 20);
-
-        playBtn.setOnAction(e -> {
-            progressRate = 0.60;
-            // if (config.isVideoRecordingEnabled())
-            // player.setRate(1.0);
-            playButtonPressed();
-        });
-        slowBtn5.setOnAction(e -> {
-            // if (config.isVideoRecordingEnabled())
-            // player.setRate(0.5);
-
-            playButtonPressed();
-        });
-        slowBtn8.setOnAction(e -> {
-            // if (config.isVideoRecordingEnabled())
-            // player.setRate(0.2);
-
-            playButtonPressed();
-        });
-
-        slowBtn10.setOnAction(e -> {
-            // if (config.isVideoRecordingEnabled())
-            // player.setRate(0.1);
-
-            playButtonPressed();
-        });
-        cancelBtn.setOnAction(e -> {
-            if (playing) {
-                playing = false;
-                graphicsPane.getChildren().removeAll();
-                addAllInitialArea();
-            }
-        });
-        if (config.isVideoRecordingEnabled()) {
-            File source;
-            File target;
-            try {
-                System.out.println("The name of the video is " + stats.getDirectoryOfVideo());
-                source = new File(stats.getDirectoryOfVideo() + ".avi");
-                target = new File(stats.getDirectoryOfVideo() + ".mp4");
-                // Audio Attributes
-                VideoAttributes videoAttributes = new VideoAttributes();
-                videoAttributes.setCodec("mpeg4");
-                // Encoding attributes
-                EncodingAttributes attrs = new EncodingAttributes();
-                attrs.setFormat("mp4");
-                attrs.setVideoAttributes(videoAttributes);
-                // Encode
-                Encoder encoder = new Encoder();
-                encoder.encode(new MultimediaObject(source), target, attrs);
-                Media media = new Media(target.toURI().toString());
-                player = new MediaPlayer(media);
-                MediaView mediaView = new MediaView(player);
-                stackPane.getChildren().add(mediaView);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-            javafx.scene.image.ImageView screenshot = new javafx.scene.image.ImageView();
-            screenshot.setPreserveRatio(true);
-            screenshot.setImage(new Image(savedStatsInfo.getScreenshotFile().toURI().toString()));
-            // stackPane.getChildren().add(screenshot);
-        }
-
-        EventHandler<Event> AOIEvent = e -> {
-
-            StatsContext statsContext;
-            statsContext = StatsContext.newInstance(gazePlay, stats);
-
-            if (config.isVideoRecordingEnabled())
-                player.stop();
-            this.clear();
-            gazePlay.onDisplayStats(statsContext);
-        };
-
-        Region region1 = new Region();
-        HBox.setHgrow(region1, Priority.ALWAYS);
-
-        Region region2 = new Region();
-        HBox.setHgrow(region2, Priority.ALWAYS);
-        HBox buttonBox = new HBox(cancelBtn, playBtn, slowBtn5, slowBtn8, slowBtn10);
-        buttonBox.setSpacing(10);
-        buttonBox.setFillHeight(true);
-        buttonBox.setPadding(new Insets(10, 10, 10, 10));
-
-        timeLabel = new Label();
-        timeLabel.setTextFill(Color.web("#FFFFFF"));
-        timeLabel.setMinSize(100, 0);
-        timeLabel.setTextFill(Color.GREEN);
-
-        scoreLabel = new Label();
-        scoreLabel.setTextFill(Color.WHITE);
-        scoreLabel.setFont(new Font("Arial", 20));
-        scoreLabel.setText("Score: " + score);
-        if (stats.getTargetAOIList() != null) {
-            topPane = new HBox(scoreLabel, timeLabel, region2, buttonBox);
-
-        } else {
-            topPane = new HBox(timeLabel, region2, buttonBox);
-
-        }
-        topPane.setPadding(new Insets(15, 15, 0, 15));
-        topPane.setSpacing(10);
-        topPane.setStyle("-fx-background-color: transparent; -fx-max-height: 80px;");
-        HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
-        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
-
-        HBox homebox = new HBox(homeButton);
-        homebox.setStyle("-fx-background-color: transparent; -fx-max-height: 100px; -fx-max-width: 100px;");
-        homebox.setPadding(new Insets(10, 10, 10, 10));
-        stackPane.getChildren().add(graphicsPane);
-        stackPane.getChildren().add(topPane);
-        stackPane.getChildren().add(homebox);
-        StackPane.setAlignment(homebox, Pos.BOTTOM_RIGHT);
-        StackPane.setAlignment(topPane, Pos.TOP_CENTER);
-        graphicsPane.setPickOnBounds(false);
-        graphicsPane.setStyle("-fx-background-color: transparent;");
-        root.setCenter(stackPane);
-        root.setStyle(
-            "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
     private void calculateTargetAOI(ArrayList<TargetAOI> targetAOIArrayList) {
@@ -615,6 +608,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     if (intersect.getBoundsInLocal().getWidth() != -1) {
                         double toCompareAreaSize = intersect.getBoundsInLocal().getWidth()
                             * intersect.getBoundsInLocal().getHeight();
+                        double combinationThreshHold = 0.70;
                         if ((toCompareAreaSize / areaSize) > combinationThreshHold) {
                             if (areaMap[index] == -1) {
                                 if (areaMap[i] != -1) {

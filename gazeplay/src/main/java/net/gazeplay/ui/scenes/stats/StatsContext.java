@@ -242,9 +242,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
 
         EventHandler<Event> AOIEvent = e -> {
-
-            AreaOfInterest areaOfInterest = AreaOfInterest.newInstance(gazePlay, stats);
-            gazePlay.onDisplayAOI(areaOfInterest);
+            gazePlay.onDisplayAOI(stats);
         };
 
         HomeButton aoiButton = new HomeButton("data/common/images/aoibtn.png");
