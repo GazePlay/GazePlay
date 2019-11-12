@@ -25,7 +25,6 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.StatsDisplay;
 import net.gazeplay.stats.ExplorationGamesStats;
@@ -106,8 +105,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
 
         Configuration config = ActiveConfigurationContext.getInstance();
-
-        Multilinguism multilinguism = Multilinguism.getSingleton();
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);

@@ -34,7 +34,6 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.ui.GraphicalContext;
 import ws.schild.jave.Encoder;
@@ -89,7 +88,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         intereatorAOI = 0;
         grid.setPadding(new Insets(50, 50, 50, 50));
         allAOIList = new ArrayList<>();
-        Multilinguism multilinguism = Multilinguism.getSingleton();
         I18NLabel screenTitleText = new I18NLabel(gazePlay.getTranslator(),"AreaOfInterest");
         screenTitleText.setId("title");
         HBox topPane;
