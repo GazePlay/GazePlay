@@ -37,7 +37,6 @@ import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.LicenseUtils;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
-import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +51,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private final GameMenuFactory gameMenuFactory;
 
-    private final GamesLocator gamesLocator;
-
     private FlowPane choicePanel;
 
     private List<Node> gameCardsList;
@@ -67,13 +64,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         super(gazePlay, new BorderPane());
         this.gazeDeviceManager = gazeDeviceManager;
         this.gameMenuFactory = gameMenuFactory;
-        this.gamesLocator = gamesLocator;
-        
+
         CustomButton exitButton = createExitButton();
         CustomButton logoutButton = createLogoutButton(gazePlay);
 
-        ConfigurationContext configurationContext = ConfigurationContext.newInstance(gazePlay);
-        ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(configurationContext);
+        ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(gazePlay);
 
         HBox leftControlPane = new HBox();
         leftControlPane.setAlignment(Pos.CENTER);

@@ -65,14 +65,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static boolean currentLanguageAlignementIsLeftAligned = true;
 
-    public static ConfigurationContext newInstance(GazePlay gazePlay) {
-        BorderPane root = new BorderPane();
-
-        return new ConfigurationContext(gazePlay, root);
-    }
-
-    private ConfigurationContext(GazePlay gazePlay, BorderPane root) {
-        super(gazePlay, root);
+    ConfigurationContext(GazePlay gazePlay) {
+        super(gazePlay, new BorderPane());
 
         Translator translator = gazePlay.getTranslator();
 

@@ -74,7 +74,8 @@ public class GazePlay {
         scanPath.setUpOnStage(primaryScene);
     }
 
-    public void onDisplayConfigurationManagement(ConfigurationContext configurationContext) {
+    public void onDisplayConfigurationManagement() {
+        ConfigurationContext configurationContext = applicationContext.getBean(ConfigurationContext.class);
         configurationContext.setUpOnStage(primaryScene);
     }
 
