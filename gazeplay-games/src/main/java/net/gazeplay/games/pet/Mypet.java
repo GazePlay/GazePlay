@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Random;
+
 @Slf4j
 class Mypet extends Pane {
 
@@ -162,15 +164,23 @@ class Mypet extends Pane {
             new KeyValue(getMouth().fillProperty(), new ImagePattern(new Image("data/pet/images/mouth.png")))));
 
         eat.setOnFinished(e -> {
-            if ((eatingBool > 0) && (eatingBool % 2 == 0)) {
+            if (eatingBool > 0) {
+                String imagePath;
+                if (eatingBool % 2 == 0) {
+                    imagePath = "data/pet/images/smile.png";
+                } else {
+                    imagePath = "data/pet/images/mouth.png";
+                }
                 eat.getKeyFrames().clear();
-                eat.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getMouth().fillProperty(),
-                    new ImagePattern(new Image("data/pet/images/smile.png")))));
-                eat.play();
-            } else if ((eatingBool > 0) && (eatingBool % 2 == 1)) {
-                eat.getKeyFrames().clear();
-                eat.getKeyFrames().add(new KeyFrame(Duration.millis(200), new KeyValue(getMouth().fillProperty(),
-                    new ImagePattern(new Image("data/pet/images/mouth.png")))));
+                eat.getKeyFrames().add(
+                    new KeyFrame(
+                        Duration.millis(200),
+                        new KeyValue(
+                            getMouth().fillProperty(),
+                            new ImagePattern(new Image(imagePath))
+                        )
+                    )
+                );
                 eat.play();
             } else {
                 setBasic();
@@ -306,24 +316,27 @@ class Mypet extends Pane {
                     baloon.setX(0);
 
                     TranslateTransition tt = new TranslateTransition(Duration.millis(1000), baloon);
-                    int nombreAleatoire = (int) (Math.random() * 4);
+                    Random random = new Random();
+                    int nombreAleatoire = random.nextInt(4);
                     switch (nombreAleatoire) {
                         case 0:
                             tt.setFromX(0);
-                            tt.setFromY((int) (Math.random() * dimension2D.getHeight()));
+                            tt.setFromY(random.nextDouble() * dimension2D.getHeight());
                             break;
                         case 1:
                             tt.setFromY(0);
-                            tt.setFromX((int) (Math.random() * dimension2D.getWidth()));
+                            tt.setFromX(random.nextDouble() * dimension2D.getWidth());
                             break;
                         case 2:
                             tt.setFromX(dimension2D.getWidth());
-                            tt.setFromY((int) (Math.random() * dimension2D.getHeight()));
+                            tt.setFromY(random.nextDouble() * dimension2D.getHeight());
                             break;
                         case 3:
                             tt.setFromY(dimension2D.getHeight());
-                            tt.setFromX((int) (Math.random() * dimension2D.getWidth()));
+                            tt.setFromX(random.nextDouble() * dimension2D.getWidth());
                             break;
+                        default:
+                            throw new UnsupportedOperationException("Unsupported value : " + nombreAleatoire);
                     }
 
                     // TODO random position of the baloon enter
@@ -335,24 +348,26 @@ class Mypet extends Pane {
                     tt.setToY(getLayoutY());
 
                     TranslateTransition t2 = new TranslateTransition(Duration.millis(500), baloon);
-                    nombreAleatoire = (int) (Math.random() * 4);
+                    nombreAleatoire = random.nextInt(4);
                     switch (nombreAleatoire) {
                         case 0:
                             t2.setToX(0);
-                            t2.setToY((int) (Math.random() * dimension2D.getHeight()));
+                            t2.setToY(random.nextDouble() * dimension2D.getHeight());
                             break;
                         case 1:
                             t2.setToY(0);
-                            t2.setToX((int) (Math.random() * dimension2D.getWidth()));
+                            t2.setToX(random.nextDouble() * dimension2D.getWidth());
                             break;
                         case 2:
                             t2.setToX(dimension2D.getWidth());
-                            t2.setToY((int) (Math.random() * dimension2D.getHeight()));
+                            t2.setToY(random.nextDouble() * dimension2D.getHeight());
                             break;
                         case 3:
                             t2.setToY(dimension2D.getHeight());
-                            t2.setToX((int) (Math.random() * dimension2D.getWidth()));
+                            t2.setToX(random.nextDouble() * dimension2D.getWidth());
                             break;
+                        default:
+                            throw new UnsupportedOperationException("Unsupported value : " + nombreAleatoire);
                     }
 
                     // TODO random position of the baloon exit

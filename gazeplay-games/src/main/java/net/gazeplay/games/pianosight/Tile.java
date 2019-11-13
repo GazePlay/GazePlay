@@ -12,7 +12,7 @@ class Tile extends Parent {
     EventHandler<Event> tileEventEnter;
     EventHandler<Event> tileEventExited;
     Color color1;
-    Color color2;
+    //Color color2;
 
     final Shape arc;
 

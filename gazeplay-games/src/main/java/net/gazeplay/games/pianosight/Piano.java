@@ -26,11 +26,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 public class Piano extends Parent implements GameLifeCycle {
 
-    private static final int[] NOTE_NAMES = { 0, 7, 1, 8, 2, 3, 9, 4, 10, 5, 11, 6 };
+    private static final int[] NOTE_NAMES = {0, 7, 1, 8, 2, 3, 9, 4, 10, 5, 11, 6};
 
     private double centerX;
     private double centerY;
@@ -50,8 +51,6 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private MidiReader midiReader;
 
-    private int nbFragments = 5;
-
     private final List<ImageView> fragments;
 
     public Piano(IGameContext gameContext, Stats stats) {
@@ -69,7 +68,9 @@ public class Piano extends Parent implements GameLifeCycle {
     }
 
     private List<ImageView> buildFragments() {
-        List<ImageView> fragments = new ArrayList<>(nbFragments);
+        final int nbFragments = 5;
+
+        List<ImageView> fragments = new ArrayList<>();
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         for (int i = 0; i < nbFragments; i++) {
@@ -90,66 +91,78 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private void explose(double xcenter, double ycenter) {
 
-        Timeline timeline = new Timeline();
-        Timeline timeline2 = new Timeline();
+        final Timeline timeline1 = new Timeline();
+        final Timeline timeline2 = new Timeline();
 
-        for (int i = 0; i < nbFragments; i++) {
+        final Random random = new Random();
 
-            ImageView fragment = fragments.get(i);
+        for (ImageView fragment : fragments) {
 
-            timeline.getKeyFrames().add(
-                    new KeyFrame(new Duration(1), new KeyValue(fragment.xProperty(), xcenter, Interpolator.LINEAR)));
-            timeline.getKeyFrames().add(
-                    new KeyFrame(new Duration(1), new KeyValue(fragment.yProperty(), ycenter, Interpolator.EASE_OUT)));
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
+            timeline1.getKeyFrames().add(
+                new KeyFrame(new Duration(1), new KeyValue(fragment.xProperty(), xcenter, Interpolator.LINEAR)));
+            timeline1.getKeyFrames().add(
+                new KeyFrame(new Duration(1), new KeyValue(fragment.yProperty(), ycenter, Interpolator.EASE_OUT)));
+            timeline1.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
-            int worh = (int) (Math.random() * 4);
+            final int worh = random.nextInt(4);
 
-            double XendValue;
-            double YendValue;
-            if (worh == 0) {
-                XendValue = 0;
-                YendValue = Math.random() * Screen.getPrimary().getBounds().getHeight();
-            } else if (worh == 1) {
-                XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
-                YendValue = 0;
-            } else if (worh == 2) {
-                XendValue = Screen.getPrimary().getBounds().getWidth();
-                YendValue = Math.random() * Screen.getPrimary().getBounds().getHeight();
-            } else {
-                XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
-                YendValue = Screen.getPrimary().getBounds().getHeight();
+            final double xEndValue;
+            final double yEndValue;
+            switch (worh) {
+                case 0:
+                    xEndValue = 0;
+                    yEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getHeight();
+                    break;
+                case 1:
+                    xEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getWidth();
+                    yEndValue = 0;
+                    break;
+                case 2:
+                    xEndValue = Screen.getPrimary().getBounds().getWidth();
+                    yEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getHeight();
+                    break;
+                case 3:
+                    xEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getWidth();
+                    yEndValue = Screen.getPrimary().getBounds().getHeight();
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Unsupported value : " + worh);
             }
 
             timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                    new KeyValue(fragment.xProperty(), XendValue, Interpolator.LINEAR)));
+                new KeyValue(fragment.xProperty(), xEndValue, Interpolator.LINEAR)));
             timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                    new KeyValue(fragment.yProperty(), YendValue, Interpolator.EASE_OUT)));
+                new KeyValue(fragment.yProperty(), yEndValue, Interpolator.EASE_OUT)));
             timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.opacityProperty(), 0)));
         }
 
         SequentialTransition sequence = new SequentialTransition();
-        sequence.getChildren().addAll(timeline, timeline2);
+        sequence.getChildren().addAll(timeline1, timeline2);
         sequence.play();
 
     }
 
     private void loadMusic(boolean b) throws IOException {
-        InputStream inputStream;
-        String fileName;
         if (b) {
-            fileName = jukebox.getS();
+            String fileName = jukebox.getS();
             if (fileName == null) {
                 return;
-            } else {
-                File f = new File(fileName);
-                inputStream = new FileInputStream(f);
+            }
+            log.info("you loaded the song : " + fileName);
+            File f = new File(fileName);
+            try (InputStream inputStream = new FileInputStream(f)) {
+                loadMusicStream(inputStream);
             }
         } else {
-            fileName = "RIVER.mid";
-            inputStream = Utils.getInputStream("data/pianosight/songs/" + fileName);
+            String fileName = "RIVER.mid";
+            log.info("you loaded the song : " + fileName);
+            try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" + fileName)) {
+                loadMusicStream(inputStream);
+            }
         }
-        log.info("you loaded the song : " + fileName);
+    }
+
+    private void loadMusicStream(InputStream inputStream) {
         midiReader = new MidiReader(inputStream);
         firstNote = midiReader.nextNote();
         for (Tile tile : tilesTab) {
@@ -261,7 +274,7 @@ public class Piano extends Parent implements GameLifeCycle {
         double theta = ((index * 360d) / 7d - origin);
         Tile a3 = new Tile(centerX, centerY, size, size, theta, angle, circ);
         a3.color1 = color1;
-        a3.color2 = color2;
+        //a3.color2 = color2;
         a3.arc.setFill(color1);
         a3.arc.setStrokeWidth(10);
         a3.setVisible(true);
