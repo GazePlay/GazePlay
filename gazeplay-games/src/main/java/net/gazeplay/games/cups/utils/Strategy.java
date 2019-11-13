@@ -34,31 +34,31 @@ public class Strategy {
             int strategy_choice = randomGenerator.nextInt(Strategies.values().length);
 
             switch (Strategies.values()[strategy_choice]) {
-            case rotation_up_down:
-                log.info("Strategy chosen : rotation_up_down");
+                case rotation_up_down:
+                    log.info("Strategy chosen : rotation_up_down");
 
-                ArrayList<Integer> cupsExchangeCellsXrud = randomCupTwoChoices(false);
-                ArrayList<Integer> cupsExchangeCellsYrud = randomCupTwoChoices(true);
+                    ArrayList<Integer> cupsExchangeCellsXrud = randomCupTwoChoices(false);
+                    ArrayList<Integer> cupsExchangeCellsYrud = randomCupTwoChoices(true);
 
-                rotation_up_down(cupsExchangeCellsXrud.get(0), cupsExchangeCellsXrud.get(1),
+                    rotation_up_down(cupsExchangeCellsXrud.get(0), cupsExchangeCellsXrud.get(1),
                         cupsExchangeCellsYrud.get(0), cupsExchangeCellsYrud.get(1));
-                break;
-            case rotation_move_closest_in_place:
-                log.info("Strategy chosen : rotation_move_closest_in_place");
+                    break;
+                case rotation_move_closest_in_place:
+                    log.info("Strategy chosen : rotation_move_closest_in_place");
 
-                ArrayList<Integer> cupsExchangeCellsXrmcip = randomCupTwoChoices(false);
-                Integer cupStartCellYrmcip = randomCupOneChoice(true);
+                    ArrayList<Integer> cupsExchangeCellsXrmcip = randomCupTwoChoices(false);
+                    Integer cupStartCellYrmcip = randomCupOneChoice(true);
 
-                rotation_move_closest_in_place(cupsExchangeCellsXrmcip.get(0), cupsExchangeCellsXrmcip.get(1),
+                    rotation_move_closest_in_place(cupsExchangeCellsXrmcip.get(0), cupsExchangeCellsXrmcip.get(1),
                         cupStartCellYrmcip);
-                break;
+                    break;
             }
         }
         return actions;
     }
 
     private void rotation_up_down(Integer startCellX, Integer targetCellX, Integer firstCupMoveToY,
-            Integer secondCupMoveToY) {
+                                  Integer secondCupMoveToY) {
         actions.add(new Action(startCellX, maxCellsY / 2, startCellX, firstCupMoveToY));
         actions.add(new Action(startCellX, firstCupMoveToY, targetCellX, firstCupMoveToY));
         actions.add(new Action(targetCellX, maxCellsY / 2, targetCellX, secondCupMoveToY));
@@ -97,11 +97,7 @@ public class Strategy {
         }
         Random randomGenerator = new Random();
         int cupChoice;
-        if (!isYChoice) {
-            cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
-        } else {
-            cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
-        }
+        cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
         return numbersToChooseFrom.get(cupChoice);
     }
 
