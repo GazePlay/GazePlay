@@ -11,19 +11,18 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class Moles extends Parent implements GameLifeCycle {
-
-    public final int nbHoles = 10;
 
     @Data
     @AllArgsConstructor
@@ -31,29 +30,24 @@ public class Moles extends Parent implements GameLifeCycle {
         public final List<MolesChar> molesList;
     }
 
-    IGameContext gameContext;
+    @Getter
+    private final IGameContext gameContext;
 
     private final Stats stats;
 
-    public Rectangle terrain;
+    private int nbMolesWhacked;
 
-    public int nbMolesWhacked;
-
-    public int nbMolesOut;
+    @Getter
+    private AtomicInteger nbMolesOut = new AtomicInteger(0);
 
     private Label lab;
 
-    public RoundDetails currentRoundDetails;
+    private RoundDetails currentRoundDetails;
 
-    public Moles(IGameContext gameContext, Stats stats) {
+    Moles(IGameContext gameContext, Stats stats) {
         super();
-
         this.gameContext = gameContext;
         this.stats = stats;
-
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        log.debug("dimension2D = {}", dimension2D);
-
     }
 
     @Override
@@ -102,14 +96,14 @@ public class Moles extends Parent implements GameLifeCycle {
         stats.notifyNewRoundReady();
         this.gameContext.resetBordersToFront();
 
-        play(dimension2D);
+        play();
 
     }
 
     /* Moles get out randomly */
-    private synchronized void play(Dimension2D gameDim2D) {
+    private synchronized void play() {
 
-        nbMolesOut = 0;
+        nbMolesOut = new AtomicInteger(0);
         Random r = new Random();
 
         Timer minuteur = new Timer();
@@ -117,19 +111,19 @@ public class Moles extends Parent implements GameLifeCycle {
             public void run() {
 
                 int n = r.nextInt();
-                if (nbMolesOut <= 3) {
+                if (nbMolesOut.get() <= 3) {
                     chooseMoleToOut(r);
-                } else if ((nbMolesOut <= 4) && (n % 4 == 0)) {
+                } else if ((nbMolesOut.get() <= 4) && (n % 4 == 0)) {
                     chooseMoleToOut(r);
-                } else if ((nbMolesOut <= 5) && (n % 8 == 0)) {
+                } else if ((nbMolesOut.get() <= 5) && (n % 8 == 0)) {
                     chooseMoleToOut(r);
-                } else if ((nbMolesOut <= 6) && (n % 12 == 0)) {
+                } else if ((nbMolesOut.get() <= 6) && (n % 12 == 0)) {
                     chooseMoleToOut(r);
-                } else if ((nbMolesOut <= 7) && (n % 16 == 0)) {
+                } else if ((nbMolesOut.get() <= 7) && (n % 16 == 0)) {
                     chooseMoleToOut(r);
-                } else if ((nbMolesOut <= 8) && (n % 20 == 0)) {
+                } else if ((nbMolesOut.get() <= 8) && (n % 20 == 0)) {
                     chooseMoleToOut(r);
-                } else if ((nbMolesOut <= 9) && (n % 24 == 0)) {
+                } else if ((nbMolesOut.get() <= 9) && (n % 24 == 0)) {
                     chooseMoleToOut(r);
                 }
             }
@@ -144,19 +138,20 @@ public class Moles extends Parent implements GameLifeCycle {
         if (currentRoundDetails != null) {
             if (currentRoundDetails.molesList != null) {
                 gameContext.getChildren().removeAll(currentRoundDetails.molesList);
-                currentRoundDetails.molesList.removeAll(currentRoundDetails.molesList);
+                currentRoundDetails.molesList.clear();
             }
             currentRoundDetails = null;
         }
     }
 
     /* Select a mole not out for the moment and call "getOut()" */
-    public void chooseMoleToOut(Random r) {
+    private void chooseMoleToOut(Random r) {
         if (this.currentRoundDetails == null) {
             return;
         }
         int indice;
         do {
+            int nbHoles = 10;
             indice = r.nextInt(nbHoles);
         } while (!currentRoundDetails.molesList.get(indice).canGoOut);
         MolesChar m = currentRoundDetails.molesList.get(indice);
@@ -206,7 +201,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
         /* Creation and placement of moles in the field */
         for (double[] doubles : place) {
-            result.add(new MolesChar(doubles[0], doubles[1], moleWidth, moleHeight, distTrans, gameContext, stats,
+            result.add(new MolesChar(doubles[0], doubles[1], moleWidth, moleHeight, distTrans, gameContext,
                 this));
         }
 
@@ -225,7 +220,7 @@ public class Moles extends Parent implements GameLifeCycle {
         return gameDimension2D.getWidth() * 0.13;
     }
 
-    public void OneMoleWhacked() {
+    void oneMoleWhacked() {
         nbMolesWhacked++;
         String s = "Score:" + nbMolesWhacked;
         stats.incNbGoals();
