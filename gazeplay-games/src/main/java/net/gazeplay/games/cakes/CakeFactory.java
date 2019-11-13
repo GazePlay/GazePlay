@@ -94,7 +94,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         setNappage(false);
         this.variant = variant;
         buttons = new ProgressButton[6];
-        this.fixationLength = ActiveConfigurationContext.getInstance().getFixationLength();
+        this.fixationLength = gameContext.getConfiguration().getFixationLength();
 
         r = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         r.setFill(col[0]);

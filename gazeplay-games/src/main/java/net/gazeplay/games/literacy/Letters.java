@@ -117,7 +117,7 @@ public class Letters implements GameLifeCycle {
     @Override
     public void launch() {
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        final Configuration config = gameContext.getConfiguration();
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -142,8 +142,8 @@ public class Letters implements GameLifeCycle {
         gameContext.getChildren().add(questionText);
 
         TranslateTransition fullAnimation = new TranslateTransition(
-                Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength() / 2), questionText);
-        fullAnimation.setDelay(Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength()));
+                Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2), questionText);
+        fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
         double bottomCenter = (0.9 * dimension2D.getHeight()) - questionText.getY()
                 + questionText.getBoundsInParent().getHeight() * 3;
         fullAnimation.setToY(bottomCenter);

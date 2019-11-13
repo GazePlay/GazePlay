@@ -6,7 +6,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 
 /**
@@ -24,9 +24,9 @@ class Explosion extends Rectangle {
     @Setter
     private boolean enableRewardSound;
 
-    Explosion(Dimension2D gameDimension/* , Image expImage */) {
+    Explosion(IGameContext gameContext, Dimension2D gameDimension/* , Image expImage */) {
         super(0, 0, 0, 0);
-        this.enableRewardSound = ActiveConfigurationContext.getInstance().isEnableRewardSound();
+        this.enableRewardSound = gameContext.getConfiguration().isEnableRewardSound();
 
         Image img = new Image(defaultPictureResourceLocation);
         double imgWidth = img.getWidth();

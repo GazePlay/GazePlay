@@ -105,7 +105,7 @@ public class WhereIsIt implements GameLifeCycle {
         final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        final Configuration config = gameContext.getConfiguration();
 
         currentRoundDetails = pickAndBuildRandomPictures(config, numberOfImagesToDisplayPerRound, random,
             winnerImageIndexAmongDisplayedImages);
@@ -126,7 +126,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         questionText.setTranslateY(0);
 
-        String color = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? "titleB" : "titleW";
+        String color = (gameContext.getConfiguration().isBackgroundWhite()) ? "titleB" : "titleW";
         questionText.setId(color);
 
         final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -177,8 +177,8 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         TranslateTransition fullAnimation = new TranslateTransition(
-            Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength() / 2d), questionText);
-        fullAnimation.setDelay(Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength()));
+            Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2d), questionText);
+        fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
         double bottomCenter = (0.9 * gamePaneDimension2D.getHeight()) - questionText.getY()
             + questionText.getBoundsInParent().getHeight() * 3;
         fullAnimation.setToY(bottomCenter);
@@ -538,7 +538,7 @@ public class WhereIsIt implements GameLifeCycle {
 
     private String getPathSound(final String folder, String language) {
         if (this.gameType == CUSTOMIZED) {
-            final Configuration config = ActiveConfigurationContext.getInstance();
+            final Configuration config = gameContext.getConfiguration();
             try {
                 log.debug("CUSTOMIZED");
                 String path = config.getWhereIsItDir() + "sounds/";
@@ -593,7 +593,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         if (this.gameType == CUSTOMIZED) {
 
-            final Configuration config = ActiveConfigurationContext.getInstance();
+            final Configuration config = gameContext.getConfiguration();
 
             File F = new File(config.getWhereIsItDir() + "questions.csv");
 
@@ -619,7 +619,7 @@ public class WhereIsIt implements GameLifeCycle {
             return null;
         }
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        final Configuration config = gameContext.getConfiguration();
 
         File F = new File(config.getWhereIsItDir() + "questions.csv");
 
@@ -685,7 +685,7 @@ public class WhereIsIt implements GameLifeCycle {
 
             log.info("imagePath = {}", imagePath);
 
-            final Configuration config = ActiveConfigurationContext.getInstance();
+            final Configuration config = gameContext.getConfiguration();
 
             this.minTime = config.getFixationLength();
             this.initialPositionX = posX;

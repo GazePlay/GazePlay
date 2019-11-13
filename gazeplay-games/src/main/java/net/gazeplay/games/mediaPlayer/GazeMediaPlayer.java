@@ -89,7 +89,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         eventTitre.add(empty);
         eventTitre.add(empty);
 
-        musicList = new MediaFileReader();
+        musicList = new MediaFileReader(gameContext);
 
         window = new HBox();
         gameContext.getGazeDeviceManager().addEventFilter(gameContext.getRoot());

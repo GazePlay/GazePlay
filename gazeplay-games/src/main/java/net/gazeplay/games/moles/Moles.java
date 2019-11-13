@@ -60,11 +60,11 @@ public class Moles extends Parent implements GameLifeCycle {
     public void launch() {
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        final Configuration config = gameContext.getConfiguration();
 
         Rectangle imageFond = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageFond.setFill(new ImagePattern(new Image("data/whackmole/images/molesGround.jpg")));
-        int coef = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? 1 : 0;
+        int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
 
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setBrightness(coef * 0.9);
@@ -91,7 +91,7 @@ public class Moles extends Parent implements GameLifeCycle {
         lab = new Label();
         String s = "Score:" + nbMolesWhacked;
         lab.setText(s);
-        Color col = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+        Color col = (gameContext.getConfiguration().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
         lab.setTextFill(col);
         lab.setFont(Font.font(dimension2D.getHeight() / 14));
         lab.setLineSpacing(10);

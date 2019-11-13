@@ -3,7 +3,7 @@ package net.gazeplay.games.mediaPlayer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
@@ -14,6 +14,8 @@ import java.util.List;
 
 @Slf4j
 public class MediaFileReader {
+    
+    private final IGameContext gameContext;
 
     @Getter
     private final List<MediaFile> mediaList;
@@ -24,12 +26,13 @@ public class MediaFileReader {
     @Setter
     private int playing;
 
-    public MediaFileReader() {
+    public MediaFileReader(IGameContext gameContext) {
+        this.gameContext = gameContext;
         mediaList = new ArrayList<>();
         index = -1;
         playing = -1;
         try {
-            File mediaPlayerDirectory = new File(GazePlayDirectories.getUserProfileDirectory(ActiveConfigurationContext.getInstance().getUserName()), "/data/mediaPlayer");
+            File mediaPlayerDirectory = new File(GazePlayDirectories.getUserProfileDirectory(gameContext.getConfiguration().getUserName()), "/data/mediaPlayer");
             mediaPlayerDirectory.mkdirs();
             File playlistFile = new File(mediaPlayerDirectory, "playerList.csv");
             playlistFile.createNewFile();
@@ -89,7 +92,7 @@ public class MediaFileReader {
 
     public void addMedia(MediaFile mf) {
         try {
-            Configuration config = ActiveConfigurationContext.getInstance();
+            Configuration config = gameContext.getConfiguration();
 
             File f;
 

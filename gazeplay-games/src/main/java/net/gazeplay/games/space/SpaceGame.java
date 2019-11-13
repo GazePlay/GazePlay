@@ -112,7 +112,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.spaceGameStats = stats;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.random = new Random();
-        this.configuration = ActiveConfigurationContext.getInstance();
+        this.configuration = gameContext.getConfiguration();
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship");
         bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule");

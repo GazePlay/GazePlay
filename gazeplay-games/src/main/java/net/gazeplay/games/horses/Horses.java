@@ -83,7 +83,7 @@ public class Horses implements GameLifeCycle {
         this.nbPlayers = nbPlayers;
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.config = ActiveConfigurationContext.getInstance();
+        this.config = gameContext.getConfiguration();
         this.translate = Multilinguism.getSingleton();
 
         this.backgroundLayer = new Group();

@@ -58,7 +58,7 @@ public class MagicCards implements GameLifeCycle {
 
     @Override
     public void launch() {
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        final Configuration config = gameContext.getConfiguration();
 
         final int cardsCount = nbColumns * nbLines;
         // final int winnerCardIndex = (int) (cardsCount * Math.random());

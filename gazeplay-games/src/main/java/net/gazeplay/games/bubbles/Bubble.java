@@ -67,7 +67,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-            int i = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? 1 : 0;
+            int i = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
 
             imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
             imageRectangle.setOpacity(1 - i * 0.9);
@@ -265,7 +265,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         Timeline timeline = new Timeline();
 
         timeline.getKeyFrames()
-                .add(new KeyFrame(new Duration(ActiveConfigurationContext.getInstance().getSpeedEffects() * timelength),
+                .add(new KeyFrame(new Duration(gameContext.getConfiguration().getSpeedEffects() * timelength),
                         new KeyValue(circle.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
 
         timeline.setOnFinished(actionEvent -> {

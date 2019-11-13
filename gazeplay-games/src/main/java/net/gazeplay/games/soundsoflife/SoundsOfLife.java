@@ -25,7 +25,7 @@ public class SoundsOfLife implements GameLifeCycle {
 
     public SoundsOfLife(IGameContext gameContext, Stats stats, int gameVariant) {
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Configuration config = ActiveConfigurationContext.getInstance();
+        Configuration config = gameContext.getConfiguration();
 
         String path = "data/soundsoflife/";
         switch (gameVariant) {

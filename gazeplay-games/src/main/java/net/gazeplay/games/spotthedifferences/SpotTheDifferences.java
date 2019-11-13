@@ -56,7 +56,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Configuration config = ActiveConfigurationContext.getInstance();
+        Configuration config = gameContext.getConfiguration();
         this.currentInstance = 0;
 
         Multilinguism translate = Multilinguism.getSingleton();

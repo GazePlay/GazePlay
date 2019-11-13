@@ -177,7 +177,7 @@ public class MolesChar extends Parent {
             int time = r.nextInt(timeMoleStayOut) + 2000;
 
             timeMoleOut.getKeyFrames()
-                .add(new KeyFrame(new Duration(ActiveConfigurationContext.getInstance().getSpeedEffects() * time),
+                .add(new KeyFrame(new Duration(gameContext.getConfiguration().getSpeedEffects() * time),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
             timeMoleOut.play();
             /* If the Mole is stay out without being touching */

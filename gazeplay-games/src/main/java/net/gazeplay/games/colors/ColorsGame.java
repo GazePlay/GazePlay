@@ -155,7 +155,7 @@ public class ColorsGame implements GameLifeCycle {
     @Override
     public void launch() {
 
-        this.gazeProgressIndicator = new GazeFollowerIndicator(root);
+        this.gazeProgressIndicator = new GazeFollowerIndicator(gameContext, root);
 
         this.root.getChildren().add(gazeProgressIndicator);
 

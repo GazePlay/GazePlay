@@ -59,7 +59,7 @@ public class VideoGrid implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.config = ActiveConfigurationContext.getInstance();
+        this.config = gameContext.getConfiguration();
         this.random = new Random();
         this.translate = Multilinguism.getSingleton();
 

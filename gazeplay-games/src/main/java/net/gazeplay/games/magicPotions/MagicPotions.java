@@ -76,7 +76,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         String image_PATH = "data/potions/images/";
         background.setFill(new ImagePattern(new Image(image_PATH + "background-potions.jpg")));
 
-        int coef = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? 1 : 0;
+        int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
         background.setOpacity(1 - coef * 0.9);
 
         gameContext.getChildren().add(background);
@@ -107,15 +107,15 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         Image blue = new Image(image_PATH + "potionBlue.png");
         potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (red.getWidth() + red.getWidth()) * 1.5,
                 gameDimension2D.getHeight() - red.getHeight() - 10, red.getWidth(), red.getHeight(), red, Color.RED,
-                gameContext, stats, this, ActiveConfigurationContext.getInstance().getFixationLength());
+                gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
 
         potionYellow = new Potion(gameDimension2D.getWidth() * 6 / 7 - yellow.getWidth() * 1.5,
                 gameDimension2D.getHeight() - yellow.getHeight() - 10, yellow.getWidth(), yellow.getHeight(), yellow,
-                Color.YELLOW, gameContext, stats, this, ActiveConfigurationContext.getInstance().getFixationLength());
+                Color.YELLOW, gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
 
         potionBlue = new Potion(gameDimension2D.getWidth() * 6 / 7, gameDimension2D.getHeight() - blue.getHeight() - 10,
                 blue.getWidth(), blue.getHeight(), blue, Color.BLUE, gameContext, stats, this,
-                ActiveConfigurationContext.getInstance().getFixationLength());
+                gameContext.getConfiguration().getFixationLength());
 
         LinkedList<Potion> potionsOnTable = new LinkedList<>();
         potionsOnTable.add(potionBlue);
