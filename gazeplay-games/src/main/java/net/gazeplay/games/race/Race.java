@@ -386,9 +386,6 @@ public class Race extends Parent implements GameLifeCycle {
 
         text.setText(cst);
 
-        double min = Math.ceil(1);
-        double max = Math.floor(3);
-
         String soundResource = "data/race/sounds/frog.WAV";
         try {
             ForegroundSoundsUtils.playSound(soundResource);
