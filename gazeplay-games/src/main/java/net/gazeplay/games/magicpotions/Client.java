@@ -1,4 +1,4 @@
-package net.gazeplay.games.magicPotions;
+package net.gazeplay.games.magicpotions;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -10,9 +10,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 /**
- *
  * @author Johana MARKU
- *
  */
 
 class Client extends Rectangle {
@@ -26,8 +24,8 @@ class Client extends Rectangle {
 
     public enum PotionMix {
         RED_Potion("Red", Color.RED), YELLOW_Potion("Yellow", Color.YELLOW), BLUE_Potion("Blue",
-                Color.BLUE), ORANGE_Potion("Orange", Color.ORANGE), GREEN_Potion("Green",
-                        Color.GREEN), PURPLE_Potion("Purple", Color.PURPLE), BLACK_Potion("Black", Color.BLACK);
+            Color.BLUE), ORANGE_Potion("Orange", Color.ORANGE), GREEN_Potion("Green",
+            Color.GREEN), PURPLE_Potion("Purple", Color.PURPLE), BLACK_Potion("Black", Color.BLACK);
 
         @Getter
         private final String colorName;
@@ -55,31 +53,33 @@ class Client extends Rectangle {
     private LinkedList<Color> toMix(PotionMix potionRequest) {
         LinkedList<Color> colorsToMix = new LinkedList<>();
         if (potionRequest.color == Color.RED || potionRequest.color == Color.YELLOW
-                || potionRequest.color == Color.BLUE) {
+            || potionRequest.color == Color.BLUE) {
             colorsToMix.add(potionRequest.color);
         } else {
             switch (potionRequest) {
-            case ORANGE_Potion:
-                colorsToMix.clear();
-                colorsToMix.add(Color.RED);
-                colorsToMix.add(Color.YELLOW);
-                break;
-            case PURPLE_Potion:
-                colorsToMix.clear();
-                colorsToMix.add(Color.RED);
-                colorsToMix.add(Color.BLUE);
-                break;
-            case GREEN_Potion:
-                colorsToMix.clear();
-                colorsToMix.add(Color.YELLOW);
-                colorsToMix.add(Color.BLUE);
-                break;
-            case BLACK_Potion:
-                colorsToMix.clear();
-                colorsToMix.add(Color.RED);
-                colorsToMix.add(Color.YELLOW);
-                colorsToMix.add(Color.BLUE);
-                break;
+                case ORANGE_Potion:
+                    colorsToMix.clear();
+                    colorsToMix.add(Color.RED);
+                    colorsToMix.add(Color.YELLOW);
+                    break;
+                case PURPLE_Potion:
+                    colorsToMix.clear();
+                    colorsToMix.add(Color.RED);
+                    colorsToMix.add(Color.BLUE);
+                    break;
+                case GREEN_Potion:
+                    colorsToMix.clear();
+                    colorsToMix.add(Color.YELLOW);
+                    colorsToMix.add(Color.BLUE);
+                    break;
+                case BLACK_Potion:
+                    colorsToMix.clear();
+                    colorsToMix.add(Color.RED);
+                    colorsToMix.add(Color.YELLOW);
+                    colorsToMix.add(Color.BLUE);
+                    break;
+                default:
+                    throw new IllegalArgumentException("value : " + potionRequest);
             }
         }
         return colorsToMix;

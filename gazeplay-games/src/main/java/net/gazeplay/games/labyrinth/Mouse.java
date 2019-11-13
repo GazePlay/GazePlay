@@ -23,7 +23,7 @@ public abstract class Mouse extends Parent {
     int nbMove;
 
     public Mouse(double positionX, double positionY, double width, double height, IGameContext gameContext, Stats stats,
-            Labyrinth gameInstance) {
+                 Labyrinth gameInstance) {
 
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
@@ -63,6 +63,8 @@ public abstract class Mouse extends Parent {
                 this.mouse
                     .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseRightBold.png"), 5, 5, 1, 1, true));
                 break;
+            default:
+                throw new IllegalArgumentException(orientation);
         }
     }
 
@@ -80,6 +82,8 @@ public abstract class Mouse extends Parent {
             case "right":
                 this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseRight.png"), 5, 5, 1, 1, true));
                 break;
+            default:
+                throw new IllegalArgumentException(orientation);
         }
     }
 
@@ -90,21 +94,21 @@ public abstract class Mouse extends Parent {
             if (oldColumn < newColumn) { // Move to the right
                 this.orientation = "right";
                 this.mouse
-                        .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseRight.png"), 5, 5, 1, 1, true));
+                    .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseRight.png"), 5, 5, 1, 1, true));
             } else { // Move to the Left
                 this.orientation = "left";
                 this.mouse
-                        .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseLeft.png"), 5, 5, 1, 1, true));
+                    .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseLeft.png"), 5, 5, 1, 1, true));
             }
         } else {
             if (oldRow < newRow) { // Move to the bottom
                 this.orientation = "front";
                 this.mouse
-                        .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 5, 5, 1, 1, true));
+                    .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 5, 5, 1, 1, true));
             } else { // Move to the up
                 this.orientation = "back";
                 this.mouse
-                        .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBack.png"), 5, 5, 1, 1, true));
+                    .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBack.png"), 5, 5, 1, 1, true));
             }
         }
     }

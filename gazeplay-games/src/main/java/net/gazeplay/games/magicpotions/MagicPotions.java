@@ -1,4 +1,4 @@
-package net.gazeplay.games.magicPotions;
+package net.gazeplay.games.magicpotions;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;

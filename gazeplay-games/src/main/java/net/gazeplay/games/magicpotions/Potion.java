@@ -1,4 +1,4 @@
-package net.gazeplay.games.magicPotions;
+package net.gazeplay.games.magicpotions;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -24,9 +24,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 /**
- *
  * @author Johana MARKU
- *
  */
 
 @Slf4j
@@ -118,7 +116,7 @@ class Potion extends Parent {
         gameInstance.getPotionRed().removeEventFilter(MouseEvent.ANY, gameInstance.getPotionRed().getEnterEvent());
         gameInstance.getPotionRed().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionRed().getEnterEvent());
         gameInstance.getPotionYellow().removeEventFilter(MouseEvent.ANY,
-                gameInstance.getPotionYellow().getEnterEvent());
+            gameInstance.getPotionYellow().getEnterEvent());
         gameInstance.getPotionYellow().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionYellow().getEnterEvent());
         stats.incNbGoals();
         currentTimeline.stop();
@@ -140,7 +138,7 @@ class Potion extends Parent {
         gameInstance.getPotionRed().removeEventFilter(MouseEvent.ANY, gameInstance.getPotionRed().getEnterEvent());
         gameInstance.getPotionRed().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionRed().getEnterEvent());
         gameInstance.getPotionYellow().removeEventFilter(MouseEvent.ANY,
-                gameInstance.getPotionYellow().getEnterEvent());
+            gameInstance.getPotionYellow().getEnterEvent());
         gameInstance.getPotionYellow().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionYellow().getEnterEvent());
         progressIndicator.setStyle(" -fx-progress-color: red;");
         progressIndicator.setOpacity(1);
@@ -216,7 +214,8 @@ class Potion extends Parent {
                         case 3:
                             MagicPotions.getMixPotColor().setFill(Color.BLACK);
                             break;
-
+                        default:
+                            throw new IllegalArgumentException("value : " + mixture.size());
                     }
                 });
             } else if (event.getEventType() == MouseEvent.MOUSE_EXITED

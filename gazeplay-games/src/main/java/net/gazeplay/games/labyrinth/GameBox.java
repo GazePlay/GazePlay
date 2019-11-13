@@ -4,7 +4,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class GameBox extends Parent {
 
     protected final Rectangle r;
@@ -13,7 +15,11 @@ public class GameBox extends Parent {
 
     private final double x;
     private final double y;
+
+    @EqualsAndHashCode.Include
     protected final int numCol; // j
+
+    @EqualsAndHashCode.Include
     protected final int numRow; // i
 
     private final boolean isAWall;
@@ -69,10 +75,6 @@ public class GameBox extends Parent {
         indicator.setMinHeight(width * 0.9);
         indicator.setOpacity(0);
         return indicator;
-    }
-
-    public boolean equals(GameBox g) {
-        return (this.numCol == g.numCol && this.numRow == g.numRow);
     }
 
 }
