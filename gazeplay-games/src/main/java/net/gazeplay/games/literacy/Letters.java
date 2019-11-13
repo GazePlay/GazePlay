@@ -20,7 +20,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
@@ -239,12 +238,8 @@ public class Letters implements GameLifeCycle {
     }
 
     void removeAllBlocs() {
-
         final Bloc[][] blocs = currentRoundDetails.blocs;
-
-        int maxX = blocs.length;
         int maxY = blocs[0].length;
-
         final Service<Void> calculateService = new Service<>() {
 
             @Override
@@ -255,9 +250,7 @@ public class Letters implements GameLifeCycle {
                     protected Void call() {
                         for (Bloc[] bloc : blocs) {
                             for (int j = 0; j < maxY; j++) {
-
                                 removeBloc(bloc[j]);
-
                             }
                         }
                         return null;
@@ -266,7 +259,6 @@ public class Letters implements GameLifeCycle {
             }
         };
         calculateService.start();
-
     }
 
     void removeBloc(Bloc toRemove) {
