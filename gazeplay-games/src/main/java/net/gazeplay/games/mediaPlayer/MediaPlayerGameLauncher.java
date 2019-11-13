@@ -16,7 +16,7 @@ public class MediaPlayerGameLauncher implements GameSpec.GameLauncher<Stats, Gam
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-        return new GazeMediaPlayer(gameContext, stats);
+        return new GazeMediaPlayer(gameContext);
     }
 
 }

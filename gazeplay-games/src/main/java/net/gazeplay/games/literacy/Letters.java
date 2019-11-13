@@ -212,7 +212,7 @@ public class Letters implements GameLifeCycle {
                     correctCount++;
                 }
 
-                Bloc bloc = new Bloc(j * width, i * height, width + 1, height + 1, i, j, currentLetter, mainLetter,
+                Bloc bloc = new Bloc(j * width, i * height, width + 1, height + 1, currentLetter, mainLetter,
                         this, stats, gameContext, fixationlength);
 
                 blocs[i][j] = bloc;

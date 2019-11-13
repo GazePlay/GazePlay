@@ -36,7 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,7 +60,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     private List<EventHandler<Event>> eventTitre;
 
-    GazeMediaPlayer(IGameContext gameContext, Stats stats) {
+    GazeMediaPlayer(IGameContext gameContext) {
         this.gameContext = gameContext;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -650,7 +649,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     }
 
     private void fullScreenCheck() {
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         if (!full) {
             enableFullScreen();
         } else {
