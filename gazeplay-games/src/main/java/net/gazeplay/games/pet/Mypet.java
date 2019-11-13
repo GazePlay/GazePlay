@@ -276,13 +276,13 @@ class Mypet extends Pane {
 
     private void createMouthHandlers() {
 
-        ph.hand.xProperty().addListener((o) -> {
+        ph.getHand().xProperty().addListener((o) -> {
             if (ph.getMode() == PetHouse.EAT_MODE) {
-                Shape intersect = Shape.intersect(ph.hand, getMouth());
+                Shape intersect = Shape.intersect(ph.getHand(), getMouth());
                 if ((intersect.getBoundsInLocal().getWidth() != -1) && !mouthTouched) {
                     setBlinkingEnabled(false);
                     setHappy();
-                    ph.hand.setFill(new ImagePattern(new Image("data/pet/images/emptyspoon.png")));
+                    ph.getHand().setFill(new ImagePattern(new Image("data/pet/images/emptyspoon.png")));
                     mouthTouched = true;
                 } else if ((intersect.getBoundsInLocal().getWidth() == -1) && mouthTouched && (ph.isSpoonFull())) {
                     setEating();
@@ -295,10 +295,10 @@ class Mypet extends Pane {
 
     private void createBodyHandlers() {
         getBody().setCursor(Cursor.OPEN_HAND);
-        ph.hand.xProperty().addListener((o) -> {
+        ph.getHand().xProperty().addListener((o) -> {
             if (ph.getMode() == PetHouse.INIT_MODE) {
 
-                Shape intersect = Shape.intersect(ph.hand, getBody());
+                Shape intersect = Shape.intersect(ph.getHand(), getBody());
                 if ((intersect.getBoundsInLocal().getWidth() != -1) && !bodyTouched && !eyeTouched[0]
                         && !eyeTouched[1]) {
                     t.stop();
@@ -311,14 +311,14 @@ class Mypet extends Pane {
                 }
             } else if ((ph.getMode() == PetHouse.SPORT_MODE)) {
 
-                Shape intersect = Shape.intersect(ph.hand, getBody());
+                Shape intersect = Shape.intersect(ph.getHand(), getBody());
                 if (!ph.getBaloonGone() && (intersect.getBoundsInLocal().getWidth() != -1)) {
                     log.debug("enter baloon");
                     ph.setBaloonGone(true);
                     ph.rd.stop();
                     ImageView baloon = new ImageView("data/pet/images/ball.png");
                     baloon.setPreserveRatio(true);
-                    baloon.fitWidthProperty().bind(ph.hand.widthProperty());
+                    baloon.fitWidthProperty().bind(ph.getHand().widthProperty());
                     ph.getGameContext().getChildren().add(baloon);
                     Dimension2D dimension2D = ph.getGameContext().getGamePanelDimensionProvider().getDimension2D();
                     baloon.setX(0);
@@ -408,10 +408,10 @@ class Mypet extends Pane {
         getLeftEye().setCursor(Cursor.HAND);
         getRightEye().setCursor(Cursor.HAND);
 
-        ph.hand.xProperty().addListener((o) -> {
+        ph.getHand().xProperty().addListener((o) -> {
             if (ph.getMode() == PetHouse.INIT_MODE) {
-                Shape intersect = Shape.intersect(ph.hand, getLeftEye());
-                Shape intersect2 = Shape.intersect(ph.hand, getRightEye());
+                Shape intersect = Shape.intersect(ph.getHand(), getLeftEye());
+                Shape intersect2 = Shape.intersect(ph.getHand(), getRightEye());
 
                 if ((intersect.getBoundsInLocal().getWidth() == -1) && (intersect2.getBoundsInLocal().getWidth() == -1)
                         && (eyeTouched[0]) && (eyeTouched[1])) {

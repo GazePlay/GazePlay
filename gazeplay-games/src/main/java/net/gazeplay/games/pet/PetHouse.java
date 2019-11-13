@@ -87,6 +87,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     @Getter
     private Rectangle zone;
 
+    @Getter
     private Rectangle hand;
 
     private final int screenWidth;
