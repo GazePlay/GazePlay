@@ -7,41 +7,21 @@ import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 
 import java.util.LinkedList;
-import java.util.Random;
+import java.util.List;
 
 /**
  * @author Johana MARKU
  */
-
 class Client extends Rectangle {
 
     @Getter
     private final Rectangle client;
+    
     @Getter
-    private PotionMix potionRequest;
+    private final PotionMix potionRequest;
+    
     @Getter
-    private LinkedList<Color> colorsToMix;
-
-    public enum PotionMix {
-        RED_Potion("Red", Color.RED), YELLOW_Potion("Yellow", Color.YELLOW), BLUE_Potion("Blue",
-            Color.BLUE), ORANGE_Potion("Orange", Color.ORANGE), GREEN_Potion("Green",
-            Color.GREEN), PURPLE_Potion("Purple", Color.PURPLE), BLACK_Potion("Black", Color.BLACK);
-
-        @Getter
-        private final String colorName;
-        @Getter
-        private final Color color;
-
-        PotionMix(String name, Color color) {
-            this.colorName = name;
-            this.color = color;
-        }
-
-        public static PotionMix getRandomPotionRequest() {
-            Random random = new Random();
-            return values()[random.nextInt(values().length)];
-        }
-    }
+    private final List<Color> colorsToMix;
 
     Client(double posX, double posY, double width, double height, Image clientImage, PotionMix request) {
         this.client = new Rectangle(posX, posY, width, height);
@@ -50,11 +30,11 @@ class Client extends Rectangle {
         this.colorsToMix = toMix(request);
     }
 
-    private LinkedList<Color> toMix(PotionMix potionRequest) {
-        LinkedList<Color> colorsToMix = new LinkedList<>();
-        if (potionRequest.color == Color.RED || potionRequest.color == Color.YELLOW
-            || potionRequest.color == Color.BLUE) {
-            colorsToMix.add(potionRequest.color);
+    private List<Color> toMix(PotionMix potionRequest) {
+        List<Color> colorsToMix = new LinkedList<>();
+        if (potionRequest.getColor() == Color.RED || potionRequest.getColor() == Color.YELLOW
+            || potionRequest.getColor() == Color.BLUE) {
+            colorsToMix.add(potionRequest.getColor());
         } else {
             switch (potionRequest) {
                 case ORANGE_Potion:
