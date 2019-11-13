@@ -20,7 +20,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -635,7 +634,6 @@ public class Race extends Parent implements GameLifeCycle {
         Point randomPoint = endPoints[r];
         tt1.setToY((-sp.centerY + randomPoint.y) / 4);
         tt1.setToX(-sp.centerX + randomPoint.x);
-        sp.destination = randomPoint;
 
         if (r == 2) {
             this.getChildren().get(this.getChildren().indexOf(sp)).toFront();

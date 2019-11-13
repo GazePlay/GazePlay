@@ -12,12 +12,12 @@ public class Wall {
     Box box;
     String name;
 
-    public Wall(String moveDirection, int positiveAxisMultiplier, String name, double xLength, double yLength) {
+    public Wall(MoveDirection moveDirection, int positiveAxisMultiplier, String name, double xLength, double yLength) {
         // The short size of a side of the cube (this is the thickness of each side)
         double wallThickness = 0.1;
         this.name = name;
         switch (moveDirection) {
-        case "X":
+        case X:
             this.box = new Box(wallThickness, yLength, xLength);
             // The positions of the sides compared to the origin
             double positionWall = xLength / 2;
@@ -31,7 +31,7 @@ public class Wall {
             }
             this.box.setTranslateX(positiveAxisMultiplier * positionWall);
             break;
-        case "Y":
+        case Y:
             this.box = new Box(xLength, wallThickness, xLength);
             positionWall = yLength / 2;
             Image top_bottomImage = new Image("data/room/top_bottom.jpg");
@@ -39,7 +39,7 @@ public class Wall {
                     top_bottomImage));
             this.box.setTranslateY(positiveAxisMultiplier * positionWall);
             break;
-        case "Z":
+        case Z:
             this.box = new Box(xLength, yLength, wallThickness);
             positionWall = xLength / 2;
             if (positiveAxisMultiplier == 1) {

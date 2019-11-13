@@ -16,6 +16,6 @@ public class RoomGameLauncher implements GameSpec.GameLauncher {
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
                                        Stats stats) {
-        return new Room(gameContext, stats);
+        return new Room(gameContext);
     }
 }

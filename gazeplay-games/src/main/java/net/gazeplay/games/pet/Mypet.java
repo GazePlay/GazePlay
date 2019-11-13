@@ -15,11 +15,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Mypet extends Pane {
-
-    public static final int DRYER_UP = 0;
-    public static final int DRYER_RIGHT = 1;
-    public static final int DRYER_LEFT = 2;
+class Mypet extends Pane {
 
     @Getter
     @Setter
@@ -70,7 +66,7 @@ public class Mypet extends Pane {
     @Getter
     private String emotion = "basic";
 
-    public Mypet(double height, double width, PetHouse ph) {
+    Mypet(double height, double width, PetHouse ph) {
         Image tmp = new Image("data/pet/images/body.png");
 
         double old_valueh = tmp.getHeight();
@@ -92,7 +88,7 @@ public class Mypet extends Pane {
 
     }
 
-    public void init() {
+    private void init() {
         Image corps = new Image("data/pet/images/body.png");
         setBody(new Rectangle(0, 0, corps.getWidth() * wratio, corps.getHeight() * hratio));
 
@@ -140,7 +136,7 @@ public class Mypet extends Pane {
 
     }
 
-    public void setBasic() {
+    void setBasic() {
         emotion = "basic";
         getBody().setFill(new ImagePattern(new Image("data/pet/images/body.png")));
         getLeftWing().setImage(new Image("data/pet/images/wing.png"));
@@ -152,7 +148,7 @@ public class Mypet extends Pane {
 
     }
 
-    public void setHappy() {
+    void setHappy() {
 
         emotion = "happy";
         getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eyeclosed.png")));
@@ -162,7 +158,7 @@ public class Mypet extends Pane {
 
     }
 
-    public void setSmiling() {
+    private void setSmiling() {
 
         emotion = "smile";
         getLeftEye().setFill(new ImagePattern(new Image("data/pet/images/eye.png")));
@@ -172,7 +168,7 @@ public class Mypet extends Pane {
 
     }
 
-    public void setEating() {
+    private void setEating() {
 
         emotion = "eating";
         eatingBool = 10;
@@ -206,7 +202,7 @@ public class Mypet extends Pane {
 
     }
 
-    public void setMovingWings(Boolean isMoving) {
+    private void setMovingWings(Boolean isMoving) {
         if (isMoving) {
             int duration = 150;
 
@@ -234,7 +230,7 @@ public class Mypet extends Pane {
         }
     }
 
-    public void setBlinking() {
+    private void setBlinking() {
         eyesAreOpen = true;
         t = new Timeline();
         t.getKeyFrames().add(new KeyFrame(Duration.millis(200),
@@ -263,7 +259,7 @@ public class Mypet extends Pane {
 
     }
 
-    public void setBlinkingEnabled(boolean b) {
+    void setBlinkingEnabled(boolean b) {
         if (b) {
             t.play();
         } else {
@@ -272,13 +268,13 @@ public class Mypet extends Pane {
 
     }
 
-    public void createHandlers() {
+    private void createHandlers() {
         createEyesHandlers();
         createBodyHandlers();
         createMouthHandlers();
     }
 
-    public void createMouthHandlers() {
+    private void createMouthHandlers() {
 
         ph.hand.xProperty().addListener((o) -> {
             if (ph.getMode() == PetHouse.EAT_MODE) {
@@ -297,7 +293,7 @@ public class Mypet extends Pane {
         });
     }
 
-    public void createBodyHandlers() {
+    private void createBodyHandlers() {
         getBody().setCursor(Cursor.OPEN_HAND);
         ph.hand.xProperty().addListener((o) -> {
             if (ph.getMode() == PetHouse.INIT_MODE) {
@@ -408,7 +404,7 @@ public class Mypet extends Pane {
 
     }
 
-    public void createEyesHandlers() {
+    private void createEyesHandlers() {
         getLeftEye().setCursor(Cursor.HAND);
         getRightEye().setCursor(Cursor.HAND);
 

@@ -14,34 +14,36 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.stats.Stats;
+
+import static net.gazeplay.games.room.MoveDirection.*;
 
 @Slf4j
 public class Room implements GameLifeCycle {
+
+    private final double xLength;
+    private final double yLength;
+    
     private final IGameContext gameContext;
 
     private final javafx.geometry.Dimension2D dimension2D;
     private final Rotate rotateX;
     private final Rotate rotateY;
 
-    private static double xLength;
-    private static double yLength;
-
     private final double positionCamera;
 
-    private Image arrowImNorth;
-    private Rectangle rectangleArrowNorth;
+    private final Image arrowImNorth;
+    private final Rectangle rectangleArrowNorth;
 
-    private Image arrowImWest;
-    private Rectangle rectangleArrowWest;
+    private final Image arrowImWest;
+    private final Rectangle rectangleArrowWest;
 
-    private Image arrowImEast;
-    private Rectangle rectangleArrowEast;
+    private final Image arrowImEast;
+    private final Rectangle rectangleArrowEast;
 
-    private Image arrowImSouth;
-    private Rectangle rectangleArrowSouth;
+    private final Image arrowImSouth;
+    private final Rectangle rectangleArrowSouth;
 
-    public Room(IGameContext gameContext, Stats stats) {
+    public Room(IGameContext gameContext) {
         super();
         this.gameContext = gameContext;
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -77,22 +79,22 @@ public class Room implements GameLifeCycle {
     public void launch() {
         Group objects = new Group();
 
-        Wall top = new Wall("Y", -1, "top", xLength, yLength);
+        Wall top = new Wall(Y, -1, "top", xLength, yLength);
         objects.getChildren().add(top.getItem());
 
-        Wall bottom = new Wall("Y", 1, "bottom", xLength, yLength);
+        Wall bottom = new Wall(Y, 1, "bottom", xLength, yLength);
         objects.getChildren().add(bottom.getItem());
 
-        Wall back = new Wall("Z", -1, "back", xLength, yLength);
+        Wall back = new Wall(Z, -1, "back", xLength, yLength);
         objects.getChildren().add(back.getItem());
 
-        Wall front = new Wall("Z", 1, "front", xLength, yLength);
+        Wall front = new Wall(Z, 1, "front", xLength, yLength);
         objects.getChildren().add(front.getItem());
 
-        Wall left = new Wall("X", -1, "left", xLength, yLength);
+        Wall left = new Wall(X, -1, "left", xLength, yLength);
         objects.getChildren().add(left.getItem());
 
-        Wall right = new Wall("X", 1, "right", xLength, yLength);
+        Wall right = new Wall(X, 1, "right", xLength, yLength);
         objects.getChildren().add(right.getItem());
 
         SubScene subScene = new SubScene(objects,

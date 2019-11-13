@@ -35,41 +35,7 @@ import java.util.logging.Logger;
  */
 @Slf4j
 class SlidingPuzzleCard extends Parent {
-
-    SlidingPuzzleCard(int id, double positionX, double positionY, double width, double height, String fileName,
-                      double fixationlength, IGameContext gameContext, SlidingPuzzle gameInstance, Stats stats, double kingPosX,
-                      double kingPosY) {
-        this.fixationlength = fixationlength;
-        this.CardId = id;
-        this.card = new Rectangle(positionX, positionY, width, height);
-        this.card.setFill(new ImagePattern(new Image(fileName), 0, 0, 1, 1, true));
-        this.gameContext = gameContext;
-        this.initWidth = (int) width;
-        int initHeight = (int) height;
-        this.initX = (int) positionX;
-        this.initY = (int) positionY;
-        this.gameInstance = gameInstance;
-        this.stats = stats;
-        this.progressIndicator = createProgressIndicator(width, height);
-        this.getChildren().add(this.progressIndicator);
-        this.getChildren().add(this.card);
-        this.isKing = false;
-        this.kingPosX = (int) kingPosX;
-        this.kingPosY = (int) kingPosY;
-        if (id != 9) {
-            this.enterEvent = buildEvent();
-        } else {
-            this.enterEvent = buildEvent2();
-        }
-        gameContext.getGazeDeviceManager().addEventFilter(card);
-
-        this.addEventFilter(MouseEvent.ANY, enterEvent);
-        this.addEventFilter(GazeEvent.ANY, enterEvent);
-
-        // Prevent null pointer exception
-        currentTimeline = new Timeline();
-    }
-
+    
     private final double fixationlength;
 
     private final Rectangle card;
@@ -105,14 +71,47 @@ class SlidingPuzzleCard extends Parent {
 
     private final Stats stats;
 
-    private final EventHandler<Event> enterEvent;
-
     /**
      * Use a comma Timeline object so we can stop the current animation to prevent overlapses.
      */
     private Timeline currentTimeline;
 
-    private ProgressIndicator createProgressIndicator(double width, double height) {
+
+    SlidingPuzzleCard(int id, double positionX, double positionY, double width, double height, String fileName,
+                      double fixationlength, IGameContext gameContext, SlidingPuzzle gameInstance, Stats stats, double kingPosX,
+                      double kingPosY) {
+        this.fixationlength = fixationlength;
+        this.CardId = id;
+        this.card = new Rectangle(positionX, positionY, width, height);
+        this.card.setFill(new ImagePattern(new Image(fileName), 0, 0, 1, 1, true));
+        this.gameContext = gameContext;
+        this.initWidth = (int) width;
+        this.initX = (int) positionX;
+        this.initY = (int) positionY;
+        this.gameInstance = gameInstance;
+        this.stats = stats;
+        this.progressIndicator = createProgressIndicator(width);
+        this.getChildren().add(this.progressIndicator);
+        this.getChildren().add(this.card);
+        this.isKing = false;
+        this.kingPosX = (int) kingPosX;
+        this.kingPosY = (int) kingPosY;
+        EventHandler<Event> enterEvent;
+        if (id != 9) {
+            enterEvent = buildEvent();
+        } else {
+            enterEvent = buildEvent2();
+        }
+        gameContext.getGazeDeviceManager().addEventFilter(card);
+
+        this.addEventFilter(MouseEvent.ANY, enterEvent);
+        this.addEventFilter(GazeEvent.ANY, enterEvent);
+
+        // Prevent null pointer exception
+        currentTimeline = new Timeline();
+    }
+    
+    private ProgressIndicator createProgressIndicator(double width) {
         ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(initX);
         indicator.setTranslateY(initY);
