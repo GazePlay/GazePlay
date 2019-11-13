@@ -25,7 +25,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
@@ -36,40 +35,56 @@ import java.util.List;
 @Slf4j
 public class CakeFactory extends Parent implements GameLifeCycle {
 
-    private final int NB_BASES = 4;
-    private final int NB_NAPPAGES = 5;
-    private final int NB_BONBONS = 3;
-    private final int NB_DECORS = 2;
+    private static final int NB_BASES = 4;
+    private static final int NB_NAPPAGES = 5;
+    private static final int NB_BONBONS = 3;
+    private static final int NB_DECORS = 2;
+
     @Getter
     private final IGameContext gameContext;
+
     private final Stats stats;
+
     private FadeTransition ft;
     @Getter
     public Rectangle r;
+
     Color[] col = {Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL};
+
     private int[][] layers = new int[3][4];
+
     private int[][] model = new int[3][4];
+
     @Getter
     private double buttonSize;
+
     private double centerX;
+
     private double centerY;
+
     @Getter
     private int fixationLength;
+
     @Getter
     @Setter
     private int currentCake;
+
     @Getter
     @Setter
     private int maxCake;
+
     @Getter
     @Setter
     private CakeGameVariant variant;
+
     @Getter
     @Setter
     private boolean nappage;
+
     @Getter
     @Setter
     private List<ProgressButton>[] p;
+
     @Getter
     @Setter
     private StackPane[] cake;
@@ -103,7 +118,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         back.setFill(new ImagePattern(new Image("data/cake/images/background.png")));
         back.setMouseTransparent(true);
         this.getChildren().add(back);
-
     }
 
     void winButton(boolean winOnly) {
@@ -417,7 +431,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     private void createSelectionButton(ProgressButton bt, int i, int j, int k, Dimension2D dimension2D) {
         EventHandler<Event> buttonHandler;
         bt.setLayoutX((i + 1) * dimension2D.getWidth() / k - buttonSize / 2);
-        int index = i;
         int jndex = j - 1;
         ImageView iv = new ImageView(new Image("data/cake/images/" + (j - 1) + "" + (i + 1) + ".png"));
         iv.setFitWidth(2 * buttonSize / 3);
@@ -428,7 +441,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             if (jndex == 1) {
                 setNappage(true);
             }
-            execAnim(index, j);
+            execAnim(i, j);
             winButton(true);
         };
         bt.assignIndicator(buttonHandler, fixationLength);
@@ -606,7 +619,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
-
         gameContext.getChildren().add(this);
 
         for (int i = 0; i < 3; i++) {
@@ -620,9 +632,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         }
 
         createCake(0);
-
         createStack();
-
         active(0);
 
         if (!variant.equals(CakeGameVariant.FREE)) {
@@ -631,9 +641,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         }
 
         stats.notifyNewRoundReady();
-
         this.gameContext.resetBordersToFront();
-
     }
 
     @Override
