@@ -48,7 +48,6 @@ import java.util.List;
 public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     private final IGameContext gameContext;
-    private final Stats stats;
 
     private Button[] titre;
     private Button left, playPause, right, fullScreen, addVideo, upArrow, downArrow;
@@ -60,24 +59,10 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     private boolean play = false;
     private MediaFileReader musicList;
 
-    List<EventHandler<Event>> eventTitre;
+    private List<EventHandler<Event>> eventTitre;
 
-    @Override
-    public void launch() {
-        createHandlers();
-        createUpDownHandlers();
-        createLeftRightHandlers();
-    }
-
-    @Override
-    public void dispose() {
-        this.stopMedia();
-
-    }
-
-    public GazeMediaPlayer(IGameContext gameContext, Stats stats) {
+    GazeMediaPlayer(IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
-        this.stats = stats;
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         eventTitre = new ArrayList<>();
@@ -191,10 +176,21 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         window.setLayoutY(dimension2D.getHeight() / 12);
 
         this.gameContext.getChildren().add(window);
-
     }
 
-    public void createHandlers() {
+    @Override
+    public void launch() {
+        createHandlers();
+        createUpDownHandlers();
+        createLeftRightHandlers();
+    }
+
+    @Override
+    public void dispose() {
+        this.stopMedia();
+    }
+
+    private void createHandlers() {
         EventHandler<Event> eventFull = e -> fullScreenCheck();
         fullScreen.addEventFilter(MouseEvent.MOUSE_CLICKED, eventFull);
         fullScreen.addEventFilter(GazeEvent.GAZE_ENTERED, eventFull);
@@ -226,7 +222,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     }
 
-    public void stopMedia() {
+    private void stopMedia() {
         if (((StackPane) videoRoot.getCenter()).getChildren().get(1) instanceof MediaView) {
             MediaView mediaView = (MediaView) ((StackPane) videoRoot.getCenter()).getChildren().get(1);
             mediaView.getMediaPlayer().stop();
@@ -234,7 +230,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         ((StackPane) videoRoot.getCenter()).getChildren().set(1, new ImageView());
     }
 
-    public void createLeftRightHandlers() {
+    private void createLeftRightHandlers() {
         EventHandler<Event> eventLeft = e -> {
             stopMedia();
             playMusic(true);
@@ -572,7 +568,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         return s;
     }
 
-    public void putMusic(int i, boolean next) {
+    private void putMusic(int i, boolean next) {
         MediaFile mf;
         if (next) {
             mf = musicList.next();
@@ -663,7 +659,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         full = !full;
     }
 
-    public void enableFullScreen() {
+    private void enableFullScreen() {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         if (((StackPane) videoRoot.getCenter()).getChildren().get(1) instanceof MediaView) {
             MediaView mediaView = (MediaView) ((StackPane) videoRoot.getCenter()).getChildren().get(1);
@@ -700,7 +696,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     }
 
-    public void disableFullScreen() {
+    private void disableFullScreen() {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         if (((StackPane) videoRoot.getCenter()).getChildren().get(1) instanceof MediaView) {
             MediaView mediaView = (MediaView) ((StackPane) videoRoot.getCenter()).getChildren().get(1);
@@ -729,7 +725,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         }
     }
 
-    public void refresh() {
+    private void refresh() {
         putMusic(0, true);
         putMusic(1, true);
         putMusic(2, true);

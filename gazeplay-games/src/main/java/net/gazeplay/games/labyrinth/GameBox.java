@@ -7,18 +7,18 @@ import javafx.scene.shape.Rectangle;
 
 public class GameBox extends Parent {
 
-    protected Rectangle r;
+    protected final Rectangle r;
 
-    protected ProgressIndicator indicator;
+    protected final ProgressIndicator indicator;
 
-    private double x;
-    private double y;
-    int numCol; // j
-    int numRow; // i
+    private final double x;
+    private final double y;
+    protected final int numCol; // j
+    protected final int numRow; // i
 
-    private boolean isAWall;
+    private final boolean isAWall;
 
-    boolean wasNextToTheMouse;
+    protected boolean wasNextToTheMouse;
 
     GameBox(double height, double width, double coordX, double coordY, int wall, int nc, int nr) {
 
@@ -51,12 +51,6 @@ public class GameBox extends Parent {
         this.getChildren().addAll(r, indicator);
     }
 
-    private GameBox(int x, int y, boolean wall, boolean visit) {
-        numCol = x;
-        numRow = y;
-        isAWall = wall;
-    }
-
     boolean isAWall() {
         return isAWall;
     }
@@ -75,10 +69,6 @@ public class GameBox extends Parent {
         indicator.setMinHeight(width * 0.9);
         indicator.setOpacity(0);
         return indicator;
-    }
-
-    public GameBox clone(Boolean b) {
-        return new GameBox(this.numCol, this.numRow, this.isAWall, b);
     }
 
     public boolean equals(GameBox g) {
