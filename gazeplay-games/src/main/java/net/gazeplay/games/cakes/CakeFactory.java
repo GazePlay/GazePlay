@@ -31,6 +31,7 @@ import net.gazeplay.components.ProgressButton;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 public class CakeFactory extends Parent implements GameLifeCycle {
@@ -556,10 +557,11 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     }
 
     private void generateRandomCake() {
+        Random random = new Random();
         for (int i = 0; i < 3; i++) {
-            model[i][0] = 1 + (int) (Math.random() * 4d);
-            model[i][1] = 1 + (int) (Math.random() * 5d);
-            model[i][2] = 1 + (int) (Math.random() * 3d);
+            model[i][0] = 1 + random.nextInt(5);
+            model[i][1] = 1 + random.nextInt(6);
+            model[i][2] = 1 + random.nextInt(4);
         }
         model[2][3] = 1 + (int) (Math.random() * 2d);
 
