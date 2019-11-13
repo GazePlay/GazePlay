@@ -299,7 +299,7 @@ public class Piano extends Parent implements GameLifeCycle {
                         x = centerX + size * Math.cos(Math.toRadians(-theta));
                         y = centerY + size * Math.sin(Math.toRadians(-theta));
                         explose(x, y);
-                        double theta1 = (((index1 + 1) * 360) / 7 - origin);
+                        double theta1 = (((index1 + 1) * 360d) / 7d - origin);
                         x = centerX + size * Math.cos(Math.toRadians(-theta1));
                         y = centerY + size * Math.sin(Math.toRadians(-theta1));
                     }

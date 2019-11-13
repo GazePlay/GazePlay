@@ -25,8 +25,9 @@ public class MidiReader {
 
     private int tickIndex;
 
+    private final Instru instru = new Instru();
+
     MidiReader(InputStream inputStream) {
-        Instru instru = new Instru();
         try {
             Sequence sequence = MidiSystem.getSequence(inputStream);
             int maxIndex = 0;
