@@ -32,7 +32,7 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
     /**
      * configure the frequency of the canvas switch, when using 3 canvas
      */
-    private final long canvasSwitchFrequency = 500;
+    private final static long canvasSwitchFrequency = 500;
 
     private final WebView webview;
 

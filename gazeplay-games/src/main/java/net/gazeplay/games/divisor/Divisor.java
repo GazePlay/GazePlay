@@ -40,7 +40,7 @@ public class Divisor implements GameLifeCycle {
             Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
             try {
                 imageRectangle.setFill(new ImagePattern(new Image("data/divisor/images/Background.png")));
-                int coef = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? 1 : 0;
+                int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
                 imageRectangle.setOpacity(1 - coef * 0.9);
 
             } catch (Exception e) {

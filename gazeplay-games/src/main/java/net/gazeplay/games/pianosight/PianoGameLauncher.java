@@ -14,8 +14,11 @@ public class PianoGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+    public GameLifeCycle createNewGame(
+        IGameContext gameContext,
+        GameSpec.DimensionGameVariant gameVariant,
+        Stats stats
+    ) {
         return new Piano(gameContext, stats);
     }
 }

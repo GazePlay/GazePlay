@@ -21,7 +21,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
@@ -114,7 +113,7 @@ public class ColorToolBox extends StackPane {
     public ColorToolBox(final Pane root, final ColorsGame colorsGame, final IGameContext gameContext) {
         super();
         this.gameContext = gameContext;
-        progressIndicator = new GazeFollowerIndicator(root);
+        progressIndicator = new GazeFollowerIndicator(gameContext, root);
 
         this.selectedColorBox = null;
         this.colorsGame = colorsGame;
@@ -199,7 +198,7 @@ public class ColorToolBox extends StackPane {
             }
         };
 
-        final AbstractGazeIndicator customColorButtonIndic = new GazeFollowerIndicator(root);
+        final AbstractGazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root);
         customColorButtonIndic.setOnFinish(customColorButtonHandler);
         customColorButtonIndic.addNodeToListen(customColorPickerButton,
                 colorsGame.getGameContext().getGazeDeviceManager());
@@ -260,7 +259,7 @@ public class ColorToolBox extends StackPane {
         thisRoot.setTop(colorziationPane);
         root.getChildren().add(customColorButtonIndic);
 
-        if (!ActiveConfigurationContext.getInstance().isBackgroundWhite()) {
+        if (!gameContext.getConfiguration().isBackgroundWhite()) {
 
             this.getStyleClass().add("bg-colored");
         }
@@ -417,7 +416,7 @@ public class ColorToolBox extends StackPane {
             stopColorize = new Button("S");
         }
 
-        AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(root);
+        AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(gameContext, root);
 
         Pane colorizeButtonPane = new StackPane(colorize);
         Pane stopColorizeButtonPane = new StackPane(stopColorize);
@@ -471,7 +470,7 @@ public class ColorToolBox extends StackPane {
 
         final Scene scene = new Scene(CustomColorPicker, Color.TRANSPARENT);
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        final Configuration config = gameContext.getConfiguration();
         CssUtil.setPreferredStylesheets(config, scene);
 
         dialog.setScene(scene);

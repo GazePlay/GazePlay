@@ -98,7 +98,7 @@ public class Memory implements GameLifeCycle {
 
     @Override
     public void launch() {
-        Configuration config = ActiveConfigurationContext.getInstance();
+        Configuration config = gameContext.getConfiguration();
         final int cardsCount = nbColumns * nbLines;
 
         images = selectionAleaImages();

@@ -79,7 +79,7 @@ public class SlidingPuzzle implements GameLifeCycle {
 
     @Override
     public void launch() {
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        final Configuration config = gameContext.getConfiguration();
         SlidingPuzzle.Coord c1 = new SlidingPuzzle.Coord((int) computePositionX(boxWidth, cardWidth, 1),
             (int) computePositionY(boxHeight, cardHeight, 1));
         coordList.add(c1);

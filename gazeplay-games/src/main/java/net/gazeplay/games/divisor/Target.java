@@ -81,14 +81,14 @@ class Target extends Parent {
 
         this.stats.notifyNewRoundReady();
 
-        ActiveConfigurationContext.getInstance().getSpeedEffectsProperty().addListener((o) -> {
+        gameContext.getConfiguration().getSpeedEffectsProperty().addListener((o) -> {
             timeline.stop();
             move();
         });
     }
 
     private void move() {
-        timeline = new Timeline(new KeyFrame(Duration.millis(ActiveConfigurationContext.getInstance().getSpeedEffects() * 10),
+        timeline = new Timeline(new KeyFrame(Duration.millis(gameContext.getConfiguration().getSpeedEffects() * 10),
             new EventHandler<>() {
                 int dx = randomDirection();
                 int dy = randomDirection();
@@ -169,7 +169,7 @@ class Target extends Parent {
                 || ((lapin) && (gameContext.getChildren().size() <= 1))) {
                 long totalTime = (System.currentTimeMillis() - startTime) / 1000;
                 Label l = new Label("Score : " + totalTime + "s");
-                Color color = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+                Color color = (gameContext.getConfiguration().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
                 l.setTextFill(color);
                 l.setFont(Font.font(50));
                 l.setLineSpacing(10);

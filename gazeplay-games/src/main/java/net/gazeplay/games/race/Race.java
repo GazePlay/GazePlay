@@ -20,7 +20,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -102,7 +101,7 @@ public class Race extends Parent implements GameLifeCycle {
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
 
-        int coef = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? 1 : 0;
+        int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
         imageRectangle.setOpacity(1 - coef * 0.9);
 
         gameContext.getChildren().add(imageRectangle);
@@ -387,10 +386,6 @@ public class Race extends Parent implements GameLifeCycle {
 
         text.setText(cst);
 
-        double min = Math.ceil(1);
-        double max = Math.floor(3);
-        int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
-
         String soundResource = "data/race/sounds/frog.WAV";
         try {
             ForegroundSoundsUtils.playSound(soundResource);
@@ -512,7 +507,7 @@ public class Race extends Parent implements GameLifeCycle {
 
     private void movePlayer(Target frogRacer, int iteration) {
 
-        double timelength = ActiveConfigurationContext.getInstance().getSpeedEffects() * 1000;
+        double timelength = gameContext.getConfiguration().getSpeedEffects() * 1000;
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
         double movementDistance = iteration * 0.05;
         tt1.setToX(dimension2D.getWidth() * movementDistance);
@@ -552,7 +547,7 @@ public class Race extends Parent implements GameLifeCycle {
 
         double timebasic = ((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH)
                 * 1000;
-        double timelength = ActiveConfigurationContext.getInstance().getSpeedEffects() * timebasic;
+        double timelength = gameContext.getConfiguration().getSpeedEffects() * timebasic;
 
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
         tt1.setToX(dimension2D.getWidth() - dimension2D.getWidth() * 0.1);
@@ -626,7 +621,7 @@ public class Race extends Parent implements GameLifeCycle {
     private void moveCircle(Target sp) {
 
         double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
-        double timelength = ActiveConfigurationContext.getInstance().getSpeedEffects() * timebasic;
+        double timelength = gameContext.getConfiguration().getSpeedEffects() * timebasic;
 
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), sp);
         double min = Math.ceil(0);
@@ -635,7 +630,6 @@ public class Race extends Parent implements GameLifeCycle {
         Point randomPoint = endPoints[r];
         tt1.setToY((-sp.centerY + randomPoint.y) / 4);
         tt1.setToX(-sp.centerX + randomPoint.x);
-        sp.destination = randomPoint;
 
         if (r == 2) {
             this.getChildren().get(this.getChildren().indexOf(sp)).toFront();

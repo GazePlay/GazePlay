@@ -97,7 +97,7 @@ public class Car extends Rectangle {
             pi.toFront();
             timelineProgressBar = new Timeline();
             timelineProgressBar.getKeyFrames()
-                .add(new KeyFrame(new Duration(ActiveConfigurationContext.getInstance().getFixationLength()),
+                .add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(pi.progressProperty(), 1)));
             timelineProgressBar.play();
             timelineProgressBar.setOnFinished(actionEvent -> setSelected(true));

@@ -13,20 +13,16 @@ import javax.sound.midi.Synthesizer;
 @Slf4j
 public class Instru {
 
-    public int volume = 100;
+    private final MidiChannel canal;
 
-    private Synthesizer synthetiseur;
-    private MidiChannel canal;
-
-    public Instru() {
-
+    Instru()  {
         // On récupère le synthétiseur, on l'ouvre et on obtient un canal
+        Synthesizer synthetiseur;
         try {
             synthetiseur = MidiSystem.getSynthesizer();
             synthetiseur.open();
         } catch (MidiUnavailableException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         canal = synthetiseur.getChannels()[0];
 
@@ -34,18 +30,26 @@ public class Instru {
         canal.programChange(0);
     }
 
-    // Joue la note dont le numéro est en paramètre
-    public void note_on(int note) {
+    /**
+     * Joue la note dont le numéro est en paramètre
+     */
+    void noteOn(int note) {
+        int volume = 100;
         canal.noteOn(note, volume);
     }
 
-    // Arrête de jouer la note dont le numéro est en paramètre
-    public void note_off(int note) {
+    /**
+     * Arrête de jouer la note dont le numéro est en paramètre
+     */
+    public void noteOff(int note) {
         canal.noteOff(note);
     }
 
-    // Set le type d'instrument dont le numéro MIDI est précisé en paramètre
-    public void set_instrument(int instru) {
+    /**
+     * Set le type d'instrument dont le numéro MIDI est précisé en paramètre
+     */
+    public void setInstrument(int instru) {
         canal.programChange(instru);
     }
+
 }

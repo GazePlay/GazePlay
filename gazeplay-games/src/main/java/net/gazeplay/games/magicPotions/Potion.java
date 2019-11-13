@@ -149,7 +149,7 @@ class Potion extends Parent {
         currentTimeline.stop();
         currentTimeline = new Timeline();
 
-        Explosion exp = new Explosion(gameContext.getGamePanelDimensionProvider().getDimension2D());
+        Explosion exp = new Explosion(gameContext, gameContext.getGamePanelDimensionProvider().getDimension2D());
         gameContext.getChildren().add(exp);
         gameContext.getChildren().removeAll(MagicPotions.getMixPot(), MagicPotions.getMixPotColor());
 

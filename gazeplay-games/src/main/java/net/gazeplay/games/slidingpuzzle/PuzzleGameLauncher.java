@@ -10,7 +10,7 @@ public class PuzzleGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec
     
     @Override
     public Stats createNewStats(Scene scene) {
-        return new slidingpuzzlestats(scene);
+        return new SlidingPuzzleStats(scene);
     }
 
     @Override

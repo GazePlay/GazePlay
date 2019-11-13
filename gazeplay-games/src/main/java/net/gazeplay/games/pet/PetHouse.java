@@ -24,7 +24,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
@@ -58,13 +57,13 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     private Integer waterNeeded = 100;
 
-    public int[] it = { LIFE_SIZE, LIFE_SIZE, LIFE_SIZE };
-    private Timeline[] timelines = { new Timeline(), new Timeline(), new Timeline() };
-    private final Color[] color = { Color.DARKSEAGREEN, Color.ALICEBLUE, Color.DARKSALMON, Color.LAVENDER };
-    private final String[] screen = { "park.jpg", "room.jpg", "kitchen.jpg", "shower.jpg" };
-    private final String[] cursor = { "glove.png", "hand.png", "emptyspoon.png", "pommeau.png" };
-    private final Color[] colorBar = { Color.BLUE, Color.RED, Color.GREEN };
-    private final double[] regressionTime = { 1, 2, 4 };
+    public int[] it = {LIFE_SIZE, LIFE_SIZE, LIFE_SIZE};
+    private Timeline[] timelines = {new Timeline(), new Timeline(), new Timeline()};
+    private final Color[] color = {Color.DARKSEAGREEN, Color.ALICEBLUE, Color.DARKSALMON, Color.LAVENDER};
+    private final String[] screen = {"park.jpg", "room.jpg", "kitchen.jpg", "shower.jpg"};
+    private final String[] cursor = {"glove.png", "hand.png", "emptyspoon.png", "pommeau.png"};
+    private final Color[] colorBar = {Color.BLUE, Color.RED, Color.GREEN};
+    private final double[] regressionTime = {1, 2, 4};
 
     @Getter
     @Setter
@@ -88,14 +87,13 @@ public class PetHouse extends Parent implements GameLifeCycle {
     @Getter
     private Rectangle zone;
 
-    private boolean enterZone = false;
-
-    Rectangle hand;
+    @Getter
+    private Rectangle hand;
 
     private final int screenWidth;
     private final int screenHeight;
 
-    public PetHouse(IGameContext gameContext, Stats stats) {
+    PetHouse(IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
 
@@ -202,7 +200,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     }
 
-    public void createZoneEvents() {
+    private void createZoneEvents() {
         EventHandler<Event> handevent = e -> {
             Cursor.setVisible(true);
             double offsetx = 0;
@@ -282,7 +280,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         zone.addEventFilter(GazeEvent.GAZE_EXITED, outhandevent);
     }
 
-    public HBox createBars() {
+    private HBox createBars() {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         HBox Bars = new HBox();
@@ -296,12 +294,12 @@ public class PetHouse extends Parent implements GameLifeCycle {
         Bars.setSpacing(offset);
 
         Bars.getChildren().addAll(createColoredProgressBar(0), createColoredProgressBar(1),
-                createColoredProgressBar(2));
+            createColoredProgressBar(2));
 
         return Bars;
     }
 
-    public HBox createColoredProgressBar(int numero) {
+    private HBox createColoredProgressBar(int numero) {
         HBox Bar = new HBox();
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double size = dimension2D.getHeight() / 20;
@@ -315,15 +313,15 @@ public class PetHouse extends Parent implements GameLifeCycle {
         return Bar;
     }
 
-    public void activateBars() {
+    private void activateBars() {
         for (int i = 0; i < 3; i++) {
             int index = getIt(i);
             HBox Bar = (HBox) Bars.getChildren().get(i);
 
             timelines[i] = new Timeline();
-            timelines[i].setDelay(Duration.seconds(ActiveConfigurationContext.getInstance().getSpeedEffects() * regressionTime[i]));
+            timelines[i].setDelay(Duration.seconds(gameContext.getConfiguration().getSpeedEffects() * regressionTime[i]));
             timelines[i].getKeyFrames().add(new KeyFrame(Duration.millis(500),
-                    new KeyValue(((Rectangle) Bar.getChildren().get(index)).fillProperty(), Color.WHITE)));
+                new KeyValue(((Rectangle) Bar.getChildren().get(index)).fillProperty(), Color.WHITE)));
 
             final int number = i;
             timelines[i].setOnFinished(e -> {
@@ -331,7 +329,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 if (index1 >= 0) {
                     timelines[number].getKeyFrames().clear();
                     timelines[number].setDelay(Duration
-                        .seconds(ActiveConfigurationContext.getInstance().getSpeedEffects() * regressionTime[number]));
+                        .seconds(gameContext.getConfiguration().getSpeedEffects() * regressionTime[number]));
                     timelines[number].getKeyFrames().add(new KeyFrame(Duration.millis(500),
                         new KeyValue(((Rectangle) Bar.getChildren().get(index1)).fillProperty(), Color.WHITE)));
                     timelines[number].play();
@@ -344,7 +342,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         }
     }
 
-    public void createHand() {
+    private void createHand() {
 
         hand = new Rectangle(0, 0, handSize, handSize);
         hand.setMouseTransparent(true);
@@ -354,19 +352,19 @@ public class PetHouse extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(hand);
     }
 
-    public int getIt(int i) {
+    private int getIt(int i) {
         it[i]--;
         return it[i];
     }
 
-    public void createButtons() {
+    private void createButtons() {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double buttonSize = dimension2D.getHeight() / 4;
         for (int i = 0; i < 4; i++) {
             ProgressButton bt = new ProgressButton();
             bt.getButton().setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
-                    + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
-                    + "-fx-max-height: " + buttonSize + "px;");
+                + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
+                + "-fx-max-height: " + buttonSize + "px;");
             ImageView iv = new ImageView(new Image("data/pet/images/menu" + i + ".png"));
 
             iv.setFitWidth(2 * buttonSize / 3);
@@ -383,7 +381,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 bt.setLayoutX(buttonSize * 0.2);
             }
 
-            bt.assignIndicator(buttonHandler, ActiveConfigurationContext.getInstance().getFixationLength());
+            bt.assignIndicator(buttonHandler, gameContext.getConfiguration().getFixationLength());
             bt.active();
             this.getChildren().add(bt);
             gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());
@@ -391,13 +389,13 @@ public class PetHouse extends Parent implements GameLifeCycle {
         }
     }
 
-    public EventHandler<Event> createprogessButtonHandler(int number) {
+    private EventHandler<Event> createprogessButtonHandler(int number) {
         EventHandler<Event> buttonHandler;
         buttonHandler = e -> activateScreen(number);
         return buttonHandler;
     }
 
-    public void activateScreen(int number) {
+    private void activateScreen(int number) {
         turnOffShower();
         stopSport();
         gameContext.getChildren().remove(bowl);
@@ -407,35 +405,35 @@ public class PetHouse extends Parent implements GameLifeCycle {
         background.setFill(color[number % 4]);
         int j;
         switch (number) {
-        case INIT_MODE:
-            j = 2;
-            hand.setWidth(2 * handSize);
-            hand.setHeight(2 * handSize);
-            hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
-            break;
-        case BATH_MODE:
-            j = 1;
-            hand.setWidth(3 * handSize);
-            hand.setHeight(2 * handSize);
-            hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
-            turnOnShower();
-            break;
-        case EAT_MODE:
-            j = 1;
-            hand.setWidth(3 * handSize);
-            hand.setHeight(2 * handSize);
-            hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
-            letsEat();
-            break;
-        case SPORT_MODE:
-            j = 1;
-            hand.setWidth(2 * handSize);
-            hand.setHeight(2 * handSize);
-            hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
-            doSport();
-            break;
-        default:
-            j = 1;
+            case INIT_MODE:
+                j = 2;
+                hand.setWidth(2 * handSize);
+                hand.setHeight(2 * handSize);
+                hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
+                break;
+            case BATH_MODE:
+                j = 1;
+                hand.setWidth(3 * handSize);
+                hand.setHeight(2 * handSize);
+                hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
+                turnOnShower();
+                break;
+            case EAT_MODE:
+                j = 1;
+                hand.setWidth(3 * handSize);
+                hand.setHeight(2 * handSize);
+                hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
+                letsEat();
+                break;
+            case SPORT_MODE:
+                j = 1;
+                hand.setWidth(2 * handSize);
+                hand.setHeight(2 * handSize);
+                hand.setFill(new ImagePattern(new Image("data/pet/images/" + cursor[number % 4])));
+                doSport();
+                break;
+            default:
+                j = 1;
         }
 
         Timeline t = new Timeline();
@@ -447,7 +445,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     }
 
-    public void refill(int i) {
+    void refill(int i) {
         if (it[i] < LIFE_SIZE) {
             if ((it[i] < LIFE_SIZE - 2) && (i == 1)) {
                 it[i] = it[i] + 3;
@@ -459,9 +457,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
             timelines[i].stop();
             timelines[i].getKeyFrames().clear();
             timelines[i].getKeyFrames()
-                    .add(new KeyFrame(Duration.millis(500), new KeyValue(
-                            ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(getIt(i))).fillProperty(),
-                            Color.WHITE)));
+                .add(new KeyFrame(Duration.millis(500), new KeyValue(
+                    ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(getIt(i))).fillProperty(),
+                    Color.WHITE)));
 
             ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i])).setFill(this.colorBar[i]);
             if (it[i] > 0) {
@@ -478,7 +476,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         }
     }
 
-    public void turnOffShower() {
+    private void turnOffShower() {
         for (Circle c : water) {
             gameContext.getChildren().remove(c);
         }
@@ -486,7 +484,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     }
 
-    public void turnOnShower() {
+    private void turnOnShower() {
         water = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
             Circle c = new Circle();
@@ -553,32 +551,32 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     }
 
-    public void doSport() {
+    private void doSport() {
         double coefx = (zone.getWidth() - zone.getWidth() / 3);
         double coefy = (zone.getHeight() - zone.getHeight() / 3);
         double xpos0 = zone.getX() + Math.random() * coefx;
         double ypos0 = zone.getY() + Math.random() * coefy;
         rd = new Timeline();
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(ActiveConfigurationContext.getInstance().getSpeedEffects() * 1000),
-                new KeyValue(pet.layoutXProperty(), xpos0)));
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(ActiveConfigurationContext.getInstance().getSpeedEffects() * 1000),
-                new KeyValue(pet.layoutYProperty(), ypos0)));
+        rd.getKeyFrames().add(new KeyFrame(Duration.millis(gameContext.getConfiguration().getSpeedEffects() * 1000),
+            new KeyValue(pet.layoutXProperty(), xpos0)));
+        rd.getKeyFrames().add(new KeyFrame(Duration.millis(gameContext.getConfiguration().getSpeedEffects() * 1000),
+            new KeyValue(pet.layoutYProperty(), ypos0)));
         rd.setOnFinished(e -> {
             rd.getKeyFrames().clear();
             double xpos = zone.getX() + Math.random() * coefx;
             double ypos = zone.getY() + Math.random() * coefy;
             rd.getKeyFrames()
-                .add(new KeyFrame(Duration.millis(ActiveConfigurationContext.getInstance().getSpeedEffects() * 1000),
+                .add(new KeyFrame(Duration.millis(gameContext.getConfiguration().getSpeedEffects() * 1000),
                     new KeyValue(pet.layoutXProperty(), xpos)));
             rd.getKeyFrames()
-                .add(new KeyFrame(Duration.millis(ActiveConfigurationContext.getInstance().getSpeedEffects() * 1000),
+                .add(new KeyFrame(Duration.millis(gameContext.getConfiguration().getSpeedEffects() * 1000),
                     new KeyValue(pet.layoutYProperty(), ypos)));
             rd.play();
         });
         rd.play();
     }
 
-    public void stopSport() {
+    private void stopSport() {
         rd.stop();
         rd.getKeyFrames().clear();
         double xpos = zone.getX() + zone.getWidth() / 2 - pet.getBiboulew() / 2;
@@ -592,7 +590,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         rd.play();
     }
 
-    public void letsEat() {
+    private void letsEat() {
 
         bowl = new ImageView(new Image("data/pet/images/bowl.png"));
         bowl.setPreserveRatio(true);
@@ -624,18 +622,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(bowl);
 
         gameContext.getChildren().add(bowl);
-
-    }
-
-    public void setBath() {
-
-    }
-
-    public void setLunch() {
-
-    }
-
-    public void setSports() {
 
     }
 

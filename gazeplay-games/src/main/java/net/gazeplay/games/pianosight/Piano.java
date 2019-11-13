@@ -30,26 +30,17 @@ import java.util.List;
 @Slf4j
 public class Piano extends Parent implements GameLifeCycle {
 
-    private static final int maxRadius = 70;
-    private static final int minRadius = 30;
-
-    private static final int maxTimeLength = 7;
-    private static final int minTimeLength = 4;
-
-    public static final int[] NOTE_NAMES = { 0, 7, 1, 8, 2, 3, 9, 4, 10, 5, 11, 6 };
-
-    // private final EventHandler<Event> enterEvent;
+    private static final int[] NOTE_NAMES = { 0, 7, 1, 8, 2, 3, 9, 4, 10, 5, 11, 6 };
 
     private double centerX;
     private double centerY;
 
-    private int FirstNote;
+    private int firstNote;
 
     private Circle circ;
     private Circle circleTemp;
-    private List<Tile> TilesTab;
-    private Jukebox Jukebox;
-    private String fileName;
+    private List<Tile> tilesTab;
+    private Jukebox jukebox;
 
     private final Stats stats;
 
@@ -57,13 +48,12 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private final Instru instru;
 
-    private midiReader midiReader;
+    private MidiReader midiReader;
 
     private int nbFragments = 5;
 
     private final List<ImageView> fragments;
 
-    // done
     public Piano(IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
@@ -72,11 +62,10 @@ public class Piano extends Parent implements GameLifeCycle {
         centerY = dimension2D.getHeight() / 2.2;
         this.fragments = buildFragments();
         this.getChildren().addAll(fragments);
-        TilesTab = new ArrayList<>();
+        tilesTab = new ArrayList<>();
         instru = new Instru();
         gameContext.getChildren().add(this);
-        Jukebox = new Jukebox(gameContext);
-
+        jukebox = new Jukebox(gameContext);
     }
 
     private List<ImageView> buildFragments() {
@@ -99,7 +88,7 @@ public class Piano extends Parent implements GameLifeCycle {
         return fragments;
     }
 
-    public void explose(double Xcenter, double Ycenter) {
+    private void explose(double xcenter, double ycenter) {
 
         Timeline timeline = new Timeline();
         Timeline timeline2 = new Timeline();
@@ -109,9 +98,9 @@ public class Piano extends Parent implements GameLifeCycle {
             ImageView fragment = fragments.get(i);
 
             timeline.getKeyFrames().add(
-                    new KeyFrame(new Duration(1), new KeyValue(fragment.xProperty(), Xcenter, Interpolator.LINEAR)));
+                    new KeyFrame(new Duration(1), new KeyValue(fragment.xProperty(), xcenter, Interpolator.LINEAR)));
             timeline.getKeyFrames().add(
-                    new KeyFrame(new Duration(1), new KeyValue(fragment.yProperty(), Ycenter, Interpolator.EASE_OUT)));
+                    new KeyFrame(new Duration(1), new KeyValue(fragment.yProperty(), ycenter, Interpolator.EASE_OUT)));
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
             int worh = (int) (Math.random() * 4);
@@ -145,10 +134,11 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
-    public void loadMusic(boolean b) throws IOException {
+    private void loadMusic(boolean b) throws IOException {
         InputStream inputStream;
+        String fileName;
         if (b) {
-            fileName = Jukebox.getS();
+            fileName = jukebox.getS();
             if (fileName == null) {
                 return;
             } else {
@@ -160,14 +150,14 @@ public class Piano extends Parent implements GameLifeCycle {
             inputStream = Utils.getInputStream("data/pianosight/songs/" + fileName);
         }
         log.info("you loaded the song : " + fileName);
-        midiReader = new midiReader(inputStream);
-        FirstNote = midiReader.nextNote();
-        for (Tile tile : TilesTab) {
+        midiReader = new MidiReader(inputStream);
+        firstNote = midiReader.nextNote();
+        for (Tile tile : tilesTab) {
             tile.arc.setFill(tile.color1);
         }
 
-        if (FirstNote != -1) {
-            TilesTab.get(FirstNote).arc.setFill(Color.YELLOW);
+        if (firstNote != -1) {
+            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
         }
     }
 
@@ -186,39 +176,39 @@ public class Piano extends Parent implements GameLifeCycle {
         circleTemp.setOpacity(0);
         this.getChildren().add(circleTemp);
 
-        CreateArcs();
+        createArcs();
 
         this.getChildren().remove(circ);
 
         EventHandler<Event> circleEvent = e -> {
             if (circleTemp.getFill() == Color.YELLOW) {
-                if (FirstNote != -1) {
-                    int precNote = FirstNote;
-                    int precKey = midiReader.key;
+                if (firstNote != -1) {
+                    int precNote = firstNote;
+                    int precKey = midiReader.getKey();
 
                     int index = midiReader.nextNote();
                     if (index > -1) {
-                        FirstNote = NOTE_NAMES[index];
+                        firstNote = NOTE_NAMES[index];
                     } else {
-                        FirstNote = index;
+                        firstNote = index;
                     }
 
-                    instru.note_on(precKey);
+                    instru.noteOn(precKey);
                     stats.incNbGoals();
                     stats.notifyNewRoundReady();
 
-                    if (FirstNote != -1) {
-                        TilesTab.get(precNote).arc.setFill(TilesTab.get(precNote).color1);
+                    if (firstNote != -1) {
+                        tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
                         circleTemp.setFill(Color.BLACK);
                         circleTemp.setOpacity(0);
-                        if (FirstNote != -1) {
-                            TilesTab.get(FirstNote).arc.setFill(Color.YELLOW);
+                        if (firstNote != -1) {
+                            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
                         } else {
-                            TilesTab.get(FirstNote).arc.setFill(TilesTab.get(precNote).color1);
+                            tilesTab.get(firstNote).arc.setFill(tilesTab.get(precNote).color1);
                         }
 
                     } else {
-                        TilesTab.get(precNote).arc.setFill(TilesTab.get(precNote).color1);
+                        tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
                         circleTemp.setFill(Color.BLACK);
                         circleTemp.setOpacity(0);
                     }
@@ -231,7 +221,7 @@ public class Piano extends Parent implements GameLifeCycle {
         circleTemp.addEventFilter(GazeEvent.GAZE_ENTERED, circleEvent);
         gameContext.getGazeDeviceManager().addEventFilter(circleTemp);
 
-        this.getChildren().addAll(this.TilesTab);
+        this.getChildren().addAll(this.tilesTab);
         this.getChildren().get(this.getChildren().indexOf(circleTemp)).toFront();
         ImageView iv = new ImageView(new Image("data/pianosight/images/1.png"));
         Button b = new Button("Open", iv);
@@ -265,10 +255,10 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
-    public void CreateArc(int index, double angle, Color color1, Color color2, double l, double origin) {
+    private void createArc(int index, double angle, Color color1, Color color2, double l, double origin) {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double size = dimension2D.getHeight() / l;
-        double theta = ((index * 360) / 7 - origin);
+        double theta = ((index * 360d) / 7d - origin);
         Tile a3 = new Tile(centerX, centerY, size, size, theta, angle, circ);
         a3.color1 = color1;
         a3.color2 = color2;
@@ -278,20 +268,20 @@ public class Piano extends Parent implements GameLifeCycle {
 
         EventHandler<Event> tileEventEnter = e -> {
 
-            if (((Tile) e.getTarget()).note == FirstNote) {
+            if (((Tile) e.getTarget()).note == firstNote) {
 
-                int precNote = FirstNote;
-                int precKey = midiReader.key;
+                int precNote = firstNote;
+                int precKey = midiReader.getKey();
 
                 int index1 = midiReader.nextNote();
                 if (index1 > -1) {
-                    FirstNote = NOTE_NAMES[index1];
+                    firstNote = NOTE_NAMES[index1];
                 } else {
-                    FirstNote = index1;
+                    firstNote = index1;
                 }
 
-                if (precNote != -1 && TilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
-                    instru.note_on(precKey);
+                if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
+                    instru.noteOn(precKey);
                     stats.incNbGoals();
                     stats.notifyNewRoundReady();
                     double x;
@@ -309,28 +299,28 @@ public class Piano extends Parent implements GameLifeCycle {
                         x = centerX + size * Math.cos(Math.toRadians(-theta));
                         y = centerY + size * Math.sin(Math.toRadians(-theta));
                         explose(x, y);
-                        double theta1 = (((index1 + 1) * 360) / 7 - origin);
+                        double theta1 = (((index1 + 1) * 360d) / 7d - origin);
                         x = centerX + size * Math.cos(Math.toRadians(-theta1));
                         y = centerY + size * Math.sin(Math.toRadians(-theta1));
                     }
                     explose(x, y);
-                    if (FirstNote != -1) {
-                        if (TilesTab.get(FirstNote).arc.getFill() == Color.YELLOW) {
-                            TilesTab.get(precNote).arc.setFill(color2);
+                    if (firstNote != -1) {
+                        if (tilesTab.get(firstNote).arc.getFill() == Color.YELLOW) {
+                            tilesTab.get(precNote).arc.setFill(color2);
                             circleTemp.setFill(Color.YELLOW);
                             circleTemp.setOpacity(1);
                         } else {
-                            TilesTab.get(precNote).arc.setFill(color2);
-                            TilesTab.get(FirstNote).arc.setFill(Color.YELLOW);
+                            tilesTab.get(precNote).arc.setFill(color2);
+                            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
                         }
 
                     } else {
-                        TilesTab.get(precNote).arc.setFill(color2);
+                        tilesTab.get(precNote).arc.setFill(color2);
                     }
                 }
 
             } else {
-                TilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color2);
+                tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color2);
 
             }
 
@@ -338,8 +328,8 @@ public class Piano extends Parent implements GameLifeCycle {
 
         EventHandler<Event> tileEventExited = e -> {
             log.info("index ={}", index);
-            if (TilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
-                TilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
+            if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
+                tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
             }
 
         };
@@ -360,18 +350,18 @@ public class Piano extends Parent implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(a3);
 
-        TilesTab.add(index, a3);
+        tilesTab.add(index, a3);
     }
 
-    public void CreateArcs() {
+    private void createArcs() {
         for (int i = 0; i < 7; i++) {
-            double angle = 360 / 7;
-            CreateArc(i, angle, Color.GHOSTWHITE, Color.GAINSBORO.darker(), 2.3, -90 + (720 / 7));
+            double angle = 360d / 7d;
+            createArc(i, angle, Color.GHOSTWHITE, Color.GAINSBORO.darker(), 2.3, -90 + (720d / 7d));
         }
 
         for (int i = 7; i < 14; i++) {
-            double angle = 360 / 14;
-            CreateArc(i, angle, Color.BLACK, Color.DIMGREY.darker(), 2.7, -90 + (720 / 7) + 2 * angle + angle / 2);
+            double angle = 360d / 14d;
+            createArc(i, angle, Color.BLACK, Color.DIMGREY.darker(), 2.7, -90 + (720d / 7d) + 2 * angle + angle / 2);
         }
 
     }

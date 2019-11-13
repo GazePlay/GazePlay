@@ -33,14 +33,10 @@ public class Bloc extends Parent {// Rectangle {
     @Getter
     private final boolean isMainLetter;
 
-    private final int posX;
-    private final int posY;
-
     private final double width;
     private final double height;
 
     private final Rectangle bloc;
-    final StackPane stack;
 
     private final Letters gameInstance;
 
@@ -54,8 +50,16 @@ public class Bloc extends Parent {// Rectangle {
 
     private Timeline currentTimeline;
 
-    public Bloc(double x, double y, double width, double height, int posX, int posY, String currentLetter,
-            String mainLetter, Letters gameInstance, Stats stats, IGameContext gameContext, int fixationlength) {
+    public Bloc(
+        double x, double y,
+        double width, double height,
+        String currentLetter,
+        String mainLetter,
+        Letters gameInstance,
+        Stats stats,
+        IGameContext gameContext,
+        int fixationlength
+    ) {
 
         this.gameInstance = gameInstance;
         this.stats = stats;
@@ -63,8 +67,6 @@ public class Bloc extends Parent {// Rectangle {
 
         this.fixationlength = fixationlength;
 
-        this.posX = posX;
-        this.posY = posY;
         this.width = width;
         this.height = height;
 
@@ -79,8 +81,8 @@ public class Bloc extends Parent {// Rectangle {
 
         this.bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
 
-        this.stack = new StackPane();
-        this.stack.getChildren().addAll(bloc, letter);
+        StackPane stack = new StackPane();
+        stack.getChildren().addAll(bloc, letter);
 
         stack.setLayoutX(x);
         stack.setLayoutY(y);
@@ -112,9 +114,6 @@ public class Bloc extends Parent {// Rectangle {
     }
 
     private void onCorrectBlocSelected() {
-
-        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
         stats.incNbGoals();
 
         double final_zoom = 1.0;
@@ -139,9 +138,9 @@ public class Bloc extends Parent {// Rectangle {
         currentTimeline = new Timeline();
 
         currentTimeline.getKeyFrames().add(
-                new KeyFrame(new Duration(1000), new KeyValue(bloc.widthProperty(), bloc.getWidth() * final_zoom)));
+            new KeyFrame(new Duration(1000), new KeyValue(bloc.widthProperty(), bloc.getWidth() * final_zoom)));
         currentTimeline.getKeyFrames().add(
-                new KeyFrame(new Duration(1000), new KeyValue(bloc.heightProperty(), bloc.getHeight() * final_zoom)));
+            new KeyFrame(new Duration(1000), new KeyValue(bloc.heightProperty(), bloc.getHeight() * final_zoom)));
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(bloc.xProperty(), 0)));
 
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(bloc.yProperty(), 0)));
@@ -168,11 +167,11 @@ public class Bloc extends Parent {// Rectangle {
         Random r = new Random();
         if (r.nextBoolean()) {
             return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/letter/" + currentLetter.toUpperCase()
-                    + ".mp3";
+                + ".mp3";
         }
 
         return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/m/letter/" + currentLetter.toUpperCase()
-                + ".mp3";
+            + ".mp3";
 
     }
 

@@ -80,7 +80,7 @@ public class GooseGame implements GameLifeCycle {
         this.nbPlayers = nbPlayers;
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.config = ActiveConfigurationContext.getInstance();
+        this.config = gameContext.getConfiguration();
 
         this.random = new Random();
 

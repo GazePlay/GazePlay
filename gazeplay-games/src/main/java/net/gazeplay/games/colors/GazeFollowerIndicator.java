@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 @Slf4j
@@ -13,9 +14,9 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
     public static final double GAZE_PROGRESS_INDICATOR_HEIGHT = GAZE_PROGRESS_INDICATOR_WIDTH;
     public static final double GAZE_PROGRESS_INDICATOR_OFFSET = GAZE_PROGRESS_INDICATOR_HEIGHT / 4;
 
-    public GazeFollowerIndicator(final Node root) {
+    public GazeFollowerIndicator(IGameContext gameContext, final Node root) {
 
-        super();
+        super(gameContext);
 
         this.setOpacity(0.7);
         this.setMouseTransparent(true);

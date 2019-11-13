@@ -20,7 +20,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
@@ -117,7 +116,7 @@ public class Letters implements GameLifeCycle {
     @Override
     public void launch() {
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        final Configuration config = gameContext.getConfiguration();
 
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -142,8 +141,8 @@ public class Letters implements GameLifeCycle {
         gameContext.getChildren().add(questionText);
 
         TranslateTransition fullAnimation = new TranslateTransition(
-                Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength() / 2), questionText);
-        fullAnimation.setDelay(Duration.millis(ActiveConfigurationContext.getInstance().getQuestionLength()));
+                Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2), questionText);
+        fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
         double bottomCenter = (0.9 * dimension2D.getHeight()) - questionText.getY()
                 + questionText.getBoundsInParent().getHeight() * 3;
         fullAnimation.setToY(bottomCenter);
@@ -213,7 +212,7 @@ public class Letters implements GameLifeCycle {
                     correctCount++;
                 }
 
-                Bloc bloc = new Bloc(j * width, i * height, width + 1, height + 1, i, j, currentLetter, mainLetter,
+                Bloc bloc = new Bloc(j * width, i * height, width + 1, height + 1, currentLetter, mainLetter,
                         this, stats, gameContext, fixationlength);
 
                 blocs[i][j] = bloc;
@@ -239,12 +238,8 @@ public class Letters implements GameLifeCycle {
     }
 
     void removeAllBlocs() {
-
         final Bloc[][] blocs = currentRoundDetails.blocs;
-
-        int maxX = blocs.length;
         int maxY = blocs[0].length;
-
         final Service<Void> calculateService = new Service<>() {
 
             @Override
@@ -255,9 +250,7 @@ public class Letters implements GameLifeCycle {
                     protected Void call() {
                         for (Bloc[] bloc : blocs) {
                             for (int j = 0; j < maxY; j++) {
-
                                 removeBloc(bloc[j]);
-
                             }
                         }
                         return null;
@@ -266,7 +259,6 @@ public class Letters implements GameLifeCycle {
             }
         };
         calculateService.start();
-
     }
 
     void removeBloc(Bloc toRemove) {

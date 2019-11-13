@@ -45,7 +45,7 @@ public class Dice implements GameLifeCycle {
 
         rolls = new int[nbDice];
 
-        Configuration config = ActiveConfigurationContext.getInstance();
+        Configuration config = gameContext.getConfiguration();
 
         // Roll button is used to roll all the dice at once
         rollButton = new ProgressButton();

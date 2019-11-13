@@ -92,7 +92,7 @@ public class Order implements GameLifeCycle {
                 i++;
                 if (i < nbTarget) {
                     timer.getKeyFrames()
-                        .add(new KeyFrame(Duration.seconds(ActiveConfigurationContext.getInstance().getSpeedEffects() * 1)));
+                        .add(new KeyFrame(Duration.seconds(gameContext.getConfiguration().getSpeedEffects() * 1)));
                     timer.play();
                 } else {
                     for (int j = 0; j < nbTarget; j++) {

@@ -26,9 +26,9 @@ public class CustomColorPicker extends Pane {
 
     final GridPane colorGrid;
 
-    public static final Color[] COLOR_LIST = { Color.BURLYWOOD, Color.DARKCYAN, Color.BLUEVIOLET, Color.BROWN,
-            Color.CADETBLUE, Color.DARKGRAY, Color.DARKORANGE, Color.GOLD, Color.LIMEGREEN, Color.ROYALBLUE,
-            Color.SIENNA, Color.YELLOWGREEN };
+    public static final Color[] COLOR_LIST = {Color.BURLYWOOD, Color.DARKCYAN, Color.BLUEVIOLET, Color.BROWN,
+        Color.CADETBLUE, Color.DARKGRAY, Color.DARKORANGE, Color.GOLD, Color.LIMEGREEN, Color.ROYALBLUE,
+        Color.SIENNA, Color.YELLOWGREEN};
 
     public static final int NB_COLOR_PER_ROW = 5/* ((int) Math.sqrt(COLOR_LIST.length)) */;
 
@@ -69,13 +69,13 @@ public class CustomColorPicker extends Pane {
 
         ToggleGroup colorGroup = new ToggleGroup();
 
-        progressIndicator = new GazeFollowerIndicator(this);
+        progressIndicator = new GazeFollowerIndicator(gameContext, this);
 
         for (int i = 0; i < COLOR_LIST.length / NB_COLOR_PER_ROW; ++i) {
 
             for (int j = 0; j < NB_COLOR_PER_ROW; ++j) {
                 ColorBox colorBox = new CustomColorBox(gameContext, COLOR_LIST[i * NB_COLOR_PER_ROW + j], root, toolBox, colorGroup,
-                        representingBox);
+                    representingBox);
                 colorBox.setProgressIndicator(progressIndicator);
 
                 colorGrid.add(colorBox, j, i);
@@ -91,7 +91,7 @@ public class CustomColorPicker extends Pane {
         Image buttonImg = null;
         try {
             buttonImg = new Image(CLOSE_CURSTOM_PANEL_IMAGE_PATH, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX,
-                    false, true);
+                false, true);
         } catch (IllegalArgumentException e) {
             log.warn(e.toString() + " : " + CLOSE_CURSTOM_PANEL_IMAGE_PATH);
         }
@@ -108,10 +108,10 @@ public class CustomColorPicker extends Pane {
         closeButton.setOnAction(closeEvent);
         mainNode.getChildren().add(closeButton);
 
-        AbstractGazeIndicator closeProgressIndic = new GazeFollowerIndicator(this);
+        AbstractGazeIndicator closeProgressIndic = new GazeFollowerIndicator(gameContext, this);
         closeProgressIndic.setOnFinish(closeEvent);
         closeProgressIndic.addNodeToListen(closeButton,
-                toolBox.getColorsGame().getGameContext().getGazeDeviceManager());
+            toolBox.getColorsGame().getGameContext().getGazeDeviceManager());
 
         this.getChildren().add(progressIndicator);
         this.getChildren().add(closeProgressIndic);

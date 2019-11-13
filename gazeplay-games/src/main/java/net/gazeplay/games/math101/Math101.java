@@ -151,7 +151,7 @@ public class Math101 implements GameLifeCycle {
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
         imageRectangle.setFill(gameType.getBackgroundColor());
 
-        int coef = (ActiveConfigurationContext.getInstance().isBackgroundWhite()) ? 1 : 0;
+        int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
         imageRectangle.setOpacity(1 - coef * 0.9);
         gameContext.getChildren().add(imageRectangle);
 
@@ -184,7 +184,7 @@ public class Math101 implements GameLifeCycle {
         final int cardsCount = 3;
         final int winnerCardIndex = r.nextInt(cardsCount); // index in the list between 0 and 2
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        final Configuration config = gameContext.getConfiguration();
 
         // Creating the cards
         List<Card> cardList = createCards(winnerCardIndex, formula.getCorrectAnswer(), config, formula.getOperator());
