@@ -107,12 +107,12 @@ public class Race extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
 
-        EventHandler<Event> handEvent = new EventHandler<Event>() {
+        EventHandler<MouseEvent> handEvent = new EventHandler<MouseEvent>() {
             @Override
-            public void handle(Event e) {
+            public void handle(MouseEvent e) {
                 if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                    double x = ((MouseEvent) e).getX();
-                    double y = ((MouseEvent) e).getY();
+                    double x = e.getX();
+                    double y = e.getY();
                     hand.setRotate(getAngle(new Point(x, y)));
                 }
             }

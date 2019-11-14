@@ -1,4 +1,4 @@
-package net.gazeplay.games.magicPotions;
+package net.gazeplay.games.magicpotions;
 
 import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;

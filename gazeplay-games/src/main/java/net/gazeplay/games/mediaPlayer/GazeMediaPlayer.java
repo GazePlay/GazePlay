@@ -322,7 +322,9 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         }
 
-        musicTitle.setText(mf.getName());
+        if (mf != null) {
+            musicTitle.setText(mf.getName());
+        }
 
     }
 

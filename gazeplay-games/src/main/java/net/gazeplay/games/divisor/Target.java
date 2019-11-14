@@ -15,7 +15,6 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -58,7 +57,7 @@ class Target extends Parent {
         this.imgLib = imgLib;
         this.pos = pos;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.radius = 200 / (level + 1);
+        this.radius = 200d / (level + 1);
         this.timeline = new Timeline();
 
         this.cercle = new Circle(pos.getX(), pos.getY(), this.radius);

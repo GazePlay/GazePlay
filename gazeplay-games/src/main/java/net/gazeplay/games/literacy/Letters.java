@@ -42,7 +42,7 @@ public class Letters implements GameLifeCycle {
         private final Bloc[][] blocs;
 
         private final String mainLetter;
-        
+
         protected int remainingCount;
 
         CurrentRoundDetails(int nbLines, int nbColumns, String mainLetter) {
@@ -54,15 +54,15 @@ public class Letters implements GameLifeCycle {
     }
 
     // Latin Letters!
-    private final String[] alphabet = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
-        "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+    private final String[] alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
+        "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
 
     private final IGameContext gameContext;
-    
+
     private final int nbLines;
-    
+
     private final int nbColomns;
-    
+
     private final Stats stats;
 
     @Getter
@@ -90,7 +90,7 @@ public class Letters implements GameLifeCycle {
         translator = gameContext.getTranslator();
 
         String language = translator.currentLanguage();
- 
+
         if (language.equalsIgnoreCase("fra")) {
             this.currentLanguage = "fra";
         } else {
@@ -130,8 +130,8 @@ public class Letters implements GameLifeCycle {
         questionText.setTranslateY(0);
         playSound(createQuestionSoundPath(currentLanguage, mainLetter));
 
-        double positionX = dimension2D.getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
-        double positionY = dimension2D.getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
+        double positionX = dimension2D.getWidth() / 2d - questionText.getBoundsInParent().getWidth() * 2d;
+        double positionY = dimension2D.getHeight() / 2d - questionText.getBoundsInParent().getHeight() / 2d;
         questionText.setX(positionX);
         questionText.setY(positionY);
         questionText.setTextAlignment(TextAlignment.CENTER);
@@ -141,10 +141,10 @@ public class Letters implements GameLifeCycle {
         gameContext.getChildren().add(questionText);
 
         TranslateTransition fullAnimation = new TranslateTransition(
-                Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2), questionText);
+            Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2d), questionText);
         fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
         double bottomCenter = (0.9 * dimension2D.getHeight()) - questionText.getY()
-                + questionText.getBoundsInParent().getHeight() * 3;
+            + questionText.getBoundsInParent().getHeight() * 3;
         fullAnimation.setToY(bottomCenter);
 
         fullAnimation.setOnFinished(actionEvent -> {
@@ -157,7 +157,7 @@ public class Letters implements GameLifeCycle {
             double width = dimension2D.getWidth() / nbColomns;
             double height = dimension2D.getHeight() / nbLines;
 
-            Bloc[][] blocksList = createCards(mainLetter, alphabet, width, height, config);
+            Bloc[][] blocksList = createCards(mainLetter, width, height, config);
             currentRoundDetails.remainingCount = correctCount;
 
             stats.notifyNewRoundReady();
@@ -182,7 +182,7 @@ public class Letters implements GameLifeCycle {
         return alphabet[(random.nextInt(alphabet.length))];
     }
 
-    private Bloc[][] createCards(String mainLetter, String[] alphabet, double width, double height,
+    private Bloc[][] createCards(String mainLetter, double width, double height,
                                  Configuration config) {
         correctCount = 0;
         Bloc[][] blocs = new Bloc[nbLines][nbColomns];
@@ -200,10 +200,8 @@ public class Letters implements GameLifeCycle {
 
                 if (i == rowTrue && j == colTrue) {
                     currentLetter = mainLetter;
-
-                } else if (f < (0.6 - (1 / (nbColomns * nbLines)))) {
+                } else if (f < (0.6d - (1d / (nbColomns * nbLines)))) {
                     currentLetter = mainLetter;
-
                 } else {
                     currentLetter = pickRandomLetter();
                 }
@@ -213,7 +211,7 @@ public class Letters implements GameLifeCycle {
                 }
 
                 Bloc bloc = new Bloc(j * width, i * height, width + 1, height + 1, currentLetter, mainLetter,
-                        this, stats, gameContext, fixationlength);
+                    this, stats, gameContext, fixationlength);
 
                 blocs[i][j] = bloc;
 
@@ -276,10 +274,10 @@ public class Letters implements GameLifeCycle {
     private String createQuestionSoundPath(String currentLanguage, String currentLetter) {
         if (random.nextBoolean()) {
             return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/quest/" + currentLetter.toUpperCase()
-                    + ".mp3";
+                + ".mp3";
         }
         return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/m/quest/" + currentLetter.toUpperCase()
-                + ".mp3";
+            + ".mp3";
     }
 
     private void playSound(String path) {

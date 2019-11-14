@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Alert;
@@ -118,7 +117,7 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The colorization event handler
      */
-    private EventHandler<Event> colorizationEventHandler;
+    private CustomEventHandler colorizationEventHandler;
 
     private final ColorsGamesStats stats;
 
@@ -142,12 +141,12 @@ public class ColorsGame implements GameLifeCycle {
                 gazeProgressIndicator.stop();
 
                 // Stop registering colorization events
-                rectangle.removeEventFilter(MouseEvent.ANY, colorizationEventHandler);
-                rectangle.removeEventFilter(GazeEvent.ANY, colorizationEventHandler);
+                rectangle.removeEventFilter(MouseEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
+                rectangle.removeEventFilter(GazeEvent.ANY, colorizationEventHandler.gazeEventEventHandler);
 
             } else {
-                rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler);
-                rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler);
+                rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
+                rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler.gazeEventEventHandler);
             }
         });
     }
@@ -248,10 +247,10 @@ public class ColorsGame implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(rectangle);
 
-        colorizationEventHandler = buildEventHandler();
+        colorizationEventHandler = new CustomEventHandler();
 
-        rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler);
-        rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler);
+        rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
+        rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler.gazeEventEventHandler);
 
     }
 
@@ -346,123 +345,6 @@ public class ColorsGame implements GameLifeCycle {
 
         updateRectangle();
 
-    }
-
-    private EventHandler<Event> buildEventHandler() {
-
-        return new EventHandler<>() {
-
-            private Double gazeXOrigin = 0.;
-            private Double gazeYOrigin = 0.;
-
-            private Double currentX = 0.;
-            private Double currentY = 0.;
-
-            @Override
-            public void handle(Event event) {
-
-                if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
-                    colorize(currentX, currentY);
-                } else if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                    GazeEvent gazeEvent = (GazeEvent) event;
-
-                    currentX = gazeEvent.getX();
-                    currentY = gazeEvent.getY();
-
-                    Point2D eventCoord = new Point2D(currentX, currentY);
-                    Point2D localCoord = root.screenToLocal(eventCoord);
-
-                    if (localCoord != null) {
-                        currentX = localCoord.getX();
-                        currentY = localCoord.getY();
-                    }
-
-                    gazeXOrigin = currentX;
-                    gazeYOrigin = currentY;
-
-                    gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
-
-                    gazeProgressIndicator.start();
-                } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
-
-                    GazeEvent gazeEvent = (GazeEvent) event;
-
-                    currentX = gazeEvent.getX();
-                    currentY = gazeEvent.getY();
-
-                    Point2D eventCoord = new Point2D(currentX, currentY);
-                    Point2D localCoord = root.screenToLocal(eventCoord);
-
-                    if (localCoord != null) {
-                        currentX = localCoord.getX();
-                        currentY = localCoord.getY();
-                    }
-
-                    // If gaze still around first point
-                    if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
-                        && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
-                        && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
-
-                        // Do nothing
-                    }
-                    // If gaze move far away
-                    else {
-
-                        gazeXOrigin = currentX;
-                        gazeYOrigin = currentY;
-
-                        gazeProgressIndicator.stop();
-                        gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
-
-                        gazeProgressIndicator.start();
-                    }
-                }
-                // If gaze quit
-                else if (event.getEventType() == GazeEvent.GAZE_EXITED) {
-                    gazeProgressIndicator.stop();
-                } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
-
-                    MouseEvent mouseEvent = (MouseEvent) event;
-                    gazeXOrigin = mouseEvent.getX();
-                    gazeYOrigin = mouseEvent.getY();
-                    currentX = gazeXOrigin;
-                    currentY = gazeYOrigin;
-
-                    gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
-
-                    gazeProgressIndicator.start();
-                } else if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
-
-                    MouseEvent mouseEvent = (MouseEvent) event;
-                    currentX = mouseEvent.getX();
-                    currentY = mouseEvent.getY();
-
-                    // If mouse still around first point
-                    if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
-                        && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
-                        && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
-
-                        // Do nothin
-                    }
-                    // If mouse move far away
-                    else {
-
-                        gazeXOrigin = currentX;
-                        gazeYOrigin = currentY;
-
-                        gazeProgressIndicator.stop();
-                        gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
-
-                        gazeProgressIndicator.start();
-                    }
-                } else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
-                    // log.info("mouse exited = ({},{})", currentX, currentY);
-                    gazeProgressIndicator.stop();
-                }
-            }
-
-        };
     }
 
     /**
@@ -617,4 +499,138 @@ public class ColorsGame implements GameLifeCycle {
         this.drawingEnable.setValue(enable);
     }
 
+    private class CustomEventHandler {
+
+        private Double gazeXOrigin = 0.;
+        private Double gazeYOrigin = 0.;
+
+        private Double currentX = 0.;
+        private Double currentY = 0.;
+        
+        @Getter
+        private final EventHandler<MouseEvent> mouseEventEventHandler = event -> {
+            if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                onMouseClicked(event);
+            } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                onMouseEntered(event);
+            } else if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
+                onMouseMoved(event);
+            } else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
+                onMouseExited(event);
+            }
+        };
+
+        @Getter
+        private final EventHandler<GazeEvent> gazeEventEventHandler = event -> {
+            if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
+                onGazeEntered(event);
+            } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
+                onGazeMove(event);
+            } else if (event.getEventType() == GazeEvent.GAZE_EXITED) {
+                onGazeExited(event);
+            }
+        };
+
+        private void onMouseExited(MouseEvent event) {
+            // log.info("mouse exited = ({},{})", currentX, currentY);
+            gazeProgressIndicator.stop();
+        }
+
+        private void onMouseMoved(MouseEvent event) {
+            MouseEvent mouseEvent = event;
+            currentX = mouseEvent.getX();
+            currentY = mouseEvent.getY();
+
+            // If mouse still around first point
+            if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
+                && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
+                && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
+
+                // Do nothin
+            }
+            // If mouse move far away
+            else {
+
+                gazeXOrigin = currentX;
+                gazeYOrigin = currentY;
+
+                gazeProgressIndicator.stop();
+                gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
+
+                gazeProgressIndicator.start();
+            }
+        }
+
+        private void onMouseEntered(MouseEvent event) {
+            gazeXOrigin = event.getX();
+            gazeYOrigin = event.getY();
+            currentX = gazeXOrigin;
+            currentY = gazeYOrigin;
+
+            gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
+
+            gazeProgressIndicator.start();
+        }
+
+        private void onGazeExited(GazeEvent event) {
+            gazeProgressIndicator.stop();
+        }
+
+        private void onGazeMove(GazeEvent event) {
+            currentX = event.getX();
+            currentY = event.getY();
+
+            Point2D eventCoord = new Point2D(currentX, currentY);
+            Point2D localCoord = root.screenToLocal(eventCoord);
+
+            if (localCoord != null) {
+                currentX = localCoord.getX();
+                currentY = localCoord.getY();
+            }
+
+            // If gaze still around first point
+            if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
+                && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
+                && gazeYOrigin + GAZE_MOVING_THRESHOLD > currentY) {
+
+                // Do nothing
+            }
+            // If gaze move far away
+            else {
+
+                gazeXOrigin = currentX;
+                gazeYOrigin = currentY;
+
+                gazeProgressIndicator.stop();
+                gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
+
+                gazeProgressIndicator.start();
+            }
+        }
+
+        private void onGazeEntered(GazeEvent event) {
+            currentX = event.getX();
+            currentY = event.getY();
+
+            Point2D eventCoord = new Point2D(currentX, currentY);
+            Point2D localCoord = root.screenToLocal(eventCoord);
+
+            if (localCoord != null) {
+                currentX = localCoord.getX();
+                currentY = localCoord.getY();
+            }
+
+            gazeXOrigin = currentX;
+            gazeYOrigin = currentY;
+
+            gazeProgressIndicator.setOnFinish((ActionEvent event1) -> colorize(currentX, currentY));
+
+            gazeProgressIndicator.start();
+        }
+
+        private void onMouseClicked(MouseEvent event) {
+            colorize(currentX, currentY);
+        }
+
+    }
 }
