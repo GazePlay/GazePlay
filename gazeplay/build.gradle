@@ -15,6 +15,8 @@ dependencies {
     runtime 'org.slf4j:jcl-over-slf4j:1.7.25'
     runtime 'org.slf4j:log4j-over-slf4j:1.7.25'
 
+    compile "info.picocli:picocli-spring-boot-starter:4.0.4"
+    
     runtime project(':gazeplay-games')
 }
 

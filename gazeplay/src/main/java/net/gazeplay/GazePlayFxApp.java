@@ -12,43 +12,71 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ApplicationIconImageLocator;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.latestnews.LatestNewPopup;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
+import net.gazeplay.ui.scenes.gamemenu.GameMenuFactory;
+import org.springframework.context.ApplicationContext;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.util.List;
 
 @Slf4j
-@SpringBootApplication
 public class GazePlayFxApp extends Application {
 
-    private ConfigurableApplicationContext context;
+    @Setter
+    private static ApplicationContext applicationContext;
+
+    @Setter
+    private static ReusableOptions applicationOptions;
+
+    private ApplicationContext context;
+
+    private ReusableOptions options;
 
     private GazePlay gazePlay;
 
     private ApplicationIconImageLocator applicationIconImageLocator;
 
+    private GameMenuFactory gameMenuFactory;
+
+    private GamesLocator gamesLocator;
+    
+    private Translator translator;
+
     @Override
     public void init() {
-        String[] args = getParameters().getRaw().toArray(new String[0]);
-
-        SpringApplicationBuilder builder = new SpringApplicationBuilder(GazePlayFxApp.class, SpringApplication.class);
-        context = builder.run(args);
-
+        this.context = applicationContext;
+        this.options = applicationOptions;
+        //
+        log.info("options = {}", options);
+        //
         applicationIconImageLocator = context.getBean(ApplicationIconImageLocator.class);
         gazePlay = context.getBean(GazePlay.class);
+        gameMenuFactory = context.getBean(GameMenuFactory.class);
+        gamesLocator = context.getBean(GamesLocator.class);
+        translator = context.getBean(Translator.class);
     }
 
     @Override
     public void start(Stage primaryStage) {
         autosize(primaryStage);
+
+        boolean showUserSelectPage = true;
+        if (options != null) {
+            if (options.getUserid() != null) {
+                showUserSelectPage = false;
+                ActiveConfigurationContext.switchToUser(options.getUserid());
+            }
+        }
+        log.info("showUserSelectPage = {}", showUserSelectPage);
 
         final Scene primaryScene = createPrimaryScene(primaryStage);
         configureKeysHandler(primaryScene);
@@ -61,8 +89,25 @@ public class GazePlayFxApp extends Application {
 
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);
-        gazePlay.goToUserPage();
 
+        if (showUserSelectPage) {
+            gazePlay.goToUserPage();
+        } else {
+            if (options.getGameNameCode() != null) {
+                List<GameSpec> gameSpecs = gamesLocator.listGames(translator);
+                GameSpec selectedGameSpec = gameSpecs.stream()
+                    .filter(gameSpec -> gameSpec.getGameSummary().getNameCode().equals(options.getGameNameCode()))
+                    .findFirst()
+                    .orElse(null);
+
+                log.info("gameSpecs = {}", gameSpecs);
+                gameMenuFactory.chooseGame(gazePlay, selectedGameSpec, null);
+            } else {
+                gazePlay.onReturnToMenu();
+            }
+        }
+
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene());
         primaryStage.centerOnScreen();
         primaryStage.show();
     }

@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 public class DefaultGamesLocator implements GamesLocator {
 
-    private static List<GameSpecSource> scanGames() {
+    private static List<GameSpecSource> scanGameSpecSources() {
         final List<GameSpecSource> sources = new ArrayList<>();
 
         String pkg = "net.gazeplay.games";
@@ -51,12 +51,10 @@ public class DefaultGamesLocator implements GamesLocator {
         return sources;
     }
 
-    private final List<GameSpecSource> sources = scanGames();
-
     @Override
     public List<GameSpec> listGames(Translator translator) {
         LinkedList<GameSpec> gameList = new LinkedList<>();
-        for (GameSpecSource source : sources) {
+        for (GameSpecSource source : scanGameSpecSources()) {
             gameList.add(source.getGameSpec());
         }
         log.info("Games found : {}", gameList.size());
