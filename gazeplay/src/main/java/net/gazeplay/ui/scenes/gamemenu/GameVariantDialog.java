@@ -3,12 +3,12 @@ package net.gazeplay.ui.scenes.gamemenu;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -28,10 +28,10 @@ public class GameVariantDialog extends Stage {
 
     public GameVariantDialog(
         final GazePlay gazePlay,
-        final GameMenuFactory gameMenuFactory,
+        final GameMenuController gameMenuController,
         final Stage primaryStage,
         final GameSpec gameSpec,
-        final Region root,
+        final Parent root,
         final String chooseVariantPromptLabelTextKey
     ) {
 
@@ -93,7 +93,7 @@ public class GameVariantDialog extends Stage {
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
-                gameMenuFactory.chooseGame(gazePlay, gameSpec, variant);
+                gameMenuController.chooseGame(gazePlay, gameSpec, variant);
             };
             button.addEventHandler(MOUSE_CLICKED, event);
 

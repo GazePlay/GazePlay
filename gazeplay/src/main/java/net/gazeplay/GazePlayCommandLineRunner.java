@@ -3,7 +3,7 @@ package net.gazeplay;
 import lombok.RequiredArgsConstructor;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.gameslocator.GamesLocator;
-import net.gazeplay.ui.scenes.gamemenu.GameMenuFactory;
+import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
@@ -28,7 +28,7 @@ public class GazePlayCommandLineRunner implements CommandLineRunner, ExitCodeGen
     private Translator translator;
 
     @Autowired
-    private GameMenuFactory gameMenuFactory;
+    private GameMenuController gameMenuController;
 
     @Autowired
     private GazePlay gazeplay;
@@ -67,7 +67,7 @@ public class GazePlayCommandLineRunner implements CommandLineRunner, ExitCodeGen
 
         @Override
         public Integer call() throws Exception {
-            gameMenuFactory.chooseGame(gazeplay, gameSpec, null);
+            gameMenuController.chooseGame(gazeplay, gameSpec, null);
             return 0;
         }
 

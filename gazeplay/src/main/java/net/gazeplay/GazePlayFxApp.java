@@ -21,7 +21,7 @@ import net.gazeplay.commons.utils.ApplicationIconImageLocator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.latestnews.LatestNewPopup;
-import net.gazeplay.ui.scenes.gamemenu.GameMenuFactory;
+import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import org.springframework.context.ApplicationContext;
 
 import java.awt.*;
@@ -45,10 +45,10 @@ public class GazePlayFxApp extends Application {
 
     private ApplicationIconImageLocator applicationIconImageLocator;
 
-    private GameMenuFactory gameMenuFactory;
+    private GameMenuController gameMenuController;
 
     private GamesLocator gamesLocator;
-    
+
     private Translator translator;
 
     @Override
@@ -60,7 +60,7 @@ public class GazePlayFxApp extends Application {
         //
         applicationIconImageLocator = context.getBean(ApplicationIconImageLocator.class);
         gazePlay = context.getBean(GazePlay.class);
-        gameMenuFactory = context.getBean(GameMenuFactory.class);
+        gameMenuController = context.getBean(GameMenuController.class);
         gamesLocator = context.getBean(GamesLocator.class);
         translator = context.getBean(Translator.class);
     }
@@ -98,10 +98,10 @@ public class GazePlayFxApp extends Application {
                 GameSpec selectedGameSpec = gameSpecs.stream()
                     .filter(gameSpec -> gameSpec.getGameSummary().getNameCode().equals(options.getGameNameCode()))
                     .findFirst()
-                    .orElse(null);
+                    .orElseThrow(() -> new IllegalArgumentException(options.getGameNameCode()));
 
                 log.info("gameSpecs = {}", gameSpecs);
-                gameMenuFactory.chooseGame(gazePlay, selectedGameSpec, null);
+                gameMenuController.onGameSelection(gazePlay, gazePlay.getPrimaryScene().getRoot(), selectedGameSpec, selectedGameSpec.getGameSummary().getNameCode());
             } else {
                 gazePlay.onReturnToMenu();
             }
@@ -113,7 +113,8 @@ public class GazePlayFxApp extends Application {
     }
 
     private Scene createPrimaryScene(Stage primaryStage) {
-        Scene primaryScene = new Scene(new Pane(), primaryStage.getWidth(), primaryStage.getHeight(), Color.BLACK);
+        Pane rootPane = new Pane();
+        Scene primaryScene = new Scene(rootPane, primaryStage.getWidth(), primaryStage.getHeight(), Color.BLACK);
         CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene);
         primaryStage.setScene(primaryScene);
         return primaryScene;
