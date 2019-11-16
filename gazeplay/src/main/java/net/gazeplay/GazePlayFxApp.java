@@ -14,6 +14,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.cli.GameSelectionOptions;
+import net.gazeplay.cli.ReusableOptions;
+import net.gazeplay.cli.UserSelectionOptions;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
@@ -72,9 +75,16 @@ public class GazePlayFxApp extends Application {
 
         boolean showUserSelectPage = true;
         if (options != null) {
-            if (options.getUserid() != null) {
-                showUserSelectPage = false;
-                ActiveConfigurationContext.switchToUser(options.getUserid());
+            final UserSelectionOptions userSelectionOptions = options.getUserSelectionOptions();
+            if (userSelectionOptions != null) {
+                if (userSelectionOptions.getUserid() != null) {
+                    showUserSelectPage = false;
+                    ActiveConfigurationContext.switchToUser(userSelectionOptions.getUserid());
+                }
+                if (userSelectionOptions.isDefaultUser()) {
+                    showUserSelectPage = false;
+                    ActiveConfigurationContext.switchToDefaultUser();
+                }
             }
         }
         log.info("showUserSelectPage = {}", showUserSelectPage);

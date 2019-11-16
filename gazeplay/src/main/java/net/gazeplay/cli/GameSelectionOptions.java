@@ -1,4 +1,4 @@
-package net.gazeplay;
+package net.gazeplay.cli;
 
 import lombok.Data;
 import picocli.CommandLine;
