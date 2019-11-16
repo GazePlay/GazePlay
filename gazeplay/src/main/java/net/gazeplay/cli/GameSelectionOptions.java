@@ -9,7 +9,7 @@ public class GameSelectionOptions {
     @CommandLine.Option(names = {"-g", "--game"})
     private String gameNameCode;
 
-    @CommandLine.Option(names = {"--randomGame"}, defaultValue = "false")
+    @CommandLine.Option(names = {"--random-game"}, defaultValue = "false")
     private boolean randomGame;
 
 }

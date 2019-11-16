@@ -9,7 +9,7 @@ public class UserSelectionOptions {
     @CommandLine.Option(names = {"-u", "--user"})
     private String userid;
 
-    @CommandLine.Option(names = {"--defaultUser"}, defaultValue = "false")
+    @CommandLine.Option(names = {"--default-user"}, defaultValue = "false")
     private boolean defaultUser;
 
 }
