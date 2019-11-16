@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import static net.gazeplay.ui.scenes.ingame.GameContext.updateConfigPane;
 
@@ -83,6 +84,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
     @Override
     public GameContext getObject() {
         final Stage primaryStage = gazePlay.getPrimaryStage();
+        Assert.notNull(primaryStage, "primaryStage is required");
 
         Pane root = new Pane();
 

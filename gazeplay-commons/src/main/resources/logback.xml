@@ -8,7 +8,7 @@
             <level>DEBUG</level>
         </filter>
     </appender>
-    
+
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.home}/GazePlay/gazeplay.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
@@ -21,7 +21,7 @@
         </triggeringPolicy>
         <encoder>
             <pattern>%date{ISO8601} %-30([%thread]) %-5level %logger - %msg%n</pattern>
-         </encoder>
+        </encoder>
     </appender>
 
     <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
@@ -32,9 +32,11 @@
         <appender-ref ref="STDOUT"/>
     </appender>
 
+    <logger name="org.springframework" level="INFO"/>
+
     <root level="DEBUG">
         <appender-ref ref="ASYNC_FILE"/>
-        <appender-ref ref="ASYNC_STDOUT" />
+        <appender-ref ref="ASYNC_STDOUT"/>
     </root>
 
 </configuration>
