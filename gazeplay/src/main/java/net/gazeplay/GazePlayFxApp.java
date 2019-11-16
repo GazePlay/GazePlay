@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContext;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 public class GazePlayFxApp extends Application {
@@ -93,15 +94,31 @@ public class GazePlayFxApp extends Application {
         if (showUserSelectPage) {
             gazePlay.goToUserPage();
         } else {
-            if (options.getGameNameCode() != null) {
+            log.info("options = {}", options);
+            final GameSelectionOptions gameSelectionOptions = options.getGameSelectionOptions();
+            if (gameSelectionOptions != null) {
                 List<GameSpec> gameSpecs = gamesLocator.listGames(translator);
-                GameSpec selectedGameSpec = gameSpecs.stream()
-                    .filter(gameSpec -> gameSpec.getGameSummary().getNameCode().equals(options.getGameNameCode()))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException(options.getGameNameCode()));
+                String selectedGameNameCode = gameSelectionOptions.getGameNameCode();
+                if (selectedGameNameCode == null) {
+                    if (gameSelectionOptions.isRandomGame()) {
+                        Random random = new Random();
+                        int randomGameIndex = random.nextInt(gameSpecs.size());
+                        GameSpec selectedGameSpec = gameSpecs.get(randomGameIndex);
+                        selectedGameNameCode = selectedGameSpec.getGameSummary().getNameCode();
+                    }
+                }
+                if (selectedGameNameCode != null) {
+                    final String searchGameNameCode = selectedGameNameCode;
+                    GameSpec selectedGameSpec = gameSpecs.stream()
+                        .filter(gameSpec -> gameSpec.getGameSummary().getNameCode().equals(searchGameNameCode))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException(searchGameNameCode));
 
-                log.info("gameSpecs = {}", gameSpecs);
-                gameMenuController.onGameSelection(gazePlay, gazePlay.getPrimaryScene().getRoot(), selectedGameSpec, selectedGameSpec.getGameSummary().getNameCode());
+                    log.info("gameSpecs = {}", gameSpecs);
+                    gameMenuController.onGameSelection(gazePlay, gazePlay.getPrimaryScene().getRoot(), selectedGameSpec, selectedGameSpec.getGameSummary().getNameCode());
+                } else {
+                    gazePlay.onReturnToMenu();
+                }
             } else {
                 gazePlay.onReturnToMenu();
             }

@@ -9,7 +9,8 @@ public class ReusableOptions {
     @CommandLine.Option(names = {"-u", "--user"})
     private String userid;
 
-    @CommandLine.Option(names = {"-g", "--game"})
-    private String gameNameCode;
+    @CommandLine.ArgGroup(exclusive = true)
+    private GameSelectionOptions gameSelectionOptions = new GameSelectionOptions();
+    
 
 }
