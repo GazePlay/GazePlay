@@ -10,7 +10,7 @@ import java.util.*;
 @Slf4j
 public class ImageUtils {
 
-    private static final Set<String> supportedFilesExtensions = Collections
+    static final Set<String> supportedFilesExtensions = Collections
             .unmodifiableSet(Sets.newHashSet("jpg", "jpeg", "png", "gif", "bmp", "wbmp"));
 
     public static ImageLibrary createImageLibrary(File directoryFile) {
