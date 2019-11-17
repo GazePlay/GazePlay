@@ -1,12 +1,8 @@
 package net.gazeplay.commons.utils;
 
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.ConfigurationContext;
+import net.gazeplay.GazePlay;
 
 /**
  * Created by schwab on 28/10/2017.
@@ -15,17 +11,11 @@ import net.gazeplay.ConfigurationContext;
 @Slf4j
 public class ConfigurationButton extends CustomButton {
 
-    public static ConfigurationButton createConfigurationButton(ConfigurationContext configurationContext) {
+    public static ConfigurationButton createConfigurationButton(GazePlay gazePlay) {
         ConfigurationButton configurationButton = new ConfigurationButton();
-        /*
-         * configurationButton.addEventFilter(KeyEvent.KEY_PRESSED,new EventHandler<KeyEvent>() {
-         * 
-         * @Override public void handle(KeyEvent ke) { if (ke.getCode() == KeyCode.SPACE) {
-         * configurationContext.getGazePlay().onReturnToMenu(); } } });
-         */
-        configurationButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
-            configurationContext.getGazePlay().onDisplayConfigurationManagement(configurationContext);
-        });
+        configurationButton.addEventHandler(
+            MouseEvent.MOUSE_CLICKED,
+            e -> gazePlay.onDisplayConfigurationManagement());
         return configurationButton;
     }
 

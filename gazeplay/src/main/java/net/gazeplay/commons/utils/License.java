@@ -17,7 +17,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by schwab on 22/12/2016.
@@ -26,26 +26,14 @@ import java.nio.charset.Charset;
 public class License extends Rectangle {
 
     public License(double X, double Y, double width, double height, GazePlay gazePlay, Scene scene, Group root) {
-
         super(X, Y, width, height);
-
         this.setFill(new ImagePattern(new Image("data/common/images/license.png"), 0, 0, 1, 1, true));
-
-        EventHandler<Event> homeEvent = new EventHandler<javafx.event.Event>() {
-            @Override
-            public void handle(javafx.event.Event e) {
-
-                if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
-                    root.getChildren().add(licence(width, height));
-
-                    gazePlay.getHomeMenuScreen();
-                }
+        EventHandler<Event> homeEvent = e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                root.getChildren().add(licence(width, height));
             }
         };
-
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-
     }
 
     private Text licence(double width, double height) {
@@ -66,12 +54,14 @@ public class License extends Rectangle {
 
     private String loadLicenseContentAsString() {
         URL resource = getClass().getClassLoader().getResource("data/common/licence.txt");
-
+        if (resource == null) {
+            return null;
+        }
         String content;
         try {
-            content = IOUtils.toString(resource, Charset.forName("UTF-8"));
+            content = IOUtils.toString(resource, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            content = "Failed to load license content";
+            throw new RuntimeException(e);
         }
         return content;
     }

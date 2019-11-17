@@ -2,6 +2,7 @@ package net.gazeplay.commons.utils.stats;
 
 import lombok.Getter;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LifeCycle {
@@ -54,11 +55,7 @@ public class LifeCycle {
     }
 
     public long computeTotalElapsedDuration() {
-        if (stopTime == null) {
-            return System.currentTimeMillis() - startTime;
-        } else {
-            return stopTime - startTime;
-        }
+        return Objects.requireNonNullElseGet(stopTime, System::currentTimeMillis) - startTime;
     }
 
 }

@@ -10,12 +10,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
-import net.gazeplay.commons.utils.FixationPoint;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import org.monte.media.Format;
 import org.monte.media.FormatKeys;
@@ -58,7 +60,6 @@ public class Stats implements GazeMotionListener {
     protected int nbGoals = 0;
     long startTime;
     int sceneCounter = 0;
-    private Configuration config;
     private EventHandler<MouseEvent> recordMouseMovements;
     private EventHandler<GazeEvent> recordGazeMovements;
     private LifeCycle lifeCycle = new LifeCycle();
@@ -189,7 +190,6 @@ public class Stats implements GazeMotionListener {
             }
 
             protected void finished() {
-                ScreenRecorder.State state = r.getState();
                 // File source;
                 // File target;
                 // try {
@@ -210,7 +210,7 @@ public class Stats implements GazeMotionListener {
     }
 
     public void start() {
-        config = Configuration.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {
             startVideoRecording();
         }
@@ -287,6 +287,7 @@ public class Stats implements GazeMotionListener {
     }
 
     public void stop() {
+        Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {
             endVideoRecording();
         }
@@ -317,6 +318,7 @@ public class Stats implements GazeMotionListener {
     }
 
     public SavedStatsInfo saveStats() throws IOException {
+        Configuration config = ActiveConfigurationContext.getInstance();
 
         File todayDirectory = getGameStatsOfTheDayDirectory();
         final String heatmapFilePrefix = Utils.now() + "-heatmap";
@@ -453,7 +455,7 @@ public class Stats implements GazeMotionListener {
         return nameOfVideo;
     }
 
-    File createInfoStatsFile() {
+    protected File createInfoStatsFile() {
         File outputDirectory = getGameStatsOfTheDayDirectory();
 
         final String fileName = Utils.now() + "-info-game.csv";
@@ -461,8 +463,8 @@ public class Stats implements GazeMotionListener {
         return new File(outputDirectory, fileName);
     }
 
-    File getGameStatsOfTheDayDirectory() {
-        File statsDirectory = new File(Utils.getUserStatsFolder(Configuration.getInstance().getUserName()));
+    protected File getGameStatsOfTheDayDirectory() {
+        File statsDirectory = GazePlayDirectories.getUserStatsFolder(ActiveConfigurationContext.getInstance().getUserName());
         File gameDirectory = new File(statsDirectory, gameName);
         File todayDirectory = new File(gameDirectory, Utils.today());
         boolean outputDirectoryCreated = todayDirectory.mkdirs();
@@ -471,7 +473,7 @@ public class Stats implements GazeMotionListener {
         return todayDirectory;
     }
 
-    void printLengthBetweenGoalsToString(PrintWriter out) {
+    protected void printLengthBetweenGoalsToString(PrintWriter out) {
         this.roundsDurationReport.printLengthBetweenGoalsToString(out);
     }
 
@@ -536,7 +538,6 @@ public class Stats implements GazeMotionListener {
                         - fixationSequence.get(fixationSequence.size() - 1).getX()) <= fixationTrail)
                 && (Math.abs(newGazePoint.getY()
                         - fixationSequence.get(fixationSequence.size() - 1).getY()) <= fixationTrail)) {
-            long gDuration = fixationSequence.get(fixationSequence.size() - 1).getGazeDuration();
             fixationSequence.get(fixationSequence.size() - 1)
                     .setGazeDuration(newGazePoint.getGazeDuration() + newGazePoint.getGazeDuration()); //
 

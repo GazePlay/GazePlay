@@ -1,7 +1,6 @@
 package net.gazeplay.commons.utils;
 
 import javafx.animation.Interpolator;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.VPos;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -16,10 +15,6 @@ import javafx.scene.text.Font;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -74,13 +69,13 @@ public class HeatMap {
         // Computing max and min values
         minValue = Double.MAX_VALUE;
         maxValue = Double.MIN_VALUE;
-        for (int x = 0; x < data.length; x++) {
-            for (int y = 0; y < data[x].length; y++) {
-                if (data[x][y] > maxValue) {
-                    maxValue = data[x][y];
+        for (double[] datum : data) {
+            for (double v : datum) {
+                if (v > maxValue) {
+                    maxValue = v;
                 }
-                if (data[x][y] < minValue && data[x][y] != 0) {
-                    minValue = data[x][y];
+                if (v < minValue && v != 0) {
+                    minValue = v;
                 }
             }
         }
@@ -134,11 +129,11 @@ public class HeatMap {
         }
         LinearGradient heatGradient = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
 
-        double margin = height / 20;
+        double margin = height / 20d;
         double barHeight = height - 2 * margin;
         gc.setFont(new Font(margin));
         gc.setFill(heatGradient);
-        gc.fillRect(0, margin, width / 3, barHeight);
+        gc.fillRect(0, margin, width / 3d, barHeight);
 
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.WHITE);
@@ -147,10 +142,10 @@ public class HeatMap {
 
         for (int i = 0; i < colors.size(); i++) {
             double y = margin + (double) i / (double) (colors.size() - 1) * barHeight;
-            gc.strokeLine(0, y, width / 3, y);
+            gc.strokeLine(0, y, width / 3d, y);
             gc.setTextBaseline(VPos.CENTER);
-            gc.fillText(numberFormat.format(maxValue - (i * subdivisionValue)) + "", width / 3 + 5, y,
-                    2 * width / 3 - 5);
+            gc.fillText(numberFormat.format(maxValue - (i * subdivisionValue)) + "", width / 3d + 5, y,
+                    2 * width / 3d - 5);
         }
 
         SnapshotParameters params = new SnapshotParameters();

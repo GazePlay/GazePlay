@@ -1218,7 +1218,7 @@ public class HeatChart {
     private void saveGraphicJpeg(BufferedImage chart, File outputFile, float quality) throws IOException {
         // Setup correct compression for jpeg.
         Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("jpeg");
-        ImageWriter writer = (ImageWriter) iter.next();
+        ImageWriter writer = iter.next();
         ImageWriteParam iwp = writer.getDefaultWriteParam();
         iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
         iwp.setCompressionQuality(quality);
@@ -1377,14 +1377,14 @@ public class HeatChart {
         int heatMapHeight = (zValues.length * cellSize.height);
         heatMapSize = new Dimension(heatMapWidth, heatMapHeight);
 
-        int yValuesHorizontalSize = 0;
+        int yValuesHorizontalSize;
         if (yValuesHorizontal) {
             yValuesHorizontalSize = yAxisValuesWidthMax;
         } else {
             yValuesHorizontalSize = yAxisValuesHeight;
         }
 
-        int xValuesVerticalSize = 0;
+        int xValuesVerticalSize;
         if (xValuesHorizontal) {
             xValuesVerticalSize = xAxisValuesHeight;
         } else {
@@ -1689,9 +1689,9 @@ public class HeatChart {
      */
     public static double max(double[][] values) {
         double max = 0;
-        for (int i = 0; i < values.length; i++) {
-            for (int j = 0; j < values[i].length; j++) {
-                max = (values[i][j] > max) ? values[i][j] : max;
+        for (double[] value : values) {
+            for (double v : value) {
+                max = Math.max(v, max);
             }
         }
         return max;
@@ -1704,9 +1704,9 @@ public class HeatChart {
      */
     public static double min(double[][] values) {
         double min = Double.MAX_VALUE;
-        for (int i = 0; i < values.length; i++) {
-            for (int j = 0; j < values[i].length; j++) {
-                min = (values[i][j] < min) ? values[i][j] : min;
+        for (double[] value : values) {
+            for (double v : value) {
+                min = Math.min(v, min);
             }
         }
         return min;

@@ -1,26 +1,23 @@
 package net.gazeplay.commons.utils;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.VPos;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.text.TextAlignment;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.TextAlignment;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.lang.Math;
-
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FixationSequence {
@@ -37,7 +34,7 @@ public class FixationSequence {
 
     public FixationSequence(int width, int height, LinkedList<FixationPoint> fixSeq) {
 
-        sequence = new LinkedList<FixationPoint>();
+        sequence = new LinkedList<>();
         this.image = new WritableImage(width, height);
         Canvas canvas = new Canvas(width, height);
 
@@ -119,11 +116,7 @@ public class FixationSequence {
             log.error("Can\'t make properly Snapshot in Fixation Sequence");
         }
 
-        Iterator<FixationPoint> it = fixSeq.iterator();
-        while (it.hasNext()) {
-            if (it.next().getGazeDuration() == -1)
-                it.remove();
-        }
+        fixSeq.removeIf(fixationPoint -> fixationPoint.getGazeDuration() == -1);
         sequence = fixSeq;
     }
 
@@ -151,10 +144,10 @@ public class FixationSequence {
     public static LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
 
         int accepted = 0;
-        double distance = 0.0;
+        double distance;
         FixationPoint pivotVertex = allPoints.get(accepted);
 
-        LinkedList<FixationPoint> reducedPolyline = new LinkedList<FixationPoint>();
+        LinkedList<FixationPoint> reducedPolyline = new LinkedList<>();
         reducedPolyline.add(pivotVertex);
 
         for (int i = 1; i < allPoints.size() - 1; i++) {

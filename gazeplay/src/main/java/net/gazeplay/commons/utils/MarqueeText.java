@@ -49,9 +49,7 @@ public class MarqueeText extends Region {
         transition.setCycleCount(Animation.INDEFINITE);
         transition.setAutoReverse(true);
 
-        transition.setOnFinished((ActionEvent actionEvent) -> {
-            rerunAnimation();
-        });
+        transition.setOnFinished((ActionEvent actionEvent) -> rerunAnimation());
 
         this.getTextProperty().addListener((observable) -> {
             this.text.setText(this.getTextProperty().getValue());
@@ -59,13 +57,9 @@ public class MarqueeText extends Region {
             rerunAnimation();
         });
 
-        this.widthProperty().addListener((observable) -> {
-            rerunAnimation();
-        });
+        this.widthProperty().addListener((observable) -> rerunAnimation());
 
-        this.speed.addListener((observable) -> {
-            rerunAnimation();
-        });
+        this.speed.addListener((observable) -> rerunAnimation());
 
         rerunAnimation();
     }

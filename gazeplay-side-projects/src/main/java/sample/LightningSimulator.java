@@ -25,7 +25,7 @@ public class LightningSimulator extends Application {
     private static final Random random = new Random(42);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
 
         TilePane field = generateField();
 
@@ -73,7 +73,7 @@ public class LightningSimulator extends Application {
         return field;
     }
 
-    private class LightningReactor extends Rectangle {
+    private static class LightningReactor extends Rectangle {
         private static final int SIZE = 20;
         private final int i;
         private final int j;
@@ -109,7 +109,7 @@ public class LightningSimulator extends Application {
         }
     }
 
-    private class StrikeEventHandler implements EventHandler<LightningEvent> {
+    private static class StrikeEventHandler implements EventHandler<LightningEvent> {
         @Override
         public void handle(LightningEvent event) {
             LightningReactor reactor = (LightningReactor) event.getTarget();

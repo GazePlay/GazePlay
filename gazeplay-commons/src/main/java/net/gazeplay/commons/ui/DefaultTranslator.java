@@ -1,20 +1,18 @@
 package net.gazeplay.commons.ui;
 
+import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 public class DefaultTranslator implements Translator {
 
     private final Multilinguism multilinguism;
 
-    @Setter
     private Configuration config;
 
     private final List<LanguageChangeListener> languageChangeListeners = new CopyOnWriteArrayList<>();
@@ -45,7 +43,7 @@ public class DefaultTranslator implements Translator {
 
     @Override
     public void notifyLanguageChanged() {
-        config = Configuration.getInstance();
+        config = ActiveConfigurationContext.getInstance();
         this.notifyAllListeners();
     }
 

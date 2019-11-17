@@ -45,8 +45,6 @@ public class Multilinguism {
      *
      * This function is used if no key exist for the language in getTrad(String key, String language) function
      *
-     * @param key
-     * @return
      */
     public String getENGTrad(String key) {
         String translate = i18n.translate(key, "eng");

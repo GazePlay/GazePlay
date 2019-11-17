@@ -1,5 +1,6 @@
 package net.gazeplay.commons.utils.games;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,10 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@Slf4j
 class ImageDirectoryLocatorTest {
 
     private static String folderName = "test_music_folder";
@@ -14,31 +19,37 @@ class ImageDirectoryLocatorTest {
 
     @BeforeAll
     static void createMockImageFolder() throws IOException {
-        new File(folderName).mkdir();
+        File folder = new File(folderName);
+        boolean folderCreated = folder.mkdirs();
+        log.debug("folderCreated = {}", folderCreated);
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folderName + Utils.FILESEPARATOR + i + ".jpg").createNewFile();
+            boolean created = new File(folder, i + ".jpg").createNewFile();
+            log.debug("created = {}", created);
         }
     }
 
     @AfterAll
     static void removeMockImageFolder() {
+        File folder = new File(folderName);
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folderName + Utils.FILESEPARATOR + i + ".jpg").delete();
+            boolean deleted = new File(folder, i + ".jpg").delete();
+            log.debug("deleted = {}", deleted);
         }
-        new File(folderName).delete();
+        boolean deleted = new File(folderName).delete();
+        log.debug("deleted = {}", deleted);
     }
 
     @Test
     void canLocateImagesDirectoryInUnpackedDistDirectory() {
-        File expected = new File("." + Utils.FILESEPARATOR, folderName);
+        File expected = new File(".", folderName);
         File result = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(folderName);
-        assert (result.equals(expected));
+        assertEquals(expected, result);
     }
 
     @Test
     void canLocateImagesDirectoryInExplodedClassPath() {
         String pathName = "data/common/default";
         File result = ImageDirectoryLocator.locateImagesDirectoryInExplodedClassPath(pathName);
-        assert (result.getAbsolutePath().contains("data" + Utils.FILESEPARATOR + "common" + Utils.FILESEPARATOR + "default"));
+        assertTrue(result.getAbsolutePath().contains("data" + "/" + "common" + "/" + "default"));
     }
 }

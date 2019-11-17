@@ -28,7 +28,7 @@ public class Clavier extends Parent {
         fond_clavier.setArcHeight(30);
         fond_clavier.setFill( // on remplie notre rectangle avec un dégradé
                 new LinearGradient(0f, 0f, 0f, 1f, true, CycleMethod.NO_CYCLE,
-                        new Stop[] { new Stop(0, Color.web("#333333")), new Stop(1, Color.web("#000000")) }));
+                    new Stop(0, Color.web("#333333")), new Stop(1, Color.web("#000000"))));
         Reflection r = new Reflection();// on applique un effet de réflection
         r.setFraction(0.25);
         r.setBottomOpacity(0);

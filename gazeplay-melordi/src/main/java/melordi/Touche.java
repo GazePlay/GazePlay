@@ -1,8 +1,6 @@
 package melordi;
 
-import javafx.event.EventHandler;
 import javafx.scene.Parent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -15,16 +13,16 @@ public class Touche extends Parent {
 
     public String lettre;// lettre de la touche, c'est une variable public pour qu'elle puisse être lue depuis les
                          // autres classes
-    private int positionX = 0;// abscisse
-    private int positionY = 0;// ordonnée de la touche
-    private int note = 0;// note correspond au numéro MIDI de la note qui doit être jouée quand on appuie sur la touche
+    private int positionX;// abscisse
+    private int positionY;// ordonnée de la touche
+    private int note;// note correspond au numéro MIDI de la note qui doit être jouée quand on appuie sur la touche
     private Instru instru;
 
     Rectangle fond_touche;
     Text lettre_touche;
 
     public Touche(String l, int posX, int posY, int note, Instru instru) {
-        lettre = new String(l);
+        lettre = l;
         positionX = posX;
         positionY = posY;
         this.note = note;
@@ -50,26 +48,10 @@ public class Touche extends Parent {
         this.setTranslateX(positionX);// positionnement de la touche sur le clavier
         this.setTranslateY(positionY);
 
-        this.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                fond_touche.setFill(Color.LIGHTGREY);
-            }
-        });
-        this.setOnMouseExited(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                fond_touche.setFill(Color.WHITE);
-            }
-        });
-        this.setOnMousePressed(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                appuyer();
-            }
-        });
-        this.setOnMouseReleased(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                relacher();
-            }
-        });
+        this.setOnMouseEntered(me -> fond_touche.setFill(Color.LIGHTGREY));
+        this.setOnMouseExited(me -> fond_touche.setFill(Color.WHITE));
+        this.setOnMousePressed(me -> appuyer());
+        this.setOnMouseReleased(me -> relacher());
     }
 
     public void appuyer() {
