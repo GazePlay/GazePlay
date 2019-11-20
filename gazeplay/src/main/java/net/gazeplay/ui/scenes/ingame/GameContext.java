@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -11,9 +12,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.NonNull;
@@ -33,6 +32,7 @@ import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
 import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.ui.MusicControl;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 
 import java.io.IOException;
@@ -208,9 +208,23 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        menuHBox.getChildren().add(getMusicControl().createMusicControlPane());
-        menuHBox.getChildren().add(getMusicControl().createEffectsVolumePane());
-        menuHBox.getChildren().add(getMusicControl().createSpeedEffectsPane());
+        Configuration config = ActiveConfigurationContext.getInstance();
+        MusicControl musicControl = getMusicControl();
+
+        GridPane leftControlPane = new GridPane();
+        leftControlPane.setHgap(5);
+        leftControlPane.setVgap(5);        
+        leftControlPane.setAlignment(Pos.TOP_CENTER);
+        leftControlPane.add(musicControl.createMusicControlPane(config), 0, 0);
+        leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
+        leftControlPane.add(musicControl.createSpeedEffectsPane(config), 2, 0);
+        leftControlPane.getChildren().forEach(node -> {
+            GridPane.setVgrow(node, Priority.ALWAYS);
+            GridPane.setHgrow(node, Priority.ALWAYS);
+        });
+        
+        
+        menuHBox.getChildren().add(leftControlPane);
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
