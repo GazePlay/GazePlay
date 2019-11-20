@@ -24,7 +24,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -54,6 +53,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private final Group backgroundLayer;
     private final Group middleLayer;
     private final Rectangle interactionOverlay;
+    private final IGameContext gameContext;
 
     private Point2D gazeTarget;
     private Point2D velocity;
@@ -110,6 +110,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     public SpaceGame(IGameContext gameContext, SpaceGameStats stats) {
         this.spaceGameStats = stats;
+        this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.random = new Random();
         this.configuration = gameContext.getConfiguration();
@@ -545,7 +546,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     }
 
     private double getGameSpeed() {
-        double speed = configuration.getSpeedEffects();
+        double speed = gameContext.getAnimationSpeedRatioSource().getSpeedEffects();
         return Math.max(speed, 1.0);
     }
 

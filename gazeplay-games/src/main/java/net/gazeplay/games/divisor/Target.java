@@ -87,7 +87,7 @@ class Target extends Parent {
     }
 
     private void move() {
-        timeline = new Timeline(new KeyFrame(Duration.millis(gameContext.getConfiguration().getSpeedEffects() * 10),
+        timeline = new Timeline(new KeyFrame(Duration.millis(gameContext.getAnimationSpeedRatioSource().getSpeedEffects() * 10),
             new EventHandler<>() {
                 int dx = randomDirection();
                 int dy = randomDirection();

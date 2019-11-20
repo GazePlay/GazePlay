@@ -23,7 +23,9 @@ import net.gazeplay.GamePanelDimensionProvider;
 import net.gazeplay.GazePlay;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.DefaultAnimationSpeedRatioSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
@@ -286,6 +288,13 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Override
     public @NonNull Configuration getConfiguration() {
         return ActiveConfigurationContext.getInstance();
+    }
+
+    @Override
+    public AnimationSpeedRatioSource getAnimationSpeedRatioSource() {
+        DefaultAnimationSpeedRatioSource defaultAnimationSpeedRatioSource = new DefaultAnimationSpeedRatioSource();
+        defaultAnimationSpeedRatioSource.setConfiguration(ActiveConfigurationContext.getInstance());
+        return defaultAnimationSpeedRatioSource;
     }
 
     @Override

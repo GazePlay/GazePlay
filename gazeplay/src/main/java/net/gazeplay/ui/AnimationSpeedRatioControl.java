@@ -19,13 +19,15 @@ import static net.gazeplay.ui.QuickControl.*;
 
 @NoArgsConstructor
 public class AnimationSpeedRatioControl {
-    
+
     @Getter
     private static final AnimationSpeedRatioControl instance = new AnimationSpeedRatioControl();
 
-    private static final double SPEED_RATIO_SLIDER_MIN_VALUE = -1.9d;
+    private static final double SPEED_RATIO_RANGE_WIDTH = 9d;
 
-    private static final double SPEED_RATIO_SLIDER_MAX_VALUE = 2d;
+    private static final double SPEED_RATIO_SLIDER_MIN_VALUE = -1d * SPEED_RATIO_RANGE_WIDTH * 0.9d;
+
+    private static final double SPEED_RATIO_SLIDER_MAX_VALUE = SPEED_RATIO_RANGE_WIDTH;
 
     public TitledPane createSpeedEffectsPane(Configuration config, Translator translator) {
         Label speedEffectValueLabel = new Label("");
@@ -50,6 +52,8 @@ public class AnimationSpeedRatioControl {
     }
 
     public Slider createSpeedEffectSlider(Configuration config, Label speedEffectValueLabel) {
+        final double initialSpeedRatioValue = config.getSpeedEffectsProperty().getValue();
+
         Slider slider = new Slider();
         slider.setMinWidth(QuickControl.SLIDERS_MIN_WIDTH);
         slider.setMaxWidth(QuickControl.SLIDERS_PREF_WIDTH);
@@ -61,33 +65,45 @@ public class AnimationSpeedRatioControl {
         slider.setShowTickMarks(true);
         slider.setSnapToTicks(true);
         slider.setBlockIncrement(1d);
-        slider.setValue(config.getSpeedEffectsProperty().getValue());
-        speedEffectValueLabel.setText(toLabelText(slider));
+        slider.setValue(speedRatioToSliderValue(initialSpeedRatioValue));
+
+        speedEffectValueLabel.setText(formatValue(initialSpeedRatioValue));
 
         // user can reset ratio to default just by clicking on the label
         speedEffectValueLabel.setOnMouseClicked(event -> slider.setValue(0d));
 
-        config.getSpeedEffectsProperty().bind(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> {
-            speedEffectValueLabel.setText(toLabelText(slider));
+            double speedRatioValue = sliderValueToSpeedRatio(slider.getValue());
+            String labelText = formatValue(speedRatioValue);
+            speedEffectValueLabel.setText(labelText);
+            config.getSpeedEffectsProperty().set(speedRatioValue);
             config.saveConfigIgnoringExceptions();
         });
+
         return slider;
     }
 
-    public String toLabelText(Slider slider) {
-        double value = toSpeedRatio(slider.getValue());
-        return "x" + String.format("%.2f", value);
+    public String formatValue(double speedRatioValue) {
+        return "x" + String.format("%.2f", speedRatioValue);
     }
 
-    public double toSpeedRatio(double value) {
-        if (value >= 0) {
+    public double sliderValueToSpeedRatio(double value) {
+        if (value >= 0d) {
             return 1d + value;
         } else {
-            BigDecimal result = new BigDecimal(value).divide(new BigDecimal(2).abs(), RoundingMode.DOWN);
+            BigDecimal result = new BigDecimal(value).setScale(2, RoundingMode.DOWN).divide(new BigDecimal(SPEED_RATIO_RANGE_WIDTH).setScale(2, RoundingMode.DOWN), RoundingMode.DOWN).setScale(2, RoundingMode.DOWN);
             return result.add(new BigDecimal(1d)).doubleValue();
         }
     }
 
+    public double speedRatioToSliderValue(double value) {
+        if (value >= 1d) {
+            return value - 1d;
+        } else {
+            BigDecimal result = new BigDecimal(value).add(new BigDecimal(-1d));
+            result = result.setScale(2, RoundingMode.DOWN).multiply(new BigDecimal(SPEED_RATIO_RANGE_WIDTH).setScale(2, RoundingMode.DOWN)).setScale(2, RoundingMode.DOWN);
+            return result.doubleValue();
+        }
+    }
 
 }

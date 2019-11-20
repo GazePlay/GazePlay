@@ -319,7 +319,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             HBox Bar = (HBox) Bars.getChildren().get(i);
 
             timelines[i] = new Timeline();
-            timelines[i].setDelay(Duration.seconds(gameContext.getConfiguration().getSpeedEffects() * regressionTime[i]));
+            timelines[i].setDelay(Duration.seconds(gameContext.getAnimationSpeedRatioSource().getSpeedEffects() * regressionTime[i]));
             timelines[i].getKeyFrames().add(new KeyFrame(Duration.millis(500),
                 new KeyValue(((Rectangle) Bar.getChildren().get(index)).fillProperty(), Color.WHITE)));
 
@@ -329,7 +329,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 if (index1 >= 0) {
                     timelines[number].getKeyFrames().clear();
                     timelines[number].setDelay(Duration
-                        .seconds(gameContext.getConfiguration().getSpeedEffects() * regressionTime[number]));
+                        .seconds(gameContext.getAnimationSpeedRatioSource().getSpeedEffects() * regressionTime[number]));
                     timelines[number].getKeyFrames().add(new KeyFrame(Duration.millis(500),
                         new KeyValue(((Rectangle) Bar.getChildren().get(index1)).fillProperty(), Color.WHITE)));
                     timelines[number].play();
@@ -557,19 +557,19 @@ public class PetHouse extends Parent implements GameLifeCycle {
         double xpos0 = zone.getX() + Math.random() * coefx;
         double ypos0 = zone.getY() + Math.random() * coefy;
         rd = new Timeline();
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(gameContext.getConfiguration().getSpeedEffects() * 1000),
+        rd.getKeyFrames().add(new KeyFrame(Duration.millis(gameContext.getAnimationSpeedRatioSource().getSpeedEffects() * 1000),
             new KeyValue(pet.layoutXProperty(), xpos0)));
-        rd.getKeyFrames().add(new KeyFrame(Duration.millis(gameContext.getConfiguration().getSpeedEffects() * 1000),
+        rd.getKeyFrames().add(new KeyFrame(Duration.millis(gameContext.getAnimationSpeedRatioSource().getSpeedEffects() * 1000),
             new KeyValue(pet.layoutYProperty(), ypos0)));
         rd.setOnFinished(e -> {
             rd.getKeyFrames().clear();
             double xpos = zone.getX() + Math.random() * coefx;
             double ypos = zone.getY() + Math.random() * coefy;
             rd.getKeyFrames()
-                .add(new KeyFrame(Duration.millis(gameContext.getConfiguration().getSpeedEffects() * 1000),
+                .add(new KeyFrame(Duration.millis(gameContext.getAnimationSpeedRatioSource().getSpeedEffects() * 1000),
                     new KeyValue(pet.layoutXProperty(), xpos)));
             rd.getKeyFrames()
-                .add(new KeyFrame(Duration.millis(gameContext.getConfiguration().getSpeedEffects() * 1000),
+                .add(new KeyFrame(Duration.millis(gameContext.getAnimationSpeedRatioSource().getSpeedEffects() * 1000),
                     new KeyValue(pet.layoutYProperty(), ypos)));
             rd.play();
         });

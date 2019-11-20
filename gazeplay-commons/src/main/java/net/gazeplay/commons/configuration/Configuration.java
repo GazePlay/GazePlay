@@ -80,7 +80,7 @@ public class Configuration implements Cloneable {
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     private static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
-    private static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
+    private static final double DEFAULT_VALUE_SPEED_EFFECTS = 1;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
 
@@ -583,16 +583,6 @@ public class Configuration implements Cloneable {
 
     public Double getEffectsVolume() {
         return effectsVolumeProperty.getValue();
-    }
-
-    public Double getSpeedEffects() {
-        double modifVal = speedEffectsProperty.getValue();
-        if (modifVal < 4) {
-            modifVal = 1 / (5 - modifVal);
-        } else {
-            modifVal = modifVal - 3;
-        }
-        return 1 / modifVal;
     }
 
     public Boolean isGazeMenuEnable() {
