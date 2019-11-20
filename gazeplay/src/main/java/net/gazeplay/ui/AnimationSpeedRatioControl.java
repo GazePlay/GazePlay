@@ -1,13 +1,18 @@
 package net.gazeplay.ui;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.Translator;
@@ -18,6 +23,7 @@ import java.math.RoundingMode;
 import static net.gazeplay.ui.QuickControl.*;
 
 @NoArgsConstructor
+@Slf4j
 public class AnimationSpeedRatioControl {
 
     @Getter
@@ -29,15 +35,16 @@ public class AnimationSpeedRatioControl {
 
     private static final double SPEED_RATIO_SLIDER_MAX_VALUE = SPEED_RATIO_RANGE_WIDTH;
 
-    public TitledPane createSpeedEffectsPane(Configuration config, Translator translator) {
+    public TitledPane createSpeedEffectsPane(Configuration config, Translator translator, Scene primaryScene) {
         Label speedEffectValueLabel = new Label("");
         speedEffectValueLabel.setMinWidth(ICON_SIZE);
-        Slider speedEffectSlider = createSpeedEffectSlider(config, speedEffectValueLabel);
+        Slider speedRatioSlider = createSpeedEffectSlider(config, speedEffectValueLabel);
+        registerKeyHandler(primaryScene, speedRatioSlider);
 
         HBox line1 = new HBox();
         line1.setSpacing(CONTENT_SPACING);
         line1.setAlignment(Pos.CENTER);
-        line1.getChildren().addAll(speedEffectValueLabel, speedEffectSlider);
+        line1.getChildren().addAll(speedEffectValueLabel, speedRatioSlider);
 
         VBox content = new VBox();
         content.setAlignment(Pos.CENTER);
@@ -52,7 +59,7 @@ public class AnimationSpeedRatioControl {
     }
 
     public Slider createSpeedEffectSlider(Configuration config, Label speedEffectValueLabel) {
-        final double initialSpeedRatioValue = config.getSpeedEffectsProperty().getValue();
+        final double initialSpeedRatioValue = config.getAnimationSpeedRatioProperty().getValue();
 
         Slider slider = new Slider();
         slider.setMinWidth(QuickControl.SLIDERS_MIN_WIDTH);
@@ -76,7 +83,7 @@ public class AnimationSpeedRatioControl {
             double speedRatioValue = sliderValueToSpeedRatio(slider.getValue());
             String labelText = formatValue(speedRatioValue);
             speedEffectValueLabel.setText(labelText);
-            config.getSpeedEffectsProperty().set(speedRatioValue);
+            config.getAnimationSpeedRatioProperty().set(speedRatioValue);
             config.saveConfigIgnoringExceptions();
         });
 
@@ -104,6 +111,38 @@ public class AnimationSpeedRatioControl {
             result = result.setScale(2, RoundingMode.DOWN).multiply(new BigDecimal(SPEED_RATIO_RANGE_WIDTH).setScale(2, RoundingMode.DOWN)).setScale(2, RoundingMode.DOWN);
             return result.doubleValue();
         }
+    }
+
+
+    public void registerKeyHandler(@NonNull Scene primaryScene, final Slider animationSpeedRatioSlider) {
+
+        EventHandler increaseSpeedEventHandler = (EventHandler<KeyEvent>) event -> {
+            final double sliderSpeedValue = Math.floor(animationSpeedRatioSlider.getValue());
+            if (sliderSpeedValue < animationSpeedRatioSlider.getMax()) {
+                animationSpeedRatioSlider.setValue(sliderSpeedValue + 1);
+            } else {
+                log.info("max speed for effects reached !");
+            }
+        };
+        EventHandler decreaseSpeedEventHandler = (EventHandler<KeyEvent>) event -> {
+            final double sliderSpeedValue = Math.floor(animationSpeedRatioSlider.getValue());
+            if (sliderSpeedValue > animationSpeedRatioSlider.getMin()) {
+                animationSpeedRatioSlider.setValue(sliderSpeedValue - 1);
+            } else {
+                log.info("min speed for effects reached !");
+            }
+        };
+
+        primaryScene.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
+            if (keyEvent.getCode().toString().equals("F")) {
+                log.info("Key Value :{}", keyEvent.getCode().toString());
+                increaseSpeedEventHandler.handle(keyEvent);
+            } else if (keyEvent.getCode().toString().equals("S")) {
+                log.info("Key Value :{}", keyEvent.getCode().toString());
+                decreaseSpeedEventHandler.handle(keyEvent);
+            }
+        });
+
     }
 
 }

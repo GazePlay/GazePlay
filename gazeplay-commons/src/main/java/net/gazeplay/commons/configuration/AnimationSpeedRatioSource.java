@@ -2,6 +2,8 @@ package net.gazeplay.commons.configuration;
 
 public interface AnimationSpeedRatioSource {
 
-    double getSpeedEffects();
+    double getDurationRatio();
+
+    double getSpeedRatio();
 
 }

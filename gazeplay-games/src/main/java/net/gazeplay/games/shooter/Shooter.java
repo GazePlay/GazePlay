@@ -552,7 +552,7 @@ public class Shooter extends Parent implements GameLifeCycle {
     private void moveCircle(Target sp) {
 
         double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
-        double timelength = gameContext.getAnimationSpeedRatioSource().getSpeedEffects() * timebasic;
+        double timelength = gameContext.getAnimationSpeedRatioSource().getDurationRatio() * timebasic;
 
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), sp);
         double min = Math.ceil(0);

@@ -8,8 +8,13 @@ public class DefaultAnimationSpeedRatioSource implements AnimationSpeedRatioSour
     private Configuration configuration;
 
     @Override
-    public double getSpeedEffects() {
-        return 1d / configuration.getSpeedEffectsProperty().getValue();
+    public double getDurationRatio() {
+        return 1d / getSpeedRatio();
+    }
+
+    @Override
+    public double getSpeedRatio() {
+        return configuration.getAnimationSpeedRatioProperty().getValue();
     }
 
 }

@@ -8,11 +8,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.NonNull;
@@ -56,8 +57,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Getter
     private final Translator translator;
-
-    private Slider getSpeedSlider;
 
     private final Bravo bravo;
 
@@ -140,76 +139,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         });
     }
 
-    public void speedAdjust(@NonNull GazePlay gp) {
-        Configuration config = ActiveConfigurationContext.getInstance();
-        final Scene scene = gp.getPrimaryScene();
-
-        Node outerNode = menuHBox.getChildren().get(2); // get SpeedEffectsPane
-        if (outerNode instanceof TitledPane) {
-            Node inPane = ((TitledPane) outerNode).getContent();
-            if (inPane instanceof BorderPane) {
-                Node inBorderPane = ((BorderPane) inPane).getCenter();
-                if (inBorderPane instanceof HBox) {
-                    for (Node inHBox : ((HBox) inBorderPane).getChildren()) {
-                        if (inHBox instanceof Slider) {
-                            getSpeedSlider = (Slider) inHBox;
-                        }
-                    }
-                }
-            }
-        }
-
-        EventHandler increaseSpeed = new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-
-                double sliderSpeedValue = getSpeedSlider.getValue();
-                sliderSpeedValue = Math.floor(sliderSpeedValue);
-
-                if (sliderSpeedValue < getSpeedSlider.getMax()) {
-                    getSpeedSlider.setValue(sliderSpeedValue + 1);
-                    config.getSpeedEffectsProperty().bind(getSpeedSlider.valueProperty());
-                } else
-                    log.info("max speed for effects reached !");
-                config.saveConfigIgnoringExceptions();
-
-                scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
-
-            }
-        };
-        EventHandler decreaseSpeed = new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-
-                double sliderSpeedValue = getSpeedSlider.getValue();
-                sliderSpeedValue = Math.floor(sliderSpeedValue);
-
-                if (sliderSpeedValue > getSpeedSlider.getMin()) {
-                    getSpeedSlider.setValue(sliderSpeedValue - 1);
-                    config.getSpeedEffectsProperty().bind(getSpeedSlider.valueProperty());
-
-                } else
-                    log.info("min speed for effects reached !");
-                config.saveConfigIgnoringExceptions();
-
-                scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
-            }
-        };
-
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
-            if (key.getCode().toString().equals("F")) {
-                log.info("Key Value :{}", key.getCode().toString());
-                scene.addEventHandler(KeyEvent.KEY_RELEASED, increaseSpeed);
-            } else if (key.getCode().toString().equals("S")) {
-                log.info("Key Value :{}", key.getCode().toString());
-                scene.addEventHandler(KeyEvent.KEY_RELEASED, decreaseSpeed);
-            }
-        });
-
-    }
-
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
         Configuration config = ActiveConfigurationContext.getInstance();
         MusicControl musicControl = getMusicControl();
@@ -221,7 +150,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         leftControlPane.setAlignment(Pos.TOP_CENTER);
         leftControlPane.add(musicControl.createMusicControlPane(config), 0, 0);
         leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
-        leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator()), 2, 0);
+        leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 2, 0);
         leftControlPane.getChildren().forEach(node -> {
             GridPane.setVgrow(node, Priority.ALWAYS);
             GridPane.setHgrow(node, Priority.ALWAYS);

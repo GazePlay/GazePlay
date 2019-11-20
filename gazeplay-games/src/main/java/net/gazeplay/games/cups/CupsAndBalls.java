@@ -154,7 +154,7 @@ public class CupsAndBalls implements GameLifeCycle {
         }
 
         TranslateTransition movementTransition = new TranslateTransition(
-                Duration.millis(gameContext.getAnimationSpeedRatioSource().getSpeedEffects() * exchangeCupDuration), cupToMove);
+                Duration.millis(gameContext.getAnimationSpeedRatioSource().getDurationRatio() * exchangeCupDuration), cupToMove);
         movementTransition.setByX(newPos.getX() - initPos.getX());
         movementTransition.setByY(newPos.getY() - initPos.getY());
 

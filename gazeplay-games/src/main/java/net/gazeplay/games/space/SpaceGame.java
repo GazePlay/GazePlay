@@ -546,7 +546,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     }
 
     private double getGameSpeed() {
-        double speed = gameContext.getAnimationSpeedRatioSource().getSpeedEffects();
+        double speed = gameContext.getAnimationSpeedRatioSource().getDurationRatio();
         return Math.max(speed, 1.0);
     }
 
