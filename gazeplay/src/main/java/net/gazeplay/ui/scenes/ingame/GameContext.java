@@ -31,6 +31,7 @@ import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
+import net.gazeplay.ui.AnimationSpeedRatioControl;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.MusicControl;
 import net.gazeplay.ui.scenes.stats.StatsContext;
@@ -210,20 +211,21 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
         Configuration config = ActiveConfigurationContext.getInstance();
         MusicControl musicControl = getMusicControl();
+        AnimationSpeedRatioControl animationSpeedRatioControl = AnimationSpeedRatioControl.getInstance();
 
         GridPane leftControlPane = new GridPane();
         leftControlPane.setHgap(5);
-        leftControlPane.setVgap(5);        
+        leftControlPane.setVgap(5);
         leftControlPane.setAlignment(Pos.TOP_CENTER);
         leftControlPane.add(musicControl.createMusicControlPane(config), 0, 0);
         leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
-        leftControlPane.add(musicControl.createSpeedEffectsPane(config), 2, 0);
+        leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator()), 2, 0);
         leftControlPane.getChildren().forEach(node -> {
             GridPane.setVgrow(node, Priority.ALWAYS);
             GridPane.setHgrow(node, Priority.ALWAYS);
         });
-        
-        
+
+
         menuHBox.getChildren().add(leftControlPane);
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);

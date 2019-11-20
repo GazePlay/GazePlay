@@ -2,7 +2,10 @@ package net.gazeplay.ui;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -23,9 +26,9 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.MarqueeText;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static net.gazeplay.ui.QuickControl.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -71,17 +74,6 @@ public class MusicControl {
     // BY</a></div>
     private static final String MUTE_ICON = IMAGES_PATH + "/" + "mute.png";
 
-    private static final double CONTENT_SPACING = 5;
-
-    private static final double ICON_SIZE = 64;
-
-    private static final int PREF_HEIGHT = 120;
-
-    private static final double SLIDERS_PREF_WIDTH = ICON_SIZE * 2d;
-    private static final double SLIDERS_MIN_WIDTH = SLIDERS_PREF_WIDTH;
-    private static final double SLIDERS_MAX_WIDTH = SLIDERS_PREF_WIDTH;
-
-
     /**
      * Field used to know if the background music controler has already been built once. This is used to get audio and
      * play it at the beginning.
@@ -103,28 +95,6 @@ public class MusicControl {
     private Button pauseButton;
 
     private double beforeMutedValue;
-
-    public TitledPane createSpeedEffectsPane(Configuration config) {
-        Label speedEffectValueLabel = new Label("");
-        speedEffectValueLabel.setMinWidth(ICON_SIZE);
-        Slider speedEffectSlider = createSpeedEffectSlider(config, speedEffectValueLabel);
-
-        HBox line1 = new HBox();
-        line1.setSpacing(CONTENT_SPACING);
-        line1.setAlignment(Pos.CENTER);
-        line1.getChildren().addAll(speedEffectValueLabel, speedEffectSlider);
-
-        VBox content = new VBox();
-        content.setAlignment(Pos.CENTER);
-        content.setSpacing(CONTENT_SPACING);
-        content.getChildren().add(line1);
-        content.setPrefHeight(PREF_HEIGHT);
-
-        I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "SpeedEffects");
-        pane.setCollapsible(false);
-        pane.setContent(content);
-        return pane;
-    }
 
     public void updateMusicControler() {
         setMusicTitle(musicName);
@@ -312,7 +282,7 @@ public class MusicControl {
     }
 
     private Slider createMediaVolumeSlider(Configuration config) {
-        Slider slider = createVolumeSlider();
+        Slider slider = QuickControl.getInstance().createVolumeSlider();
         slider.setValue(config.getMusicVolume());
         config.getMusicVolumeProperty().bindBidirectional(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> config.saveConfigIgnoringExceptions());
@@ -320,26 +290,12 @@ public class MusicControl {
     }
 
     private Slider createEffectsVolumeSlider(Configuration config) {
-        Slider slider = createVolumeSlider();
+        Slider slider = QuickControl.getInstance().createVolumeSlider();
         slider.setValue(config.getEffectsVolume());
         config.getEffectsVolumeProperty().bindBidirectional(slider.valueProperty());
         slider.valueProperty().addListener((observable) -> config.saveConfigIgnoringExceptions());
         return slider;
     }
-
-    private Slider createVolumeSlider() {
-        Slider slider = new Slider();
-        slider.setMinWidth(SLIDERS_MIN_WIDTH);
-        slider.setMaxWidth(SLIDERS_PREF_WIDTH);
-        slider.setPrefWidth(SLIDERS_MAX_WIDTH);
-        slider.setMin(0);
-        slider.setMax(1);
-        slider.setShowTickMarks(false);
-        slider.setMajorTickUnit(0.25);
-        slider.setSnapToTicks(false);
-        return slider;
-    }
-
 
     public TitledPane createVolumeLevelControlPane(Configuration config, Translator translator) {
         final Slider mediaVolumeSlider = createMediaVolumeSlider(config);
@@ -380,49 +336,6 @@ public class MusicControl {
         pane.setCollapsible(false);
         pane.setContent(content);
         return pane;
-    }
-
-    private static final double SPEED_RATIO_SLIDER_MIN_VALUE = -1.9d;
-    private static final double SPEED_RATIO_SLIDER_MAX_VALUE = 2d;
-
-    private Slider createSpeedEffectSlider(Configuration config, Label speedEffectValueLabel) {
-        Slider slider = new Slider();
-        slider.setMinWidth(SLIDERS_MIN_WIDTH);
-        slider.setMaxWidth(SLIDERS_PREF_WIDTH);
-        slider.setPrefWidth(SLIDERS_MAX_WIDTH);
-        slider.setMin(SPEED_RATIO_SLIDER_MIN_VALUE);
-        slider.setMax(SPEED_RATIO_SLIDER_MAX_VALUE);
-        slider.setMajorTickUnit(1);
-        slider.setMinorTickCount(1);
-        slider.setShowTickMarks(true);
-        slider.setSnapToTicks(true);
-        slider.setBlockIncrement(1d);
-        slider.setValue(config.getSpeedEffectsProperty().getValue());
-        speedEffectValueLabel.setText(toLabelText(slider));
-
-        // user can reset ratio to default just by clicking on the label
-        speedEffectValueLabel.setOnMouseClicked(event -> slider.setValue(0d));
-
-        config.getSpeedEffectsProperty().bind(slider.valueProperty());
-        slider.valueProperty().addListener((observable) -> {
-            speedEffectValueLabel.setText(toLabelText(slider));
-            config.saveConfigIgnoringExceptions();
-        });
-        return slider;
-    }
-
-    private String toLabelText(Slider slider) {
-        double value = toSpeedRatio(slider.getValue());
-        return "x" + String.format("%.2f", value);
-    }
-
-    private double toSpeedRatio(double value) {
-        if (value >= 0) {
-            return 1d + value;
-        } else {
-            BigDecimal result = new BigDecimal(value).divide(new BigDecimal(2).abs(), RoundingMode.DOWN);
-            return result.add(new BigDecimal(1d)).doubleValue();
-        }
     }
 
     private void setMusicTitle(final MarqueeText musicLabel) {
