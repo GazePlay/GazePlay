@@ -70,12 +70,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(gazePlay);
 
-        HBox leftControlPane = new HBox();
-        leftControlPane.setAlignment(Pos.CENTER);
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
-        leftControlPane.getChildren().add(configurationButton);
-        leftControlPane.getChildren().add(getMusicControl().createMusicControlPane());
-        leftControlPane.getChildren().add(getMusicControl().createEffectsVolumePane());
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        HBox leftControlPane = QuickControlPanel.getInstance().createQuickControlPanel(gazePlay, getMusicControl(), configurationButton, config);
 
         I18NButton toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
 
@@ -103,8 +100,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().addAll(logoutButton, exitButton);
-
-        final Configuration config = ActiveConfigurationContext.getInstance();
 
         ProgressIndicator indicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);

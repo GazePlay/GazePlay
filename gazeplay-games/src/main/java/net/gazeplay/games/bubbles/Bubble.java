@@ -16,7 +16,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -265,7 +264,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         Timeline timeline = new Timeline();
 
         timeline.getKeyFrames()
-                .add(new KeyFrame(new Duration(gameContext.getConfiguration().getSpeedEffects() * timelength),
+                .add(new KeyFrame(new Duration(gameContext.getAnimationSpeedRatioSource().getDurationRatio() * timelength),
                         new KeyValue(circle.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
 
         timeline.setOnFinished(actionEvent -> {

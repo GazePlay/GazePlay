@@ -217,8 +217,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
      * @return capped game speed
      */
     private double getGameSpeed() {
-        double speed = config.getSpeedEffects();
-        return speed <= 1.0 ? 1.0 : speed;
+        return gameContext.getAnimationSpeedRatioSource().getDurationRatio();
     }
 
     /**
@@ -391,7 +390,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         logs += "Time elasped -- Real: " + timeElapsed;
         timeElapsed /= getGameSpeed();
         logs += timeElapsed + "\n";
-        logs += "Speed effect: " + config.getSpeedEffects() + "\n";
+        logs += "Speed effect: " + gameContext.getAnimationSpeedRatioSource().getDurationRatio() + "\n";
 
         // Movement
         /// Gravity

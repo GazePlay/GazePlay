@@ -80,14 +80,14 @@ class Target extends Parent {
 
         this.stats.notifyNewRoundReady();
 
-        gameContext.getConfiguration().getSpeedEffectsProperty().addListener((o) -> {
+        gameContext.getConfiguration().getAnimationSpeedRatioProperty().addListener((o) -> {
             timeline.stop();
             move();
         });
     }
 
     private void move() {
-        timeline = new Timeline(new KeyFrame(Duration.millis(gameContext.getConfiguration().getSpeedEffects() * 10),
+        timeline = new Timeline(new KeyFrame(Duration.millis(gameContext.getAnimationSpeedRatioSource().getDurationRatio() * 10),
             new EventHandler<>() {
                 int dx = randomDirection();
                 int dy = randomDirection();

@@ -26,3 +26,17 @@ dependencies {
 //        }
 //    }
 //}
+
+
+jar {
+    manifest {
+        attributes(
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.version,
+                "Implementation-Vendor": "Univ. Grenoble Alpes - LIG - GETALP",
+                "Class-Path": configurations.runtime.collect { it.getName() }.join(' '),
+                "JavaFX-Version": javafxVersion,
+                "Built-By": System.properties['user.name']
+        )
+    }
+}

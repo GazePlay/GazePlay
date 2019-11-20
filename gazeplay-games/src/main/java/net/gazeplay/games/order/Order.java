@@ -16,7 +16,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
@@ -92,7 +91,7 @@ public class Order implements GameLifeCycle {
                 i++;
                 if (i < nbTarget) {
                     timer.getKeyFrames()
-                        .add(new KeyFrame(Duration.seconds(gameContext.getConfiguration().getSpeedEffects() * 1)));
+                        .add(new KeyFrame(Duration.seconds(gameContext.getAnimationSpeedRatioSource().getDurationRatio() * 1)));
                     timer.play();
                 } else {
                     for (int j = 0; j < nbTarget; j++) {

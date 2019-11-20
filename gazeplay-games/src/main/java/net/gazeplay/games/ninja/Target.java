@@ -118,7 +118,7 @@ public class Target extends Portrait {
         log.debug("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
 
         TranslateTransition translation = new TranslateTransition(
-            new Duration(gameContext.getConfiguration().getSpeedEffects() * length), this);
+            new Duration(gameContext.getAnimationSpeedRatioSource().getDurationRatio() * length), this);
         translation.setByX(-this.getCenterX() + newPosition.getX());
         translation.setByY(-this.getCenterY() + newPosition.getY());
         translation.setOnFinished(actionEvent -> {
@@ -144,7 +144,7 @@ public class Target extends Portrait {
     }
 
     private void createBackAndForthTranlations(Position pos1, Position pos2, int length) {
-        Duration animationLength = new Duration(gameContext.getConfiguration().getSpeedEffects() * length);
+        Duration animationLength = new Duration(gameContext.getAnimationSpeedRatioSource().getDurationRatio() * length);
 
         Timeline translation1 = new Timeline(new KeyFrame(animationLength,
             new KeyValue(this.centerXProperty(), pos1.getX()), new KeyValue(this.centerYProperty(), pos1.getY())));
