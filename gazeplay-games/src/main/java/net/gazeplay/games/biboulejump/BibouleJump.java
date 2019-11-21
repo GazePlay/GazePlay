@@ -212,15 +212,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     }
 
     /**
-     * Caps the game speed, so it's not too fast
-     *
-     * @return capped game speed
-     */
-    private double getGameSpeed() {
-        return gameContext.getAnimationSpeedRatioSource().getDurationRatio();
-    }
-
-    /**
      * It uses a dat file in the stat folder to save the highscores, the top 3 at the moment even though only the
      * highest score is displayed, a leaderboard system could be implemented. It reads the top 3 from the file, inserts
      * the new score, sorts it, and then takes the new top 3, and writes it in the file.
@@ -312,7 +303,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                 "bounce.wav", 3, 0.5, 0, 0, 0);
         } else {
             p = new MovingPlatform(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth,
-                platformHeight, "bounce.wav", 3, dimensions.getWidth(), getGameSpeed(), 0.5, 0, 0, 0);
+                platformHeight, "bounce.wav", 3, dimensions.getWidth(), gameContext.getAnimationSpeedRatioSource().getDurationRatio(), 0.5, 0, 0, 0);
         }
         highestPlatform = p;
         platforms.add(p);
@@ -382,15 +373,10 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         double timeElapsed = ((double) now - (double) lastTickTime) / Math.pow(10.0, 6.0); // in ms
         lastTickTime = now;
 
-        String logs = "FPS: " + (int) (1000 / timeElapsed) + "\n";
         if (1000 / timeElapsed < minFPS) {
             minFPS = 1000 / (int) timeElapsed;
         }
-        logs += "MinFPS: " + minFPS + "\n";
-        logs += "Time elasped -- Real: " + timeElapsed;
-        timeElapsed /= getGameSpeed();
-        logs += timeElapsed + "\n";
-        logs += "Speed effect: " + gameContext.getAnimationSpeedRatioSource().getDurationRatio() + "\n";
+        timeElapsed /= gameContext.getAnimationSpeedRatioSource().getDurationRatio();
 
         // Movement
         /// Gravity
