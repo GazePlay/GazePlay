@@ -23,7 +23,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -154,7 +153,7 @@ public class GooseGame implements GameLifeCycle {
             ImageView imagePawn = new ImageView(String.format(BIBOULEPATH, bibouleColors.get(i)));
             imagePawn.setFitHeight(dimensions.getWidth() / 20);
             imagePawn.setFitWidth(dimensions.getWidth() / 20);
-            pawns.add(new Pawn(imagePawn, firstSquare, i + 1));
+            pawns.add(new Pawn(imagePawn, firstSquare, i + 1, gameContext.getAnimationSpeedRatioSource()));
         }
 
         // Creating the turn indicator, it shows which biboule's turn it is
@@ -186,6 +185,7 @@ public class GooseGame implements GameLifeCycle {
                         new KeyValue(turnIndicator.scaleXProperty(), 1),
                         new KeyValue(turnIndicator.scaleYProperty(), 1)));
 
+        showPlayingBiboule.setRate(gameContext.getAnimationSpeedRatioSource().getSpeedRatio());
         showPlayingBiboule.setOnFinished(
                 e -> rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollButton.getImage().getFitHeight()));
 
@@ -216,6 +216,9 @@ public class GooseGame implements GameLifeCycle {
                 new KeyValue(diceDisplay.layoutYProperty(), 0, Interpolator.EASE_OUT),
                 new KeyValue(diceDisplay.scaleXProperty(), 0.5), new KeyValue(diceDisplay.scaleYProperty(), 0.5)));
 
+        moveDiceIn.setRate(gameContext.getAnimationSpeedRatioSource().getSpeedRatio());
+        moveDiceOut.setRate(gameContext.getAnimationSpeedRatioSource().getSpeedRatio());
+        
         // Dice are put in their default location, smaller, in the upper left corner
         diceDisplay.setScaleX(0.5);
         diceDisplay.setScaleY(0.5);
@@ -353,6 +356,7 @@ public class GooseGame implements GameLifeCycle {
                 new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
                 new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0)));
 
+        showMessage.setRate(gameContext.getAnimationSpeedRatioSource().getSpeedRatio());
         showMessage.setOnFinished(e -> messages.getChildren().remove(messageText));
 
         showMessage.playFromStart();
