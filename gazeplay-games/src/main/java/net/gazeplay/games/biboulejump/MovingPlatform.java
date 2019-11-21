@@ -9,19 +9,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MovingPlatform extends Platform {
 
-    private Timeline leftMovement;
-    private Timeline rightMovement;
+    private final Timeline leftMovement;
 
-    public MovingPlatform(double x, double y, double width, double height, String soundFileLocation, int bounceFactor,
-            double windowWidth, double speed) {
-        this(x, y, width, height, soundFileLocation, bounceFactor, windowWidth, speed, 0, 0, 0, 0);
-    }
+    private final Timeline rightMovement;
 
-    public MovingPlatform(double x, double y, double width, double height, String soundFileLocation, int bounceFactor,
-            double windowWidth, double speed, double colliderMarginUp, double colliderMarginRight,
-            double colliderMarginDown, double colliderMarginLeft) {
-        super(x, y, width, height, soundFileLocation, bounceFactor, colliderMarginUp, colliderMarginRight,
-                colliderMarginDown, colliderMarginLeft);
+    public MovingPlatform(
+        double x, double y,
+        double width, double height,
+        String soundFileLocation,
+        double windowWidth,
+        double colliderMarginUp, double colliderMarginRight, double colliderMarginDown, double colliderMarginLeft,
+        int bounceFactor,
+        double speed
+    ) {
+        super(x, y,
+            width, height,
+            soundFileLocation,
+            bounceFactor,
+            colliderMarginUp, colliderMarginRight, colliderMarginDown, colliderMarginLeft);
 
         double mouvementArea = windowWidth - width;
         double leftLimit = 0;
@@ -37,12 +42,13 @@ public class MovingPlatform extends Platform {
 
         double animationTime = speed * 2;
         leftMovement = new Timeline(new KeyFrame(Duration.seconds(animationTime),
-                new KeyValue(this.xProperty(), rightLimit), new KeyValue(collider.xProperty(), rightLimit)));
+            new KeyValue(this.xProperty(), rightLimit), new KeyValue(collider.xProperty(), rightLimit)));
         rightMovement = new Timeline(new KeyFrame(Duration.seconds(animationTime),
-                new KeyValue(this.xProperty(), leftLimit), new KeyValue(collider.xProperty(), leftLimit)));
+            new KeyValue(this.xProperty(), leftLimit), new KeyValue(collider.xProperty(), leftLimit)));
         leftMovement.setOnFinished(event -> rightMovement.playFromStart());
         rightMovement.setOnFinished(event -> leftMovement.playFromStart());
 
         leftMovement.playFrom(Duration.seconds((rightLimit % 5) * animationTime / 5));
     }
+
 }

@@ -299,11 +299,22 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private void createPlatform(double centerX, double centerY, boolean moving) {
         Platform p;
         if (!moving) {
-            p = new Platform(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth, platformHeight,
-                "bounce.wav", 3, 0.5, 0, 0, 0);
+            p = new Platform(
+                centerX - platformWidth / 2, centerY - platformHeight / 2, 
+                platformWidth, platformHeight,
+                "bounce.wav", 
+                3, 
+                0.5, 0, 0, 0
+            );
         } else {
-            p = new MovingPlatform(centerX - platformWidth / 2, centerY - platformHeight / 2, platformWidth,
-                platformHeight, "bounce.wav", 3, dimensions.getWidth(), gameContext.getAnimationSpeedRatioSource().getDurationRatio(), 0.5, 0, 0, 0);
+            p = new MovingPlatform(
+                centerX - platformWidth / 2, centerY - platformHeight / 2,
+                platformWidth, platformHeight,
+                "bounce.wav",
+                dimensions.getWidth(),
+                0.5, 0, 0, 0,
+                3, gameContext.getAnimationSpeedRatioSource().getDurationRatio()
+            );
         }
         highestPlatform = p;
         platforms.add(p);
@@ -327,7 +338,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                     + platformWidth / 2;
                 newPlatY = bottom - randomGenerator.nextInt((int) (dimensions.getHeight() / 4));
             } while (Math.abs(newPlatX - highestPlatform.getX()) >= dimensions.getWidth() / 3);
-            
+
             if (variant.equals(BibouleJumpVariant.MOVING) && randomGenerator.nextInt(4) == 0) {
                 createPlatform(newPlatX, newPlatY, true);
             } else {
