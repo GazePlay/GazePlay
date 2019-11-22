@@ -550,15 +550,14 @@ public class Shooter extends Parent implements GameLifeCycle {
     }
 
     private void moveCircle(Target sp) {
+        final double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
 
-        double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
-        double timelength = gameContext.getAnimationSpeedRatioSource().getDurationRatio() * timebasic;
-
-        TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), sp);
         double min = Math.ceil(0);
         double max = Math.floor(endPoints.length - 1);
         int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
         Point randomPoint = endPoints[r];
+
+        TranslateTransition tt1 = new TranslateTransition(new Duration(timebasic), sp);
         tt1.setToY(-sp.getCenterY() + randomPoint.y);
         tt1.setToX(-sp.getCenterX() + randomPoint.x);
         sp.setDestination(randomPoint);
@@ -571,15 +570,10 @@ public class Shooter extends Parent implements GameLifeCycle {
             cage.toBack();
         }
 
-        ScaleTransition st = new ScaleTransition(new Duration(timelength), sp);
-        st.setByX(10);
-        st.setByY(10);
-        ParallelTransition pt = new ParallelTransition();
-
-        FadeTransition btog = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(2));
-        FadeTransition gtoy = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(3));
-        FadeTransition ytoo = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(4));
-        FadeTransition otor = new FadeTransition(new Duration(timelength / 4), sp.getChildren().get(5));
+        FadeTransition btog = new FadeTransition(new Duration(timebasic / 4), sp.getChildren().get(2));
+        FadeTransition gtoy = new FadeTransition(new Duration(timebasic / 4), sp.getChildren().get(3));
+        FadeTransition ytoo = new FadeTransition(new Duration(timebasic / 4), sp.getChildren().get(4));
+        FadeTransition otor = new FadeTransition(new Duration(timebasic / 4), sp.getChildren().get(5));
 
         btog.setFromValue(0);
         gtoy.setFromValue(0);
@@ -593,11 +587,15 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         SequentialTransition seqt = new SequentialTransition(btog, gtoy, ytoo, otor);
 
+        ScaleTransition st = new ScaleTransition(new Duration(timebasic), sp);
+        st.setByX(10);
+        st.setByY(10);
+
+        ParallelTransition pt = new ParallelTransition();
         pt.getChildren().addAll(seqt, tt1, st);
+        pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         sp.setTransition(pt);
-
-        pt.play();
 
         pt.setOnFinished(actionEvent -> {
             int index = (getChildren().indexOf(sp));
@@ -607,6 +605,7 @@ public class Shooter extends Parent implements GameLifeCycle {
             }
         });
 
+        pt.play();
     }
 
     public void restart(Target sp) {
