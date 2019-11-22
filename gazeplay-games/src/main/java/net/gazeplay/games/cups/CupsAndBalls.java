@@ -66,7 +66,7 @@ public class CupsAndBalls implements GameLifeCycle {
         Point posCup;
         for (int indexCup = 0; indexCup < cups.length; indexCup++) {
             PositionCup position = new PositionCup(indexCup, nbColumns / 2, nbColumns, nbLines, dimension2D.getHeight(),
-                    dimension2D.getWidth(), imageWidth, imageHeight);
+                dimension2D.getWidth(), imageWidth, imageHeight);
             posCup = position.calculateXY(position.getCellX(), position.getCellY());
             ImageView cupRectangle = new ImageView(cupPicture);
             cupRectangle.setX(posCup.getX());
@@ -136,7 +136,7 @@ public class CupsAndBalls implements GameLifeCycle {
         for (int indexCup = 0; indexCup < nbCups; indexCup++) {
             Cup currentCup = cups[indexCup];
             if (currentCup.getPositionCup().getCellX() == initCellX
-                    && currentCup.getPositionCup().getCellY() == initCellY) {
+                && currentCup.getPositionCup().getCellY() == initCellY) {
                 cupToMove = currentCup.getItem();
                 initPos = currentCup.getPositionCup().calculateXY(initCellX, initCellY);
                 newPos = currentCup.getPositionCup().calculateXY(finalCellX, finalCellY);
@@ -154,7 +154,7 @@ public class CupsAndBalls implements GameLifeCycle {
         }
 
         TranslateTransition movementTransition = new TranslateTransition(
-                Duration.millis(gameContext.getAnimationSpeedRatioSource().getDurationRatio() * exchangeCupDuration), cupToMove);
+            Duration.millis(exchangeCupDuration), cupToMove);
         movementTransition.setByX(newPos.getX() - initPos.getX());
         movementTransition.setByY(newPos.getY() - initPos.getY());
 
@@ -168,6 +168,9 @@ public class CupsAndBalls implements GameLifeCycle {
                 createNewTransition(actions);
             }
         });
+
+        movementTransition.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
+
         movementTransition.play();
     }
 
