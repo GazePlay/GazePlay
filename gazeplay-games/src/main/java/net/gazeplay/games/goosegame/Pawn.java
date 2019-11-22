@@ -7,30 +7,40 @@ import javafx.animation.Timeline;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import lombok.Getter;
+import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.components.Position;
 
 
 public class Pawn {
 
     @Getter
-    private ImageView pawnDisplay;
+    private final ImageView pawnDisplay;
+
     @Getter
     private int turnsLeftToSkip;
+
     @Getter
     private int lastThrowResult;
+
     @Getter
     private Square currentSquare;
-    private int nbMovementsLeft;
-    @Getter
-    private int number;
-    private boolean movementStart;
 
-    public Pawn(ImageView pawnDisplay, Square startSquare, int number) {
+    private int nbMovementsLeft;
+
+    @Getter
+    private final int number;
+
+    private boolean movementStart;
+    
+    private final AnimationSpeedRatioSource animationSpeedRatioSource;
+
+    public Pawn(ImageView pawnDisplay, Square startSquare, int number, AnimationSpeedRatioSource animationSpeedRatioSource) {
         this.pawnDisplay = pawnDisplay;
         this.turnsLeftToSkip = 0;
         this.number = number;
         reset(startSquare);
         nbMovementsLeft = 0;
+        this.animationSpeedRatioSource = animationSpeedRatioSource;
     }
 
     public void reset(Square startSquare) {
@@ -100,17 +110,19 @@ public class Pawn {
         double targetY = position.getY() - pawnDisplay.getFitHeight() / 2 + Math.sin(number * 2 * Math.PI / 5) * 10;
 
         Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
-                new KeyValue(pawnDisplay.xProperty(), targetX, Interpolator.EASE_BOTH),
-                new KeyValue(pawnDisplay.yProperty(), targetY, Interpolator.EASE_BOTH)));
+            new KeyValue(pawnDisplay.xProperty(), targetX, Interpolator.EASE_BOTH),
+            new KeyValue(pawnDisplay.yProperty(), targetY, Interpolator.EASE_BOTH)));
         newTimeline.setOnFinished(e -> {
             square.pawnPassesBy(this);
             move();
         });
+        newTimeline.setRate(animationSpeedRatioSource.getSpeedRatio());
 
         if (movementStart) {
             movementStart = false;
             Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5)));
             delay.setOnFinished(e -> newTimeline.playFromStart());
+            delay.setRate(animationSpeedRatioSource.getSpeedRatio());
             delay.playFromStart();
         } else {
             newTimeline.playFromStart();
