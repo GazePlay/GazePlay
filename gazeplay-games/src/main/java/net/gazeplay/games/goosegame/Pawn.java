@@ -116,13 +116,13 @@ public class Pawn {
             square.pawnPassesBy(this);
             move();
         });
-        newTimeline.setRate(animationSpeedRatioSource.getSpeedRatio());
+        newTimeline.rateProperty().bind(animationSpeedRatioSource.getSpeedRatioProperty());
 
         if (movementStart) {
             movementStart = false;
             Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5)));
             delay.setOnFinished(e -> newTimeline.playFromStart());
-            delay.setRate(animationSpeedRatioSource.getSpeedRatio());
+            delay.rateProperty().bind(animationSpeedRatioSource.getSpeedRatioProperty());
             delay.playFromStart();
         } else {
             newTimeline.playFromStart();

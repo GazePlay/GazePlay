@@ -185,7 +185,7 @@ public class GooseGame implements GameLifeCycle {
                         new KeyValue(turnIndicator.scaleXProperty(), 1),
                         new KeyValue(turnIndicator.scaleYProperty(), 1)));
 
-        showPlayingBiboule.setRate(gameContext.getAnimationSpeedRatioSource().getSpeedRatio());
+        showPlayingBiboule.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
         showPlayingBiboule.setOnFinished(
                 e -> rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollButton.getImage().getFitHeight()));
 
@@ -216,8 +216,8 @@ public class GooseGame implements GameLifeCycle {
                 new KeyValue(diceDisplay.layoutYProperty(), 0, Interpolator.EASE_OUT),
                 new KeyValue(diceDisplay.scaleXProperty(), 0.5), new KeyValue(diceDisplay.scaleYProperty(), 0.5)));
 
-        moveDiceIn.setRate(gameContext.getAnimationSpeedRatioSource().getSpeedRatio());
-        moveDiceOut.setRate(gameContext.getAnimationSpeedRatioSource().getSpeedRatio());
+        moveDiceIn.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
+        moveDiceOut.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
         
         // Dice are put in their default location, smaller, in the upper left corner
         diceDisplay.setScaleX(0.5);
@@ -356,7 +356,7 @@ public class GooseGame implements GameLifeCycle {
                 new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
                 new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0)));
 
-        showMessage.setRate(gameContext.getAnimationSpeedRatioSource().getSpeedRatio());
+        showMessage.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
         showMessage.setOnFinished(e -> messages.getChildren().remove(messageText));
 
         showMessage.playFromStart();
