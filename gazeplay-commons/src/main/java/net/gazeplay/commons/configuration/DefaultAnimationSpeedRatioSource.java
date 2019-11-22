@@ -10,12 +10,7 @@ public class DefaultAnimationSpeedRatioSource implements AnimationSpeedRatioSour
 
     @Override
     public double getDurationRatio() {
-        return 1d / getSpeedRatio();
-    }
-
-    @Override
-    public double getSpeedRatio() {
-        return getSpeedRatioProperty().getValue();
+        return 1d / getSpeedRatioProperty().getValue();
     }
 
     @Override

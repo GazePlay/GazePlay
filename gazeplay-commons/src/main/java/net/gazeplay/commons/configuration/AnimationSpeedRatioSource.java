@@ -10,8 +10,6 @@ public interface AnimationSpeedRatioSource {
     @Deprecated
     double getDurationRatio();
 
-    double getSpeedRatio();
-
     DoubleProperty getSpeedRatioProperty();
 
 }
