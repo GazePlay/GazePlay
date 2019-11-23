@@ -1,8 +1,8 @@
 /*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package net.gazeplay.games.order;
 
 import javafx.animation.KeyFrame;
@@ -19,7 +19,6 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
- *
  * @author vincent
  */
 @Slf4j
@@ -91,7 +90,7 @@ public class Order implements GameLifeCycle {
                 i++;
                 if (i < nbTarget) {
                     timer.getKeyFrames()
-                        .add(new KeyFrame(Duration.seconds(gameContext.getAnimationSpeedRatioSource().getDurationRatio() * 1)));
+                        .add(new KeyFrame(Duration.seconds(1)));
                     timer.play();
                 } else {
                     for (int j = 0; j < nbTarget; j++) {
@@ -100,6 +99,7 @@ public class Order implements GameLifeCycle {
                 }
             }
         });
+        timer.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
         timer.play();
     }
 

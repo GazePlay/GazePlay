@@ -1,5 +1,6 @@
 package net.gazeplay.commons.configuration;
 
+import javafx.beans.property.DoubleProperty;
 import lombok.Setter;
 
 public class DefaultAnimationSpeedRatioSource implements AnimationSpeedRatioSource {
@@ -9,12 +10,12 @@ public class DefaultAnimationSpeedRatioSource implements AnimationSpeedRatioSour
 
     @Override
     public double getDurationRatio() {
-        return 1d / getSpeedRatio();
+        return 1d / getSpeedRatioProperty().getValue();
     }
 
     @Override
-    public double getSpeedRatio() {
-        return configuration.getAnimationSpeedRatioProperty().getValue();
+    public DoubleProperty getSpeedRatioProperty() {
+        return configuration.getAnimationSpeedRatioProperty();
     }
 
 }

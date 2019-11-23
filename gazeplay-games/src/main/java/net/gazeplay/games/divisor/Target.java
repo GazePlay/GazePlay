@@ -87,7 +87,7 @@ class Target extends Parent {
     }
 
     private void move() {
-        timeline = new Timeline(new KeyFrame(Duration.millis(gameContext.getAnimationSpeedRatioSource().getDurationRatio() * 10),
+        timeline = new Timeline(new KeyFrame(Duration.millis(10),
             new EventHandler<>() {
                 int dx = randomDirection();
                 int dy = randomDirection();
@@ -115,6 +115,7 @@ class Target extends Parent {
                     }
                 }
             }));
+        timeline.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 

@@ -2,16 +2,14 @@ package net.gazeplay.games.biboulejump;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 
 @Slf4j
 public class MovingPlatform extends Platform {
-
-    private final Timeline leftMovement;
-
-    private final Timeline rightMovement;
 
     public MovingPlatform(
         double x, double y,
@@ -20,7 +18,7 @@ public class MovingPlatform extends Platform {
         double windowWidth,
         double colliderMarginUp, double colliderMarginRight, double colliderMarginDown, double colliderMarginLeft,
         int bounceFactor,
-        double speed
+        AnimationSpeedRatioSource animationSpeedRatioSource
     ) {
         super(x, y,
             width, height,
@@ -40,15 +38,16 @@ public class MovingPlatform extends Platform {
         collider.setX(leftLimit);
         setX(leftLimit);
 
-        double animationTime = speed * 2;
-        leftMovement = new Timeline(new KeyFrame(Duration.seconds(animationTime),
+        Timeline leftMovement = new Timeline(new KeyFrame(Duration.seconds(2),
             new KeyValue(this.xProperty(), rightLimit), new KeyValue(collider.xProperty(), rightLimit)));
-        rightMovement = new Timeline(new KeyFrame(Duration.seconds(animationTime),
+        Timeline rightMovement = new Timeline(new KeyFrame(Duration.seconds(2),
             new KeyValue(this.xProperty(), leftLimit), new KeyValue(collider.xProperty(), leftLimit)));
-        leftMovement.setOnFinished(event -> rightMovement.playFromStart());
-        rightMovement.setOnFinished(event -> leftMovement.playFromStart());
 
-        leftMovement.playFrom(Duration.seconds((rightLimit % 5) * animationTime / 5));
+        SequentialTransition animation = new SequentialTransition();
+        animation.getChildren().addAll(leftMovement, rightMovement);
+        animation.setCycleCount(-1);
+        animation.rateProperty().bind(animationSpeedRatioSource.getSpeedRatioProperty());
+        animation.playFrom(Duration.seconds((rightLimit % 5d) * 2d / 5d));
     }
 
 }

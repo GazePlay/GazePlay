@@ -313,7 +313,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                 "bounce.wav",
                 dimensions.getWidth(),
                 0.5, 0, 0, 0,
-                3, gameContext.getAnimationSpeedRatioSource().getDurationRatio()
+                3, gameContext.getAnimationSpeedRatioSource()
             );
         }
         highestPlatform = p;
