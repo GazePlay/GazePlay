@@ -470,13 +470,6 @@ public class Configuration implements Cloneable {
         applicationConfig.setProperty(PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, Long.toString(latestNewsPopupShownTime.getValue()));
     }
 
-
-    // Simpler getter
-
-    public Boolean getGazeMode() {
-        return gazeModeProperty.getValue();
-    }
-
     public String getEyeTracker() {
         return eyetrackerProperty.getValue();
     }
