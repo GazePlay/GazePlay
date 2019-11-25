@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
 @Slf4j
-public class Configuration implements Cloneable {
+public class Configuration {
 
     private static final String PROPERTY_NAME_GAZEMODE = "GAZEMODE";
     private static final String PROPERTY_NAME_EYETRACKER = "EYETRACKER";
