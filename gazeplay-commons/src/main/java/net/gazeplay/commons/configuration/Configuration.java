@@ -426,9 +426,6 @@ public class Configuration implements Cloneable {
     }
 
     private void persistConfig(ApplicationConfig applicationConfig) {
-        // FIXME why is this not saved to file ? -> Certainly no longer usefull (see issue #102)
-        // applicationConfig.setProperty(PROPERTY_NAME_GAZEMODE, this.gazeMode);
-
         applicationConfig.setProperty(PROPERTY_NAME_EYETRACKER, this.eyetrackerProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_LANGUAGE, this.languageProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_QUIT_KEY, this.quitKeyProperty.getValue());
@@ -460,9 +457,6 @@ public class Configuration implements Cloneable {
         applicationConfig.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_USER_NAME, this.userNameProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_USER_PICTURE, this.userPictureProperty.getValue());
-        /*
-         * applicationConfig.setProperty(PROPERTY_NAME_GAZE_MENU, Boolean.toString(this.gazeMenuProperty.getValue()));
-         */
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
