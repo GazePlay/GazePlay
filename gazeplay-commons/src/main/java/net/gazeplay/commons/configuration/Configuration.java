@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedDoubleProperty;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 

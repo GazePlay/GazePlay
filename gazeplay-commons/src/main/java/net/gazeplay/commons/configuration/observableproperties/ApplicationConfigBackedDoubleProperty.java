@@ -1,5 +1,7 @@
-package net.gazeplay.commons.configuration;
+package net.gazeplay.commons.configuration.observableproperties;
 
+
+import net.gazeplay.commons.configuration.ApplicationConfig;
 
 import java.beans.PropertyChangeListener;
 

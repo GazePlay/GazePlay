@@ -1,4 +1,4 @@
-package net.gazeplay.commons.configuration;
+package net.gazeplay.commons.configuration.observableproperties;
 
 import javafx.beans.property.DoublePropertyBase;
 import lombok.RequiredArgsConstructor;
