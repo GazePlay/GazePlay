@@ -198,6 +198,7 @@ public class Configuration implements Cloneable {
     @Getter
     private final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME,
         DEFAULT_VALUE_USER_NAME);
+    
     @Getter
     private final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE,
         DEFAULT_VALUE_USER_PICTURE);
@@ -210,30 +211,10 @@ public class Configuration implements Cloneable {
         this.configFile = configFile;
         this.applicationConfig = applicationConfig;
 
+        musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
+        effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
+        
         populateFromApplicationConfig(applicationConfig);
-
-        // Listeners
-        musicVolumeProperty.addListener((observable) -> {
-            double musicVolume = getMusicVolume();
-            if (musicVolume > 1) {
-                log.warn("Invalid msuic volume value set : {}. 1 set instead", musicVolume);
-                musicVolumeProperty.setValue(1);
-            } else if (musicVolume < 0) {
-                log.warn("Invalid msuic volume value set : {}. 0 set instead", musicVolume);
-                musicVolumeProperty.setValue(0);
-            }
-        });
-
-        effectsVolumeProperty.addListener((observable) -> {
-            double musicVolume = getMusicVolume();
-            if (musicVolume > 1) {
-                log.warn("Invalid effects volume value set : {}. 1 set instead", musicVolume);
-                effectsVolumeProperty.setValue(1);
-            } else if (musicVolume < 0) {
-                log.warn("Invalid effects volume value set : {}. 0 set instead", musicVolume);
-                effectsVolumeProperty.setValue(0);
-            }
-        });
     }
 
     private void saveConfig() throws IOException {
