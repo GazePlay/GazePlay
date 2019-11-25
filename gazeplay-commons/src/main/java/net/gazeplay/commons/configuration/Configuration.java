@@ -99,109 +99,88 @@ public class Configuration {
     private final LongProperty latestNewsPopupShownTime = new SimpleLongProperty(this, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0);
 
     @Getter
-    private final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
-        DEFAULT_VALUE_QUIT_KEY.toString());
+    private final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString());
 
     @Getter
-    private final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE,
-        DEFAULT_VALUE_GAZEMODE);
+    private final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE, DEFAULT_VALUE_GAZEMODE);
 
     @Getter
-    private final BooleanProperty gazeMenuProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MENU,
-        DEFAULT_VALUE_GAZE_MENU);
+    private final BooleanProperty gazeMenuProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU);
 
     @Getter
-    private final StringProperty eyetrackerProperty = new SimpleStringProperty(this, PROPERTY_NAME_EYETRACKER,
-        DEFAULT_VALUE_EYETRACKER);
+    private final StringProperty eyetrackerProperty = new SimpleStringProperty(this, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER);
 
     @Getter
-    private final StringProperty languageProperty = new SimpleStringProperty(this, PROPERTY_NAME_LANGUAGE,
-        DEFAULT_VALUE_LANGUAGE);
+    private final StringProperty languageProperty = new SimpleStringProperty(this, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE);
 
     @Getter
-    private final StringProperty filedirProperty = new SimpleStringProperty(this, PROPERTY_NAME_FILEDIR,
-        GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath());
+    private final StringProperty filedirProperty = new SimpleStringProperty(this, PROPERTY_NAME_FILEDIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath());
 
     @Getter
-    private final IntegerProperty fixationlengthProperty = new SimpleIntegerProperty(this,
-        PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH);
+    private final IntegerProperty fixationlengthProperty = new SimpleIntegerProperty(this, PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH);
 
     @Getter
-    private final StringProperty cssfileProperty = new SimpleStringProperty(this, PROPERTY_NAME_CSSFILE,
-        DEFAULT_VALUE_CSS_FILE);
+    private final StringProperty cssfileProperty = new SimpleStringProperty(this, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE);
 
     @Getter
-    private final StringProperty whereIsItDirProperty = new SimpleStringProperty(this, PROPERTY_NAME_WHEREISIT_DIR,
-        DEFAULT_VALUE_WHEREISIT_DIR);
+    private final StringProperty whereIsItDirProperty = new SimpleStringProperty(this, PROPERTY_NAME_WHEREISIT_DIR, DEFAULT_VALUE_WHEREISIT_DIR);
 
     @Getter
-    private final LongProperty questionLengthProperty = new SimpleLongProperty(this,
-        PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH);
+    private final LongProperty questionLengthProperty = new SimpleLongProperty(this, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH);
 
     @Getter
-    private final BooleanProperty enableRewardSoundProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND);
+    private final BooleanProperty enableRewardSoundProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND);
 
     @Getter
-    private final StringProperty menuButtonsOrientationProperty = new SimpleStringProperty(this,
-        PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION);
+    private final StringProperty menuButtonsOrientationProperty = new SimpleStringProperty(this, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION);
 
     @Getter
-    private final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
-    @Getter
-    private final DoubleProperty heatMapOpacityProperty = new SimpleDoubleProperty(this,
-        PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY);
-    @Getter
-    private final StringProperty heatMapColorsProperty = new SimpleStringProperty(this, PROPERTY_NAME_HEATMAP_COLORS,
-        DEFAULT_VALUE_HEATMAP_COLORS);
-    @Getter
-    private final BooleanProperty areaOfInterestDisabledProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
-    @Getter
-    private final BooleanProperty convexHullDisabledProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED);
-    @Getter
-    private final BooleanProperty videoRecordingDisabledProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_VIDEO_RECORDING_DISABLED, DEFAULT_VALUE_VIDEO_RECORDING);
-    @Getter
-    private final BooleanProperty fixationSequenceDisabledProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED);
-    @Getter
-    private final BooleanProperty gazeMouseProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MOUSE,
-        DEFAULT_VALUE_GAZE_MOUSE);
+    private final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
 
     @Getter
-    private final BooleanProperty whiteBackgroundProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD);
+    private final DoubleProperty heatMapOpacityProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY);
 
     @Getter
-    private final DoubleProperty musicVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_MUSIC_VOLUME,
-        DEFAULT_VALUE_MUSIC_VOLUME);
+    private final StringProperty heatMapColorsProperty = new SimpleStringProperty(this, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS);
 
     @Getter
-    private final StringProperty musicFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_MUSIC_FOLDER,
-        DEFAULT_VALUE_MUSIC_FOLDER);
+    private final BooleanProperty areaOfInterestDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
 
     @Getter
-    private final DoubleProperty effectsVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_EFFECTS_VOLUME,
-        DEFAULT_VALUE_EFFECTS_VOLUME);
+    private final BooleanProperty convexHullDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED);
 
     @Getter
-    private final DoubleProperty animationSpeedRatioProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_ANIMATION_SPEED_RATIO,
-        DEFAULT_VALUE_ANIMATION_SPEED_RATIO);
+    private final BooleanProperty videoRecordingDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_VIDEO_RECORDING_DISABLED, DEFAULT_VALUE_VIDEO_RECORDING);
 
     @Getter
-    private final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER,
-        GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
+    private final BooleanProperty fixationSequenceDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED);
 
     @Getter
-    private final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME,
-        DEFAULT_VALUE_USER_NAME);
+    private final BooleanProperty gazeMouseProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE);
 
     @Getter
-    private final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE,
-        DEFAULT_VALUE_USER_PICTURE);
+    private final BooleanProperty whiteBackgroundProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD);
+
+    @Getter
+    private final DoubleProperty musicVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME);
+
+    @Getter
+    private final StringProperty musicFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_MUSIC_FOLDER, DEFAULT_VALUE_MUSIC_FOLDER);
+
+    @Getter
+    private final DoubleProperty effectsVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME);
+
+    @Getter
+    private final DoubleProperty animationSpeedRatioProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO);
+
+    @Getter
+    private final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
+
+    @Getter
+    private final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME);
+
+    @Getter
+    private final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE);
 
     private final File configFile;
 
@@ -223,7 +202,6 @@ public class Configuration {
             String fileComment = "Automatically generated by GazePlay";
             applicationConfig.store(fileOutputStream, fileComment);
         }
-        // log.info("Properties saved : {}", properties);
     }
 
     public void saveConfigIgnoringExceptions() {
