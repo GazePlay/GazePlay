@@ -231,15 +231,7 @@ public class Configuration implements Cloneable {
         });
     }
 
-    void populateFromApplicationConfig(ApplicationConfig applicationConfig) {
-        Properties properties = new Properties();
-        applicationConfig.propertyNames().forEach(property -> {
-            properties.setProperty(property, applicationConfig.getProperty(property));
-        });
-        populateFromProperties(properties);
-    }
-
-    private void populateFromProperties(Properties prop) {
+    void populateFromApplicationConfig(ApplicationConfig prop) {
         String buffer;
 
         buffer = prop.getProperty(PROPERTY_NAME_QUIT_KEY);
