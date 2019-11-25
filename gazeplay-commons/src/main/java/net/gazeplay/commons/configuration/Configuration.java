@@ -203,10 +203,15 @@ public class Configuration implements Cloneable {
         DEFAULT_VALUE_USER_PICTURE);
 
     private final File configFile;
+    
+    private final ApplicationConfig applicationConfig;
 
-    protected Configuration(File configFile) {
+    protected Configuration(File configFile, ApplicationConfig applicationConfig) {
         this.configFile = configFile;
+        this.applicationConfig = applicationConfig;
 
+        populateFromApplicationConfig(applicationConfig);
+        
         // Listeners
         musicVolumeProperty.addListener((observable) -> {
             double musicVolume = getMusicVolume();
@@ -231,7 +236,7 @@ public class Configuration implements Cloneable {
         });
     }
 
-    void populateFromApplicationConfig(ApplicationConfig prop) {
+    private void populateFromApplicationConfig(ApplicationConfig prop) {
         String buffer;
 
         buffer = prop.getProperty(PROPERTY_NAME_QUIT_KEY);

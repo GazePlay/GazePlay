@@ -25,23 +25,20 @@ public class ConfigurationSource {
     }
 
     public static Configuration createFromPropertiesResource(File propertiesFile) {
-        Properties properties = null;
+        Properties properties;
         try {
             log.info("Loading Properties from : {}", propertiesFile);
             properties = loadProperties(propertiesFile);
             log.info("Properties loaded : {}", properties);
         } catch (FileNotFoundException e) {
             log.warn("Properties file not found : {}", propertiesFile);
+            properties = new Properties();
         } catch (IOException e) {
             log.error("Failure while loading Properties file {}", propertiesFile, e);
+            properties = new Properties();
         }
         ApplicationConfig applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
-        final Configuration config = new Configuration(propertiesFile);
-        if (properties != null) {
-            config.populateFromApplicationConfig(applicationConfig);
-            //config.populateFromProperties(properties);
-        }
-        return config;
+        return new Configuration(propertiesFile, applicationConfig);
     }
 
     private static Properties loadProperties(File propertiesFile) throws IOException {
