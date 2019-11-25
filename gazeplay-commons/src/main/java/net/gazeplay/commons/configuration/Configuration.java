@@ -497,9 +497,9 @@ public class Configuration implements Cloneable {
         return heatMapOpacityProperty.getValue();
     }
 
-    public ArrayList<Color> getHeatMapColors() {
+    public List<Color> getHeatMapColors() {
         String colorsString = heatMapColorsProperty.getValue();
-        ArrayList<Color> colors = new ArrayList<>();
+        List<Color> colors = new ArrayList<>();
         for (String colorString : colorsString.split(",")) {
             colors.add(Color.web(colorString));
         }

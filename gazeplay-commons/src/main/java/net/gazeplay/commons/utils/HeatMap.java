@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Creates a heatmap image from a given 2D array
@@ -32,7 +33,7 @@ public class HeatMap {
     /**
      * Array of the different colors used to interpolate
      */
-    private ArrayList<Color> colors;
+    private List<Color> colors;
     /**
      * Maximum value of the data
      */
@@ -60,7 +61,7 @@ public class HeatMap {
      * @param colors
      *            custom colors for the heatmap, must be on order from minimum to maximum.
      */
-    public HeatMap(double[][] data, double opacity, ArrayList<Color> colors) {
+    public HeatMap(double[][] data, double opacity, List<Color> colors) {
 
         this.image = new WritableImage(data[0].length, data.length);
         this.colors = colors;
