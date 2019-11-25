@@ -139,7 +139,7 @@ public class Configuration {
     private final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
 
     @Getter
-    private final DoubleProperty heatMapOpacityProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY);
+    private final DoubleProperty heatMapOpacityProperty;
 
     @Getter
     private final StringProperty heatMapColorsProperty = new SimpleStringProperty(this, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS);
@@ -198,6 +198,8 @@ public class Configuration {
 
         animationSpeedRatioProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO, propertyChangeListener);
 
+        heatMapOpacityProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY, propertyChangeListener);
+        
         musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
 
@@ -286,10 +288,6 @@ public class Configuration {
         buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_DISABLED);
         if (buffer != null) {
             heatMapDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_OPACITY);
-        if (buffer != null) {
-            heatMapOpacityProperty.setValue(Double.parseDouble(buffer));
         }
         buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_COLORS);
         if (buffer != null) {
@@ -405,7 +403,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND, Boolean.toString(enableRewardSoundProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, menuButtonsOrientationProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_DISABLED, Boolean.toString(heatMapDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_OPACITY, Double.toString(heatMapOpacityProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, heatMapColorsProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, Boolean.toString(areaOfInterestDisabledProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED, Boolean.toString(convexHullDisabledProperty.getValue()));
