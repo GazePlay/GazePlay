@@ -84,7 +84,6 @@ public class AnimationSpeedRatioControl {
             String labelText = formatValue(speedRatioValue);
             speedEffectValueLabel.setText(labelText);
             config.getAnimationSpeedRatioProperty().set(speedRatioValue);
-            config.saveConfigIgnoringExceptions();
         });
 
         return slider;
