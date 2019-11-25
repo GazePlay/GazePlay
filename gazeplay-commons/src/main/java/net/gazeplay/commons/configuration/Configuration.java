@@ -198,7 +198,7 @@ public class Configuration implements Cloneable {
     @Getter
     private final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME,
         DEFAULT_VALUE_USER_NAME);
-    
+
     @Getter
     private final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE,
         DEFAULT_VALUE_USER_PICTURE);
@@ -213,7 +213,7 @@ public class Configuration implements Cloneable {
 
         musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
-        
+
         populateFromApplicationConfig(applicationConfig);
     }
 
@@ -407,37 +407,31 @@ public class Configuration implements Cloneable {
     }
 
     private void persistConfig(ApplicationConfig applicationConfig) {
-        applicationConfig.setProperty(PROPERTY_NAME_EYETRACKER, this.eyetrackerProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_LANGUAGE, this.languageProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_QUIT_KEY, this.quitKeyProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_FILEDIR, this.filedirProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(this.fixationlengthProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_CSSFILE, this.cssfileProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_WHEREISIT_DIR, this.whereIsItDirProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Long.toString(this.questionLengthProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND,
-            Boolean.toString(this.enableRewardSoundProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, this.menuButtonsOrientationProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_DISABLED,
-            Boolean.toString(this.heatMapDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_OPACITY, Double.toString(this.heatMapOpacityProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, this.heatMapColorsProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED,
-            Boolean.toString(this.areaOfInterestDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED,
-            Boolean.toString(this.convexHullDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED,
-            Boolean.toString(this.videoRecordingDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED,
-            Boolean.toString(this.fixationSequenceDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_MUSIC_VOLUME, Double.toString(this.musicVolumeProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_MUSIC_FOLDER, this.musicFolderProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_EYETRACKER, eyetrackerProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_LANGUAGE, languageProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_QUIT_KEY, quitKeyProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_FILEDIR, filedirProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(fixationlengthProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_CSSFILE, cssfileProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_WHEREISIT_DIR, whereIsItDirProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Long.toString(questionLengthProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND, Boolean.toString(enableRewardSoundProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, menuButtonsOrientationProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_DISABLED, Boolean.toString(heatMapDisabledProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_OPACITY, Double.toString(heatMapOpacityProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, heatMapColorsProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, Boolean.toString(areaOfInterestDisabledProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED, Boolean.toString(convexHullDisabledProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED, Boolean.toString(videoRecordingDisabledProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, Boolean.toString(fixationSequenceDisabledProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_MUSIC_VOLUME, Double.toString(musicVolumeProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_MUSIC_FOLDER, musicFolderProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, Double.toString(effectsVolumeProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_ANIMATION_SPEED_RATIO, Double.toString(animationSpeedRatioProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_VIDEO_FOLDER, this.videoFolderProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_VIDEO_FOLDER, videoFolderProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_USER_NAME, this.userNameProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_USER_PICTURE, this.userPictureProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_USER_NAME, userNameProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_USER_PICTURE, userPictureProperty.getValue());
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
