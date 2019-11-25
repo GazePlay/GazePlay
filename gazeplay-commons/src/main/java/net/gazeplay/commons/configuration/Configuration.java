@@ -99,7 +99,7 @@ public class Configuration implements Cloneable {
     private final LongProperty latestNewsPopupShownTime = new SimpleLongProperty(this, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0);
 
     @Getter
-    protected final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
+    private final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
         DEFAULT_VALUE_QUIT_KEY.toString());
 
     @Getter
@@ -482,7 +482,6 @@ public class Configuration implements Cloneable {
     }
 
     public String getQuitKey() {
-        // System.out.println(QuitKeyProperty.getValue());
         return quitKeyProperty.getValue();
     }
 

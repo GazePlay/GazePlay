@@ -133,7 +133,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         // scene.addEventHandler(KeyEvent.KEY_PRESSED, buttonHandler);
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if (key.getCode().getChar().equals(config.getQuitKey())) {
-                log.info("Key Value : {} ; quitkey: {}", key.getCode().getChar(), config.getQuitKey());
                 scene.addEventHandler(KeyEvent.KEY_RELEASED, buttonHandler);
             }
         });
