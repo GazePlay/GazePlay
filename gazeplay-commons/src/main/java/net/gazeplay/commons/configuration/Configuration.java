@@ -256,15 +256,9 @@ public class Configuration implements Cloneable {
     private void populateFromApplicationConfig(ApplicationConfig prop) {
         String buffer;
 
-        buffer = prop.getProperty(PROPERTY_NAME_QUIT_KEY);
-        if (buffer != null) {
-            quitKeyProperty.setValue(buffer);
-        }
+        quitKeyProperty.setValue(prop.getProperty(PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString()));
 
-        buffer = prop.getProperty(PROPERTY_NAME_GAZEMODE);
-        if (buffer != null) {
-            gazeModeProperty.setValue(Boolean.parseBoolean(buffer));
-        }
+        gazeModeProperty.setValue(Boolean.parseBoolean(prop.getProperty(PROPERTY_NAME_GAZEMODE, Boolean.toString(DEFAULT_VALUE_GAZEMODE))));
 
         buffer = prop.getProperty(PROPERTY_NAME_EYETRACKER);
         if (buffer != null) {
