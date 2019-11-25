@@ -408,16 +408,14 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Long.toString(questionLengthProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND, Boolean.toString(enableRewardSoundProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, menuButtonsOrientationProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_DISABLED, Boolean.toString(heatMapDisabledProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_DISABLED, BolatestNewsPopupShownTimeolean.toString(heatMapDisabledProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_OPACITY, Double.toString(heatMapOpacityProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, heatMapColorsProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, Boolean.toString(areaOfInterestDisabledProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED, Boolean.toString(convexHullDisabledProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED, Boolean.toString(videoRecordingDisabledProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, Boolean.toString(fixationSequenceDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_MUSIC_VOLUME, Double.toString(musicVolumeProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_MUSIC_FOLDER, musicFolderProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, Double.toString(effectsVolumeProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_ANIMATION_SPEED_RATIO, Double.toString(animationSpeedRatioProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_VIDEO_FOLDER, videoFolderProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
