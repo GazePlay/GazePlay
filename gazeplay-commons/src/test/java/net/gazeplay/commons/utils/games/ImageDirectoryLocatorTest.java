@@ -16,18 +16,20 @@ class ImageDirectoryLocatorTest {
 
     @BeforeAll
     static void createMockImageFolder() throws IOException {
-        new File(folderName).mkdir();
+        boolean created = new File(folderName).mkdir();
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folderName + FILESEPARATOR + i + ".jpg").createNewFile();
+            created = new File(folderName + FILESEPARATOR + i + ".jpg").createNewFile();
         }
     }
 
     @AfterAll
     static void removeMockImageFolder() {
+        boolean deleted;
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folderName + FILESEPARATOR + i + ".jpg").delete();
+            deleted = new File(folderName + FILESEPARATOR + i + ".jpg").delete();
         }
-        new File(folderName).delete();
+        deleted = new File(folderName).delete();
+        System.out.println(deleted);
     }
 
     @Test

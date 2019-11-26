@@ -21,32 +21,36 @@ class ImageUtilsTest {
 
     @BeforeAll
     static void createMockImageFolder() throws IOException {
-        new File(folderName).mkdir();
+        boolean created = new File(folderName).mkdir();
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folderName + FILESEPARATOR + i + ".jpg").createNewFile();
+            created = new File(folderName + FILESEPARATOR + i + ".jpg").createNewFile();
         }
     }
 
     @AfterAll
     static void removeMockImageFolder() {
+        boolean deleted;
         for (int i = 0; i < numberOfFiles; i++) {
-            new File(folderName + FILESEPARATOR + i + ".jpg").delete();
+            deleted = new File(folderName + FILESEPARATOR + i + ".jpg").delete();
         }
-        new File(folderName).delete();
+        deleted = new File(folderName).delete();
+        System.out.println(deleted);
     }
 
     void createMockDataFolder() throws IOException {
-        new File("data/" + folderName).mkdirs();
+        boolean created = new File("data/" + folderName).mkdirs();
         for (int i = 0; i < numberOfFiles; i++) {
-            new File("data/" + folderName + FILESEPARATOR + i + ".jpg").createNewFile();
+            created = new File("data/" + folderName + FILESEPARATOR + i + ".jpg").createNewFile();
         }
     }
 
     void removeMockDataFolder() {
+        boolean deleted;
         for (int i = 0; i < numberOfFiles; i++) {
-            new File("data/" + folderName + FILESEPARATOR + i + ".jpg").delete();
+            deleted = new File("data/" + folderName + FILESEPARATOR + i + ".jpg").delete();
         }
-        new File("data/" + folderName).delete();
+        deleted = new File("data/" + folderName).delete();
+        System.out.println(deleted);
     }
 
     @Test
