@@ -200,7 +200,7 @@ public class Configuration {
         animationSpeedRatioProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO, propertyChangeListener);
 
         heatMapOpacityProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY, propertyChangeListener);
-        
+
         musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
 
@@ -216,6 +216,12 @@ public class Configuration {
         }
     }
 
+    /**
+     * when everything is using an ApplicationConfigBacked...Property, 
+     * there is not need to call this method anymore, 
+     * it should be called by the ApplicationConfigBacked...Property itself
+     */
+    @Deprecated
     public void saveConfigIgnoringExceptions() {
         try {
             saveConfig();
