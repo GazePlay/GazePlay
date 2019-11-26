@@ -1,6 +1,7 @@
 package net.gazeplay.commons.ui;
 
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 
 public class I18NLabel extends Label implements Translator.LanguageChangeListener {
 
@@ -13,14 +14,20 @@ public class I18NLabel extends Label implements Translator.LanguageChangeListene
         this.textKeys = textKeys;
         this.translator = translator;
         //
-        setText(translator.translate(textKeys));
+        String newText = translator.translate(textKeys);
+        setText(newText);
+        setTooltip(new Tooltip(newText));
+        setAccessibleText(newText);
         //
         translator.registerLanguageChangeListener(this);
     }
 
     @Override
     public void languageChanged() {
-        setText(translator.translate(textKeys));
+        String newText = translator.translate(textKeys);
+        setText(newText);
+        setTooltip(new Tooltip(newText));
+        setAccessibleText(newText);
     }
 
 }

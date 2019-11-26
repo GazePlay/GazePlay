@@ -34,7 +34,7 @@ public class Target extends Portrait {
     private static final int nbBall = 20;
 
     private final IGameContext gameContext;
-    
+
     private final RandomPositionGenerator randomPositionGenerator;
 
     private final Stats stats;
@@ -118,7 +118,7 @@ public class Target extends Portrait {
         log.debug("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
 
         TranslateTransition translation = new TranslateTransition(
-            new Duration(gameContext.getConfiguration().getSpeedEffects() * length), this);
+            new Duration(length), this);
         translation.setByX(-this.getCenterX() + newPosition.getX());
         translation.setByY(-this.getCenterY() + newPosition.getY());
         translation.setOnFinished(actionEvent -> {
@@ -126,6 +126,7 @@ public class Target extends Portrait {
 
             move();
         });
+        translation.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         currentTranslation = translation;
         translation.play();
@@ -144,13 +145,14 @@ public class Target extends Portrait {
     }
 
     private void createBackAndForthTranlations(Position pos1, Position pos2, int length) {
-        Duration animationLength = new Duration(gameContext.getConfiguration().getSpeedEffects() * length);
 
-        Timeline translation1 = new Timeline(new KeyFrame(animationLength,
+        Timeline translation1 = new Timeline(new KeyFrame(new Duration(length),
             new KeyValue(this.centerXProperty(), pos1.getX()), new KeyValue(this.centerYProperty(), pos1.getY())));
+        translation1.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
-        Timeline translation2 = new Timeline(new KeyFrame(animationLength,
+        Timeline translation2 = new Timeline(new KeyFrame(new Duration(length),
             new KeyValue(this.centerXProperty(), pos2.getX()), new KeyValue(this.centerYProperty(), pos2.getY())));
+        translation2.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         translation1.setOnFinished(actionEvent -> {
             resetTargetAtPosition(pos1);
@@ -167,7 +169,7 @@ public class Target extends Portrait {
         });
 
         setPosition(pos2);
-        translation1.playFrom(animationLength.multiply(randomGen.nextDouble()));
+        translation1.playFrom(new Duration(length).multiply(randomGen.nextDouble()));
         currentTranslation = translation1;
     }
 

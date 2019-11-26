@@ -46,7 +46,6 @@ import java.util.List;
 /**
  * Created by schwab on 16/08/2017.
  */
-@SuppressWarnings("ALL")
 @Slf4j
 @ToString
 public class Stats implements GazeMotionListener {

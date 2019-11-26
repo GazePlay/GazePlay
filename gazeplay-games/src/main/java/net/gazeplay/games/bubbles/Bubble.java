@@ -16,7 +16,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -148,18 +147,18 @@ public class Bubble extends Parent implements GameLifeCycle {
              * fragment.setCenterX(C.getCenterX()); fragment.setCenterY(C.getCenterY()); fragment.setOpacity(1);
              */
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(fragment.centerXProperty(), Xcenter, Interpolator.LINEAR)));
+                new KeyValue(fragment.centerXProperty(), Xcenter, Interpolator.LINEAR)));
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(fragment.centerYProperty(), Ycenter, Interpolator.EASE_OUT)));
+                new KeyValue(fragment.centerYProperty(), Ycenter, Interpolator.EASE_OUT)));
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
             double XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
             double YendValue = Math.random() * Screen.getPrimary().getBounds().getHeight();
 
             timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                    new KeyValue(fragment.centerXProperty(), XendValue, Interpolator.LINEAR)));
+                new KeyValue(fragment.centerXProperty(), XendValue, Interpolator.LINEAR)));
             timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                    new KeyValue(fragment.centerYProperty(), YendValue, Interpolator.EASE_OUT)));
+                new KeyValue(fragment.centerYProperty(), YendValue, Interpolator.EASE_OUT)));
             timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.opacityProperty(), 0)));
         }
 
@@ -204,7 +203,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         Timeline timeline = new Timeline();
 
         timeline.getKeyFrames()
-                .add(new KeyFrame(new Duration(1), new KeyValue(target.centerXProperty(), -maxRadius * 5)));
+            .add(new KeyFrame(new Duration(1), new KeyValue(target.centerXProperty(), -maxRadius * 5)));
 
         timeline.play();
 
@@ -265,14 +264,15 @@ public class Bubble extends Parent implements GameLifeCycle {
         Timeline timeline = new Timeline();
 
         timeline.getKeyFrames()
-                .add(new KeyFrame(new Duration(gameContext.getConfiguration().getSpeedEffects() * timelength),
-                        new KeyValue(circle.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
+            .add(new KeyFrame(new Duration(timelength),
+                new KeyValue(circle.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
 
         timeline.setOnFinished(actionEvent -> {
-
             // moveCircle(circle);
             newCircle();
         });
+
+        timeline.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         timeline.play();
     }
