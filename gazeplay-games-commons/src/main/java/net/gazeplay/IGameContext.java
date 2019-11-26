@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import lombok.NonNull;
+import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.ui.Translator;
@@ -18,6 +19,8 @@ public interface IGameContext {
 
     @NonNull
     Configuration getConfiguration();
+    
+    AnimationSpeedRatioSource getAnimationSpeedRatioSource();
 
     @NonNull
     RandomPositionGenerator getRandomPositionGenerator();

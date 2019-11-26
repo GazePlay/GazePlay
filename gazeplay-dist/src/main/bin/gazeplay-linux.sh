@@ -2,7 +2,7 @@
 
 set -e
 
-MAIN_JAR_FILE=@NAME@-@VERSION@.jar
+MAIN_JAR_FILE=gazeplay-@VERSION@.jar
 
 export JAVA_OPTS="-Xms256m -Xmx1g"
 
@@ -22,7 +22,9 @@ LIB_DIR_RELATIVE=$(realpath --relative-to="${WORKING_DIR}" "${LIB_DIR}")
 
 echo "LIB_DIR_RELATIVE = ${LIB_DIR_RELATIVE}"
 
-export JAVA_CMD="java ${JAVA_OPTS} -jar ${LIB_DIR_RELATIVE}/${MAIN_JAR_FILE}" 
+CLASSPATH=$(find ./$LIB_DIR_RELATIVE -name "*.jar" | sort | tr '\n' ':')
+
+export JAVA_CMD="java -cp \"$CLASSPATH\" ${JAVA_OPTS} net.gazeplay.GazePlayLauncher" 
 
 echo "Executing command line: $JAVA_CMD"
 

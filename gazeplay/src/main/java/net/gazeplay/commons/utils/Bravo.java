@@ -19,7 +19,6 @@ import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 /**
  * Created by schwab on 30/10/2016.
  */
-@SuppressWarnings("ALL")
 @Slf4j
 public class Bravo extends Rectangle {
 

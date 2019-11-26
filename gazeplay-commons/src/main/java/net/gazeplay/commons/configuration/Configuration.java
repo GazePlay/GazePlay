@@ -44,7 +44,7 @@ public class Configuration implements Cloneable {
     private static final String PROPERTY_NAME_GAZE_MENU = "GAZE_MENU";
     private static final String PROPERTY_NAME_GAZE_MOUSE = "GAZE_MOUSE";
     private static final String PROPERTY_NAME_WHITE_BCKGRD = "WHITE_BACKGROUND";
-    private static final String PROPERTY_NAME_SPEED_EFFECTS = "SPEED_EFFECTS";
+    private static final String PROPERTY_NAME_ANIMATION_SPEED_RATIO = "ANIMATION_SPEED_RATIO";
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
@@ -80,7 +80,7 @@ public class Configuration implements Cloneable {
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     private static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
-    private static final double DEFAULT_VALUE_SPEED_EFFECTS = 4;
+    private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
 
@@ -188,8 +188,8 @@ public class Configuration implements Cloneable {
         DEFAULT_VALUE_EFFECTS_VOLUME);
 
     @Getter
-    protected final DoubleProperty speedEffectsProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_SPEED_EFFECTS,
-        DEFAULT_VALUE_SPEED_EFFECTS);
+    protected final DoubleProperty animationSpeedRatioProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_ANIMATION_SPEED_RATIO,
+        DEFAULT_VALUE_ANIMATION_SPEED_RATIO);
 
     @Getter
     protected final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER,
@@ -353,10 +353,10 @@ public class Configuration implements Cloneable {
             }
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_SPEED_EFFECTS);
+        buffer = prop.getProperty(PROPERTY_NAME_ANIMATION_SPEED_RATIO);
         if (buffer != null) {
             try {
-                speedEffectsProperty.setValue(Double.parseDouble(buffer));
+                animationSpeedRatioProperty.setValue(Double.parseDouble(buffer));
             } catch (NumberFormatException e) {
                 log.warn("Malformed property");
             }
@@ -451,7 +451,7 @@ public class Configuration implements Cloneable {
         properties.setProperty(PROPERTY_NAME_MUSIC_VOLUME, Double.toString(this.musicVolumeProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_MUSIC_FOLDER, this.musicFolderProperty.getValue());
         properties.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, Double.toString(effectsVolumeProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_SPEED_EFFECTS, Double.toString(speedEffectsProperty.getValue()));
+        properties.setProperty(PROPERTY_NAME_ANIMATION_SPEED_RATIO, Double.toString(animationSpeedRatioProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_VIDEO_FOLDER, this.videoFolderProperty.getValue());
         properties.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
         properties.setProperty(PROPERTY_NAME_USER_NAME, this.userNameProperty.getValue());
@@ -583,16 +583,6 @@ public class Configuration implements Cloneable {
 
     public Double getEffectsVolume() {
         return effectsVolumeProperty.getValue();
-    }
-
-    public Double getSpeedEffects() {
-        double modifVal = speedEffectsProperty.getValue();
-        if (modifVal < 4) {
-            modifVal = 1 / (5 - modifVal);
-        } else {
-            modifVal = modifVal - 3;
-        }
-        return 1 / modifVal;
     }
 
     public Boolean isGazeMenuEnable() {

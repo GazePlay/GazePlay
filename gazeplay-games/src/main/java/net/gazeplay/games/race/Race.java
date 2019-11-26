@@ -198,7 +198,7 @@ public class Race extends Parent implements GameLifeCycle {
     public float getAngle(Point target) {
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         float angle = (float) Math
-                .toDegrees(Math.atan2(target.x - (dimension2D.getWidth() / 2), -target.y + (dimension2D.getHeight())));
+            .toDegrees(Math.atan2(target.x - (dimension2D.getWidth() / 2), -target.y + (dimension2D.getHeight())));
 
         if (angle < 0) {
             angle += 360;
@@ -506,17 +506,20 @@ public class Race extends Parent implements GameLifeCycle {
     }
 
     private void movePlayer(Target frogRacer, int iteration) {
+        final double timelength = 1000;
+        final double movementDistance = iteration * 0.05;
 
-        double timelength = gameContext.getConfiguration().getSpeedEffects() * 1000;
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
-        double movementDistance = iteration * 0.05;
         tt1.setToX(dimension2D.getWidth() * movementDistance);
+
         ScaleTransition st = new ScaleTransition(new Duration(timelength), frogRacer);
         st.setByX(1);
         st.setByY(1);
-        ParallelTransition pt = new ParallelTransition();
 
+        ParallelTransition pt = new ParallelTransition();
         pt.getChildren().addAll(tt1);
+        pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
+
         frogRacer.t = pt;
 
         pt.play();
@@ -545,9 +548,9 @@ public class Race extends Parent implements GameLifeCycle {
         frogRacer.centerX = 0;
         frogRacer.centerY = y;
 
-        double timebasic = ((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH)
-                * 1000;
-        double timelength = gameContext.getConfiguration().getSpeedEffects() * timebasic;
+        final double timebasic = ((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH)
+            * 1000;
+        final double timelength = timebasic;
 
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
         tt1.setToX(dimension2D.getWidth() - dimension2D.getWidth() * 0.1);
@@ -555,8 +558,9 @@ public class Race extends Parent implements GameLifeCycle {
         st.setByX(1);
         st.setByY(1);
         ParallelTransition pt = new ParallelTransition();
-
         pt.getChildren().addAll(tt1);
+        pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
+        
         frogRacer.t = pt;
         pt.setOnFinished(event -> {
 
@@ -619,9 +623,7 @@ public class Race extends Parent implements GameLifeCycle {
     }
 
     private void moveCircle(Target sp) {
-
-        double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
-        double timelength = gameContext.getConfiguration().getSpeedEffects() * timebasic;
+        final double timelength = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
 
         TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), sp);
         double min = Math.ceil(0);
@@ -664,6 +666,7 @@ public class Race extends Parent implements GameLifeCycle {
         pt.getChildren().addAll(seqt, tt1, st);
         sp.t = pt;
 
+        pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
         pt.play();
 
         pt.setOnFinished(new EventHandler<ActionEvent>() {
