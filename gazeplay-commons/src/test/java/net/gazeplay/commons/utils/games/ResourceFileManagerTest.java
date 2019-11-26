@@ -72,4 +72,10 @@ class ResourceFileManagerTest {
         assert(result.size() == 1);
     }
 
+    @Test
+    void receiveNullForInvalidPath() {
+        Set<String> result = ResourceFileManager.getMatchingResources("wrongpath");
+        assert(result.size() == 0);
+    }
+
 }

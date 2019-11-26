@@ -5,7 +5,10 @@ import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 
 import java.io.File;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -38,16 +41,29 @@ public class ResourceFileManager {
     }
 
     public static Set<String> getMatchingResources(String location) {
-        String path = Paths.get(location).getParent().toString();
-        String filename = Paths.get(location).getFileName().toString();
+        try {
+            Path path = Paths.get(location);
 
-        Set<String> resources = getResourcePaths(path);
-        resources.removeIf(x -> !x.contains(filename));
+            Path parentPath = path.getParent();
+            Path filenamePath = path.getFileName();
 
-        for (String resource : resources) {
-            log.debug("ResourceFileManager : Found file = {}", resource);
+            String parent = parentPath != null ? parentPath.toString() : "";
+            String filename = filenamePath != null ? filenamePath.toString() : "";
+
+            if (parent.equals("") || filename.equals(""))
+                return Collections.emptySet();
+
+            Set<String> resources = getResourcePaths(parent);
+            resources.removeIf(x -> !x.contains(filename));
+
+            for (String resource : resources) {
+                log.debug("ResourceFileManager : Found file = {}", resource);
+            }
+            return resources;
+        } catch (InvalidPathException ie) {
+            log.info("Path could not be found: {}", ie.toString());
+            return Collections.emptySet();
         }
-        return resources;
     }
 
     static String createExtensionRegex(Set<String> fileExtensions) {
