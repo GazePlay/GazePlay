@@ -1,5 +1,6 @@
 package net.gazeplay.commons.utils.games;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 
+@Slf4j
 class ImageDirectoryLocatorTest {
 
     private static String folderName = "test_music_folder";
@@ -20,6 +22,7 @@ class ImageDirectoryLocatorTest {
         for (int i = 0; i < numberOfFiles; i++) {
             created = new File(folderName + FILESEPARATOR + i + ".jpg").createNewFile();
         }
+        log.info("Created Mock Folder: {}", created);
     }
 
     @AfterAll
@@ -29,7 +32,7 @@ class ImageDirectoryLocatorTest {
             deleted = new File(folderName + FILESEPARATOR + i + ".jpg").delete();
         }
         deleted = new File(folderName).delete();
-        System.out.println(deleted);
+        log.info("Deleted Mock Folder: {}", deleted);
     }
 
     @Test

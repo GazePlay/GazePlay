@@ -1,6 +1,7 @@
 package net.gazeplay.commons.utils.games;
 
 import javafx.scene.image.Image;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @ExtendWith(ApplicationExtension.class)
 class ImageUtilsTest {
 
@@ -25,6 +27,7 @@ class ImageUtilsTest {
         for (int i = 0; i < numberOfFiles; i++) {
             created = new File(folderName + FILESEPARATOR + i + ".jpg").createNewFile();
         }
+        log.info("Created Mock Folder: {}", created);
     }
 
     @AfterAll
@@ -34,7 +37,7 @@ class ImageUtilsTest {
             deleted = new File(folderName + FILESEPARATOR + i + ".jpg").delete();
         }
         deleted = new File(folderName).delete();
-        System.out.println(deleted);
+        log.info("Deleted Mock Folder: {}", deleted);
     }
 
     void createMockDataFolder() throws IOException {
@@ -42,6 +45,7 @@ class ImageUtilsTest {
         for (int i = 0; i < numberOfFiles; i++) {
             created = new File("data/" + folderName + FILESEPARATOR + i + ".jpg").createNewFile();
         }
+        log.info("Created Mock Folder: {}", created);
     }
 
     void removeMockDataFolder() {
@@ -50,7 +54,7 @@ class ImageUtilsTest {
             deleted = new File("data/" + folderName + FILESEPARATOR + i + ".jpg").delete();
         }
         deleted = new File("data/" + folderName).delete();
-        System.out.println(deleted);
+        log.info("Deleted Mock Folder: {}", deleted);
     }
 
     @Test
