@@ -7,9 +7,11 @@ import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedDoubleProperty;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
 @Slf4j
-public class Configuration implements Cloneable {
+public class Configuration {
 
     private static final String PROPERTY_NAME_GAZEMODE = "GAZEMODE";
     private static final String PROPERTY_NAME_EYETRACKER = "EYETRACKER";
@@ -73,7 +75,7 @@ public class Configuration implements Cloneable {
     private static final boolean DEFAULT_VALUE_CONVEX_HULL_DISABLED = false;
     private static final boolean DEFAULT_VALUE_VIDEO_RECORDING = false;
     private static final boolean DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED = false;
-    public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25;
+    public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25d;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
 
@@ -99,150 +101,141 @@ public class Configuration implements Cloneable {
     private final LongProperty latestNewsPopupShownTime = new SimpleLongProperty(this, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0);
 
     @Getter
-    protected final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY,
-        DEFAULT_VALUE_QUIT_KEY.toString());
+    private final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString());
 
     @Getter
-    protected final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE,
-        DEFAULT_VALUE_GAZEMODE);
+    private final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE, DEFAULT_VALUE_GAZEMODE);
 
     @Getter
-    protected final BooleanProperty gazeMenuProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MENU,
-        DEFAULT_VALUE_GAZE_MENU);
+    private final BooleanProperty gazeMenuProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU);
 
     @Getter
-    protected final StringProperty eyetrackerProperty = new SimpleStringProperty(this, PROPERTY_NAME_EYETRACKER,
-        DEFAULT_VALUE_EYETRACKER);
+    private final StringProperty eyetrackerProperty = new SimpleStringProperty(this, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER);
 
     @Getter
-    protected final StringProperty languageProperty = new SimpleStringProperty(this, PROPERTY_NAME_LANGUAGE,
-        DEFAULT_VALUE_LANGUAGE);
+    private final StringProperty languageProperty = new SimpleStringProperty(this, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE);
 
     @Getter
-    protected final StringProperty filedirProperty = new SimpleStringProperty(this, PROPERTY_NAME_FILEDIR,
-        GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath());
+    private final StringProperty filedirProperty = new SimpleStringProperty(this, PROPERTY_NAME_FILEDIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath());
 
     @Getter
-    protected final IntegerProperty fixationlengthProperty = new SimpleIntegerProperty(this,
-        PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH);
+    private final IntegerProperty fixationlengthProperty = new SimpleIntegerProperty(this, PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH);
 
     @Getter
-    protected final StringProperty cssfileProperty = new SimpleStringProperty(this, PROPERTY_NAME_CSSFILE,
-        DEFAULT_VALUE_CSS_FILE);
+    private final StringProperty cssfileProperty = new SimpleStringProperty(this, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE);
 
     @Getter
-    protected final StringProperty whereIsItDirProperty = new SimpleStringProperty(this, PROPERTY_NAME_WHEREISIT_DIR,
-        DEFAULT_VALUE_WHEREISIT_DIR);
+    private final StringProperty whereIsItDirProperty = new SimpleStringProperty(this, PROPERTY_NAME_WHEREISIT_DIR, DEFAULT_VALUE_WHEREISIT_DIR);
 
     @Getter
-    protected final LongProperty questionLengthProperty = new SimpleLongProperty(this,
-        PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH);
+    private final LongProperty questionLengthProperty = new SimpleLongProperty(this, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH);
 
     @Getter
-    protected final BooleanProperty enableRewardSoundProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND);
+    private final BooleanProperty enableRewardSoundProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND);
 
     @Getter
-    protected final StringProperty menuButtonsOrientationProperty = new SimpleStringProperty(this,
-        PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION);
+    private final StringProperty menuButtonsOrientationProperty = new SimpleStringProperty(this, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION);
 
     @Getter
-    protected final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
-    @Getter
-    protected final DoubleProperty heatMapOpacityProperty = new SimpleDoubleProperty(this,
-        PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY);
-    @Getter
-    protected final StringProperty heatMapColorsProperty = new SimpleStringProperty(this, PROPERTY_NAME_HEATMAP_COLORS,
-        DEFAULT_VALUE_HEATMAP_COLORS);
-    @Getter
-    protected final BooleanProperty areaOfInterestDisabledProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
-    @Getter
-    protected final BooleanProperty convexHullDisabledProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED);
-    @Getter
-    protected final BooleanProperty videoRecordingDisabledProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_VIDEO_RECORDING_DISABLED, DEFAULT_VALUE_VIDEO_RECORDING);
-    @Getter
-    protected final BooleanProperty fixationSequenceDisabledProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED);
-    @Getter
-    protected final BooleanProperty gazeMouseProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MOUSE,
-        DEFAULT_VALUE_GAZE_MOUSE);
+    private final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
 
     @Getter
-    protected final BooleanProperty whiteBackgroundProperty = new SimpleBooleanProperty(this,
-        PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD);
+    private final DoubleProperty heatMapOpacityProperty;
 
     @Getter
-    protected final DoubleProperty musicVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_MUSIC_VOLUME,
-        DEFAULT_VALUE_MUSIC_VOLUME);
+    private final StringProperty heatMapColorsProperty = new SimpleStringProperty(this, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS);
 
     @Getter
-    protected final StringProperty musicFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_MUSIC_FOLDER,
-        DEFAULT_VALUE_MUSIC_FOLDER);
+    private final BooleanProperty areaOfInterestDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
 
     @Getter
-    protected final DoubleProperty effectsVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_EFFECTS_VOLUME,
-        DEFAULT_VALUE_EFFECTS_VOLUME);
+    private final BooleanProperty convexHullDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED);
 
     @Getter
-    protected final DoubleProperty animationSpeedRatioProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_ANIMATION_SPEED_RATIO,
-        DEFAULT_VALUE_ANIMATION_SPEED_RATIO);
+    private final BooleanProperty videoRecordingDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_VIDEO_RECORDING_DISABLED, DEFAULT_VALUE_VIDEO_RECORDING);
 
     @Getter
-    protected final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER,
-        GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
+    private final BooleanProperty fixationSequenceDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED);
 
     @Getter
-    protected final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME,
-        DEFAULT_VALUE_USER_NAME);
+    private final BooleanProperty gazeMouseProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE);
+
     @Getter
-    protected final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE,
-        DEFAULT_VALUE_USER_PICTURE);
+    private final BooleanProperty whiteBackgroundProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD);
+
+    @Getter
+    private final DoubleProperty musicVolumeProperty;
+
+    @Getter
+    private final StringProperty musicFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_MUSIC_FOLDER, DEFAULT_VALUE_MUSIC_FOLDER);
+
+    @Getter
+    private final DoubleProperty effectsVolumeProperty;
+
+    @Getter
+    private final DoubleProperty animationSpeedRatioProperty;
+
+    @Getter
+    private final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
+
+    @Getter
+    private final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME);
+
+    @Getter
+    private final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE);
 
     private final File configFile;
 
-    protected Configuration(File configFile) {
+    private final ApplicationConfig applicationConfig;
+
+    protected Configuration(File configFile, ApplicationConfig applicationConfig) {
         this.configFile = configFile;
+        this.applicationConfig = applicationConfig;
 
-        // Listeners
-        musicVolumeProperty.addListener((observable) -> {
-            double musicVolume = getMusicVolume();
-            if (musicVolume > 1) {
-                log.warn("Invalid msuic volume value set : {}. 1 set instead", musicVolume);
-                musicVolumeProperty.setValue(1);
-            } else if (musicVolume < 0) {
-                log.warn("Invalid msuic volume value set : {}. 0 set instead", musicVolume);
-                musicVolumeProperty.setValue(0);
-            }
-        });
+        PropertyChangeListener propertyChangeListener = evt -> saveConfigIgnoringExceptions();
 
-        effectsVolumeProperty.addListener((observable) -> {
-            double musicVolume = getMusicVolume();
-            if (musicVolume > 1) {
-                log.warn("Invalid effects volume value set : {}. 1 set instead", musicVolume);
-                effectsVolumeProperty.setValue(1);
-            } else if (musicVolume < 0) {
-                log.warn("Invalid effects volume value set : {}. 0 set instead", musicVolume);
-                effectsVolumeProperty.setValue(0);
-            }
-        });
+        musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
+        effectsVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME, propertyChangeListener);
+
+        animationSpeedRatioProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO, propertyChangeListener);
+
+        heatMapOpacityProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY, propertyChangeListener);
+
+        musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
+        effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
+
+        populateFromApplicationConfig(applicationConfig);
     }
 
-    void populateFromProperties(Properties prop) {
+    private void saveConfig() throws IOException {
+        log.info("Saving Config ...");
+        persistConfig(applicationConfig);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(configFile)) {
+            String fileComment = "Automatically generated by GazePlay";
+            applicationConfig.store(fileOutputStream, fileComment);
+        }
+    }
+
+    /**
+     * when everything is using an ApplicationConfigBacked...Property, 
+     * there is not need to call this method anymore, 
+     * it should be called by the ApplicationConfigBacked...Property itself
+     */
+    @Deprecated
+    public void saveConfigIgnoringExceptions() {
+        try {
+            saveConfig();
+        } catch (IOException e) {
+            log.error("Exception while writing configuration to file {}", configFile, e);
+        }
+    }
+
+    private void populateFromApplicationConfig(ApplicationConfig prop) {
         String buffer;
 
-        buffer = prop.getProperty(PROPERTY_NAME_QUIT_KEY);
-        if (buffer != null) {
-            quitKeyProperty.setValue(buffer);
-        }
+        quitKeyProperty.setValue(prop.getProperty(PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString()));
 
-        buffer = prop.getProperty(PROPERTY_NAME_GAZEMODE);
-        if (buffer != null) {
-            gazeModeProperty.setValue(Boolean.parseBoolean(buffer));
-        }
+        gazeModeProperty.setValue(Boolean.parseBoolean(prop.getProperty(PROPERTY_NAME_GAZEMODE, Boolean.toString(DEFAULT_VALUE_GAZEMODE))));
 
         buffer = prop.getProperty(PROPERTY_NAME_EYETRACKER);
         if (buffer != null) {
@@ -302,10 +295,6 @@ public class Configuration implements Cloneable {
         buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_DISABLED);
         if (buffer != null) {
             heatMapDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_OPACITY);
-        if (buffer != null) {
-            heatMapOpacityProperty.setValue(Double.parseDouble(buffer));
         }
         buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_COLORS);
         if (buffer != null) {
@@ -409,86 +398,33 @@ public class Configuration implements Cloneable {
         }
     }
 
-    public Properties toProperties() {
-        Properties properties = new Properties() {
+    private void persistConfig(ApplicationConfig applicationConfig) {
+        applicationConfig.setProperty(PROPERTY_NAME_EYETRACKER, eyetrackerProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_LANGUAGE, languageProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_QUIT_KEY, quitKeyProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_FILEDIR, filedirProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(fixationlengthProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_CSSFILE, cssfileProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_WHEREISIT_DIR, whereIsItDirProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Long.toString(questionLengthProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND, Boolean.toString(enableRewardSoundProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, menuButtonsOrientationProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_DISABLED, Boolean.toString(heatMapDisabledProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, heatMapColorsProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, Boolean.toString(areaOfInterestDisabledProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED, Boolean.toString(convexHullDisabledProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED, Boolean.toString(videoRecordingDisabledProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, Boolean.toString(fixationSequenceDisabledProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_MUSIC_FOLDER, musicFolderProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_VIDEO_FOLDER, videoFolderProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
+        applicationConfig.setProperty(PROPERTY_NAME_USER_NAME, userNameProperty.getValue());
+        applicationConfig.setProperty(PROPERTY_NAME_USER_PICTURE, userPictureProperty.getValue());
 
-            @Override
-            public Object setProperty(String key, String value) {
-                if (value == null) {
-                    return this.remove(key);
-                }
-                return super.setProperty(key, value);
-            }
+        applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
+        applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
 
-        };
-
-        // FIXME why is this not saved to file ? -> Certainly no longer usefull (see issue #102)
-        // properties.setProperty(PROPERTY_NAME_GAZEMODE, this.gazeMode);
-
-        properties.setProperty(PROPERTY_NAME_EYETRACKER, this.eyetrackerProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_LANGUAGE, this.languageProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_QUIT_KEY, this.quitKeyProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_FILEDIR, this.filedirProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(this.fixationlengthProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_CSSFILE, this.cssfileProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_WHEREISIT_DIR, this.whereIsItDirProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Long.toString(this.questionLengthProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND,
-            Boolean.toString(this.enableRewardSoundProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, this.menuButtonsOrientationProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_HEATMAP_DISABLED,
-            Boolean.toString(this.heatMapDisabledProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_HEATMAP_OPACITY, Double.toString(this.heatMapOpacityProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_HEATMAP_COLORS, this.heatMapColorsProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED,
-            Boolean.toString(this.areaOfInterestDisabledProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED,
-            Boolean.toString(this.convexHullDisabledProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED,
-            Boolean.toString(this.videoRecordingDisabledProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED,
-            Boolean.toString(this.fixationSequenceDisabledProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_MUSIC_VOLUME, Double.toString(this.musicVolumeProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_MUSIC_FOLDER, this.musicFolderProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, Double.toString(effectsVolumeProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_ANIMATION_SPEED_RATIO, Double.toString(animationSpeedRatioProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_VIDEO_FOLDER, this.videoFolderProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
-        properties.setProperty(PROPERTY_NAME_USER_NAME, this.userNameProperty.getValue());
-        properties.setProperty(PROPERTY_NAME_USER_PICTURE, this.userPictureProperty.getValue());
-        /*
-         * properties.setProperty(PROPERTY_NAME_GAZE_MENU, Boolean.toString(this.gazeMenuProperty.getValue()));
-         */
-
-        properties.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
-        properties.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
-
-        properties.setProperty(PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, Long.toString(latestNewsPopupShownTime.getValue()));
-
-        return properties;
-    }
-
-    private void saveConfig() throws IOException {
-        Properties properties = toProperties();
-        try (FileOutputStream fileOutputStream = new FileOutputStream(configFile)) {
-            String fileComment = "Automatically generated by GazePlay";
-            properties.store(fileOutputStream, fileComment);
-        }
-        // log.info("Properties saved : {}", properties);
-    }
-
-    public void saveConfigIgnoringExceptions() {
-        try {
-            saveConfig();
-        } catch (IOException e) {
-            log.error("Exception while writing configuration to file {}", configFile, e);
-        }
-    }
-
-    // Simpler getter
-
-    public Boolean getGazeMode() {
-        return gazeModeProperty.getValue();
+        applicationConfig.setProperty(PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, Long.toString(latestNewsPopupShownTime.getValue()));
     }
 
     public String getEyeTracker() {
@@ -496,7 +432,6 @@ public class Configuration implements Cloneable {
     }
 
     public String getQuitKey() {
-        // System.out.println(QuitKeyProperty.getValue());
         return quitKeyProperty.getValue();
     }
 
@@ -544,9 +479,9 @@ public class Configuration implements Cloneable {
         return heatMapOpacityProperty.getValue();
     }
 
-    public ArrayList<Color> getHeatMapColors() {
+    public List<Color> getHeatMapColors() {
         String colorsString = heatMapColorsProperty.getValue();
-        ArrayList<Color> colors = new ArrayList<>();
+        List<Color> colors = new ArrayList<>();
         for (String colorString : colorsString.split(",")) {
             colors.add(Color.web(colorString));
         }
