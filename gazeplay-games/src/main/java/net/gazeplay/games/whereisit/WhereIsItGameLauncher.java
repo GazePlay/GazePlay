@@ -9,13 +9,13 @@ import net.gazeplay.commons.utils.stats.Stats;
 public class WhereIsItGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
-        return new WhereIsItStats(scene, WhereIsIt.WhereIsItGameType.CUSTOMIZED.getGameName());
+        return new WhereIsItStats(scene, WhereIsItGameType.CUSTOMIZED.getGameName());
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-        return new WhereIsIt(WhereIsIt.WhereIsItGameType.CUSTOMIZED, gameVariant.getWidth(),
+        return new WhereIsIt(WhereIsItGameType.CUSTOMIZED, gameVariant.getWidth(),
             gameVariant.getHeight(), false, gameContext, stats);
     }
 }

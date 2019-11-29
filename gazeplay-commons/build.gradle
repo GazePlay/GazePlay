@@ -17,6 +17,8 @@ dependencies {
     runtime 'io.github.classgraph:classgraph:4.8.52'
     compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.2.1.RELEASE'
 
+    compile 'org.reflections:reflections:0.9.11'
+
     compile 'org.aeonbits.owner:owner:1.0.10'
 }
 
