@@ -30,9 +30,9 @@ public class QuickControl {
         slider.setPrefWidth(SLIDERS_MAX_WIDTH);
         slider.setMin(0);
         slider.setMax(1);
-        slider.setShowTickMarks(false);
+        slider.setShowTickMarks(true);
         slider.setMajorTickUnit(0.25);
-        slider.setSnapToTicks(false);
+        slider.setSnapToTicks(true);
         return slider;
     }
 

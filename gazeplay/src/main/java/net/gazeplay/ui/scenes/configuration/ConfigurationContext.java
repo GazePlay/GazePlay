@@ -1048,7 +1048,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             config.getHeatMapOpacityProperty().setValue(newValue);
-            config.saveConfigIgnoringExceptions();
         });
         return choiceBox;
     }
