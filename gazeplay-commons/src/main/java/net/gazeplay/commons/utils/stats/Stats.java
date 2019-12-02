@@ -227,7 +227,7 @@ public class Stats implements GazeMotionListener {
                 if (!config.isFixationSequenceDisabled()) {
                     incFixationSequence(getX, getY);
                 }
-                if (config.isAreaOfInterestEnabled()) {
+                if (config.getAreaOfInterestDisabledProperty().getValue()) {
                     if (getX != previousX || getY != previousY) {
                         long timeToFixation = System.currentTimeMillis() - startTime;
                         previousX = getX;
@@ -247,7 +247,7 @@ public class Stats implements GazeMotionListener {
                 if (!config.isFixationSequenceDisabled()) {
                     incFixationSequence(getX, getY);
                 }
-                if (config.isAreaOfInterestEnabled()) {
+                if (config.getAreaOfInterestDisabledProperty().getValue()) {
                     if (getX != previousX || getY != previousY && counter == 2) {
                         long timeElapsedMillis = System.currentTimeMillis() - startTime;
                         previousX = getX;

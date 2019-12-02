@@ -491,10 +491,6 @@ public class Configuration {
         return colors;
     }
 
-    public Boolean isAreaOfInterestEnabled() {
-        return areaOfInterestDisabledProperty.getValue();
-    }
-
     public Boolean isConvexHullEnabled() {
         return convexHullDisabledProperty.getValue();
     }

@@ -257,7 +257,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
 
-        if (config.isAreaOfInterestEnabled())
+        if (config.getAreaOfInterestDisabledProperty().getValue())
             controlButtonPane.getChildren().add(aoiButton);
         if (!config.isFixationSequenceDisabled()) {
             controlButtonPane.getChildren().add(colorBands);
