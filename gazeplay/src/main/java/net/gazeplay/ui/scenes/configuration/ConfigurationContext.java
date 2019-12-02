@@ -315,7 +315,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         {
             I18NText label = new I18NText(translator, "EnableGazeMouse", COLON);
-            CheckBox input = buildGazeMouse(config, configurationContext);
+            CheckBox input = buildGazeMouseEnabledCheckBox(config, configurationContext);
             String[] labelParts = label.getText().split(";");
             StringBuilder concatenateLabel = new StringBuilder();
             for (String labels : labelParts) {
@@ -805,17 +805,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private static CheckBox buildGazeMouse(Configuration configuration, ConfigurationContext configurationContext) {
+    private static CheckBox buildGazeMouseEnabledCheckBox(Configuration configuration, ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isGazeMouseEnable());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getGazeMouseProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
+        checkBox.setSelected(configuration.getGazeMouseEnabledProperty().getValue());
+        configuration.getGazeMouseEnabledProperty().bindBidirectional(checkBox.selectedProperty());
         return checkBox;
     }
 

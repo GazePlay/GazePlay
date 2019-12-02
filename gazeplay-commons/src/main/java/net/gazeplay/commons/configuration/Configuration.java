@@ -159,7 +159,7 @@ public class Configuration {
     private final BooleanProperty fixationSequenceDisabledProperty;
 
     @Getter
-    private final BooleanProperty gazeMouseProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE);
+    private final BooleanProperty gazeMouseEnabledProperty;
 
     @Getter
     private final BooleanProperty whiteBackgroundProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD);
@@ -210,6 +210,7 @@ public class Configuration {
         videoRecordingEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_VIDEO_RECORDING_ENABLED, DEFAULT_VALUE_VIDEO_RECORDING_ENABLED, propertyChangeListener);
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
         gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
+        gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
 
         populateFromApplicationConfig(applicationConfig);
     }
@@ -338,11 +339,6 @@ public class Configuration {
             } catch (NumberFormatException e) {
                 log.warn("Malformed property");
             }
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_GAZE_MOUSE);
-        if (buffer != null) {
-            gazeMouseProperty.setValue(Boolean.parseBoolean(buffer));
         }
 
         buffer = prop.getProperty(PROPERTY_NAME_WHITE_BCKGRD);
@@ -489,7 +485,7 @@ public class Configuration {
     }
 
     public Boolean isGazeMouseEnable() {
-        return gazeMouseProperty.getValue();
+        return gazeMouseEnabledProperty.getValue();
     }
 
     public Boolean isBackgroundWhite() {
