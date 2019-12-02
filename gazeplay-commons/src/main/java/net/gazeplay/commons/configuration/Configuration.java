@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedBooleanProperty;
 import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedDoubleProperty;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -146,7 +147,7 @@ public class Configuration {
     private final StringProperty heatMapColorsProperty = new SimpleStringProperty(this, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS);
 
     @Getter
-    private final BooleanProperty areaOfInterestDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
+    private final BooleanProperty areaOfInterestDisabledProperty;
 
     @Getter
     private final BooleanProperty convexHullDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED);
@@ -203,6 +204,8 @@ public class Configuration {
 
         musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
+
+        areaOfInterestDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED, propertyChangeListener);
 
         populateFromApplicationConfig(applicationConfig);
     }
@@ -504,20 +507,12 @@ public class Configuration {
         return fixationSequenceDisabledProperty.getValue();
     }
 
-    public Double getMusicVolume() {
-        return musicVolumeProperty.getValue();
-    }
-
     public String getMusicFolder() {
         return musicFolderProperty.getValue();
     }
 
     public String getVideoFolder() {
         return videoFolderProperty.getValue();
-    }
-
-    public Double getEffectsVolume() {
-        return effectsVolumeProperty.getValue();
     }
 
     public Boolean isGazeMenuEnable() {

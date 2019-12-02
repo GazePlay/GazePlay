@@ -739,18 +739,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private static CheckBox buildDisableAreaOfInterest(Configuration configuration,
-                                                       ConfigurationContext configurationContext) {
+    private static CheckBox buildDisableAreaOfInterest(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isAreaOfInterestEnabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getAreaOfInterestDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
+        checkBox.setSelected(configuration.getAreaOfInterestDisabledProperty().getValue());
+        configuration.getAreaOfInterestDisabledProperty().bindBidirectional(checkBox.selectedProperty());
         return checkBox;
     }
 
