@@ -108,7 +108,7 @@ public class Configuration {
     private final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE, DEFAULT_VALUE_GAZEMODE);
 
     @Getter
-    private final BooleanProperty gazeMenuProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU);
+    private final BooleanProperty gazeMenuEnabledProperty;
 
     @Getter
     private final StringProperty eyetrackerProperty = new SimpleStringProperty(this, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER);
@@ -209,6 +209,7 @@ public class Configuration {
         convexHullDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED, propertyChangeListener);
         videoRecordingEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_VIDEO_RECORDING_ENABLED, DEFAULT_VALUE_VIDEO_RECORDING_ENABLED, propertyChangeListener);
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
+        gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
 
         populateFromApplicationConfig(applicationConfig);
     }
@@ -337,11 +338,6 @@ public class Configuration {
             } catch (NumberFormatException e) {
                 log.warn("Malformed property");
             }
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_GAZE_MENU);
-        if (buffer != null) {
-            gazeMenuProperty.setValue(Boolean.parseBoolean(buffer));
         }
 
         buffer = prop.getProperty(PROPERTY_NAME_GAZE_MOUSE);
@@ -489,7 +485,7 @@ public class Configuration {
     }
 
     public Boolean isGazeMenuEnable() {
-        return gazeMenuProperty.getValue();
+        return gazeMenuEnabledProperty.getValue();
     }
 
     public Boolean isGazeMouseEnable() {

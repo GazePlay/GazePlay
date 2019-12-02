@@ -794,14 +794,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static CheckBox buildGazeMenu(Configuration configuration, ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isGazeMenuEnable());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getGazeMenuProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
+        checkBox.setSelected(configuration.getGazeMenuEnabledProperty().getValue());
+        configuration.getGazeMenuEnabledProperty().bindBidirectional(checkBox.selectedProperty());
 
         // TODO
         // ****** REMOVE FROM HERE
