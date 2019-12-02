@@ -301,19 +301,10 @@ public class Configuration {
             menuButtonsOrientationProperty.setValue(buffer);
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_DISABLED);
-        if (buffer != null) {
-            heatMapDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
         buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_COLORS);
         if (buffer != null) {
             heatMapColorsProperty.setValue(buffer);
         }
-        buffer = prop.getProperty(PROPERTY_NAME_MUSIC_VOLUME);
-        if (buffer != null) {
-            musicVolumeProperty.setValue(Double.parseDouble(buffer));
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_MUSIC_FOLDER);
         if (buffer != null) {
             musicFolderProperty.setValue(buffer);
@@ -322,24 +313,6 @@ public class Configuration {
         buffer = prop.getProperty(PROPERTY_NAME_VIDEO_FOLDER);
         if (buffer != null) {
             videoFolderProperty.setValue(buffer);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_EFFECTS_VOLUME);
-        if (buffer != null) {
-            try {
-                effectsVolumeProperty.setValue(Double.parseDouble(buffer));
-            } catch (NumberFormatException e) {
-                log.warn("Malformed property");
-            }
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_ANIMATION_SPEED_RATIO);
-        if (buffer != null) {
-            try {
-                animationSpeedRatioProperty.setValue(Double.parseDouble(buffer));
-            } catch (NumberFormatException e) {
-                log.warn("Malformed property");
-            }
         }
 
         buffer = prop.getProperty(PROPERTY_NAME_USER_NAME);
@@ -385,7 +358,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Long.toString(questionLengthProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND, Boolean.toString(enableRewardSoundProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, menuButtonsOrientationProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_DISABLED, Boolean.toString(heatMapDisabledProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, heatMapColorsProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_MUSIC_FOLDER, musicFolderProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_VIDEO_FOLDER, videoFolderProperty.getValue());
