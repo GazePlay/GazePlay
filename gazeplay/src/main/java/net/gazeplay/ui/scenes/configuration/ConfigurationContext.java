@@ -749,18 +749,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private static CheckBox buildDisableConvexHull(Configuration configuration,
-                                                   ConfigurationContext configurationContext) {
+    private static CheckBox buildDisableConvexHull(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isConvexHullEnabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getConvexHullDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
+        checkBox.setSelected(configuration.getConvexHullDisabledProperty().getValue());
+        configuration.getConvexHullDisabledProperty().bindBidirectional(checkBox.selectedProperty());
         return checkBox;
     }
 

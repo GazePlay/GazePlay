@@ -150,7 +150,7 @@ public class Configuration {
     private final BooleanProperty areaOfInterestDisabledProperty;
 
     @Getter
-    private final BooleanProperty convexHullDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED);
+    private final BooleanProperty convexHullDisabledProperty;
 
     @Getter
     private final BooleanProperty videoRecordingDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_VIDEO_RECORDING_DISABLED, DEFAULT_VALUE_VIDEO_RECORDING);
@@ -206,6 +206,7 @@ public class Configuration {
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
 
         areaOfInterestDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED, propertyChangeListener);
+        convexHullDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED, propertyChangeListener);
 
         populateFromApplicationConfig(applicationConfig);
     }
@@ -220,8 +221,8 @@ public class Configuration {
     }
 
     /**
-     * when everything is using an ApplicationConfigBacked...Property, 
-     * there is not need to call this method anymore, 
+     * when everything is using an ApplicationConfigBacked...Property,
+     * there is not need to call this method anymore,
      * it should be called by the ApplicationConfigBacked...Property itself
      */
     @Deprecated
@@ -489,10 +490,6 @@ public class Configuration {
             colors.add(Color.web(colorString));
         }
         return colors;
-    }
-
-    public Boolean isConvexHullEnabled() {
-        return convexHullDisabledProperty.getValue();
     }
 
     public Boolean isVideoRecordingEnabled() {
