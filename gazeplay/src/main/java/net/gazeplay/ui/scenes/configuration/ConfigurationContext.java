@@ -338,7 +338,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
-            CheckBox input = buildVideoRecording(config, configurationContext);
+            CheckBox input = buildEnableVideoRecordingCheckbox(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -759,32 +759,23 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private static CheckBox buildVideoRecording(Configuration configuration,
-                                                ConfigurationContext configurationContext) {
+    private static CheckBox buildEnableVideoRecordingCheckbox(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isVideoRecordingEnabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-            configuration.getVideoRecordingDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
+        checkBox.setSelected(configuration.getVideoRecordingEnabledProperty().getValue());
+        configuration.getVideoRecordingEnabledProperty().bindBidirectional(checkBox.selectedProperty());
         return checkBox;
     }
 
-    private static CheckBox buildDisableFixationSequenceCheckBox(Configuration configuration,
-                                                                 ConfigurationContext configurationContext) {
+    private static CheckBox buildDisableFixationSequenceCheckBox(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isFixationSequenceDisabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getFixationSequenceDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
+        checkBox.setSelected(configuration.getFixationSequenceDisabledProperty().getValue());
+        configuration.getFixationSequenceDisabledProperty().bindBidirectional(checkBox.selectedProperty());
         return checkBox;
     }
 

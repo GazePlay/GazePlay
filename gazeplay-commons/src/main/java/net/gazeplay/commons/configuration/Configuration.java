@@ -39,7 +39,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_HEATMAP_COLORS = "HEATMAP_COLORS";
     private static final String PROPERTY_NAME_AREA_OF_INTEREST_DISABLED = "AREA_OF_INTEREST_DISABLED";
     private static final String PROPERTY_NAME_CONVEX_HULL_DISABLED = "CONVEX_HULL_DISABLED";
-    private static final String PROPERTY_NAME_VIDEO_RECORDING_DISABLED = "VIDEO_RECORDING_DISABLED";
+    private static final String PROPERTY_NAME_VIDEO_RECORDING_ENABLED = "VIDEO_RECORDING_ENABLED";
     private static final String PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED = "FIXATIONSEQUENCE_DISABLED";
     private static final String PROPERTY_NAME_MUSIC_VOLUME = "MUSIC_VOLUME";
     private static final String PROPERTY_NAME_MUSIC_FOLDER = "MUSIC_FOLDER";
@@ -74,7 +74,7 @@ public class Configuration {
     public static final String DEFAULT_VALUE_HEATMAP_COLORS = "0000FF,00FF00,FFFF00,FF0000";
     private static final boolean DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED = false;
     private static final boolean DEFAULT_VALUE_CONVEX_HULL_DISABLED = false;
-    private static final boolean DEFAULT_VALUE_VIDEO_RECORDING = false;
+    private static final boolean DEFAULT_VALUE_VIDEO_RECORDING_ENABLED = false;
     private static final boolean DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED = false;
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25d;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
@@ -153,10 +153,10 @@ public class Configuration {
     private final BooleanProperty convexHullDisabledProperty;
 
     @Getter
-    private final BooleanProperty videoRecordingDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_VIDEO_RECORDING_DISABLED, DEFAULT_VALUE_VIDEO_RECORDING);
+    private final BooleanProperty videoRecordingEnabledProperty;
 
     @Getter
-    private final BooleanProperty fixationSequenceDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED);
+    private final BooleanProperty fixationSequenceDisabledProperty;
 
     @Getter
     private final BooleanProperty gazeMouseProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE);
@@ -207,6 +207,8 @@ public class Configuration {
 
         areaOfInterestDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED, propertyChangeListener);
         convexHullDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED, propertyChangeListener);
+        videoRecordingEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_VIDEO_RECORDING_ENABLED, DEFAULT_VALUE_VIDEO_RECORDING_ENABLED, propertyChangeListener);
+        fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
 
         populateFromApplicationConfig(applicationConfig);
     }
@@ -304,24 +306,6 @@ public class Configuration {
         if (buffer != null) {
             heatMapColorsProperty.setValue(buffer);
         }
-        buffer = prop.getProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED);
-        if (buffer != null) {
-            areaOfInterestDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED);
-        if (buffer != null) {
-            convexHullDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED);
-        if (buffer != null) {
-            videoRecordingDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED);
-        if (buffer != null) {
-            fixationSequenceDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_MUSIC_VOLUME);
         if (buffer != null) {
             musicVolumeProperty.setValue(Double.parseDouble(buffer));
@@ -415,10 +399,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, menuButtonsOrientationProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_DISABLED, Boolean.toString(heatMapDisabledProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, heatMapColorsProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, Boolean.toString(areaOfInterestDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED, Boolean.toString(convexHullDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED, Boolean.toString(videoRecordingDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, Boolean.toString(fixationSequenceDisabledProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_MUSIC_FOLDER, musicFolderProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_VIDEO_FOLDER, videoFolderProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
@@ -493,7 +473,7 @@ public class Configuration {
     }
 
     public Boolean isVideoRecordingEnabled() {
-        return videoRecordingDisabledProperty.getValue();
+        return getVideoRecordingEnabledProperty().getValue();
     }
 
     public Boolean isFixationSequenceDisabled() {
