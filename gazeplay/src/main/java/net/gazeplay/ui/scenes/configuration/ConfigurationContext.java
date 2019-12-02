@@ -779,16 +779,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private CheckBox buildEnabledWhiteBackground(Configuration configuration,
-                                                 ConfigurationContext configurationContext) {
+    private CheckBox buildEnabledWhiteBackground(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isBackgroundWhite());
-
-        checkBox.selectedProperty().addListener((o) -> {
-            configuration.getWhiteBackgroundProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
+        checkBox.setSelected(configuration.getWhiteBackgroundProperty().getValue());
+        configuration.getWhiteBackgroundProperty().bindBidirectional(checkBox.selectedProperty());
         return checkBox;
     }
 

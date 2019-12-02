@@ -162,7 +162,7 @@ public class Configuration {
     private final BooleanProperty gazeMouseEnabledProperty;
 
     @Getter
-    private final BooleanProperty whiteBackgroundProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD);
+    private final BooleanProperty whiteBackgroundProperty;
 
     @Getter
     private final DoubleProperty musicVolumeProperty;
@@ -211,6 +211,7 @@ public class Configuration {
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
         gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
         gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
+        whiteBackgroundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
 
         populateFromApplicationConfig(applicationConfig);
     }
@@ -341,11 +342,6 @@ public class Configuration {
             }
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_WHITE_BCKGRD);
-        if (buffer != null) {
-            whiteBackgroundProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_USER_NAME);
         if (buffer != null) {
             userNameProperty.setValue(buffer);
@@ -393,7 +389,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, heatMapColorsProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_MUSIC_FOLDER, musicFolderProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_VIDEO_FOLDER, videoFolderProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_USER_NAME, userNameProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_USER_PICTURE, userPictureProperty.getValue());
 
