@@ -206,7 +206,7 @@ public class MemoryCard extends Parent {
                         for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
                             gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = id;
                         }
-                        progressIndicator.setOpacity(isOpen ? 1 : 0);
+                        progressIndicator.setOpacity(isOpen ? 0.35 : 0);
 
                     });
                 } else { /* 2nd card */
