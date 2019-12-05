@@ -120,7 +120,7 @@ public class GameMenuFactory {
 
         if (gameSummary.getGameThumbnail() != null) {
 
-            Image buttonGraphics = new Image(gameSummary.getGameThumbnail());
+            Image buttonGraphics = new Image(gameSummary.getGameThumbnail(),200,200,true,false);
             ImageView imageView = new ImageView(buttonGraphics);
             imageView.getStyleClass().add("gameChooserButtonThumbnail");
             imageView.setPreserveRatio(true);
