@@ -122,8 +122,6 @@ public class ColorsGame implements GameLifeCycle {
 
     private final ColorsGamesStats stats;
 
-    private final BorderPane toolBoxPane;
-
     private final Translator translator;
 
     ColorsGame(IGameContext gameContext, final ColorsGamesStats stats, final Translator translator) {
@@ -132,8 +130,6 @@ public class ColorsGame implements GameLifeCycle {
         this.translator = translator;
 
         root = gameContext.getRoot();
-
-        toolBoxPane = new BorderPane(colorToolBox);
 
         drawingEnable.addListener((observable, oldValue, newValue) -> {
             // If we want to stop colorization
@@ -164,10 +160,13 @@ public class ColorsGame implements GameLifeCycle {
         double width = dimension2D.getWidth();
         double height = dimension2D.getHeight();
 
+
         buildToolBox(width, height);
 
         // log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
         buildDraw(DEFAULT_IMAGE, width, height);
+
+        colorToolBox.getColorBoxes().forEach(ColorBox::updateHeight);
 
         stats.notifyNewRoundReady();
     }
@@ -180,9 +179,7 @@ public class ColorsGame implements GameLifeCycle {
     private void buildToolBox(double width, double height) {
 
         this.colorToolBox = new ColorToolBox(this.root, this, gameContext);
-        toolBoxPane.setCenter(colorToolBox);
-
-        this.root.getChildren().add(toolBoxPane);
+        this.root.getChildren().add(colorToolBox);
 
         // Add it here so it appears on top of the tool box
         final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
@@ -191,8 +188,9 @@ public class ColorsGame implements GameLifeCycle {
 
         updateToolBox();
 
-        toolBoxPane.maxHeightProperty().bind(gameContext.getRoot().heightProperty());
-        toolBoxPane.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
+        colorToolBox.maxHeightProperty().bind(gameContext.getRoot().heightProperty());
+        colorToolBox.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
+        colorToolBox.minHeightProperty().bind(gameContext.getRoot().heightProperty());
     }
 
     private void buildDraw(String imgURL, double width, double height) {
@@ -273,10 +271,10 @@ public class ColorsGame implements GameLifeCycle {
 
         double width = dimension2D.getWidth();
 
-        double ToolBoxWidth = toolBoxPane.getWidth();
+        double ToolBoxWidth = colorToolBox.getWidth();
         double x = width - ToolBoxWidth;
         log.debug("translated tool box to : {}, x toolBoxWidth : {}", x, ToolBoxWidth);
-        toolBoxPane.setTranslateX(x);
+        colorToolBox.setTranslateX(x);
     }
 
     /**

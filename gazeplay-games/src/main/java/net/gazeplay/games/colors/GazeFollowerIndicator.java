@@ -49,7 +49,6 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
     }
 
     private void moveGazeIndicator(double x, double y) {
-        System.out.println("moving gaze");
         this.setTranslateX(x - (GAZE_PROGRESS_INDICATOR_WIDTH) / 2);
         this.setTranslateY(y + GAZE_PROGRESS_INDICATOR_OFFSET - GAZE_PROGRESS_INDICATOR_HEIGHT / 2);
 

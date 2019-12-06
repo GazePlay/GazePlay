@@ -3,6 +3,7 @@ package net.gazeplay.games.colors;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
@@ -28,6 +29,8 @@ public class ColorBox extends StackPane {
 
     public static final double COLOR_BOX_HEIGHT_REDUCTION_COEFF = 1.3;
 
+    public static final double COLOR_BOX_PADDING = 5;
+
     @Setter
     private AbstractGazeIndicator progressIndicator;
 
@@ -45,6 +48,7 @@ public class ColorBox extends StackPane {
 
         button = new ToggleButton();
         //button.setToggleGroup(group);
+        button.setPadding( new Insets(COLOR_BOX_PADDING,COLOR_BOX_PADDING,COLOR_BOX_PADDING,COLOR_BOX_PADDING));
 
         graphic = new Rectangle(COLOR_BOX_WIDTH_PX, computeHeight(), color);
         // graphic = new Circle(COLOR_CIRCLE_RADIUS);
@@ -54,7 +58,7 @@ public class ColorBox extends StackPane {
 
         this.color = color;
 
-        root.heightProperty().addListener((observable) -> {
+        toolBox.heightProperty().addListener((observable) -> {
 
             double newHeight = this.computeHeight();
             // log.info("new Height = {}", newHeight);
@@ -72,6 +76,10 @@ public class ColorBox extends StackPane {
         toolBox.getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(this);
     }
 
+    public void updateHeight(){
+        graphic.setHeight(computeHeight());
+    }
+
     /**
      * Automatically compute free space in the tool box.
      * 
@@ -82,15 +90,15 @@ public class ColorBox extends StackPane {
         javafx.geometry.Dimension2D dimension2D = toolBox.getColorsGame().getGameContext()
                 .getGamePanelDimensionProvider().getDimension2D();
 
-        double totalHeight = dimension2D.getHeight() * ColorToolBox.HEIGHT_POURCENT;
+        double totalHeight = dimension2D.getHeight();
 
         // Compute free space taking into account every elements in the tool box
-        double freeSpace = totalHeight - (ColorToolBox.MAIN_INSETS.getTop() + ColorToolBox.MAIN_INSETS.getBottom()
-                + ColorToolBox.SPACING_PX*3 + toolBox.getImageManager().getHeight())
-                + toolBox.getColorziationPane().getBoundsInLocal().getHeight();
+        double freeSpace = totalHeight - ( (ColorToolBox.SPACING_PX + 2* COLOR_BOX_PADDING) * (5 + 1) + toolBox.getImageManager().getBoundsInLocal().getHeight()
+                + toolBox.getColorziationPane().getBoundsInLocal().getHeight() + ColorToolBox.COLORIZE_BUTTONS_SIZE_PX) -COLOR_BOX_PADDING*2;
+
 
         // + 1 for the curstom color box
-        return freeSpace / ((ColorToolBox.NB_COLORS_DISPLAYED + 1) * COLOR_BOX_HEIGHT_REDUCTION_COEFF);
+        return freeSpace / (ColorToolBox.NB_COLORS_DISPLAYED + 1);
     }
 
     public void select() {
