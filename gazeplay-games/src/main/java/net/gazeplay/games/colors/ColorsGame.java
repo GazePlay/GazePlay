@@ -15,6 +15,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -121,7 +122,7 @@ public class ColorsGame implements GameLifeCycle {
 
     private final ColorsGamesStats stats;
 
-    private final TitledPane toolBoxPane;
+    private final BorderPane toolBoxPane;
 
     private final Translator translator;
 
@@ -132,7 +133,7 @@ public class ColorsGame implements GameLifeCycle {
 
         root = gameContext.getRoot();
 
-        toolBoxPane = new TitledPane(translator.translate("Colors!"), colorToolBox);
+        toolBoxPane = new BorderPane(colorToolBox);
 
         drawingEnable.addListener((observable, oldValue, newValue) -> {
             // If we want to stop colorization
@@ -179,10 +180,7 @@ public class ColorsGame implements GameLifeCycle {
     private void buildToolBox(double width, double height) {
 
         this.colorToolBox = new ColorToolBox(this.root, this, gameContext);
-        toolBoxPane.setContent(colorToolBox);
-
-        toolBoxPane.setCollapsible(false);
-        toolBoxPane.setAnimated(false);
+        toolBoxPane.setCenter(colorToolBox);
 
         this.root.getChildren().add(toolBoxPane);
 

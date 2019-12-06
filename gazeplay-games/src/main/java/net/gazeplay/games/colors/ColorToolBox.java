@@ -126,7 +126,7 @@ public class ColorToolBox extends StackPane {
         mainPane = new VBox();
         thisRoot.setCenter(mainPane);
         mainPane.setSpacing(SPACING_PX);
-        mainPane.setPadding(MAIN_INSETS);
+       // mainPane.setPadding(MAIN_INSETS);
 
         imageManager = buildImageManager();
         colorziationPane = buildColorizationPane();

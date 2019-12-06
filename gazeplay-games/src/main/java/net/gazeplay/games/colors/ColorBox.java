@@ -25,7 +25,6 @@ public class ColorBox extends StackPane {
     private final ColorToolBox toolBox;
 
     public static final double COLOR_BOX_WIDTH_PX = 200;
-    public static final double COLOR_CIRCLE_RADIUS = 2;
 
     public static final double COLOR_BOX_HEIGHT_REDUCTION_COEFF = 1.3;
 
@@ -45,7 +44,7 @@ public class ColorBox extends StackPane {
         progressIndicator = toolBox.getProgressIndicator();
 
         button = new ToggleButton();
-        button.setToggleGroup(group);
+        //button.setToggleGroup(group);
 
         graphic = new Rectangle(COLOR_BOX_WIDTH_PX, computeHeight(), color);
         // graphic = new Circle(COLOR_CIRCLE_RADIUS);
@@ -87,24 +86,8 @@ public class ColorBox extends StackPane {
 
         // Compute free space taking into account every elements in the tool box
         double freeSpace = totalHeight - (ColorToolBox.MAIN_INSETS.getTop() + ColorToolBox.MAIN_INSETS.getBottom()
-                + ColorToolBox.SPACING_PX + toolBox.getImageManager().getHeight())
-                + toolBox.getColorziationPane().getHeight();
-
-        // + 1 for the curstom color box
-        return freeSpace / ((ColorToolBox.NB_COLORS_DISPLAYED + 1) * COLOR_BOX_HEIGHT_REDUCTION_COEFF);
-    }
-
-    private double computeRadius() {
-
-        javafx.geometry.Dimension2D dimension2D = toolBox.getColorsGame().getGameContext()
-                .getGamePanelDimensionProvider().getDimension2D();
-
-        double totalHeight = dimension2D.getHeight() * ColorToolBox.HEIGHT_POURCENT;
-
-        // Compute free space taking into account every elements in the tool box
-        double freeSpace = totalHeight - (ColorToolBox.MAIN_INSETS.getTop() + ColorToolBox.MAIN_INSETS.getBottom()
-                + ColorToolBox.SPACING_PX + toolBox.getImageManager().getHeight())
-                + toolBox.getColorziationPane().getHeight();
+                + ColorToolBox.SPACING_PX*3 + toolBox.getImageManager().getHeight())
+                + toolBox.getColorziationPane().getBoundsInLocal().getHeight();
 
         // + 1 for the curstom color box
         return freeSpace / ((ColorToolBox.NB_COLORS_DISPLAYED + 1) * COLOR_BOX_HEIGHT_REDUCTION_COEFF);
