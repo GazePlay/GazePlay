@@ -19,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -185,6 +186,17 @@ public class ColorsGame implements GameLifeCycle {
         final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
         root.getChildren().add(progressIndicator);
         progressIndicator.toFront();
+
+        Polygon triangle = new Polygon();
+        triangle.getPoints().addAll(0.0, 0.0, 10.0, 20.0, 20.0, 10.0);
+
+        root.addEventFilter(MouseEvent.ANY, (event) -> {
+            triangle.toFront();
+            triangle.setTranslateX(event.getX());
+            triangle.setTranslateY(event.getY());
+        });
+
+        root.getChildren().add(triangle);
 
         updateToolBox();
 
