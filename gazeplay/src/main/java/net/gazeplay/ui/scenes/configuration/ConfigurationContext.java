@@ -19,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -181,6 +182,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         AtomicInteger currentFormRow = new AtomicInteger(1);
 
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "LanguageSettings", COLON));
+        // Language settings
         {
             I18NText label = new I18NText(translator, "Lang", COLON);
 
@@ -189,14 +192,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
-        {
-            I18NText label = new I18NText(translator, "EyeTracker", COLON);
 
-            ChoiceBox<EyeTracker> input = buildEyeTrackerConfigChooser(config, configurationContext);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GamesSettings", COLON));
+        // Games settings
         {
             I18NText label = new I18NText(translator, "QuitKey", COLON);
 
@@ -205,21 +203,29 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "FileDir", COLON);
+            I18NText label = new I18NText(translator, "QuestionLength", COLON);
 
-            Node input = buildDirectoryChooser(config, configurationContext, translator);
+            ChoiceBox<Double> input = buildQuestionLengthChooserMenu(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
-
         {
-            I18NText label = new I18NText(translator, "LayoutFile", COLON);
-
-            ChoiceBox<BuiltInUiTheme> input = buildStyleThemeChooser(config, configurationContext);
+            I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
+            CheckBox input = buildEnableRewardSoundBox(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
 
+
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EyeTrackerSettings", COLON));
+        // Eye Tracking settings
+        {
+            I18NText label = new I18NText(translator, "EyeTracker", COLON);
+
+            ChoiceBox<EyeTracker> input = buildEyeTrackerConfigChooser(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
         {
             I18NText label = new I18NText(translator, "FixationLength", COLON);
 
@@ -228,60 +234,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GraphicsSettings", COLON));
+        // Graphics settings
         {
-            I18NText label = new I18NText(translator, "WhereIsItDirectory", COLON);
+            I18NText label = new I18NText(translator, "LayoutFile", COLON);
 
-            Node input = buildWhereIsItDirectoryChooser(config, configurationContext, translator);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-
-        {
-            I18NText label = new I18NText(translator, "QuestionLength", COLON);
-
-            ChoiceBox<Double> input = buildQuestionLengthChooserMenu(config, configurationContext);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-
-        {
-            I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
-            CheckBox input = buildEnableRewardSoundBox(config, configurationContext);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-
-        {
-            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
-            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config, configurationContext);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-
-        {
-            I18NText label = new I18NText(translator, "DisableHeatMap", COLON);
-            CheckBox input = buildDisableHeatMapSoundBox(config, configurationContext);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-
-        {
-            I18NText label = new I18NText(translator, "HeatMapOpacity", COLON);
-            ChoiceBox input = buildHeatMapOpacityChoiceBox(config);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-
-        {
-            I18NText label = new I18NText(translator, "HeatMapColors", COLON);
-            HBox input = buildHeatMapColorHBox(config, translator);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-
-        {
-            I18NText label = new I18NText(translator, "DisableSequence", COLON);
-            CheckBox input = buildDisableFixationSequenceCheckBox(config, configurationContext);
+            ChoiceBox<BuiltInUiTheme> input = buildStyleThemeChooser(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -291,39 +250,67 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+        {
+            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
+            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config, configurationContext);
 
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "FoldersSettings", COLON));
+        // Folders settings
+        {
+            I18NText label = new I18NText(translator, "FileDir", COLON);
+
+            Node input = buildDirectoryChooser(config, configurationContext, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
         {
             I18NText label = new I18NText(translator, "MusicFolder", COLON);
             final Node input = buildMusicInput(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
-
         {
             I18NText label = new I18NText(translator, "VideoFolder", COLON);
             final Node input = buildVideoFolderChooser(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
-
         {
-            I18NText label = new I18NText(translator, "EnableGazeMenu", COLON);
-            CheckBox input = buildGazeMenu(config, configurationContext);
+            I18NText label = new I18NText(translator, "WhereIsItDirectory", COLON);
+
+            Node input = buildWhereIsItDirectoryChooser(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "StatsSettings", COLON));
+        // Stats settings
+        addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "HeatMapSettings", COLON));
+        // HeatMap settings
         {
-            I18NText label = new I18NText(translator, "EnableGazeMouse", COLON);
-            CheckBox input = buildGazeMouse(config, configurationContext);
-            String[] labelParts = label.getText().split(";");
-            StringBuilder concatenateLabel = new StringBuilder();
-            for (String labels : labelParts) {
-                concatenateLabel.append(labels).append("\n\t");
-            }
-            label.setText(concatenateLabel.toString());
+            I18NText label = new I18NText(translator, "DisableHeatMap", COLON);
+            CheckBox input = buildDisableHeatMapSoundBox(config, configurationContext);
+
             addToGrid(grid, currentFormRow, label, input);
         }
+        {
+            I18NText label = new I18NText(translator, "HeatMapOpacity", COLON);
+            ChoiceBox input = buildHeatMapOpacityChoiceBox(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "HeatMapColors", COLON);
+            HBox input = buildHeatMapColorHBox(config, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
+        addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "AOISettings", COLON));
+        // AOI settings
         {
             I18NText label = new I18NText(translator, "EnableAreaOfInterest", COLON);
             CheckBox input = buildDisableAreaOfInterest(config, configurationContext);
@@ -336,6 +323,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+        addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "MoreStatsSettings", COLON));
+        // More Stats settings
+        {
+            I18NText label = new I18NText(translator, "DisableSequence", COLON);
+            CheckBox input = buildDisableFixationSequenceCheckBox(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
         {
             I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
             CheckBox input = buildVideoRecording(config, configurationContext);
@@ -343,15 +338,59 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "BetaSettings", COLON));
+        // Beta settings
+        {
+            I18NText label = new I18NText(translator, "EnableGazeMenu", COLON);
+            CheckBox input = buildGazeMenu(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "EnableGazeMouse", COLON);
+            CheckBox input = buildGazeMouse(config, configurationContext);
+            String[] labelParts = label.getText().split(";");
+            StringBuilder concatenateLabel = new StringBuilder();
+            for (String labels : labelParts) {
+                concatenateLabel.append(labels).append("\n\t");
+            }
+            label.setText(concatenateLabel.toString());
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
         return grid;
     }
 
-    private void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
+    private void addCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
+        int COLUMN_INDEX_LABEL_LEFT = 0;
+        int COLUMN_INDEX_LABEL_RIGHT = 2;
 
-        final int COLUMN_INDEX_LABEL_LEFT = 0;
-        final int COLUMN_INDEX_INPUT_LEFT = 1;
-        final int COLUMN_INDEX_LABEL_RIGHT = 1;
-        final int COLUMN_INDEX_INPUT_RIGHT = 0;
+
+        final int currentRowIndex = currentFormRow.incrementAndGet();
+
+        label.setId("item");
+        // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
+
+        Separator s = new Separator();
+        grid.add(s, 0, currentRowIndex,3,1);
+        GridPane.setHalignment(s, HPos.CENTER);
+
+        if (currentLanguageAlignementIsLeftAligned) {
+                int newcurrentRowIndex = currentFormRow.incrementAndGet();
+                grid.add(label, COLUMN_INDEX_LABEL_LEFT, newcurrentRowIndex);
+                GridPane.setHalignment(label, HPos.LEFT);
+        } else {
+            int newcurrentRowIndex = currentFormRow.incrementAndGet();
+            grid.add(label, COLUMN_INDEX_LABEL_RIGHT, newcurrentRowIndex);
+            GridPane.setHalignment(label, HPos.RIGHT);
+        }
+    }
+
+    private void addSubCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
+        int COLUMN_INDEX_LABEL_LEFT = 0;
+        int COLUMN_INDEX_LABEL_RIGHT = 2;
+        int COLUMN_INDEX_INPUT_LEFT = 1;
+        int COLUMN_INDEX_INPUT_RIGHT = 0;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
@@ -360,17 +399,48 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         if (currentLanguageAlignementIsLeftAligned) {
             grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
-            grid.add(input, COLUMN_INDEX_INPUT_LEFT, currentRowIndex);
-
             GridPane.setHalignment(label, HPos.LEFT);
+            Separator s = new Separator();
+            grid.add(s, COLUMN_INDEX_INPUT_LEFT, currentRowIndex,2,1);
+            GridPane.setHalignment(s, HPos.LEFT);
+        } else {
+            grid.add(label, COLUMN_INDEX_LABEL_RIGHT, currentRowIndex);
+            GridPane.setHalignment(label, HPos.RIGHT);
+            Separator s = new Separator();
+            grid.add(s, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex,2,1);
+            GridPane.setHalignment(s, HPos.RIGHT);
+        }
+    }
+
+
+    private void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
+
+         int COLUMN_INDEX_LABEL_LEFT = 1;
+         int COLUMN_INDEX_INPUT_LEFT = 2;
+
+         int COLUMN_INDEX_LABEL_RIGHT = 1;
+         int COLUMN_INDEX_INPUT_RIGHT = 0;
+
+
+        final int currentRowIndex = currentFormRow.incrementAndGet();
+
+        label.setId("item");
+        // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
+
+        if (currentLanguageAlignementIsLeftAligned) {
+
+            grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
+            GridPane.setHalignment(label, HPos.LEFT);
+            grid.add(input, COLUMN_INDEX_INPUT_LEFT, currentRowIndex);
             GridPane.setHalignment(input, HPos.LEFT);
+
         } else {
 
-            grid.add(input, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex);
             grid.add(label, COLUMN_INDEX_LABEL_RIGHT, currentRowIndex);
-
             GridPane.setHalignment(label, HPos.RIGHT);
+            grid.add(input, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex);
             GridPane.setHalignment(input, HPos.RIGHT);
+
         }
     }
 
