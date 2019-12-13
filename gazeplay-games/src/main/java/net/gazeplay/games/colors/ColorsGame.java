@@ -187,16 +187,7 @@ public class ColorsGame implements GameLifeCycle {
         root.getChildren().add(progressIndicator);
         progressIndicator.toFront();
 
-        Polygon triangle = new Polygon();
-        triangle.getPoints().addAll(0.0, 0.0, 10.0, 20.0, 20.0, 10.0);
 
-        root.addEventFilter(MouseEvent.ANY, (event) -> {
-            triangle.toFront();
-            triangle.setTranslateX(event.getX());
-            triangle.setTranslateY(event.getY());
-        });
-
-        root.getChildren().add(triangle);
 
         updateToolBox();
 

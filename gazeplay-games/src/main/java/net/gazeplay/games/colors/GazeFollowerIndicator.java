@@ -3,6 +3,8 @@ package net.gazeplay.games.colors;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Polygon;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -14,7 +16,7 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
     public static final double GAZE_PROGRESS_INDICATOR_HEIGHT = GAZE_PROGRESS_INDICATOR_WIDTH;
     public static final double GAZE_PROGRESS_INDICATOR_OFFSET = GAZE_PROGRESS_INDICATOR_HEIGHT / 4;
 
-    public GazeFollowerIndicator(IGameContext gameContext, final Node root) {
+    public GazeFollowerIndicator(IGameContext gameContext, final Pane root) {
 
         super(gameContext);
 
@@ -24,12 +26,24 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
         this.setMinWidth(GAZE_PROGRESS_INDICATOR_WIDTH);
         this.setMinHeight(GAZE_PROGRESS_INDICATOR_HEIGHT);
 
+        Polygon triangle = new Polygon();
+        triangle.getPoints().addAll(0.0, 0.0, 10.0, 20.0, 20.0, 10.0);
+
+        root.addEventFilter(MouseEvent.ANY, (event) -> {
+            triangle.toFront();
+            triangle.setTranslateX(event.getX());
+            triangle.setTranslateY(event.getY());
+        });
+
+        root.getChildren().add(triangle);
+
         root.addEventFilter(MouseEvent.ANY, (event) -> {
 
             this.toFront();
             moveGazeIndicator(event.getX(), event.getY());
         });
         root.addEventFilter(GazeEvent.ANY, (event) -> {
+
 
             this.toFront();
 
