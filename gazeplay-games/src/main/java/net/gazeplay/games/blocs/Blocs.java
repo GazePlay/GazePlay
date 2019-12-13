@@ -134,27 +134,12 @@ public class Blocs implements GameLifeCycle {
     private void removeAllBlocs() {
         final Bloc[][] blocs = currentRoundDetails.blocs;
         int maxY = blocs[0].length;
+        for (Bloc[] bloc : blocs) {
+            for (int j = 0; j < maxY; j++) {
 
-        final Service<Void> calculateService = new Service<>() {
-
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<>() {
-
-                    @Override
-                    protected Void call() {
-                        for (Bloc[] bloc : blocs) {
-                            for (int j = 0; j < maxY; j++) {
-
-                                removeBloc(bloc[j]);
-                            }
-                        }
-                        return null;
-                    }
-                };
+                removeBloc(bloc[j]);
             }
-        };
-        calculateService.start();
+        }
     }
 
     private void removeBloc(Bloc toRemove) {
