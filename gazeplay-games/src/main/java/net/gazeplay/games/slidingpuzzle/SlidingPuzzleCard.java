@@ -91,8 +91,8 @@ class SlidingPuzzleCard extends Parent {
         this.gameInstance = gameInstance;
         this.stats = stats;
         this.progressIndicator = createProgressIndicator(width);
-        this.getChildren().add(this.progressIndicator);
         this.getChildren().add(this.card);
+        this.getChildren().add(this.progressIndicator);
         this.isKing = false;
         this.kingPosX = (int) kingPosX;
         this.kingPosY = (int) kingPosY;
@@ -115,9 +115,10 @@ class SlidingPuzzleCard extends Parent {
         ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(initX);
         indicator.setTranslateY(initY);
-        indicator.setMinWidth(width * 0.1);
-        indicator.setMinHeight(width * 0.1);
+        indicator.setMinWidth(width);
+        indicator.setMinHeight(width);
         indicator.setOpacity(0);
+        indicator.setMouseTransparent(true);
         return indicator;
     }
 
@@ -131,7 +132,7 @@ class SlidingPuzzleCard extends Parent {
 
     private void isMyNeighborEvent() {
 
-        progressIndicator.setOpacity(1);
+        progressIndicator.setOpacity(0.7);
         // currentTimeline.stop();
         currentTimeline = new Timeline();
         KeyValue xValue = new KeyValue(card.xProperty(), kingPosX);
@@ -189,9 +190,9 @@ class SlidingPuzzleCard extends Parent {
 
             if (!(currentTimeline.getStatus() == Animation.Status.RUNNING)
                 && (e.getEventType() == MouseEvent.MOUSE_ENTERED
-                || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
+                || e.getEventType() == GazeEvent.GAZE_ENTERED) && checkIfNeighbor()) {
 
-                progressIndicator.setOpacity(1);
+                progressIndicator.setOpacity(0.7);
                 progressIndicator.setProgress(0);
 
                 // currentTimeline.stop();
@@ -208,7 +209,6 @@ class SlidingPuzzleCard extends Parent {
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
 
-                    if (checkIfNeighbor()) {
                         progressIndicator.setTranslateX(kingPosX);
                         progressIndicator.setTranslateY(kingPosY);
 
@@ -223,7 +223,6 @@ class SlidingPuzzleCard extends Parent {
 
                         if (gameInstance.isGameOver())
                             onGameOver();
-                    }
 
                 });
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
