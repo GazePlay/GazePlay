@@ -193,8 +193,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
 
-        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GameSettings", COLON));
-        // Game settings
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GamesSettings", COLON));
+        // Games settings
         {
             I18NText label = new I18NText(translator, "QuitKey", COLON);
 
