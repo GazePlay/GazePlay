@@ -143,7 +143,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
                 from = 1;
                 to = 0;
                 angle = -1 * angle;
-            } else {
+            } else if (!configPane.getChildren().contains(controlPanel)) {
                 configPane.getChildren().add(controlPanel);
             }
             RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
