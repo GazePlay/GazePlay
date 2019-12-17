@@ -1,0 +1,66 @@
+/**
+ * Created by schwab on 28/10/2017.
+ *
+ * Inspired by http://fxexperience.com/2011/12/styling-fx-buttons-with-css/
+ */
+
+.choice-box {
+    -fx-background-color: linear-gradient(#9898fb, #000080);
+    -fx-text-fill: white;
+    -fx-mark-color: orange;
+}
+
+.progress-indicator {
+
+    -fx-control-inner-background: palegreen;
+    -fx-progress-color: blue;
+}
+
+/* Selected item text color on the control itself */
+.choice-box > .label {
+
+    -fx-text-fill: white;
+}
+
+/* Background color of the whole context menu*/
+.choice-box .context-menu {
+
+    -fx-background-color: linear-gradient(#9898fb, #000080);
+    -fx-text-fill: white;
+}
+
+/* Focused item background color in the list*/
+.choice-box .menu-item:focused {
+
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(#98fb98, #008000);
+}
+
+/* Text color of non-focused items in the list*/
+.choice-box .menu-item > .label {
+
+    -fx-text-fill: white;
+}
+
+/* Text color of focused item in the list*/
+.choice-box .menu-item:focused > .label {
+
+    -fx-text-fill: white;
+}
+
+.button {
+
+    -fx-background-color: linear-gradient(#9898fb, #000080);
+    -fx-text-fill: white;
+}
+
+.button:hover {
+
+    -fx-background-color: linear-gradient(#98fb98, #008000);
+}
+
+/* Items with a background color corresponding to current them */
+.bg-colored {
+    -fx-background-color: linear-gradient(#98fb98, #008000);
+    -fx-text-fill: white;
+}

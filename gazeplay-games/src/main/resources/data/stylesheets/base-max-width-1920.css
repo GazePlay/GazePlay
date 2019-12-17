@@ -1,0 +1,17 @@
+.gameChooserButtonHorizontal {
+    -fx-min-width: 18em;
+    -fx-min-height: 4em;
+    -fx-pref-width: 40em;
+    -fx-pref-height: 9em;
+}
+
+.gameChooserButtonVertical {
+    -fx-min-width: 18em;
+    -fx-min-height: 14em;
+    -fx-pref-width: 18em;
+    -fx-pref-height: 14em;
+}
+
+.gameChooserButtonTitle {
+    -fx-font-size: 18pt;
+}

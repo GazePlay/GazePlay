@@ -1,0 +1,54 @@
+{
+  "background": "background.png",
+  "elements": [
+    {
+      "image": "crocodile.png",
+      "scale": 0.6,
+      "coords": {
+        "x": 1800,
+        "y": 1500
+      },
+      "sounds": [
+        "crocodile.wav"
+      ]
+    },
+    {
+      "image": "hyena.png",
+      "scale": 0.4,
+      "coords": {
+        "x": 800,
+        "y": 1300
+      },
+      "sounds": [
+        "hyena.wav",
+        "hyena2.wav",
+        "hyena3.wav"
+      ]
+    },
+    {
+      "image": "lion.png",
+      "scale": 0.4,
+      "coords": {
+        "x": 1600,
+        "y": 1100
+      },
+      "sounds": [
+        "lion.wav",
+        "lion2.wav",
+        "lion3.wav"
+      ]
+    },
+    {
+      "image": "ostrich.png",
+      "scale": 0.4,
+      "coords": {
+        "x": 2250,
+        "y": 1100
+      },
+      "sounds": [
+        "ostrich.wav",
+        "ostrich2.wav"
+      ]
+    }
+  ]
+}

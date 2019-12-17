@@ -1,0 +1,78 @@
+{
+  "background": "background.png",
+  "elements": [
+    {
+      "image": "horse.png",
+      "scale": 4.4,
+      "coords": {
+        "x": 4900,
+        "y": 3400
+      },
+      "sounds": [
+        "horse.wav",
+        "horse2.wav"
+      ]
+    },
+    {
+      "image": "cow.png",
+      "scale": 4,
+      "coords": {
+        "x": 3520,
+        "y": 2520
+      },
+      "sounds": [
+        "cow.wav"
+      ]
+    },
+    {
+      "image": "hen.png",
+      "scale": 2.3,
+      "coords": {
+        "x": 2018,
+        "y": 3370
+      },
+      "sounds": [
+        "hen.wav",
+        "hen2.wav"
+      ]
+    },
+    {
+      "image": "pig.png",
+      "scale": 3.3,
+      "coords": {
+        "x": 3280,
+        "y": 3800
+      },
+      "sounds": [
+        "pig.wav",
+        "pig1.wav",
+        "pig2.wav"
+      ]
+    },
+    {
+      "image": "rooster.png",
+      "scale": 3,
+      "coords": {
+        "x": 1170,
+        "y": 3720
+      },
+      "sounds": [
+        "rooster.wav",
+        "rooster2.wav"
+      ]
+    },
+    {
+      "image": "sheep.png",
+      "scale": 2,
+      "coords": {
+        "x": 1520,
+        "y": 2520
+      },
+      "sounds": [
+        "sheep.wav",
+        "sheep2.wav",
+        "sheep3.wav"
+      ]
+    }
+  ]
+}

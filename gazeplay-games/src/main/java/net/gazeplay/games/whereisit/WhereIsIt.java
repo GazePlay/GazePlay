@@ -2,17 +2,11 @@ package net.gazeplay.games.whereisit;
 
 //It is repeated always, it works like a charm :)
 
-import javafx.animation.*;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
@@ -21,21 +15,15 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.util.Duration;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageDirectoryLocator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -157,7 +145,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         TranslateTransition fullAnimation = new TranslateTransition(
-            Duration.millis(gameContext.getConfiguration().getQuestionLength()/2.0), questionText);
+            Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2.0), questionText);
 
         fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
 
@@ -174,7 +162,7 @@ public class WhereIsIt implements GameLifeCycle {
             gameContext.getChildren().addAll(currentRoundDetails.getPictureCardList());
 
             for (PictureCard p : currentRoundDetails.getPictureCardList()) {
-              //  log.debug("p = {}", p);
+                //  log.debug("p = {}", p);
                 p.toFront();
                 p.setOpacity(1);
             }
@@ -229,9 +217,9 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().removeAll(pictureCardsToHide);
     }
 
-    private RoundDetails pickAndBuildRandomPictures(final Configuration config,
-                                                    final int numberOfImagesToDisplayPerRound, final Random random,
-                                                    final int winnerImageIndexAmongDisplayedImages) {
+    RoundDetails pickAndBuildRandomPictures(final Configuration config,
+                                            final int numberOfImagesToDisplayPerRound, final Random random,
+                                            final int winnerImageIndexAmongDisplayedImages) {
 
         final File imagesDirectory = locateImagesDirectory(config);
 
@@ -264,10 +252,10 @@ public class WhereIsIt implements GameLifeCycle {
             int index = ((randomFolderIndex + step) % filesCount) + 1;
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
-                if (i == winnerImageIndexAmongDisplayedImages){
-                    index = ( index + 1 ) %filesCount;
+                if (i == winnerImageIndexAmongDisplayedImages) {
+                    index = (index + 1) % filesCount;
                 } else {
-                 index = ((randomFolderIndex + step) % filesCount) + 1;
+                    index = ((randomFolderIndex + step) % filesCount) + 1;
                 }
 
                 final File folder = imagesFolders[(index) % filesCount];
@@ -502,7 +490,7 @@ public class WhereIsIt implements GameLifeCycle {
             File Ftoken = new File(token);
             log.debug("Exists {}", Ftoken.exists());
             if (Ftoken.exists()) {
-                L.add(new Image(Ftoken.toURI().toString(),500,500,true,false));
+                L.add(new Image(Ftoken.toURI().toString(), 500, 500, true, false));
             }
         }
 

@@ -1,0 +1,26 @@
+.gameChooserButtonHorizontal {
+    -fx-min-width: 19em;
+    -fx-min-height: 5em;
+    -fx-pref-width: 19em;
+    -fx-pref-height: 6em;
+}
+
+.gameChooserButtonVertical {
+    -fx-min-width: 18em;
+    -fx-min-height: 14em;
+    -fx-pref-width: 18em;
+    -fx-pref-height: 14em;
+}
+
+.gameVariationChooserButton {
+    -fx-background-insets: 0;
+}
+
+.gameChooserButtonGameTypeIndicator {
+    -fx-border-insets: 0px;
+    -fx-background-radius: 0px;
+}
+
+.gameChooserButtonTitle {
+    -fx-font-size: 10pt;
+}
