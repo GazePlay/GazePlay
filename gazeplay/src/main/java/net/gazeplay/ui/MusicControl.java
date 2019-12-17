@@ -285,7 +285,6 @@ public class MusicControl {
         Slider slider = QuickControl.getInstance().createVolumeSlider();
         slider.setValue(config.getMusicVolume());
         config.getMusicVolumeProperty().bindBidirectional(slider.valueProperty());
-        slider.valueProperty().addListener((observable) -> config.saveConfigIgnoringExceptions());
         return slider;
     }
 
@@ -293,7 +292,6 @@ public class MusicControl {
         Slider slider = QuickControl.getInstance().createVolumeSlider();
         slider.setValue(config.getEffectsVolume());
         config.getEffectsVolumeProperty().bindBidirectional(slider.valueProperty());
-        slider.valueProperty().addListener((observable) -> config.saveConfigIgnoringExceptions());
         return slider;
     }
 

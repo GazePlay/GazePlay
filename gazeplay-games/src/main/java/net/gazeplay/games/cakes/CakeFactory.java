@@ -559,11 +559,11 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     private void generateRandomCake() {
         Random random = new Random();
         for (int i = 0; i < 3; i++) {
-            model[i][0] = 1 + random.nextInt(5);
-            model[i][1] = 1 + random.nextInt(6);
-            model[i][2] = 1 + random.nextInt(4);
+            model[i][0] = 1 + random.nextInt(4);
+            model[i][1] = 1 + random.nextInt(5);
+            model[i][2] = 1 + random.nextInt(3);
         }
-        model[2][3] = 1 + random.nextInt(3);
+        model[2][3] = 1 + random.nextInt(2);
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         randomCake = new Pane();
@@ -576,6 +576,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                 k = 4;
             }
             for (int j = 0; j < k; j++) {
+                log.info("I = " + i + " et J = " + j + " data/cake/images/" + j + "" + model[i][j] + ".png");
                 ImageView cakemodel = new ImageView(new Image("data/cake/images/" + j + "" + model[i][j] + ".png"));
                 cakemodel.setFitWidth(dimension2D.getWidth() / (2 * (4 + i)));
                 cakemodel.setPreserveRatio(true);

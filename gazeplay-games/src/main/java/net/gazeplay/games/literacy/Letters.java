@@ -238,25 +238,11 @@ public class Letters implements GameLifeCycle {
     void removeAllBlocs() {
         final Bloc[][] blocs = currentRoundDetails.blocs;
         int maxY = blocs[0].length;
-        final Service<Void> calculateService = new Service<>() {
-
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<>() {
-
-                    @Override
-                    protected Void call() {
-                        for (Bloc[] bloc : blocs) {
-                            for (int j = 0; j < maxY; j++) {
-                                removeBloc(bloc[j]);
-                            }
-                        }
-                        return null;
-                    }
-                };
+        for (Bloc[] bloc : blocs) {
+            for (int j = 0; j < maxY; j++) {
+                removeBloc(bloc[j]);
             }
-        };
-        calculateService.start();
+        }
     }
 
     void removeBloc(Bloc toRemove) {

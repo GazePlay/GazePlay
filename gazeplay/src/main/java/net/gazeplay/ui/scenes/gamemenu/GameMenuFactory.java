@@ -33,8 +33,6 @@ import static javafx.scene.input.MouseEvent.*;
 @Component
 public class GameMenuFactory {
 
-    private final boolean useDebuggingBackgrounds = false;
-
     private final static double THUMBNAIL_WIDTH_RATIO = 1;
     private final static double THUMBNAIL_HEIGHT_RATIO = 0.4;
 
@@ -87,10 +85,6 @@ public class GameMenuFactory {
         BorderPane thumbnailContainer = new BorderPane();
         thumbnailContainer.setPadding(new Insets(1, 1, 1, 1));
         thumbnailContainer.setOpaqueInsets(new Insets(1, 1, 1, 1));
-        if (useDebuggingBackgrounds) {
-            thumbnailContainer
-                .setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
-        }
 
         GameButtonPane gameCard = new GameButtonPane(gameSpec);
         switch (orientation) {
@@ -104,23 +98,17 @@ public class GameMenuFactory {
                 break;
         }
 
-        if (useDebuggingBackgrounds) {
-            gameCard.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-        }
 
         gameCard.getStyleClass().add("button");
 
         double thumbnailBorderSize = 28d;
 
         BorderPane gameDescriptionPane = new BorderPane();
-        if (useDebuggingBackgrounds) {
-            gameDescriptionPane
-                .setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-        }
+
 
         if (gameSummary.getGameThumbnail() != null) {
 
-            Image buttonGraphics = new Image(gameSummary.getGameThumbnail());
+            Image buttonGraphics = new Image(gameSummary.getGameThumbnail(),200,200,true,false);
             ImageView imageView = new ImageView(buttonGraphics);
             imageView.getStyleClass().add("gameChooserButtonThumbnail");
             imageView.setPreserveRatio(true);

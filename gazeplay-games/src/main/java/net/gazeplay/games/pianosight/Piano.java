@@ -238,6 +238,25 @@ public class Piano extends Parent implements GameLifeCycle {
         this.getChildren().get(this.getChildren().indexOf(circleTemp)).toFront();
         ImageView iv = new ImageView(new Image("data/pianosight/images/1.png"));
         Button b = new Button("Open", iv);
+
+        b.setOpacity(1);
+
+        Timeline buttonOpacityTimeline = new Timeline();
+        buttonOpacityTimeline.getKeyFrames().add(
+            new KeyFrame(Duration.seconds(1), new KeyValue(b.opacityProperty(), 0.1, Interpolator.LINEAR)));
+
+        buttonOpacityTimeline.setDelay(Duration.seconds(2));
+        buttonOpacityTimeline.play();
+
+        b.setOnMouseEntered(evt -> {
+            b.setOpacity(1);
+        });
+
+        b.setOnMouseExited(evt -> {
+            b.setOpacity(0.1);
+        });
+
+
         b.setPrefWidth(dimension2D.getWidth() / 7);
         b.setPrefHeight(dimension2D.getHeight() / 7);
         iv.setPreserveRatio(true);

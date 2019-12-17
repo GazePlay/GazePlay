@@ -511,6 +511,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 }
 
                 musicList.addMedia(mf);
+                refresh();
                 primaryStage.getScene().getRoot().setEffect(null);
             } else {
                 t.setText("Invalid URL !");
@@ -534,6 +535,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                     mf = new MediaFile("MEDIA", pathField.getText(), name, tfi.getText());
                 }
                 musicList.addMedia(mf);
+                refresh();
                 primaryStage.getScene().getRoot().setEffect(null);
             } else {
                 t.setText("Invalid File !");
@@ -641,8 +643,8 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             File f = new File(mf.getImagepath());
             ImageView iv = new ImageView(new Image(f.toURI().toString()));
             iv.setPreserveRatio(true);
-            iv.setFitHeight((90 * titre[i].getHeight()) / 100);
-            iv.setFitWidth((90 * titre[i].getHeight()) / 100);
+            iv.fitHeightProperty().bind(titre[i].heightProperty().multiply(9.0/10.0));
+            iv.fitWidthProperty().bind(titre[i].widthProperty().multiply(9.0/10.0));
             titre[i].setGraphic(iv);
         } else {
             titre[i].setGraphic(null);
@@ -749,10 +751,11 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         if (selectedFile != null) {
             s = selectedFile.getAbsolutePath();
             ImageView iv;
+            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             try {
                 iv = new ImageView(new Image(new FileInputStream(selectedFile)));
                 iv.setPreserveRatio(true);
-                iv.setFitHeight(primaryStage.getHeight() / 10);
+                iv.setFitHeight(dimension2D.getHeight() / 10);
                 tfi.setGraphic(iv);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

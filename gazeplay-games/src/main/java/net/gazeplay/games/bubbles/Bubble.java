@@ -54,11 +54,19 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final EventHandler<Event> enterEvent;
 
-    public Bubble(IGameContext gameContext, BubbleType type, Stats stats, boolean useBackgroundImage) {
+    public static final String DIRECTION_TOP = "toTop";
+    public static final String DIRECTION_BOTTOM = "toBottom";
+    public static final String DIRECTION_LEFT = "toLeft";
+    public static final String DIRECTION_RIGHT = "toRight";
+
+    private final BubblesGameVariant direction;
+
+    public Bubble(IGameContext gameContext, BubbleType type, Stats stats, boolean useBackgroundImage, BubblesGameVariant direction) {
         this.gameContext = gameContext;
         this.type = type;
         this.stats = stats;
         this.image = useBackgroundImage;
+        this.direction = direction;
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("portraits"));
 
@@ -250,25 +258,48 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private void moveCircle(Circle circle) {
         javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        log.debug("dimension2D = {}", dimension2D);
 
-        double centerX = (dimension2D.getWidth() - maxRadius) * Math.random() + maxRadius;
-        double centerY = dimension2D.getHeight();
-
-        circle.setCenterX(centerX);
-        // circle.setTranslateY((scene.getHeight() - maxRadius) * Math.random() + maxRadius);
-        circle.setCenterY(centerY);
+        double centerX = 0;
+        double centerY = 0;
 
         double timelength = ((maxTimeLength - minTimeLength) * Math.random() + minTimeLength) * 1000;
 
         Timeline timeline = new Timeline();
 
-        timeline.getKeyFrames()
-            .add(new KeyFrame(new Duration(timelength),
-                new KeyValue(circle.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
+
+        if (this.direction == BubblesGameVariant.TOP) {
+            centerX = (dimension2D.getWidth() - maxRadius) * Math.random() + maxRadius;
+            centerY = dimension2D.getHeight();
+            timeline.getKeyFrames()
+                .add(new KeyFrame(new Duration(timelength),
+                    new KeyValue(circle.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
+        }else if (this.direction == BubblesGameVariant.BOTTOM){
+                centerX = (dimension2D.getWidth() - maxRadius) * Math.random() + maxRadius;
+                centerY = 0;
+                timeline.getKeyFrames()
+                    .add(new KeyFrame(new Duration(timelength),
+                        new KeyValue(circle.centerYProperty(), dimension2D.getHeight() + maxRadius, Interpolator.EASE_IN)));
+    }else if (this.direction == BubblesGameVariant.RIGHT){
+                centerX = 0;
+                centerY = (dimension2D.getHeight() - maxRadius) * Math.random() + maxRadius;
+                timeline.getKeyFrames()
+                    .add(new KeyFrame(new Duration(timelength),
+                        new KeyValue(circle.centerXProperty(), dimension2D.getWidth() + maxRadius, Interpolator.EASE_IN)));
+}else if (this.direction == BubblesGameVariant.LEFT){
+                centerX = dimension2D.getWidth();
+                centerY = (dimension2D.getHeight() - maxRadius) * Math.random() + maxRadius;
+                timeline.getKeyFrames()
+                    .add(new KeyFrame(new Duration(timelength),
+                        new KeyValue(circle.centerXProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
+        }
+
+
+        circle.setCenterX(centerX);
+        circle.setCenterY(centerY);
 
         timeline.setOnFinished(actionEvent -> {
-            // moveCircle(circle);
+            gameContext.getGazeDeviceManager().removeEventFilter(circle);
+            this.getChildren().remove(circle);
             newCircle();
         });
 
