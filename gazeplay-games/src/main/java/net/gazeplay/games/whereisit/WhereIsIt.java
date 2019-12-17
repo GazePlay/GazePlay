@@ -286,7 +286,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                     // TODO check a new question path for 'Find the Odd one Out' question
                     // TODO for now the line under is commented to avoid freeze
-                   // questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
+                    //questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
 
                     question = "Find the Odd one Out";
 
