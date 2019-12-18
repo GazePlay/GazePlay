@@ -23,12 +23,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -282,6 +284,19 @@ public class ColorToolBox extends Pane {
 
             final File imageFile = imageChooser.showOpenDialog(primaryStage);
             if (imageFile != null) {
+                Path from = Paths.get(imageFile.toURI());
+                File to = new File(this.getColorsDirectory(), imageFile.getName());
+                CopyOption[] options = new CopyOption[]{
+                    StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.COPY_ATTRIBUTES
+                };
+                try {
+                    Files.copy(from, to.toPath(), options);
+                    gameContext.getConfiguration().getColorsDefaultImageProperty().setValue(to.getAbsolutePath());
+                    gameContext.getConfiguration().saveConfigIgnoringExceptions();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 Image image = new Image(imageFile.toURI().toString());
 
@@ -318,6 +333,21 @@ public class ColorToolBox extends Pane {
         bottomBox.getChildren().add(imageSaverButton);
 
         return bottomBox;
+    }
+
+    private File getColorsDirectory() {
+        Configuration config = gameContext.getConfiguration();
+        String userName = config.getUserName();
+        //
+        final File colorsDirectory;
+        if (userName == null || userName.equals("")) {
+            colorsDirectory = new File(GazePlayDirectories.getGazePlayFolder(), "/data/colors");
+        } else {
+            colorsDirectory = new File(GazePlayDirectories.getUserProfileDirectory(userName), "/data/colors");
+        }
+        colorsDirectory.mkdir();
+
+        return colorsDirectory;
     }
 
     /**

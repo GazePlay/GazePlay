@@ -52,6 +52,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
     private static final String PROPERTY_NAME_VIDEO_FOLDER = "VIDEO_FOLDER";
+    private static final String PROPERTY_NAME_COLORS_DEFAULT_IMAGE = "COLORS_DEFAULT_IMAGE";
 
     private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
 
@@ -86,6 +87,10 @@ public class Configuration {
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
+
+
+    // "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
+    public static final String DEFAULT_VALUE_COLORS_DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
 
     @Getter
@@ -184,6 +189,9 @@ public class Configuration {
 
     @Getter
     private final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE);
+
+    @Getter
+    private final StringProperty colorsDefaultImageProperty = new SimpleStringProperty(this, PROPERTY_NAME_COLORS_DEFAULT_IMAGE, DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
 
     private final File configFile;
 
@@ -390,6 +398,11 @@ public class Configuration {
             hiddenCategoriesProperty.get().addAll(values);
         }
 
+        buffer = prop.getProperty(PROPERTY_NAME_COLORS_DEFAULT_IMAGE);
+        if (buffer != null) {
+            colorsDefaultImageProperty.setValue(buffer);
+        }
+
         buffer = prop.getProperty(PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME);
         if (buffer != null) {
             try {
@@ -433,6 +446,8 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
 
         applicationConfig.setProperty(PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, Long.toString(latestNewsPopupShownTime.getValue()));
+
+        applicationConfig.setProperty(PROPERTY_NAME_COLORS_DEFAULT_IMAGE, colorsDefaultImageProperty.getValue());
     }
 
     public String getEyeTracker() {

@@ -28,9 +28,12 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
@@ -58,13 +61,6 @@ public class ColorsGame implements GameLifeCycle {
      * The tool box object.
      */
     private ColorToolBox colorToolBox;
-
-    /**
-     * The default image to display
-     */
-    // public static final String DEFAULT_IMAGE =
-    // "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
-    private static final String DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
     /**
      * On a [0, 1] scale, used to determine the threshold in the difference between two colors to consider that they are
@@ -165,7 +161,7 @@ public class ColorsGame implements GameLifeCycle {
         buildToolBox(width, height);
 
         // log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
-        buildDraw(DEFAULT_IMAGE, width, height);
+        buildDraw(gameContext.getConfiguration().getColorsDefaultImageProperty().getValue(), width, height);
 
         colorToolBox.getColorBoxes().forEach(ColorBox::updateHeight);
 
@@ -212,8 +208,17 @@ public class ColorsGame implements GameLifeCycle {
         };
 
         colorToolBox.widthProperty().addListener(listener);
+        Image img;
+try {
+    log.info(imgURL);
+     img = new Image(new FileInputStream(imgURL));
+} catch(FileNotFoundException e ){
+    getGameContext().getConfiguration().getColorsDefaultImageProperty().set(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
+    getGameContext().getConfiguration().saveConfigIgnoringExceptions();
 
-        Image img = new Image(imgURL);
+    imgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
+    img = new Image(imgURL);
+}
 
         if (!img.isError()) {
 
@@ -287,6 +292,8 @@ public class ColorsGame implements GameLifeCycle {
      * @param imageName The name of the image
      */
     public void updateImage(final Image image, final String imageName) {
+
+
 
         final PixelReader tmpPixelReader = image.getPixelReader();
 
