@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -39,10 +40,39 @@ import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+class GameComparator implements Comparator<Node>
+{
+    Configuration config;
+    // Used for sorting in ascending order of
+    // roll number
+
+    public GameComparator(Configuration conf){
+        super();
+        this.config = conf;
+    }
+
+    public int compare(Node a0, Node b0)
+    {
+        GameButtonPane a = (GameButtonPane) a0;
+        GameButtonPane b = (GameButtonPane) b0;
+
+        if (config.getFavoriteGamesProperty().contains( a.getGameSpec().getGameSummary().getNameCode()) && config.getFavoriteGamesProperty().contains( b.getGameSpec().getGameSummary().getNameCode())) {
+            return  a.getGameSpec().getGameSummary().getNameCode().compareTo( b.getGameSpec().getGameSummary().getNameCode());
+        } else if (config.getFavoriteGamesProperty().contains( a.getGameSpec().getGameSummary().getNameCode())) {
+            return -1;
+        } else if (config.getFavoriteGamesProperty().contains( b.getGameSpec().getGameSummary().getNameCode())) {
+            return 1;
+        } else {
+           return  a.getGameSpec().getGameSummary().getNameCode().compareTo( b.getGameSpec().getGameSummary().getNameCode());
+        }
+    }
+}
 
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
@@ -53,7 +83,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private FlowPane choicePanel;
 
-    private List<Node> gameCardsList;
+    private List<GameButtonPane> gameCardsList;
 
     public HomeMenuScreen(
         GazePlay gazePlay,
@@ -148,6 +178,21 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.setVgap(flowpaneGap);
         choicePanel.setPadding(new Insets(20, 60, 20, 60));
 
+        config.getFavoriteGamesProperty().addListener((observableValue, oldValue, newValue) -> {
+
+            Predicate<Node> gameCardPredicate = new GameCardVisiblePredicate(config);
+            List<Node> filteredList = gameCardsList.stream()
+                .filter(gameCardPredicate)
+                .collect(Collectors.toList());
+            //
+            filteredList.sort(new GameComparator(config));
+            choicePanel.getChildren().clear();
+            choicePanel.getChildren().addAll(filteredList);
+
+        });
+
+        gameCardsList.sort(new GameComparator(config));
+
         choicePanel.getChildren().addAll(gameCardsList);
 
         ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
@@ -159,7 +204,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return choicePanelScroller;
     }
 
-    private List<Node> createGameCardsList(
+    private List<GameButtonPane> createGameCardsList(
         List<GameSpec> games,
         final Configuration config,
         final ProgressIndicator indicator
@@ -167,7 +212,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Translator translator = getGazePlay().getTranslator();
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
 
-        final List<Node> gameCardsList = new ArrayList<>();
+        final List<GameButtonPane> gameCardsList = new ArrayList<>();
+
 
         for (GameSpec gameSpec : games) {
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(
@@ -249,7 +295,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return gameCardsList;
     }
 
-    private static void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, Configuration config) {
+    private static void filterGames(FlowPane choicePanel, List<GameButtonPane> completeGameCardsList, Configuration config) {
         Predicate<Node> gameCardPredicate = new GameCardVisiblePredicate(config);
         List<Node> filteredList = completeGameCardsList.stream()
             .filter(gameCardPredicate)
@@ -291,7 +337,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         Configuration config,
         Translator translator,
         FlowPane choicePanel,
-        List<Node> gameCardsList
+        List<GameButtonPane> gameCardsList
     ) {
         I18NText label = new I18NText(translator, category.getGameCategory());
         CheckBox categoryCheckbox = new CheckBox(label.getText());
