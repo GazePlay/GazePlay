@@ -4,11 +4,11 @@ import javafx.geometry.Dimension2D;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import java.io.File;
 import java.util.Random;
 
 import static org.mockito.Mockito.when;
@@ -33,21 +34,44 @@ class WhereIsItTest {
     @Mock
     Configuration mockConfig;
 
+    private static String FILESEPARATOR = File.separator;
+
     @BeforeEach
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
-    void shouldPickAndBuildRandomPictures() {
-        WhereIsIt whereIsIt = new WhereIsIt(WhereIsItGameType.ANIMALNAME, 2, 2, false, mockGameContext, mockStats);
+    @ParameterizedTest
+    @EnumSource(value = WhereIsItGameType.class, mode = EnumSource.Mode.EXCLUDE, names = {"CUSTOMIZED"})
+    void shouldPickAndBuildRandomPictures(WhereIsItGameType gameType) {
+        WhereIsIt whereIsIt = new WhereIsIt(gameType, 2, 2, false, mockGameContext, mockStats);
         when(mockConfig.getLanguage()).thenReturn("eng");
 
         Dimension2D mockDimension = new Dimension2D(20, 20);
         when(mockGameContext.getGamePanelDimensionProvider().getDimension2D()).thenReturn(mockDimension);
+        when(mockGameContext.getConfiguration()).thenReturn(mockConfig);
 
         Random random = new Random();
-        RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(mockConfig, 4, random, 0);
+        RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(4, random, 0);
+        assert randomPictures.getPictureCardList().size() == 4;
+    }
+
+    @Test
+    void shouldPickAndBuildRandomCustomPictures() {
+        WhereIsIt whereIsIt = new WhereIsIt(WhereIsItGameType.CUSTOMIZED, 2, 2, false, mockGameContext, mockStats);
+        when(mockConfig.getLanguage()).thenReturn("eng");
+        String currentDir = System.getProperty("user.dir") +
+            FILESEPARATOR + "src" +
+            FILESEPARATOR + "test" +
+            FILESEPARATOR + "resources";
+        when(mockConfig.getWhereIsItDir()).thenReturn(currentDir);
+
+        Dimension2D mockDimension = new Dimension2D(20, 20);
+        when(mockGameContext.getGamePanelDimensionProvider().getDimension2D()).thenReturn(mockDimension);
+        when(mockGameContext.getConfiguration()).thenReturn(mockConfig);
+
+        Random random = new Random();
+        RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(4, random, 0);
         assert randomPictures.getPictureCardList().size() == 4;
     }
 

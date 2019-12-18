@@ -201,7 +201,7 @@ class PictureCard extends Group {
 
     private ImageView createImageView(double posX, double posY, double width, double height,
                                       @NonNull String imagePath) {
-        final Image image = new Image("file:" + imagePath);
+        final Image image = new Image(imagePath);
 
         ImageView result = new ImageView(image);
         result.setX(posX);
