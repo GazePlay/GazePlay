@@ -82,7 +82,7 @@ public class ColorsGame implements GameLifeCycle {
      */
     public static final double GAZE_INDICATOR_DISTANCE = 5;
 
-    private static final double AVG_THRESHOLD = 0.39;
+    private static double AVG_THRESHOLD = 0.39;
 
     /**
      * The gaze progress indicator to show time before colorization.
@@ -330,6 +330,18 @@ public class ColorsGame implements GameLifeCycle {
     }
 
     private void toBlackAndWhite() {
+        double sum = 0;
+        for (int i = 0; i < writableImg.getWidth(); ++i) {
+            for (int j = 0; j < writableImg.getHeight(); ++j) {
+
+                Color pixCol = pixelReader.getColor(i, j);
+                sum = sum + (pixCol.getRed() + pixCol.getGreen() + pixCol.getBlue()) / 3;
+            }
+        }
+
+        sum = sum / (writableImg.getWidth() * writableImg.getHeight());
+
+        AVG_THRESHOLD = sum / 2;
 
         for (int i = 0; i < writableImg.getWidth(); ++i) {
             for (int j = 0; j < writableImg.getHeight(); ++j) {
