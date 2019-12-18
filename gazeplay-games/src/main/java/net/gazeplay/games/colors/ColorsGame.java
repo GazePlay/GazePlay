@@ -270,7 +270,7 @@ try {
         rectangle.setWidth(width);
         rectangle.setHeight(height);
 
-        rectangle.setFill(new ImagePattern(writableImg));
+        rectangle.setFill(this.createImagePattern(writableImg, rectangle));
     }
 
     private void updateToolBox() {
@@ -303,7 +303,7 @@ try {
             return;
         }
 
-        rectangle.setFill(new ImagePattern(image));
+        rectangle.setFill(this.createImagePattern(image, rectangle));
 
         writableImg = new WritableImage(tmpPixelReader, (int) image.getWidth(), (int) image.getHeight());
         pixelWriter = writableImg.getPixelWriter();
@@ -388,7 +388,7 @@ try {
             && drawingEnable.getValue()) {
             javaFXFloodFill(pixelWriter, pixelReader, colorToolBox.getSelectedColorBox().getColor(), pixelX, pixelY,
                 (int) writableImg.getWidth(), (int) writableImg.getHeight());
-            rectangle.setFill(new ImagePattern(writableImg));
+            rectangle.setFill(this.createImagePattern(writableImg, rectangle));
             rectangle.toBack();
 
             stats.incNbGoals();
@@ -402,6 +402,11 @@ try {
 
         // floodInColumnAndLineRec(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
         floodInColumnAndLine(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
+    }
+
+    public ImagePattern createImagePattern(Image img, Rectangle r){
+        return new ImagePattern(img,0,0,r.getHeight()/r.getWidth(),1,true);
+        // todo: changer la taille du rectangle ou modifier le pattern
     }
 
     /**
