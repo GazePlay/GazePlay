@@ -4,32 +4,43 @@ import javafx.geometry.Dimension2D;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.util.Random;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
+@RunWith(MockitoJUnitRunner.class)
 class WhereIsItTest {
     // Test Mocks
-    static IGameContext mockGameContext = mock(IGameContext.class, Mockito.RETURNS_DEEP_STUBS);
-    static Stats mockStats = mock(Stats.class);
-    private static WhereIsIt whereIsIt;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    IGameContext mockGameContext;
 
-    @BeforeAll
-    static void setup() {
-        whereIsIt = new WhereIsIt(WhereIsItGameType.ANIMALNAME, 2, 2, false, mockGameContext, mockStats);
+    @Mock
+    Stats mockStats;
+
+    @Mock
+    Configuration mockConfig;
+
+    @BeforeEach
+    public void initMocks() {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
     void shouldPickAndBuildRandomPictures() {
-        Configuration mockConfig = mock(Configuration.class);
+        WhereIsIt whereIsIt = new WhereIsIt(WhereIsItGameType.ANIMALNAME, 2, 2, false, mockGameContext, mockStats);
         when(mockConfig.getLanguage()).thenReturn("eng");
 
         Dimension2D mockDimension = new Dimension2D(20, 20);

@@ -21,14 +21,12 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageDirectoryLocator;
+import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
 
@@ -221,13 +219,18 @@ public class WhereIsIt implements GameLifeCycle {
                                             final int numberOfImagesToDisplayPerRound, final Random random,
                                             final int winnerImageIndexAmongDisplayedImages) {
 
-        final File imagesDirectory = locateImagesDirectory(config);
+//        final File imagesDirectory = locateImagesDirectory(config);
+        String imagesDirectory = "data/" + this.gameType.getResourcesDirectoryName() + "/images/";
+
+        Set<String> resourcesFolders = ResourceFileManager.getResourceFolders(imagesDirectory);
 
         final String language = config.getLanguage();
 
-        final File[] imagesFolders = imagesDirectory.listFiles();
+//        final File[] imagesFolders = imagesDirectory.listFiles();
 
-        final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
+//        final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
+
+        int filesCount = resourcesFolders.size();
 
         if (filesCount == 0) {
             log.warn("No image found in Directory " + imagesDirectory);
@@ -258,17 +261,19 @@ public class WhereIsIt implements GameLifeCycle {
                     index = ((randomFolderIndex + step) % filesCount) + 1;
                 }
 
-                final File folder = imagesFolders[(index) % filesCount];
+                String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
 
-                if (!folder.isDirectory())
-                    continue;
+//                if (!folder.isDirectory())
+//                    continue;
 
                 // final File[] files = folder.listFiles();
-                final File[] files = getFiles(folder);
+//                final File[] files = getFiles(folder);
+                Set<String> files = ResourceFileManager.getResourcePaths(folder);
 
-                final int numFile = random.nextInt(files.length);
+                final int numFile = random.nextInt(files.size());
 
-                final File randomImageFile = files[numFile];
+//                final File randomImageFile = files[numFile];
+                String randomImageFile = (String) files.toArray()[numFile];
 
                 if (winnerImageIndexAmongDisplayedImages == i) {
 
@@ -278,7 +283,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                     question = "Find the Odd one Out";
 
-                    pictograms = getPictogramms(imagesFolders[(index) % filesCount].getName());
+                    pictograms = getPictogramms((String) resourcesFolders.toArray()[(index) % filesCount]);
 
                 }
 
@@ -301,25 +306,28 @@ public class WhereIsIt implements GameLifeCycle {
 
                 final int index = (randomFolderIndex + step * i) % filesCount;
 
-                final File folder = imagesFolders[(index) % filesCount];
+//                final File folder = imagesFolders[(index) % filesCount];
+                String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
 
-                if (!folder.isDirectory())
-                    continue;
+//                if (!folder.isDirectory())
+//                    continue;
 
                 // final File[] files = folder.listFiles();
-                final File[] files = getFiles(folder);
+//                final File[] files = getFiles(folder);
+                Set<String> files = ResourceFileManager.getResourcePaths(folder);
 
-                final int numFile = random.nextInt(files.length);
+                final int numFile = random.nextInt(files.size());
 
-                final File randomImageFile = files[numFile];
+//                final File randomImageFile = files[numFile];
+                String randomImageFile = (String) files.toArray()[numFile];
 
                 if (winnerImageIndexAmongDisplayedImages == i) {
 
-                    questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
+                    questionSoundPath = getPathSound(folder, language);
 
-                    question = getQuestionText(imagesFolders[(index) % filesCount].getName(), language);
+                    question = getQuestionText(folder, language);
 
-                    pictograms = getPictogramms(imagesFolders[(index) % filesCount].getName());
+                    pictograms = getPictogramms(folder);
 
                 }
 
