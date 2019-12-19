@@ -149,7 +149,7 @@ public class GameMenuFactory {
         }
         for (GameCategories.Category gameCategory : gameSummary.getCategories()) {
             if (gameCategory.getThumbnail() != null) {
-                Image buttonGraphics = new Image(gameCategory.getThumbnail());
+                Image buttonGraphics = new Image(gameCategory.getThumbnail(),50,50,true,false);
                 ImageView imageView = new ImageView(buttonGraphics);
                 imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
                 imageView.setPreserveRatio(true);

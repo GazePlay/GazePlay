@@ -314,30 +314,31 @@ public class ColorsGame implements GameLifeCycle {
         pixelReader = writableImg.getPixelReader();
 
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.initOwner(gameContext.getPrimaryStage());
-        alert.initModality(Modality.WINDOW_MODAL);
-        alert.initStyle(StageStyle.UTILITY);
-        alert.setContentText(translator.translate("confirmBWText") + imageName);
-        alert.setTitle(translator.translate("confirmBWTitle"));
-        alert.setHeaderText(translator.translate("confirmBWHeader"));
-
-        // Make sure the alert is on top
-        alert.initOwner(gameContext.getPrimaryStage());
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.setAlwaysOnTop(true);
-
-        ButtonType yesButton = new ButtonType("Yes");
-        ButtonType noButton = new ButtonType("No");
-
-        alert.getButtonTypes().setAll(yesButton, noButton);
-
-        stage.toFront();
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.get() == yesButton) {
-            toBlackAndWhite();
-        }
+//        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//        alert.initOwner(gameContext.getPrimaryStage());
+//        alert.initModality(Modality.WINDOW_MODAL);
+//        alert.initStyle(StageStyle.UTILITY);
+//        alert.setContentText(translator.translate("confirmBWText") + imageName);
+//        alert.setTitle(translator.translate("confirmBWTitle"));
+//        alert.setHeaderText(translator.translate("confirmBWHeader"));
+//
+//        // Make sure the alert is on top
+//        alert.initOwner(gameContext.getPrimaryStage());
+//        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+//        stage.setAlwaysOnTop(true);
+//
+//        ButtonType yesButton = new ButtonType("Yes");
+//        ButtonType noButton = new ButtonType("No");
+//
+//        alert.getButtonTypes().setAll(yesButton, noButton);
+//
+//        stage.toFront();
+//        Optional<ButtonType> result = alert.showAndWait();
+//
+//        if (result.get() == yesButton) {
+//            toBlackAndWhite();
+//        }
+        toBlackAndWhite();
     }
 
     private void toBlackAndWhite() {

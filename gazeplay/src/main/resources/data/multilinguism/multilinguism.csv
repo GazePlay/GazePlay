@@ -1,15 +1,15 @@
 ,alb,ara,chn,deu,ell,eng,fin,fra,hrv,ind,ita,jpn,pol,por,zsm,nld,rus,spa,vnm
-closeWindowToContinueToGazePlay,,,,,,Close this window to continue to GazePlay,,Fermez cette fenêtre pour continuer vers GazePlay,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-close,,,,,,Close,,Fermer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+closeWindowToContinueToGazePlay,,,,,,Close this window to continue to GazePlay,,Fermez cette fenêtre pour continuer vers GazePlay,,,,,,,,,,,
+close,,,,,,Close,,Fermer,,,,,,,,,,,
 Colon,:,:,:,: ,:,: ,:, : ,:,:,:,:,:,:,:,:,:,:,:
-games count,,,,,,Games count,,Nombre de jeux,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-games variants count,,,,,,Games variants count,,Nombre de variantes de jeux,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+games count,,,,,,Games count,,Nombre de jeux,,,,,,,,,,,
+games variants count,,,,,,Games variants count,,Nombre de variantes de jeux,,,,,,,,,,,
 Creampie,Tartë me krem,فطائر كريمة,奶油派,Sahnetorte,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Cream pies,kermatorttu,Tartes à la crème,Krempita ,Pai krim,Torte alla crema,クリームパイ,Torty kremowe,Pastéis de nata,Pai krim,Taarten,Кремовый пирог,Tarta de crema,Bánh kem
-EnableAreaOfInterest,Aktivizo Zonën e Interesit,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest
-EnableConvexHull,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI
-EnableVideoRecording,Aktivizo Video Regjistrimin për Lojën ,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording
-FrogsRace,Vrapo bretkosë!,سباق الضفادع!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,La course des grenouilles,La course des grenouilles!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Frog Runner!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!
-AreaOfInterest,Zona e Interesit,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,
+EnableAreaOfInterest,Aktivizo Zonën e Interesit,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest,Registreer blikrichtingen,Enable The Area Of Interest,Enable The Area Of Interest,Enable The Area Of Interest
+EnableConvexHull,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Gebogen lijnen bij registratie blikrichting,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI
+EnableVideoRecording,Aktivizo Video Regjistrimin për Lojën ,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Activeer video-opname van spelletjes,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording
+FrogsRace,Vrapo bretkosë!,سباق الضفادع!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,La course des grenouilles,La course des grenouilles!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Frog Runner!,Kikker Loop!,Ribbit Run!,Ribbit Run!,Ribbit Run!
+AreaOfInterest,Zona e Interesit,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Rustpunt blikrichting,Area Of Interest,Area Of Interest,
 Ninja,Ninxha,النينجا,忍者 ！,Ninja !,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Ninja !,Ninja,Ninja !,Ninja,Ninja!,Ninja!,にんじゃ !,Ninja!,Ninja,Ninja!,Ninja !,Ниндзя,Ninja,Ninja !
 MagicCards,Karta magjike,اوراق سحرية,魔幻卡,Zauberkarten,Επιτυχημένες αποκαλύψεις,Magic cards,Taikakortit,Cartes magiques,Čarobne kartice,Kad sihir,Carte magiche,マジックカード,Magiczne karty,Cartas mágicas,Kad sihir,Magische kaarten,Магические карты,Tarjetas mágicas,Những quân bài ma thuật
 Blocks,Blloqe,مكعبات,,Blocks,Επιτυχημένες αποκαλύψεις,Blocks,kappaleet,Blocs,Blokovi,Blok,Blocchi,ブロック,Bloki,Bloco,Blok,Blokken,Блоки,Bloques,Các hình khối
@@ -18,16 +18,16 @@ ColoredBubbles,Flluska me ngjyra,فقاعات ملونة,多彩泡泡,Farbige bl
 PortraitBubbles,Flluska me portrete,فقاعات,肥皂泡,Porträt Blasen,Φυσαλίδες με πορτρέτα,Portrait Bubbles,muotokuvakuplat,Bulles portrait,Mjehurići s portretom,Potret Bubbles,Bolle con ritratto,しょうぞうのあわ,Portret Bąbelki ???,Bulha retrato,Potret Bubbles,Foto Bubbels,Пузырьки с картинками,Burbujas retrato,Bong bóng có chân dung
 WhereIsTheAnimal,Ku është kafsha?,اين هذا الحيوان؟,这个动物在哪？,Wo ist dieses Tier?,Επιτυχημένες αποκαλύψεις,Where is this animal?,missä on eläin,Où est cet animal ?,Gdje je ova životinja?,Di manakah haiwan ini?,Dov'è questo animale?,このせいぶつはドコ？,Gdzie jest to zwierzę?,Onde està essa animal ?,Di manakah haiwan ini?,Waar is dit dier?,Где это животное?,Donde está este animal?,Con vật này ở đâu?
 WhereIsTheColor,Ku është ngjyra?,اين هذا اللون؟,这个颜色在哪？,Wo ist die Farbe?,Επιτυχημένες αποκαλύψεις,Where is this color?,missä on väri,Où est cette couleur ?,Gdje je ova boja?,Di manakah warna ini?,Dov'è questo colore?,このいろはドコ？,Gdzie jest ten kolor?,Onde està essa côr ?,Di manakah warna ini?,Waar is deze kleur?,Где этот цвет?,Donde ves este color?,Màu này ở đâu?
-WhereIsTheLetter,Ku është shkronja?,اين هذا الحرف؟,,,,Where is the letter?,,Où est cette lettre ?,,,Dov'è questa lettera?,,,,,,,,
-WhereIsTheNumber,Ku është numri?,اين هذا الرقم؟,,,,Where is the number?,,Où est ce nombre ?,,,Dov'è questo numero?,,,,,,,,
+WhereIsTheLetter,Ku është shkronja?,اين هذا الحرف؟,,,,Where is the letter?,,Où est cette lettre ?,,,Dov'è questa lettera?,,,,,Waar is de letter?,,,
+WhereIsTheNumber,Ku është numri?,اين هذا الرقم؟,,,,Where is the number?,,Où est ce nombre ?,,,Dov'è questo numero?,,,,,Waar is het cijfer?,,,
 WhereIsIt,Ku është?,اين هذا؟,它在哪？,Wo ist es?,Επιτυχημένες αποκαλύψεις,Where is it ?,missä se on,Où est-ce ?,Gdje je?,Di mana ia?,Dov'è?,これはドコ？,Gdzie to jest ?,Onde é ?,Di mana ia?,Waar is het?,Где это находится?,Donde está?,Nó ở đâu?
-flags,Luajmë me Flamujt,اين هذا العلم؟,,,,Fun with Flags,,Trouve les drapeaux,,,Trova la bandiera,,,Scopri la bandiera,,,,,
+flags,Luajmë me Flamujt,اين هذا العلم؟,,,,Fun with Flags,,Trouve les drapeaux,,,Trova la bandiera,,,Scopri la bandiera,,Plezier met vlaggen,,,
 StatsTitle,Statistika,احصائيات,统计,Statistiken,Στατιστικά,Statistics,otsikko,Statistiques,Statistika,Statistik,Statistiche,統計,Statystyka,Estatística,Statistik,Statistieken,Статистика,Estadísticas,Số liệu thống kê
 Aver,Mesatarja,معدل,平均值,Durchschnitt,Μέση τιμή,Average,Keskiverto,Moyenne,Prosječan,Purata,Media,平均,Średni,Média,Purata,Gemiddelde,Средний показатель,Promedio,Trung bình
 Med,Mediani,متوسط,中位数,Median,Διάμεσος,Median,Mediaani,Médiane,Srednji,Median,Mediana,中央値,Sredni/Srodkowy,Mediana,Median,Mediaan,Медианное значение,Mediana,Giá trị giữa
 TotalLength,Kohëzgjatja e lojës,وقت اللعب الإجمالي,总游戏时间,Zeit auf dem Spiel,Συνολικός ενεργός χρόνος παιχνιδιού,Total active playtime,kokonaispituus,Temps de jeu actif,Ukupno aktivno vrijeme igranja,Jumlah jam bermain aktif,Tempo totale di gioco attivo,遊び時間,Łączny czas odtwarzania,Tempo de jogo activo,Jumlah jam bermain aktif,Totale actieve speeltijd,Общее время воспроизведения,Tiempo activo de juego,Tổng thời gian chơi
 Shots,Gjuajtje,رميات,射击,Schüsse,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Shots,ammuskelu,Tirs,Pogoci,Tembak,Tiri,射撃,Pędy,Tiros,Tembak,Aantal hits,Выстрелы,Tiros,Lần bắn
-HitRate,Raporti i gjuajtjeve,نسبة الطلقات,镜头比例,Zum Platzen gebrachte Blasen,Φούσκες έκρηξης,Hit rate,kuplien ammuskelu,Taux de réussite,Rasprsni mjehuriće,Buih pecah,Rapporto dei tiri,,Pekniete babelki,Bulha atingido,Buih pecah,Ratio de tirs,Шарики,Tasa de éxito,tỷ lệ bắn
+HitRate,Raporti i gjuajtjeve,نسبة الطلقات,镜头比例,Zum Platzen gebrachte Blasen,Φούσκες έκρηξης,Hit rate,kuplien ammuskelu,Taux de réussite,Rasprsni mjehuriće,Buih pecah,Rapporto dei tiri,,Pekniete babelki,Bulha atingido,Buih pecah,Aantal hits,Шарики,Tasa de éxito,tỷ lệ bắn
 BubbleShot,Flluska të çara,رمي الفقاعات,戳泡泡,Zum Platzen gebrachte Blasen,Φούσκες έκρηξης,Burst bubbles,kuplien ammuskelu,Bulles éclatées,Rasprsni mjehuriće,Buih pecah,Bolle scoppiate,,Pekniete babelki,Bulha atingido,Buih pecah,Barst de bubbels,Шарики,Burbujas reventadas,Số bóng bắn vỡ
 HiddenItemsShot,Imazhe të fshehura,الصور المخفية,,Entdeckte Bilder,Ακάλυπτες εικόνες,Uncovered Images,piileskelevien juttujen ammuskelu,Images découvertes,Skrivene slike ,Gambar dijumpai,Immagini scoperte,,Nie odkryte obrazy,Imagens descobstas,Gambar dijumpai,Ontdek de prenten,Стреляй в скрытые предметы,Imagenes descubiertas,Số hình đã mở
 Length,Koha aktive e lojës,وقت اللعب الفعلي,实际游戏时间,Gespielte Zeit,Πραγματικός χρόνος παιχνιδιού,Actual play Time,pituus,Temps effectif de jeu,Efektivno vrijeme igranja,Masa mainan sebenar,Tempo di gioco effettivo,,Rzeczywisty czas gry,Tempo de jogo efectivo,Masa mainan sebenar,Totale speeltijd,Время в игре,Tiempo efectivo de juego,Thời gian chơi
@@ -43,30 +43,26 @@ EyeTracker,Eye Tracker,تعقب العين,眼球跟踪,Eyetracker,Συσκευ�
 FileDir,Direktoria,دليل الملف,文件夹,Dateiverzeichnis,Κατάλογος αρχείων,Files Directory ,tallennuspaikka,Répertoire des fichiers,Datoteka,Direktori Fail,Cartella,,Katalog plików,Diretório de Arquivos,Direktori Fail,Bestands locatie,Директоия файлов,Directorio,Thư mục
 FixationLength,Koha e fiksimit (sekonda),مدة التثبيت (بالثواني),注视时长（秒）,Dauer der Fixierung  (Sekunden),Μήκος σταθεροποίησης (δευτερόλεπτα),Fixation Length (seconds),kiinnittämisen pituus,Durée de la fixation (secondes),Dužina fiksiranog pogleda (u sekundama),Panjang Penekanan (saat),Durata fissazione (secondi),,Czas poprawki (sekundy),Duracaõ de fixação,Panjang Penekanan (saat),Fixatietijd (seconden),Длина фиксации (в секундах),Duración de la fijación,Độ dài cố định (giây)
 LayoutFile,Stilet,ملف نموذجي,,Style Sheets,Φύλλα στυλ,Style Sheets,asettelutiedosto,Fichier de style,Raspored datoteka,Helaian Gaya,Fogli di stile,,Arkusze stylów,Diretório do jogo « Onde é »,Helaian Gaya,Stijlen,Таблица стилей,Hojas de estilo,Tập tin Định dạng
-WhereIsItDirectory,Direktoria “Ku është?”, دليل اللعبة اين هذا؟,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? >,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco ""Dov'è?""""artella",, Gdzie to jest?  Katalog gier,Duracaõ de afichagem das perguntas,« Di mana? » Arahan permainan,Waar is het Spel bestandslocatie,Где это? директория Игры,"Directorio del juego ""¿Donde está?""""irectorio del",Thư mục game
-WII-error,Verifikim i direktorisë “Ku është?”,تثبت من دليل اللعبة اين هذا؟,查找《它在哪》游戏目录,Überprüfen Spielverzeichnis « Wo ist es? »,Ελέγξτε «Πού είναι; ,Check « Where is it? » Game directory,Tarkista «Missä se on? » Pelihakemisto,Vérifiez le répertoire du jeu « Où est-ce ? ».,Provjeri ,Semak « Di mana? » Arahan permainan,"Controllo cartella di gioco ""Dov'è?""""ontroll",,Sprawdź «Gdzie to jest? » Katalog gier,*Verifique «Onde está? ,Semak «Di mana? » Arahan permainan,verifiëer ,Проверка ,"Verifica el directorio del juego ""¿Donde está?""""erifica el di",Kiểm tra Thư mục game
+WhereIsItDirectory,Direktoria “Ku është?”, دليل اللعبة اين هذا؟,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? >,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco ""Dov'è?""""artella",, Gdzie to jest?  Katalog gier,Duracaõ de afichagem das perguntas,« Di mana? » Arahan permainan,« Waar is het » Spel bestandslocatie,Где это? директория Игры,"Directorio del juego ""¿Donde está?""""irectorio del",Thư mục game
+WII-error,Verifikim i direktorisë “Ku është?”,تثبت من دليل اللعبة اين هذا؟,查找《它在哪》游戏目录,Überprüfen Spielverzeichnis « Wo ist es? »,Ελέγξτε «Πού είναι; ,Check « Where is it? » Game directory,Tarkista «Missä se on? » Pelihakemisto,Vérifiez le répertoire du jeu « Où est-ce ? ».,Provjeri ,Semak « Di mana? » Arahan permainan,"Controllo cartella di gioco ""Dov'è?""""ontroll",,Sprawdź «Gdzie to jest? » Katalog gier,*Verifique «Onde está? ,Semak «Di mana? » Arahan permainan,Controleer de « Waar is het » Spel bestandslocatie,Проверка ,"Verifica el directorio del juego ""¿Donde está?""""erifica el di",Kiểm tra Thư mục game
 QuestionLength,Kohëzgjatja e pyetjeve,مدة ظهور الاسئلة,,Dauer der Veröffentlichung von Fragen,Μήκος εμφάνισης ερωτήματος,Question Display Length,kysymys,Durée d’affichage des questions,Dužina prikazivanja pitanja,Panjang Paparan Soalan,Durata esposizione della domanda,,Długość wyświetlania pytania,*Pergunta Display Length,Panjang Paparan Soalan,Hoe lang de vraag tonen?,Длина дисплея вопроса,Duración de visualización de las preguntas,Thời gian hiển thị câu hỏi
 CupsBalls,Tasa dhe topa,كؤوس وكرات,杯子和球,Bechertrick,Επιτυχημένες αποκαλύψεις,Cups and Balls,kupit ja pallot,Gobelets Pass Pass,Šalice i lopte,Piala dan Balls,Tazze e palle,,Puchary i kule,*Copos e Bolas,Piala dan Balls,Bekers en Ballen,Чашки и шарики,Tazas y bolas,Chiếc cốc và Quả bóng
 Biboule,Biboules,كويرات,垒球,Biboles,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Biballs,biboules,Biboules,Biboules,Biballs,Biballs,,Biballs,Biboules,Biballs,Vliegjes,Безделушки,Biboules,Bóng Bi
 Robots,Robota,روبوتات,机器人,Roboters,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Robots,ropotit,Robots,Roboti,Robot,Robot,,Roboty,Robots,Robot,Robotten,Роботы,Robot,Rô-bốt
-Memory,Memorizo,ذاكرة,记忆,Memory,Επιτυχημένες αποκαλύψεις,Memory,muisti,Memory,Memory,Memori,Memoria,,Pamięć,Memoria,Memori,Memory,Память,Memory,Bộ nhớ
-MemoryLetters,Memorizo Shkronjat,ذاكرة (الأحرف),,,,Memory (Letters),,Memory (lettres),,,Memoria(lettere),,,,,,,,
-MemoryNumbers,Memorizo Numrat,ذاكرة (أرقام),,,,Memory (Numbers),,Memory (nombres),,,Memoria(numeri),,,,,,,,
+Memory,Memorizo,ذاكرة,记忆,Memory,Επιτυχημένες αποκαλύψεις,Memory,muisti,Memory,Memory,Memori,Memoria,,Pamięć,Memoria,Memori,Geheugenspel,Память,Memory,Bộ nhớ
+MemoryLetters,Memorizo Shkronjat,ذاكرة (الأحرف),,,,Memory (Letters),,Memory (lettres),,,Memoria(lettere),,,,,Geheugenspel Letters,,,
+MemoryNumbers,Memorizo Numrat,ذاكرة (أرقام),,,,Memory (Numbers),,Memory (nombres),,,Memoria(numeri),,,,,Geheugenspel Cijfers,,,
 EnableRewardSound,Aktivizo audion për shpërblimet,تفعيل الصوت (احسنت),打开奖励音效,Aktiviere den Sound Bravo,Ενεργοποίηση ήχου ανταμοιβής,Enable Reward sound,sallia palkkioääni,Activer le son « bravo »,Aktiviraj zvuk za ,Dayakan bunyi Ganjaran,Attiva suono ricompensa,,Włącz dźwięk nagrody,Activar o som a « Bravo »,Dayakan bunyi Ganjaran,Activeer beloningsgeluid,Включить звук вознаграждения,Activar el sonido Bravo,Bật tiếng
 DisableHeatMap,Çaktivizo Heat Map,الغاء خريطة الحرارة,关闭热量地图,Deaktivieren Sie die Heat Map,Απενεργοποιήστε το χάρτη θερμότητας,Disable Heat Map,estää lämpökartta,Désactiver la Heat Map,Deaktiviraj mapu za toplinu,Lumpuhkan Peta Haba,Disattiva mappa di calore,,Wyłącz mapę ciepła,Desactivar heatmap,Lumpuhkan Peta Haba,Deactiveer Heat Map,Отключить тепловую карту,Desactivar mapa de calor,Tắt
-DisableSequence,Çaktivizo Sequencën e Fiksimit,,,,,Disable the Fixation Sequence,,Désactiver la Séquence de fixation,,,Disattive la sequenza di fissazione,,,Desactivar la secuencia de fijación,,,,,
-EnableGazeMenu,Aktivizo Menunë Gaze (Beta),تفعيل النظر ,,Aktivieren Sie das Blickmenü (Beta),Ενεργοποίηση του μενού Gaze (Beta),Enable the Gaze Menu (Beta),sallia gaze-menu,Activer le menu regard (Beta),Aktiviraj meni za pogled (Beta),Dayakan Menu Gila (Beta),Attiva il menù di vista (beta),,Włącz menu Gaze (Beta),Activar o menu regard (Beta),Dayakan Menu Gila (Beta),Activeer menu blikrichting (Beta),Включить меню Гейз (бета),Activar el menú de mirada (Beta),Bật Menu Gaze
+DisableSequence,Çaktivizo Sequencën e Fiksimit,,,,,Disable the Fixation Sequence,,Désactiver la Séquence de fixation,,,Disattive la sequenza di fissazione,,,Desactivar la secuencia de fijación,,Deactiveer de Fixatievolgorde,,,
+EnableGazeMenu,Aktivizo Menunë Gaze (Beta),تفعيل النظر ,,Aktivieren Sie das Blickmenü (Beta),Ενεργοποίηση του μενού Gaze (Beta),Enable the Gaze Menu (Beta),sallia gaze-menu,Activer le menu regard (Beta),Aktiviraj meni za pogled (Beta),Dayakan Menu Gila (Beta),Attiva il menù di vista (beta),,Włącz menu Gaze (Beta),Activar o menu regard (Beta),Dayakan Menu Gila (Beta),Activeer het menu blikrichting (Beta),Включить меню Гейз (бета),Activar el menú de mirada (Beta),Bật Menu Gaze
 MenuOrientation,Orientimi i menusë (nevojitet rinisja e lojës),إتجاه القائمة,,Menüorientierung (erfordert Neustart des Spiels),Μενού προσανατολισμού (επανεκκίνηση του παιχνιδιού για να τεθεί σε ισχύ),Menu Orientation (restart game to take effect),valikon suunta,Orientation du menu (nécessite de relancer le jeu),Orjentacijski meni (restartiraj igru za aktivaciju),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Orientazione del menù (è richiesto il riavvio del gioco),,Orientacja menu (uruchom ponownie grę),orientacaõ domens,Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Richting menu (herstart nodig voor activering),Управление через Меню (перезапустите игру для ввода в дйствие),Orientación del menú (requiere reiniciar el juego),Phương ngang/dọc của menu (Khởi động lại để có hiệu lực)
-
 Music,Muzika,موسيقى ,音乐,Musik,Μουσική,Music,musiikki,Musique,Muzika,Muzik,Musica,,Muzyka,Música,Muzik,Muziek,Музыка,Musica,Âm nhạc
-Effects,,,,,,Effects,,Effets,,,,,,,,,,,
+Effects,,,,,,Effects,,Effets,,,,,,,,effect,,,
 Volume,Volumi,صوت,,Volume,Ενταση Ήχου,Volume,äänenvoimakkuus,Volume,Glasnoća,Jumlah dagangan,Volume,,Tom,Volume,Jumlah dagangan,Volume,Громкость,Volumen,Âm lượng
-Sound Volume,Volumi,صوت,,Volume,Ενταση Ήχου,Volume,äänenvoimakkuus,Volume,Glasnoća,Jumlah dagangan,Volume,,Tom,Volume,Jumlah dagangan,Volume,Громкость,Volumen,Âm lượng
-
-
 OpenMemory,Memorizo (hapur),ذاكرة مفتوحة,,OpenMemory,Επιτυχημένες αποκαλύψεις,OpenMemory,avoin muisti,Memory ouvert,Otvori memoriju,OpenMemory,Memoria aperta,,Otwarta pamiec,Memoria Aberta,OpenMemory,Open Memory,Доступная память,Memory abierto,Bộ nhớ Mở rộng
-OpenMemoryLetters,Memorizo Shkronjat (hapur),ذاكرة مفتوحة (الأحرف),,,,Open Memory (Letters),,Memory ouvert (lettres),,,,,,,,,,,
-OpenMemoryNumbers,Memorizo Numrat (hapur),ذاكرة مفتوحة (أرقام),,,,Open Memory (Numbers),,Memory ouvert (nombres),,,,,,,,,,,
+OpenMemoryLetters,Memorizo Shkronjat (hapur),ذاكرة مفتوحة (الأحرف),,,,Open Memory (Letters),,Memory ouvert (lettres),,,,,,,,Open Memory (Letters),,,
+OpenMemoryNumbers,Memorizo Numrat (hapur),ذاكرة مفتوحة (أرقام),,,,Open Memory (Numbers),,Memory ouvert (nombres),,,,,,,,Open Memory (Cijfers),,,
 VideoPlayer,Video player me reagim,تشغيل الفيديو مع العودة,,Video Player mit Feedback,Βίντεο με Ανατροφοδότηση,Video Player with Feedback,video player palautteella,Lecteur Video avec retour,Video player sa povratnom informacijom,Pemain Video dengan Maklum Balas,Lettore video con feedback,,Odtwarzacz wideo z komentarzem,Leitore video com feedback,Pemain Video dengan Maklum Balas,Video speler met feedback,Видеоплеер с Обратной связью,Reproductor de video con comentarios,Trình chơi nhạc có Phản hồi
 Choose Game Variante,Zgjidh një variant,اختيار البديل,,Wählen Sie Variante,Επιλέξτε εναλλακτική λύση,Choose Variante,valitse peli -muunnos,Choisi une variante,Izaberi varijantu igre,Pilih Variante,Scegli una variante,,Wybierz wariant,Escolhe jogo variante,Pilih Variante,Kies een variant,Выбрать вариант игры,Elija Variante,Chọn loại bạn muốn
 Enter FullScreen,Aktivizo Ekranin e plotë,إدخال كامل الشاشة,,Vollbild,Κατάσταση πλήρους οθόνης,Enter FullScreen,valitse täysi näyttö,Mettre en plein écran,Povećaj ekran,Masukkan Fullscreen,Attiva modalità schermo intero,,Wlacz pelny ekran,Entrar ao modo pleino ecrà,Masukkan Fullscreen,Toon op volledig scherm,Войти в режим Полного экрана,Pantalla completa,Chuyển sang
@@ -76,7 +72,7 @@ Colors,Ngjyra,الالوان,颜色,Farben!,Χρώματα!,Colors !,värit,Coul
 Lapins,Lepurusha,الارانب,,Conejos,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Rabbits,jänis,Lapins,Zečevi,Arnab,Conigli,,Króliki,Coelhos,Arnab,Konijnen,Кролики,Conejos,Thỏ
 Divisor,Ndarës,المقسوم عليه,,Divisor,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Divisor,jakaja,Diviseur,Podijeli,Pembahagi,Divisore,,Dzielnik,Divisor,Pembahagi,Delen,Делитель,Divisor,Phép chia
 Piano,Piano,بيانو,,Piano,Πιάνο,Piano,piano,Piano,Sviraj piano,Piano,Pianoforte,,Pianino,Piano,Piano,Piano,Пианино,Piano,Đàn Piano
-Colorsss,Ngjyros!,تلوين,,Färbung,Χρωματίζω,Coloring,värit,Coloriage,Oboji,Mewarna,Colorare,,Kolorowanie,Coloraçaõ,Mewarna,Schilderen,Раскраска,Colorear,Tô màu
+Colorsss,Ngjyros!,تلوين,,Färbung,Χρωματίζω,Coloring,värit,Coloriage,Oboji,Mewarna,Colorare,,Kolorowanie,Coloraçaõ,Mewarna,Kleuren,Раскраска,Colorear,Tô màu
 LoadImg,Ngarko Imazhin,تحميل الصورة,,Bild laden,Φόρτωση εικόνας,Load image,lataa,Charger image,Učitavanje slike ,Muatkan imej,Carica immagine,,Załaduj obraz,*Carregar imagem,Muatkan imej,Laad foto,Загрузить изображение,Cargar imagen,Load ảnh
 SaveImg,Ruaj Imazhin,حفظ الصورة,,Bild speichern,Αποθήκευση εικόνας,Save image,tallentaa,Sauvegarder image,Sačuvaj sliku,Menyimpan imej,Salva immagine,,Zapisać obraz,*Salvar imagem,Menyimpan imej,Bewaar foto,Сохранить изображение,Guardar imagen,Lưu ảnh
 imgLoadChooserTitle,Zgjidh imazhin për të ngarkuar,اختار الصورة لتحميل,,Wählen Sie Ihr Bild zum Laden,Επιλέξτε την εικόνα που θέλετε να φορτώσετε,Choose your image to load,lataa valitun tiedoston,Choisissez votre image à charger,Izaberi sliku,Pilih imej anda untuk dimuatkan,Scegli la tua immagine da caricare,,Wybierz obraz do załadowania,*Escolha sua imagem para carregar,Pilih imej anda untuk dimuatkan,Kies je foto om te laden,Выберите изображение для загрузки,Elige tu imagen para cargar,Chọn ảnh để mở
@@ -92,141 +88,128 @@ Order,Rendit,امر,,Reihenfolge,Εντοπισμός στόχου επιτυχ�
 EffectsVolume,Efektet e volumit,حجم التأثيرات,,Effektvolumen,εφέ ήχου,effects volume,tehoste äänille,volume des effets,Glasnoća efekata,jumlah kesan,Volume degli effetti,,Nieliczone strzały,*Volume de efeitos,jumlah kesan,Volume effecten,Объм эффектов,Volumen de efectos,Âm lượng của hiệu ứng
 reset,Reset,اعادة تعيين,,zurücksetzen,επαναφορά,reset,nollaus,réinitialiser,Resetiraj,menetapkan semula,Resetta,,głośność efektów,*restabelecer,menetapkan semula,Reset,Сброс,Restablecimiento,Đặt lại
 ColorDesc,Ngjyros imazhe!,قم بالتلوين باستخدام اي صورة و حفظها,,Färben Sie mit einem beliebigen Bild und speichern Sie das Bild.,Χρωμάτισε εικόνες!,Color images !,väri desc,Coloriez des images !,Oboji bilo koju sliku i sačuvaj,Gambar berwarna!,Colora usando qualsiasi immagine e salvala,,Zrób trochę kolorowania na dowolnym obrazie, a następnie go zapisz.,Gambar berwarna!,Kleur om het even welke plaat en bewaar.,Раскрасьте какое-либо изображение и сохраните его.,Coloree usando cualquier imagen y luego guárdela,Tô màu một hình bất kì và lưu lại
-Labyrinth,Labirinti,متاهة,,Labyrinth,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Labyrinth,labyrintti,Labyrinthe,Labirint,Labyrinth,Labirinto,,Labirynt,labirinto,Labyrinth,Labyrint,Лабиринт,Laberinto,Mê cung
+Labyrinth,Labirinti,متاهة,,Labyrinth,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Labyrinth,labyrintti,Labyrinthe,Labirint,Labyrinth,Labirinto,,Labirynt,labirinto,Labyrinth,Doolhof,Лабиринт,Laberinto,Mê cung
 Pet,Kam një Biball !,لدي كويرات,,Ich habe ein Biboles,Έχω ένα Biball!,I've got a Biball !,lemmikki,J'ai un Biboule !,Imam Biboule!,Saya mempunyai Biball!,Ho un Biball!,,Mam Biballa!,*Eu tenho um Biball!,Saya mempunyai Biball!,Ik heb een paar !,Домашний питомец,Yo tengo un Bibole!,Tôi có Bóng Bi!
-SpeedEffects,Shpejtësia e efekteve,سرعة,,Weißer Hintergrund,Ταχύτητα επίδρασης,Effect speed,vauhtiefektit,Vitesse des animations,Brzina animacije,Kelajuan kesan,Velocità delle animazioni,,Szybkość efektu,*Velocidade do efeito,Kelajuan kesan,Snelheids effecten,Эффекты скорости,Velocidad de las animaciones,Tốc độ của hiệu ứng
+SpeedEffects,Shpejtësia e efekteve,سرعة,,Weißer Hintergrund,Ταχύτητα επίδρασης,Effect speed,vauhtiefektit,Vitesse des animations,Brzina animacije,Kelajuan kesan,Velocità delle animazioni,,Szybkość efektu,*Velocidade do efeito,Kelajuan kesan,Snelheid van de effecten,Эффекты скорости,Velocidad de las animaciones,Tốc độ của hiệu ứng
 WhiteBackground,Sfond i bardhë,اختيار خلفية بيضاء,,Animationsgeschwindigkeit,Λειτουργία λευκού φόντου,White Background mode,valkoinen tausta,Mode fond blanc,Bijela pozadina,Mod Latar Belakang Putih,Modalità sfondo bianco,,Tryb białego tła,*Modo de fundo branco,Mod Latar Belakang Putih,Witte achtergrond modus,Режим белого фона,Modo fondo de pantalla blanco,Chế độ hình nền trắng
 EnableGazeMouse,Aktivizo mouse ,تشغيل مظاهات الفارة البصرية اضغط س لايقاف/تشغيل,,Aktivieren der visuellen Mausemulation ; drücken Sie S um die Emulation zu stoppen/starten ; Drücken Sie die Leertaste um den Mausklick zu emulieren.,Ενεργοποιήστε την εξομοίωση του Mouse Gaze. πατήστε S για να διακόψετε ; ξεκινήσετε την εξομοίωση. Πατήστε το πλήκτρο διαστήματος για να εξομοιώσετε το κλικ.,Enable the Gaze Mouse emulation ; press S to stop/start the emulation ; Press space to emulate click,aktivoi katseohjainhiiri,Activer l'émulation de la souris visuelle ; appuyez sur S pour arrêter/commencer l'émulation ; appuyez sur espace pour émuler un click de souris,Aktiviraj opciju pogled; Pritisni S za stop/start; Pritisni razmaknicu za efekt klik misa,Dayakan emulasi Gaze Mouse; tekan S untuk menghentikan / memulakan emulasi; Tekan ruang untuk meniru klik,Attiva modalità emulazione mouse ; premi S per fermare/avviare l'emulatore ; premi spazio per emulare il click del mouse,,Włącz emulację Gaze Mouse; naciśnij S,*Ative a emulação do Gaze Mouse; pressione S para parar / iniciar a emulação; Pressione espaço para emular clique,Dayakan emulasi Gaze Mouse; tekan S untuk menghentikan / memulakan emulasi; Tekan ruang untuk meniru klik,Activeer de oogsturing via muissimulatie ; druk S om de muissimulaite te stoppen/starten ; klik op de spatiebar om een klik na te doen,Включить эмуляцию Gaze мышки ; нажмите на S ; чтобы начать/остановить эмуляцию; нажмите пробел для эмуляции клика,Activación de la emulación del ratón visual ; presione S para detener/iniciar la emulación ; presione espacio para emular el clic,Bật giả lập Chuột Gaze; ấn S để dừng/bắt đầu giả lập
-AddUser,Shto një përdorues të ri,اظافة مستخدم جديد,,Neuen Benutzer hinzufügen,Προσθήκη νέου χρήστη,Add new user,lisää käyttäjä,Ajouter un nouvel utilisateur,Dodaj novog korisnika,Tambah pengguna baharu,Aggiungi un nuovo utente,,Dodaj nowego użytkownika, aby zatrzymać / rozpocząć emulację; Naciśnij spację,Tambah pengguna baharu, aby emulować kliknięcie,Добавить нового пользователя,Agregar un usuario,Thêm người dùng mới
+AddUser,Shto një përdorues të ri,اظافة مستخدم جديد,,Neuen Benutzer hinzufügen,Προσθήκη νέου χρήστη,Add new user,lisää käyttäjä,Ajouter un nouvel utilisateur,Dodaj novog korisnika,Tambah pengguna baharu,Aggiungi un nuovo utente,,Dodaj nowego użytkownika, aby zatrzymać / rozpocząć emulację; Naciśnij spację,Tambah pengguna baharu,Voeg gebruiker toe,Добавить нового пользователя,Agregar un usuario,Thêm người dùng mới
 DefaultUser,Përdorues i parazgjedhur,مستخدم افتراضي,,Standardbenutzer,Προεπιλεγμένος χρήστης,Default User,poista käyttäjä,Utilisateur par Défaut,Zadani korisnik,Pengguna Lalai,Utente standard,,Domyślny użytkownik,*Usuário padrão,Pengguna Lalai,Standaard Gebruiker,Пользователь по умолчанию,Usuario predeterminado,Người dùng mặc định
 NewUser,Përdorues i ri, مستخدم جديد,,Neuer Benutzer,Νέος χρήστης,New user,uusi käyttäjä,Nouvel utilisateur,Novi korisnik,Pengguna baru,Nuovo utente,,Nowy użytkownik,*Novo usuário,Pengguna baru,Nieuwe gebruiker,Новый пользователь,Nuevo usario,Người dùng mới
 Remove,Dëshiron të fshish këtë përdorues?,هل تريد فعلا محو المستخدم؟,,Wollen Sie diesen Benutzer wirklich löschen? ,Θέλετε πραγματικά να διαγράψετε αυτόν τον χρήστη;,Do you really want to delete this user ?,poista,Voulez vous vraiment supprimer cet utilisateur ?,Želiš li zaista obrisati ovog korisnika?,Adakah anda benar-benar mahu memadam pengguna ini?,Vuoi davvero eliminare questo utente?,,Czy na pewno chcesz usunąć tego użytkownika?,*Você realmente deseja excluir este usuário?,Adakah anda benar-benar mahu memadam pengguna ini?,Ben je zeker dat je deze gebruiker wil verwijderen?,Вы действительно хотите удалить данного пользователя?,¿Realmente quieres eliminar a este usuario?,Bạn có muốn xóa người dùng này thật không
-UserModif,Modifiko përdoruesin,تغيير المستخدم,,Ändern des Benutzers,Τροποποίηση χρήστη,User Modification,käyttäjän muokkaaminen,Modification de l'utilisateur,Modificiraj korisnika,Pengubahsuaian Pengguna,Modifica utente,,Modyfikacja użytkownika,*Modificação do usuário,Pengubahsuaian Pengguna,Gebruikers instellingen,Обновление данных пользователя,Modificación del usario,Tùy chỉnh người dùng
+UserModif,Modifiko përdoruesin,تغيير المستخدم,,Ändern des Benutzers,Τροποποίηση χρήστη,User Modification,käyttäjän muokkaaminen,Modification de l'utilisateur,Modificiraj korisnika,Pengubahsuaian Pengguna,Modifica utente,,Modyfikacja użytkownika,*Modificação do usuário,Pengubahsuaian Pengguna,Instellingen gebruikers,Обновление данных пользователя,Modificación del usario,Tùy chỉnh người dùng
 YesRemove,Po (fshi),نعم (محو),,Ja (löschen),Ναι (Διαγραφή),Yes (delete),Kyllä poista,Oui (supprimer),Da (obriši),Ya (padamkan),Si (rimuovi),,Tak (usuń),*Sim (excluir),Ya (padamkan),Ja (verwijder),Да (удалить),Si (eliminar),Có (xóa)
-NoCancel,Jo (anullo),لا (الغاء),,Nein (Annullierer),Όχι (ακύρωση),No (cancel),Ei kumota,Non (annuler),Ne (poništi),Tidak (membatalkan),No (annulla),,Nie (anuluj),*Não (cancelar),Tidak (membatalkan),Neen (cancel),Нет (отменить),No (anular),Không (quay Lại)
+NoCancel,Jo (anullo),لا (الغاء),,Nein (Annullierer),Όχι (ακύρωση),No (cancel),Ei kumota,Non (annuler),Ne (poništi),Tidak (membatalkan),No (annulla),,Nie (anuluj),*Não (cancelar),Tidak (membatalkan),Nee (annuleer),Нет (отменить),No (anular),Không (quay Lại)
 Name,Emri,اسم,,Name,Όνομα,Name,nimi,Nom,Ime,Nama,Nome,,Nazwa,*Nome,Nama,Naam,Имя,Nombre,Tên
 enterName,Shruaj një emër,ادخل الاسم,,Geben Sie einen Namen,Εισαγάγετε ένα όνομα,Enter a name,lisää nimi,Entrer un nom,Unesi ime,Masukkan nama,Inserisci un nome,,Wpisz imię,*Insira o nome,Masukkan nama,Geef een naam,Введите имя,Ingresa un nombre,Nhập tên
-ChooseImage,Zgjidh një imazh,اختر صورة,,Wählen Sie ein Bild,Επιλέξτε μια εικόνα,Choose an image,valitse kuva,Choisissez une image,Izaberi sliku,Pilih imej,Scegli un'immagine,,Wybierz obraz,*Escolha uma imagem,Pilih imej,Kies een kleurplaat,Выберите изображение,Elige una imagen,Chọn một hình
-Image,Imazh ,صورة,,Bild,Εικόνα,Image,kuva,Image,Slika,Gambar,Immagine,,Obraz,*Imagem,Gambar,Kleurplaat,Изображение,Imagen,Hình ảnh
+ChooseImage,Zgjidh një imazh,اختر صورة,,Wählen Sie ein Bild,Επιλέξτε μια εικόνα,Choose an image,valitse kuva,Choisissez une image,Izaberi sliku,Pilih imej,Scegli un'immagine,,Wybierz obraz,*Escolha uma imagem,Pilih imej,Kies een afbeelding,Выберите изображение,Elige una imagen,Chọn một hình
+Image,Imazh ,صورة,,Bild,Εικόνα,Image,kuva,Image,Slika,Gambar,Immagine,,Obraz,*Imagem,Gambar,Afbeelding,Изображение,Imagen,Hình ảnh
 AlreadyUsed,Ky përdorues ekziston,اسم المستخدم غير متوفر,,Dieser Benutzername existiert bereits,Αυτό το όνομα χρήστη υπάρχει ήδη,This user name exists already,käytössä,Ce nom d'utilisateur existe déjà,Ime korisnika već postoji,Nama pengguna ini sudah wujud,Questo nome utente è già utilizzato,,Ta nazwa użytkownika już istnieje,*Este nome de usuário já existe,Nama pengguna ini sudah wujud,Deze gebruikersnaam bestaat reeds,Пользователь с таким именем уже существует,Este nombre de usario ya existe,Tên người dùng này đã tồn tại
 MediaPlayer,Media Player,مشغل الوسائط,,Media Player,Media Player,Media Player,media player,Media Player,Media Player,Pemain media,Media Player,,Odtwarzacz multimedialny,Media Player,Pemain media,Media Player,Медиа плеер,Media Player,Media Player
 RushHour,Ora e pikut,ساعة الذروة,,Rush Hour,Ώρα αιχμής,Rush Hour,Rush hour ; ruuhka-aika,Rush Hour,Rush Hour,Masa yang sibuk,Rush Hour,,Godziny szczytu,Rush Hour,Masa yang sibuk,Rush Hour,Час пик,Rush Hour,*Giờ cao điểm
-QuitKey,Tasti për të dalë,مفتاح الخروج,,,,Quit Key,,Bouton pour quitter,,,Tasto per uscire,,,,,,,Tecla para salir,
+QuitKey,Tasti për të dalë,مفتاح الخروج,,,,Quit Key,,Bouton pour quitter,,,Tasto per uscire,,,,,Stop toets,,Tecla para salir,
 Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny,Big Buck Bunny
 Caminandes 2: Gran Dillama - Blender Animated Short,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama,Caminandes 2: Gran Dillama
 Caminandes 3: Llamigos - Funny 3D Animated Short,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos,Caminandes 3: Llamigos
-1H de Petit Ours Brun,Aventurat e arushit të vogël kaf,ساعة من الدب البني الصغير,,,,,,1H de Petit Ours Brun,,,Le avventure del piccolo orsacchiotto marrone,,,,,,,Las aventuras del osito pardo,
-Zou s'amuse,Zou argëtohet,زو يمرح,,,,Zou’s having fun,,Zou s'amuse,,,Zou si diverte,,,,,,,Zou se divierte,
-Tchoupi et ses amis,Çupi dhe shokët e tij,تشوبي وأصدقائه,,,,Tchoupi and his friends,,Tchoupi et ses amis,,,Tchoupi e i suoi amici,,,,,,,Tchoupi y sus amigos,
-Princesse sofia rencontre Belle,Princesha Sofia takon Belën ,الأميرة صوفيا تلتقي بيل,,,,Princess Sofia meets Belle,,Princesse sofia rencontre Belle,,,La principessa Sofia incontra Bella,,,,,,,La princesa Sofía se encuentra con Belle,
-Look at the destination box to move,Për të lëvizur shiko kutinë ku do të mbërrish,أنظر إلى المربع لتتحرك,,,,Look at the destination box to move,,Regarde la boîte de destination pour bouger,,,Guarda la cassetta destinazione per muoverti,,,,,,,Mira el cuadro de destino para moverte,
-Look the movement arrows around the mouse to move,Për të lëvizur shiko shigjetat përqark miut ,أنظر إلى الأسهم حول الفأر لتتحرك,,,,Look the movement arrows around the mouse to move,,Regarde les flèches de mouvement autour de la souris pour bouger,,,Guarda le frecce di movimento intorno al topo per muoverti,,,,,,,Mira las flechas de movimiento alrededor del ratón para moverte,
-Look the movement arrows around the labyrinth to move,Për të lëvizur shiko shigjetat përqark labirintit,أنظر إلى الأسهم حول المتاهات لتتحرك,,,,Look the movement arrows around the labyrinth to move,,Regarde les flèches de mouvement autour du labyrinthe pour bouger,,,Guarda le frecce di movimento intorno al labirinto per muoverti,,,,,,,Mira las flechas de movimiento alrededor del laberinto para moverte,
-Select the mouse then look at the destination box to move,Selekto miun pastaj shiko kutinë ku do të mbërrish,إختر الفأر ثم أنظر إلى الوجهة لتتحرك,,,,Select the mouse then look at the destination box to move,,Selectionne la souris et après regarde la boîte de destination pour bouger,,,Selezziona il topo poi guarda la cassetta di destinazione per muoverti,,,,,,,Selecciona el ratón y luego mira el cuadro de destino para moverte,
-free,Lehtë,حر,,,,Free,,Facile,,,Facile,,,,,,,Fácil,
-normal,Normal,عادي,,,,Normal,,Normal,,,Normale,,,,,,,Normal,
-extreme,Ekstrem,درجة قصوى,,,,Extreme,,Extrême,,,Estremo,,,,,,,Extremo,
+1H de Petit Ours Brun,Aventurat e arushit të vogël kaf,ساعة من الدب البني الصغير,,,,,,1H de Petit Ours Brun,,,Le avventure del piccolo orsacchiotto marrone,,,,,1H Kleine bruine beren,,Las aventuras del osito pardo,
+Zou s'amuse,Zou argëtohet,زو يمرح,,,,Zou’s having fun,,Zou s'amuse,,,Zou si diverte,,,,,Zou heeft plezier,,Zou se divierte,
+Tchoupi et ses amis,Çupi dhe shokët e tij,تشوبي وأصدقائه,,,,Tchoupi and his friends,,Tchoupi et ses amis,,,Tchoupi e i suoi amici,,,,,Tjoepie en zijn vrienden,,Tchoupi y sus amigos,
+Princesse sofia rencontre Belle,Princesha Sofia takon Belën ,الأميرة صوفيا تلتقي بيل,,,,Princess Sofia meets Belle,,Princesse sofia rencontre Belle,,,La principessa Sofia incontra Bella,,,,,Princes Sofia ontmoet Belle,,La princesa Sofía se encuentra con Belle,
+Look at the destination box to move,Për të lëvizur shiko kutinë ku do të mbërrish,أنظر إلى المربع لتتحرك,,,,Look at the destination box to move,,Regarde la boîte de destination pour bouger,,,Guarda la cassetta destinazione per muoverti,,,,,Kijk naar de bestemmingsbox om te verplaatsen,,Mira el cuadro de destino para moverte,
+Look the movement arrows around the mouse to move,Për të lëvizur shiko shigjetat përqark miut ,أنظر إلى الأسهم حول الفأر لتتحرك,,,,Look the movement arrows around the mouse to move,,Regarde les flèches de mouvement autour de la souris pour bouger,,,Guarda le frecce di movimento intorno al topo per muoverti,,,,,Kijk naar de pijlen rond de muis om te verplaatsen,,Mira las flechas de movimiento alrededor del ratón para moverte,
+Look the movement arrows around the labyrinth to move,Për të lëvizur shiko shigjetat përqark labirintit,أنظر إلى الأسهم حول المتاهات لتتحرك,,,,Look the movement arrows around the labyrinth to move,,Regarde les flèches de mouvement autour du labyrinthe pour bouger,,,Guarda le frecce di movimento intorno al labirinto per muoverti,,,,,Kijk naar de pijlen rond het labyrint om te verplaatsen,,Mira las flechas de movimiento alrededor del laberinto para moverte,
+Select the mouse then look at the destination box to move,Selekto miun pastaj shiko kutinë ku do të mbërrish,إختر الفأر ثم أنظر إلى الوجهة لتتحرك,,,,Select the mouse then look at the destination box to move,,Selectionne la souris et après regarde la boîte de destination pour bouger,,,Selezziona il topo poi guarda la cassetta di destinazione per muoverti,,,,,"Kijk naar de muis, kijk dan naar de bestemmingsbox om te verplaatsen",,Selecciona el ratón y luego mira el cuadro de destino para moverte,
+free,Lehtë,حر,,,,Free,,Facile,,,Facile,,,,,Gratis,,Fácil,
+normal,Normal,عادي,,,,Normal,,Normal,,,Normale,,,,,Normaal,,Normal,
+extreme,Ekstrem,درجة قصوى,,,,Extreme,,Extrême,,,Estremo,,,,,Extreem,,Extremo,
 BibJump,Biboule Jump,بيبول يقذف,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump
-Score,Pikët,مجموع النقاط,,,,Score,,Score,,,Punteggio,,,,,,,Puntuación,
-Highscore,Rekord ,أعلى نتيجة,,,,Highscore,,Meilleur score,,,Record !,,,,,,,Récord,
-New highscore!,Rekord i ri !,نتيجة عالية جديدة,,,,New highscore!,,Nouveau meilleur score!,,,Nuovo record !,,,,,,,Niuevo récord !,
-
-Choose number of targets,,,,,,Choose number of targets,,Choisis le nombre de cibles,,,,,,,,,,,
-targets, shënjestra,أهداف,,,,  targets,, objectifs,,, bersagli,,,,,,, objetivos,
-
-Choose number of cups,,,,,,Choose number of cups,,Choisis le nombre de gobelets,,,,,,,,,,,
-cups, tasa,كؤوس,,,, cups,, gobelets,,, tazze,,,,,,, tazas,
-
-Choose size,,,,,,Choose size,,Choisis la taille,,,,,,,,,,,
-
-Math101: Addition,,,,,,Math 101: Addition,, Apprends les Maths : Additions,,,,,,,,,,,
-Math101: Substraction,,,,,,Math 101: Substraction,, Apprends les Maths : Soustractions,,,,,,,,,,,
-Math101: Multiplication,,,,,,Math 101: Multiplication,, Apprends les Maths : Multiplications,,,,,,,,,,,
-Math101: Division,,,,,,Math 101: Division,, Apprends les Maths : Divisions,,,,,,,,,,,
-Math101: All operations,,,,,,Math 101: All operations,, Apprends les Maths : Toutes opérations,,,,,,,,,,,
-
-MathDesc,,,,,,Addition & Subtraction Multiplication & Division,,Addition & Soustraction Multiplication & Division,,,,,,,,,,,
-MathDescAdd,,,,,,Add two numbers!,,Addition de deux nombres!,,,,,,,,,,,
-MathDescSub,,,,,,Subtract two numbers!,,Soustraction de deux nombres!,,,,,,,,,,,
-MathDescMult,,,,,,Multiply two numbers!,,Multiplication de deux nombres!,,,,,,,,,,,
-MathDescDiv,,,,,,Divide two numbers!,,Division de deux nombres!,,,,,,,,,,,
-
-From,,,,,,From,,De,,,,,,,,,,,
-to,,,,,,to,,à,,,,,,,,,,,
-findodd,Çfarë nuk shkon ?,,,,,Find the Odd one out,,Trouvez l’intrus,,,Trova l’intruso,,,,,,,,
-Vertical,,,,,,Vertical,,Vertical,,,,,,,,,,,
-Horizontal,,,,,,Horizontal,,Horizontal,,,,,,,,,,,
-Diagonal from upper left to lower right,,,,,,Upper Left - Lower Right,,Haut Gauche – Bas Droite,,,,,,,,,,,
-Diagonal from upper right to lower left,,,,,,Upper Right - Lower Left,,Haut Droite - Bas Gauche,,,,,,,,,,,
-Random,,,,,,Random,,Hasard,,,,,,,,,,,
-Choose Game Variant,Zgjidh variantin a lojës,,,,,Choose Game Variant,,Choisissez une variante de jeu,,,Scegli un variante di gioco,,,,,,,,
-With moving platforms,Me platforma lëvizëse ,,,,,With moving platforms,,Avec les platformes animées,,,Con piattaforme mobili,,,,,,,,
-Without moving platforms,Pa platforma lëvizëse,,,,,Without moving platforms,,Sans les platformes animées,,,Senza piattaforme mobili,,,,,,,,
-
-Selection games,Lojëra me Përzgjedhje,,,,,Selection games,,Jeux Sélection,,,Giochi Selezione,,,,,,,,
-Memorization games,Lojëra me Memorizim,,,,,Memorization games,,Jeux Mémorisation,,,Giochi Memorizzazione,,,,,,,,
-ActionReaction games,Lojëra me Veprim-Reagim,,,,,Action-Reaction games,,Jeux Action – Réaction,,,Giochi Azione – Reazione,,,,,,,,
-Logic games,Lojëra me Logjikë,,,,,Logic games,,Jeux Logique,,,Giochi Logica,,,,,,,,
+Score,Pikët,مجموع النقاط,,,,Score,,Score,,,Punteggio,,,,,Score,,Puntuación,
+Highscore,Rekord ,أعلى نتيجة,,,,Highscore,,Meilleur score,,,Record !,,,,,Hoogste Score,,Récord,
+New highscore!,Rekord i ri !,نتيجة عالية جديدة,,,,New highscore!,,Nouveau meilleur score!,,,Nuovo record !,,,,,Nieuwe hoogste score!,,Niuevo récord !,
+Choose number of targets,,,,,,Choose number of targets,,Choisis le nombre de cibles,,,,,,,,Kies het aantal doelen,,,
+targets, shënjestra,أهداف,,,,  targets,, objectifs,,, bersagli,,,,,Doelen,, objetivos,
+Choose number of cups,,,,,,Choose number of cups,,Choisis le nombre de gobelets,,,,,,,,Kies het aantal kopjes,,,
+cups, tasa,كؤوس,,,, cups,, gobelets,,, tazze,,,,,Bekers,, tazas,
+Choose size,,,,,,Choose size,,Choisis la taille,,,,,,,,kies maat,,,
+Math101: Addition,,,,,,Math 101: Addition,, Apprends les Maths : Additions,,,,,,,,Wiskunde 101 : optellen,,,
+Math101: Substraction,,,,,,Math 101: Substraction,, Apprends les Maths : Soustractions,,,,,,,,Wiskunde 102 : aftrekken,,,
+Math101: Multiplication,,,,,,Math 101: Multiplication,, Apprends les Maths : Multiplications,,,,,,,,Wiskunde 103 : vermenigvuldigen,,,
+Math101: Division,,,,,,Math 101: Division,, Apprends les Maths : Divisions,,,,,,,,Wiskunde 104 : delen,,,
+Math101: All operations,,,,,,Math 101: All operations,, Apprends les Maths : Toutes opérations,,,,,,,,Wiskunde 201,,,
+MathDesc,,,,,,Addition & Subtraction Multiplication & Division,,Addition & Soustraction Multiplication & Division,,,,,,,,"Optellen, aftrekken, vermenigvuldigen en delen",,,
+MathDescAdd,,,,,,Add two numbers!,,Addition de deux nombres!,,,,,,,,Tel de twee getallen op!,,,
+MathDescSub,,,,,,Subtract two numbers!,,Soustraction de deux nombres!,,,,,,,,Trek de twee getallen van elkaar af!,,,
+MathDescMult,,,,,,Multiply two numbers!,,Multiplication de deux nombres!,,,,,,,,Vermenigvuldig de twee getallen!,,,
+MathDescDiv,,,,,,Divide two numbers!,,Division de deux nombres!,,,,,,,,Deel de twee getallen!,,,
+From,,,,,,From,,De,,,,,,,,Van,,,
+to,,,,,,to,,à,,,,,,,,tot,,,
+findodd,Çfarë nuk shkon ?,,,,,Find the Odd one out,,Trouvez l’intrus,,,Trova l’intruso,,,,,wat hoort hier niet thuis?,,,
+Vertical,,,,,,Vertical,,Vertical,,,,,,,,Verticaal,,,
+Horizontal,,,,,,Horizontal,,Horizontal,,,,,,,,Horizontaal,,,
+Diagonal from upper left to lower right,,,,,,Upper Left - Lower Right,,Haut Gauche – Bas Droite,,,,,,,,Boven links - onder rechts,,,
+Diagonal from upper right to lower left,,,,,,Upper Right - Lower Left,,Haut Droite - Bas Gauche,,,,,,,,Boven rechts - onder links,,,
+Random,,,,,,Random,,Hasard,,,,,,,,Willekeurig,,,
+Choose Game Variant,Zgjidh variantin a lojës,,,,,Choose Game Variant,,Choisissez une variante de jeu,,,Scegli un variante di gioco,,,,,Kies spelvorm,,,
+With moving platforms,Me platforma lëvizëse ,,,,,With moving platforms,,Avec les platformes animées,,,Con piattaforme mobili,,,,,Met bewegende platformen,,,
+Without moving platforms,Pa platforma lëvizëse,,,,,Without moving platforms,,Sans les platformes animées,,,Senza piattaforme mobili,,,,,Zonder bewegende platformen,,,
+Selection games,Lojëra me Përzgjedhje,,,,,Selection games,,Jeux Sélection,,,Giochi Selezione,,,,,Selectie spelletjes,,,
+Memorization games,Lojëra me Memorizim,,,,,Memorization games,,Jeux Mémorisation,,,Giochi Memorizzazione,,,,,Geheugen spelletjes,,,
+ActionReaction games,Lojëra me Veprim-Reagim,,,,,Action-Reaction games,,Jeux Action – Réaction,,,Giochi Azione – Reazione,,,,,Actie-reactie spelletjes,,,
+Logic games,Lojëra me Logjikë,,,,,Logic games,,Jeux Logique,,,Giochi Logica,,,,,logica spelletjes,,,
 Creativity games,Creativity games,,,,,Creativity games,,Jeux Créatifs,,,Creativity games,,,,,,,,
 Utilities,Utilities,,,,,Utilities,,Utilitaires,,,Utilities,,,,,,,,
-
-Spot the differences,Gjej ndryshimet,,,,,Spot the differences,,Trouvez les différences,,,Trova le differenze,,,,,,,,
-SpotDifference,Gjej Ndryshimin,,,,,Spot The Difference,,Trouvez les différences,,,,,,,,,,,
-Spot all the differences,Gjej gjithë ndryshimet,,,,,Spot all the differences,,Trouvez toutes les différences,,,Trova tutte le differenze,,,,,,,,
-Differences found,Ndryshimet e gjetura,,,,,Differences found,,Différences trouvées,,,Differenze trovate,,,,,,,,
-
-Dice,Zara,,,,,Dice,,Dés,,,Dadi,,,,,,,,
-Choose number of dices,,,,,,Choose number of dices,,Choisis le nombre de dès,,,,,,,,,,,
-
-letters,Gjej shkronjat ,,,,,Identify The Letters,,Identifiez La Lettre,,,Trova la lettera,,,,,,,,
-puzzle,,,,,,Sliding Puzzle,,Jeu de taquin,,,Puzzle scorrevole,,,,,,,,
-Choose the Letter,Zgjidh shkronjën ,,,,,Choose the Letter,,Choisissez la Lettre,,,Scegli la lettera,,,,,,,,
-Numbers,Numra,,,,,Numbers,,Nombres,,,Numeri,,,,,,,,
-Mona Lisa,Mona Liza,,,,,Mona Lisa,,Mona Lisa,,,Mona Lisa,,,,,,,,
-Fish,Peshk,,,,,Fish,,Poisson,,,Pesce,,,,,,,,
-Biboule,Biboule,,,,,Biboule,,Biboule,,,Biball,,,,,,,,
-Potions,Përzierje Magjike,,,,,Magic Potions,,Potions Magiques,,,Pozioni Magiche ,,,,,,,Pociones Mágicas,
-SpaceGame,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game
-GooseGame,,,,,,Goose Game,,Jeu de l'oie,,,,,,,,,,,
-
-players,,,,,,players,,joueurs,,,,,,,,,,,
-Choose number of players,,,,,,Choose number of players,,Choisis le nombre de joueurs,,,,,,,,,,,
-
-Player %d's turn,,,,,,Player %d's turn,,C'est au tour du joueur %d,,,,,,,,,,,
-Repeat last throw!,,,,,,Repeat last throw!,,Rejoue le dernier lancer!,,,,,,,,,,,
-Player %d takes the bridge to square %d,,,,,,Player %d takes the bridge to square %d,,Le joueur %d prend le pont jusqu'à la case %d,,,,,,,,,,,
-Player %d wins the game,,,,,,Player %d wins the game,,Le joueur %d gagne la partie,,,,,,,,,,,
-Player %d is asleep for %d more turn(s),,,,,,Player %d is asleep for %d more turn(s),,Le joueur %d dort encore pour %d tour(s),,,,,,,,,,,
-Player %d is stuck,,,,,,Player %d is stuck,,Le joueur %d est bloqué,,,,,,,,,,,
-Player %d fell into a well,,,,,,Player %d fell into a well,,Le joueur %d est tombé dans un puit,,,,,,,,,,,
-Player %d freed player %d,,,,,,Player %d freed player %d,,Le joueur %d a libéré le joueur %d,,,,,,,,,,,
-Restart from the beginning,,,,,,Restart from the beginning,,Retour à la case départ,,,,,,,,,,,
-Player %d got locked up in prison,,,,,,Player %d got locked up in prison,,Le joueur %d tombe en prison,,,,,,,,,,,
-Player %d falls asleep for %d turns,,,,,,Player %d falls asleep for %d turns,,Le joueur %d s'endort pour %d tours,,,,,,,,,,,
-HeatMapOpacity,,,,,,Heat map's opacity,,Opacité de la heat map,,,,,,,,,,,
-HeatMapColors,,,,,,Heat map's colors,,Couleurs de la heat map,,,,,,,,,,,
-VideoFolder,,,,,,Video folder,,Répertoire des vidéos,,,,,,,,,,,
-VideoGrid,,,,,,Video Grid,,Grille de vidéos,,,,,,,,,,,
-No videos found,,,,,,Please indicate a folder with videos in configuration video,,Veuillez sélectionner un dossier avec des vidéos dans les configurations,,,,,,,,,,,
-File %s is not supported,,,,,,File %s is not supported,,Le fichier %s n'est pas compatible,,,,,,,,,,,
-Horses Simplified,,,,,,Horses Simplified,,Petits Chevaux Simplifiés,,,,,,,,,,,
-Horses,,,,,,Horses,,Petits Chevaux,,,,,,,,,,,
-Select teams by looking at the big circles,,,,,,Select teams by looking at the big circles,,Selectionnez les équipes en regardant les gros ronds,,,,,,,,,,,
-Play again,,,,,,Play again,,Jouez à nouveau,,,,,,,,,,,
-%d more team(s) to select,,,,,,%d more team(s) to select,,%d équipes restantes à sélectionner,,,,,,,,,,,
-red,,,,,,red,,rouge,,,,,,,,,,,
-blue,,,,,,blue,,bleu,,,,,,,,,,,
-yellow,,,,,,yellow,,jaune,,,,,,,,,,,
-green,,,,,,green,,vert,,,,,,,,,,,
-%s team's turn,,,,,,%s team's turn,,C'est au tour de l'équipe %s,,,,,,,,,,,
-No moves available,,,,,,No moves available,,Pas de déplacement possible,,,,,,,,,,,
-Select the pawn you want to move,,,,,,Select the pawn you want to move,,Sélectionnez le pion à déplacer,,,,,,,,,,,
-%s team wins,,,,,,%s team wins,,L'équipe %s gagne la partie,,,,,,,,,,,
-Sounds of Life,,,,,,Sounds of Life,,Les sons de la Vie,,,,,,,,,,,
-Farm,,,,,,Farm,,Ferme,,,,,,,,,,,
-Jungle,,,,,,Jungle,,Jungle,,,,,,,,,,,
-Savanna,,,,,,Savanna,,Savane,,,,,,,,,,,
-
+Spot the differences,Gjej ndryshimet,,,,,Spot the differences,,Trouvez les différences,,,Trova le differenze,,,,,Zoek de verschillen,,,
+SpotDifference,Gjej Ndryshimin,,,,,Spot The Difference,,Trouvez les différences,,,,,,,,Zoek het verschil,,,
+Spot all the differences,Gjej gjithë ndryshimet,,,,,Spot all the differences,,Trouvez toutes les différences,,,Trova tutte le differenze,,,,,Zoek al de verschillen,,,
+Differences found,Ndryshimet e gjetura,,,,,Differences found,,Différences trouvées,,,Differenze trovate,,,,,Verschillen gevonden,,,
+Dice,Zara,,,,,Dice,,Dés,,,Dadi,,,,,Dobbelstenen,,,
+Choose number of dices,,,,,,Choose number of dices,,Choisis le nombre de dès,,,,,,,,kies een aantal dobbelstenen,,,
+letters,Gjej shkronjat ,,,,,Identify The Letters,,Identifiez La Lettre,,,Trova la lettera,,,,,Zoek de letters,,,
+puzzle,,,,,,Sliding Puzzle,,Jeu de taquin,,,Puzzle scorrevole,,,,,Schuifpuzzel,,,
+Choose the Letter,Zgjidh shkronjën ,,,,,Choose the Letter,,Choisissez la Lettre,,,Scegli la lettera,,,,,Kies de letter,,,
+Numbers,Numra,,,,,Numbers,,Nombres,,,Numeri,,,,,Cijfers,,,
+Mona Lisa,Mona Liza,,,,,Mona Lisa,,Mona Lisa,,,Mona Lisa,,,,,Mona Lisa,,,
+Fish,Peshk,,,,,Fish,,Poisson,,,Pesce,,,,,Vis,,,
+Biboule,Biboule,,,,,Biboule,,Biboule,,,Biball,,,,,Biboule,,,
+Potions,Përzierje Magjike,,,,,Magic Potions,,Potions Magiques,,,Pozioni Magiche ,,,,,Toverdrankjes,,Pociones Mágicas,
+SpaceGame,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Ruimtespel,Space Game,Space Game,Space Game
+GooseGame,,,,,,Goose Game,,Jeu de l'oie,,,,,,,,Ganzenbord spel,,,
+players,,,,,,players,,joueurs,,,,,,,,spelers,,,
+Choose number of players,,,,,,Choose number of players,,Choisis le nombre de joueurs,,,,,,,,kies het aantal spelers,,,
+Player %d's turn,,,,,,Player %d's turn,,C'est au tour du joueur %d,,,,,,,,Beurt van speler %d,,,
+Repeat last throw!,,,,,,Repeat last throw!,,Rejoue le dernier lancer!,,,,,,,,Herhaal laatste worp,,,
+Player %d takes the bridge to square %d,,,,,,Player %d takes the bridge to square %d,,Le joueur %d prend le pont jusqu'à la case %d,,,,,,,,Speler %d neemt de brug naar vak %d,,,
+Player %d wins the game,,,,,,Player %d wins the game,,Le joueur %d gagne la partie,,,,,,,,Speler %d wint!,,,
+Player %d is asleep for %d more turn(s),,,,,,Player %d is asleep for %d more turn(s),,Le joueur %d dort encore pour %d tour(s),,,,,,,,speler %d moet %d beurten wachten,,,
+Player %d is stuck,,,,,,Player %d is stuck,,Le joueur %d est bloqué,,,,,,,,Speler %d zit vast,,,
+Player %d fell into a well,,,,,,Player %d fell into a well,,Le joueur %d est tombé dans un puit,,,,,,,,Speler %d valt in een put,,,
+Player %d freed player %d,,,,,,Player %d freed player %d,,Le joueur %d a libéré le joueur %d,,,,,,,,Speler %d heeft speler %d bevrijd,,,
+Restart from the beginning,,,,,,Restart from the beginning,,Retour à la case départ,,,,,,,,Start terug bij het begin,,,
+Player %d got locked up in prison,,,,,,Player %d got locked up in prison,,Le joueur %d tombe en prison,,,,,,,,Speler %d gaat naar de gevangenis,,,
+Player %d falls asleep for %d turns,,,,,,Player %d falls asleep for %d turns,,Le joueur %d s'endort pour %d tours,,,,,,,,Speler %d valt in slaap gedurende %d beurt(en).,,,
+HeatMapOpacity,,,,,,Heat map's opacity,,Opacité de la heat map,,,,,,,,Transparantie heatmap,,,
+HeatMapColors,,,,,,Heat map's colors,,Couleurs de la heat map,,,,,,,,Heatmap kleuren,,,
+VideoFolder,,,,,,Video folder,,Répertoire des vidéos,,,,,,,,Video map,,,
+VideoGrid,,,,,,Video Grid,,Grille de vidéos,,,,,,,,Video rooster,,,
+No videos found,,,,,,Please indicate a folder with videos in configuration video,,Veuillez sélectionner un dossier avec des vidéos dans les configurations,,,,,,,,Kies een map met video's in configuratie video,,,
+File %s is not supported,,,,,,File %s is not supported,,Le fichier %s n'est pas compatible,,,,,,,,Bestand %s wordt niet ondersteund,,,
+Horses Simplified,,,,,,Horses Simplified,,Petits Chevaux Simplifiés,,,,,,,,"Mens erger je niet, vereenvoudigd!",,,
+Horses,,,,,,Horses,,Petits Chevaux,,,,,,,,Mens erger je niet!,,,
+Select teams by looking at the big circles,,,,,,Select teams by looking at the big circles,,Selectionnez les équipes en regardant les gros ronds,,,,,,,,Selecteer teams door naar de grote cirkels te kijken,,,
+Play again,,,,,,Play again,,Jouez à nouveau,,,,,,,,Speel opnieuw,,,
+%d more team(s) to select,,,,,,%d more team(s) to select,,%d équipes restantes à sélectionner,,,,,,,,Nog %d team(s) selecteren,,,
+red,,,,,,red,,rouge,,,,,,,,rood,,,
+blue,,,,,,blue,,bleu,,,,,,,,blauw,,,
+yellow,,,,,,yellow,,jaune,,,,,,,,geel,,,
+green,,,,,,green,,vert,,,,,,,,groen,,,
+%s team's turn,,,,,,%s team's turn,,C'est au tour de l'équipe %s,,,,,,,,beurt voor team %d,,,
+No moves available,,,,,,No moves available,,Pas de déplacement possible,,,,,,,,Geen zetten mogelijk,,,
+Select the pawn you want to move,,,,,,Select the pawn you want to move,,Sélectionnez le pion à déplacer,,,,,,,,Selecteer de pion die u wilt verplaatsen,,,
+%s team wins,,,,,,%s team wins,,L'équipe %s gagne la partie,,,,,,,,Team %s wint,,,
+Sounds of Life,,,,,,Sounds of Life,,Les sons de la Vie,,,,,,,,Geluiden van het Leven,,,
+Farm,,,,,,Farm,,Ferme,,,,,,,,Boerderij,,,
+Jungle,,,,,,Jungle,,Jungle,,,,,,,,Jungle,,,
+Savanna,,,,,,Savanna,,Savane,,,,,,,,Savanne,,,
 LanguageSettings,,,,,,Language Settings,,Paramètres de Langage,,,,,,,,,,,
 GamesSettings,,,,,,Games Settings,,Paramètres de Jeux,,,,,,,,,,,
 EyeTrackerSettings,,,,,,Eye-Tracker Settings,,Paramètres de l'Oculomètre,,,,,,,,,,,
