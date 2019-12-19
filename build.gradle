@@ -123,7 +123,7 @@ distributions {
             from("build/scripts") {
                 into 'bin'
             }
-            from("gazeplay-games/src/main/resources")
+            from("gazeplay/src/main/resources")
             from("gazeplay-dist/src/jre") {
                 into 'lib/jre'
             }
