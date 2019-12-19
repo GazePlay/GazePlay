@@ -71,8 +71,6 @@ public class WhereIsIt implements GameLifeCycle {
         final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        final Configuration config = gameContext.getConfiguration();
-
         currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, random,
             winnerImageIndexAmongDisplayedImages);
 
