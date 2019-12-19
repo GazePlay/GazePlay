@@ -3,6 +3,7 @@ package net.gazeplay.ui.scenes.gamemenu;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -50,28 +51,25 @@ public class GameMenuFactory {
         @NonNull final Configuration config,
         @NonNull final Translator translator,
         @NonNull final GameSpec gameSpec,
-        @NonNull final GameButtonOrientation orientation,
-        final boolean isFavorite
+        @NonNull final GameButtonOrientation orientation
     ) {
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = translator.translate(gameSummary.getNameCode());
 
         final Image heartIcon;
-        if (isFavorite) {
-            heartIcon = new Image("data/common/images/heart_filled.png");
+        heartIcon = new Image("data/common/images/heart_filled.png");
+        ImageView favGamesImageView = new ImageView(heartIcon);
+
+        if (config.getFavoriteGamesProperty().contains(gameSummary.getNameCode())) {
+            favGamesImageView.setEffect(null);
         } else {
-            heartIcon = new Image("data/common/images/heart_empty.png");
+            ColorAdjust colorAdjust = new ColorAdjust();
+            colorAdjust.setSaturation(-1);
+            favGamesImageView.setEffect(colorAdjust);
         }
 
-        ImageView favGamesImageView = new ImageView(heartIcon);
-        //ImagePattern favGamesImagePattern = new ImagePattern(heartIcon);
 
-        // can't understand the goal of the following 3 lines
-        // favGamesImageView.imageProperty().addListener((listener) -> {
-        // isFavourite.setValue(favGamesImageView.getImage().equals(new Image("data/common/images/heart_filled.png")));
-        // config.saveConfigIgnoringExceptions();
-        // });
 
         final I18NText gameTitleText = new I18NText(translator, gameSummary.getNameCode());
         gameTitleText.getStyleClass().add("gameChooserButtonTitle");
@@ -228,7 +226,7 @@ public class GameMenuFactory {
                 break;
         }
 
-        gameCard.addEventHandler(MOUSE_PRESSED, (MouseEvent e) -> gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName));
+        gameCard.addEventHandler(MOUSE_PRESSED, (MouseEvent e) ->   {if(!favGamesImageView.isHover()){ gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);}});
 
         @Data
         class EventState {
@@ -243,40 +241,22 @@ public class GameMenuFactory {
 
             @Override
             public void handle(MouseEvent event) {
-                if (event.getEventType() == MOUSE_ENTERED) {
-                    boolean wasFavorite = config.getFavoriteGamesProperty().contains(gameSummary.getNameCode());
-                    enteredState.set(new EventState(System.currentTimeMillis(), wasFavorite));
-                    log.info("enteredState = {}", enteredState);
-                    return;
-                }
-                if (event.getEventType() == MOUSE_EXITED) {
-                    boolean wasFavorite = config.getFavoriteGamesProperty().contains(gameSummary.getNameCode());
-                    exitedState.set(new EventState(System.currentTimeMillis(), wasFavorite));
-                    log.info("exitedState = {}", exitedState);
-                    //return;
-                }
-                //if (event.getEventType() != MOUSE_MOVED) {
-                //    return;
-                //}
-                long fixationDuration = System.currentTimeMillis() - enteredState.get().time;
-                if (fixationDuration < FAVORITE_SWITCH_FIXATION_DURATION_IN_MILLISECONDS) {
-                    // too early
-                    return;
-                }
-                boolean isFavorite = !enteredState.get().wasFavorite;
-                if (isFavorite) {
-                    config.getFavoriteGamesProperty().add(gameSummary.getNameCode());
-                    favGamesImageView.setImage(new Image("data/common/images/heart_filled.png"));
-                } else {
+                if (config.getFavoriteGamesProperty().contains(gameSummary.getNameCode())) {
                     config.getFavoriteGamesProperty().remove(gameSummary.getNameCode());
-                    favGamesImageView.setImage(new Image("data/common/images/heart_empty.png"));
+                    ColorAdjust colorAdjust = new ColorAdjust();
+                    colorAdjust.setSaturation(-1);
+                    favGamesImageView.setEffect(colorAdjust);
+                } else {
+                    config.getFavoriteGamesProperty().add(gameSummary.getNameCode());
+                    favGamesImageView.setEffect(null);
                 }
                 config.saveConfigIgnoringExceptions();
             }
         };
-        favIconContainer.addEventFilter(MOUSE_ENTERED, favoriteGameSwitchEventHandler);
-        favIconContainer.addEventFilter(MOUSE_MOVED, favoriteGameSwitchEventHandler);
-        favIconContainer.addEventFilter(MOUSE_EXITED, favoriteGameSwitchEventHandler);
+       // favIconContainer.addEventFilter(MOUSE_ENTERED, favoriteGameSwitchEventHandler);
+       // favIconContainer.addEventFilter(MOUSE_MOVED, favoriteGameSwitchEventHandler);
+       // favIconContainer.addEventFilter(MOUSE_EXITED, favoriteGameSwitchEventHandler);
+        favIconContainer.addEventFilter(MOUSE_CLICKED, favoriteGameSwitchEventHandler);
 
         // pausedEvents.add(gameCard);
         return gameCard;

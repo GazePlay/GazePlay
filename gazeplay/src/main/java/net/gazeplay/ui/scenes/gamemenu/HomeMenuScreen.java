@@ -176,8 +176,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 config,
                 translator,
                 gameSpec,
-                gameButtonOrientation,
-                isFavorite(gameSpec, config));
+                gameButtonOrientation);
 
             gameCardsList.add(gameCard);
 
@@ -273,10 +272,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         categoryFilters.getChildren().addAll(allCheckBoxes);
 
         return categoryFilters;
-    }
-
-    private boolean isFavorite(GameSpec g, Configuration configuration) {
-        return configuration.getFavoriteGamesProperty().contains(g.getGameSummary().getNameCode());
     }
 
     private CustomButton createExitButton() {
