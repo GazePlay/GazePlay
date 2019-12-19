@@ -17,6 +17,7 @@ public class ConfigurationSource {
     }
 
     public static Configuration createFromDefaultProfile() {
+        log.info(defaultProfileConfigFile.getAbsolutePath());
         return createFromPropertiesResource(defaultProfileConfigFile);
     }
 
@@ -38,6 +39,7 @@ public class ConfigurationSource {
             properties = new Properties();
         }
         ApplicationConfig applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
+        log.info("*************************************************************");
         return new Configuration(propertiesFile, applicationConfig);
     }
 
