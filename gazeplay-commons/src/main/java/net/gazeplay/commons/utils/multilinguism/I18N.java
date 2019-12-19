@@ -12,6 +12,12 @@ import java.util.Map;
 @Slf4j
 public class I18N {
 
+    private final Map<Entry, String> translations;
+
+    public I18N(String resourcePath) {
+        this.translations = loadFromFile(resourcePath);
+    }
+
     @Data
     @AllArgsConstructor
     protected static class Entry {
@@ -27,40 +33,33 @@ public class I18N {
             is = systemClassLoader.getResourceAsStream(resourceLocation);
 
             if (is == null) {
-                // throw new FileNotFoundException("Resource was not found : " + resourceLocation);
-
                 File F = new File(resourceLocation);
                 is = new FileInputStream(F);
             }
 
-            if (is == null) {
-                throw new FileNotFoundException("Resource was not found : " + resourceLocation);
-            }
-
             try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
 
-                Map<Entry, String> traductions = new HashMap<>(1000);
+                Map<Entry, String> translations = new HashMap<>(1000);
 
-                String ligne;
+                String line;
 
                 boolean firstline = true;
 
                 String[] languages = null, data;
 
-                while ((ligne = br.readLine()) != null) {
+                while ((line = br.readLine()) != null) {
                     if (firstline) {
-                        // Retourner la ligne dans un tableau
-                        languages = ligne.split(",");
+                        languages = line.split(",");
                         firstline = false;
                     } else {
-                        data = ligne.split(",");
+                        data = line.split(",");
                         String key = data[0].strip();
                         for (int i = 1; i < data.length; i++) {
-                            traductions.put(new Entry(key, languages[i].strip()), data[i].strip());
+                            translations.put(new Entry(key, languages[i].strip()), data[i].strip());
                         }
                     }
                 }
-                return traductions;
+                return translations;
             }
         } catch (IOException e) {
             log.error("Exception while loading resource {}", resourceLocation, e);
@@ -68,17 +67,7 @@ public class I18N {
         }
     }
 
-    private final String resourcePath;
-
-    private final Map<Entry, String> traductions;
-
-    public I18N(String resourcePath) {
-        this.resourcePath = resourcePath;
-        this.traductions = loadFromFile(resourcePath);
-    }
-
     public String translate(String key, String language) {
-        return traductions.get(new Entry(key, language));
+        return translations.get(new Entry(key, language));
     }
-
 }
