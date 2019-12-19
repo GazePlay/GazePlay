@@ -28,7 +28,8 @@ import net.gazeplay.components.CssUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class ColorToolBox extends Pane {
     public static final double COLORIZE_BUTTONS_SIZE_PX = 64;
 
     public static final String COLORS_IMAGES_PATH = "data" + File.separator + "colors" + File.separator + "images"
-            + File.separator;
+        + File.separator;
 
     // Credits
     // <div>Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a
@@ -75,40 +76,28 @@ public class ColorToolBox extends Pane {
      */
     @Getter
     private final List<ColorBox> colorBoxes;
-
+    @Getter
+    private final ColorsGame colorsGame;
+    private final Pane root;
+    private final ColorBox customBox;
+    private final ColorPicker colorPicker;
+    private final Button customColorPickerButton;
+    @Getter
+    private final Pane imageManager;
+    @Getter
+    private final Pane colorziationPane;
+    private final Stage customColorDialog;
+    private final IGameContext gameContext;
     /**
      * The index of the first color displayed (then followed by the NB_COLORS_DISPLAYED next colors).
      */
     private int firstColorDisplayed;
-
-    @Getter
-    private final ColorsGame colorsGame;
-
-    private final Pane root;
-
-    private final ColorBox customBox;
-
-    private final ColorPicker colorPicker;
-    private final Button customColorPickerButton;
-
     @Getter
     @Setter
     private ColorBox selectedColorBox;
-
-    @Getter
-    private final Pane imageManager;
-
-    @Getter
-    private final Pane colorziationPane;
-
     private EventHandler disableColorizeButton = null;
-
-    private final Stage customColorDialog;
     private CustomColorPicker CustomColorPicker;
-
     private boolean previousEnableColor;
-    
-    private final IGameContext gameContext;
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame, final IGameContext gameContext) {
         super();
@@ -126,7 +115,7 @@ public class ColorToolBox extends Pane {
         mainPane = new VBox();
         thisRoot.setCenter(mainPane);
         mainPane.setSpacing(SPACING_PX);
-       // mainPane.setPadding(MAIN_INSETS);
+        // mainPane.setPadding(MAIN_INSETS);
 
         imageManager = buildImageManager();
         colorziationPane = buildColorizationPane();
@@ -174,7 +163,7 @@ public class ColorToolBox extends Pane {
         Image buttonImg = null;
         try {
             buttonImg = new Image(CUSTOM_BUTTON_IMAGE_PATH, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX, false,
-                    true);
+                true);
         } catch (IllegalArgumentException e) {
             log.warn(e.toString() + " : " + CUSTOM_BUTTON_IMAGE_PATH);
         }
@@ -204,7 +193,7 @@ public class ColorToolBox extends Pane {
         final AbstractGazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root);
         customColorButtonIndic.setOnFinish(customColorButtonHandler);
         customColorButtonIndic.addNodeToListen(customColorPickerButton,
-                colorsGame.getGameContext().getGazeDeviceManager());
+            colorsGame.getGameContext().getGazeDeviceManager());
 
         customColorPickerButton.setOnAction(customColorButtonHandler);
 
@@ -267,7 +256,34 @@ public class ColorToolBox extends Pane {
 
     }
 
-    private void copyFile(File imageFile){
+    /**
+     * Write an image to a File using Java Swing.
+     *
+     * @param image  The image to write.
+     * @param file   The file to write the image into.
+     * @param format The image format to use ("png" is the only one working correctly).
+     */
+    private static void saveImageToFile(final Image image, final File file, final String format) throws IOException {
+
+        BufferedImage swingImg = SwingFXUtils.fromFXImage(image, null);
+        ImageIO.write(swingImg, format, file);
+    }
+
+    private static void configureImageFileChooser(final FileChooser imageFileChooser) {
+        imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Images", "*.*"),
+            new FileChooser.ExtensionFilter("JPG", "*.jpg"), new FileChooser.ExtensionFilter("PNG", "*.png"),
+            new FileChooser.ExtensionFilter("GIF", "*.gif"));
+    }
+
+    private static void configureImageFileSaver(final FileChooser imageFileChooser) {
+        imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("png", "*.png"));
+    }
+
+    private static boolean checkFormat(final String format) {
+        return "png".equals(format);
+    }
+
+    private void copyFile(File imageFile) {
         if (imageFile != null) {
             Path from = Paths.get(imageFile.toURI());
             File to = new File(this.getColorsDirectory(), imageFile.getName());
@@ -280,7 +296,7 @@ public class ColorToolBox extends Pane {
                 gameContext.getConfiguration().getColorsDefaultImageProperty().setValue(to.getAbsolutePath());
                 gameContext.getConfiguration().saveConfigIgnoringExceptions();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.debug("Impossible to copy file" + imageFile.getAbsolutePath() + " to " + to.getAbsolutePath());
             }
         }
     }
@@ -295,7 +311,7 @@ public class ColorToolBox extends Pane {
         final FileChooser imageChooser = new FileChooser();
         configureImageFileChooser(imageChooser);
         imageChooser.setTitle(translator.translate("imgChooserTitle"));
-        
+
         Button imageChooserButton = new Button(translator.translate("LoadImg"));
         imageChooserButton.setOnAction((event) -> {
 
@@ -360,36 +376,6 @@ public class ColorToolBox extends Pane {
         return colorsDirectory;
     }
 
-    /**
-     * Write an image to a File using Java Swing.
-     * 
-     * @param image
-     *            The image to write.
-     * @param file
-     *            The file to write the image into.
-     * @param format
-     *            The image format to use ("png" is the only one working correctly).
-     */
-    private static void saveImageToFile(final Image image, final File file, final String format) throws IOException {
-
-        BufferedImage swingImg = SwingFXUtils.fromFXImage(image, null);
-        ImageIO.write(swingImg, format, file);
-    }
-
-    private static void configureImageFileChooser(final FileChooser imageFileChooser) {
-        imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Images", "*.*"),
-                new FileChooser.ExtensionFilter("JPG", "*.jpg"), new FileChooser.ExtensionFilter("PNG", "*.png"),
-                new FileChooser.ExtensionFilter("GIF", "*.gif"));
-    }
-
-    private static void configureImageFileSaver(final FileChooser imageFileChooser) {
-        imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("png", "*.png"));
-    }
-
-    private static boolean checkFormat(final String format) {
-        return "png".equals(format);
-    }
-
     private void updatePallet(Button previousPallet, Button nextPallet) {
 
         mainPane.getChildren().clear();
@@ -428,7 +414,7 @@ public class ColorToolBox extends Pane {
         Image buttonImg = null;
         try {
             buttonImg = new Image(COLORIZE_BUTTON_IMAGE_NAME, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX, false,
-                    true);
+                true);
         } catch (IllegalArgumentException e) {
             log.warn(e.toString() + " : " + COLORIZE_BUTTON_IMAGE_NAME);
         }
@@ -444,7 +430,7 @@ public class ColorToolBox extends Pane {
         buttonImg = null;
         try {
             buttonImg = new Image(STOP_COLORIZE_BUTTON_IMAGE_PATH, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX,
-                    false, true);
+                false, true);
         } catch (IllegalArgumentException e) {
             log.warn(e.toString() + " : " + STOP_COLORIZE_BUTTON_IMAGE_PATH);
         }
@@ -481,9 +467,9 @@ public class ColorToolBox extends Pane {
         colorizeButtonIndicator.setOnFinish(enableColorizeButton);
 
         colorizeButtonIndicator.addNodeToListen(stopColorizeButtonPane,
-                getColorsGame().getGameContext().getGazeDeviceManager());
+            getColorsGame().getGameContext().getGazeDeviceManager());
         colorizeButtonIndicator.addNodeToListen(colorizeButtonPane,
-                getColorsGame().getGameContext().getGazeDeviceManager());
+            getColorsGame().getGameContext().getGazeDeviceManager());
 
         stopColorizeButtonPane.setVisible(false);
         root.getChildren().add(colorizeButtonIndicator);
@@ -496,14 +482,14 @@ public class ColorToolBox extends Pane {
     private Stage buildCustomColorDialog() {
         Translator translator = gameContext.getTranslator();
         Stage primaryStage = gameContext.getPrimaryStage();
-        
+
         final Stage dialog = new Stage();
 
         dialog.initOwner(primaryStage);
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setOnCloseRequest(
-                windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
+            windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
         dialog.setTitle(translator.translate("customColorDialogTitle"));
         dialog.setAlwaysOnTop(true);
 

@@ -19,7 +19,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -140,6 +139,466 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         root.setStyle(
             "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
+    }
+
+    private static ChoiceBox<Double> buildFixLengthChooserMenu(Configuration configuration,
+                                                               ConfigurationContext configurationContext) {
+
+        ChoiceBox<Double> choiceBox = new ChoiceBox<>();
+
+        int i = 300;
+
+        choiceBox.getItems().add((double) configuration.getFixationLength() / 1000);
+        while (i <= 30000) {
+
+            choiceBox.getItems().add(((double) i) / 1000);
+            i = i + 100;
+        }
+
+        choiceBox.getSelectionModel().select(0);
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
+
+        choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+
+            final int newPropertyValue = (int) (1000
+                * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
+
+            configuration.getFixationlengthProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
+
+        });
+
+        return choiceBox;
+    }
+
+    private static ChoiceBox<Double> buildQuestionLengthChooserMenu(Configuration configuration,
+                                                                    ConfigurationContext configurationContext) {
+
+        ChoiceBox<Double> choiceBox = new ChoiceBox<>();
+
+        int i = 500;
+
+        choiceBox.getItems().add((double) configuration.getQuestionLength() / 1000);
+        while (i <= 20000) {
+
+            choiceBox.getItems().add(((double) i) / 1000);
+            i = i + 500;
+        }
+
+        choiceBox.getSelectionModel().select(0);
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
+
+        choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+
+            final int newPropertyValue = (int) (1000
+                * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
+
+            configuration.getQuestionLengthProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
+
+        });
+
+        return choiceBox;
+    }
+
+    /**
+     * Function to use to permit to user to select between several theme
+     */
+    private static ChoiceBox<BuiltInUiTheme> buildStyleThemeChooser(Configuration configuration, ConfigurationContext configurationContext) {
+        ChoiceBox<BuiltInUiTheme> themesBox = new ChoiceBox<>();
+
+        final String cssfile = configuration.getCssFile();
+
+        themesBox.getItems().addAll(BuiltInUiTheme.values());
+
+        Optional<BuiltInUiTheme> configuredTheme = BuiltInUiTheme.findFromConfigPropertyValue(cssfile);
+
+        BuiltInUiTheme selected = configuredTheme.orElse(BuiltInUiTheme.DEFAULT_THEME);
+
+        themesBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(BuiltInUiTheme object) {
+                return object.getLabel();
+            }
+
+            @Override
+            public BuiltInUiTheme fromString(String string) {
+                return null;
+            }
+        });
+
+        themesBox.getSelectionModel().select(selected);
+
+        themesBox.setPrefWidth(PREF_WIDTH);
+        themesBox.setPrefHeight(PREF_HEIGHT);
+
+        themesBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            String newPropertyValue = newValue.getPreferredConfigPropertyValue();
+
+            configuration.getCssfileProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
+
+            final GazePlay gazePlay = configurationContext.getGazePlay();
+            // final Scene scene = gazePlay.getPrimaryScene();
+
+            CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
+
+            /*
+             * scene.getStylesheets().removeAll(scene.getStylesheets()); String styleSheetPath =
+             * newValue.getStyleSheetPath(); if (styleSheetPath != null) {
+             * scene.getStylesheets().add(styleSheetPath); }
+             */
+        });
+
+        return themesBox;
+    }
+
+    /**
+     * Function to use to permit to user to choose his/her own css file
+     */
+    private static Button buildStyleFileChooser(Configuration configuration,
+                                                ConfigurationContext configurationContext) {
+
+        Button buttonLoad = new Button(configuration.getCssFile());
+
+        buttonLoad.setOnAction(arg0 -> {
+            FileChooser fileChooser = new FileChooser();
+            final GazePlay gazePlay = configurationContext.getGazePlay();
+            final Scene scene = gazePlay.getPrimaryScene();
+            File file = fileChooser.showOpenDialog(scene.getWindow());
+            buttonLoad.setText(file.toString());
+
+            String newPropertyValue = file.toString();
+            if (Utils.isWindows()) {
+                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
+            }
+
+            configuration.getCssfileProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
+
+            scene.getStylesheets().remove(0);
+            scene.getStylesheets().add("file://" + newPropertyValue);
+
+            log.info(scene.getStylesheets().toString());
+        });
+
+        return buttonLoad;
+    }
+
+    private static Node buildDirectoryChooser(Configuration configuration, ConfigurationContext configurationContext, Translator translator) {
+
+        final HBox pane = new HBox(5);
+
+        final String filedir = configuration.getFileDir();
+
+        Button buttonLoad = new Button(filedir);
+        buttonLoad.textProperty().bind(configuration.getFiledirProperty());
+
+        buttonLoad.setOnAction(arg0 -> {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            final File currentFolder = new File(configuration.getFileDir());
+            if (currentFolder.isDirectory()) {
+                directoryChooser.setInitialDirectory(currentFolder);
+            }
+            final GazePlay gazePlay = configurationContext.getGazePlay();
+            final Scene scene = gazePlay.getPrimaryScene();
+            File file = directoryChooser.showDialog(scene.getWindow());
+            if (file == null) {
+                return;
+            }
+
+            String newPropertyValue = file.getAbsolutePath();
+
+            if (Utils.isWindows()) {
+                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
+            }
+
+            configuration.getFiledirProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        pane.getChildren().add(buttonLoad);
+
+        final I18NButton resetButton = new I18NButton(translator, "reset");
+        resetButton.setOnAction((event) -> configuration.getFiledirProperty().setValue(GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath()));
+
+        pane.getChildren().add(resetButton);
+
+        return pane;
+    }
+
+    private static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration,
+                                                                      ConfigurationContext configurationContext) {
+        ChoiceBox<EyeTracker> choiceBox = new ChoiceBox<>();
+
+        choiceBox.getItems().addAll(EyeTracker.values());
+
+        EyeTracker selectedEyeTracker = findSelectedEyeTracker(configuration);
+        choiceBox.getSelectionModel().select(selectedEyeTracker);
+
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
+
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            final String newPropertyValue = newValue.name();
+            configuration.getEyetrackerProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return choiceBox;
+    }
+
+    private static EyeTracker findSelectedEyeTracker(Configuration configuration) {
+        for (EyeTracker currentEyeTracker : EyeTracker.values()) {
+            if (currentEyeTracker.name().equals(configuration.getEyeTracker())) {
+                return currentEyeTracker;
+            }
+        }
+        return null;
+    }
+
+    private static CheckBox buildEnableRewardSoundBox(Configuration configuration,
+                                                      ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isEnableRewardSound());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getEnableRewardSoundProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildDisableHeatMapSoundBox(Configuration configuration,
+                                                        ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isHeatMapDisabled());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getHeatMapDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildDisableAreaOfInterest(Configuration configuration,
+                                                       ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isAreaOfInterestEnabled());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getAreaOfInterestDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildDisableConvexHull(Configuration configuration,
+                                                   ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isConvexHullEnabled());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getConvexHullDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildVideoRecording(Configuration configuration,
+                                                ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isVideoRecordingEnabled());
+
+        checkBox.selectedProperty().addListener((o) -> {
+            configuration.getVideoRecordingDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildDisableFixationSequenceCheckBox(Configuration configuration,
+                                                                 ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isFixationSequenceDisabled());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getFixationSequenceDisabledProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static CheckBox buildGazeMenu(Configuration configuration, ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isGazeMenuEnable());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getGazeMenuProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        // TODO
+        // ****** REMOVE FROM HERE
+        checkBox.setDisable(true);
+        // TO HERE TO ENABLE******
+
+        return checkBox;
+    }
+
+    private static CheckBox buildGazeMouse(Configuration configuration, ConfigurationContext configurationContext) {
+        CheckBox checkBox = new CheckBox();
+
+        checkBox.setSelected(configuration.isGazeMouseEnable());
+
+        checkBox.selectedProperty().addListener((o) -> {
+
+            configuration.getGazeMouseProperty().setValue(checkBox.isSelected());
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return checkBox;
+    }
+
+    private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(Configuration configuration,
+                                                                                      ConfigurationContext configurationContext) {
+        ChoiceBox<GameButtonOrientation> choiceBox = new ChoiceBox<>();
+
+        choiceBox.getItems().addAll(GameButtonOrientation.values());
+
+        GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
+        choiceBox.getSelectionModel().select(selectedValue);
+
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
+
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            final String newPropertyValue = newValue.name();
+            configuration.getMenuButtonsOrientationProperty().setValue(newPropertyValue);
+            configuration.saveConfigIgnoringExceptions();
+        });
+
+        return choiceBox;
+    }
+
+    private static void changeMusicFolder(final String newMusicFolder, Configuration config) {
+
+        String musicFolder = newMusicFolder;
+
+        if (musicFolder.isBlank()) {
+            File gazePlayFolder = GazePlayDirectories.getGazePlayFolder();
+            File gazePlayMusicFolder = new File(gazePlayFolder, "music");
+
+            String songName = "songidea(copycat)_0.mp3";
+            setupNewMusicFolder(gazePlayMusicFolder, songName);
+
+            musicFolder = gazePlayMusicFolder.getAbsolutePath();
+        }
+
+        config.getMusicFolderProperty().setValue(musicFolder);
+
+        config.saveConfigIgnoringExceptions();
+
+        BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+
+        musicManager.emptyPlaylist();
+        musicManager.getAudioFromFolder(musicFolder);
+        musicManager.play();
+    }
+
+    static void setupNewMusicFolder(File gazePlayMusicFolder, String defaultSong) {
+        // Copy resource into users root folder, and set that to be the new default music folder. Then the user
+        // can easily add their own songs to it without having to change configurations.
+
+        if (!gazePlayMusicFolder.exists()) {
+            boolean musicFolderCreated = gazePlayMusicFolder.mkdir();
+            log.debug("musicFolderCreated = " + musicFolderCreated);
+        }
+
+        String resourcePath = "data/home/sounds/" + defaultSong;
+
+        try {
+            InputStream defaultMusicTrack = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
+            if (gazePlayMusicFolder.exists()) {
+                Files.copy(defaultMusicTrack,
+                    Paths.get(new File(gazePlayMusicFolder, defaultSong).getAbsolutePath()),
+                    StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (NullPointerException ne) {
+            log.debug(String.format("Could not find %s: %s", resourcePath, ne.toString()));
+        } catch (IOException ie) {
+            log.debug(String.format("Could not copy file at %s to %s: %s", resourcePath, gazePlayMusicFolder, ie.toString()));
+        }
+    }
+
+    private static HBox buildVideoFolderChooser(Configuration config, ConfigurationContext configurationContext, Translator translator) {
+        HBox hbox = new HBox(5);
+
+        Button buttonFolder = new Button(config.getVideoFolder());
+        buttonFolder.textProperty().bind(config.getVideoFolderProperty());
+        I18NButton buttonReset = new I18NButton(translator, "reset");
+        hbox.getChildren().addAll(buttonFolder, buttonReset);
+
+        buttonFolder.setOnAction(e -> {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            final File currentVideoFolder = new File(config.getVideoFolder());
+            if (currentVideoFolder.isDirectory()) {
+                directoryChooser.setInitialDirectory(currentVideoFolder);
+            }
+            final GazePlay gazePlay = configurationContext.getGazePlay();
+            final Scene scene = gazePlay.getPrimaryScene();
+            File file = directoryChooser.showDialog(scene.getWindow());
+            if (file == null) {
+                return;
+            }
+            String newPropertyValue = file.getAbsolutePath();
+            if (Utils.isWindows()) {
+                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
+            }
+            config.getVideoFolderProperty().setValue(newPropertyValue);
+            config.saveConfigIgnoringExceptions();
+        });
+
+        buttonReset.setOnAction(e -> {
+            config.getVideoFolderProperty().setValue(GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
+            config.saveConfigIgnoringExceptions();
+        });
+
+        return hbox;
+    }
+
+    private static GameButtonOrientation findSelectedGameButtonOrientation(Configuration configuration) {
+        final String configValue = configuration.getMenuButtonsOrientation();
+        if (configValue == null) {
+            return null;
+        }
+        try {
+            return GameButtonOrientation.valueOf(configValue);
+        } catch (IllegalArgumentException e) {
+            log.warn("IllegalArgumentException : unsupported GameButtonOrientation value : {}", configValue, e);
+            return null;
+        }
     }
 
     private HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
@@ -372,13 +831,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
 
         Separator s = new Separator();
-        grid.add(s, 0, currentRowIndex,3,1);
+        grid.add(s, 0, currentRowIndex, 3, 1);
         GridPane.setHalignment(s, HPos.CENTER);
 
         if (currentLanguageAlignementIsLeftAligned) {
-                int newcurrentRowIndex = currentFormRow.incrementAndGet();
-                grid.add(label, COLUMN_INDEX_LABEL_LEFT, newcurrentRowIndex);
-                GridPane.setHalignment(label, HPos.LEFT);
+            int newcurrentRowIndex = currentFormRow.incrementAndGet();
+            grid.add(label, COLUMN_INDEX_LABEL_LEFT, newcurrentRowIndex);
+            GridPane.setHalignment(label, HPos.LEFT);
         } else {
             int newcurrentRowIndex = currentFormRow.incrementAndGet();
             grid.add(label, COLUMN_INDEX_LABEL_RIGHT, newcurrentRowIndex);
@@ -401,25 +860,24 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
             Separator s = new Separator();
-            grid.add(s, COLUMN_INDEX_INPUT_LEFT, currentRowIndex,2,1);
+            grid.add(s, COLUMN_INDEX_INPUT_LEFT, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.LEFT);
         } else {
             grid.add(label, COLUMN_INDEX_LABEL_RIGHT, currentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
             Separator s = new Separator();
-            grid.add(s, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex,2,1);
+            grid.add(s, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.RIGHT);
         }
     }
 
-
     private void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
 
-         int COLUMN_INDEX_LABEL_LEFT = 1;
-         int COLUMN_INDEX_INPUT_LEFT = 2;
+        int COLUMN_INDEX_LABEL_LEFT = 1;
+        int COLUMN_INDEX_INPUT_LEFT = 2;
 
-         int COLUMN_INDEX_LABEL_RIGHT = 1;
-         int COLUMN_INDEX_INPUT_RIGHT = 0;
+        int COLUMN_INDEX_LABEL_RIGHT = 1;
+        int COLUMN_INDEX_INPUT_RIGHT = 0;
 
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
@@ -442,194 +900,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             GridPane.setHalignment(input, HPos.RIGHT);
 
         }
-    }
-
-    private static ChoiceBox<Double> buildFixLengthChooserMenu(Configuration configuration,
-                                                               ConfigurationContext configurationContext) {
-
-        ChoiceBox<Double> choiceBox = new ChoiceBox<>();
-
-        int i = 300;
-
-        choiceBox.getItems().add((double) configuration.getFixationLength() / 1000);
-        while (i <= 30000) {
-
-            choiceBox.getItems().add(((double) i) / 1000);
-            i = i + 100;
-        }
-
-        choiceBox.getSelectionModel().select(0);
-        choiceBox.setPrefWidth(PREF_WIDTH);
-        choiceBox.setPrefHeight(PREF_HEIGHT);
-
-        choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-
-            final int newPropertyValue = (int) (1000
-                * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
-
-            configuration.getFixationlengthProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-
-        });
-
-        return choiceBox;
-    }
-
-    private static ChoiceBox<Double> buildQuestionLengthChooserMenu(Configuration configuration,
-                                                                    ConfigurationContext configurationContext) {
-
-        ChoiceBox<Double> choiceBox = new ChoiceBox<>();
-
-        int i = 500;
-
-        choiceBox.getItems().add((double) configuration.getQuestionLength() / 1000);
-        while (i <= 20000) {
-
-            choiceBox.getItems().add(((double) i) / 1000);
-            i = i + 500;
-        }
-
-        choiceBox.getSelectionModel().select(0);
-        choiceBox.setPrefWidth(PREF_WIDTH);
-        choiceBox.setPrefHeight(PREF_HEIGHT);
-
-        choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-
-            final int newPropertyValue = (int) (1000
-                * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
-
-            configuration.getQuestionLengthProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-
-        });
-
-        return choiceBox;
-    }
-
-    /**
-     * Function to use to permit to user to select between several theme
-     */
-    private static ChoiceBox<BuiltInUiTheme> buildStyleThemeChooser(Configuration configuration, ConfigurationContext configurationContext) {
-        ChoiceBox<BuiltInUiTheme> themesBox = new ChoiceBox<>();
-
-        final String cssfile = configuration.getCssFile();
-
-        themesBox.getItems().addAll(BuiltInUiTheme.values());
-
-        Optional<BuiltInUiTheme> configuredTheme = BuiltInUiTheme.findFromConfigPropertyValue(cssfile);
-
-        BuiltInUiTheme selected = configuredTheme.orElse(BuiltInUiTheme.DEFAULT_THEME);
-
-        themesBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(BuiltInUiTheme object) {
-                return object.getLabel();
-            }
-
-            @Override
-            public BuiltInUiTheme fromString(String string) {
-                return null;
-            }
-        });
-
-        themesBox.getSelectionModel().select(selected);
-
-        themesBox.setPrefWidth(PREF_WIDTH);
-        themesBox.setPrefHeight(PREF_HEIGHT);
-
-        themesBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            String newPropertyValue = newValue.getPreferredConfigPropertyValue();
-
-            configuration.getCssfileProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-
-            final GazePlay gazePlay = configurationContext.getGazePlay();
-            // final Scene scene = gazePlay.getPrimaryScene();
-
-            CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
-
-            /*
-             * scene.getStylesheets().removeAll(scene.getStylesheets()); String styleSheetPath =
-             * newValue.getStyleSheetPath(); if (styleSheetPath != null) {
-             * scene.getStylesheets().add(styleSheetPath); }
-             */
-        });
-
-        return themesBox;
-    }
-
-    /**
-     * Function to use to permit to user to choose his/her own css file
-     */
-    private static Button buildStyleFileChooser(Configuration configuration,
-                                                ConfigurationContext configurationContext) {
-
-        Button buttonLoad = new Button(configuration.getCssFile());
-
-        buttonLoad.setOnAction(arg0 -> {
-            FileChooser fileChooser = new FileChooser();
-            final GazePlay gazePlay = configurationContext.getGazePlay();
-            final Scene scene = gazePlay.getPrimaryScene();
-            File file = fileChooser.showOpenDialog(scene.getWindow());
-            buttonLoad.setText(file.toString());
-
-            String newPropertyValue = file.toString();
-            if (Utils.isWindows()) {
-                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-            }
-
-            configuration.getCssfileProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-
-            scene.getStylesheets().remove(0);
-            scene.getStylesheets().add("file://" + newPropertyValue);
-
-            log.info(scene.getStylesheets().toString());
-        });
-
-        return buttonLoad;
-    }
-
-    private static Node buildDirectoryChooser(Configuration configuration, ConfigurationContext configurationContext, Translator translator) {
-
-        final HBox pane = new HBox(5);
-
-        final String filedir = configuration.getFileDir();
-
-        Button buttonLoad = new Button(filedir);
-        buttonLoad.textProperty().bind(configuration.getFiledirProperty());
-
-        buttonLoad.setOnAction(arg0 -> {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            final File currentFolder = new File(configuration.getFileDir());
-            if (currentFolder.isDirectory()) {
-                directoryChooser.setInitialDirectory(currentFolder);
-            }
-            final GazePlay gazePlay = configurationContext.getGazePlay();
-            final Scene scene = gazePlay.getPrimaryScene();
-            File file = directoryChooser.showDialog(scene.getWindow());
-            if (file == null) {
-                return;
-            }
-
-            String newPropertyValue = file.getAbsolutePath();
-
-            if (Utils.isWindows()) {
-                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-            }
-
-            configuration.getFiledirProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-        });
-
-        pane.getChildren().add(buttonLoad);
-
-        final I18NButton resetButton = new I18NButton(translator, "reset");
-        resetButton.setOnAction((event) -> configuration.getFiledirProperty().setValue(GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath()));
-
-        pane.getChildren().add(resetButton);
-
-        return pane;
     }
 
     private Node buildWhereIsItDirectoryChooser(Configuration configuration,
@@ -749,125 +1019,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return languageBox;
     }
 
-    private static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration,
-                                                                      ConfigurationContext configurationContext) {
-        ChoiceBox<EyeTracker> choiceBox = new ChoiceBox<>();
-
-        choiceBox.getItems().addAll(EyeTracker.values());
-
-        EyeTracker selectedEyeTracker = findSelectedEyeTracker(configuration);
-        choiceBox.getSelectionModel().select(selectedEyeTracker);
-
-        choiceBox.setPrefWidth(PREF_WIDTH);
-        choiceBox.setPrefHeight(PREF_HEIGHT);
-
-        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            final String newPropertyValue = newValue.name();
-            configuration.getEyetrackerProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-        });
-
-        return choiceBox;
-    }
-
-    private static EyeTracker findSelectedEyeTracker(Configuration configuration) {
-        for (EyeTracker currentEyeTracker : EyeTracker.values()) {
-            if (currentEyeTracker.name().equals(configuration.getEyeTracker())) {
-                return currentEyeTracker;
-            }
-        }
-        return null;
-    }
-
-    private static CheckBox buildEnableRewardSoundBox(Configuration configuration,
-                                                      ConfigurationContext configurationContext) {
-        CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isEnableRewardSound());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getEnableRewardSoundProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
-        return checkBox;
-    }
-
-    private static CheckBox buildDisableHeatMapSoundBox(Configuration configuration,
-                                                        ConfigurationContext configurationContext) {
-        CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isHeatMapDisabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getHeatMapDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
-        return checkBox;
-    }
-
-    private static CheckBox buildDisableAreaOfInterest(Configuration configuration,
-                                                       ConfigurationContext configurationContext) {
-        CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isAreaOfInterestEnabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getAreaOfInterestDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
-        return checkBox;
-    }
-
-    private static CheckBox buildDisableConvexHull(Configuration configuration,
-                                                   ConfigurationContext configurationContext) {
-        CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isConvexHullEnabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getConvexHullDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
-        return checkBox;
-    }
-
-    private static CheckBox buildVideoRecording(Configuration configuration,
-                                                ConfigurationContext configurationContext) {
-        CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isVideoRecordingEnabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-            configuration.getVideoRecordingDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
-        return checkBox;
-    }
-
-    private static CheckBox buildDisableFixationSequenceCheckBox(Configuration configuration,
-                                                                 ConfigurationContext configurationContext) {
-        CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isFixationSequenceDisabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getFixationSequenceDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
-        return checkBox;
-    }
-
     private CheckBox buildEnabledWhiteBackground(Configuration configuration,
                                                  ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
@@ -879,60 +1030,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             configuration.saveConfigIgnoringExceptions();
         });
         return checkBox;
-    }
-
-    private static CheckBox buildGazeMenu(Configuration configuration, ConfigurationContext configurationContext) {
-        CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isGazeMenuEnable());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getGazeMenuProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
-        // TODO
-        // ****** REMOVE FROM HERE
-        checkBox.setDisable(true);
-        // TO HERE TO ENABLE******
-
-        return checkBox;
-    }
-
-    private static CheckBox buildGazeMouse(Configuration configuration, ConfigurationContext configurationContext) {
-        CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isGazeMouseEnable());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getGazeMouseProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
-        return checkBox;
-    }
-
-    private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(Configuration configuration,
-                                                                                      ConfigurationContext configurationContext) {
-        ChoiceBox<GameButtonOrientation> choiceBox = new ChoiceBox<>();
-
-        choiceBox.getItems().addAll(GameButtonOrientation.values());
-
-        GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
-        choiceBox.getSelectionModel().select(selectedValue);
-
-        choiceBox.setPrefWidth(PREF_WIDTH);
-        choiceBox.setPrefHeight(PREF_HEIGHT);
-
-        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            final String newPropertyValue = newValue.name();
-            configuration.getMenuButtonsOrientationProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-        });
-
-        return choiceBox;
     }
 
     private Node buildMusicInput(Configuration config, ConfigurationContext configurationContext, Translator translator) {
@@ -985,105 +1082,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         pane.getChildren().add(resetButton);
 
         return pane;
-    }
-
-    private static void changeMusicFolder(final String newMusicFolder, Configuration config) {
-
-        String musicFolder = newMusicFolder;
-
-        if (musicFolder.isBlank()) {
-            File gazePlayFolder = GazePlayDirectories.getGazePlayFolder();
-            File gazePlayMusicFolder = new File(gazePlayFolder, "music");
-
-            String songName = "songidea(copycat)_0.mp3";
-            setupNewMusicFolder(gazePlayMusicFolder, songName);
-
-            musicFolder = gazePlayMusicFolder.getAbsolutePath();
-        }
-
-        config.getMusicFolderProperty().setValue(musicFolder);
-
-        config.saveConfigIgnoringExceptions();
-
-        BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
-
-        musicManager.emptyPlaylist();
-        musicManager.getAudioFromFolder(musicFolder);
-        musicManager.play();
-    }
-
-    static void setupNewMusicFolder(File gazePlayMusicFolder, String defaultSong) {
-        // Copy resource into users root folder, and set that to be the new default music folder. Then the user
-        // can easily add their own songs to it without having to change configurations.
-
-        if (!gazePlayMusicFolder.exists()) {
-            boolean musicFolderCreated = gazePlayMusicFolder.mkdir();
-            log.debug("musicFolderCreated = " + musicFolderCreated);
-        }
-
-        String resourcePath = "data/home/sounds/" + defaultSong;
-
-        try {
-            InputStream defaultMusicTrack = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
-            if (gazePlayMusicFolder.exists()) {
-                Files.copy(defaultMusicTrack,
-                    Paths.get(new File(gazePlayMusicFolder, defaultSong).getAbsolutePath()),
-                    StandardCopyOption.REPLACE_EXISTING);
-            }
-        } catch (NullPointerException ne) {
-            log.debug(String.format("Could not find %s: %s", resourcePath, ne.toString()));
-        } catch (IOException ie) {
-            log.debug(String.format("Could not copy file at %s to %s: %s", resourcePath, gazePlayMusicFolder, ie.toString()));
-        }
-    }
-
-    private static HBox buildVideoFolderChooser(Configuration config, ConfigurationContext configurationContext, Translator translator) {
-        HBox hbox = new HBox(5);
-
-        Button buttonFolder = new Button(config.getVideoFolder());
-        buttonFolder.textProperty().bind(config.getVideoFolderProperty());
-        I18NButton buttonReset = new I18NButton(translator, "reset");
-        hbox.getChildren().addAll(buttonFolder, buttonReset);
-
-        buttonFolder.setOnAction(e -> {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            final File currentVideoFolder = new File(config.getVideoFolder());
-            if (currentVideoFolder.isDirectory()) {
-                directoryChooser.setInitialDirectory(currentVideoFolder);
-            }
-            final GazePlay gazePlay = configurationContext.getGazePlay();
-            final Scene scene = gazePlay.getPrimaryScene();
-            File file = directoryChooser.showDialog(scene.getWindow());
-            if (file == null) {
-                return;
-            }
-            String newPropertyValue = file.getAbsolutePath();
-            if (Utils.isWindows()) {
-                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-            }
-            config.getVideoFolderProperty().setValue(newPropertyValue);
-            config.saveConfigIgnoringExceptions();
-        });
-
-        buttonReset.setOnAction(e -> {
-            config.getVideoFolderProperty().setValue(GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
-            config.saveConfigIgnoringExceptions();
-        });
-
-        return hbox;
-    }
-
-    private static GameButtonOrientation findSelectedGameButtonOrientation(Configuration configuration) {
-        final String configValue = configuration.getMenuButtonsOrientation();
-        if (configValue == null) {
-            return null;
-        }
-        try {
-            return GameButtonOrientation.valueOf(configValue);
-        } catch (IllegalArgumentException e) {
-            log.warn("IllegalArgumentException : unsupported GameButtonOrientation value : {}", configValue, e);
-            return null;
-        }
     }
 
     private ChoiceBox<String> buildQuitKeyChooser(Configuration configuration,

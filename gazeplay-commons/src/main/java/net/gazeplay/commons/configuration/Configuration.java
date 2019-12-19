@@ -89,7 +89,9 @@ public class Configuration {
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
 
 
-    // "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
+    /*
+    source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
+    * */
     public static final String DEFAULT_VALUE_COLORS_DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
 

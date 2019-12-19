@@ -8,12 +8,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Getter;
@@ -26,29 +24,22 @@ import static net.gazeplay.games.colors.ColorToolBox.COLORS_IMAGES_PATH;
 @Slf4j
 public class CustomColorPicker extends Pane {
 
-    final GridPane colorGrid;
-
     public static final Color[] COLOR_LIST = {Color.BURLYWOOD, Color.DARKCYAN, Color.BLUEVIOLET, Color.BROWN,
         Color.CADETBLUE, Color.DARKGRAY, Color.DARKORANGE, Color.GOLD, Color.LIMEGREEN, Color.ROYALBLUE,
         Color.SIENNA, Color.YELLOWGREEN};
-
     public static final int NB_COLOR_PER_ROW = 5/* ((int) Math.sqrt(COLOR_LIST.length)) */;
-
     // Credits
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
     public static final String CLOSE_CURSTOM_PANEL_IMAGE_PATH = COLORS_IMAGES_PATH + "error.png";
-
+    final GridPane colorGrid;
+    private final ColorBox representingBox;
+    private final AbstractGazeIndicator progressIndicator;
+    private final Stage dialog;
     @Getter
     private ColorBox selectedColor;
-
-    private final ColorBox representingBox;
-
-    private final AbstractGazeIndicator progressIndicator;
-
-    private final Stage dialog;
 
     public CustomColorPicker(final IGameContext gameContext, final Pane root, final ColorToolBox toolBox, final ColorBox representingBox,
                              final Stage stage) {

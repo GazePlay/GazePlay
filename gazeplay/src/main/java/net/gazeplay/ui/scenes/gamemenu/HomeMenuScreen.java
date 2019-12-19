@@ -4,7 +4,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -40,7 +39,6 @@ import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.function.Predicate;
@@ -131,6 +129,41 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     }
 
+    private static void filterGames(FlowPane choicePanel, List<GameButtonPane> completeGameCardsList, Configuration config) {
+        Predicate<Node> gameCardPredicate = new GameCardVisiblePredicate(config);
+        List<Node> filteredList = completeGameCardsList.stream()
+            .filter(gameCardPredicate)
+            .collect(Collectors.toList());
+        //
+        choicePanel.getChildren().clear();
+        choicePanel.getChildren().addAll(filteredList);
+    }
+
+    private static CheckBox buildCategoryCheckBox(
+        GameCategories.Category category,
+        Configuration config,
+        Translator translator,
+        FlowPane choicePanel,
+        List<GameButtonPane> gameCardsList
+    ) {
+        I18NText label = new I18NText(translator, category.getGameCategory());
+        CheckBox categoryCheckbox = new CheckBox(label.getText());
+        categoryCheckbox.setTextFill(Color.WHITE);
+
+        categoryCheckbox.setSelected(!config.getHiddenCategoriesProperty().contains(category.getGameCategory()));
+        categoryCheckbox.selectedProperty().addListener((o) -> {
+            if (categoryCheckbox.isSelected()) {
+                config.getHiddenCategoriesProperty().remove(category.getGameCategory());
+            } else {
+                config.getHiddenCategoriesProperty().add(category.getGameCategory());
+            }
+            filterGames(choicePanel, gameCardsList, config);
+            config.saveConfigIgnoringExceptions();
+
+        });
+        return categoryCheckbox;
+    }
+
     @Override
     public ObservableList<Node> getChildren() {
         return root.getChildren();
@@ -149,7 +182,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.setHgap(flowpaneGap);
         choicePanel.setVgap(flowpaneGap);
         choicePanel.setPadding(new Insets(20, 60, 20, 60));
-
 
         choicePanel.getChildren().addAll(gameCardsList);
 
@@ -171,7 +203,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
 
         final List<GameButtonPane> gameCardsList = new ArrayList<>();
-
 
         for (GameSpec gameSpec : games) {
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(
@@ -253,16 +284,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return gameCardsList;
     }
 
-    private static void filterGames(FlowPane choicePanel, List<GameButtonPane> completeGameCardsList, Configuration config) {
-        Predicate<Node> gameCardPredicate = new GameCardVisiblePredicate(config);
-        List<Node> filteredList = completeGameCardsList.stream()
-            .filter(gameCardPredicate)
-            .collect(Collectors.toList());
-        //
-        choicePanel.getChildren().clear();
-        choicePanel.getChildren().addAll(filteredList);
-    }
-
     private HBox buildFilterByCategory(Configuration config, Translator translator) {
         List<CheckBox> allCheckBoxes = new ArrayList<>();
         for (GameCategories.Category category : GameCategories.Category.values()) {
@@ -288,31 +309,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton logoutButton = new CustomButton("data/common/images/logout.png");
         logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
         return logoutButton;
-    }
-
-    private static CheckBox buildCategoryCheckBox(
-        GameCategories.Category category,
-        Configuration config,
-        Translator translator,
-        FlowPane choicePanel,
-        List<GameButtonPane> gameCardsList
-    ) {
-        I18NText label = new I18NText(translator, category.getGameCategory());
-        CheckBox categoryCheckbox = new CheckBox(label.getText());
-        categoryCheckbox.setTextFill(Color.WHITE);
-
-        categoryCheckbox.setSelected(!config.getHiddenCategoriesProperty().contains(category.getGameCategory()));
-        categoryCheckbox.selectedProperty().addListener((o) -> {
-            if (categoryCheckbox.isSelected()) {
-                config.getHiddenCategoriesProperty().remove(category.getGameCategory());
-            } else {
-                config.getHiddenCategoriesProperty().add(category.getGameCategory());
-            }
-            filterGames(choicePanel, gameCardsList, config);
-            config.saveConfigIgnoringExceptions();
-
-        });
-        return categoryCheckbox;
     }
 
     @AllArgsConstructor

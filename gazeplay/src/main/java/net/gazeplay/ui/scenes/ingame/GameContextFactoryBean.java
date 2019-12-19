@@ -37,6 +37,13 @@ import static net.gazeplay.ui.scenes.ingame.GameContext.updateConfigPane;
 public class GameContextFactoryBean implements FactoryBean<GameContext> {
 
     private static final double BUTTON_MIN_HEIGHT = 64;
+    @Autowired
+    private GazePlay gazePlay;
+    @Autowired
+    private Translator translator;
+    @Autowired
+    private GazeDeviceManager gazeDeviceManager;
+    private boolean menuOpen = false;
 
     private static double computeButtonSize(Stage primaryStage) {
         return primaryStage.getWidth() / 10;
@@ -69,17 +76,6 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         button.setPrefHeight(buttonSize);
         button.setPrefWidth(buttonSize);
     }
-
-    @Autowired
-    private GazePlay gazePlay;
-
-    @Autowired
-    private Translator translator;
-
-    @Autowired
-    private GazeDeviceManager gazeDeviceManager;
-
-    private boolean menuOpen = false;
 
     @Override
     public GameContext getObject() {

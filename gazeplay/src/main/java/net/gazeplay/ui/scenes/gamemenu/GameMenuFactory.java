@@ -7,8 +7,10 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import lombok.Data;
@@ -27,7 +29,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import static javafx.scene.input.MouseEvent.*;
+import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
+import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 
 @Slf4j
 @Data
@@ -70,7 +73,6 @@ public class GameMenuFactory {
         }
 
 
-
         final I18NText gameTitleText = new I18NText(translator, gameSummary.getNameCode());
         gameTitleText.getStyleClass().add("gameChooserButtonTitle");
 
@@ -106,7 +108,7 @@ public class GameMenuFactory {
 
         if (gameSummary.getGameThumbnail() != null) {
 
-            Image buttonGraphics = new Image(gameSummary.getGameThumbnail(),200,200,true,false);
+            Image buttonGraphics = new Image(gameSummary.getGameThumbnail(), 200, 200, true, false);
             ImageView imageView = new ImageView(buttonGraphics);
             imageView.getStyleClass().add("gameChooserButtonThumbnail");
             imageView.setPreserveRatio(true);
@@ -149,7 +151,7 @@ public class GameMenuFactory {
         }
         for (GameCategories.Category gameCategory : gameSummary.getCategories()) {
             if (gameCategory.getThumbnail() != null) {
-                Image buttonGraphics = new Image(gameCategory.getThumbnail(),50,50,true,false);
+                Image buttonGraphics = new Image(gameCategory.getThumbnail(), 50, 50, true, false);
                 ImageView imageView = new ImageView(buttonGraphics);
                 imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
                 imageView.setPreserveRatio(true);
@@ -226,7 +228,11 @@ public class GameMenuFactory {
                 break;
         }
 
-        gameCard.addEventHandler(MOUSE_PRESSED, (MouseEvent e) ->   {if(!favGamesImageView.isHover()){ gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);}});
+        gameCard.addEventHandler(MOUSE_PRESSED, (MouseEvent e) -> {
+            if (!favGamesImageView.isHover()) {
+                gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
+            }
+        });
 
         @Data
         class EventState {
@@ -253,9 +259,9 @@ public class GameMenuFactory {
                 config.saveConfigIgnoringExceptions();
             }
         };
-       // favIconContainer.addEventFilter(MOUSE_ENTERED, favoriteGameSwitchEventHandler);
-       // favIconContainer.addEventFilter(MOUSE_MOVED, favoriteGameSwitchEventHandler);
-       // favIconContainer.addEventFilter(MOUSE_EXITED, favoriteGameSwitchEventHandler);
+        // favIconContainer.addEventFilter(MOUSE_ENTERED, favoriteGameSwitchEventHandler);
+        // favIconContainer.addEventFilter(MOUSE_MOVED, favoriteGameSwitchEventHandler);
+        // favIconContainer.addEventFilter(MOUSE_EXITED, favoriteGameSwitchEventHandler);
         favIconContainer.addEventFilter(MOUSE_CLICKED, favoriteGameSwitchEventHandler);
 
         // pausedEvents.add(gameCard);

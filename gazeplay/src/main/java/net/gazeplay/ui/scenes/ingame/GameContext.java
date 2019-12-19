@@ -44,36 +44,20 @@ import java.io.IOException;
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
 
-    public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
-        double mainHeight = primaryStage.getHeight();
-
-        final double newY = mainHeight - configPane.getHeight() - 30;
-        log.debug("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
-        configPane.setTranslateY(newY);
-    }
-
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
-
     @Getter
     private final Translator translator;
-
     private final Bravo bravo;
-
     @Getter
     private final HBox menuHBox;
-
     @Getter
     private final RandomPositionGenerator randomPositionGenerator;
-
     @Getter
     private final GamePanelDimensionProvider gamePanelDimensionProvider;
-
     @Getter
     private final GazeDeviceManager gazeDeviceManager;
-
     private final Pane configPane;
-
     private final Pane gamingRoot;
 
     protected GameContext(
@@ -96,6 +80,14 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         this.gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
         this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
+    }
+
+    public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
+        double mainHeight = primaryStage.getHeight();
+
+        final double newY = mainHeight - configPane.getHeight() - 30;
+        log.debug("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
+        configPane.setTranslateY(newY);
     }
 
     @Override

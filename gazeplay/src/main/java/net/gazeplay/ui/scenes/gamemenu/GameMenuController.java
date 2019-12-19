@@ -25,9 +25,9 @@ public class GameMenuController {
     private ApplicationContext applicationContext;
 
     public void onGameSelection(
-        @NonNull GazePlay gazePlay, 
-        @NonNull Parent root, 
-        @NonNull GameSpec gameSpec, 
+        @NonNull GazePlay gazePlay,
+        @NonNull Parent root,
+        @NonNull GameSpec gameSpec,
         String gameName
     ) {
         Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
@@ -38,7 +38,7 @@ public class GameMenuController {
             GameVariantDialog dialog = new GameVariantDialog(gazePlay, this, gazePlay.getPrimaryStage(), gameSpec, root, gameSpec.getGameVariantGenerator().getVariantChooseText());
             dialog.setTitle(gameName);
             dialog.show();
-            
+
 
             dialog.toFront();
             dialog.setAlwaysOnTop(true);
