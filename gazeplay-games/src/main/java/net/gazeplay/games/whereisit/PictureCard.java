@@ -83,7 +83,7 @@ class PictureCard extends Group {
         this.getChildren().add(progressIndicator);
         this.getChildren().add(errorImageRectangle);
 
-        customInputEventHandler = buildCustomInputEventHandler(gameInstance);
+        customInputEventHandler = new PictureCard.CustomInputEventHandler();
 
         gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
 
@@ -249,10 +249,6 @@ class PictureCard extends Group {
         result.setOpacity(0.5);
         result.setVisible(false);
         return result;
-    }
-
-    private PictureCard.CustomInputEventHandler buildCustomInputEventHandler(final WhereIsIt gameInstance) {
-        return new PictureCard.CustomInputEventHandler();
     }
 
     private class CustomInputEventHandler implements EventHandler<Event> {
