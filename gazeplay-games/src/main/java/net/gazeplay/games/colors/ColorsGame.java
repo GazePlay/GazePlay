@@ -271,6 +271,13 @@ try {
         rectangle.setHeight(height);
 
         rectangle.setFill(this.createImagePattern(writableImg, rectangle));
+
+
+        double ratio = writableImg.getHeight()/writableImg.getWidth();
+        rectangle.setWidth(rectangle.getHeight()/ratio);
+
+        rectangle.setX((width - rectangle.getHeight()/ratio) /2 );
+
     }
 
     private void updateToolBox() {
@@ -348,7 +355,7 @@ try {
 
         sum = sum / (writableImg.getWidth() * writableImg.getHeight());
 
-        AVG_THRESHOLD = sum / 2;
+        AVG_THRESHOLD = 3*sum/4;
 
         for (int i = 0; i < writableImg.getWidth(); ++i) {
             for (int j = 0; j < writableImg.getHeight(); ++j) {
@@ -373,8 +380,8 @@ try {
      */
     private void colorize(final double x, final double y) {
 
-        int pixelX = (int) (x * writableImg.getWidth() / rectangle.getWidth());
-        int pixelY = (int) (y * writableImg.getHeight() / rectangle.getHeight());
+        int pixelX = (int) ((x-rectangle.getX()) * writableImg.getWidth() / rectangle.getWidth());
+        int pixelY = (int) ((y-rectangle.getY()) * writableImg.getHeight() / rectangle.getHeight());
         // log.info("pixel at x= {}, y = {}", pixelX, pixelY);
 
         Color color = pixelReader.getColor(pixelX, pixelY);
@@ -405,8 +412,9 @@ try {
     }
 
     public ImagePattern createImagePattern(Image img, Rectangle r){
-        return new ImagePattern(img,0,0,r.getHeight()/r.getWidth(),1,true);
-        // todo: changer la taille du rectangle ou modifier le pattern
+       //double ratio = img.getHeight()/img.getWidth();
+
+        return new ImagePattern(img,0,0,1,1,true);
     }
 
     /**
