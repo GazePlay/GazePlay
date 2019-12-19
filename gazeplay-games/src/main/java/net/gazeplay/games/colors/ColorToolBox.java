@@ -28,10 +28,8 @@ import net.gazeplay.components.CssUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -269,16 +267,20 @@ public class ColorToolBox extends Pane {
 
     }
 
-    private void copyFile(File source, File dest) throws IOException {
-
-        try (var fis = new FileInputStream(source);
-             var fos = new FileOutputStream(dest)) {
-
-            byte[] buffer = new byte[1024];
-            int length;
-
-            while ((length = fis.read(buffer)) > 0) {
-                fos.write(buffer, 0, length);
+    private void copyFile(File imageFile){
+        if (imageFile != null) {
+            Path from = Paths.get(imageFile.toURI());
+            File to = new File(this.getColorsDirectory(), imageFile.getName());
+            CopyOption[] options = new CopyOption[]{
+                StandardCopyOption.REPLACE_EXISTING,
+                StandardCopyOption.COPY_ATTRIBUTES
+            };
+            try {
+                Files.copy(from, to.toPath(), options);
+                gameContext.getConfiguration().getColorsDefaultImageProperty().setValue(to.getAbsolutePath());
+                gameContext.getConfiguration().saveConfigIgnoringExceptions();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -299,14 +301,8 @@ public class ColorToolBox extends Pane {
 
             final File imageFile = imageChooser.showOpenDialog(primaryStage);
             if (imageFile != null) {
-                File to = new File(this.getColorsDirectory(), imageFile.getName());
-                try {
-                    copyFile(imageFile, to);
-                    gameContext.getConfiguration().getColorsDefaultImageProperty().setValue(to.getAbsolutePath());
-                    gameContext.getConfiguration().saveConfigIgnoringExceptions();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                copyFile(imageFile);
 
                 Image image = new Image(imageFile.toURI().toString());
 
@@ -355,7 +351,11 @@ public class ColorToolBox extends Pane {
         } else {
             colorsDirectory = new File(GazePlayDirectories.getUserProfileDirectory(userName), "/data/colors");
         }
-        colorsDirectory.mkdir();
+        boolean mkDirSuccess = colorsDirectory.mkdirs();
+
+        if (!mkDirSuccess) {
+            log.debug(colorsDirectory.getAbsolutePath() + " can't be created");
+        }
 
         return colorsDirectory;
     }

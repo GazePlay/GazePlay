@@ -78,8 +78,6 @@ public class ColorsGame implements GameLifeCycle {
      */
     public static final double GAZE_INDICATOR_DISTANCE = 5;
 
-    private static double AVG_THRESHOLD = 0.39;
-
     /**
      * The gaze progress indicator to show time before colorization.
      */
@@ -209,16 +207,15 @@ public class ColorsGame implements GameLifeCycle {
 
         colorToolBox.widthProperty().addListener(listener);
         Image img;
-try {
-    log.info(imgURL);
-     img = new Image(new FileInputStream(imgURL));
-} catch(FileNotFoundException e ){
-    getGameContext().getConfiguration().getColorsDefaultImageProperty().set(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
-    getGameContext().getConfiguration().saveConfigIgnoringExceptions();
+        try {
+             img = new Image(new FileInputStream(imgURL));
+        } catch(FileNotFoundException e ){
+            getGameContext().getConfiguration().getColorsDefaultImageProperty().set(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
+            getGameContext().getConfiguration().saveConfigIgnoringExceptions();
 
-    imgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
-    img = new Image(imgURL);
-}
+            imgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
+            img = new Image(imgURL);
+        }
 
         if (!img.isError()) {
 
@@ -355,7 +352,7 @@ try {
 
         sum = sum / (writableImg.getWidth() * writableImg.getHeight());
 
-        AVG_THRESHOLD = 3*sum/4;
+        double AVG_THRESHOLD = 3 * sum / 4;
 
         for (int i = 0; i < writableImg.getWidth(); ++i) {
             for (int j = 0; j < writableImg.getHeight(); ++j) {

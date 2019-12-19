@@ -46,34 +46,6 @@ import java.util.SortedSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-class GameComparator implements Comparator<Node>
-{
-    Configuration config;
-    // Used for sorting in ascending order of
-    // roll number
-
-    public GameComparator(Configuration conf){
-        super();
-        this.config = conf;
-    }
-
-    public int compare(Node a0, Node b0)
-    {
-        GameButtonPane a = (GameButtonPane) a0;
-        GameButtonPane b = (GameButtonPane) b0;
-
-        if (config.getFavoriteGamesProperty().contains( a.getGameSpec().getGameSummary().getNameCode()) && config.getFavoriteGamesProperty().contains( b.getGameSpec().getGameSummary().getNameCode())) {
-            return  a.getGameSpec().getGameSummary().getNameCode().compareTo( b.getGameSpec().getGameSummary().getNameCode());
-        } else if (config.getFavoriteGamesProperty().contains( a.getGameSpec().getGameSummary().getNameCode())) {
-            return -1;
-        } else if (config.getFavoriteGamesProperty().contains( b.getGameSpec().getGameSummary().getNameCode())) {
-            return 1;
-        } else {
-           return  a.getGameSpec().getGameSummary().getNameCode().compareTo( b.getGameSpec().getGameSummary().getNameCode());
-        }
-    }
-}
-
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
@@ -178,20 +150,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.setVgap(flowpaneGap);
         choicePanel.setPadding(new Insets(20, 60, 20, 60));
 
-        config.getFavoriteGamesProperty().addListener((observableValue, oldValue, newValue) -> {
-
-            Predicate<Node> gameCardPredicate = new GameCardVisiblePredicate(config);
-            List<Node> filteredList = gameCardsList.stream()
-                .filter(gameCardPredicate)
-                .collect(Collectors.toList());
-            //
-            filteredList.sort(new GameComparator(config));
-            choicePanel.getChildren().clear();
-            choicePanel.getChildren().addAll(filteredList);
-
-        });
-
-        gameCardsList.sort(new GameComparator(config));
 
         choicePanel.getChildren().addAll(gameCardsList);
 
