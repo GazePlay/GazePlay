@@ -20,7 +20,6 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
-import net.gazeplay.commons.utils.games.ImageDirectoryLocator;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -218,7 +217,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         Configuration config = gameContext.getConfiguration();
 
-        int filesCount = 0;
+        int filesCount;
         String directoryName;
         File[] imagesFolders = new File[1];
         Set<String> resourcesFolders = Collections.emptySet();
@@ -328,7 +327,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                 }
 
-                // The image file needs 'file:' preprended as this will get images from a local source, not resources.
+                // The image file needs 'file:' prepended as this will get images from a local source, not resources.
                 PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
                     winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
@@ -409,26 +408,6 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().addAll(error);
     }
 
-    private File locateImagesDirectory(Configuration config) {
-
-        File result;
-
-        if (this.gameType == CUSTOMIZED) {
-
-            result = new File(config.getWhereIsItDir() + "/images/");
-        } else {
-
-            result = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(
-                "data/" + this.gameType.getResourcesDirectoryName() + "/images/");
-
-            if (result == null) {
-                result = ImageDirectoryLocator.locateImagesDirectoryInExplodedClassPath(
-                    "data/" + this.gameType.getResourcesDirectoryName() + "/images/");
-            }
-        }
-        return result;
-    }
-
     private String getPathSound(final String folder, String language) {
         if (this.gameType == CUSTOMIZED) {
             final Configuration config = gameContext.getConfiguration();
@@ -492,15 +471,12 @@ public class WhereIsIt implements GameLifeCycle {
 
             Multilinguism localMultilinguism = Multilinguism.getForResource(F.toString());
 
-            String traduction = localMultilinguism.getTrad(folder, language);
-
-            return traduction;
+            return localMultilinguism.getTrad(folder, language);
         }
 
         Multilinguism localMultilinguism = Multilinguism.getForResource(gameType.getLanguageResourceLocation());
 
-        String traduction = localMultilinguism.getTrad(folder, language);
-        return traduction;
+        return localMultilinguism.getTrad(folder, language);
     }
 
     private List<Image> getPictogramms(final String folder) {
