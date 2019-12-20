@@ -59,7 +59,7 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
 
         stats.getFixationSequence().forEach(p -> {
             Circle newPoint = new Circle();
-            newPoint.setOpacity(0.5);
+            newPoint.setOpacity(0);
             newPoint.setCenterX(p.getY());
             newPoint.setCenterY(p.getX());
             newPoint.setRadius((20. + Math.sqrt(p.getGazeDuration()))/2);
@@ -75,8 +75,8 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
             label.setX(newPoint.getCenterX() + newPoint.getRadius());
             label.setY(newPoint.getCenterY() - label.getLayoutY());
 
-            newPoint.setOnMouseEntered(s -> center.getChildren().add(label));
-            newPoint.setOnMouseExited(s -> center.getChildren().remove(label));
+            newPoint.setOnMouseEntered(s -> {center.getChildren().add(label); newPoint.setOpacity(0.5);});
+            newPoint.setOnMouseExited(s -> {center.getChildren().remove(label);newPoint.setOpacity(0);});
         });
 
         center.getChildren().addAll(points);

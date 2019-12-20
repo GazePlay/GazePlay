@@ -360,13 +360,7 @@ public class ColorToolBox extends Pane {
     private File getColorsDirectory() {
         Configuration config = gameContext.getConfiguration();
         String userName = config.getUserName();
-        //
-        final File colorsDirectory;
-        if (userName == null || userName.equals("")) {
-            colorsDirectory = new File(GazePlayDirectories.getGazePlayFolder(), "/data/colors");
-        } else {
-            colorsDirectory = new File(GazePlayDirectories.getUserProfileDirectory(userName), "/data/colors");
-        }
+        final File colorsDirectory = new File(GazePlayDirectories.getUserDataFolder(userName), "colors");
         boolean mkDirSuccess = colorsDirectory.mkdirs();
 
         if (!mkDirSuccess) {

@@ -46,11 +46,26 @@ public class GazePlayDirectories {
         return new File(getGazePlayFolder(), "statistics");
     }
 
+    /**
+     * @return data directory for GazePlay : in the default directory of GazePlay, in a folder called data
+     */
+    public static File getDataFolder() {
+        return new File(getGazePlayFolder(), "data");
+    }
+
     public static File getUserStatsFolder(String user) {
         if (!user.equals("")) {
             return new File(getUserProfileDirectory(user), "statistics");
         } else {
             return getStatsFolder();
+        }
+    }
+
+    public static File getUserDataFolder(String user) {
+        if (!user.equals("")) {
+            return new File(getUserProfileDirectory(user), "data");
+        } else {
+            return getDataFolder();
         }
     }
 
