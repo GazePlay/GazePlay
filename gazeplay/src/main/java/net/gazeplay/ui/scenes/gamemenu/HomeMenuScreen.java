@@ -53,7 +53,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private FlowPane choicePanel;
 
-    private List<GameButtonPane> gameCardsList;
+    private List<Node> gameCardsList;
 
     public HomeMenuScreen(
         GazePlay gazePlay,
@@ -129,7 +129,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     }
 
-    private static void filterGames(FlowPane choicePanel, List<GameButtonPane> completeGameCardsList, Configuration config) {
+    private static void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, Configuration config) {
         Predicate<Node> gameCardPredicate = new GameCardVisiblePredicate(config);
         List<Node> filteredList = completeGameCardsList.stream()
             .filter(gameCardPredicate)
@@ -144,7 +144,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         Configuration config,
         Translator translator,
         FlowPane choicePanel,
-        List<GameButtonPane> gameCardsList
+        List<Node> gameCardsList
     ) {
         I18NText label = new I18NText(translator, category.getGameCategory());
         CheckBox categoryCheckbox = new CheckBox(label.getText());
@@ -194,7 +194,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return choicePanelScroller;
     }
 
-    private List<GameButtonPane> createGameCardsList(
+    private List<Node> createGameCardsList(
         List<GameSpec> games,
         final Configuration config,
         final ProgressIndicator indicator
@@ -202,7 +202,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final Translator translator = getGazePlay().getTranslator();
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
 
-        final List<GameButtonPane> gameCardsList = new ArrayList<>();
+        final List<Node> gameCardsList = new ArrayList<>();
 
         for (GameSpec gameSpec : games) {
             final GameButtonPane gameCard = gameMenuFactory.createGameButton(
