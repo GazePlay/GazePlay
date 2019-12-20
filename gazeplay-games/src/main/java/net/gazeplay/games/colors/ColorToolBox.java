@@ -387,7 +387,6 @@ public class ColorToolBox extends Pane {
     private void buildAddCustomCostomColorButton() {
 
         Pane customColorPane = new VBox(customBox, customColorPickerButton);
-        // Pane customColorPane = new VBox(customBox, colorPicker);
         mainPane.getChildren().add(customColorPane);
     }
 
