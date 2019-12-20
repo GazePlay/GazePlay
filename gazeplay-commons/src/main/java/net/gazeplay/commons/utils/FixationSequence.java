@@ -51,9 +51,6 @@ public class FixationSequence {
         for (int i = 0; i < fixSeq.size() - 1; i++) {
             gc.strokeLine(fixSeq.get(i).getY(), fixSeq.get(i).getX(), fixSeq.get(i + 1).getY(),
                 fixSeq.get(i + 1).getX());
-            // log.info("Point nb :" + i + ", firstGaze = " + fixSeq.get(i).getFirstGaze() + ", gazeDuration = "
-            // + fixSeq.get(i).getGazeDuration() + ", x = " + fixSeq.get(i).getY() + " , y = "
-            // + fixSeq.get(i).getX());
         }
         gc.setEffect(null);
         gc.setFont(sanSerifFont);
@@ -81,8 +78,7 @@ public class FixationSequence {
             y = fixSeq.get(j).getX();
             duration = fixSeq.get(j).getGazeDuration();
 
-            // modify this value in order to increase or decrease the number of fixation points (Johanna put 20 ; Didier
-            // 100)
+            // modify this value in order to change the number of fixation points (Johanna put 20 ; Didier 100)
             if (duration > 100) {
                 label_count++;
                 // fixation circle size
@@ -138,11 +134,6 @@ public class FixationSequence {
         }
         return reducedPolyline;
     }
-
-    // Vertex Cluster Reduction -- successive vertices that are clustered too closely are reduced to a single vertex
-    // public static LinkedList<FixationPoint> getFixationSequence() {
-    // return sequence;
-    // }
 
     /**
      * Saves the fixation Sequence to a PNG file
