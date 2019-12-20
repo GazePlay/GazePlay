@@ -271,12 +271,8 @@ public class GameMenuFactory {
                 config.saveConfigIgnoringExceptions();
             }
         };
-        // favIconContainer.addEventFilter(MOUSE_ENTERED, favoriteGameSwitchEventHandler);
-        // favIconContainer.addEventFilter(MOUSE_MOVED, favoriteGameSwitchEventHandler);
-        // favIconContainer.addEventFilter(MOUSE_EXITED, favoriteGameSwitchEventHandler);
         favIconContainer.addEventFilter(MOUSE_CLICKED, favoriteGameSwitchEventHandler);
 
-        // pausedEvents.add(gameCard);
         return gameCard;
     }
 

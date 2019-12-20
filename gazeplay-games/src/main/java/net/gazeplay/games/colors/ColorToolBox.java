@@ -43,8 +43,6 @@ public class ColorToolBox extends Pane {
 
     public static final double SPACING_PX = 10;
 
-    //public static final Insets MAIN_INSETS = new Insets(10, 15, 10, 15);
-
     /**
      * The size of the next and previous
      */
@@ -54,14 +52,15 @@ public class ColorToolBox extends Pane {
 
     public static final double COLORIZE_BUTTONS_SIZE_PX = 64;
 
-    public static final String COLORS_IMAGES_PATH = "data" + File.separator + "colors" + File.separator + "images"
-        + File.separator;
+    public static final String COLORS_IMAGES_PATH = "data/colors/images/";
 
-    // Credits
-    // <div>Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a
-    // href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
-    // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
-    // BY</a></div>
+    /**
+     * Credits
+     * <div>Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a
+     * href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
+     * href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
+     * BY</a></div>
+     */
     public static final String CUSTOM_BUTTON_IMAGE_PATH = COLORS_IMAGES_PATH + "add-button-inside-black-circle.png";
 
     public static final String COLORIZE_BUTTON_IMAGE_NAME = COLORS_IMAGES_PATH + "palette.png";
@@ -115,7 +114,6 @@ public class ColorToolBox extends Pane {
         mainPane = new VBox();
         thisRoot.setCenter(mainPane);
         mainPane.setSpacing(SPACING_PX);
-        // mainPane.setPadding(MAIN_INSETS);
 
         imageManager = buildImageManager();
         colorziationPane = buildColorizationPane();
@@ -198,12 +196,6 @@ public class ColorToolBox extends Pane {
         customColorPickerButton.setOnAction(customColorButtonHandler);
 
         customColorDialog.setOnCloseRequest((event) -> {
-
-            /*
-             * log.info("custom indic min width = {}, min height = {}", customColorButtonIndic.getMinWidth(),
-             * customColorButtonIndic.getMinHeight()); log.info("custom indic width = {}, height = {}",
-             * customColorButtonIndic.getWidth(), customColorButtonIndic.getHeight());
-             */
             colorsGame.setEnableColorization(previousEnableColor);
         });
 
@@ -241,10 +233,6 @@ public class ColorToolBox extends Pane {
         }
 
         this.updatePallet(previousPallet, nextPallet);
-
-        /*
-         * this.setRight(nextPallet); this.setLeft(previousPallet);
-         */
 
         root.getChildren().add(customColorButtonIndic);
 

@@ -32,33 +32,22 @@ import java.util.List;
 @Slf4j
 public class Bubble extends Parent implements GameLifeCycle {
 
-    private static final int maxRadius = 70;
-    private static final int minRadius = 30;
-
-    private static final int maxTimeLength = 7;
-    private static final int minTimeLength = 4;
-
-    private static final int nbFragments = 10; // number of little circles after explosion
-
-    private final IGameContext gameContext;
-
-    private final BubbleType type;
-
-    private final Stats stats;
-
-    private final boolean image;
-
-    private final ImageLibrary imageLibrary;
-
-    private final List<Circle> fragments;
-
-    private final EventHandler<Event> enterEvent;
-
     public static final String DIRECTION_TOP = "toTop";
     public static final String DIRECTION_BOTTOM = "toBottom";
     public static final String DIRECTION_LEFT = "toLeft";
     public static final String DIRECTION_RIGHT = "toRight";
-
+    private static final int maxRadius = 70;
+    private static final int minRadius = 30;
+    private static final int maxTimeLength = 7;
+    private static final int minTimeLength = 4;
+    private static final int nbFragments = 10; // number of little circles after explosion
+    private final IGameContext gameContext;
+    private final BubbleType type;
+    private final Stats stats;
+    private final boolean image;
+    private final ImageLibrary imageLibrary;
+    private final List<Circle> fragments;
+    private final EventHandler<Event> enterEvent;
     private final BubblesGameVariant direction;
 
     public Bubble(IGameContext gameContext, BubbleType type, Stats stats, boolean useBackgroundImage, BubblesGameVariant direction) {
@@ -172,7 +161,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         }
 
         SequentialTransition sequence = new SequentialTransition();
-        sequence.getChildren().addAll(goToCenterTimeline,timeline);
+        sequence.getChildren().addAll(goToCenterTimeline, timeline);
         sequence.play();
 
         if (Math.random() > 0.5) {
@@ -272,24 +261,24 @@ public class Bubble extends Parent implements GameLifeCycle {
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(circle.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
-        }else if (this.direction == BubblesGameVariant.BOTTOM){
-                centerX = (dimension2D.getWidth() - maxRadius) * Math.random() + maxRadius;
-                centerY = 0;
-                timeline.getKeyFrames()
-                    .add(new KeyFrame(new Duration(timelength),
-                        new KeyValue(circle.centerYProperty(), dimension2D.getHeight() + maxRadius, Interpolator.EASE_IN)));
-    }else if (this.direction == BubblesGameVariant.RIGHT){
-                centerX = 0;
-                centerY = (dimension2D.getHeight() - maxRadius) * Math.random() + maxRadius;
-                timeline.getKeyFrames()
-                    .add(new KeyFrame(new Duration(timelength),
-                        new KeyValue(circle.centerXProperty(), dimension2D.getWidth() + maxRadius, Interpolator.EASE_IN)));
-}else if (this.direction == BubblesGameVariant.LEFT){
-                centerX = dimension2D.getWidth();
-                centerY = (dimension2D.getHeight() - maxRadius) * Math.random() + maxRadius;
-                timeline.getKeyFrames()
-                    .add(new KeyFrame(new Duration(timelength),
-                        new KeyValue(circle.centerXProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
+        } else if (this.direction == BubblesGameVariant.BOTTOM) {
+            centerX = (dimension2D.getWidth() - maxRadius) * Math.random() + maxRadius;
+            centerY = 0;
+            timeline.getKeyFrames()
+                .add(new KeyFrame(new Duration(timelength),
+                    new KeyValue(circle.centerYProperty(), dimension2D.getHeight() + maxRadius, Interpolator.EASE_IN)));
+        } else if (this.direction == BubblesGameVariant.RIGHT) {
+            centerX = 0;
+            centerY = (dimension2D.getHeight() - maxRadius) * Math.random() + maxRadius;
+            timeline.getKeyFrames()
+                .add(new KeyFrame(new Duration(timelength),
+                    new KeyValue(circle.centerXProperty(), dimension2D.getWidth() + maxRadius, Interpolator.EASE_IN)));
+        } else if (this.direction == BubblesGameVariant.LEFT) {
+            centerX = dimension2D.getWidth();
+            centerY = (dimension2D.getHeight() - maxRadius) * Math.random() + maxRadius;
+            timeline.getKeyFrames()
+                .add(new KeyFrame(new Duration(timelength),
+                    new KeyValue(circle.centerXProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
         }
 
 
@@ -297,7 +286,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         circle.setCenterY(centerY);
 
         timeline.setOnFinished(actionEvent -> {
-            if(this.getChildren().contains(circle)) {
+            if (this.getChildren().contains(circle)) {
                 gameContext.getGazeDeviceManager().removeEventFilter(circle);
                 this.getChildren().remove(circle);
                 newCircle();
