@@ -24,7 +24,6 @@ import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 @Slf4j
 public class Configuration {
 
-    private static final String PROPERTY_NAME_GAZEMODE = "GAZEMODE";
     private static final String PROPERTY_NAME_EYETRACKER = "EYETRACKER";
     private static final String PROPERTY_NAME_LANGUAGE = "LANGUAGE";
     private static final String PROPERTY_NAME_FILEDIR = "FILEDIR";
@@ -61,7 +60,6 @@ public class Configuration {
 
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
-    private static final boolean DEFAULT_VALUE_GAZEMODE = true;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
     private static final String DEFAULT_VALUE_LANGUAGE = "fra";
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
@@ -110,9 +108,6 @@ public class Configuration {
 
     @Getter
     private final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString());
-
-    @Getter
-    private final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE, DEFAULT_VALUE_GAZEMODE);
 
     @Getter
     private final BooleanProperty gazeMenuProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU);
@@ -246,8 +241,6 @@ public class Configuration {
         String buffer;
 
         quitKeyProperty.setValue(prop.getProperty(PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString()));
-
-        gazeModeProperty.setValue(Boolean.parseBoolean(prop.getProperty(PROPERTY_NAME_GAZEMODE, Boolean.toString(DEFAULT_VALUE_GAZEMODE))));
 
         buffer = prop.getProperty(PROPERTY_NAME_EYETRACKER);
         if (buffer != null) {

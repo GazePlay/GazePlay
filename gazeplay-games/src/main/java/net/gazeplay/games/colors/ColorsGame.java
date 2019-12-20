@@ -264,13 +264,10 @@ public class ColorsGame implements GameLifeCycle {
         double width = dimension2D.getWidth() - colorToolBox.getWidth();
         double height = dimension2D.getHeight();
 
-        // rectangle.setTranslateX(colorToolBox.getWidth());
-
         rectangle.setWidth(width);
         rectangle.setHeight(height);
 
         rectangle.setFill(this.createImagePattern(writableImg, rectangle));
-
 
         double ratio = writableImg.getHeight() / writableImg.getWidth();
         rectangle.setWidth(rectangle.getHeight() / ratio);
