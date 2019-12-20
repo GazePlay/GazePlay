@@ -62,28 +62,20 @@ public class FixationSequence {
         gc.setTextBaseline(VPos.CENTER);
 
         // draw the circles with the labels on top
-        gc.setStroke(Color.RED);
         gc.setLineWidth(1);
 
-        int label_count = 1;// for the labels of the fixation sequence
-
-        gc.setStroke(Color.RED);
+        int label_count = 0;// for the labels of the fixation sequence
         int x = fixSeq.get(0).getY();
         int y = fixSeq.get(0).getX();
 
-        int radius = 45; // central fixation bias . Read more about it at
-        // https://imotions.com/blog/7-terms-metrics-eye-tracking/
+        double radius = 45;
 
-        gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
-        gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
-        gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font("Verdana", 25));
-        gc.fillText(Integer.toString(label_count), x, y, 90);
 
         double duration;
 
-        for (int j = 1; j < fixSeq.size() - 1; j++) {
+        for (int j = 0; j < fixSeq.size() ; j++) {
 
             gc.setStroke(Color.RED);
             x = fixSeq.get(j).getY();
@@ -95,12 +87,12 @@ public class FixationSequence {
             if (duration > 100) {
                 label_count++;
                 // fixation circle size
-                radius = 20 + (int) (duration / 20);
-                gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
+                radius = 20. +  Math.sqrt(duration) ;
+                gc.strokeOval(x - radius / 2., y - radius / 2., radius, radius);
                 gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
-                gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
+                gc.fillOval(x - radius / 2., y - radius / 2., radius, radius);
                 gc.setFill(Color.BLACK);
-                gc.fillText(Integer.toString(label_count), x, y, 80);
+                gc.fillText(Integer.toString((int)label_count), x, y, 80);
 
             } else {
                 fixSeq.get(j).setGazeDuration(-1);

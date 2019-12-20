@@ -144,42 +144,36 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     public void explose(double Xcenter, double Ycenter) {
 
+        Timeline goToCenterTimeline = new Timeline();
         Timeline timeline = new Timeline();
-        Timeline timeline2 = new Timeline();
 
         for (int i = 0; i < nbFragments; i++) {
 
             Circle fragment = fragments.get(i);
 
-            /*
-             * fragment.setCenterX(C.getCenterX()); fragment.setCenterY(C.getCenterY()); fragment.setOpacity(1);
-             */
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+            fragment.setCenterX(Xcenter);
+            fragment.setCenterY(Ycenter);
+            fragment.setOpacity(1);
+
+            goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
                 new KeyValue(fragment.centerXProperty(), Xcenter, Interpolator.LINEAR)));
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1),
+            goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
                 new KeyValue(fragment.centerYProperty(), Ycenter, Interpolator.EASE_OUT)));
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
+            goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
             double XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
             double YendValue = Math.random() * Screen.getPrimary().getBounds().getHeight();
 
-            timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000),
+            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
                 new KeyValue(fragment.centerXProperty(), XendValue, Interpolator.LINEAR)));
-            timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000),
+            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
                 new KeyValue(fragment.centerYProperty(), YendValue, Interpolator.EASE_OUT)));
-            timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.opacityProperty(), 0)));
+            timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.opacityProperty(), 0)));
         }
 
         SequentialTransition sequence = new SequentialTransition();
-        sequence.getChildren().addAll(timeline, timeline2);
+        sequence.getChildren().addAll(goToCenterTimeline,timeline);
         sequence.play();
-
-        // ObservableList<Node> nodes = this.getChildren();
-
-        timeline.setOnFinished(actionEvent -> {
-
-            // nodes.removeAll(fragments);
-        });
 
         if (Math.random() > 0.5) {
             String soundResource = "data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3";
@@ -210,16 +204,21 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         Timeline timeline = new Timeline();
 
-        timeline.getKeyFrames()
-            .add(new KeyFrame(new Duration(1), new KeyValue(target.centerXProperty(), -maxRadius * 5)));
+//        timeline.getKeyFrames()
+//            .add(new KeyFrame(new Duration(1), new KeyValue(target.centerXProperty(), -maxRadius * 5)));
+//
+//        timeline.play();
+//
+//        target.removeEventFilter(MouseEvent.ANY, enterEvent);
+//
+//        target.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-        timeline.play();
-
-        target.removeEventFilter(MouseEvent.ANY, enterEvent);
-
-        target.removeEventFilter(GazeEvent.ANY, enterEvent);
+        gameContext.getGazeDeviceManager().removeEventFilter(target);
+        this.getChildren().remove(target);
 
         explose(Xcenter, Ycenter); // instead of C to avoid wrong position of the explosion
+
+        this.newCircle();
         stats.incNbGoals();
     }
 
@@ -298,9 +297,11 @@ public class Bubble extends Parent implements GameLifeCycle {
         circle.setCenterY(centerY);
 
         timeline.setOnFinished(actionEvent -> {
-            gameContext.getGazeDeviceManager().removeEventFilter(circle);
-            this.getChildren().remove(circle);
-            newCircle();
+            if(this.getChildren().contains(circle)) {
+                gameContext.getGazeDeviceManager().removeEventFilter(circle);
+                this.getChildren().remove(circle);
+                newCircle();
+            }
         });
 
         timeline.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
