@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedBooleanProperty;
 import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedDoubleProperty;
+import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedLongProperty;
 import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedStringProperty;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -130,7 +131,7 @@ public class Configuration {
     private final StringProperty whereIsItDirProperty = new SimpleStringProperty(this, PROPERTY_NAME_WHEREISIT_DIR, DEFAULT_VALUE_WHEREISIT_DIR);
 
     @Getter
-    private final LongProperty questionLengthProperty = new SimpleLongProperty(this, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH);
+    private final LongProperty questionLengthProperty;
 
     @Getter
     private final BooleanProperty enableRewardSoundProperty;
@@ -220,6 +221,9 @@ public class Configuration {
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
 
+
+        questionLengthProperty = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH, propertyChangeListener);
+
         musicFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_FOLDER, DEFAULT_VALUE_MUSIC_FOLDER, propertyChangeListener);
         videoFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath(), propertyChangeListener);
         userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
@@ -293,16 +297,6 @@ public class Configuration {
             whereIsItDirProperty.setValue(buffer.toLowerCase());
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_QUESTION_LENGTH);
-        if (buffer != null) {
-            try {
-                questionLengthProperty.setValue(Long.parseLong(buffer));
-            } catch (NumberFormatException e) {
-                log.warn("NumberFormatException while parsing value '{}' for property {}", buffer,
-                    PROPERTY_NAME_QUESTION_LENGTH);
-            }
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
         if (buffer != null) {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
@@ -333,7 +327,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(fixationlengthProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_CSSFILE, cssfileProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_WHEREISIT_DIR, whereIsItDirProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Long.toString(questionLengthProperty.getValue()));
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
