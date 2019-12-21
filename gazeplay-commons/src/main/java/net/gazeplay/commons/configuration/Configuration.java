@@ -184,7 +184,7 @@ public class Configuration {
     private final StringProperty userNameProperty;
 
     @Getter
-    private final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE);
+    private final StringProperty userPictureProperty;
 
     private final File configFile;
 
@@ -215,6 +215,7 @@ public class Configuration {
         whiteBackgroundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
 
         userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
+        userPictureProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE, propertyChangeListener);
 
         populateFromApplicationConfig(applicationConfig);
     }
@@ -318,11 +319,6 @@ public class Configuration {
             videoFolderProperty.setValue(buffer);
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_USER_PICTURE);
-        if (buffer != null) {
-            userPictureProperty.setValue(buffer);
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
         if (buffer != null) {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
@@ -359,7 +355,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, heatMapColorsProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_MUSIC_FOLDER, musicFolderProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_VIDEO_FOLDER, videoFolderProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_USER_PICTURE, userPictureProperty.getValue());
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
