@@ -33,17 +33,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class ColorToolBox extends StackPane {
+public class ColorToolBox extends Pane {
 
     /**
      * Pourcents use to compute height and width.
      */
-    public static final double WIDTH_POURCENT = 0.10;
-    public static final double HEIGHT_POURCENT = 0.80;
 
     public static final double SPACING_PX = 10;
 
-    public static final Insets MAIN_INSETS = new Insets(10, 15, 10, 15);
+    //public static final Insets MAIN_INSETS = new Insets(10, 15, 10, 15);
 
     /**
      * The size of the next and previous
@@ -74,6 +72,7 @@ public class ColorToolBox extends StackPane {
     /**
      * All the color boxes
      */
+    @Getter
     private final List<ColorBox> colorBoxes;
 
     /**
@@ -126,10 +125,13 @@ public class ColorToolBox extends StackPane {
         mainPane = new VBox();
         thisRoot.setCenter(mainPane);
         mainPane.setSpacing(SPACING_PX);
-        mainPane.setPadding(MAIN_INSETS);
+       // mainPane.setPadding(MAIN_INSETS);
 
         imageManager = buildImageManager();
         colorziationPane = buildColorizationPane();
+
+        thisRoot.setBottom(imageManager);
+        thisRoot.setTop(colorziationPane);
 
         ColorBox colorBox;
         EventHandler<Event> eventHandler;
@@ -213,7 +215,6 @@ public class ColorToolBox extends StackPane {
              * customColorButtonIndic.getWidth(), customColorButtonIndic.getHeight());
              */
             colorsGame.setEnableColorization(previousEnableColor);
-
         });
 
         colorPicker.setOnAction((event) -> customBox.setColor(colorPicker.getValue()));
@@ -255,14 +256,14 @@ public class ColorToolBox extends StackPane {
          * this.setRight(nextPallet); this.setLeft(previousPallet);
          */
 
-        thisRoot.setBottom(imageManager);
-        thisRoot.setTop(colorziationPane);
         root.getChildren().add(customColorButtonIndic);
 
         if (!gameContext.getConfiguration().isBackgroundWhite()) {
 
             this.getStyleClass().add("bg-colored");
         }
+
+
     }
 
     private Pane buildImageManager() {
@@ -270,7 +271,7 @@ public class ColorToolBox extends StackPane {
         Stage primaryStage = gameContext.getPrimaryStage();
 
         final HBox bottomBox = new HBox(7);
-        bottomBox.setPadding(new Insets(0, 5, 2, 5));
+        bottomBox.setPadding(new Insets(0, 5, 0, 5));
 
         final FileChooser imageChooser = new FileChooser();
         configureImageFileChooser(imageChooser);

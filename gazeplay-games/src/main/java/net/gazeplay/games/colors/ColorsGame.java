@@ -15,9 +15,11 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -121,8 +123,6 @@ public class ColorsGame implements GameLifeCycle {
 
     private final ColorsGamesStats stats;
 
-    private final TitledPane toolBoxPane;
-
     private final Translator translator;
 
     ColorsGame(IGameContext gameContext, final ColorsGamesStats stats, final Translator translator) {
@@ -131,8 +131,6 @@ public class ColorsGame implements GameLifeCycle {
         this.translator = translator;
 
         root = gameContext.getRoot();
-
-        toolBoxPane = new TitledPane(translator.translate("Colors!"), colorToolBox);
 
         drawingEnable.addListener((observable, oldValue, newValue) -> {
             // If we want to stop colorization
@@ -163,10 +161,13 @@ public class ColorsGame implements GameLifeCycle {
         double width = dimension2D.getWidth();
         double height = dimension2D.getHeight();
 
+
         buildToolBox(width, height);
 
         // log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
         buildDraw(DEFAULT_IMAGE, width, height);
+
+        colorToolBox.getColorBoxes().forEach(ColorBox::updateHeight);
 
         stats.notifyNewRoundReady();
     }
@@ -179,22 +180,20 @@ public class ColorsGame implements GameLifeCycle {
     private void buildToolBox(double width, double height) {
 
         this.colorToolBox = new ColorToolBox(this.root, this, gameContext);
-        toolBoxPane.setContent(colorToolBox);
-
-        toolBoxPane.setCollapsible(false);
-        toolBoxPane.setAnimated(false);
-
-        this.root.getChildren().add(toolBoxPane);
+        this.root.getChildren().add(colorToolBox);
 
         // Add it here so it appears on top of the tool box
         final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
         root.getChildren().add(progressIndicator);
         progressIndicator.toFront();
 
+
+
         updateToolBox();
 
-        toolBoxPane.maxHeightProperty().bind(gameContext.getRoot().heightProperty());
-        toolBoxPane.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
+        colorToolBox.maxHeightProperty().bind(gameContext.getRoot().heightProperty());
+        colorToolBox.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
+        colorToolBox.minHeightProperty().bind(gameContext.getRoot().heightProperty());
     }
 
     private void buildDraw(String imgURL, double width, double height) {
@@ -275,10 +274,10 @@ public class ColorsGame implements GameLifeCycle {
 
         double width = dimension2D.getWidth();
 
-        double ToolBoxWidth = toolBoxPane.getWidth();
+        double ToolBoxWidth = colorToolBox.getWidth();
         double x = width - ToolBoxWidth;
         log.debug("translated tool box to : {}, x toolBoxWidth : {}", x, ToolBoxWidth);
-        toolBoxPane.setTranslateX(x);
+        colorToolBox.setTranslateX(x);
     }
 
     /**

@@ -349,7 +349,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         plotMovement(movementIndex + 1, graphicsPane);
                     } else {
                         clock.stop();
-                        addAllInitialArea();
+                        //addAllInitialArea();
                         playing = false;
                         // if (config.isVideoRecordingEnabled())
                         // {

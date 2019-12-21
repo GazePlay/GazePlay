@@ -159,7 +159,6 @@ class PictureCard extends Group {
         fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
             gameInstance.dispose();
             gameContext.clear();
-
             gameInstance.launch();
             // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
             // gameInstance.stats);

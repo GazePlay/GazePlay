@@ -8,10 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Getter;
@@ -81,6 +83,7 @@ public class CustomColorPicker extends Pane {
                 colorGrid.add(colorBox, j, i);
             }
         }
+
 
         mainNode.getChildren().add(colorGrid);
 

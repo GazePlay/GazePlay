@@ -58,12 +58,14 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         if (directoryContent == null) {
             return new ArrayList<>();
         }
-        return Arrays.stream(directoryContent)
+        List<String> listOfUsers = Arrays.stream(directoryContent)
             .filter(f -> !f.getName().startsWith("."))
             .filter(File::isDirectory)
             .map(File::getName)
             .sorted()
             .collect(Collectors.toList());
+        log.info("HERE IS THE FULL LIST OF THE USERS OF GAZEPLAY" + listOfUsers);
+        return listOfUsers;
     }
 
     private final double cardHeight;

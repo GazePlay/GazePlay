@@ -10,6 +10,6 @@ public class ColoredBubblesGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("ColoredBubbles").gameThumbnail("data/Thumbnails/bubblecolor.png").category(GameCategories.Category.SELECTION).build(),
-            new ColoredBubblesGameLauncher());
+            new BubbleGameVariantGenerator(),new ColoredBubblesGameLauncher());
     }
 }

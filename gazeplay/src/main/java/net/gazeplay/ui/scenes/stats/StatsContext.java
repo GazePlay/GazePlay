@@ -107,10 +107,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         Configuration config = ActiveConfigurationContext.getInstance();
 
         GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
+        grid.setAlignment(Pos.TOP_CENTER);
         grid.setHgap(100);
         grid.setVgap(50);
-        grid.setPadding(new Insets(50, 50, 50, 50));
+        grid.setPadding(new Insets(0, 50, 0, 50));
 
         AtomicInteger currentFormRow = new AtomicInteger(1);
         {
@@ -282,13 +282,20 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         topPane.getChildren().add(screenTitleText);
 
         root.setTop(topPane);
+
+        BorderPane sidePane = new BorderPane();
+
         if (alignLeft) {
+            sidePane.setTop(centerStackPane);
+            root.setCenter(sidePane);
             root.setLeft(grid);
         } else { // Arabic alignment
-            root.setRight(grid);
+            sidePane.setTop(grid);
+            root.setCenter(centerStackPane);
+            root.setRight(sidePane);
         }
-        root.setCenter(centerStackPane);
-        root.setBottom(controlButtonPane);
+        sidePane.setBottom(controlButtonPane);
+
         root.setStyle(
             "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }

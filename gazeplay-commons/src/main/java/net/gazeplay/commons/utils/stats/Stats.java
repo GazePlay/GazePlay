@@ -149,6 +149,8 @@ public class Stats implements GazeMotionListener {
         videoFormatName = "tscc";
         compressorName = "Techsmith Screen Capture";
         ScreenRecorderCompactMain asi = null;
+
+        System.setProperty("java.awt.headless", "false");
         GraphicsConfiguration cfg = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
                 .getDefaultConfiguration();
         Rectangle areaRect = null;
