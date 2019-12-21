@@ -1,7 +1,6 @@
 package net.gazeplay.commons.configuration;
 
 import com.sun.javafx.collections.ObservableSetWrapper;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -141,7 +140,7 @@ public class Configuration {
     private final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
 
     @Getter
-    private final DoubleProperty heatMapOpacityProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY);;
+    private final DoubleProperty heatMapOpacityProperty;
 
     @Getter
     private final StringProperty heatMapColorsProperty = new SimpleStringProperty(this, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS);
@@ -165,16 +164,16 @@ public class Configuration {
     private final BooleanProperty whiteBackgroundProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD);
 
     @Getter
-    private final DoubleProperty musicVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME);
+    private final DoubleProperty musicVolumeProperty;
 
     @Getter
     private final StringProperty musicFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_MUSIC_FOLDER, DEFAULT_VALUE_MUSIC_FOLDER);
 
     @Getter
-    private final DoubleProperty effectsVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME);
+    private final DoubleProperty effectsVolumeProperty;
 
     @Getter
-    private final DoubleProperty animationSpeedRatioProperty =  new SimpleDoubleProperty(this, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO);
+    private final DoubleProperty animationSpeedRatioProperty;
 
     @Getter
     private final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
@@ -191,28 +190,21 @@ public class Configuration {
 
     protected Configuration(File configFile, ApplicationConfig applicationConfig) {
         this.configFile = configFile;
-
         this.applicationConfig = applicationConfig;
+
+        PropertyChangeListener propertyChangeListener = evt -> saveConfigIgnoringExceptions();
+
+        musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
+        effectsVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME, propertyChangeListener);
+
+        animationSpeedRatioProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO, propertyChangeListener);
+
+        heatMapOpacityProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY, propertyChangeListener);
+
+        musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
+        effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
+
         populateFromApplicationConfig(applicationConfig);
-
-      //  musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
-       // effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
-
-        InvalidationListener id = evt -> {
-            log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            log.info(""+musicVolumeProperty.getValue());
-            log.info(applicationConfig.getProperty("MUSIC_VOLUME"));
-            saveConfigIgnoringExceptions();
-            log.info(applicationConfig.getProperty("MUSIC_VOLUME"));
-            log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-
-        };
-
-        musicFolderProperty.addListener(id);
-        effectsVolumeProperty.addListener(id);
-        heatMapOpacityProperty.addListener(id);
-        animationSpeedRatioProperty.addListener(id);
-        musicVolumeProperty.addListener(id);
     }
 
     private void saveConfig() throws IOException {
@@ -428,12 +420,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_USER_NAME, userNameProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_USER_PICTURE, userPictureProperty.getValue());
-
-
-        applicationConfig.setProperty(PROPERTY_NAME_MUSIC_VOLUME, ""+musicVolumeProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, ""+effectsVolumeProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_OPACITY, ""+heatMapOpacityProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_ANIMATION_SPEED_RATIO,""+animationSpeedRatioProperty.getValue());
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
