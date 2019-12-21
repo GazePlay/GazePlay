@@ -145,7 +145,7 @@ public class Configuration {
     private final DoubleProperty heatMapOpacityProperty;
 
     @Getter
-    private final StringProperty heatMapColorsProperty = new SimpleStringProperty(this, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS);
+    private final StringProperty heatMapColorsProperty;
 
     @Getter
     private final BooleanProperty areaOfInterestDisabledProperty;
@@ -202,6 +202,7 @@ public class Configuration {
         animationSpeedRatioProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO, propertyChangeListener);
 
         heatMapOpacityProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY, propertyChangeListener);
+        heatMapColorsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS, propertyChangeListener);
 
         musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
@@ -306,10 +307,6 @@ public class Configuration {
             menuButtonsOrientationProperty.setValue(buffer);
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_COLORS);
-        if (buffer != null) {
-            heatMapColorsProperty.setValue(buffer);
-        }
         buffer = prop.getProperty(PROPERTY_NAME_MUSIC_FOLDER);
         if (buffer != null) {
             musicFolderProperty.setValue(buffer);
@@ -348,7 +345,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Long.toString(questionLengthProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND, Boolean.toString(enableRewardSoundProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, menuButtonsOrientationProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, heatMapColorsProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_MUSIC_FOLDER, musicFolderProperty.getValue());
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
