@@ -198,15 +198,21 @@ public class Configuration {
       //  musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
        // effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
 
-        InvalidationListener saveOnChange = evt -> {
+        InvalidationListener id = evt -> {
+            log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            log.info(""+musicVolumeProperty.getValue());
+            log.info(applicationConfig.getProperty("MUSIC_VOLUME"));
             saveConfigIgnoringExceptions();
+            log.info(applicationConfig.getProperty("MUSIC_VOLUME"));
+            log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
         };
 
-        musicFolderProperty.addListener(saveOnChange);
-        effectsVolumeProperty.addListener(saveOnChange);
-        heatMapOpacityProperty.addListener(saveOnChange);
-        animationSpeedRatioProperty.addListener(saveOnChange);
-        musicVolumeProperty.addListener(saveOnChange);
+        musicFolderProperty.addListener(id);
+        effectsVolumeProperty.addListener(id);
+        heatMapOpacityProperty.addListener(id);
+        animationSpeedRatioProperty.addListener(id);
+        musicVolumeProperty.addListener(id);
     }
 
     private void saveConfig() throws IOException {
