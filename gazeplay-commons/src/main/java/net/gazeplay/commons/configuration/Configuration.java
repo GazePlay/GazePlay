@@ -178,7 +178,7 @@ public class Configuration {
     private final DoubleProperty animationSpeedRatioProperty;
 
     @Getter
-    private final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
+    private final StringProperty videoFolderProperty;
 
     @Getter
     private final StringProperty userNameProperty;
@@ -214,6 +214,7 @@ public class Configuration {
         gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
         whiteBackgroundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
 
+        videoFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath(), propertyChangeListener);
         userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
         userPictureProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE, propertyChangeListener);
 
@@ -314,11 +315,6 @@ public class Configuration {
             musicFolderProperty.setValue(buffer);
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_VIDEO_FOLDER);
-        if (buffer != null) {
-            videoFolderProperty.setValue(buffer);
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
         if (buffer != null) {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
@@ -354,7 +350,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, menuButtonsOrientationProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, heatMapColorsProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_MUSIC_FOLDER, musicFolderProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_VIDEO_FOLDER, videoFolderProperty.getValue());
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
