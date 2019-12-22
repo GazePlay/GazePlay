@@ -1063,7 +1063,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         KeyBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             final String newPropertyValue = newValue;
             configuration.getQuitKeyProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
         });
 
         return KeyBox;
