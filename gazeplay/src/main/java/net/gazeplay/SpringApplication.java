@@ -7,7 +7,7 @@ import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.gameslocator.CachingGamesLocator;
-import net.gazeplay.gameslocator.DefaultGamesLocator;
+import net.gazeplay.gameslocator.CatalogBasedGamesLocator;
 import net.gazeplay.gameslocator.GamesLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ public class SpringApplication {
 
     @Bean
     public GamesLocator gamesLocator() {
-        return new CachingGamesLocator(new DefaultGamesLocator());
+        return new CachingGamesLocator(new CatalogBasedGamesLocator());
     }
 
     @Bean
