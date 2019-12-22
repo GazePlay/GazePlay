@@ -18,7 +18,7 @@ public abstract class AbstractGamesLocator implements GamesLocator {
     @Override
     public List<GameSpec> listGames(Translator translator) {
         LinkedList<GameSpec> gameList = new LinkedList<>();
-        List<Class> gamesClasses = scanGamesClasses();
+        List<Class> gamesClasses = findGameSpecSourceClasses();
         for (GameSpecSource source : gameSpecSourceInstantiator.instantiateGameSpecSources(gamesClasses)) {
             gameList.add(source.getGameSpec());
         }
@@ -37,6 +37,6 @@ public abstract class AbstractGamesLocator implements GamesLocator {
         return gameList;
     }
 
-    protected abstract List<Class> scanGamesClasses();
+    protected abstract List<Class> findGameSpecSourceClasses();
 
 }

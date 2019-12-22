@@ -17,7 +17,7 @@ public class CatalogBasedGamesLocator extends AbstractGamesLocator {
     private static final String catalogResourceLocation = "games-catalog.txt";
 
     @Override
-    protected List<Class> scanGamesClasses() {
+    protected List<Class> findGameSpecSourceClasses() {
 
         Stream<String> linesStream = Stream.generate(new Supplier<>() {
 

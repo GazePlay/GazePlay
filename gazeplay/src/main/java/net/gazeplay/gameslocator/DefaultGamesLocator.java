@@ -13,7 +13,7 @@ import java.util.List;
 public class DefaultGamesLocator extends AbstractGamesLocator {
 
     @Override
-    protected List<Class> scanGamesClasses() {
+    protected List<Class> findGameSpecSourceClasses() {
         final List<Class> result = new ArrayList<>();
 
         String pkg = "net.gazeplay.games";
