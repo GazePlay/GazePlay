@@ -113,7 +113,7 @@ public class Configuration {
     private final StringProperty eyetrackerProperty = new SimpleStringProperty(this, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER);
 
     @Getter
-    private final StringProperty languageProperty = new SimpleStringProperty(this, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE);
+    private final StringProperty languageProperty;
 
     @Getter
     private final StringProperty filedirProperty;
@@ -194,6 +194,8 @@ public class Configuration {
 
         PropertyChangeListener propertyChangeListener = evt -> saveConfigIgnoringExceptions();
 
+        languageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE, propertyChangeListener);
+
         musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
         effectsVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME, propertyChangeListener);
 
@@ -268,11 +270,6 @@ public class Configuration {
             eyetrackerProperty.setValue(buffer);
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_LANGUAGE);
-        if (buffer != null) {
-            languageProperty.setValue(buffer.toLowerCase());
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
         if (buffer != null) {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
@@ -297,7 +294,6 @@ public class Configuration {
 
     private void persistConfig(ApplicationConfig applicationConfig) {
         applicationConfig.setProperty(PROPERTY_NAME_EYETRACKER, eyetrackerProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_LANGUAGE, languageProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_QUIT_KEY, quitKeyProperty.getValue());
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
