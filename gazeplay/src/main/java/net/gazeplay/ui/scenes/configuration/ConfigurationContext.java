@@ -1048,25 +1048,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private ChoiceBox<String> buildQuitKeyChooser(Configuration configuration,
-                                                  ConfigurationContext configurationContext) {
-
-        ChoiceBox<String> KeyBox = new ChoiceBox<>();
-        KeyBox.getItems().addAll("Q", "W", "E", "R", "T", "Y");
-
-        // GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
-        KeyBox.getSelectionModel().select("Q");
-
-        KeyBox.setPrefWidth(PREF_WIDTH);
-        KeyBox.setPrefHeight(PREF_HEIGHT);
-
-        KeyBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            final String newPropertyValue = newValue;
-            configuration.getQuitKeyProperty().setValue(newPropertyValue);
+    private ChoiceBox<String> buildQuitKeyChooser(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
+        choiceBox.getItems().addAll("Q", "W", "E", "R", "T", "Y");
+        choiceBox.getSelectionModel().select(configuration.getQuitKeyProperty().getValue());
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            configuration.getQuitKeyProperty().setValue(newValue);
         });
-
-        return KeyBox;
-
+        return choiceBox;
     }
 
     private ChoiceBox<Double> buildHeatMapOpacityChoiceBox(Configuration config) {
