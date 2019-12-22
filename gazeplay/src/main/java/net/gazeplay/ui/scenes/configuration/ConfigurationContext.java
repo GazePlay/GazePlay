@@ -1130,6 +1130,5 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         log.info(stringBuilder.toString());
         config.getHeatMapColorsProperty().setValue(stringBuilder.toString());
-        config.saveConfigIgnoringExceptions();
     }
 }
