@@ -760,7 +760,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             final String newPropertyValue = newValue.name();
             configuration.getEyetrackerProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
         });
 
         return choiceBox;
