@@ -3,6 +3,7 @@ package net.gazeplay.gameslocator;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
@@ -25,7 +26,7 @@ public class CatalogBasedGamesLocator extends AbstractGamesLocator {
             {
                 InputStream resourceAsStream;
                 resourceAsStream = getClass().getClassLoader().getResourceAsStream(catalogResourceLocation);
-                scanner = new Scanner(Objects.requireNonNull(resourceAsStream));
+                scanner = new Scanner(Objects.requireNonNull(resourceAsStream), StandardCharsets.UTF_8);
             }
 
             @Override
