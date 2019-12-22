@@ -574,7 +574,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
 
             configuration.getCssfileProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
 
             scene.getStylesheets().remove(0);
             scene.getStylesheets().add("file://" + newPropertyValue);
