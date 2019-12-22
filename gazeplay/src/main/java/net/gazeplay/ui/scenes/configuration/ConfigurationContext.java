@@ -19,7 +19,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -1027,12 +1026,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
             config.getVideoFolderProperty().setValue(newPropertyValue);
-            config.saveConfigIgnoringExceptions();
         });
 
         buttonReset.setOnAction(e -> {
             config.getVideoFolderProperty().setValue(GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
-            config.saveConfigIgnoringExceptions();
         });
 
         return hbox;
