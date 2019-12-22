@@ -125,7 +125,7 @@ public class Configuration {
     private final IntegerProperty fixationlengthProperty = new SimpleIntegerProperty(this, PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH);
 
     @Getter
-    private final StringProperty cssfileProperty = new SimpleStringProperty(this, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE);
+    private final StringProperty cssfileProperty;
 
     @Getter
     private final StringProperty whereIsItDirProperty;
@@ -220,7 +220,7 @@ public class Configuration {
         whiteBackgroundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
-
+        cssfileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
 
         questionLengthProperty = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH, propertyChangeListener);
 
@@ -289,11 +289,6 @@ public class Configuration {
             }
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_CSSFILE);
-        if (buffer != null) {
-            cssfileProperty.setValue(buffer);
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
         if (buffer != null) {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
@@ -322,7 +317,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_QUIT_KEY, quitKeyProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_FILEDIR, filedirProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(fixationlengthProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_CSSFILE, cssfileProperty.getValue());
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
