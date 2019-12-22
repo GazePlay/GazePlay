@@ -7,10 +7,7 @@ import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedBooleanProperty;
-import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedDoubleProperty;
-import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedLongProperty;
-import net.gazeplay.commons.configuration.observableproperties.ApplicationConfigBackedStringProperty;
+import net.gazeplay.commons.configuration.observableproperties.*;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
@@ -122,7 +119,7 @@ public class Configuration {
     private final StringProperty filedirProperty = new SimpleStringProperty(this, PROPERTY_NAME_FILEDIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath());
 
     @Getter
-    private final IntegerProperty fixationlengthProperty = new SimpleIntegerProperty(this, PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH);
+    private final IntegerProperty fixationlengthProperty;
 
     @Getter
     private final StringProperty cssfileProperty;
@@ -223,6 +220,7 @@ public class Configuration {
         cssfileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
 
         questionLengthProperty = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH, propertyChangeListener);
+        fixationlengthProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH, propertyChangeListener);
 
         musicFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_FOLDER, DEFAULT_VALUE_MUSIC_FOLDER, propertyChangeListener);
         videoFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath(), propertyChangeListener);
@@ -279,16 +277,6 @@ public class Configuration {
             filedirProperty.setValue(buffer);
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_FIXATIONLENGTH);
-        if (buffer != null) {
-            try {
-                fixationlengthProperty.setValue(Integer.parseInt(buffer));
-            } catch (NumberFormatException e) {
-                log.warn("NumberFormatException while parsing value '{}' for property {}", buffer,
-                    PROPERTY_NAME_FIXATIONLENGTH);
-            }
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
         if (buffer != null) {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
@@ -316,7 +304,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_LANGUAGE, languageProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_QUIT_KEY, quitKeyProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_FILEDIR, filedirProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(fixationlengthProperty.getValue()));
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
