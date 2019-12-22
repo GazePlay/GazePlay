@@ -104,7 +104,7 @@ public class Configuration {
     private final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString());
 
     @Getter
-    private final BooleanProperty gazeModeProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZEMODE, DEFAULT_VALUE_GAZEMODE);
+    private final BooleanProperty gazeModeProperty;
 
     @Getter
     private final BooleanProperty gazeMenuEnabledProperty;
@@ -197,6 +197,7 @@ public class Configuration {
         languageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE, propertyChangeListener);
 
         eyetrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
+        gazeModeProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZEMODE, DEFAULT_VALUE_GAZEMODE, propertyChangeListener);
 
         musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
         effectsVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME, propertyChangeListener);
@@ -264,8 +265,6 @@ public class Configuration {
         String buffer;
 
         quitKeyProperty.setValue(prop.getProperty(PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString()));
-
-        gazeModeProperty.setValue(Boolean.parseBoolean(prop.getProperty(PROPERTY_NAME_GAZEMODE, Boolean.toString(DEFAULT_VALUE_GAZEMODE))));
 
         buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
         if (buffer != null) {
