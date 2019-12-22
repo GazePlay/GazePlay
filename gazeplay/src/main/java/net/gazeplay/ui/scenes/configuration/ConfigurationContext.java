@@ -798,7 +798,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getAreaOfInterestDisabledProperty().getValue());
-        configuration.getAreaOfInterestDisabledProperty().bindBidirectional(checkBox.selectedProperty());
+        checkBox.selectedProperty().bindBidirectional(configuration.getAreaOfInterestDisabledProperty());
         return checkBox;
     }
 
@@ -808,7 +808,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getConvexHullDisabledProperty().getValue());
-        configuration.getConvexHullDisabledProperty().bindBidirectional(checkBox.selectedProperty());
+        checkBox.selectedProperty().bindBidirectional(configuration.getConvexHullDisabledProperty());
         return checkBox;
     }
 
@@ -818,7 +818,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getVideoRecordingEnabledProperty().getValue());
-        configuration.getVideoRecordingEnabledProperty().bindBidirectional(checkBox.selectedProperty());
+        checkBox.selectedProperty().bindBidirectional(configuration.getVideoRecordingEnabledProperty());
         return checkBox;
     }
 
@@ -828,7 +828,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getFixationSequenceDisabledProperty().getValue());
-        configuration.getFixationSequenceDisabledProperty().bindBidirectional(checkBox.selectedProperty());
+        checkBox.selectedProperty().bindBidirectional(configuration.getFixationSequenceDisabledProperty());
         return checkBox;
     }
 
@@ -838,14 +838,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getWhiteBackgroundProperty().getValue());
-        configuration.getWhiteBackgroundProperty().bindBidirectional(checkBox.selectedProperty());
+        checkBox.selectedProperty().bindBidirectional(configuration.getWhiteBackgroundProperty());
         return checkBox;
     }
 
     private static CheckBox buildGazeMenu(Configuration configuration, ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getGazeMenuEnabledProperty().getValue());
-        configuration.getGazeMenuEnabledProperty().bindBidirectional(checkBox.selectedProperty());
+        checkBox.selectedProperty().bindBidirectional(configuration.getGazeMenuEnabledProperty());
 
         // TODO
         // ****** REMOVE FROM HERE
@@ -858,7 +858,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private static CheckBox buildGazeMouseEnabledCheckBox(Configuration configuration, ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getGazeMouseEnabledProperty().getValue());
-        configuration.getGazeMouseEnabledProperty().bindBidirectional(checkBox.selectedProperty());
+        checkBox.selectedProperty().bindBidirectional(configuration.getGazeMouseEnabledProperty());
         return checkBox;
     }
 

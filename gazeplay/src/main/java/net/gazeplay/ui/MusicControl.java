@@ -284,14 +284,14 @@ public class MusicControl {
     private Slider createMediaVolumeSlider(Configuration config) {
         Slider slider = QuickControl.getInstance().createVolumeSlider();
         slider.setValue(config.getMusicVolumeProperty().getValue());
-        config.getMusicVolumeProperty().bindBidirectional(slider.valueProperty());
+        slider.valueProperty().bindBidirectional(config.getMusicVolumeProperty());
         return slider;
     }
 
     private Slider createEffectsVolumeSlider(Configuration config) {
         Slider slider = QuickControl.getInstance().createVolumeSlider();
         slider.setValue(config.getEffectsVolumeProperty().getValue());
-        config.getEffectsVolumeProperty().bindBidirectional(slider.valueProperty());
+        slider.valueProperty().bindBidirectional(config.getEffectsVolumeProperty());
         return slider;
     }
 

@@ -34,7 +34,7 @@ public class ForegroundSoundsUtils {
         Media media = new Media(path);
         MediaPlayer soundPlayer = new MediaPlayer(media);
         soundPlayer.setVolume(configuration.getEffectsVolumeProperty().getValue());
-        configuration.getEffectsVolumeProperty().bindBidirectional(soundPlayer.volumeProperty());
+        soundPlayer.volumeProperty().bindBidirectional(configuration.getEffectsVolumeProperty());
         soundPlayer.play();
         lastSoundPlayer = soundPlayer;
     }
