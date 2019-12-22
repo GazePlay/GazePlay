@@ -128,7 +128,7 @@ public class Configuration {
     private final StringProperty cssfileProperty = new SimpleStringProperty(this, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE);
 
     @Getter
-    private final StringProperty whereIsItDirProperty = new SimpleStringProperty(this, PROPERTY_NAME_WHEREISIT_DIR, DEFAULT_VALUE_WHEREISIT_DIR);
+    private final StringProperty whereIsItDirProperty;
 
     @Getter
     private final LongProperty questionLengthProperty;
@@ -229,6 +229,8 @@ public class Configuration {
         userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
         userPictureProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE, propertyChangeListener);
 
+        whereIsItDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_WHEREISIT_DIR, DEFAULT_VALUE_WHEREISIT_DIR, propertyChangeListener);
+
         populateFromApplicationConfig(applicationConfig);
     }
 
@@ -292,11 +294,6 @@ public class Configuration {
             cssfileProperty.setValue(buffer);
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_WHEREISIT_DIR);
-        if (buffer != null) {
-            whereIsItDirProperty.setValue(buffer.toLowerCase());
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
         if (buffer != null) {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
@@ -326,7 +323,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_FILEDIR, filedirProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(fixationlengthProperty.getValue()));
         applicationConfig.setProperty(PROPERTY_NAME_CSSFILE, cssfileProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_WHEREISIT_DIR, whereIsItDirProperty.getValue());
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
