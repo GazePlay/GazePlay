@@ -90,7 +90,6 @@ public class LatestNewPopup {
 
     private void markDisplayedNow(Configuration config) {
         config.getLatestNewsPopupShownTime().set(System.currentTimeMillis());
-        config.saveConfigIgnoringExceptions();
     }
 
     private LatestNewPopup(Configuration config, Translator translator) {

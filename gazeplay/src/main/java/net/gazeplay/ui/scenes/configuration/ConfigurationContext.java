@@ -19,7 +19,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -333,7 +332,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
-            CheckBox input = buildVideoRecording(config, configurationContext);
+            CheckBox input = buildEnableVideoRecordingCheckbox(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -348,7 +347,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "EnableGazeMouse", COLON);
-            CheckBox input = buildGazeMouse(config, configurationContext);
+            CheckBox input = buildGazeMouseEnabledCheckBox(config, configurationContext);
             String[] labelParts = label.getText().split(";");
             StringBuilder concatenateLabel = new StringBuilder();
             for (String labels : labelParts) {
@@ -372,13 +371,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
 
         Separator s = new Separator();
-        grid.add(s, 0, currentRowIndex,3,1);
+        grid.add(s, 0, currentRowIndex, 3, 1);
         GridPane.setHalignment(s, HPos.CENTER);
 
         if (currentLanguageAlignementIsLeftAligned) {
-                int newcurrentRowIndex = currentFormRow.incrementAndGet();
-                grid.add(label, COLUMN_INDEX_LABEL_LEFT, newcurrentRowIndex);
-                GridPane.setHalignment(label, HPos.LEFT);
+            int newcurrentRowIndex = currentFormRow.incrementAndGet();
+            grid.add(label, COLUMN_INDEX_LABEL_LEFT, newcurrentRowIndex);
+            GridPane.setHalignment(label, HPos.LEFT);
         } else {
             int newcurrentRowIndex = currentFormRow.incrementAndGet();
             grid.add(label, COLUMN_INDEX_LABEL_RIGHT, newcurrentRowIndex);
@@ -401,13 +400,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
             Separator s = new Separator();
-            grid.add(s, COLUMN_INDEX_INPUT_LEFT, currentRowIndex,2,1);
+            grid.add(s, COLUMN_INDEX_INPUT_LEFT, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.LEFT);
         } else {
             grid.add(label, COLUMN_INDEX_LABEL_RIGHT, currentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
             Separator s = new Separator();
-            grid.add(s, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex,2,1);
+            grid.add(s, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.RIGHT);
         }
     }
@@ -415,11 +414,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
 
-         int COLUMN_INDEX_LABEL_LEFT = 1;
-         int COLUMN_INDEX_INPUT_LEFT = 2;
+        int COLUMN_INDEX_LABEL_LEFT = 1;
+        int COLUMN_INDEX_INPUT_LEFT = 2;
 
-         int COLUMN_INDEX_LABEL_RIGHT = 1;
-         int COLUMN_INDEX_INPUT_RIGHT = 0;
+        int COLUMN_INDEX_LABEL_RIGHT = 1;
+        int COLUMN_INDEX_INPUT_RIGHT = 0;
 
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
@@ -444,9 +443,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private static ChoiceBox<Double> buildFixLengthChooserMenu(Configuration configuration,
-                                                               ConfigurationContext configurationContext) {
-
+    private static ChoiceBox<Double> buildFixLengthChooserMenu(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         ChoiceBox<Double> choiceBox = new ChoiceBox<>();
 
         int i = 300;
@@ -463,20 +463,18 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.setPrefHeight(PREF_HEIGHT);
 
         choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-
             final int newPropertyValue = (int) (1000
                 * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
-
             configuration.getFixationlengthProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-
         });
 
         return choiceBox;
     }
 
-    private static ChoiceBox<Double> buildQuestionLengthChooserMenu(Configuration configuration,
-                                                                    ConfigurationContext configurationContext) {
+    private static ChoiceBox<Double> buildQuestionLengthChooserMenu(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
 
         ChoiceBox<Double> choiceBox = new ChoiceBox<>();
 
@@ -499,8 +497,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
 
             configuration.getQuestionLengthProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-
         });
 
         return choiceBox;
@@ -541,7 +537,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             String newPropertyValue = newValue.getPreferredConfigPropertyValue();
 
             configuration.getCssfileProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
 
             final GazePlay gazePlay = configurationContext.getGazePlay();
             // final Scene scene = gazePlay.getPrimaryScene();
@@ -579,7 +574,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
 
             configuration.getCssfileProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
 
             scene.getStylesheets().remove(0);
             scene.getStylesheets().add("file://" + newPropertyValue);
@@ -619,7 +613,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
 
             configuration.getFiledirProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
         });
 
         pane.getChildren().add(buttonLoad);
@@ -668,7 +661,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
 
             configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
         });
 
         pane.getChildren().add(buttonLoad);
@@ -711,8 +703,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 LanguagesItem.setOnAction(eventMenuLanguages -> {
 
                     configuration.getLanguageProperty().setValue(language.getCode());
-
-                    configuration.saveConfigIgnoringExceptions();
 
                     configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
 
@@ -764,7 +754,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             final String newPropertyValue = newValue.name();
             configuration.getEyetrackerProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
         });
 
         return choiceBox;
@@ -779,118 +768,84 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return null;
     }
 
-    private static CheckBox buildEnableRewardSoundBox(Configuration configuration,
-                                                      ConfigurationContext configurationContext) {
+    private static CheckBox buildEnableRewardSoundBox(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
         checkBox.setSelected(configuration.isEnableRewardSound());
-
         checkBox.selectedProperty().addListener((o) -> {
-
             configuration.getEnableRewardSoundProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
         });
-
         return checkBox;
     }
 
-    private static CheckBox buildDisableHeatMapSoundBox(Configuration configuration,
-                                                        ConfigurationContext configurationContext) {
+    private static CheckBox buildDisableHeatMapSoundBox(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
         checkBox.setSelected(configuration.isHeatMapDisabled());
-
         checkBox.selectedProperty().addListener((o) -> {
-
             configuration.getHeatMapDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
         });
-
         return checkBox;
     }
 
-    private static CheckBox buildDisableAreaOfInterest(Configuration configuration,
-                                                       ConfigurationContext configurationContext) {
+    private static CheckBox buildDisableAreaOfInterest(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isAreaOfInterestEnabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getAreaOfInterestDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
+        checkBox.setSelected(configuration.getAreaOfInterestDisabledProperty().getValue());
+        checkBox.selectedProperty().bindBidirectional(configuration.getAreaOfInterestDisabledProperty());
         return checkBox;
     }
 
-    private static CheckBox buildDisableConvexHull(Configuration configuration,
-                                                   ConfigurationContext configurationContext) {
+    private static CheckBox buildDisableConvexHull(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isConvexHullEnabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getConvexHullDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
+        checkBox.setSelected(configuration.getConvexHullDisabledProperty().getValue());
+        checkBox.selectedProperty().bindBidirectional(configuration.getConvexHullDisabledProperty());
         return checkBox;
     }
 
-    private static CheckBox buildVideoRecording(Configuration configuration,
-                                                ConfigurationContext configurationContext) {
+    private static CheckBox buildEnableVideoRecordingCheckbox(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isVideoRecordingEnabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-            configuration.getVideoRecordingDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
+        checkBox.setSelected(configuration.getVideoRecordingEnabledProperty().getValue());
+        checkBox.selectedProperty().bindBidirectional(configuration.getVideoRecordingEnabledProperty());
         return checkBox;
     }
 
-    private static CheckBox buildDisableFixationSequenceCheckBox(Configuration configuration,
-                                                                 ConfigurationContext configurationContext) {
+    private static CheckBox buildDisableFixationSequenceCheckBox(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isFixationSequenceDisabled());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getFixationSequenceDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
+        checkBox.setSelected(configuration.getFixationSequenceDisabledProperty().getValue());
+        checkBox.selectedProperty().bindBidirectional(configuration.getFixationSequenceDisabledProperty());
         return checkBox;
     }
 
-    private CheckBox buildEnabledWhiteBackground(Configuration configuration,
-                                                 ConfigurationContext configurationContext) {
+    private CheckBox buildEnabledWhiteBackground(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isBackgroundWhite());
-
-        checkBox.selectedProperty().addListener((o) -> {
-            configuration.getWhiteBackgroundProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
+        checkBox.setSelected(configuration.getWhiteBackgroundProperty().getValue());
+        checkBox.selectedProperty().bindBidirectional(configuration.getWhiteBackgroundProperty());
         return checkBox;
     }
 
     private static CheckBox buildGazeMenu(Configuration configuration, ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isGazeMenuEnable());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getGazeMenuProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
+        checkBox.setSelected(configuration.getGazeMenuEnabledProperty().getValue());
+        checkBox.selectedProperty().bindBidirectional(configuration.getGazeMenuEnabledProperty());
 
         // TODO
         // ****** REMOVE FROM HERE
@@ -900,38 +855,27 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private static CheckBox buildGazeMouse(Configuration configuration, ConfigurationContext configurationContext) {
+    private static CheckBox buildGazeMouseEnabledCheckBox(Configuration configuration, ConfigurationContext configurationContext) {
         CheckBox checkBox = new CheckBox();
-
-        checkBox.setSelected(configuration.isGazeMouseEnable());
-
-        checkBox.selectedProperty().addListener((o) -> {
-
-            configuration.getGazeMouseProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
-        });
-
+        checkBox.setSelected(configuration.getGazeMouseEnabledProperty().getValue());
+        checkBox.selectedProperty().bindBidirectional(configuration.getGazeMouseEnabledProperty());
         return checkBox;
     }
 
-    private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(Configuration configuration,
-                                                                                      ConfigurationContext configurationContext) {
+    private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         ChoiceBox<GameButtonOrientation> choiceBox = new ChoiceBox<>();
-
         choiceBox.getItems().addAll(GameButtonOrientation.values());
-
         GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
         choiceBox.getSelectionModel().select(selectedValue);
-
         choiceBox.setPrefWidth(PREF_WIDTH);
         choiceBox.setPrefHeight(PREF_HEIGHT);
-
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             final String newPropertyValue = newValue.name();
             configuration.getMenuButtonsOrientationProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
         });
-
         return choiceBox;
     }
 
@@ -1003,8 +947,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         config.getMusicFolderProperty().setValue(musicFolder);
 
-        config.saveConfigIgnoringExceptions();
-
         BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
 
         musicManager.emptyPlaylist();
@@ -1062,12 +1004,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
             config.getVideoFolderProperty().setValue(newPropertyValue);
-            config.saveConfigIgnoringExceptions();
         });
 
         buttonReset.setOnAction(e -> {
             config.getVideoFolderProperty().setValue(GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
-            config.saveConfigIgnoringExceptions();
         });
 
         return hbox;
@@ -1086,26 +1026,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private ChoiceBox<String> buildQuitKeyChooser(Configuration configuration,
-                                                  ConfigurationContext configurationContext) {
-
-        ChoiceBox<String> KeyBox = new ChoiceBox<>();
-        KeyBox.getItems().addAll("Q", "W", "E", "R", "T", "Y");
-
-        // GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
-        KeyBox.getSelectionModel().select("Q");
-
-        KeyBox.setPrefWidth(PREF_WIDTH);
-        KeyBox.setPrefHeight(PREF_HEIGHT);
-
-        KeyBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            final String newPropertyValue = newValue;
-            configuration.getQuitKeyProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
+    private ChoiceBox<String> buildQuitKeyChooser(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
+        choiceBox.getItems().addAll("Q", "W", "E", "R", "T", "Y");
+        choiceBox.getSelectionModel().select(configuration.getQuitKeyProperty().getValue());
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            configuration.getQuitKeyProperty().setValue(newValue);
         });
-
-        return KeyBox;
-
+        return choiceBox;
     }
 
     private ChoiceBox<Double> buildHeatMapOpacityChoiceBox(Configuration config) {
@@ -1197,6 +1130,5 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         log.info(stringBuilder.toString());
         config.getHeatMapColorsProperty().setValue(stringBuilder.toString());
-        config.saveConfigIgnoringExceptions();
     }
 }
