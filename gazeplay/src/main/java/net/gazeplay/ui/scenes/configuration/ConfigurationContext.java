@@ -443,9 +443,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private static ChoiceBox<Double> buildFixLengthChooserMenu(Configuration configuration,
-                                                               ConfigurationContext configurationContext) {
-
+    private static ChoiceBox<Double> buildFixLengthChooserMenu(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         ChoiceBox<Double> choiceBox = new ChoiceBox<>();
 
         int i = 300;
@@ -462,13 +463,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.setPrefHeight(PREF_HEIGHT);
 
         choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-
             final int newPropertyValue = (int) (1000
                 * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
-
             configuration.getFixationlengthProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-
         });
 
         return choiceBox;
