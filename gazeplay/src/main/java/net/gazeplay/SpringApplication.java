@@ -17,7 +17,6 @@ public class SpringApplication {
 
     @Bean
     public GamesLocator gamesLocator() {
-        //return new CachingGamesLocator(new DefaultGamesLocator());
         return new CachingGamesLocator(new CatalogBasedGamesLocator());
     }
 

@@ -3,14 +3,12 @@ package net.gazeplay.gameslocator;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameSpecSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
-public class DefaultGamesLocator extends AbstractGamesLocator {
+public class ClasspathScanningGamesLocator extends AbstractGamesLocator {
 
     @Override
     protected List<Class> findGameSpecSourceClasses() {
@@ -28,7 +26,6 @@ public class DefaultGamesLocator extends AbstractGamesLocator {
             scanResult = classGraph.scan();
             for (ClassInfo routeClassInfo : scanResult.getClassesImplementing(searchedInterface.getName())) {
                 Class<GameSpecSource> gameClass = routeClassInfo.loadClass(searchedInterface);
-                log.info("Found {} class : {}", searchedInterface.getSimpleName(), gameClass.getName());
                 result.add(gameClass);
             }
         } finally {
