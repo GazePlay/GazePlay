@@ -116,7 +116,7 @@ public class Configuration {
     private final StringProperty languageProperty = new SimpleStringProperty(this, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE);
 
     @Getter
-    private final StringProperty filedirProperty = new SimpleStringProperty(this, PROPERTY_NAME_FILEDIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath());
+    private final StringProperty filedirProperty;
 
     @Getter
     private final IntegerProperty fixationlengthProperty;
@@ -222,6 +222,7 @@ public class Configuration {
         questionLengthProperty = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH, propertyChangeListener);
         fixationlengthProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH, propertyChangeListener);
 
+        filedirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FILEDIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), propertyChangeListener);
         musicFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_FOLDER, DEFAULT_VALUE_MUSIC_FOLDER, propertyChangeListener);
         videoFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath(), propertyChangeListener);
         userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
@@ -272,11 +273,6 @@ public class Configuration {
             languageProperty.setValue(buffer.toLowerCase());
         }
 
-        buffer = prop.getProperty(PROPERTY_NAME_FILEDIR);
-        if (buffer != null) {
-            filedirProperty.setValue(buffer);
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
         if (buffer != null) {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
@@ -303,7 +299,6 @@ public class Configuration {
         applicationConfig.setProperty(PROPERTY_NAME_EYETRACKER, eyetrackerProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_LANGUAGE, languageProperty.getValue());
         applicationConfig.setProperty(PROPERTY_NAME_QUIT_KEY, quitKeyProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_FILEDIR, filedirProperty.getValue());
 
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
