@@ -786,18 +786,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private static CheckBox buildDisableHeatMapSoundBox(Configuration configuration,
-                                                        ConfigurationContext configurationContext) {
+    private static CheckBox buildDisableHeatMapSoundBox(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
         checkBox.setSelected(configuration.isHeatMapDisabled());
-
         checkBox.selectedProperty().addListener((o) -> {
-
             configuration.getHeatMapDisabledProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
         });
-
         return checkBox;
     }
 
