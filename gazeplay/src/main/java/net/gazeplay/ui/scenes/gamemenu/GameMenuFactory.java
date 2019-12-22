@@ -7,8 +7,10 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import lombok.Data;
@@ -27,7 +29,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import static javafx.scene.input.MouseEvent.*;
+import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
+import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 
 @Slf4j
 @Data
@@ -250,7 +253,6 @@ public class GameMenuFactory {
                     config.getFavoriteGamesProperty().add(gameSummary.getNameCode());
                     favGamesImageView.setEffect(null);
                 }
-                config.saveConfigIgnoringExceptions();
             }
         };
        // favIconContainer.addEventFilter(MOUSE_ENTERED, favoriteGameSwitchEventHandler);

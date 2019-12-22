@@ -1,5 +1,6 @@
 package net.gazeplay.commons.configuration;
 
+import com.google.common.collect.Sets;
 import com.sun.javafx.collections.ObservableSetWrapper;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
@@ -92,10 +93,10 @@ public class Configuration {
     private boolean mouseFree = false;
 
     @Getter
-    private final SimpleSetProperty<String> favoriteGamesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_FAVORITE_GAMES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
+    private final SetProperty<String> favoriteGamesProperty;
 
     @Getter
-    private final SimpleSetProperty<String> hiddenCategoriesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_HIDDEN_CATEGORIES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
+    private final SetProperty<String> hiddenCategoriesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_HIDDEN_CATEGORIES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
 
     @Getter
     private final LongProperty latestNewsPopupShownTime;
@@ -238,6 +239,8 @@ public class Configuration {
 
         latestNewsPopupShownTime = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0, propertyChangeListener);
 
+        favoriteGamesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_FAVORITE_GAMES, Sets.newLinkedHashSet(), propertyChangeListener);
+
         populateFromApplicationConfig(applicationConfig);
     }
 
@@ -267,12 +270,6 @@ public class Configuration {
     private void populateFromApplicationConfig(ApplicationConfig prop) {
         String buffer;
 
-        buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
-        if (buffer != null) {
-            Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
-            favoriteGamesProperty.get().addAll(values);
-        }
-
         buffer = prop.getProperty(PROPERTY_NAME_HIDDEN_CATEGORIES);
         if (buffer != null) {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
@@ -281,7 +278,6 @@ public class Configuration {
     }
 
     private void persistConfig(ApplicationConfig applicationConfig) {
-        applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
     }
 
