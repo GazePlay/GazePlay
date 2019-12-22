@@ -471,8 +471,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
-    private static ChoiceBox<Double> buildQuestionLengthChooserMenu(Configuration configuration,
-                                                                    ConfigurationContext configurationContext) {
+    private static ChoiceBox<Double> buildQuestionLengthChooserMenu(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
 
         ChoiceBox<Double> choiceBox = new ChoiceBox<>();
 
@@ -495,8 +497,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
 
             configuration.getQuestionLengthProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
-
         });
 
         return choiceBox;
