@@ -7,9 +7,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GameSpecSourceInstanciator {
+public class GameSpecSourceInstantiator {
 
-    public List<GameSpecSource> instanciateGameSpecSource(List<Class> gamesClasses) {
+    public List<GameSpecSource> instantiateGameSpecSources(List<Class> gamesClasses) {
         return gamesClasses
             .stream()
             .map(gameClass -> {

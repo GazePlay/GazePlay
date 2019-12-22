@@ -13,13 +13,13 @@ import java.util.List;
 @Slf4j
 public abstract class AbstractGamesLocator implements GamesLocator {
 
-    private final GameSpecSourceInstanciator gameSpecSourceInstanciator = new GameSpecSourceInstanciator();
+    private final GameSpecSourceInstantiator gameSpecSourceInstantiator = new GameSpecSourceInstantiator();
 
     @Override
     public List<GameSpec> listGames(Translator translator) {
         LinkedList<GameSpec> gameList = new LinkedList<>();
         List<Class> gamesClasses = scanGamesClasses();
-        for (GameSpecSource source : gameSpecSourceInstanciator.instanciateGameSpecSource(gamesClasses)) {
+        for (GameSpecSource source : gameSpecSourceInstantiator.instantiateGameSpecSources(gamesClasses)) {
             gameList.add(source.getGameSpec());
         }
         log.info("Games found : {}", gameList.size());
