@@ -371,13 +371,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
 
         Separator s = new Separator();
-        grid.add(s, 0, currentRowIndex,3,1);
+        grid.add(s, 0, currentRowIndex, 3, 1);
         GridPane.setHalignment(s, HPos.CENTER);
 
         if (currentLanguageAlignementIsLeftAligned) {
-                int newcurrentRowIndex = currentFormRow.incrementAndGet();
-                grid.add(label, COLUMN_INDEX_LABEL_LEFT, newcurrentRowIndex);
-                GridPane.setHalignment(label, HPos.LEFT);
+            int newcurrentRowIndex = currentFormRow.incrementAndGet();
+            grid.add(label, COLUMN_INDEX_LABEL_LEFT, newcurrentRowIndex);
+            GridPane.setHalignment(label, HPos.LEFT);
         } else {
             int newcurrentRowIndex = currentFormRow.incrementAndGet();
             grid.add(label, COLUMN_INDEX_LABEL_RIGHT, newcurrentRowIndex);
@@ -400,13 +400,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
             Separator s = new Separator();
-            grid.add(s, COLUMN_INDEX_INPUT_LEFT, currentRowIndex,2,1);
+            grid.add(s, COLUMN_INDEX_INPUT_LEFT, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.LEFT);
         } else {
             grid.add(label, COLUMN_INDEX_LABEL_RIGHT, currentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
             Separator s = new Separator();
-            grid.add(s, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex,2,1);
+            grid.add(s, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.RIGHT);
         }
     }
@@ -414,11 +414,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
 
-         int COLUMN_INDEX_LABEL_LEFT = 1;
-         int COLUMN_INDEX_INPUT_LEFT = 2;
+        int COLUMN_INDEX_LABEL_LEFT = 1;
+        int COLUMN_INDEX_INPUT_LEFT = 2;
 
-         int COLUMN_INDEX_LABEL_RIGHT = 1;
-         int COLUMN_INDEX_INPUT_RIGHT = 0;
+        int COLUMN_INDEX_LABEL_RIGHT = 1;
+        int COLUMN_INDEX_INPUT_RIGHT = 0;
 
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
