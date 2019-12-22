@@ -98,7 +98,7 @@ public class Configuration {
     private final SimpleSetProperty<String> hiddenCategoriesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_HIDDEN_CATEGORIES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
 
     @Getter
-    private final LongProperty latestNewsPopupShownTime = new SimpleLongProperty(this, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0);
+    private final LongProperty latestNewsPopupShownTime;
 
     @Getter
     private final StringProperty quitKeyProperty;
@@ -236,6 +236,8 @@ public class Configuration {
 
         whereIsItDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_WHEREISIT_DIR, DEFAULT_VALUE_WHEREISIT_DIR, propertyChangeListener);
 
+        latestNewsPopupShownTime = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0, propertyChangeListener);
+
         populateFromApplicationConfig(applicationConfig);
     }
 
@@ -276,22 +278,11 @@ public class Configuration {
             Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
             hiddenCategoriesProperty.get().addAll(values);
         }
-
-        buffer = prop.getProperty(PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME);
-        if (buffer != null) {
-            try {
-                latestNewsPopupShownTime.setValue(Long.parseLong(buffer));
-            } catch (NumberFormatException e) {
-                log.warn("Malformed property");
-            }
-        }
     }
 
     private void persistConfig(ApplicationConfig applicationConfig) {
         applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
         applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
-
-        applicationConfig.setProperty(PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, Long.toString(latestNewsPopupShownTime.getValue()));
     }
 
     public String getEyeTracker() {
