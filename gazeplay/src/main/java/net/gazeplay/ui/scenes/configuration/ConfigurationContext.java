@@ -774,18 +774,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return null;
     }
 
-    private static CheckBox buildEnableRewardSoundBox(Configuration configuration,
-                                                      ConfigurationContext configurationContext) {
+    private static CheckBox buildEnableRewardSoundBox(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         CheckBox checkBox = new CheckBox();
-
         checkBox.setSelected(configuration.isEnableRewardSound());
-
         checkBox.selectedProperty().addListener((o) -> {
-
             configuration.getEnableRewardSoundProperty().setValue(checkBox.isSelected());
-            configuration.saveConfigIgnoringExceptions();
         });
-
         return checkBox;
     }
 
