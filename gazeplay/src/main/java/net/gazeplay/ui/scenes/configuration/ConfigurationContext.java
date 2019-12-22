@@ -947,8 +947,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         config.getMusicFolderProperty().setValue(musicFolder);
 
-        config.saveConfigIgnoringExceptions();
-
         BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
 
         musicManager.emptyPlaylist();
