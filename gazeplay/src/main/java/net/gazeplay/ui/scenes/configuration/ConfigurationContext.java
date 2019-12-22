@@ -537,7 +537,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             String newPropertyValue = newValue.getPreferredConfigPropertyValue();
 
             configuration.getCssfileProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
 
             final GazePlay gazePlay = configurationContext.getGazePlay();
             // final Scene scene = gazePlay.getPrimaryScene();
