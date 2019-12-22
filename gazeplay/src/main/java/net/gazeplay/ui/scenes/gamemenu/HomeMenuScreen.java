@@ -309,8 +309,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 config.getHiddenCategoriesProperty().add(category.getGameCategory());
             }
             filterGames(choicePanel, gameCardsList, config);
-            config.saveConfigIgnoringExceptions();
-
         });
         return categoryCheckbox;
     }

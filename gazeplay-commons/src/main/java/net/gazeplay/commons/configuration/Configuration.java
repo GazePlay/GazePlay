@@ -1,7 +1,6 @@
 package net.gazeplay.commons.configuration;
 
 import com.google.common.collect.Sets;
-import com.sun.javafx.collections.ObservableSetWrapper;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -16,8 +15,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
@@ -96,7 +95,7 @@ public class Configuration {
     private final SetProperty<String> favoriteGamesProperty;
 
     @Getter
-    private final SetProperty<String> hiddenCategoriesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_HIDDEN_CATEGORIES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
+    private final SetProperty<String> hiddenCategoriesProperty;
 
     @Getter
     private final LongProperty latestNewsPopupShownTime;
@@ -240,6 +239,7 @@ public class Configuration {
         latestNewsPopupShownTime = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0, propertyChangeListener);
 
         favoriteGamesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_FAVORITE_GAMES, Sets.newLinkedHashSet(), propertyChangeListener);
+        hiddenCategoriesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_HIDDEN_CATEGORIES, Sets.newLinkedHashSet(), propertyChangeListener);
 
         populateFromApplicationConfig(applicationConfig);
     }
@@ -268,17 +268,9 @@ public class Configuration {
     }
 
     private void populateFromApplicationConfig(ApplicationConfig prop) {
-        String buffer;
-
-        buffer = prop.getProperty(PROPERTY_NAME_HIDDEN_CATEGORIES);
-        if (buffer != null) {
-            Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
-            hiddenCategoriesProperty.get().addAll(values);
-        }
     }
 
     private void persistConfig(ApplicationConfig applicationConfig) {
-        applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
     }
 
     public String getEyeTracker() {
