@@ -667,7 +667,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
 
             configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
         });
 
         pane.getChildren().add(buttonLoad);
