@@ -868,24 +868,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(Configuration configuration,
-                                                                                      ConfigurationContext configurationContext) {
+    private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         ChoiceBox<GameButtonOrientation> choiceBox = new ChoiceBox<>();
-
         choiceBox.getItems().addAll(GameButtonOrientation.values());
-
         GameButtonOrientation selectedValue = findSelectedGameButtonOrientation(configuration);
         choiceBox.getSelectionModel().select(selectedValue);
-
         choiceBox.setPrefWidth(PREF_WIDTH);
         choiceBox.setPrefHeight(PREF_HEIGHT);
-
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             final String newPropertyValue = newValue.name();
             configuration.getMenuButtonsOrientationProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
         });
-
         return choiceBox;
     }
 
