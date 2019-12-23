@@ -471,8 +471,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                     conf2.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(newUser1.getName()).getAbsolutePath());
 
-                    conf2.saveConfigIgnoringExceptions();
-
                     dialog.close();
                     primaryStage.getScene().getRoot().setEffect(null);
 
@@ -501,7 +499,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
                     conf2.setUserPicture(dst.getAbsolutePath());
                 }
-                conf2.saveConfigIgnoringExceptions();
 
                 dialog.close();
                 primaryStage.getScene().getRoot().setEffect(null);
