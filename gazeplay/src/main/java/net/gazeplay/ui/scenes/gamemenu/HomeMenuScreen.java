@@ -274,6 +274,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return categoryFilters;
     }
 
+    private boolean isFavorite(GameSpec g, Configuration configuration) {
+        return configuration.getFavoriteGamesProperty().contains(g.getGameSummary().getNameCode());
+    }
+
     private CustomButton createExitButton() {
         CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
@@ -305,8 +309,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 config.getHiddenCategoriesProperty().add(category.getGameCategory());
             }
             filterGames(choicePanel, gameCardsList, config);
-            config.saveConfigIgnoringExceptions();
-
         });
         return categoryCheckbox;
     }

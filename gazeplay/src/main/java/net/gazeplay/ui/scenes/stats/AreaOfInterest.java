@@ -400,7 +400,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                             areaOfInterestList.get(i).getYValue());
                     }
                     Double[] polygonPoints;
-                    if (config.isConvexHullEnabled()) {
+                    if (config.getConvexHullDisabledProperty().getValue()) {
                         polygonPoints = calculateConvexHull(point2DS, areaOfInterestList.size());
                     } else {
                         polygonPoints = calculateRectangle(point2DS);
