@@ -2,11 +2,11 @@
 
 set -e
 
-MAIN_JAR_FILE=gazeplay-@VERSION@.jar
-
 export JAVA_OPTS="-Xms256m -Xmx1g"
 
-export JAVA_CMD="java ${JAVA_OPTS} -jar ../lib/${MAIN_JAR_FILE}"
+CLASSPATH=$(find ../lib -name "*.jar" | sort | tr '\n' ':')
+
+export JAVA_CMD="java -cp \"$CLASSPATH\" ${JAVA_OPTS} net.gazeplay.GazePlayLauncher"
 
 echo "Executing command line: $JAVA_CMD"
 
