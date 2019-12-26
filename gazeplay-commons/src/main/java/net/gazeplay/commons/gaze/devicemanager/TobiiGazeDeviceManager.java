@@ -1,16 +1,18 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
-import com.sun.glass.ui.Screen;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.utils.CachingSupplier;
+import net.gazeplay.commons.utils.ScreenDimensionSupplier;
 import tobii.Tobii;
 
-import java.awt.*;
+import java.util.function.Supplier;
 
 @Slf4j
 public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
@@ -26,9 +28,7 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
     public void init() {
         Tobii.gazePosition();
 
-        Screen mainScreen = Screen.getMainScreen();
-        final int screenWidth = mainScreen.getWidth();
-        final int screenHeight = mainScreen.getHeight();
+        final Supplier<Dimension2D> screenDimensionSupplier = new CachingSupplier<>(new ScreenDimensionSupplier());
 
         calculateService = new Service<>() {
 
@@ -38,28 +38,16 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
 
                     @Override
                     protected Void call() {
+
+                        final Dimension2D screenDimension = screenDimensionSupplier.get();
                         while (!stopRequested) {
                             float[] pointAsFloatArray = Tobii.gazePosition();
 
                             final float xRatio = pointAsFloatArray[0];
                             final float yRatio = pointAsFloatArray[1];
 
-                            final double positionX = xRatio * screenWidth;
-                            final double positionY = yRatio * screenHeight;
-                            
-                            Configuration config = ActiveConfigurationContext.getInstance();
-
-                            if (config.isGazeMouseEnable() && !config.isMouseFree()) {
-                                Platform.runLater(() -> {
-                                    try {
-                                        Robot robot = new Robot();
-                                        robot.mouseMove((int) positionX, (int) positionY);
-                                    } catch (AWTException e) {
-                                        // TODO Auto-generated catch block
-                                        e.printStackTrace();
-                                    }
-                                });
-                            }
+                            final double positionX = xRatio * screenDimension.getWidth();
+                            final double positionY = yRatio * screenDimension.getHeight();
 
                             Point2D point = new Point2D(positionX, positionY);
                             Platform.runLater(() -> onGazeUpdate(point));
@@ -67,6 +55,7 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
                             // sleep is mandatory to avoid too much calls to gazePosition()
                             try {
                                 Thread.sleep(10);
+                                Configuration config = ActiveConfigurationContext.getInstance();
                                 if (config.isGazeMenuEnable()) {
                                     Thread.sleep(10);
                                 }
