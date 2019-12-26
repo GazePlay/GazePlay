@@ -500,7 +500,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         StringTokenizer st = new StringTokenizer(traduction, ";");
 
-        List<Image> L = new ArrayList<>(20);
+        List<Image> imageList = new ArrayList<>(20);
 
         while (st.hasMoreTokens()) {
             String token = config.getWhereIsItDir() + "/pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
@@ -508,11 +508,11 @@ public class WhereIsIt implements GameLifeCycle {
             File tokenFile = new File(token);
             log.debug("Exists {}", tokenFile.exists());
             if (tokenFile.exists()) {
-                L.add(new Image(tokenFile.toURI().toString(), 500, 500, true, false));
+                imageList.add(new Image(tokenFile.toURI().toString(), 500, 500, true, false));
             }
         }
 
-        log.debug("L {}", L);
-        return L;
+        log.debug("imageList: {}", imageList);
+        return imageList;
     }
 }
