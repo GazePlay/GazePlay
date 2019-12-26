@@ -490,9 +490,9 @@ public class WhereIsIt implements GameLifeCycle {
 
         final Configuration config = gameContext.getConfiguration();
 
-        File F = new File(config.getWhereIsItDir() + "/questions.csv");
+        File questionFile = new File(config.getWhereIsItDir(), "questions.csv");
 
-        Multilinguism localMultilinguism = Multilinguism.getForResource(F.toString());
+        Multilinguism localMultilinguism = Multilinguism.getForResource(questionFile.toString());
 
         String traduction = localMultilinguism.getTrad(folder, language);
 
@@ -500,18 +500,15 @@ public class WhereIsIt implements GameLifeCycle {
 
         StringTokenizer st = new StringTokenizer(traduction, ";");
 
-        String token;
-
         List<Image> L = new ArrayList<>(20);
 
         while (st.hasMoreTokens()) {
-
-            token = config.getWhereIsItDir() + "/pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
+            String token = config.getWhereIsItDir() + "/pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
             log.debug("token \"{}\"", token);
-            File Ftoken = new File(token);
-            log.debug("Exists {}", Ftoken.exists());
-            if (Ftoken.exists()) {
-                L.add(new Image(Ftoken.toURI().toString(), 500, 500, true, false));
+            File tokenFile = new File(token);
+            log.debug("Exists {}", tokenFile.exists());
+            if (tokenFile.exists()) {
+                L.add(new Image(tokenFile.toURI().toString(), 500, 500, true, false));
             }
         }
 
