@@ -27,10 +27,9 @@ public class I18N {
 
     protected static Map<Entry, String> loadFromFile(String resourceLocation) {
         final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-        InputStream is;
 
         try {
-            is = systemClassLoader.getResourceAsStream(resourceLocation);
+            InputStream is = systemClassLoader.getResourceAsStream(resourceLocation);
 
             if (is == null) {
                 File F = new File(resourceLocation);
@@ -59,6 +58,8 @@ public class I18N {
                         }
                     }
                 }
+
+                is.close();
                 return translations;
             }
         } catch (IOException e) {
