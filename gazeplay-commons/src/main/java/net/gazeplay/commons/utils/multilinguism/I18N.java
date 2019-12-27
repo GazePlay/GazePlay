@@ -28,41 +28,44 @@ public class I18N {
     protected static Map<Entry, String> loadFromFile(String resourceLocation) {
         final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
 
-        try {
-            InputStream is = systemClassLoader.getResourceAsStream(resourceLocation);
+        final InputStream is;
 
-            if (is == null) {
-                File F = new File(resourceLocation);
-                is = new FileInputStream(F);
+        if (new File(resourceLocation).isFile()) {
+            try {
+                is = new FileInputStream(new File(resourceLocation));
+            } catch (IOException ie) {
+                log.error("Exception while reading file {}", resourceLocation, ie);
+                throw new RuntimeException(ie);
             }
+        } else {
+            is = systemClassLoader.getResourceAsStream(resourceLocation);
+        }
 
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
 
-                Map<Entry, String> translations = new HashMap<>(1000);
+            Map<Entry, String> translations = new HashMap<>(1000);
 
-                String line;
+            String line;
 
-                boolean firstline = true;
+            boolean firstline = true;
 
-                String[] languages = null, data;
+            String[] languages = null, data;
 
-                while ((line = br.readLine()) != null) {
-                    if (firstline) {
-                        languages = line.split(",");
-                        firstline = false;
-                    } else {
-                        data = line.split(",");
-                        String key = data[0].strip();
-                        for (int i = 1; i < data.length; i++) {
-                            translations.put(new Entry(key, languages[i].strip()), data[i].strip());
-                        }
+            while ((line = br.readLine()) != null) {
+                if (firstline) {
+                    languages = line.split(",");
+                    firstline = false;
+                } else {
+                    data = line.split(",");
+                    String key = data[0].strip();
+                    for (int i = 1; i < data.length; i++) {
+                        translations.put(new Entry(key, languages[i].strip()), data[i].strip());
                     }
                 }
-
-                is.close();
-                return translations;
             }
-        } catch (IOException e) {
+            return translations;
+
+        } catch (Exception e) {
             log.error("Exception while loading resource {}", resourceLocation, e);
             throw new RuntimeException(e);
         }

@@ -31,6 +31,20 @@ class I18NTest {
     }
 
     @Test
+    void shouldThrowAnErrorWhenCantReadFromLocalFile() {
+        String file = System.getProperty("user.dir") +
+            FILESEPARATOR + "src" +
+            FILESEPARATOR + "test" +
+            FILESEPARATOR + "resources" +
+            FILESEPARATOR + "data" +
+            FILESEPARATOR + "multilinguism" +
+            FILESEPARATOR + "wrong.csv";
+        assertThrows(RuntimeException.class, () -> {
+            I18N.loadFromFile(file);
+        });
+    }
+
+    @Test
     void shouldThrowErrorWhenCantReadFromFile() {
         assertThrows(RuntimeException.class, () -> {
             I18N.loadFromFile("some/path/to.csv");
