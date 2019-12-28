@@ -85,6 +85,10 @@ public class ImageUtils {
         return new Image(file.toURI().toString());
     }
 
+    public static Image loadImage(String resource) {
+        return new Image(resource);
+    }
+
     private static boolean isImage(File file) {
         if (file.isDirectory()) {
             return false;
