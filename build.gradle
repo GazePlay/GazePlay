@@ -131,6 +131,9 @@ distributions {
     }
 }
 
+distZip {
+    duplicatesStrategy = 'exclude'
+}
 
 runtime {
     options = ['--compress', '2', '--no-header-files', '--no-man-pages']
