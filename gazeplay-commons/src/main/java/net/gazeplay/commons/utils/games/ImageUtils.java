@@ -19,40 +19,37 @@ public class ImageUtils {
 
     public static ImageLibrary createImageLibrary(File directoryFile, File defaultDirectoryFile) {
         return new LazyImageLibrary(directoryFile,
-                createDefaultImageLibrary(new LazyImageLibrary(defaultDirectoryFile)));
+            createDefaultImageLibrary(new LazyImageLibrary(defaultDirectoryFile)));
     }
 
+    /**
+     * Creates an Image Library that reads from the data/common/default/images directory
+     * in the resources folder of the module from which it has been invoked.
+     *
+     * @param fallbackImageLibrary The library to use if, for whatever reason, the resources folder cannot be accessed.
+     * @return A ResourceImageLibrary including the <pre>fallbackImageLibrary</pre>
+     * @see net.gazeplay.commons.utils.games.ResourceImageLibrary
+     */
     public static ImageLibrary createDefaultImageLibrary(ImageLibrary fallbackImageLibrary) {
-        File defaultImageDirectory = ImageDirectoryLocator
-                .locateImagesDirectoryInUnpackedDistDirectory("data/common/default/images/");
+        String defaultResourceDirectory = "data/common/default/images/";
 
-        if (defaultImageDirectory == null) {
-            defaultImageDirectory = ImageDirectoryLocator
-                    .locateImagesDirectoryInExplodedClassPath("data/common/default/images/");
-        }
-
-        // Checking this location as a last resort - should only get this far if running the program from Gradle.
-        if (!defaultImageDirectory.isDirectory()) {
-            defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(
-                    "gazeplay/src/main/resources/data/common/default/images/");
-        }
-
-        return new LazyImageLibrary(defaultImageDirectory, fallbackImageLibrary);
+        return new ResourceImageLibrary(defaultResourceDirectory, fallbackImageLibrary);
     }
 
+    /**
+     * Creates an Image Library that reads from data/ + your chosen path
+     * in the resources folder of the module from which it has been invoked.
+     *
+     * @param fallbackImageLibrary The library to use if, for whatever reason, the resources folder cannot be accessed.
+     * @param path                 The path within the resources folder to load your library from. For example, if you wanted to read from
+     *                             data/colors/images, you would set this value to "colors/images".
+     * @return A ResourceImageLibrary including the <pre>fallbackImageLibrary</pre>
+     * @see net.gazeplay.commons.utils.games.ResourceImageLibrary
+     */
     public static ImageLibrary createCustomizedImageLibrary(ImageLibrary fallbackImageLibrary, String path) {
-        File defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory("data/" + path);
+        String defaultResourceDirectory = "data/" + path;
 
-        if (defaultImageDirectory == null) {
-            defaultImageDirectory = ImageDirectoryLocator.locateImagesDirectoryInExplodedClassPath("data/" + path);
-        }
-
-        if (!defaultImageDirectory.isDirectory()) {
-            defaultImageDirectory = ImageDirectoryLocator
-                    .locateImagesDirectoryInUnpackedDistDirectory("gazeplay/src/main/resources/data/" + path);
-        }
-
-        return new LazyImageLibrary(defaultImageDirectory, fallbackImageLibrary);
+        return new ResourceImageLibrary(defaultResourceDirectory, fallbackImageLibrary);
     }
 
     @Deprecated
