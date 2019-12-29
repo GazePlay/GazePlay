@@ -21,8 +21,13 @@ public class SpringApplication {
     }
 
     @Bean
-    public GazeDeviceManager gazeDeviceManager() {
-        return GazeDeviceManagerFactory.getInstance().createNewGazeListener();
+    public GazeDeviceManager gazeDeviceManager(GazeDeviceManagerFactory gazeDeviceManagerFactory) {
+        return gazeDeviceManagerFactory.createNewGazeListener();
+    }
+
+    @Bean
+    public GazeDeviceManagerFactory gazeDeviceManagerFactory() {
+        return new GazeDeviceManagerFactory();
     }
 
     @Bean

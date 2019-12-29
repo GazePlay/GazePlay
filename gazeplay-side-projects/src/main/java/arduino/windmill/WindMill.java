@@ -32,7 +32,8 @@ public class WindMill extends Application {
         Scene scene = new Scene(root, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
                 Color.BLACK);
 
-        GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
+        GazeDeviceManagerFactory gazeDeviceManagerFactory = new GazeDeviceManagerFactory();
+        GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.createNewGazeListener();
 
         Choices pictos = new Choices(scene, gazeDeviceManager);
 

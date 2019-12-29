@@ -29,7 +29,8 @@ public class Pictogrammes extends Application {
         Group root = new Group();
         Scene scene = new Scene(root, 1200, 700, Color.BLACK);
 
-        GazeDeviceManager gazeDeviceManager = GazeDeviceManagerFactory.getInstance().createNewGazeListener();
+        GazeDeviceManagerFactory gazeDeviceManagerFactory = new GazeDeviceManagerFactory();
+        GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.createNewGazeListener();
 
         Pictos pictos = new Pictos(scene, gazeDeviceManager);
 
