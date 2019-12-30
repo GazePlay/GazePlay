@@ -1,7 +1,7 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
 import net.gazeplay.GazePlay;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.gameslocator.GamesLocator;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class HomeMenuScreenFactoryBean implements FactoryBean<HomeMenuScreen> {
     private GazePlay gazePlay;
 
     @Autowired
-    private GazeDeviceManager gazeDeviceManager;
+    private GazeDeviceManagerFactory gazeDeviceManagerFactory;
 
     @Autowired
     private GameMenuFactory gameMenuFactory;
@@ -27,7 +27,7 @@ public class HomeMenuScreenFactoryBean implements FactoryBean<HomeMenuScreen> {
 
     @Override
     public HomeMenuScreen getObject() {
-        return new HomeMenuScreen(gazePlay, gazeDeviceManager, gameMenuFactory, gamesLocator);
+        return new HomeMenuScreen(gazePlay, gazeDeviceManagerFactory.get(), gameMenuFactory, gamesLocator);
     }
 
     @Override
