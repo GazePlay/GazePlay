@@ -32,6 +32,9 @@ jar {
 }
 
 task generateGamesCatalog() {
+    def catalogPath = "../gazeplay/src/main/resources/games-catalog.txt"
+    delete catalogPath
+
     def sourceSet = project.sourceSets.findByName('main').java
     def packages = sourceSet
             .filter { it.path.endsWith('.java') }
@@ -45,7 +48,7 @@ task generateGamesCatalog() {
             }
             .unique()
 
-    def file = new File(projectDir, "../gazeplay/src/main/resources/games-catalog.txt")
+    def file = new File(projectDir, catalogPath)
 
     packages.each { file.append(it + '\n') }
 }
