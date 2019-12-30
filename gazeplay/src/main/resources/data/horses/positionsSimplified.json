@@ -1,7 +1,7 @@
 {
-  "imageName" : "horsiesBoardSimplified.png",
-  "nbPawns" : 1,
-  "elementsPerSide" : 9,
+  "imageName": "horsiesBoardSimplified.png",
+  "nbPawns": 1,
+  "elementsPerSide": 9,
   "BLUE": {
     "finalPath": [
       {
@@ -50,8 +50,12 @@
         "x": 1020,
         "y": 420
       }
-    ], "spawnPoints" : [
-      {"x":900,"y":180}
+    ],
+    "spawnPoints": [
+      {
+        "x": 900,
+        "y": 180
+      }
     ]
   },
   "RED": {
@@ -102,8 +106,12 @@
         "x": 660,
         "y": 1020
       }
-    ], "spawnPoints" : [
-      {"x":900,"y":900}
+    ],
+    "spawnPoints": [
+      {
+        "x": 900,
+        "y": 900
+      }
     ]
   },
   "GREEN": {
@@ -154,8 +162,12 @@
         "x": 60,
         "y": 660
       }
-    ], "spawnPoints" : [
-      {"x":180,"y":900}
+    ],
+    "spawnPoints": [
+      {
+        "x": 180,
+        "y": 900
+      }
     ]
   },
   "YELLOW": {
@@ -206,8 +218,12 @@
         "x": 420,
         "y": 60
       }
-    ], "spawnPoints" : [
-      {"x":180,"y":180}
+    ],
+    "spawnPoints": [
+      {
+        "x": 180,
+        "y": 180
+      }
     ]
   }
 }
