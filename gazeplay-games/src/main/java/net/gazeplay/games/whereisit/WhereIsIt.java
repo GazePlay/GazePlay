@@ -2,17 +2,11 @@ package net.gazeplay.games.whereisit;
 
 //It is repeated always, it works like a charm :)
 
-import javafx.animation.*;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
@@ -21,26 +15,17 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.util.Duration;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
-import net.gazeplay.commons.utils.games.ImageDirectoryLocator;
+import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
 
@@ -85,9 +70,7 @@ public class WhereIsIt implements GameLifeCycle {
         final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        final Configuration config = gameContext.getConfiguration();
-
-        currentRoundDetails = pickAndBuildRandomPictures(config, numberOfImagesToDisplayPerRound, random,
+        currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, random,
             winnerImageIndexAmongDisplayedImages);
 
         if (currentRoundDetails != null) {
@@ -157,7 +140,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         TranslateTransition fullAnimation = new TranslateTransition(
-            Duration.millis(gameContext.getConfiguration().getQuestionLength()/2.0), questionText);
+            Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2.0), questionText);
 
         fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
 
@@ -174,7 +157,7 @@ public class WhereIsIt implements GameLifeCycle {
             gameContext.getChildren().addAll(currentRoundDetails.getPictureCardList());
 
             for (PictureCard p : currentRoundDetails.getPictureCardList()) {
-              //  log.debug("p = {}", p);
+                //  log.debug("p = {}", p);
                 p.toFront();
                 p.setOpacity(1);
             }
@@ -229,20 +212,32 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().removeAll(pictureCardsToHide);
     }
 
-    private RoundDetails pickAndBuildRandomPictures(final Configuration config,
-                                                    final int numberOfImagesToDisplayPerRound, final Random random,
-                                                    final int winnerImageIndexAmongDisplayedImages) {
+    RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final Random random,
+                                            final int winnerImageIndexAmongDisplayedImages) {
 
-        final File imagesDirectory = locateImagesDirectory(config);
+        Configuration config = gameContext.getConfiguration();
+
+        int filesCount;
+        String directoryName;
+        File[] imagesFolders = new File[1];
+        Set<String> resourcesFolders = Collections.emptySet();
+
+        if (this.gameType == CUSTOMIZED) {
+            File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
+            directoryName = imagesDirectory.getPath();
+            imagesFolders = imagesDirectory.listFiles();
+            filesCount = imagesFolders == null ? 0 : imagesFolders.length;
+        } else {
+            String imagesDirectory = "data/" + this.gameType.getResourcesDirectoryName() + "/images/";
+            directoryName = imagesDirectory;
+            resourcesFolders = ResourceFileManager.getResourceFolders(imagesDirectory);
+            filesCount = resourcesFolders.size();
+        }
 
         final String language = config.getLanguage();
 
-        final File[] imagesFolders = imagesDirectory.listFiles();
-
-        final int filesCount = imagesFolders == null ? 0 : imagesFolders.length;
-
         if (filesCount == 0) {
-            log.warn("No image found in Directory " + imagesDirectory);
+            log.warn("No images found in Directory " + directoryName);
             error(language);
             return null;
         }
@@ -264,23 +259,21 @@ public class WhereIsIt implements GameLifeCycle {
             int index = ((randomFolderIndex + step) % filesCount) + 1;
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
-                if (i == winnerImageIndexAmongDisplayedImages){
-                    index = ( index + 1 ) %filesCount;
+                if (i == winnerImageIndexAmongDisplayedImages) {
+                    index = (index + 1) % filesCount;
                 } else {
-                 index = ((randomFolderIndex + step) % filesCount) + 1;
+                    index = ((randomFolderIndex + step) % filesCount) + 1;
                 }
 
-                final File folder = imagesFolders[(index) % filesCount];
+                String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
+                String[] bits = folder.split("\\\\");
+                String folderName = bits[bits.length - 1];
 
-                if (!folder.isDirectory())
-                    continue;
+                Set<String> files = ResourceFileManager.getResourcePaths(folder);
 
-                // final File[] files = folder.listFiles();
-                final File[] files = getFiles(folder);
+                final int numFile = random.nextInt(files.size());
 
-                final int numFile = random.nextInt(files.length);
-
-                final File randomImageFile = files[numFile];
+                String randomImageFile = (String) files.toArray()[numFile];
 
                 if (winnerImageIndexAmongDisplayedImages == i) {
 
@@ -290,7 +283,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                     question = "Find the Odd one Out";
 
-                    pictograms = getPictogramms(imagesFolders[(index) % filesCount].getName());
+                    pictograms = getPictogramms(folderName);
 
                 }
 
@@ -308,7 +301,7 @@ public class WhereIsIt implements GameLifeCycle {
                 }
             }
 
-        } else {
+        } else if (this.gameType == CUSTOMIZED) {
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
                 final int index = (randomFolderIndex + step * i) % filesCount;
@@ -318,7 +311,6 @@ public class WhereIsIt implements GameLifeCycle {
                 if (!folder.isDirectory())
                     continue;
 
-                // final File[] files = folder.listFiles();
                 final File[] files = getFiles(folder);
 
                 final int numFile = random.nextInt(files.length);
@@ -327,11 +319,51 @@ public class WhereIsIt implements GameLifeCycle {
 
                 if (winnerImageIndexAmongDisplayedImages == i) {
 
-                    questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
+                    questionSoundPath = getPathSound(folder.getName(), language);
 
-                    question = getQuestionText(imagesFolders[(index) % filesCount].getName(), language);
+                    question = getQuestionText(folder.getName(), language);
 
-                    pictograms = getPictogramms(imagesFolders[(index) % filesCount].getName());
+                    pictograms = getPictogramms(folder.getName());
+
+                }
+
+                // The image file needs 'file:' prepended as this will get images from a local source, not resources.
+                PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
+                    winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
+
+                pictureCardList.add(pictureCard);
+
+
+                if ((i + 1) % nbColumns != 0)
+                    posX++;
+                else {
+                    posY++;
+                    posX = 0;
+                }
+            }
+        } else {
+            for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
+
+                final int index = (randomFolderIndex + step * i) % filesCount;
+
+                String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
+                String[] bits = folder.split("\\\\");
+                String folderName = bits[bits.length - 1];
+
+                Set<String> files = ResourceFileManager.getResourcePaths(folder);
+
+                final int numFile = random.nextInt(files.size());
+
+                String randomImageFile = (String) files.toArray()[numFile];
+
+                if (winnerImageIndexAmongDisplayedImages == i) {
+
+                    questionSoundPath = getPathSound(folderName, language);
+
+                    question = getQuestionText(folderName, language);
+
+                    pictograms = getPictogramms(folderName);
 
                 }
 
@@ -374,26 +406,6 @@ public class WhereIsIt implements GameLifeCycle {
         error.setY(root.getHeight() / 2.);
         error.setId("item");
         gameContext.getChildren().addAll(error);
-    }
-
-    private File locateImagesDirectory(Configuration config) {
-
-        File result;
-
-        if (this.gameType == CUSTOMIZED) {
-
-            result = new File(config.getWhereIsItDir() + "/images/");
-        } else {
-
-            result = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(
-                "data/" + this.gameType.getResourcesDirectoryName() + "/images/");
-
-            if (result == null) {
-                result = ImageDirectoryLocator.locateImagesDirectoryInExplodedClassPath(
-                    "data/" + this.gameType.getResourcesDirectoryName() + "/images/");
-            }
-        }
-        return result;
     }
 
     private String getPathSound(final String folder, String language) {
@@ -455,19 +467,16 @@ public class WhereIsIt implements GameLifeCycle {
 
             final Configuration config = gameContext.getConfiguration();
 
-            File F = new File(config.getWhereIsItDir() + "questions.csv");
+            File F = new File(config.getWhereIsItDir() + "/questions.csv");
 
             Multilinguism localMultilinguism = Multilinguism.getForResource(F.toString());
 
-            String traduction = localMultilinguism.getTrad(folder, language);
-
-            return traduction;
+            return localMultilinguism.getTrad(folder, language);
         }
 
         Multilinguism localMultilinguism = Multilinguism.getForResource(gameType.getLanguageResourceLocation());
 
-        String traduction = localMultilinguism.getTrad(folder, language);
-        return traduction;
+        return localMultilinguism.getTrad(folder, language);
     }
 
     private List<Image> getPictogramms(final String folder) {
@@ -481,9 +490,9 @@ public class WhereIsIt implements GameLifeCycle {
 
         final Configuration config = gameContext.getConfiguration();
 
-        File F = new File(config.getWhereIsItDir() + "questions.csv");
+        File questionFile = new File(config.getWhereIsItDir(), "questions.csv");
 
-        Multilinguism localMultilinguism = Multilinguism.getForResource(F.toString());
+        Multilinguism localMultilinguism = Multilinguism.getForResource(questionFile.toString());
 
         String traduction = localMultilinguism.getTrad(folder, language);
 
@@ -491,22 +500,19 @@ public class WhereIsIt implements GameLifeCycle {
 
         StringTokenizer st = new StringTokenizer(traduction, ";");
 
-        String token;
-
-        List<Image> L = new ArrayList<>(20);
+        List<Image> imageList = new ArrayList<>(20);
 
         while (st.hasMoreTokens()) {
-
-            token = config.getWhereIsItDir() + "pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
+            String token = config.getWhereIsItDir() + "/pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
             log.debug("token \"{}\"", token);
-            File Ftoken = new File(token);
-            log.debug("Exists {}", Ftoken.exists());
-            if (Ftoken.exists()) {
-                L.add(new Image(Ftoken.toURI().toString(),500,500,true,false));
+            File tokenFile = new File(token);
+            log.debug("Exists {}", tokenFile.exists());
+            if (tokenFile.exists()) {
+                imageList.add(new Image(tokenFile.toURI().toString(), 500, 500, true, false));
             }
         }
 
-        log.debug("L {}", L);
-        return L;
+        log.debug("imageList: {}", imageList);
+        return imageList;
     }
 }

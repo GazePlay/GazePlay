@@ -16,3 +16,4 @@ gazeplay.log.*
 
 .gradle/
 build
+out
