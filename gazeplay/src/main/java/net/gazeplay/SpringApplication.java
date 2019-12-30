@@ -1,8 +1,6 @@
 package net.gazeplay;
 
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -18,16 +16,6 @@ public class SpringApplication {
     @Bean
     public GamesLocator gamesLocator() {
         return new CachingGamesLocator(new CatalogBasedGamesLocator());
-    }
-
-    @Bean
-    public GazeDeviceManager gazeDeviceManager(GazeDeviceManagerFactory gazeDeviceManagerFactory) {
-        return gazeDeviceManagerFactory.createNewGazeListener();
-    }
-
-    @Bean
-    public GazeDeviceManagerFactory gazeDeviceManagerFactory() {
-        return new GazeDeviceManagerFactory();
     }
 
     @Bean

@@ -58,7 +58,6 @@ public class PositionPollerRunnable implements Runnable {
         final double positionY = yRatio * screenDimension.getHeight();
 
         Point2D point = new Point2D(positionX, positionY);
-        log.info("point = {}", point);
         Platform.runLater(() -> tobiiGazeDeviceManager.onGazeUpdate(point));
     }
 
