@@ -20,17 +20,6 @@ dependencies {
     runtime project(':gazeplay-games')
 }
 
-//if (gradle.startParameter.getTaskNames().contains('packageApp')) {
-//    sourceSets {
-//        main {
-//            resources {
-//                include 'data/common/images/gazeplayicon.png'
-//                include 'data/multilinguism/*'
-//            }
-//        }
-//    }
-//}
-
 jar {
     manifest {
         attributes(

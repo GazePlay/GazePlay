@@ -1,14 +1,14 @@
 {
-  "background":"background.png",
-  "elements":[
+  "background": "background.png",
+  "elements": [
     {
-      "image":"parrot.png",
-      "scale":0.15,
-      "coords":{
-        "x":620,
-        "y":200
+      "image": "parrot.png",
+      "scale": 0.15,
+      "coords": {
+        "x": 620,
+        "y": 200
       },
-      "sounds":[
+      "sounds": [
         "parrot.wav",
         "parrot2.wav",
         "parrot3.wav",
@@ -16,62 +16,62 @@
       ]
     },
     {
-      "image":"snake.png",
-      "scale":0.15,
-      "coords":{
-        "x":250,
-        "y":750
+      "image": "snake.png",
+      "scale": 0.15,
+      "coords": {
+        "x": 250,
+        "y": 750
       },
-      "sounds":[
+      "sounds": [
         "snake.wav",
         "snake2.wav"
       ]
     },
     {
-      "image":"monkey.png",
-      "scale":0.3,
-      "coords":{
-        "x":500,
-        "y":650
+      "image": "monkey.png",
+      "scale": 0.3,
+      "coords": {
+        "x": 500,
+        "y": 650
       },
-      "sounds":[
+      "sounds": [
         "monkey.wav"
       ]
     },
     {
-      "image":"jaguar.png",
-      "scale":0.4,
-      "coords":{
-        "x":1200,
-        "y":720
+      "image": "jaguar.png",
+      "scale": 0.4,
+      "coords": {
+        "x": 1200,
+        "y": 720
       },
-      "sounds":[
+      "sounds": [
         "jaguar.wav",
         "jaguar2.wav",
         "jaguar3.wav"
       ]
     },
     {
-      "image":"elephant.png",
-      "scale":0.4,
-      "coords":{
-        "x":820,
-        "y":450
+      "image": "elephant.png",
+      "scale": 0.4,
+      "coords": {
+        "x": 820,
+        "y": 450
       },
-      "sounds":[
+      "sounds": [
         "elephant.wav",
         "elephant2.wav",
         "elephant3.wav"
       ]
     },
     {
-      "image":"frog.png",
-      "scale":0.3,
-      "coords":{
-        "x":750,
-        "y":700
+      "image": "frog.png",
+      "scale": 0.3,
+      "coords": {
+        "x": 750,
+        "y": 700
       },
-      "sounds":[
+      "sounds": [
         "frog.wav",
         "frog2.wav"
       ]
