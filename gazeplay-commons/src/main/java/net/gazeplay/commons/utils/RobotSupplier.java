@@ -5,6 +5,10 @@ import java.util.function.Supplier;
 
 public class RobotSupplier implements Supplier<Robot> {
 
+    public RobotSupplier() {
+        System.setProperty("java.awt.headless", "false");
+    }
+
     @Override
     public Robot get() {
         try {
