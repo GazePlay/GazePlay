@@ -30,25 +30,3 @@ jar {
         )
     }
 }
-
-task generateGamesCatalog() {
-    def catalogPath = "../gazeplay/src/main/resources/games-catalog.txt"
-    delete catalogPath
-
-    def sourceSet = project.sourceSets.findByName('main').java
-    def packages = sourceSet
-            .filter { it.path.endsWith('.java') }
-            .filter { it.path.contains('SpecSource') }
-            .collect {
-                it.path
-                    .substring(sourceSet.srcDirs[0].path.length() + 1)
-                    .replace('/', '.')
-                    .replace('\\', '.')
-                    .replace('.java', '')
-            }
-            .unique()
-
-    def file = new File(projectDir, catalogPath)
-
-    packages.each { file.append(it + '\n') }
-}
