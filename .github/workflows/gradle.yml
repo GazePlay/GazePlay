@@ -16,6 +16,6 @@ jobs:
     - name: Set up xvfb for non headless tests
       run: sudo apt-get install xvfb
     - name: Build with Gradle (no test)
-      run: ./gradlew build --stacktrace --info -x test
+      run: ./gradlew --stacktrace --info build -x test
     - name: Run tests with Gradle
-      run: xvfb-run --auto-servernum ./gradlew test
+      run: xvfb-run --auto-servernum ./gradlew --stacktrace --info test
