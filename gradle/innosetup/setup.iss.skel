@@ -27,7 +27,7 @@ AppUpdatesURL=https://github.com/GazePlay/GazePlay/releases
 
 DefaultDirName={pf}\\GazePlay
 DefaultGroupName=GazePlay
-LicenseFile=..\\license\\dependency-license.html       
+LicenseFile=licence.txt
 
 OutputBaseFilename=setup
 Compression=lzma
@@ -37,14 +37,14 @@ SolidCompression=yes
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\\bin\\gazeplay-windows.bat"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\\lib\\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\\license\\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\\${unpackedDirectory}\\bin\\gazeplay-windows.bat"; DestDir: "{app}\\bin"; Flags: ignoreversion
+Source: "..\\${unpackedDirectory}\\lib\\*"; DestDir: "{app}\\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\\${unpackedDirectory}\\license\\*"; DestDir: "{app}\\license"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"
-Name: "{commondesktop}\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; Tasks: desktopicon
+Name: "{group}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"
+Name: "{commondesktop}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\\bin\\gazeplay-windows.bat"; Description: "{cm:LaunchProgram,GazePlay}"; Flags: shellexec postinstall skipifsilent
