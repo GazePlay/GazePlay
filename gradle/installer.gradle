@@ -23,6 +23,11 @@ task generateInstaller(dependsOn: ['unzipDistribution']) {
             into(innoSetupDir)
         }
 
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.ico")
+            into(innoSetupDir)
+        }
+
         exec {
             workingDir rootDir
             commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setup.iss"

@@ -37,14 +37,16 @@ SolidCompression=yes
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
+Source: "gazeplayicon.ico"; DestDir: "{app}\\bin"; Flags: ignoreversion
 Source: "..\\${unpackedDirectory}\\bin\\gazeplay-windows.bat"; DestDir: "{app}\\bin"; Flags: ignoreversion
 Source: "..\\${unpackedDirectory}\\lib\\*"; DestDir: "{app}\\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\\${unpackedDirectory}\\license\\*"; DestDir: "{app}\\license"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"
-Name: "{commondesktop}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; Tasks: desktopicon
-
+Name: "{group}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; IconFilename: "{app}\\bin\\gazeplayicon.ico"
+Name: "{group}\\Uninstall GazePlay"; Filename: "{uninstallexe}"
+Name: "{commondesktop}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; Tasks: desktopicon; IconFilename: "{app}\\bin\\gazeplayicon.ico"
+p
 [Run]
 Filename: "{app}\\bin\\gazeplay-windows.bat"; Description: "{cm:LaunchProgram,GazePlay}"; Flags: shellexec postinstall skipifsilent
