@@ -1,0 +1,50 @@
+; GazePlay Inno Setup Skeleton Script
+;
+; PLEASE NOTE:
+;
+; 1. This script is a SKELETON and is meant to be parsed by the Gradle 
+;    task "innosetup" before handing it to the Inno Setup compiler (ISCC)
+;
+; 2. All VARIABLES with a dollar sign and curly brackets are replaced
+;    by Gradle, e.g. "applicationVersion" below
+;
+; 3. The script is COPIED to build/innosetup before its run,
+;    so all relative paths refer to this path!
+;
+; 4. All BACKSLASHES must be escaped 
+;
+
+
+[Setup]
+AppId=GazePlay
+AppName=GazePlay
+AppVersion=${applicationVersion}
+AppVerName=GazePlay ${applicationVersion}
+AppPublisher=Univ. Grenoble Alpes - LIG - GETALP
+AppPublisherURL=https://github.com/GazePlay/GazePlay
+AppSupportURL=https://github.com/GazePlay/GazePlay/issues
+AppUpdatesURL=https://github.com/GazePlay/GazePlay/releases
+
+DefaultDirName={pf}\\GazePlay
+DefaultGroupName=GazePlay
+LicenseFile=..\\license\\dependency-license.html       
+
+OutputBaseFilename=setup
+Compression=lzma
+SolidCompression=yes
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+
+[Files]
+Source: "..\\bin\\gazeplay-windows.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\\lib\\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\\license\\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+
+[Icons]
+Name: "{group}\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"
+Name: "{commondesktop}\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; Tasks: desktopicon
+
+[Run]
+Filename: "{app}\\bin\\gazeplay-windows.bat"; Description: "{cm:LaunchProgram,GazePlay}"; Flags: shellexec postinstall skipifsilent
