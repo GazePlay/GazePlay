@@ -47,6 +47,6 @@ Source: "..\\${unpackedDirectory}\\license\\*"; DestDir: "{app}\\license"; Flags
 Name: "{group}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; IconFilename: "{app}\\bin\\gazeplayicon.ico"
 Name: "{group}\\Uninstall GazePlay"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; Tasks: desktopicon; IconFilename: "{app}\\bin\\gazeplayicon.ico"
-p
+
 [Run]
 Filename: "{app}\\bin\\gazeplay-windows.bat"; Description: "{cm:LaunchProgram,GazePlay}"; Flags: shellexec postinstall skipifsilent
