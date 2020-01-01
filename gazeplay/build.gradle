@@ -16,7 +16,7 @@ dependencies {
     runtime 'org.slf4j:log4j-over-slf4j:1.7.25'
 
     compile "info.picocli:picocli-spring-boot-starter:4.0.4"
-    
+
     runtime project(':gazeplay-games')
 }
 
@@ -31,5 +31,32 @@ jar {
                 "JavaFX-Version": javafxVersion,
                 "Built-By": System.properties['user.name']
         )
+    }
+}
+
+def generatedResources = "${buildDir}/generated-resources/main"
+
+sourceSets.main.output.dir(generatedResources, builtBy: 'generateGamesCatalog')
+
+task generateGamesCatalog {
+    outputs.dir generatedResources
+
+    doLast {
+        def sourceSet = project(':gazeplay-games').sourceSets.findByName('main').java
+        def packages = sourceSet
+                .filter { it.path.endsWith('.java') }
+                .filter { it.path.contains('SpecSource') }
+                .collect {
+                    it.path
+                            .substring(sourceSet.srcDirs[0].path.length() + 1)
+                            .replace('/', '.')
+                            .replace('\\', '.')
+                            .replace('.java', '')
+                }
+                .unique()
+
+        def file = new File(generatedResources, "games-catalog.txt")
+
+        packages.each { file.append(it + '\n') }
     }
 }
