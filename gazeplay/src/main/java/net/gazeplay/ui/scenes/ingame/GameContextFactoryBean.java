@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
@@ -77,7 +77,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
     private Translator translator;
 
     @Autowired
-    private GazeDeviceManager gazeDeviceManager;
+    private GazeDeviceManagerFactory gazeDeviceManagerFactory;
 
     private boolean menuOpen = false;
 
@@ -181,7 +181,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         root.getChildren().add(gamingRoot);
         root.getChildren().add(configPane);
 
-        return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gazeDeviceManager, configPane);
+        return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gazeDeviceManagerFactory.get(), configPane);
     }
 
     private void buttonTransparentHandler(Button bt) {
