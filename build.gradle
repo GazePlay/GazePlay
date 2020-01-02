@@ -102,6 +102,7 @@ subprojects {
 }
 
 apply from: "${rootDir}/gradle/package.gradle"
+apply from: "${rootDir}/gradle/installer.gradle"
 apply from: "${rootDir}/gazeplay-dist/build.gradle"
 
 dependencies {
