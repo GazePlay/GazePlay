@@ -1,6 +1,6 @@
 GAZEPLAY Copyright (C) 2016-2019 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
 
-Version : ${project.version} (${build.date})
+Version : ${version} (${date})
 
 contact : didier.schwab@univ-grenoble-alpes.fr
 
@@ -12,7 +12,7 @@ dont les partenaires académiques sont l'Université Grenoble Alpes, le CNRS, Gr
 Ce projet a été initié par Didier Schwab qui a été rejoint par de nombreuses personnes. Le dépôt
 github du projet peut permettre de constater leur contribution directe.
 
-https://github.com/schwabdidier/GazePlay
+https://github.com/GazePlay/GazePlay
 
 Cette présente page a également pour objectif de rassembler les contribution indirectes au cours
 de rencontrer plus ou moins informelles.

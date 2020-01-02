@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
@@ -73,10 +72,10 @@ public class Memory implements GameLifeCycle {
 
         if (gameType == MemoryGameType.LETTERS) {
 
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "data/common/letters");
         } else if (gameType == MemoryGameType.NUMBERS) {
 
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers");
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "data/common/numbers");
         } else
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
                     Utils.getImagesSubDirectory("default"));
