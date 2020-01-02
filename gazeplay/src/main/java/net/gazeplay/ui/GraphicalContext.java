@@ -39,7 +39,7 @@ public abstract class GraphicalContext<T extends Parent> {
         // Make sure we are the root of the scene
         scene.setRoot(root);
 
-        musicControl.updateMusicControler();
+        musicControl.updateMusicController();
 
         log.debug("Finished setup stage with the game scene");
     }
