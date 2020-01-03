@@ -379,9 +379,6 @@ public class Race extends Parent implements GameLifeCycle {
         t.t.stop();
 
         String cst;
-        // if (gameType.equals("biboule")) {
-        // cst = date + "\n\t" + "Score:" + score;
-        // } else {// equals robot
         cst = "" + ++score;
 
         text.setText(cst);

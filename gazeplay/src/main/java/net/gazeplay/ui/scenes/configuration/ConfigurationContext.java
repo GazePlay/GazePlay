@@ -661,7 +661,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
 
             configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
-            configuration.saveConfigIgnoringExceptions();
         });
 
         pane.getChildren().add(buttonLoad);
@@ -704,8 +703,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 LanguagesItem.setOnAction(eventMenuLanguages -> {
 
                     configuration.getLanguageProperty().setValue(language.getCode());
-
-                    configuration.saveConfigIgnoringExceptions();
 
                     configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
 
