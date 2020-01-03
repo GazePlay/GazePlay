@@ -88,7 +88,7 @@ public class GameMenuController {
             if (!musicManager.getIsCustomMusicSet().getValue() || musicManager.getPlaylist().isEmpty()) {
                 musicManager.emptyPlaylist();
                 musicManager.playMusicAlone(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
-                gameContext.getMusicControl().updateMusicControler();
+                gameContext.getMusicControl().updateMusicController();
             }
         }
 

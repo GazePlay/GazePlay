@@ -12,6 +12,12 @@ import java.util.Map;
 @Slf4j
 public class I18N {
 
+    private final Map<Entry, String> translations;
+
+    public I18N(String resourcePath) {
+        this.translations = loadFromFile(resourcePath);
+    }
+
     @Data
     @AllArgsConstructor
     protected static class Entry {
@@ -21,66 +27,51 @@ public class I18N {
 
     protected static Map<Entry, String> loadFromFile(String resourceLocation) {
         final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-        InputStream is;
 
-        try {
+        final InputStream is;
+
+        if (new File(resourceLocation).isFile()) {
+            try {
+                is = new FileInputStream(new File(resourceLocation));
+            } catch (IOException ie) {
+                log.error("Exception while reading file {}", resourceLocation, ie);
+                throw new RuntimeException(ie);
+            }
+        } else {
             is = systemClassLoader.getResourceAsStream(resourceLocation);
+        }
 
-            if (is == null) {
-                // throw new FileNotFoundException("Resource was not found : " + resourceLocation);
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
 
-                File F = new File(resourceLocation);
-                is = new FileInputStream(F);
-            }
+            Map<Entry, String> translations = new HashMap<>(1000);
 
-            if (is == null) {
-                throw new FileNotFoundException("Resource was not found : " + resourceLocation);
-            }
+            String line;
 
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+            boolean firstline = true;
 
-                Map<Entry, String> traductions = new HashMap<>(1000);
+            String[] languages = null, data;
 
-                String ligne;
-
-                boolean firstline = true;
-
-                String[] languages = null, data;
-
-                while ((ligne = br.readLine()) != null) {
-                    if (firstline) {
-                        // Retourner la ligne dans un tableau
-                        languages = ligne.split(",");
-                        firstline = false;
-                    } else {
-                        data = ligne.split(",");
-                        String key = data[0];
-                        for (int i = 1; i < data.length; i++) {
-
-                            // log.info(key + ", " + languages[i] + ", " + data[i]);
-                            traductions.put(new Entry(key, languages[i]), data[i]);
-                        }
+            while ((line = br.readLine()) != null) {
+                if (firstline) {
+                    languages = line.split(",");
+                    firstline = false;
+                } else {
+                    data = line.split(",");
+                    String key = data[0].strip();
+                    for (int i = 1; i < data.length; i++) {
+                        translations.put(new Entry(key, languages[i].strip()), data[i].strip());
                     }
                 }
-                return traductions;
             }
-        } catch (IOException e) {
+            return translations;
+
+        } catch (Exception e) {
             log.error("Exception while loading resource {}", resourceLocation, e);
             throw new RuntimeException(e);
         }
     }
 
-    private final String resourcePath;
-
-    private final Map<Entry, String> traductions;
-
-    public I18N(String resourcePath) {
-        this.resourcePath = resourcePath;
-        this.traductions = loadFromFile(resourcePath);
-    }
-
     public String translate(String key, String language) {
-        return traductions.get(new Entry(key, language));
+        return translations.get(new Entry(key, language));
     }
-
 }

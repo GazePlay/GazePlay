@@ -268,7 +268,6 @@ public class GameMenuFactory {
                     config.getFavoriteGamesProperty().add(gameSummary.getNameCode());
                     favGamesImageView.setEffect(null);
                 }
-                config.saveConfigIgnoringExceptions();
             }
         };
         favIconContainer.addEventFilter(MOUSE_CLICKED, favoriteGameSwitchEventHandler);

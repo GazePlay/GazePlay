@@ -34,7 +34,7 @@ import static net.gazeplay.ui.QuickControl.*;
 @RequiredArgsConstructor
 public class MusicControl {
 
-    private static final String RESOURCES_PATH = "data" + "/" + "common";
+    private static final String RESOURCES_PATH = "data/common";
 
     private static final String IMAGES_PATH = RESOURCES_PATH + "/" + "images";
 
@@ -75,7 +75,7 @@ public class MusicControl {
     private static final String MUTE_ICON = IMAGES_PATH + "/" + "mute.png";
 
     /**
-     * Field used to know if the background music controler has already been built once. This is used to get audio and
+     * Field used to know if the background music controller has already been built once. This is used to get audio and
      * play it at the beginning.
      */
     private static AtomicBoolean autoplayExecuted = new AtomicBoolean(false);
@@ -84,7 +84,7 @@ public class MusicControl {
     private final GazePlay gazePlay;
 
     /**
-     * Fields with listeners from music controler. When need those because when the volume controle is not on stage
+     * Fields with listeners from music controller. When need those because when the volume control is not on stage
      * (i.e. when configuration is shown), it doesn't receive any event from listener (no idea why). Then when it comes
      * back on stage, it needs to be updated.
      */
@@ -96,7 +96,7 @@ public class MusicControl {
 
     private double beforeMutedValue;
 
-    public void updateMusicControler() {
+    public void updateMusicController() {
         setMusicTitle(musicName);
         if (playButton != null && pauseButton != null) {
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
@@ -122,7 +122,7 @@ public class MusicControl {
 
         backgroundMusicManager.getIsMusicChanging().addListener((observable, oldValue, newValue) -> {
 
-            // If we receive a change event and the new value is fales, then it means
+            // If we receive a change event and the new value is false, then it means
             // that the music has been changed (see changingProperty from Slider)
             if (!newValue) {
                 setMusicTitle(musicName);
@@ -283,15 +283,15 @@ public class MusicControl {
 
     private Slider createMediaVolumeSlider(Configuration config) {
         Slider slider = QuickControl.getInstance().createVolumeSlider();
-        slider.setValue(config.getMusicVolume());
-        config.getMusicVolumeProperty().bindBidirectional(slider.valueProperty());
+        slider.setValue(config.getMusicVolumeProperty().getValue());
+        slider.valueProperty().bindBidirectional(config.getMusicVolumeProperty());
         return slider;
     }
 
     private Slider createEffectsVolumeSlider(Configuration config) {
         Slider slider = QuickControl.getInstance().createVolumeSlider();
-        slider.setValue(config.getEffectsVolume());
-        config.getEffectsVolumeProperty().bindBidirectional(slider.valueProperty());
+        slider.setValue(config.getEffectsVolumeProperty().getValue());
+        slider.valueProperty().bindBidirectional(config.getEffectsVolumeProperty());
         return slider;
     }
 

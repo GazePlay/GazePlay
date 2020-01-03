@@ -1,6 +1,6 @@
 package net.gazeplay.commons.configuration;
 
-import com.sun.javafx.collections.ObservableSetWrapper;
+import com.google.common.collect.Sets;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
@@ -8,14 +8,16 @@ import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.observableproperties.*;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
@@ -36,7 +38,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_HEATMAP_COLORS = "HEATMAP_COLORS";
     private static final String PROPERTY_NAME_AREA_OF_INTEREST_DISABLED = "AREA_OF_INTEREST_DISABLED";
     private static final String PROPERTY_NAME_CONVEX_HULL_DISABLED = "CONVEX_HULL_DISABLED";
-    private static final String PROPERTY_NAME_VIDEO_RECORDING_DISABLED = "VIDEO_RECORDING_DISABLED";
+    private static final String PROPERTY_NAME_VIDEO_RECORDING_ENABLED = "VIDEO_RECORDING_ENABLED";
     private static final String PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED = "FIXATIONSEQUENCE_DISABLED";
     private static final String PROPERTY_NAME_MUSIC_VOLUME = "MUSIC_VOLUME";
     private static final String PROPERTY_NAME_MUSIC_FOLDER = "MUSIC_FOLDER";
@@ -71,7 +73,7 @@ public class Configuration {
     public static final String DEFAULT_VALUE_HEATMAP_COLORS = "0000FF,00FF00,FFFF00,FF0000";
     private static final boolean DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED = false;
     private static final boolean DEFAULT_VALUE_CONVEX_HULL_DISABLED = false;
-    private static final boolean DEFAULT_VALUE_VIDEO_RECORDING = false;
+    private static final boolean DEFAULT_VALUE_VIDEO_RECORDING_ENABLED = false;
     private static final boolean DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED = false;
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25d;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
@@ -96,97 +98,97 @@ public class Configuration {
     private boolean mouseFree = false;
 
     @Getter
-    private final SimpleSetProperty<String> favoriteGamesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_FAVORITE_GAMES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
+    private final SetProperty<String> favoriteGamesProperty;
 
     @Getter
-    private final SimpleSetProperty<String> hiddenCategoriesProperty = new SimpleSetProperty<>(this, PROPERTY_NAME_HIDDEN_CATEGORIES, new ObservableSetWrapper<>(new LinkedHashSet<>()));
+    private final SetProperty<String> hiddenCategoriesProperty;
 
     @Getter
-    private final LongProperty latestNewsPopupShownTime = new SimpleLongProperty(this, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0);
+    private final LongProperty latestNewsPopupShownTime;
 
     @Getter
-    private final StringProperty quitKeyProperty = new SimpleStringProperty(this, PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString());
+    private final StringProperty quitKeyProperty;
 
     @Getter
-    private final BooleanProperty gazeMenuProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU);
+    private final BooleanProperty gazeMenuEnabledProperty;
 
     @Getter
-    private final StringProperty eyetrackerProperty = new SimpleStringProperty(this, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER);
+    private final StringProperty eyetrackerProperty;
 
     @Getter
-    private final StringProperty languageProperty = new SimpleStringProperty(this, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE);
+    private final StringProperty languageProperty;
 
     @Getter
-    private final StringProperty filedirProperty = new SimpleStringProperty(this, PROPERTY_NAME_FILEDIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath());
+    private final StringProperty filedirProperty;
 
     @Getter
-    private final IntegerProperty fixationlengthProperty = new SimpleIntegerProperty(this, PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH);
+    private final IntegerProperty fixationlengthProperty;
 
     @Getter
-    private final StringProperty cssfileProperty = new SimpleStringProperty(this, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE);
+    private final StringProperty cssfileProperty;
 
     @Getter
-    private final StringProperty whereIsItDirProperty = new SimpleStringProperty(this, PROPERTY_NAME_WHEREISIT_DIR, DEFAULT_VALUE_WHEREISIT_DIR);
+    private final StringProperty whereIsItDirProperty;
 
     @Getter
-    private final LongProperty questionLengthProperty = new SimpleLongProperty(this, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH);
+    private final LongProperty questionLengthProperty;
 
     @Getter
-    private final BooleanProperty enableRewardSoundProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND);
+    private final BooleanProperty enableRewardSoundProperty;
 
     @Getter
-    private final StringProperty menuButtonsOrientationProperty = new SimpleStringProperty(this, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION);
+    private final StringProperty menuButtonsOrientationProperty;
 
     @Getter
-    private final BooleanProperty heatMapDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED);
+    private final BooleanProperty heatMapDisabledProperty;
 
     @Getter
-    private final DoubleProperty heatMapOpacityProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY);;
+    private final DoubleProperty heatMapOpacityProperty;
 
     @Getter
-    private final StringProperty heatMapColorsProperty = new SimpleStringProperty(this, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS);
+    private final StringProperty heatMapColorsProperty;
 
     @Getter
-    private final BooleanProperty areaOfInterestDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED);
+    private final BooleanProperty areaOfInterestDisabledProperty;
 
     @Getter
-    private final BooleanProperty convexHullDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED);
+    private final BooleanProperty convexHullDisabledProperty;
 
     @Getter
-    private final BooleanProperty videoRecordingDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_VIDEO_RECORDING_DISABLED, DEFAULT_VALUE_VIDEO_RECORDING);
+    private final BooleanProperty videoRecordingEnabledProperty;
 
     @Getter
-    private final BooleanProperty fixationSequenceDisabledProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED);
+    private final BooleanProperty fixationSequenceDisabledProperty;
 
     @Getter
-    private final BooleanProperty gazeMouseProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE);
+    private final BooleanProperty gazeMouseEnabledProperty;
 
     @Getter
-    private final BooleanProperty whiteBackgroundProperty = new SimpleBooleanProperty(this, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD);
+    private final BooleanProperty whiteBackgroundProperty;
 
     @Getter
-    private final DoubleProperty musicVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME);
+    private final DoubleProperty musicVolumeProperty;
 
     @Getter
-    private final StringProperty musicFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_MUSIC_FOLDER, DEFAULT_VALUE_MUSIC_FOLDER);
+    private final StringProperty musicFolderProperty;
 
     @Getter
-    private final DoubleProperty effectsVolumeProperty = new SimpleDoubleProperty(this, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME);
+    private final DoubleProperty effectsVolumeProperty;
 
     @Getter
-    private final DoubleProperty animationSpeedRatioProperty =  new SimpleDoubleProperty(this, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO);
+    private final DoubleProperty animationSpeedRatioProperty;
 
     @Getter
-    private final StringProperty videoFolderProperty = new SimpleStringProperty(this, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
+    private final StringProperty videoFolderProperty;
 
     @Getter
-    private final StringProperty userNameProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME);
+    private final StringProperty userNameProperty;
 
     @Getter
-    private final StringProperty userPictureProperty = new SimpleStringProperty(this, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE);
+    private final StringProperty userPictureProperty;
 
     @Getter
-    private final StringProperty colorsDefaultImageProperty = new SimpleStringProperty(this, PROPERTY_NAME_COLORS_DEFAULT_IMAGE, DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
+    private final StringProperty colorsDefaultImageProperty;
 
     private final File configFile;
 
@@ -194,8 +196,57 @@ public class Configuration {
 
     protected Configuration(File configFile, ApplicationConfig applicationConfig) {
         this.configFile = configFile;
-
         this.applicationConfig = applicationConfig;
+
+        PropertyChangeListener propertyChangeListener = evt -> saveConfigIgnoringExceptions();
+
+        languageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE, propertyChangeListener);
+
+        eyetrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
+
+        musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
+        effectsVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME, propertyChangeListener);
+
+        animationSpeedRatioProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO, propertyChangeListener);
+
+        heatMapOpacityProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY, propertyChangeListener);
+        heatMapColorsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS, propertyChangeListener);
+        heatMapDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED, propertyChangeListener);
+
+        musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
+        effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
+
+        enableRewardSoundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND, propertyChangeListener);
+
+        areaOfInterestDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED, propertyChangeListener);
+        convexHullDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED, propertyChangeListener);
+        videoRecordingEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_VIDEO_RECORDING_ENABLED, DEFAULT_VALUE_VIDEO_RECORDING_ENABLED, propertyChangeListener);
+        fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
+        gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
+        gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
+        whiteBackgroundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
+
+        menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
+        cssfileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
+        quitKeyProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString(), propertyChangeListener);
+
+        questionLengthProperty = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH, propertyChangeListener);
+        fixationlengthProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH, propertyChangeListener);
+
+        filedirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FILEDIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), propertyChangeListener);
+        musicFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_FOLDER, DEFAULT_VALUE_MUSIC_FOLDER, propertyChangeListener);
+        videoFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath(), propertyChangeListener);
+        userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
+        userPictureProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE, propertyChangeListener);
+        colorsDefaultImageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COLORS_DEFAULT_IMAGE, DEFAULT_VALUE_COLORS_DEFAULT_IMAGE, propertyChangeListener);
+
+        whereIsItDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_WHEREISIT_DIR, DEFAULT_VALUE_WHEREISIT_DIR, propertyChangeListener);
+
+        latestNewsPopupShownTime = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0, propertyChangeListener);
+
+        favoriteGamesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_FAVORITE_GAMES, Sets.newLinkedHashSet(), propertyChangeListener);
+        hiddenCategoriesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_HIDDEN_CATEGORIES, Sets.newLinkedHashSet(), propertyChangeListener);
+
         populateFromApplicationConfig(applicationConfig);
 
         InvalidationListener saveOnChange = evt -> {
@@ -210,7 +261,7 @@ public class Configuration {
     }
 
     private void saveConfig() throws IOException {
-        log.info("Saving Config ...");
+        log.info("Saving Config {} ...", configFile);
         persistConfig(applicationConfig);
         try (FileOutputStream fileOutputStream = new FileOutputStream(configFile)) {
             String fileComment = "Automatically generated by GazePlay";
@@ -219,8 +270,8 @@ public class Configuration {
     }
 
     /**
-     * when everything is using an ApplicationConfigBacked...Property, 
-     * there is not need to call this method anymore, 
+     * when everything is using an ApplicationConfigBacked...Property,
+     * there is not need to call this method anymore,
      * it should be called by the ApplicationConfigBacked...Property itself
      */
     @Deprecated
@@ -233,211 +284,11 @@ public class Configuration {
     }
 
     private void populateFromApplicationConfig(ApplicationConfig prop) {
-        String buffer;
-
-        quitKeyProperty.setValue(prop.getProperty(PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString()));
-
-        buffer = prop.getProperty(PROPERTY_NAME_EYETRACKER);
-        if (buffer != null) {
-            eyetrackerProperty.setValue(buffer);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_LANGUAGE);
-        if (buffer != null) {
-            languageProperty.setValue(buffer.toLowerCase());
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_FILEDIR);
-        if (buffer != null) {
-            filedirProperty.setValue(buffer);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_FIXATIONLENGTH);
-        if (buffer != null) {
-            try {
-                fixationlengthProperty.setValue(Integer.parseInt(buffer));
-            } catch (NumberFormatException e) {
-                log.warn("NumberFormatException while parsing value '{}' for property {}", buffer,
-                    PROPERTY_NAME_FIXATIONLENGTH);
-            }
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_CSSFILE);
-        if (buffer != null) {
-            cssfileProperty.setValue(buffer);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_WHEREISIT_DIR);
-        if (buffer != null) {
-            whereIsItDirProperty.setValue(buffer.toLowerCase());
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_QUESTION_LENGTH);
-        if (buffer != null) {
-            try {
-                questionLengthProperty.setValue(Long.parseLong(buffer));
-            } catch (NumberFormatException e) {
-                log.warn("NumberFormatException while parsing value '{}' for property {}", buffer,
-                    PROPERTY_NAME_QUESTION_LENGTH);
-            }
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND);
-        if (buffer != null) {
-            enableRewardSoundProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION);
-        if (buffer != null) {
-            menuButtonsOrientationProperty.setValue(buffer);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_DISABLED);
-        if (buffer != null) {
-            heatMapDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_HEATMAP_COLORS);
-        if (buffer != null) {
-            heatMapColorsProperty.setValue(buffer);
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED);
-        if (buffer != null) {
-            areaOfInterestDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED);
-        if (buffer != null) {
-            convexHullDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-        buffer = prop.getProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED);
-        if (buffer != null) {
-            videoRecordingDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED);
-        if (buffer != null) {
-            fixationSequenceDisabledProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_MUSIC_VOLUME);
-        if (buffer != null) {
-            musicVolumeProperty.setValue(Double.parseDouble(buffer));
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_MUSIC_FOLDER);
-        if (buffer != null) {
-            musicFolderProperty.setValue(buffer);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_VIDEO_FOLDER);
-        if (buffer != null) {
-            videoFolderProperty.setValue(buffer);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_EFFECTS_VOLUME);
-        if (buffer != null) {
-            try {
-                effectsVolumeProperty.setValue(Double.parseDouble(buffer));
-            } catch (NumberFormatException e) {
-                log.warn("Malformed property");
-            }
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_ANIMATION_SPEED_RATIO);
-        if (buffer != null) {
-            try {
-                animationSpeedRatioProperty.setValue(Double.parseDouble(buffer));
-            } catch (NumberFormatException e) {
-                log.warn("Malformed property");
-            }
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_GAZE_MENU);
-        if (buffer != null) {
-            gazeMenuProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_GAZE_MOUSE);
-        if (buffer != null) {
-            gazeMouseProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_WHITE_BCKGRD);
-        if (buffer != null) {
-            whiteBackgroundProperty.setValue(Boolean.parseBoolean(buffer));
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_USER_NAME);
-        if (buffer != null) {
-            userNameProperty.setValue(buffer);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_USER_PICTURE);
-        if (buffer != null) {
-            userPictureProperty.setValue(buffer);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_FAVORITE_GAMES);
-        if (buffer != null) {
-            Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
-            favoriteGamesProperty.get().addAll(values);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_HIDDEN_CATEGORIES);
-        if (buffer != null) {
-            Set<String> values = new HashSet<>(Arrays.asList(buffer.split(",")));
-            hiddenCategoriesProperty.get().addAll(values);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_COLORS_DEFAULT_IMAGE);
-        if (buffer != null) {
-            colorsDefaultImageProperty.setValue(buffer);
-        }
-
-        buffer = prop.getProperty(PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME);
-        if (buffer != null) {
-            try {
-                latestNewsPopupShownTime.setValue(Long.parseLong(buffer));
-            } catch (NumberFormatException e) {
-                log.warn("Malformed property");
-            }
-        }
     }
 
     private void persistConfig(ApplicationConfig applicationConfig) {
-        applicationConfig.setProperty(PROPERTY_NAME_EYETRACKER, eyetrackerProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_LANGUAGE, languageProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_QUIT_KEY, quitKeyProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_FILEDIR, filedirProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_FIXATIONLENGTH, Integer.toString(fixationlengthProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_CSSFILE, cssfileProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_WHEREISIT_DIR, whereIsItDirProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_QUESTION_LENGTH, Long.toString(questionLengthProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_ENABLE_REWARD_SOUND, Boolean.toString(enableRewardSoundProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, menuButtonsOrientationProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_DISABLED, Boolean.toString(heatMapDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_COLORS, heatMapColorsProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, Boolean.toString(areaOfInterestDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_CONVEX_HULL_DISABLED, Boolean.toString(convexHullDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_VIDEO_RECORDING_DISABLED, Boolean.toString(videoRecordingDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, Boolean.toString(fixationSequenceDisabledProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_MUSIC_FOLDER, musicFolderProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_VIDEO_FOLDER, videoFolderProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_WHITE_BCKGRD, Boolean.toString(whiteBackgroundProperty.getValue()));
-        applicationConfig.setProperty(PROPERTY_NAME_USER_NAME, userNameProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_USER_PICTURE, userPictureProperty.getValue());
-
-
-        applicationConfig.setProperty(PROPERTY_NAME_MUSIC_VOLUME, ""+musicVolumeProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_EFFECTS_VOLUME, ""+effectsVolumeProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_HEATMAP_OPACITY, ""+heatMapOpacityProperty.getValue());
-        applicationConfig.setProperty(PROPERTY_NAME_ANIMATION_SPEED_RATIO,""+animationSpeedRatioProperty.getValue());
-
-        applicationConfig.setProperty(PROPERTY_NAME_FAVORITE_GAMES, favoriteGamesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
-        applicationConfig.setProperty(PROPERTY_NAME_HIDDEN_CATEGORIES, hiddenCategoriesProperty.getValue().parallelStream().collect(Collectors.joining(",")));
-
-        applicationConfig.setProperty(PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, Long.toString(latestNewsPopupShownTime.getValue()));
-
         applicationConfig.setProperty(PROPERTY_NAME_COLORS_DEFAULT_IMAGE, colorsDefaultImageProperty.getValue());
+
     }
 
     public String getEyeTracker() {
@@ -501,24 +352,12 @@ public class Configuration {
         return colors;
     }
 
-    public Boolean isAreaOfInterestEnabled() {
-        return areaOfInterestDisabledProperty.getValue();
-    }
-
-    public Boolean isConvexHullEnabled() {
-        return convexHullDisabledProperty.getValue();
-    }
-
     public Boolean isVideoRecordingEnabled() {
-        return videoRecordingDisabledProperty.getValue();
+        return getVideoRecordingEnabledProperty().getValue();
     }
 
     public Boolean isFixationSequenceDisabled() {
         return fixationSequenceDisabledProperty.getValue();
-    }
-
-    public Double getMusicVolume() {
-        return musicVolumeProperty.getValue();
     }
 
     public String getMusicFolder() {
@@ -529,16 +368,12 @@ public class Configuration {
         return videoFolderProperty.getValue();
     }
 
-    public Double getEffectsVolume() {
-        return effectsVolumeProperty.getValue();
-    }
-
     public Boolean isGazeMenuEnable() {
-        return gazeMenuProperty.getValue();
+        return gazeMenuEnabledProperty.getValue();
     }
 
     public Boolean isGazeMouseEnable() {
-        return gazeMouseProperty.getValue();
+        return gazeMouseEnabledProperty.getValue();
     }
 
     public Boolean isBackgroundWhite() {
