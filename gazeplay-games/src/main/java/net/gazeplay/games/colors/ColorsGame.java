@@ -41,57 +41,73 @@ public class ColorsGame implements GameLifeCycle {
      * Distance in pixel of the current cursor or gaze position in x and y for the gaze indicator.
      */
     public static final double GAZE_INDICATOR_DISTANCE = 5;
+
     /**
      * On a [0, 1] scale, used to determine the threshold in the difference between two colors to consider that they are
      * equals.
      */
     private static final double COLOR_EQUALITY_THRESHOLD = 10d / 255d;
+
     /**
      * Distance in pixel between two gaze event to consider that the gaze is moving.
      */
+
     private static final double GAZE_MOVING_THRESHOLD = 25;
     /**
      * The game context provided.
      */
+
     @Getter
     private final IGameContext gameContext;
     /**
      * The root where to draw everything
      */
+
     private final Pane root;
     /**
      * Should we enableColorization.
      */
+
     @Getter
     private final BooleanProperty drawingEnable = new SimpleBooleanProperty(this, "isDrawingEnable", true);
+
     private final ColorsGamesStats stats;
+
     private final Translator translator;
+
     private final Deque<HorizontalZone> horiZones = new ArrayDeque<>();
+
     /**
      * The tool box object.
      */
     private ColorToolBox colorToolBox;
+
     /**
      * The gaze progress indicator to show time before colorization.
      */
     private AbstractGazeIndicator gazeProgressIndicator;
+
     /**
      * The pixel writer to into wich we modify pixels
      */
     private PixelWriter pixelWriter;
+
     /**
      * The pixel reader into wich we read pixels
      */
     private PixelReader pixelReader;
+
     /**
      * The image linked to the pixelReader and pixelWriter
      */
     @Getter
     private WritableImage writableImg;
+
     /**
      * The rectangle in which the writableImg is painted
      */
     private Rectangle rectangle;
+
     /**
      * The colorization event handler
      */

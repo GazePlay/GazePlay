@@ -27,17 +27,24 @@ public class CustomColorPicker extends Pane {
     public static final Color[] COLOR_LIST = {Color.BURLYWOOD, Color.DARKCYAN, Color.BLUEVIOLET, Color.BROWN,
         Color.CADETBLUE, Color.DARKGRAY, Color.DARKORANGE, Color.GOLD, Color.LIMEGREEN, Color.ROYALBLUE,
         Color.SIENNA, Color.YELLOWGREEN};
+
     public static final int NB_COLOR_PER_ROW = 5/* ((int) Math.sqrt(COLOR_LIST.length)) */;
+
     // Credits
     // <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
     // <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
     // href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0
     // BY</a></div>
     public static final String CLOSE_CURSTOM_PANEL_IMAGE_PATH = COLORS_IMAGES_PATH + "error.png";
+
     final GridPane colorGrid;
+
     private final ColorBox representingBox;
+
     private final AbstractGazeIndicator progressIndicator;
+
     private final Stage dialog;
+
     @Getter
     private ColorBox selectedColor;
 

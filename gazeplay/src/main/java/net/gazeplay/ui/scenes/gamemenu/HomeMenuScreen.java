@@ -129,41 +129,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     }
 
-    private static void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, Configuration config) {
-        Predicate<Node> gameCardPredicate = new GameCardVisiblePredicate(config);
-        List<Node> filteredList = completeGameCardsList.stream()
-            .filter(gameCardPredicate)
-            .collect(Collectors.toList());
-        //
-        choicePanel.getChildren().clear();
-        choicePanel.getChildren().addAll(filteredList);
-    }
-
-    private static CheckBox buildCategoryCheckBox(
-        GameCategories.Category category,
-        Configuration config,
-        Translator translator,
-        FlowPane choicePanel,
-        List<Node> gameCardsList
-    ) {
-        I18NText label = new I18NText(translator, category.getGameCategory());
-        CheckBox categoryCheckbox = new CheckBox(label.getText());
-        categoryCheckbox.setTextFill(Color.WHITE);
-
-        categoryCheckbox.setSelected(!config.getHiddenCategoriesProperty().contains(category.getGameCategory()));
-        categoryCheckbox.selectedProperty().addListener((o) -> {
-            if (categoryCheckbox.isSelected()) {
-                config.getHiddenCategoriesProperty().remove(category.getGameCategory());
-            } else {
-                config.getHiddenCategoriesProperty().add(category.getGameCategory());
-            }
-            filterGames(choicePanel, gameCardsList, config);
-            config.saveConfigIgnoringExceptions();
-
-        });
-        return categoryCheckbox;
-    }
-
     @Override
     public ObservableList<Node> getChildren() {
         return root.getChildren();
@@ -284,6 +249,16 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return gameCardsList;
     }
 
+    private static void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, Configuration config) {
+        Predicate<Node> gameCardPredicate = new GameCardVisiblePredicate(config);
+        List<Node> filteredList = completeGameCardsList.stream()
+            .filter(gameCardPredicate)
+            .collect(Collectors.toList());
+
+        choicePanel.getChildren().clear();
+        choicePanel.getChildren().addAll(filteredList);
+    }
+
     private HBox buildFilterByCategory(Configuration config, Translator translator) {
         List<CheckBox> allCheckBoxes = new ArrayList<>();
         for (GameCategories.Category category : GameCategories.Category.values()) {
@@ -313,6 +288,29 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton logoutButton = new CustomButton("data/common/images/logout.png");
         logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
         return logoutButton;
+    }
+
+    private static CheckBox buildCategoryCheckBox(
+        GameCategories.Category category,
+        Configuration config,
+        Translator translator,
+        FlowPane choicePanel,
+        List<Node> gameCardsList
+    ) {
+        I18NText label = new I18NText(translator, category.getGameCategory());
+        CheckBox categoryCheckbox = new CheckBox(label.getText());
+        categoryCheckbox.setTextFill(Color.WHITE);
+
+        categoryCheckbox.setSelected(!config.getHiddenCategoriesProperty().contains(category.getGameCategory()));
+        categoryCheckbox.selectedProperty().addListener((o) -> {
+            if (categoryCheckbox.isSelected()) {
+                config.getHiddenCategoriesProperty().remove(category.getGameCategory());
+            } else {
+                config.getHiddenCategoriesProperty().add(category.getGameCategory());
+            }
+            filterGames(choicePanel, gameCardsList, config);
+        });
+        return categoryCheckbox;
     }
 
     @AllArgsConstructor

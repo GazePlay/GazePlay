@@ -36,18 +36,29 @@ public class Bubble extends Parent implements GameLifeCycle {
     public static final String DIRECTION_BOTTOM = "toBottom";
     public static final String DIRECTION_LEFT = "toLeft";
     public static final String DIRECTION_RIGHT = "toRight";
+
     private static final int maxRadius = 70;
     private static final int minRadius = 30;
+
     private static final int maxTimeLength = 7;
     private static final int minTimeLength = 4;
+
     private static final int nbFragments = 10; // number of little circles after explosion
+
     private final IGameContext gameContext;
+
     private final BubbleType type;
+
     private final Stats stats;
+
     private final boolean image;
+
     private final ImageLibrary imageLibrary;
+
     private final List<Circle> fragments;
+
     private final EventHandler<Event> enterEvent;
+
     private final BubblesGameVariant direction;
 
     public Bubble(IGameContext gameContext, BubbleType type, Stats stats, boolean useBackgroundImage, BubblesGameVariant direction) {

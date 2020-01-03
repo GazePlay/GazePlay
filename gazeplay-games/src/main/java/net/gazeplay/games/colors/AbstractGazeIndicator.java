@@ -29,13 +29,19 @@ import java.util.concurrent.locks.ReentrantLock;
 public class AbstractGazeIndicator extends ProgressIndicator implements IGazeProgressIndicator {
 
     public static final long TIME_DISPLAYED_AFTER_FINISHED_MS = 1000;
+
     private final OnFinishIndicatorEvent onFinishHandler;
+    
     private final Map<Node, EventHandler> nodedToListenTo;
+
     @Getter
     @Setter
     private double duration;
+
     private Timeline animation;
+
     private EventHandler<ActionEvent> finishHandler;
+
     @Getter
     private boolean isStarted;
 

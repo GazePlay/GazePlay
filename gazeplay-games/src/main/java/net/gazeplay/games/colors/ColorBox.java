@@ -21,16 +21,20 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 public class ColorBox extends StackPane {
 
     public static final double COLOR_BOX_WIDTH_PX = 200;
-    public static final double COLOR_BOX_HEIGHT_REDUCTION_COEFF = 1.3;
+
     public static final double COLOR_BOX_PADDING = 5;
+
     private final ColorToolBox toolBox;
+
     private final ToggleButton button;
+
     private final Rectangle graphic;
+
     @Getter
     private Color color;
+
     @Setter
     private AbstractGazeIndicator progressIndicator;
-    // private final Circle graphic;
 
     public ColorBox(final IGameContext gameContext, final Color color, final Pane root, final ColorToolBox toolBox, final ToggleGroup group) {
         super();
@@ -40,11 +44,9 @@ public class ColorBox extends StackPane {
         progressIndicator = toolBox.getProgressIndicator();
 
         button = new ToggleButton();
-        //button.setToggleGroup(group);
         button.setPadding(new Insets(COLOR_BOX_PADDING, COLOR_BOX_PADDING, COLOR_BOX_PADDING, COLOR_BOX_PADDING));
 
         graphic = new Rectangle(COLOR_BOX_WIDTH_PX, computeHeight(), color);
-        // graphic = new Circle(COLOR_CIRCLE_RADIUS);
         button.setGraphic(graphic);
 
         gameContext.getGazeDeviceManager().addEventFilter(graphic);
@@ -54,9 +56,7 @@ public class ColorBox extends StackPane {
         toolBox.heightProperty().addListener((observable) -> {
 
             double newHeight = this.computeHeight();
-            // log.info("new Height = {}", newHeight);
             graphic.setHeight(newHeight);
-            // graphic.setRadius(newHeight);
         });
 
         ColorEventHandler eventHandler = new ColorEventHandler(this);
@@ -147,16 +147,12 @@ public class ColorBox extends StackPane {
                 || event.getEventType() == GazeEvent.GAZE_ENTERED) {
 
                 progressIndicator.setOnFinish((ActionEvent event1) -> action());
-
                 colorBox.progressIndicator.start();
-
-                // log.info("entered {}", colorBox.toString());
 
             } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
                 || event.getEventType() == GazeEvent.GAZE_EXITED) {
 
                 colorBox.progressIndicator.stop();
-                // log.info("exited : {}", colorBox.toString());
             }
         }
     }
