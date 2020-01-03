@@ -51,23 +51,22 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * Distance in pixel between two gaze event to consider that the gaze is moving.
      */
-
     private static final double GAZE_MOVING_THRESHOLD = 25;
+
     /**
      * The game context provided.
      */
-
     @Getter
     private final IGameContext gameContext;
+
     /**
      * The root where to draw everything
      */
-
     private final Pane root;
+
     /**
      * Should we enableColorization.
      */
-
     @Getter
     private final BooleanProperty drawingEnable = new SimpleBooleanProperty(this, "isDrawingEnable", true);
 
