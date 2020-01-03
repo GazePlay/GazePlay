@@ -14,7 +14,7 @@ GazePlay est un projet open source hébergé sur GitHub.
 À part cette page, destinée aux étudiants francophone, la langue de développement de GazePlay est l'**anglais**.
 
 ## Ouvrir un ticket
-La manière la plus simple pour contribuer est d'ouvrir un ticket (*issue*). Vous pouvez déclarer y un bug, proposer une amélioration, un nouveau jeu, 
+La manière la plus simple pour contribuer est d'ouvrir un ticket (*issue*). Vous pouvez y déclarer un bug, proposer une amélioration, un nouveau jeu, 
 ... Ce ticket pourra être discuté par tous les contributeurs (y compris les autres stagières) et finalement accepté par Didier Schwab.
 
 ## Coder
@@ -26,11 +26,11 @@ Une bonne pratique consiste à suivre les étapes suivantes.
 Vous trouverez des informations supplémentaires [ici](https://openclassrooms.com/courses/gerer-son-code-avec-git-et-github/contribuer-a-des-projets-open-source)
 
 ## Pull request
-Il vous sera demandé de faire *a minima* une *pull request* **quotidienne** afin d'éviter que votre code s'éloigne trop de la branche principale. Chaque pull resquest doit être documentée au mieux. En faisant le lien, entre autres, avec l'issue correspondante.
+Il vous sera demandé de faire *a minima* une *pull request* **quotidienne** afin d'éviter que votre code s'éloigne trop de la branche principale. Chaque **pull request** doit être documentée au mieux. En faisant le lien, entre autres, avec l'issue correspondante.
 
 Afin de faire une *pull request*, toujours faire un `gradlew` qui exécutera tous les tests et s'assurera que le code n'est pas cassé.
 
-Chaque requête sera examinée par un des contributeurs.
+Chaque requête sera examinée par un des administrateur.
 
 ## Gradle
 
@@ -50,7 +50,7 @@ Tous les composants requis seront installés à partir d'Internet, alors assurez
 ### Java
 
 GazePlay est compilé avec Java 11 construit avec OpenJDK 11. Si vous avez besoin d'une distribution, [AdoptOpenJDK](https://adoptopenjdk.net/)
-offre un package simple à installer sur n'importe quel ordinateur Windows ou Unix. Gradle vous dira si vous ne dirigez pas un
+offre un package simple à installer sur n'importe quel ordinateur Windows ou Unix. Gradle vous dira si vous n'utilisez pas une
 version compatible de Java et empêcher les builds sur tout ce qui est inférieur à Java 11.
 
 ## Utilitaires
