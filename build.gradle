@@ -124,7 +124,6 @@ distributions {
             from("build/scripts") {
                 into 'bin'
             }
-            from("gazeplay/src/main/resources")
             from("gazeplay-dist/src/jre") {
                 into 'lib/jre'
             }
