@@ -11,7 +11,8 @@ GazePlay est un projet open source hébergé sur GitHub.
 À part cette page, destinée aux étudiants francophone, la langue de développement de GazePlay est l'**anglais**.
 
 ## Ouvrir un ticket
-La manière la plus simple pour contribuer est d'ouvrir un ticket (*issue*). Vous pouvez déclarer y un bug, proposer une amélioration, un nouveau jeu, ... Ce ticket pourra être discuté par tous les contributeurs (y compris les autres stagières) et finalement accepté par Didier Schwab.
+La manière la plus simple pour contribuer est d'ouvrir un ticket (*issue*). Vous pouvez déclarer y un bug, proposer une amélioration, un nouveau jeu, 
+... Ce ticket pourra être discuté par tous les contributeurs (y compris les autres stagières) et finalement accepté par Didier Schwab.
 
 ## Coder
 Une bonne pratique consiste à suivre les étapes suivantes.
@@ -24,24 +25,30 @@ Vous trouverez des informations supplémentaires [ici](https://openclassrooms.co
 ## Pull request
 Il vous sera demandé de faire *a minima* une *pull request* **quotidienne** afin d'éviter que votre code s'éloigne trop de la branche principale. Chaque pull resquest doit être documentée au mieux. En faisant le lien, entre autres, avec l'issue correspondante.
 
-Afin de faire une *pull request*, toujours faire un *maven clean install* qui a pour effet d'uniformiser le code (indentations, espaces,...).
+Afin de faire une *pull request*, toujours faire un `gradlew` qui exécutera tous les tests et s'assurera que le code n'est pas cassé.
 
 Chaque requête sera examinée par un des contributeurs.
 
-## Maven
-Maven est un outil de gestion et d'automatisation de production des projets logiciels Java ([Wikipedia](https://fr.wikipedia.org/wiki/Apache_Maven)). Maven est généralement intégré à son IDE.
+## Gradle
 
-Vous trouverez des informations complémentaires sur le site https://maven.apache.org
+[Gradle](https://gradle.org/) est un système d'automatisation de construction open source qui utilise un langage spécifique au domaine (DSL) basé sur Groovy.
+Il est utilisé pour des tâches automatisées telles que la construction, les tests et la publication de GazePlay.
+Si vous importez le projet dans IntelliJ, vous serez peut-être invité à importer le projet Gradle - cela permet à tous
+tâches de test à effectuer à l'aide de Gradle.
 
-Pour l'utilisation commune de *maven*, vous devrez faire au départ pour installer tous les packages puis avant toute *pull request*
-
+Avant de pouvoir commencer à développer GazePlay, vous devrez exécuter une version initiale. Cela peut être fait sur la ligne de commande avec
 ```
-mvn clean install
+> gradlew
+$ ./gradlew
 ```
+
+Tous les composants requis seront installés à partir d'Internet, alors assurez-vous d'être en ligne.
 
 ### Java
 
-GazePlay est compilé en java 1.8 produit avec le jdk 1.8 (actuellement, il n'est pas possible d'utiliser une version ulterieure car elle n'intègrent pas JavaFX).
+GazePlay est compilé avec Java 11 construit avec OpenJDK 11. Si vous avez besoin d'une distribution, [AdoptOpenJDK](https://adoptopenjdk.net/)
+offre un package simple à installer sur n'importe quel ordinateur Windows ou Unix. Gradle vous dira si vous ne dirigez pas un
+version compatible de Java et empêcher les builds sur tout ce qui est inférieur à Java 11.
 
 ## Utilitaires
 
@@ -83,29 +90,26 @@ Par exemple :
 Plus d'informations : 
 https://projectlombok.org
 
-### Findbugs
+### Spotbugs
 
-Findbugs permet d'éviter l'introduction de bugs qui pourraient être automatiquement détectés grâce à une analyse statique du code.
+Spotbugs permet d'éviter l'introduction de bugs qui pourraient être automatiquement détectés grâce à une analyse statique du code.
 
-La configuration utilisée dans GazePlay exclut la recherche des bugs car il rend les builds bien plus longs.
-
-```
-mvn clean install -Dfindbugs.skip=true
-```
-
-Assurez-vous que l'utilisation de findbugs ne trouve pas de bug avant de faire un *pull request*.
+La configuration utilisée dans GazePlay inclut la recherche de bogues. Vous pouvez arrêter l'exécution de Spotbugs avec cette commande.
 
 ```
-mvn clean install -Dfindbugs.skip=false
+> gradlew -PSpotBugs=false
+$ ./gradlew -PSpotBugs=false
 ```
 
-Plus d'informations sur http://findbugs.sourceforge.net
 
-### formatter-maven-plugin
+Assurez-vous que l'utilisation de spotbugs ne trouve pas de bug avant de faire un *pull request*.
 
-Ce plugin est automatiquement appelé lorsqu'on réalise un appel à Maven. Il permet de réaliser un certain nombre d'opérations comme la normalisation des fins de ligne, des espaces, ...
+```
+> gradlew
+$ ./gradlew
+```
 
-Plus d'informations sur http://code.revelc.net/formatter-maven-plugin/
+Plus d'informations sur https://spotbugs.github.io/
 
 ### TravisCI
 
@@ -121,6 +125,7 @@ En savoir plus https://docs.travis-ci.com/user/getting-started/
 
 Cette ligne de commande réalise l'ensemble des opérations vérifiées par Travis
 ```
-mvn clean install -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
+> gradlew
+$ ./gradlew
 ```
 
