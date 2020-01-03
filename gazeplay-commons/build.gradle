@@ -20,6 +20,8 @@ dependencies {
     compile 'org.reflections:reflections:0.9.11'
 
     compile 'org.aeonbits.owner:owner:1.0.10'
+
+    testImplementation "org.mockito:mockito-core:2.+"
 }
 
 jar {

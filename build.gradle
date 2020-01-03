@@ -80,8 +80,6 @@ subprojects {
 
     sourceCompatibility = '11'
 
-
-
     publishing {
         publications {
             maven(MavenPublication) {

@@ -40,7 +40,7 @@ public class BackgroundMusicManager {
 
     @Getter
     private static BackgroundMusicManager instance = new BackgroundMusicManager();
-    
+
     public static void onConfigurationChanged() {
         instance.stop();
         instance = new BackgroundMusicManager();
@@ -269,6 +269,7 @@ public class BackgroundMusicManager {
         if (value > 1) {
             throw new IllegalArgumentException("volume must be between 0 and 1");
         }
+        currentMusic.setVolume(value);
         ActiveConfigurationContext.getInstance().getMusicVolumeProperty().setValue(value);
     }
 
@@ -408,13 +409,12 @@ public class BackgroundMusicManager {
         return outputFile;
     }
 
-    private MediaPlayer createMediaPlayer(String source) {
-
+    MediaPlayer createMediaPlayer(String source) {
         try {
             final Media media = new Media(source);
             final MediaPlayer player = new MediaPlayer(media);
             player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
-            player.volumeProperty().bind(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
+            player.volumeProperty().bindBidirectional(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
             player.setOnEndOfMedia(this::next);
 
             return player;
