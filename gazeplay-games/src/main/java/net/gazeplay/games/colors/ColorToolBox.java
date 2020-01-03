@@ -64,6 +64,7 @@ public class ColorToolBox extends Pane {
     public static final String CUSTOM_BUTTON_IMAGE_PATH = COLORS_IMAGES_PATH + "add-button-inside-black-circle.png";
 
     public static final String COLORIZE_BUTTON_IMAGE_NAME = COLORS_IMAGES_PATH + "palette.png";
+
     public static final String STOP_COLORIZE_BUTTON_IMAGE_PATH = "data/common/images/error.png";
 
     private final VBox mainPane;
@@ -75,27 +76,41 @@ public class ColorToolBox extends Pane {
      */
     @Getter
     private final List<ColorBox> colorBoxes;
+
     @Getter
     private final ColorsGame colorsGame;
+
     private final Pane root;
+
     private final ColorBox customBox;
+
     private final ColorPicker colorPicker;
+
     private final Button customColorPickerButton;
+
     @Getter
     private final Pane imageManager;
+
     @Getter
     private final Pane colorziationPane;
+
     private final Stage customColorDialog;
+
     private final IGameContext gameContext;
+
     /**
      * The index of the first color displayed (then followed by the NB_COLORS_DISPLAYED next colors).
      */
     private int firstColorDisplayed;
+
     @Getter
     @Setter
     private ColorBox selectedColorBox;
+
     private EventHandler disableColorizeButton = null;
+
     private CustomColorPicker CustomColorPicker;
+
     private boolean previousEnableColor;
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame, final IGameContext gameContext) {
