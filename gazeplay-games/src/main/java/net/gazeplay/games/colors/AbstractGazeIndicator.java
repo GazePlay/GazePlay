@@ -28,12 +28,6 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 public class AbstractGazeIndicator extends ProgressIndicator implements IGazeProgressIndicator {
 
-    public static final long TIME_DISPLAYED_AFTER_FINISHED_MS = 1000;
-
-    private final OnFinishIndicatorEvent onFinishHandler;
-    
-    private final Map<Node, EventHandler> nodedToListenTo;
-
     @Getter
     @Setter
     private double duration;
@@ -41,6 +35,11 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
     private Timeline animation;
 
     private EventHandler<ActionEvent> finishHandler;
+    private final OnFinishIndicatorEvent onFinishHandler;
+
+    private final Map<Node, EventHandler> nodedToListenTo;
+
+    public static final long TIME_DISPLAYED_AFTER_FINISHED_MS = 1000;
 
     @Getter
     private boolean isStarted;
@@ -97,48 +96,6 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
         return new OnFinishIndicatorEvent(this);
     }
 
-    protected EventHandler buildEventHandler(final Node node) {
-
-        final AbstractGazeIndicator thisIndicator = this;
-
-        return (Event event) -> {
-
-            if (event.getEventType() == MouseEvent.MOUSE_ENTERED || event.getEventType() == GazeEvent.GAZE_ENTERED) {
-                thisIndicator.start();
-            } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
-                || event.getEventType() == GazeEvent.GAZE_EXITED) {
-                thisIndicator.stop();
-            }
-        };
-    }
-
-    @Override
-    public boolean addNodeToListen(final Node node, final GazeDeviceManager gazeDeviceManager) {
-
-        final EventHandler eventHandler = buildEventHandler(node);
-
-        node.addEventFilter(MouseEvent.ANY, eventHandler);
-        node.addEventFilter(GazeEvent.ANY, eventHandler);
-
-        this.nodedToListenTo.put(node, eventHandler);
-
-        gazeDeviceManager.addEventFilter(node);
-
-        return true;
-    }
-
-    @Override
-    public boolean removeNodeToListen(final Node node, final GazeDeviceManager gazeDeviceManager) {
-
-        EventHandler eventHandler = this.nodedToListenTo.remove(node);
-        node.removeEventFilter(MouseEvent.ANY, eventHandler);
-        node.removeEventFilter(GazeEvent.ANY, eventHandler);
-
-        gazeDeviceManager.removeEventFilter(node);
-
-        return true;
-    }
-
     private class OnFinishIndicatorEvent implements EventHandler<ActionEvent> {
 
         private final AbstractGazeIndicator thisIndicator;
@@ -193,5 +150,47 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
             return res;
         }
 
+    }
+
+    protected EventHandler buildEventHandler(final Node node) {
+
+        final AbstractGazeIndicator thisIndicator = this;
+
+        return (Event event) -> {
+
+            if (event.getEventType() == MouseEvent.MOUSE_ENTERED || event.getEventType() == GazeEvent.GAZE_ENTERED) {
+                thisIndicator.start();
+            } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
+                    || event.getEventType() == GazeEvent.GAZE_EXITED) {
+                thisIndicator.stop();
+            }
+        };
+    }
+
+    @Override
+    public boolean addNodeToListen(final Node node, final GazeDeviceManager gazeDeviceManager) {
+
+        final EventHandler eventHandler = buildEventHandler(node);
+
+        node.addEventFilter(MouseEvent.ANY, eventHandler);
+        node.addEventFilter(GazeEvent.ANY, eventHandler);
+
+        this.nodedToListenTo.put(node, eventHandler);
+
+        gazeDeviceManager.addEventFilter(node);
+
+        return true;
+    }
+
+    @Override
+    public boolean removeNodeToListen(final Node node, final GazeDeviceManager gazeDeviceManager) {
+
+        EventHandler eventHandler = this.nodedToListenTo.remove(node);
+        node.removeEventFilter(MouseEvent.ANY, eventHandler);
+        node.removeEventFilter(GazeEvent.ANY, eventHandler);
+
+        gazeDeviceManager.removeEventFilter(node);
+
+        return true;
     }
 }

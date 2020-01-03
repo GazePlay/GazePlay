@@ -107,6 +107,22 @@ public class FixationSequence {
         sequence = fixSeq;
     }
 
+    /**
+     * Saves the fixation Sequence to a PNG file
+     *
+     * @param outputFile
+     *            The output file (Must be open and writable)
+     */
+    // creates a clear background image
+    public void saveToFile(File outputFile) {
+        BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+        try {
+            ImageIO.write(bImage, "png", outputFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
 
         int accepted = 0;
@@ -133,20 +149,5 @@ public class FixationSequence {
             }
         }
         return reducedPolyline;
-    }
-
-    /**
-     * Saves the fixation Sequence to a PNG file
-     *
-     * @param outputFile The output file (Must be open and writable)
-     */
-    // creates a clear background image
-    public void saveToFile(File outputFile) {
-        BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
-        try {
-            ImageIO.write(bImage, "png", outputFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
