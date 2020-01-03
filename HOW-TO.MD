@@ -1,32 +1,37 @@
-From https://github.com/schwabdidier/GazePlay/issues/161#issuecomment-362115364
+# Frequently Asked Questions
 
-In order to be able to run gazeplay in your IDE, 
-without having to mess around your global PATH env variable for the Windows user.
+In these instructions, actions performed in the Windows command line are prefixed with `>`, and those on the Unix
+shell are prefixed with `$`. Select the command appropriate for your platform.
 
-Just configure the run configuration of your IDE, in order to add the dll directory to the ```Path``` env variable.
+## Issues with DLL dependencies
+
+See this [example issue](https://github.com/schwabdidier/GazePlay/issues/161#issuecomment-362115364)
+
+In order to be able to run GazePlay in your IDE, 
+without having to mess around your global PATH env variable for the Windows user, just configure the run configuration of your IDE, in order to add the dll directory to the ```Path``` env variable.
 
 The value to set would be
 ```
-C:\Users\yann\AppData\Local\TobiiStreamEngineForJava\lib\tobii\x64
+C:\Users\<username>\AppData\Local\TobiiStreamEngineForJava\lib\tobii\x64
 ```
-if your windows username is ```yann``` (adapt to your own username)
-(did not managed to use a environment variable reference here, it seems you have to use the fully hardcoded value)
+If your Windows username is `yann` , change `<username>` to `yann`
 
 Here is a screenshot showing how to do it with Intellij
 
 ![intellij_run_configuration_screenshot](https://user-images.githubusercontent.com/1653590/35654449-7125e424-06ed-11e8-847e-3f3a5c5169a9.png)
 
-From https://github.com/schwabdidier/GazePlay/pull/207#issuecomment-363957589
+## Git Branch Issues
+See this [example issue](https://github.com/schwabdidier/GazePlay/pull/207#issuecomment-363957589)
 
-I guess that you branched from an previous PR instead of branching from ```schwabdidier:master```
+I guess that you branched from an previous PR instead of branching from ```Gazeplay:master```
 
 Here are the basic step when you want to work on a new Pull Request: 
 
 Assuming you have a remote repository named ```origin``` for ```https://github.com/WaffleBuffer/GazePlay.git``` that were added when you cloned your own github fork
 
-Assuming you have a remote repository named ```upstream``` for ```https://github.com/schwabdidier/GazePlay.git``` that you added with 
+Assuming you have a remote repository named ```upstream``` for ```https://github.com/GazePlay/GazePlay.git``` that you added with 
 ```
-git remote add upstream https://github.com/schwabdidier/GazePlay.git
+git remote add upstream https://github.com/GazePlay/GazePlay.git
 ```
 
 Go to your master branch of your local repository
@@ -85,9 +90,10 @@ For simplicity, just try to make the minimal change that works.
 
 When you find any change is not strictly required to fix the issue you're working on, then discard this particular change (or commit it to another branch). Use your IDE to compare files, and cancel any line change that is not needed.
 
-When you're happy with your change, then build the code with maven, generally it will be
+When you're happy with your change, then build the code with Gradle, generally it will be
 ```
-mvn clean install -T 1C
+> gradlew
+$ ./gradlew
 ```
 
 Then test, test a lot.
@@ -103,10 +109,12 @@ The diff should again only contain the changes you were intending.
 If you're happy with the change(s), then add the modified files to the git staging.
 ```git add -u``` or ```git add .```
 
-Build again using maven
+Build again using Gradle
 ```
-mvn clean install -T 1C -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
+> gradlew
+$ ./gradlew
 ```
+
 then check ```git status``` if maven reformatted any code.
 If so, add the modified files again with ```git add -u```
 

@@ -4,6 +4,9 @@ Cette page est destinée aux étudiants réalisant un stage encadré par Didier 
 
 Tout contributeur peut s'inspirer de cette page mais n'a évidement pas l'obligation de chercher l'approbation *a priori* de Didier Schwab. 
 
+Dans ces instructions, les actions effectuées dans la ligne de commande Windows sont préfixées par `>`, et celles sur Unix
+shell sont préfixés avec `$`. Sélectionnez la commande appropriée à votre plateforme.
+
 ## Git et GitHub
 
 GazePlay est un projet open source hébergé sur GitHub.

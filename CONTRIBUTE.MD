@@ -4,6 +4,9 @@ This page is intended for students doing an internship supervised by Didier Schw
 
 Any contributor can take inspiration from this page but is obviously not obliged to seek Didier Schwab's *prior* approval. 
 
+In these instructions, actions performed in the Windows command line are prefixed with `>`, and those on the Unix
+shell are prefixed with `$`. Select the command appropriate for your platform.
+
 ## Git and GitHub
 
 GazePlay is an open source project hosted on GitHub.
