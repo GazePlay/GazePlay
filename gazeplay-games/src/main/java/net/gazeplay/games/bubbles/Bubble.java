@@ -202,17 +202,6 @@ public class Bubble extends Parent implements GameLifeCycle {
         double Xcenter = target.getCenterX();
         double Ycenter = target.getCenterY();
 
-        Timeline timeline = new Timeline();
-
-//        timeline.getKeyFrames()
-//            .add(new KeyFrame(new Duration(1), new KeyValue(target.centerXProperty(), -maxRadius * 5)));
-//
-//        timeline.play();
-//
-//        target.removeEventFilter(MouseEvent.ANY, enterEvent);
-//
-//        target.removeEventFilter(GazeEvent.ANY, enterEvent);
-
         gameContext.getGazeDeviceManager().removeEventFilter(target);
         this.getChildren().remove(target);
 
