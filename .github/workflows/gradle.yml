@@ -18,7 +18,7 @@ jobs:
       - name: Set up xvfb for non headless tests
         run: sudo apt-get install xvfb
       - name: Run tests with Gradle
-        run: _JAVA_OPTIONS="-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw" xvfb-run --auto-servernum ./gradlew --stacktrace --info test
+        run: xvfb-run --auto-servernum ./gradlew --stacktrace --info test
 
   package:
     needs: build

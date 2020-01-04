@@ -15,9 +15,7 @@ matrix:
     - dist: bionic
       jdk: openjdk11
       sudo: false
-      env:
-        - JENV=openjdk11
-        - _JAVA_OPTIONS="-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw"
+      env: JENV=openjdk11
 
 before_install:
   - sudo apt install openjfx
