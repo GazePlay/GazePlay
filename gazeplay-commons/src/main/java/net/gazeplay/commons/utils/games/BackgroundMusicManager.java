@@ -263,14 +263,10 @@ public class BackgroundMusicManager {
     }
 
     public void setVolume(double value) {
-        if (value < 0) {
-            throw new IllegalArgumentException("volume must be between 0 and 1");
-        }
-        if (value > 1) {
+        if ((value < 0) || (value > 1)) {
             throw new IllegalArgumentException("volume must be between 0 and 1");
         }
         currentMusic.setVolume(value);
-        ActiveConfigurationContext.getInstance().getMusicVolumeProperty().setValue(value);
     }
 
     public void playRemoteSound(String resourceUrlAsString) {

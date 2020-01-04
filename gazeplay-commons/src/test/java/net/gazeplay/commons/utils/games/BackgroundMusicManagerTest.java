@@ -2,6 +2,7 @@ package net.gazeplay.commons.utils.games;
 
 import javafx.scene.media.MediaPlayer;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,12 +31,19 @@ class BackgroundMusicManagerTest {
             + "music" + sep;
 
     private MediaPlayer mediaPlayer;
+    private double previousVolume;
 
     @BeforeEach
     void setup() {
         String uri = new File(localDataFolder + "song.mp3").toURI().toString();
         musicManager.getAudioFromFolder(localDataFolder);
         mediaPlayer = musicManager.createMediaPlayer(uri);
+        previousVolume = musicManager.getCurrentMusic().getVolume();
+    }
+
+    @AfterEach
+    void teardown() {
+        musicManager.getCurrentMusic().setVolume(previousVolume);
     }
 
     @Test
