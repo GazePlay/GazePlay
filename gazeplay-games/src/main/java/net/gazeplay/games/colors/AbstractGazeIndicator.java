@@ -98,10 +98,9 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
 
     private class OnFinishIndicatorEvent implements EventHandler<ActionEvent> {
 
-        private Timer timer;
         private final AbstractGazeIndicator thisIndicator;
-
         private final Lock lock;
+        private Timer timer;
 
         public OnFinishIndicatorEvent(final AbstractGazeIndicator thisIndicator) {
 

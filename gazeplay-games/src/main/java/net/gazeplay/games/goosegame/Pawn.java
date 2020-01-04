@@ -121,11 +121,11 @@ public class Pawn {
         if (movementStart) {
             movementStart = false;
             Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5)));
-            delay.setOnFinished(e -> newTimeline.playFromStart());
+            delay.setOnFinished(e -> newTimeline.play());
             delay.rateProperty().bind(animationSpeedRatioSource.getSpeedRatioProperty());
-            delay.playFromStart();
+            delay.play();
         } else {
-            newTimeline.playFromStart();
+            newTimeline.play();
         }
     }
 }

@@ -2,7 +2,10 @@
 
 This page is intended for students doing an internship supervised by Didier Schwab.
 
-Any contributor can take inspiration from this page but is obviously not obliged to seek Didier Schwab's *a priori* approval. 
+Any contributor can take inspiration from this page but is obviously not obliged to seek Didier Schwab's *prior* approval. 
+
+In these instructions, actions performed in the Windows command line are prefixed with `>`, and those on the Unix
+shell are prefixed with `$`. Select the command appropriate for your platform.
 
 ## Git and GitHub
 
@@ -11,7 +14,8 @@ GazePlay is an open source project hosted on GitHub.
 GazePlay's development language is **English**.
 
 ## Open a ticket
-The easiest way to contribute is to open a ticket (*issue*). You can declare a bug, propose an improvement, a new game,... This ticket can be discussed by all contributors (including other interns) and finally accepted by Didier Schwab.
+The easiest way to contribute is to open a ticket (*issue*). You can declare a bug, propose an improvement, a new game,
+... This ticket can be discussed by all contributors (including other interns) and finally accepted by Didier Schwab.
 
 ## Coding
 A good practice is to follow the following steps.
@@ -22,27 +26,34 @@ A good practice is to follow the following steps.
 You will find further information [here](https://openclassrooms.com/courses/gerer-son-code-avec-git-et-github/contribuer-a-des-projets-open-source)
 
 ## Pull request
-You will be asked to do at least a *pull request* **daily** to avoid that your code deviates too far from the main branch. Each sweater must be documented as well as possible. By making the link, among other things, with the corresponding outcome.
+You will be asked to do at least a *pull request* **daily** to avoid that your code deviates too far from the main branch. 
 
-In order to make a *pull request*, always do a *maven clean install* which has the effect of standardizing the code (indentations, spaces,...).
+Each request must be documented as well as possible. By making the link, among other things, with the corresponding outcome.
+
+In order to make a *pull request*, always run `gradlew` which will run all tests and ensure the code has not broken.
 
 Each request will be examined by one of the contributors.
 
-## Maven
-Maven is a tool for managing and automating the production of Java software projects ([Wikipedia] (https://en.wikipedia.org/wiki/Apache_Maven). Maven is generally integrated into IDE.
+## Gradle
 
-Further information can be found at https://maven.apache.org
+[Gradle](https://gradle.org/) is an open-source build-automation system that uses a Groovy-based domain-specific language (DSL). 
+It is used for automated tasks such as building, testing and releasing GazePlay. 
+If you import the project into IntelliJ, you may be prompted to import the Gradle project - doing so allows all build and
+test tasks to be performed using Gradle.
 
-For the common use of *maven*, you will have to do at the beginning to install all the packages and then before any *pull request*
-
+Before you can start developing GazePlay, you will need to run an initial build. This can be done on the command line with
 ```
-mvn clean install
+> gradlew
+$ ./gradlew
 ```
+
+All required components will be installed from the internet, so make sure you're online.
 
 ##Java
 
-GazePlay is compiled with java 1.8 built with jdk 1.8 (currently, it is not possible to use an upper version of Java because they don't integrate JavaFX).
-
+GazePlay is compiled with Java 11 built with OpenJDK 11. If you need a distribution, [AdoptOpenJDK](https://adoptopenjdk.net/) 
+offer a simple package to install on any Windows or Unix computer. Gradle will tell you if you're not running a 
+compatible version of Java and prevent builds on anything lower than Java 11.
 
 ## Utilities
 
@@ -84,33 +95,33 @@ For example:
 More information: 
 https://projectlombok.org
 
-### Findbugs
+### Spotbugs
 
-Findbugs prevents the introduction of bugs that could be automatically detected by static analysis of the code.
+Spotbugs prevents the introduction of bugs that could be automatically detected by static analysis of the code.
 
-The configuration used in GazePlay excludes the search for bugs because it makes builds much longer.
-
-```
-mvn clean install -Dfindbugs.skip=true
-```
-
-Make sure that the use of findbugs does not find a bug before making a *pull request*.
+The configuration used in GazePlay includes the search for bugs. You can stop Spotbugs from running with this command.
 
 ```
-mvn clean install -Dfindbugs.skip=false
+> gradlew -PSpotBugs=false
+$ ./gradlew -PSpotBugs=false
 ```
 
-For more information, visit http://findbugs.sourceforge.net
+Make sure that the use of spotbugs does not find a bug before making a *pull request*.
 
-### formatter-maven-plugin
+```
+> gradlew
+$ ./gradlew
+```
 
-This plugin is automatically called when you make a call to Maven. It allows you to perform a certain number of operations such as normalizing the end of a line, spaces, etc.
-
-For more information, visit http://code.revelc.net/formatter-maven-plugin/
+For more information, visit https://spotbugs.github.io/
 
 ### TravisCI
 
-Travis CI is a free software for continuous integration ([Wikipedia] (https://en.wikipedia.org/wiki/Travis_CI)). Continuous integration is a set of practices used in software engineering to verify at each change in source code that the result of the changes does not produce regression in the developed application ([Wikipedia] (https://en.wikipedia.org/wiki/Continuous_integration)).
+Travis CI is a free software for continuous integration ([Wikipedia] (https://en.wikipedia.org/wiki/Travis_CI)). 
+
+Continuous integration is a set of practices used in software engineering to verify at each change in source code that 
+
+the result of the changes does not produce regression in the developed application ([Wikipedia] (https://en.wikipedia.org/wiki/Continuous_integration)).
  
 TravisCI builds a *build* for each *commit*, for each *pull request* and thus find problems more quickly.
 
@@ -121,6 +132,8 @@ For more information, visit https://docs.travis-ci.com/user/getting-started/
 ### "Ideal" command line
 
 This command line performs all the operations verified by Travis
+
 ```
-mvn clean install -Dfindbugs.skip=false -DskipFormatterFormat=false -DskipFormatterValidate=false
+> gradlew
+$ ./gradlew
 ```

@@ -14,7 +14,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 }
 
-// Add -PSpotBugs=true to the Gradle Command Line to run spotbugs.
+// Add -PSpotBugs=false to the Gradle Command Line to not run spotbugs.
 String value = project.getProperties().get('SpotBugs')
 boolean SpotBugs = Boolean.parseBoolean(value) ?: true
 
