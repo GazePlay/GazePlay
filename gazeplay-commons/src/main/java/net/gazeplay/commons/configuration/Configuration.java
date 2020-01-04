@@ -1,7 +1,6 @@
 package net.gazeplay.commons.configuration;
 
 import com.google.common.collect.Sets;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -248,7 +247,6 @@ public class Configuration {
         hiddenCategoriesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_HIDDEN_CATEGORIES, Sets.newLinkedHashSet(), propertyChangeListener);
 
         populateFromApplicationConfig(applicationConfig);
-
     }
 
     private void saveConfig() throws IOException {
