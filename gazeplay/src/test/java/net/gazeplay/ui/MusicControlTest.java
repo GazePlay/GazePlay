@@ -2,7 +2,6 @@ package net.gazeplay.ui;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.StackPane;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.ui.Translator;

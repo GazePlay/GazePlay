@@ -94,6 +94,9 @@ subprojects {
 
     test {
         useJUnitPlatform()
+        if (project.hasProperty('excludeTests')) {
+            exclude project.property('excludeTests')
+        }
     }
 
     tasks.jacocoTestReport.dependsOn('test')
