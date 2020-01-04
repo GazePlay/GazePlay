@@ -67,7 +67,7 @@ public class BackgroundMusicManager {
     @Getter
     private final BooleanProperty isCustomMusicSet = new SimpleBooleanProperty(this, "isCustomMusicSet", false);
 
-    // If there is a change event and the new value is fales, then it means
+    // If there is a change event and the new value is false, then it means
     // that the music has been changed (see isChangingProperty from Slider)
     private final ReadOnlyBooleanWrapper isMusicChanging = new ReadOnlyBooleanWrapper(this, "musicChanged", false);
 

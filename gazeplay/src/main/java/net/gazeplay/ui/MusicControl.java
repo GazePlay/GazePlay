@@ -111,7 +111,7 @@ public class MusicControl {
         }
     }
 
-    public TitledPane createMusicControlPane(Configuration config) {
+    public TitledPane createMusicControlPane() {
 
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
@@ -248,7 +248,7 @@ public class MusicControl {
         button.setMaxHeight(ICON_SIZE * 0.5d);
     }
 
-    private Node createMuteSwitchButton(final Slider volumeSlider) {
+    Node createMuteSwitchButton(final Slider volumeSlider) {
         Button muteButton = createButton("mute", SPEAKER_ICON, "mute", ICON_SIZE / 2d);
         Button unmuteButton = createButton("unmute", MUTE_ICON, "unmute", ICON_SIZE / 2d);
 
@@ -276,6 +276,7 @@ public class MusicControl {
             final boolean localMuted = newValue.doubleValue() == 0;
             muteButton.setVisible(!localMuted);
             unmuteButton.setVisible(localMuted);
+            BackgroundMusicManager.getInstance().setVolume(newValue.doubleValue());
         });
 
         return new StackPane(muteButton, unmuteButton);

@@ -147,7 +147,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         leftControlPane.setHgap(5);
         leftControlPane.setVgap(5);
         leftControlPane.setAlignment(Pos.TOP_CENTER);
-        leftControlPane.add(musicControl.createMusicControlPane(config), 0, 0);
+        leftControlPane.add(musicControl.createMusicControlPane(), 0, 0);
         leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
         leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 2, 0);
         leftControlPane.getChildren().forEach(node -> {

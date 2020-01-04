@@ -24,7 +24,7 @@ public class QuickControlPanel {
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.setAlignment(Pos.TOP_CENTER);
         leftControlPane.getChildren().add(configurationButton);
-        leftControlPane.getChildren().add(musicControl.createMusicControlPane(config));
+        leftControlPane.getChildren().add(musicControl.createMusicControlPane());
         leftControlPane.getChildren().add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()));
         return leftControlPane;
     }
