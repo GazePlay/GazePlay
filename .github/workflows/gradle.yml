@@ -32,11 +32,14 @@ jobs:
       - name: Package with Gradle (no test)
         run: |
           ./gradlew --stacktrace --info packageApp -x test
+      - name: Remove files that should not be saved
+        run: |
+          find build/distributions -not -name "gazeplay-project-*.zip"
       - name: Save Package Job Artifacts
         uses: actions/upload-artifact@v1
         with:
           name: package-artifacts
-          path: build/distributions/gazeplay-project-*.zip
+          path: build/distributions/
 
   deploy:
     needs: package
