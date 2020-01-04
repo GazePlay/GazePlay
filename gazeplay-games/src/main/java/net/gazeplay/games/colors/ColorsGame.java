@@ -236,7 +236,6 @@ public class ColorsGame implements GameLifeCycle {
             log.debug("Drawing image " + imgURL + " cannot be found");
 
             getGameContext().getConfiguration().getColorsDefaultImageProperty().set(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
-            getGameContext().getConfiguration().saveConfigIgnoringExceptions();
 
             imgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
             img = new Image(imgURL);
