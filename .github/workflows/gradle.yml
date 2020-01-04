@@ -34,7 +34,7 @@ jobs:
           ./gradlew --stacktrace --info packageApp -x test
       - name: Remove files that should not be saved
         run: |
-          find build/distributions -not -name "gazeplay-project-*.zip"
+          find build/distributions/ -type f -not -name "gazeplay-project-*.zip" -delete
       - name: Save Package Job Artifacts
         uses: actions/upload-artifact@v1
         with:
