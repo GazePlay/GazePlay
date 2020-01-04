@@ -18,4 +18,4 @@ jobs:
     - name: Build with Gradle (no test)
       run: ./gradlew --stacktrace --info build -x test
     - name: Run tests with Gradle
-      run: xvfb-run --auto-servernum ./gradlew --stacktrace --info test
+      run: _JAVA_OPTIONS="-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw" xvfb-run --auto-servernum ./gradlew --stacktrace --info test
