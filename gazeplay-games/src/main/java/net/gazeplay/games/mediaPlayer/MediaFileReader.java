@@ -115,14 +115,7 @@ public class MediaFileReader {
     private File getMediaPlayerDirectory() {
         Configuration config = gameContext.getConfiguration();
         String userName = config.getUserName();
-        //
-        final File mediaPlayerDirectory;
-        if (userName == null || userName.equals("")) {
-            mediaPlayerDirectory = new File(GazePlayDirectories.getGazePlayFolder(), "/data/mediaPlayer");
-        } else {
-            mediaPlayerDirectory = new File(GazePlayDirectories.getUserProfileDirectory(userName), "/data/mediaPlayer");
-        }
-        return mediaPlayerDirectory;
+        return new File(GazePlayDirectories.getUserDataFolder(userName), "mediaPlayer");
     }
 
 }

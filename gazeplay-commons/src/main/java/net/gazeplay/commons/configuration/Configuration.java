@@ -1,6 +1,7 @@
 package net.gazeplay.commons.configuration;
 
 import com.google.common.collect.Sets;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -23,7 +24,6 @@ import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 @Slf4j
 public class Configuration {
 
-    private static final String PROPERTY_NAME_GAZEMODE = "GAZEMODE";
     private static final String PROPERTY_NAME_EYETRACKER = "EYETRACKER";
     private static final String PROPERTY_NAME_LANGUAGE = "LANGUAGE";
     private static final String PROPERTY_NAME_FILEDIR = "FILEDIR";
@@ -51,6 +51,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
     private static final String PROPERTY_NAME_VIDEO_FOLDER = "VIDEO_FOLDER";
+    private static final String PROPERTY_NAME_COLORS_DEFAULT_IMAGE = "COLORS_DEFAULT_IMAGE";
 
     private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
 
@@ -59,7 +60,6 @@ public class Configuration {
 
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
-    private static final boolean DEFAULT_VALUE_GAZEMODE = true;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
     private static final String DEFAULT_VALUE_LANGUAGE = "fra";
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
@@ -87,6 +87,12 @@ public class Configuration {
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
 
 
+    /*
+    source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
+    * */
+    public static final String DEFAULT_VALUE_COLORS_DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
+
+
     @Getter
     @Setter
     private boolean mouseFree = false;
@@ -102,9 +108,6 @@ public class Configuration {
 
     @Getter
     private final StringProperty quitKeyProperty;
-
-    @Getter
-    private final BooleanProperty gazeModeProperty;
 
     @Getter
     private final BooleanProperty gazeMenuEnabledProperty;
@@ -184,6 +187,9 @@ public class Configuration {
     @Getter
     private final StringProperty userPictureProperty;
 
+    @Getter
+    private final StringProperty colorsDefaultImageProperty;
+
     private final File configFile;
 
     private final ApplicationConfig applicationConfig;
@@ -197,7 +203,6 @@ public class Configuration {
         languageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE, propertyChangeListener);
 
         eyetrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
-        gazeModeProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZEMODE, DEFAULT_VALUE_GAZEMODE, propertyChangeListener);
 
         musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
         effectsVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME, propertyChangeListener);
@@ -233,6 +238,7 @@ public class Configuration {
         videoFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath(), propertyChangeListener);
         userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
         userPictureProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE, propertyChangeListener);
+        colorsDefaultImageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COLORS_DEFAULT_IMAGE, DEFAULT_VALUE_COLORS_DEFAULT_IMAGE, propertyChangeListener);
 
         whereIsItDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_WHEREISIT_DIR, DEFAULT_VALUE_WHEREISIT_DIR, propertyChangeListener);
 
@@ -242,11 +248,11 @@ public class Configuration {
         hiddenCategoriesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_HIDDEN_CATEGORIES, Sets.newLinkedHashSet(), propertyChangeListener);
 
         populateFromApplicationConfig(applicationConfig);
+
     }
 
     private void saveConfig() throws IOException {
         log.info("Saving Config {} ...", configFile);
-        persistConfig(applicationConfig);
         try (FileOutputStream fileOutputStream = new FileOutputStream(configFile)) {
             String fileComment = "Automatically generated by GazePlay";
             applicationConfig.store(fileOutputStream, fileComment);
@@ -268,9 +274,6 @@ public class Configuration {
     }
 
     private void populateFromApplicationConfig(ApplicationConfig prop) {
-    }
-
-    private void persistConfig(ApplicationConfig applicationConfig) {
     }
 
     public String getEyeTracker() {

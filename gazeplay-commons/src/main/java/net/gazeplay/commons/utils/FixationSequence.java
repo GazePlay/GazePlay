@@ -22,6 +22,7 @@ import java.util.LinkedList;
 @Slf4j
 public class FixationSequence {
 
+    private static Font sanSerifFont = new Font("SanSerif", 10);
     /**
      * Writable image used to create the fixation Sequence image
      */
@@ -29,8 +30,6 @@ public class FixationSequence {
     private WritableImage image;
     @Getter
     private LinkedList<FixationPoint> sequence;
-
-    private static Font sanSerifFont = new Font("SanSerif", 10);
 
     public FixationSequence(int width, int height, LinkedList<FixationPoint> fixSeq) {
 
@@ -51,10 +50,7 @@ public class FixationSequence {
 
         for (int i = 0; i < fixSeq.size() - 1; i++) {
             gc.strokeLine(fixSeq.get(i).getY(), fixSeq.get(i).getX(), fixSeq.get(i + 1).getY(),
-                    fixSeq.get(i + 1).getX());
-            // log.info("Point nb :" + i + ", firstGaze = " + fixSeq.get(i).getFirstGaze() + ", gazeDuration = "
-            // + fixSeq.get(i).getGazeDuration() + ", x = " + fixSeq.get(i).getY() + " , y = "
-            // + fixSeq.get(i).getX());
+                fixSeq.get(i + 1).getX());
         }
         gc.setEffect(null);
         gc.setFont(sanSerifFont);
@@ -62,43 +58,34 @@ public class FixationSequence {
         gc.setTextBaseline(VPos.CENTER);
 
         // draw the circles with the labels on top
-        gc.setStroke(Color.RED);
         gc.setLineWidth(1);
 
-        int label_count = 1;// for the labels of the fixation sequence
-
-        gc.setStroke(Color.RED);
+        int label_count = 0;// for the labels of the fixation sequence
         int x = fixSeq.get(0).getY();
         int y = fixSeq.get(0).getX();
 
-        int radius = 45; // central fixation bias . Read more about it at
-        // https://imotions.com/blog/7-terms-metrics-eye-tracking/
+        double radius = 45;
 
-        gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
-        gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
-        gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font("Verdana", 25));
-        gc.fillText(Integer.toString(label_count), x, y, 90);
 
         double duration;
 
-        for (int j = 1; j < fixSeq.size() - 1; j++) {
+        for (int j = 0; j < fixSeq.size(); j++) {
 
             gc.setStroke(Color.RED);
             x = fixSeq.get(j).getY();
             y = fixSeq.get(j).getX();
             duration = fixSeq.get(j).getGazeDuration();
 
-            // modify this value in order to increase or decrease the number of fixation points (Johanna put 20 ; Didier
-            // 100)
+            // modify this value in order to change the number of fixation points (Johanna put 20 ; Didier 100)
             if (duration > 100) {
                 label_count++;
                 // fixation circle size
-                radius = 20 + (int) (duration / 20);
-                gc.strokeOval(x - radius / 2, y - radius / 2, radius, radius);
+                radius = 20d + Math.sqrt(duration);
+                gc.strokeOval(x - radius / 2d, y - radius / 2d, radius, radius);
                 gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
-                gc.fillOval(x - radius / 2, y - radius / 2, radius, radius);
+                gc.fillOval(x - radius / 2d, y - radius / 2d, radius, radius);
                 gc.setFill(Color.BLACK);
                 gc.fillText(Integer.toString(label_count), x, y, 80);
 
@@ -136,11 +123,6 @@ public class FixationSequence {
         }
     }
 
-    // Vertex Cluster Reduction -- successive vertices that are clustered too closely are reduced to a single vertex
-    // public static LinkedList<FixationPoint> getFixationSequence() {
-    // return sequence;
-    // }
-
     public static LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
 
         int accepted = 0;
@@ -152,7 +134,7 @@ public class FixationSequence {
 
         for (int i = 1; i < allPoints.size() - 1; i++) {
             distance = Math.sqrt(Math.pow(pivotVertex.getY() - allPoints.get(i).getY(), 2)
-                    + Math.pow(pivotVertex.getX() - allPoints.get(i).getX(), 2));
+                + Math.pow(pivotVertex.getX() - allPoints.get(i).getX(), 2));
 
             if (distance <= tolerance) {
                 // add to the accepted vertex the duration of the reduced vertices -- to adapt the radius

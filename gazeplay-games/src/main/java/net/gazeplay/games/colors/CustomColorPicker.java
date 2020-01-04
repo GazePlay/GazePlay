@@ -8,12 +8,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Getter;
@@ -25,8 +23,6 @@ import static net.gazeplay.games.colors.ColorToolBox.COLORS_IMAGES_PATH;
 
 @Slf4j
 public class CustomColorPicker extends Pane {
-
-    final GridPane colorGrid;
 
     public static final Color[] COLOR_LIST = {Color.BURLYWOOD, Color.DARKCYAN, Color.BLUEVIOLET, Color.BROWN,
         Color.CADETBLUE, Color.DARKGRAY, Color.DARKORANGE, Color.GOLD, Color.LIMEGREEN, Color.ROYALBLUE,
@@ -41,14 +37,16 @@ public class CustomColorPicker extends Pane {
     // BY</a></div>
     public static final String CLOSE_CURSTOM_PANEL_IMAGE_PATH = COLORS_IMAGES_PATH + "error.png";
 
-    @Getter
-    private ColorBox selectedColor;
+    final GridPane colorGrid;
 
     private final ColorBox representingBox;
 
     private final AbstractGazeIndicator progressIndicator;
 
     private final Stage dialog;
+
+    @Getter
+    private ColorBox selectedColor;
 
     public CustomColorPicker(final IGameContext gameContext, final Pane root, final ColorToolBox toolBox, final ColorBox representingBox,
                              final Stage stage) {

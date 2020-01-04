@@ -9,7 +9,7 @@ import java.io.IOException;
 
 /**
  * Stats for the color game.
- * 
+ *
  * @author Thomas Medard
  */
 @Slf4j
