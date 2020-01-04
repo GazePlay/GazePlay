@@ -31,13 +31,12 @@ class MusicControlTest {
     Slider mockVolumeSlider;
 
     private MusicControl musicControl;
-    private TitledPane titledPane;
 
     @BeforeEach
     void setup() {
         initMocks();
         musicControl = new MusicControl(mockGazePlay);
-        titledPane = musicControl.createMusicControlPane();
+        musicControl.createMusicControlPane();
         mockVolumeSlider = new Slider();
     }
 
