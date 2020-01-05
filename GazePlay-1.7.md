@@ -20,7 +20,9 @@
 
 ## Features
 
-### Lots of new features for gaze visualization
+* Windows installer (Miles Bardon)
+* OpenJDK (Miles Bardon)
+* Open JavaFx (Miles Bardon)
 
 ## Various translations and bug resolution
 
