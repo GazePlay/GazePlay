@@ -25,4 +25,4 @@ before_install:
 install: true
 
 script:
-  - ./gradlew -PexcludeTests=**/MusicControlTest*
+  - ./gradlew -PexcludeTests=**/*Music*
