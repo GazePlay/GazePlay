@@ -276,7 +276,6 @@ public class MusicControl {
             final boolean localMuted = newValue.doubleValue() == 0;
             muteButton.setVisible(!localMuted);
             unmuteButton.setVisible(localMuted);
-            BackgroundMusicManager.getInstance().setVolume(newValue.doubleValue());
         });
 
         return new StackPane(muteButton, unmuteButton);
@@ -286,6 +285,9 @@ public class MusicControl {
         Slider slider = QuickControl.getInstance().createVolumeSlider();
         slider.setValue(config.getMusicVolumeProperty().getValue());
         slider.valueProperty().bindBidirectional(config.getMusicVolumeProperty());
+        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            BackgroundMusicManager.getInstance().setVolume(newValue.doubleValue());
+        });
         return slider;
     }
 
