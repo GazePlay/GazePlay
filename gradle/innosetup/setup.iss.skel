@@ -25,11 +25,16 @@ AppPublisherURL=https://github.com/GazePlay/GazePlay
 AppSupportURL=https://github.com/GazePlay/GazePlay/issues
 AppUpdatesURL=https://github.com/GazePlay/GazePlay/releases
 
+SetupIconFile=gazeplayicon.ico
+WizardStyle=modern
+WizardImageFile=gazeplayicon.bmp
+WizardSmallImageFile=gazeplayicon.bmp
+
 DefaultDirName={pf}\\GazePlay
 DefaultGroupName=GazePlay
 LicenseFile=licence.txt
 
-OutputBaseFilename=setup
+OutputBaseFilename=GazePlayInstaller
 Compression=lzma
 SolidCompression=yes
 
@@ -44,8 +49,8 @@ Source: "..\\${unpackedDirectory}\\license\\*"; DestDir: "{app}\\license"; Flags
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; IconFilename: "{app}\\bin\\gazeplayicon.ico"
-Name: "{group}\\Uninstall GazePlay"; Filename: "{uninstallexe}"
+Name: "{group}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; IconFilename: "{app}\\bin\\gazeplayicon.ico"; Flags: runminimized
+Name: "{group}\\Uninstall GazePlay"; Filename: "{uninstallexe}"; IconFilename: "{app}\\bin\\gazeplayicon.ico"
 Name: "{commondesktop}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; Tasks: desktopicon; IconFilename: "{app}\\bin\\gazeplayicon.ico"
 
 [Run]
