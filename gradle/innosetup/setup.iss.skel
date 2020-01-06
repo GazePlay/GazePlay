@@ -14,7 +14,6 @@
 ; 4. All BACKSLASHES must be escaped 
 ;
 
-
 [Setup]
 AppId=GazePlay
 AppName=GazePlay
@@ -29,6 +28,7 @@ SetupIconFile=gazeplayicon.ico
 WizardStyle=modern
 WizardImageFile=gazeplayicon.bmp
 WizardSmallImageFile=gazeplayicon.bmp
+SignTool=Standard
 
 DefaultDirName={pf}\\GazePlay
 DefaultGroupName=GazePlay
