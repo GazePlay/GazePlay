@@ -254,7 +254,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         List<Node> filteredList = completeGameCardsList.stream()
             .filter(gameCardPredicate)
             .collect(Collectors.toList());
-        //
+
         choicePanel.getChildren().clear();
         choicePanel.getChildren().addAll(filteredList);
     }

@@ -11,7 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -54,15 +54,14 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
         ImageView scanPathView = new ImageView(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString()));
         center.getChildren().add(scanPathView);
 
-        final List<Ellipse> points = new LinkedList<>();
+        final List<Circle> points = new LinkedList<>();
 
         stats.getFixationSequence().forEach(p -> {
-            Ellipse newPoint = new Ellipse();
+            Circle newPoint = new Circle();
             newPoint.setOpacity(0);
             newPoint.setCenterX(p.getY());
             newPoint.setCenterY(p.getX());
-            newPoint.setRadiusX(30 + (int) (p.getGazeDuration() / 1000));
-            newPoint.setRadiusY(newPoint.getRadiusX());
+            newPoint.setRadius((20d + Math.sqrt(p.getGazeDuration())) / 2);
 
             points.add(newPoint);
 
@@ -72,11 +71,17 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
             label.setStrokeWidth(2);
             label.setStroke(Color.BLACK);
             label.setFill(Color.RED);
-            label.setX(newPoint.getCenterX() + newPoint.getRadiusX());
+            label.setX(newPoint.getCenterX() + newPoint.getRadius());
             label.setY(newPoint.getCenterY() - label.getLayoutY());
 
-            newPoint.setOnMouseEntered(s -> center.getChildren().add(label));
-            newPoint.setOnMouseExited(s -> center.getChildren().remove(label));
+            newPoint.setOnMouseEntered(s -> {
+                center.getChildren().add(label);
+                newPoint.setOpacity(0.5);
+            });
+            newPoint.setOnMouseExited(s -> {
+                center.getChildren().remove(label);
+                newPoint.setOpacity(0);
+            });
         });
 
         center.getChildren().addAll(points);

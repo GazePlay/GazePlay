@@ -246,7 +246,7 @@ public class GooseGame implements GameLifeCycle {
      */
     private void roll() {
         rollButton.setLayoutY(dimensions.getHeight() * 2);
-        moveDiceIn.playFromStart();
+        moveDiceIn.play();
         moveDiceIn.setOnFinished(e -> {
             for (int i = 0; i < diceRollers.size(); i++) {
                 rolls[i] = diceRollers.get(i).roll(i == 0 ? action -> playTurn() : null);
@@ -258,7 +258,7 @@ public class GooseGame implements GameLifeCycle {
      * Computes the dice result and sends it to the pawn in play.
      */
     private void playTurn() {
-        moveDiceOut.playFromStart();
+        moveDiceOut.play();
         int rollResult = rolls[0] + rolls[1];
         pawns.get(currentPawn).move(rollResult);
     }
@@ -331,7 +331,7 @@ public class GooseGame implements GameLifeCycle {
             } while (pawn.isSleeping() || pawn.isStuck());
 
             turnIndicator.setImage(new Image(String.format(BIBOULEPATH, bibouleColors.get(currentPawn))));
-            showPlayingBiboule.playFromStart();
+            showPlayingBiboule.play();
             showMessage("Player %d's turn", pawn.getNumber());
         }
     }
@@ -359,7 +359,7 @@ public class GooseGame implements GameLifeCycle {
         showMessage.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
         showMessage.setOnFinished(e -> messages.getChildren().remove(messageText));
 
-        showMessage.playFromStart();
+        showMessage.play();
     }
 
     /***
