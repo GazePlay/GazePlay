@@ -266,8 +266,7 @@ public class WhereIsIt implements GameLifeCycle {
                 }
 
                 String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
-                String[] bits = folder.split("\\\\");
-                String folderName = bits[bits.length - 1];
+                String folderName = (new File(folder)).getName();
 
                 Set<String> files = ResourceFileManager.getResourcePaths(folder);
 
@@ -348,8 +347,7 @@ public class WhereIsIt implements GameLifeCycle {
                 final int index = (randomFolderIndex + step * i) % filesCount;
 
                 String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
-                String[] bits = folder.split("\\\\");
-                String folderName = bits[bits.length - 1];
+                String folderName = (new File(folder)).getName();
 
                 Set<String> files = ResourceFileManager.getResourcePaths(folder);
 

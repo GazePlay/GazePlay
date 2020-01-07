@@ -234,3 +234,8 @@ HeatMapSettings,,,,,,HeatMap Settings,,Paramètres de la Carte de Chaleur,,,,,,,
 AOISettings,,,,,,A.O.I Settings,,Paramètres des Zones d'Interet,,,,,,,,,,,
 MoreStatsSettings,,,,,,More Stats Settings,,Plus de Paramètres de Statistiques,,,,,,,,,,,
 BetaSettings,,,,,,Beta Settings,,Paramètres en Beta,,,,,,,,,,,
+
+toTop,,,,,,from bottom to top,,du bas vers le haut,,,,,,,,,,de abajo hacia arriba,
+toBottom,,,,,,from top to bottom,,du haut vers le bas,,,,,,,,,,de arriba hacia abajo,
+toRight,,,,,,from left to right,,de gauche à droite,,,,,,,,,,de la izquierda hacia la derecha,
+toLeft,,,,,,from right to left,,de droite à gauche,,,,,,,,,,de la derecha hacia la izquierda,

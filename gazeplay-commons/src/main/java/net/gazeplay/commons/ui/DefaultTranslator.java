@@ -3,9 +3,11 @@ package net.gazeplay.commons.ui;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.utils.multilinguism.LanguageLocale;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
@@ -48,8 +50,8 @@ public class DefaultTranslator implements Translator {
     }
 
     @Override
-    public String currentLanguage() {
-        return config.getLanguage();
+    public LanguageLocale currentLocale() {
+        return new LanguageLocale(config.getLanguage(),config.getCountry());
     }
 
     private void notifyAllListeners() {

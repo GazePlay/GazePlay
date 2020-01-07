@@ -28,10 +28,12 @@ import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.multilinguism.LanguageLocale;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.AspectRatioImageRectangleUtil;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Random;
 
 public class Letters implements GameLifeCycle {
@@ -89,9 +91,9 @@ public class Letters implements GameLifeCycle {
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("blocs"));
         translator = gameContext.getTranslator();
 
-        String language = translator.currentLanguage();
+        LanguageLocale locale = translator.currentLocale();
 
-        if (language.equalsIgnoreCase("fra")) {
+        if (locale.getLanguage().equalsIgnoreCase("fra")) {
             this.currentLanguage = "fra";
         } else {
             this.currentLanguage = "eng";
