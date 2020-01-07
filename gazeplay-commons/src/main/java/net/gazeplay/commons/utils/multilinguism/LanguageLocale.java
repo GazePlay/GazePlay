@@ -24,11 +24,31 @@ public class LanguageLocale implements Comparable<LanguageLocale>{
 
     @Override
     public int compareTo(LanguageLocale languageLocale) {
+
+        if(languageLocale == null) {return -1;}
+
         int compareLanguage = this.getLanguage().compareTo(languageLocale.getLanguage());
         if (compareLanguage !=0) {
             return compareLanguage;
         } else {
             return this.getCountry().compareTo(languageLocale.getCountry());
         }
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == null) {
+            return false;
+        }
+        if(o.getClass() == this.getClass()){
+            return compareTo((LanguageLocale) o) == 0;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode(){
+        return (getLanguage()+getCountry()).hashCode();
     }
 }
