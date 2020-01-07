@@ -28,7 +28,6 @@ SetupIconFile=gazeplayicon.ico
 WizardStyle=modern
 WizardImageFile=gazeplayicon.bmp
 WizardSmallImageFile=gazeplayicon.bmp
-SignTool=Standard
 
 DefaultDirName={pf}\\GazePlay
 DefaultGroupName=GazePlay

@@ -33,10 +33,8 @@ task generateInstaller(dependsOn: ['unzipDistribution']) {
             into(innoSetupDir)
         }
 
-        exec {
-            workingDir rootDir
-            commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "/SStandard=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f".split()
-        }
+        // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
+        // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
 
         exec {
             workingDir rootDir
