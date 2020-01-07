@@ -26,6 +26,7 @@ public class Configuration {
 
     private static final String PROPERTY_NAME_EYETRACKER = "EYETRACKER";
     private static final String PROPERTY_NAME_LANGUAGE = "LANGUAGE";
+    private static final String PROPERTY_NAME_COUNTRY = "COUNTRY";
     private static final String PROPERTY_NAME_FILEDIR = "FILEDIR";
     private static final String PROPERTY_NAME_FIXATIONLENGTH = "FIXATIONLENGTH";
     private static final String PROPERTY_NAME_CSSFILE = "CSSFILE";
@@ -62,6 +63,7 @@ public class Configuration {
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
     private static final String DEFAULT_VALUE_LANGUAGE = "fra";
+    private static final String DEFAULT_VALUE_COUNTRY = "FR";
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
@@ -117,6 +119,9 @@ public class Configuration {
 
     @Getter
     private final StringProperty languageProperty;
+
+    @Getter
+    private final StringProperty countryProperty;
 
     @Getter
     private final StringProperty filedirProperty;
@@ -201,6 +206,7 @@ public class Configuration {
         PropertyChangeListener propertyChangeListener = evt -> saveConfigIgnoringExceptions();
 
         languageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE, propertyChangeListener);
+        countryProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COUNTRY, DEFAULT_VALUE_COUNTRY, propertyChangeListener);
 
         eyetrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
 
@@ -284,9 +290,9 @@ public class Configuration {
         return quitKeyProperty.getValue();
     }
 
-    public String getLanguage() {
-        return languageProperty.getValue();
-    }
+    public String getLanguage() { return languageProperty.getValue(); }
+
+    public String getCountry() { return countryProperty.getValue(); }
 
     public String getFileDir() {
         return filedirProperty.getValue();

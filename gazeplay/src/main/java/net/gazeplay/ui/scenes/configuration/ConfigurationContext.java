@@ -39,6 +39,7 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
+import net.gazeplay.commons.utils.multilinguism.LanguageLocale;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
@@ -51,6 +52,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -70,8 +72,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         Translator translator = gazePlay.getTranslator();
 
-        String currentLanguage = translator.currentLanguage();
-        LanguageDetails languageDetails = Languages.getLanguage(currentLanguage);
+        LanguageLocale currentLocale = translator.currentLocale();
+        LanguageDetails languageDetails = Languages.getLocale(currentLocale);
         currentLanguageAlignementIsLeftAligned = languageDetails.isLeftAligned();
 
         // Bottom Pane
@@ -677,7 +679,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                                             ConfigurationContext configurationContext) {
 
         String currentCodeLanguage = configuration.getLanguage();
-        LanguageDetails currentLanguageDetails = Languages.getLanguage(currentCodeLanguage);
+        String currentCodeCountry = configuration.getCountry();
+        LanguageLocale currentLocale = new LanguageLocale(currentCodeLanguage,currentCodeCountry);
+        LanguageDetails currentLanguageDetails = Languages.getLocale(currentLocale);
 
         Image currentFlag = new Image(currentLanguageDetails.getFlags().get(0));
         ImageView currentFlagImageView = new ImageView(currentFlag);
@@ -702,7 +706,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
                 LanguagesItem.setOnAction(eventMenuLanguages -> {
 
-                    configuration.getLanguageProperty().setValue(language.getCode());
+                    configuration.getLanguageProperty().setValue(language.getLocale().getLanguage());
+                    configuration.getCountryProperty().setValue(language.getLocale().getCountry());
 
                     configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
 

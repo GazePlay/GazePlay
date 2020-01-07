@@ -1,5 +1,9 @@
 package net.gazeplay.commons.ui;
 
+import net.gazeplay.commons.utils.multilinguism.LanguageLocale;
+
+import java.util.Locale;
+
 public interface Translator {
 
     interface LanguageChangeListener {
@@ -16,6 +20,6 @@ public interface Translator {
 
     void notifyLanguageChanged();
 
-    String currentLanguage();
+    LanguageLocale currentLocale();
 
 }
