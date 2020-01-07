@@ -25,7 +25,6 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.multilinguism.LanguageLocale;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.StatsDisplay;
 import net.gazeplay.stats.ExplorationGamesStats;
@@ -98,7 +97,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         final Translator translator = gazePlay.getTranslator();
 
-        LanguageLocale currentLocale = translator.currentLocale();
+        Locale currentLocale = translator.currentLocale();
 
         boolean alignLeft = true;
         // Align right for Arabic Language

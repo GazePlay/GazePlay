@@ -11,7 +11,7 @@ public class LanguageDetails {
 
     // the ISO 639 code of the language
     @Getter
-    private final LanguageLocale locale;
+    private final Locale locale;
 
     // the language name
     @Getter

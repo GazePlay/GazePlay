@@ -39,7 +39,6 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
-import net.gazeplay.commons.utils.multilinguism.LanguageLocale;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
@@ -72,7 +71,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         Translator translator = gazePlay.getTranslator();
 
-        LanguageLocale currentLocale = translator.currentLocale();
+        Locale currentLocale = translator.currentLocale();
         LanguageDetails languageDetails = Languages.getLocale(currentLocale);
         currentLanguageAlignementIsLeftAligned = languageDetails.isLeftAligned();
 
@@ -680,7 +679,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         String currentCodeLanguage = configuration.getLanguage();
         String currentCodeCountry = configuration.getCountry();
-        LanguageLocale currentLocale = new LanguageLocale(currentCodeLanguage,currentCodeCountry);
+        Locale currentLocale = new Locale(currentCodeLanguage,currentCodeCountry);
         LanguageDetails currentLanguageDetails = Languages.getLocale(currentLocale);
 
         Image currentFlag = new Image(currentLanguageDetails.getFlags().get(0));

@@ -1,8 +1,6 @@
 package net.gazeplay.games.literacy;
 
 import javafx.animation.TranslateTransition;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -28,7 +26,6 @@ import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.multilinguism.LanguageLocale;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.AspectRatioImageRectangleUtil;
 
@@ -91,7 +88,7 @@ public class Letters implements GameLifeCycle {
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("blocs"));
         translator = gameContext.getTranslator();
 
-        LanguageLocale locale = translator.currentLocale();
+        Locale locale = translator.currentLocale();
 
         if (locale.getLanguage().equalsIgnoreCase("fra")) {
             this.currentLanguage = "fra";
