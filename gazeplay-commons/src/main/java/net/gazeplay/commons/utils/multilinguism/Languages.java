@@ -44,32 +44,40 @@ import java.util.*;
 @Slf4j
 public class Languages {
 
-    private static final SortedMap<String, LanguageDetails> languageMap = Collections.unmodifiableSortedMap(createLanguagesMap());
+    private static final SortedMap<Locale, LanguageDetails> languageMap = Collections.unmodifiableSortedMap(createLanguagesMap());
 
-    private static final Locale DEFAULT_CODE = new Locale("fra","FR");
+    private static final Locale DEFAULT_CODE = new Locale("fra", "FR");
 
     private static final String flagsPath = "data/common/flags/";
 
-    private static SortedMap<String, LanguageDetails> createLanguagesMap() {
-        SortedMap<String, LanguageDetails> result = new TreeMap<>();
+    private static SortedMap<Locale, LanguageDetails> createLanguagesMap() {
+        SortedMap<Locale, LanguageDetails> result = new TreeMap<Locale, LanguageDetails>(
+            (o1, o2) -> {
+                int languageComparison = o1.getLanguage().compareTo(o2.getLanguage());
+                if (languageComparison != 0) {
+                    return languageComparison;
+                } else {
+                    return o1.getCountry().compareTo(o2.getCountry());
+                }
+            });
         put(result, build(new Locale("alb"), "Shqip", false, true, "800px-Flag_of_Albania.svg.png"));
         put(result, build(new Locale("ara"), "العَرَبِيَّة", false, false, "800px-Flag_of_the_Arab_League.svg.png"));
         put(result, build(new Locale("chn"), "漢語", false, true, "800px-Flag_of_the_People's_Republic_of_China.svg.png"));
-        put(result, build(new Locale("deu","DE"), "Deutsch", true, true, "800px-Flag_of_Germany.svg.png"));
-        put(result, build(new Locale("deu","AT"), "Deutsch", true, true, "800px-Flag_of_Austria.svg.png"));
-        put(result, build(new Locale("eng","GB"), "English", true, true, "800px-Flag_of_the_United_Kingdom.svg.png"));
-        put(result, build(new Locale("eng","US"), "English", true, true, "800px-Flag_of_the_United_States_(Pantone).svg.png"));
+        put(result, build(new Locale("deu", "DE"), "Deutsch", true, true, "800px-Flag_of_Germany.svg.png"));
+        put(result, build(new Locale("deu", "AT"), "Deutsch", true, true, "800px-Flag_of_Austria.svg.png"));
+        put(result, build(new Locale("eng", "GB"), "English", true, true, "800px-Flag_of_the_United_Kingdom.svg.png"));
+        put(result, build(new Locale("eng", "US"), "English", true, true, "800px-Flag_of_the_United_States_(Pantone).svg.png"));
         put(result, build(new Locale("ell"), "ελληνικά", false, true, "800px-Flag_of_Greece.svg.png"));
         put(result, build(new Locale("fin"), "Suomi", false, true, "800px-Flag_of_Finland.svg.png"));
-        put(result, build(new Locale("fra","FR"), "Français", true, true, "800px-Flag_of_France.svg.png"));
+        put(result, build(new Locale("fra", "FR"), "Français", true, true, "800px-Flag_of_France.svg.png"));
         put(result, build(new Locale("fra"), "Français", true, true, "Flag_of_La_Francophonie.svg.png"));
         put(result, build(new Locale("hrv"), "Hrvatski", false, true, "800px-Flag_of_Croatia.svg.png"));
         put(result, build(new Locale("ind"), "Bahasa Indonesia", false, true, "800px-Flag_of_Indonesia.svg.png"));
         put(result, build(new Locale("ita"), "Italiano", false, true, "800px-Flag_of_Italy.svg.png"));
         put(result, build(new Locale("jpn"), "日本語", false, true, "800px-Flag_of_Japan.svg.png"));
         put(result, build(new Locale("pol"), "polszczyzna", false, true, "800px-Flag_of_Poland.svg.png"));
-        put(result, build(new Locale("por","PT"), "Português", false, true, "800px-Flag_of_Portugal.svg.png"));
-        put(result, build(new Locale("por","BR"), "Português", false, true, "800px-Flag_of_Brazil.svg.png"));
+        put(result, build(new Locale("por", "PT"), "Português", false, true, "800px-Flag_of_Portugal.svg.png"));
+        put(result, build(new Locale("por", "BR"), "Português", false, true, "800px-Flag_of_Brazil.svg.png"));
         put(result, build(new Locale("nld"), "Nederlands", false, true, "800px-Flag_of_the_Netherlands.svg.png"));
         put(result, build(new Locale("rus"), "Pу́сский язы́к", false, true, "800px-Flag_of_Russia.svg.png"));
         put(result, build(new Locale("spa"), "Español", false, true, "800px-Flag_of_Spain.svg.png"));
@@ -78,8 +86,8 @@ public class Languages {
         return result;
     }
 
-    private static void put(SortedMap<String, LanguageDetails> result, LanguageDetails languageDetails) {
-        result.put(languageDetails.getLocale().getLanguage()+languageDetails.getLocale().getCountry(), languageDetails);
+    private static void put(SortedMap<Locale, LanguageDetails> result, LanguageDetails languageDetails) {
+        result.put(languageDetails.getLocale(), languageDetails);
     }
 
     private static LanguageDetails build(Locale locale, String language, boolean stableTranslationAvailable, boolean leftAligned, String... flags) {
@@ -105,21 +113,20 @@ public class Languages {
             locale = DEFAULT_CODE;
         }
 
-        LanguageDetails localeValue = languageMap.get(locale.getLanguage()+locale.getCountry());
+        LanguageDetails localeValue = languageMap.get(locale);
 
-        if (localeValue == null){
+        if (localeValue == null) {
             locale = DEFAULT_CODE;
         }
 
-        log.debug(locale.getLanguage() + " ..... " + locale.getCountry());
-        return languageMap.get(locale.getLanguage()+locale.getCountry());
+        return languageMap.get(locale);
     }
 
     public static Collection<LanguageDetails> getAllLanguageDetails() {
         return languageMap.values();
     }
 
-    public static Collection<String> getAllCodes() {
+    public static Collection<Locale> getAllCodes() {
         return languageMap.keySet();
     }
 
