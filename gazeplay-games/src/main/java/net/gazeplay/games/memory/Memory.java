@@ -56,7 +56,7 @@ public class Memory implements GameLifeCycle {
     private final boolean isOpen;
 
     public Memory(final MemoryGameType gameType, IGameContext gameContext, int nbLines, int nbColumns, Stats stats,
-            boolean isOpen) {
+                  boolean isOpen) {
         super();
         this.isOpen = isOpen;
         int cardsCount = nbLines * nbColumns;
@@ -72,13 +72,17 @@ public class Memory implements GameLifeCycle {
 
         if (gameType == MemoryGameType.LETTERS) {
 
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "data/common/letters");
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
+
         } else if (gameType == MemoryGameType.NUMBERS) {
 
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "data/common/numbers");
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers");
+
         } else
+
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
-                    Utils.getImagesSubDirectory("default"));
+                Utils.getImagesSubDirectory("default"));
+
     }
 
     private HashMap<Integer, Image> selectionAleaImages() {
@@ -179,7 +183,7 @@ public class Memory implements GameLifeCycle {
                 Image image = images.get(id);
 
                 MemoryCard card = new MemoryCard(positionX, positionY, cardWidth, cardHeight, image, id, gameContext,
-                        stats, this, fixationlength, isOpen);
+                    stats, this, fixationlength, isOpen);
 
                 result.add(card);
             }
