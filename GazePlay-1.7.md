@@ -1,10 +1,10 @@
-# gazeplay 1.7
+# GazePlay 1.7
 
 ## New games :
 
 ### Action-Reaction games
 
-### Litteracy games
+### Literacy games
 
 ### Logic games
 
@@ -18,13 +18,18 @@
 
 ## Various games improvement
 
+* Static resources are now self contained _(Miles Bardon)_
+
 ## Features
 
-* Windows installer (Miles Bardon)
-* OpenJDK (Miles Bardon)
-* Open JavaFx (Miles Bardon)
+* Windows installer _(Miles Bardon)_
+* OpenJDK _(Miles Bardon)_
+* Open JavaFx _(Miles Bardon)_
 
 ## Various translations and bug resolution
+
+* Improvements to launch scripts _(Yann Robert and Miles Bardon)_
+* Music Volume Slider now responds in the application _(Miles Bardon)_
 
 ## Tests and Supervision
 
