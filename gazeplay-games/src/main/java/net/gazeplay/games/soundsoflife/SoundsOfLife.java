@@ -58,7 +58,9 @@ public class SoundsOfLife implements GameLifeCycle {
         background.setX(xOffset);
         background.setY(yOffset);
 
-        gameContext.getChildren().add(background);
+        if(!config.isBackgroundWhite()) {
+            gameContext.getChildren().add(background);
+        }
 
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
         for (JsonElement element : elements) {
