@@ -156,3 +156,5 @@ mainClassName = 'net.gazeplay.GazePlayLauncher'
 
 defaultTasks 'clean', 'build'
 startScripts.enabled = false
+
+afterReleaseBuild.dependsOn generateInstaller
