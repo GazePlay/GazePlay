@@ -111,7 +111,7 @@ public class MusicControl {
         }
     }
 
-    public TitledPane createMusicControlPane(Configuration config) {
+    public TitledPane createMusicControlPane() {
 
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
@@ -248,7 +248,7 @@ public class MusicControl {
         button.setMaxHeight(ICON_SIZE * 0.5d);
     }
 
-    private Node createMuteSwitchButton(final Slider volumeSlider) {
+    Node createMuteSwitchButton(final Slider volumeSlider) {
         Button muteButton = createButton("mute", SPEAKER_ICON, "mute", ICON_SIZE / 2d);
         Button unmuteButton = createButton("unmute", MUTE_ICON, "unmute", ICON_SIZE / 2d);
 
@@ -285,6 +285,9 @@ public class MusicControl {
         Slider slider = QuickControl.getInstance().createVolumeSlider();
         slider.setValue(config.getMusicVolumeProperty().getValue());
         slider.valueProperty().bindBidirectional(config.getMusicVolumeProperty());
+        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            BackgroundMusicManager.getInstance().setVolume(newValue.doubleValue());
+        });
         return slider;
     }
 

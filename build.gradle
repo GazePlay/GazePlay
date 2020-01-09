@@ -80,8 +80,6 @@ subprojects {
 
     sourceCompatibility = '11'
 
-
-
     publishing {
         publications {
             maven(MavenPublication) {
@@ -96,6 +94,9 @@ subprojects {
 
     test {
         useJUnitPlatform()
+        if (project.hasProperty('excludeTests')) {
+            exclude project.property('excludeTests')
+        }
     }
 
     tasks.jacocoTestReport.dependsOn('test')

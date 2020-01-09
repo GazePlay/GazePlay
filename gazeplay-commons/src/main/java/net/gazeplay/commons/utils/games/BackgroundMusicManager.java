@@ -40,7 +40,7 @@ public class BackgroundMusicManager {
 
     @Getter
     private static BackgroundMusicManager instance = new BackgroundMusicManager();
-    
+
     public static void onConfigurationChanged() {
         instance.stop();
         instance = new BackgroundMusicManager();
@@ -67,7 +67,7 @@ public class BackgroundMusicManager {
     @Getter
     private final BooleanProperty isCustomMusicSet = new SimpleBooleanProperty(this, "isCustomMusicSet", false);
 
-    // If there is a change event and the new value is fales, then it means
+    // If there is a change event and the new value is false, then it means
     // that the music has been changed (see isChangingProperty from Slider)
     private final ReadOnlyBooleanWrapper isMusicChanging = new ReadOnlyBooleanWrapper(this, "musicChanged", false);
 
@@ -263,13 +263,10 @@ public class BackgroundMusicManager {
     }
 
     public void setVolume(double value) {
-        if (value < 0) {
+        if ((value < 0) || (value > 1)) {
             throw new IllegalArgumentException("volume must be between 0 and 1");
         }
-        if (value > 1) {
-            throw new IllegalArgumentException("volume must be between 0 and 1");
-        }
-        ActiveConfigurationContext.getInstance().getMusicVolumeProperty().setValue(value);
+        currentMusic.setVolume(value);
     }
 
     public void playRemoteSound(String resourceUrlAsString) {
@@ -408,13 +405,12 @@ public class BackgroundMusicManager {
         return outputFile;
     }
 
-    private MediaPlayer createMediaPlayer(String source) {
-
+    MediaPlayer createMediaPlayer(String source) {
         try {
             final Media media = new Media(source);
             final MediaPlayer player = new MediaPlayer(media);
             player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
-            player.volumeProperty().bind(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
+            player.volumeProperty().bindBidirectional(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
             player.setOnEndOfMedia(this::next);
 
             return player;

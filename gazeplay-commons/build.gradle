@@ -7,7 +7,6 @@ dependencies {
     compile 'ch.qos.logback:logback-core:1.2.1'
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
-    compile 'junit:junit:4.12'
     compile 'com.google.guava:guava:28.1-jre'
     compile 'com.github.coylz:TobiiStreamEngineForJava:3.0'
     compile 'com.automation-remarks:video-recorder-core:2.0'
@@ -20,6 +19,9 @@ dependencies {
     compile 'org.reflections:reflections:0.9.11'
 
     compile 'org.aeonbits.owner:owner:1.0.10'
+
+    testImplementation "org.mockito:mockito-core:2.+"
+    testImplementation "junit:junit:4.12"
 }
 
 jar {
