@@ -158,19 +158,19 @@ public class Target extends Portrait {
             resetTargetAtPosition(pos1);
 
             currentTranslation = translation2;
-            translation2.playFromStart();
+            translation2.play();
         });
 
         translation2.setOnFinished(actionEvent -> {
             resetTargetAtPosition(pos2);
 
             currentTranslation = translation1;
-            translation1.playFromStart();
+            translation1.play();
         });
 
         setPosition(pos2);
-        translation1.playFrom(new Duration(length).multiply(randomGen.nextDouble()));
         currentTranslation = translation1;
+        translation1.playFrom(new Duration(length).multiply(randomGen.nextDouble()));
     }
 
     private void move() {
