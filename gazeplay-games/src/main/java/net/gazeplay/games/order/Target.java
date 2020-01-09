@@ -30,13 +30,15 @@ public class Target extends Parent {
     private final Position pos;
     private final double radius;
     private Timeline timelineProgressBar;
+    private double fixationLength;
 
-    public Target(Order gameInstance, IGameContext gameContext, int num) {
+    public Target(Order gameInstance, IGameContext gameContext, int num, double fixLength) {
         this.num = num;
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
         this.pos = this.gameContext.getRandomPositionGenerator().newRandomPosition(100);
         this.radius = 75;
+        this.fixationLength = fixLength;
 
         Circle cercle = new Circle(pos.getX(), pos.getY(), this.radius);
         cercle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
@@ -63,7 +65,7 @@ public class Target extends Parent {
         progressIndicator.setProgress(0);
         timelineProgressBar = new Timeline();
         timelineProgressBar.getKeyFrames()
-                .add(new KeyFrame(new Duration(1000), new KeyValue(progressIndicator.progressProperty(), 1)));
+                .add(new KeyFrame(Duration.millis(fixationLength), new KeyValue(progressIndicator.progressProperty(), 1)));
         timelineProgressBar.setOnFinished(actionEvent -> {
             progressIndicator.setOpacity(0);
             Target.this.gameInstance.enter(Target.this);

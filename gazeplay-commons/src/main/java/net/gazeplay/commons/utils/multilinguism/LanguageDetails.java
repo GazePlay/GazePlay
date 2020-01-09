@@ -4,13 +4,14 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Locale;
 
 @Builder
 public class LanguageDetails {
 
     // the ISO 639 code of the language
     @Getter
-    private final String code;
+    private final Locale locale;
 
     // the language name
     @Getter

@@ -32,6 +32,7 @@ import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.GraphicalContext;
 
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -96,11 +97,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         final Translator translator = gazePlay.getTranslator();
 
-        String currentLanguage = translator.currentLanguage();
+        Locale currentLocale = translator.currentLocale();
 
         boolean alignLeft = true;
         // Align right for Arabic Language
-        if (currentLanguage.equals("ara")) {
+        if (currentLocale.getLanguage().equals("ara")) {
             alignLeft = false;
         }
 

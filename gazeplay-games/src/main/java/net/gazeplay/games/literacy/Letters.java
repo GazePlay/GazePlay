@@ -1,8 +1,6 @@
 package net.gazeplay.games.literacy;
 
 import javafx.animation.TranslateTransition;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -32,6 +30,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.AspectRatioImageRectangleUtil;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Random;
 
 public class Letters implements GameLifeCycle {
@@ -89,9 +88,9 @@ public class Letters implements GameLifeCycle {
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("blocs"));
         translator = gameContext.getTranslator();
 
-        String language = translator.currentLanguage();
+        Locale locale = translator.currentLocale();
 
-        if (language.equalsIgnoreCase("fra")) {
+        if (locale.getLanguage().equalsIgnoreCase("fra")) {
             this.currentLanguage = "fra";
         } else {
             this.currentLanguage = "eng";

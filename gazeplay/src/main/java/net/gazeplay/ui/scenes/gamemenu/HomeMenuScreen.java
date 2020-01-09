@@ -9,10 +9,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -249,6 +246,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return gameCardsList;
     }
 
+    private static void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, Configuration config, String searchText, Translator translator) {
+        List<Node> filteredList = completeGameCardsList.stream()
+            .filter(node -> {
+                GameButtonPane gameButtonPane = (GameButtonPane) node;
+                return (new GameCardVisiblePredicate(config)).test(node) &&
+                    translator.translate(gameButtonPane.getGameSpec().getGameSummary().getNameCode()).toLowerCase().contains(searchText.toLowerCase());
+            })
+            .collect(Collectors.toList());
+
+        choicePanel.getChildren().clear();
+        choicePanel.getChildren().addAll(filteredList);
+    }
+
     private static void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, Configuration config) {
         Predicate<Node> gameCardPredicate = new GameCardVisiblePredicate(config);
         List<Node> filteredList = completeGameCardsList.stream()
@@ -259,16 +269,36 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.getChildren().addAll(filteredList);
     }
 
+
+    private TextField buildSearchBar(Configuration config, Translator translator) {
+        TextField gameSearchBar = new TextField();
+
+        gameSearchBar.textProperty().addListener((obs, oldValue, newValue) -> {
+            log.debug(newValue);
+            filterGames(choicePanel, gameCardsList, config, newValue, translator);
+        });
+
+        return gameSearchBar;
+    }
+
     private HBox buildFilterByCategory(Configuration config, Translator translator) {
+
+
+        TextField searchBar = buildSearchBar(config, translator);
+        searchBar.maxWidthProperty().bind(root.widthProperty().multiply(1d / 4d));
+        searchBar.prefWidthProperty().bind(root.widthProperty().multiply(1d / 4d));
+        searchBar.minWidthProperty().bind(root.widthProperty().multiply(1d / 4d));
+
         List<CheckBox> allCheckBoxes = new ArrayList<>();
         for (GameCategories.Category category : GameCategories.Category.values()) {
-            CheckBox checkBox = buildCategoryCheckBox(category, config, translator, choicePanel, gameCardsList);
+            CheckBox checkBox = buildCategoryCheckBox(category, config, translator, choicePanel, gameCardsList, searchBar);
             allCheckBoxes.add(checkBox);
         }
 
         HBox categoryFilters = new HBox(10);
         categoryFilters.setAlignment(Pos.CENTER);
         categoryFilters.setPadding(new Insets(15, 12, 15, 12));
+        categoryFilters.getChildren().add(searchBar);
         categoryFilters.getChildren().addAll(allCheckBoxes);
 
         return categoryFilters;
@@ -295,7 +325,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         Configuration config,
         Translator translator,
         FlowPane choicePanel,
-        List<Node> gameCardsList
+        List<Node> gameCardsList,
+        TextField searchBar
     ) {
         I18NText label = new I18NText(translator, category.getGameCategory());
         CheckBox categoryCheckbox = new CheckBox(label.getText());
@@ -308,7 +339,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             } else {
                 config.getHiddenCategoriesProperty().add(category.getGameCategory());
             }
-            filterGames(choicePanel, gameCardsList, config);
+            filterGames(choicePanel, gameCardsList, config, searchBar.getText(), translator);
         });
         return categoryCheckbox;
     }
@@ -327,5 +358,4 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         }
 
     }
-
 }

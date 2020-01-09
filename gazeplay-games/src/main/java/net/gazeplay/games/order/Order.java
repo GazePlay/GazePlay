@@ -84,7 +84,7 @@ public class Order implements GameLifeCycle {
 
             @Override
             public void handle(ActionEvent actionEvent) {
-                Target t = new Target(Order.this, gameContext, i + 1);
+                Target t = new Target(Order.this, gameContext, i + 1, gameContext.getConfiguration().getFixationLength());
                 gameContext.getChildren().add(t);
                 tabTarget[i] = t;
                 i++;

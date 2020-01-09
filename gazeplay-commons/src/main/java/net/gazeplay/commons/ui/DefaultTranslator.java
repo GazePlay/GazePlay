@@ -6,6 +6,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
@@ -48,8 +49,8 @@ public class DefaultTranslator implements Translator {
     }
 
     @Override
-    public String currentLanguage() {
-        return config.getLanguage();
+    public Locale currentLocale() {
+        return new Locale(config.getLanguage(),config.getCountry());
     }
 
     private void notifyAllListeners() {

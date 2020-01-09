@@ -74,7 +74,7 @@ public class Cup {
         this.actionsDone = 0;
         this.actionsToDo = 0;
         this.openCupSpeed = openCupSpeed;
-        this.fixationDurationNeeded = 1500;
+        this.fixationDurationNeeded = gameContext.getConfiguration().getFixationLength();
         this.item = item;
         this.widthItem = item.getFitWidth();
         this.heightItem = item.getFitHeight();
