@@ -315,6 +315,7 @@ public class ColorToolBox extends Pane {
         imageChooser.setTitle(translator.translate("imgChooserTitle"));
 
         Button imageChooserButton = new Button(translator.translate("LoadImg"));
+        imageChooserButton.setPrefHeight(COLORIZE_BUTTONS_SIZE_PX/2);
         imageChooserButton.setOnAction((event) -> {
 
             final File imageFile = imageChooser.showOpenDialog(primaryStage);
@@ -332,6 +333,7 @@ public class ColorToolBox extends Pane {
         configureImageFileSaver(imageSaveChooser);
         imageSaveChooser.setTitle(translator.translate("imgSaveChooserTitle"));
         Button imageSaverButton = new Button(translator.translate("SaveImg"));
+        imageSaverButton.setPrefHeight(COLORIZE_BUTTONS_SIZE_PX/2);
         imageSaverButton.setOnAction((event) -> {
 
             File imageFile = imageSaveChooser.showSaveDialog(primaryStage);
