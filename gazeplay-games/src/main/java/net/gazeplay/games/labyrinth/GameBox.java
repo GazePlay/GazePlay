@@ -4,34 +4,36 @@ import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class GameBox extends Parent {
 
-    protected final Rectangle r;
+    private final Rectangle r;
 
-    protected final ProgressIndicator indicator;
+    @Getter
+    private final ProgressIndicator indicator;
 
     private final double x;
+
     private final double y;
 
-    @EqualsAndHashCode.Include
     protected final int numCol; // j
 
-    @EqualsAndHashCode.Include
     protected final int numRow; // i
 
     private final boolean isAWall;
 
-    protected boolean wasNextToTheMouse;
+    @Getter
+    @Setter
+    private boolean nextToTheMouse;
 
-    GameBox(double height, double width, double coordX, double coordY, int wall, int nc, int nr) {
+    GameBox(double height, double width, double coordX, double coordY, int wall, int numCol, int numRow) {
 
         this.x = coordX;
         this.y = coordY;
-        this.numCol = nc;
-        this.numRow = nr;
+        this.numCol = numCol;
+        this.numRow = numRow;
 
         this.r = new Rectangle();
         if (wall == 0) {

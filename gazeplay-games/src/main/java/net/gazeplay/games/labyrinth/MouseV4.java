@@ -46,9 +46,9 @@ public class MouseV4 extends Mouse {
     private void mettreLesEventHandler() {
         for (int i = 0; i < gameInstance.nbBoxesLine; i++) {
             for (int j = 0; j < gameInstance.nbBoxesColumns; j++) {
-                gameInstance.walls[i][j].addEventHandler(MouseEvent.ANY, eventBox);
-                gameInstance.walls[i][j].addEventHandler(GazeEvent.ANY, eventBox);
-                gameContext.getGazeDeviceManager().addEventFilter(gameInstance.walls[i][j]);
+                gameInstance.getBoxAt(i, j).addEventHandler(MouseEvent.ANY, eventBox);
+                gameInstance.getBoxAt(i, j).addEventHandler(GazeEvent.ANY, eventBox);
+                gameContext.getGazeDeviceManager().addEventFilter(gameInstance.getBoxAt(i, j));
 
             }
         }
@@ -89,7 +89,7 @@ public class MouseV4 extends Mouse {
 
             if (conditionToMove(e)) {
                 GameBox gb = (GameBox) e.getSource();
-                gb.indicator.setOpacity(0);
+                gb.getIndicator().setOpacity(0);
                 reOrientateMouse(indiceX, indiceY, gb.numCol, gb.numRow);
                 putInBold();
                 indiceX = gb.numCol;
