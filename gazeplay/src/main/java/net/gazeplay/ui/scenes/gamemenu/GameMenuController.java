@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
@@ -84,8 +85,9 @@ public class GameMenuController {
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
 
             final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
-            log.info("is default music set : {}", musicManager.getIsCustomMusicSet().getValue());
-            if (!musicManager.getIsCustomMusicSet().getValue() || musicManager.getPlaylist().isEmpty()) {
+            boolean defaultMusicPlaying = musicManager.getCurrentMusic().getMedia().getSource().contains(Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC);
+            log.info("is default music set : {}", defaultMusicPlaying);
+            if (defaultMusicPlaying || musicManager.getPlaylist().isEmpty()) {
                 musicManager.emptyPlaylist();
                 musicManager.playMusicAlone(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
                 gameContext.getMusicControl().updateMusicController();
