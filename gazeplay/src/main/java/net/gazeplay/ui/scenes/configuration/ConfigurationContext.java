@@ -935,7 +935,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return pane;
     }
 
-    private static void changeMusicFolder(final String newMusicFolder, Configuration config) {
+    static void changeMusicFolder(final String newMusicFolder, Configuration config) {
 
         String musicFolder = newMusicFolder;
 
