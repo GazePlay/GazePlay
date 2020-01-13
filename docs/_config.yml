@@ -27,7 +27,6 @@ description: >- # this means to ignore newlines until "baseurl:"
 baseurl: "/GazePlay" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: GazePlay
-thumbnail_base: https://github.com/GazePlay/GazePlay/tree/master/gazeplay/src/main/resources/data/Thumbnails
 
 # Build settings
 remote_theme: mmistakes/minimal-mistakes

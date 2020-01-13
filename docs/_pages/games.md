@@ -4,13 +4,13 @@ permalink: /games/
 layout: single
 ---
 
-{{ site.thumbnail_base }}
+{% assign base = "https://github.com/GazePlay/GazePlay/tree/master/gazeplay/src/main/resources/data/Thumbnails" %}
 
 ## Cream Pies
 
 Throw a cream pie on the target by looking at it.
 
-![Creampie]({{ site.thumbnail_base }}/creamPie.png)
+![Creampie]({{ base | append: "/creamPie.png" }})
 
 ## Ninja
 
