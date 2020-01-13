@@ -5,11 +5,12 @@ layout: single
 ---
 
 ## Where is the default GazePlay folder?
-|         | Location                       |
-|---------|--------------------------------|
-| Windows | `C:\Users\<username>\GazePlay` |
-| MacOS   | `/Users/<username>/GazePlay`   |
-| Linux   | `/home/<username>/GazePlay`    |
+
+|  |Location| 
+|-----------------|:-----------|
+| Windows   |   `C:\Users\<username>\GazePlay` |
+| MacOS     |   `/Users/<username>/GazePlay`   |
+| Linux     |   `/home/<username>/GazePlay`    |
 
 ## How can I add my own Images to GazePlay?
 In a folder of your choice, create a folder called `images`.
