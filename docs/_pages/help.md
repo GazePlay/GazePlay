@@ -10,7 +10,7 @@ GazePlay is always being improved, and anyone can contribute to it. You can sugg
 ## Support
 You cna support GazePlay development with a donation. Donations help us to fund interns, who directly develop software for GazePlay. They also help us fund expenses such as hosting and hardware purchases. 
 
-https://paypal.me/pools/c/80nEd8cVq5
+<https://paypal.me/pools/c/80nEd8cVq5>
 
 ## Follow our Facebook Page
 We publish updates and other information on [our Facebook Page](https://www.facebook.com/GazePlay.root/)
