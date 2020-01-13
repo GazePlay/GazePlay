@@ -28,7 +28,7 @@ You can change the image folder within GazePlay in the configuration menu, so yo
 2. Move the shortcut on the desktop.
 3. Double-click on the shortcut to launch GazePlay.
 
-## I'm clicking on gazeplay.bat but it doesn't work. Why?
+## I'm clicking on gazeplay-windows.bat but it doesn't work. Why?
 You may see an error message stating that you don’t have a Java Virtual Machine on your computer.
 To fix this, check that there is a `jre` folder in your GazePlay installation folder. If there
 is not, you will need to redownload the latest version of GazePlay. 
