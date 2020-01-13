@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -23,44 +22,32 @@ import java.util.Objects;
 @Slf4j
 public class SoundsOfLife implements GameLifeCycle {
 
+
+    private double scaleRatio;
+
     public SoundsOfLife(IGameContext gameContext, Stats stats, int gameVariant) {
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = gameContext.getConfiguration();
 
         String path = "data/soundsoflife/";
         switch (gameVariant) {
-        case 0:
-            path += "farm/";
-            break;
-        case 1:
-            path += "jungle/";
-            break;
-        default:
-            path += "savanna/";
+            case 0:
+                path += "farm/";
+                break;
+            case 1:
+                path += "jungle/";
+                break;
+            default:
+                path += "savanna/";
         }
 
         JsonParser parser = new JsonParser();
         JsonObject jsonRoot;
         jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
-                Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + "elements.json")), StandardCharsets.UTF_8));
+            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + "elements.json")), StandardCharsets.UTF_8));
 
-        String backgroundPath = path + jsonRoot.get("background").getAsString();
-        Image backgroundImage = new Image(backgroundPath);
-        ImageView background = new ImageView(backgroundImage);
 
-        // use ratio in order to adapt images to screen
-        double scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
-                dimensions.getHeight() / backgroundImage.getHeight());
-        background.setFitWidth(backgroundImage.getWidth() * scaleRatio);
-        background.setFitHeight(backgroundImage.getHeight() * scaleRatio);
-        double xOffset = (dimensions.getWidth() - background.getFitWidth()) / 2;
-        double yOffset = (dimensions.getHeight() - background.getFitHeight()) / 2;
-        background.setX(xOffset);
-        background.setY(yOffset);
-
-        if(!config.isBackgroundWhite()) {
-            gameContext.getChildren().add(background);
-        }
+        ImageView background = createBackground(config, jsonRoot, path, dimensions, gameContext);
 
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
         for (JsonElement element : elements) {
@@ -75,8 +62,8 @@ public class SoundsOfLife implements GameLifeCycle {
             imageView.setFitHeight(image.getHeight() * scaleRatio * scale);
             // Positioning image
             JsonObject coordinates = elementObj.getAsJsonObject("coords");
-            double x = coordinates.get("x").getAsDouble() * scaleRatio + xOffset;
-            double y = coordinates.get("y").getAsDouble() * scaleRatio + yOffset;
+            double x = coordinates.get("x").getAsDouble() * scaleRatio + background.getX();
+            double y = coordinates.get("y").getAsDouble() * scaleRatio + background.getY();
             imageView.setX(x - imageView.getFitWidth() / 2);
             imageView.setY(y - imageView.getFitHeight() / 2);
             // Creating progress indicator
@@ -95,11 +82,34 @@ public class SoundsOfLife implements GameLifeCycle {
             }
 
             SoundMakingEntity entity = new SoundMakingEntity(imageView, stats, sounds, progressIndicator,
-                    config.getFixationLength());
+                config.getFixationLength());
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);
         }
 
+    }
+
+    private ImageView createBackground(Configuration config, JsonObject jsonRoot, String path, Dimension2D dimensions, IGameContext gameContext) {
+
+        String backgroundPath = path + jsonRoot.get("background").getAsString();
+        Image backgroundImage = new Image(backgroundPath);
+        ImageView background = new ImageView(backgroundImage);
+
+        // use ratio in order to adapt images to screen
+        scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
+            dimensions.getHeight() / backgroundImage.getHeight());
+        background.setFitWidth(backgroundImage.getWidth() * scaleRatio);
+        background.setFitHeight(backgroundImage.getHeight() * scaleRatio);
+        double offsetX = (dimensions.getWidth() - background.getFitWidth()) / 2;
+        double offsetY = (dimensions.getHeight() - background.getFitHeight()) / 2;
+        background.setX(offsetX);
+        background.setY(offsetY);
+
+        if (!config.isBackgroundWhite()) {
+            gameContext.getChildren().add(background);
+        }
+
+        return background;
     }
 
     @Override
