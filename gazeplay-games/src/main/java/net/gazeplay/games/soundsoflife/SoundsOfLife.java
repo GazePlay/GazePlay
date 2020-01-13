@@ -46,8 +46,17 @@ public class SoundsOfLife implements GameLifeCycle {
         jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + "elements.json")), StandardCharsets.UTF_8));
 
+        String backgroundPath = path + jsonRoot.get("background").getAsString();
+        Image backgroundImage = new Image(backgroundPath);
+        ImageView background = new ImageView(backgroundImage);
 
-        ImageView background = createBackground(config, jsonRoot, path, dimensions, gameContext);
+        // use ratio in order to adapt images to screen
+        scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
+            dimensions.getHeight() / backgroundImage.getHeight());
+
+        if (!config.isBackgroundWhite()) {
+            createBackground(background, dimensions, gameContext);
+        }
 
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
         for (JsonElement element : elements) {
@@ -89,27 +98,18 @@ public class SoundsOfLife implements GameLifeCycle {
 
     }
 
-    private ImageView createBackground(Configuration config, JsonObject jsonRoot, String path, Dimension2D dimensions, IGameContext gameContext) {
+    private void createBackground(ImageView background, Dimension2D dimensions, IGameContext gameContext) {
 
-        String backgroundPath = path + jsonRoot.get("background").getAsString();
-        Image backgroundImage = new Image(backgroundPath);
-        ImageView background = new ImageView(backgroundImage);
+        background.setFitWidth(background.getImage().getWidth() * scaleRatio);
+        background.setFitHeight(background.getImage().getHeight() * scaleRatio);
 
-        // use ratio in order to adapt images to screen
-        scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
-            dimensions.getHeight() / backgroundImage.getHeight());
-        background.setFitWidth(backgroundImage.getWidth() * scaleRatio);
-        background.setFitHeight(backgroundImage.getHeight() * scaleRatio);
         double offsetX = (dimensions.getWidth() - background.getFitWidth()) / 2;
         double offsetY = (dimensions.getHeight() - background.getFitHeight()) / 2;
+
         background.setX(offsetX);
         background.setY(offsetY);
 
-        if (!config.isBackgroundWhite()) {
-            gameContext.getChildren().add(background);
-        }
-
-        return background;
+        gameContext.getChildren().add(background);
     }
 
     @Override
