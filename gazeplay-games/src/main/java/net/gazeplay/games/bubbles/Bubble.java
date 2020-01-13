@@ -57,7 +57,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final List<Circle> fragments;
 
-    private final EventHandler<Event> enterEvent;
+    private EventHandler<Event> enterEvent;
 
     private final BubblesGameVariant direction;
 
@@ -115,7 +115,8 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        enterEvent = e -> {};
+        this.getChildren().clear();
     }
 
     private List<Circle> buildFragments(BubbleType bubbleType) {
