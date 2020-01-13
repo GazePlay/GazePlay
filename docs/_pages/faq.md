@@ -33,4 +33,4 @@ You may see an error message stating that you don’t have a Java Virtual Machin
 To fix this, check that there is a `jre` folder in your GazePlay installation folder. If there
 is not, you will need to redownload the latest version of GazePlay. 
 
-If you experience any other problems, send an email to didier.schwab@univ-grenoble-alpes.fr or [raise an Issue with our Developers directly](https://github.com/GazePlay/GazePlay/issues/new)
+If you experience any other problems, send an email to <didier.schwab@univ-grenoble-alpes.fr> or [raise an Issue with our Developers directly](https://github.com/GazePlay/GazePlay/issues/new)
