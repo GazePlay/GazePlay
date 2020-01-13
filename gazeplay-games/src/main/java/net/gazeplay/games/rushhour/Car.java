@@ -1,4 +1,4 @@
-package net.gazeplay.games.rushHour;
+package net.gazeplay.games.rushhour;
 
 import com.sun.glass.ui.Screen;
 import javafx.animation.KeyFrame;

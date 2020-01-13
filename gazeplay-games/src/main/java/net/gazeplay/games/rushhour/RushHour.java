@@ -1,4 +1,4 @@
-package net.gazeplay.games.rushHour;
+package net.gazeplay.games.rushhour;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

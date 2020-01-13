@@ -1,4 +1,4 @@
-package net.gazeplay.games.rushHour;
+package net.gazeplay.games.rushhour;
 
 import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
