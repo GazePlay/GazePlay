@@ -1,0 +1,11 @@
+main:
+  - title: "Games"
+    url: /games/
+  - title: "Installation"
+    url: /installation/
+  - title: "FAQ"
+    url: /faq/
+  - title: "Contact"
+    url: /contact/
+  - title: "Help"
+    url: /help/
