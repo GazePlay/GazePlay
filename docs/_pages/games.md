@@ -6,37 +6,38 @@ layout: single
 
 ## Cream Pies
 
-Throw a cream pie on the target by looking at it.
+Throw a cream pie at the target by looking at it.
 
 ![Creampie]({{ site.thumbnail_base }}/creamPie.png)
 
 ## Ninja
 
-Target perfoms a random walk and explode when player looks at it.
+Target is thrown up randomly and explodes when the player looks at it.
 
 ![Ninja]({{ site.thumbnail_base }}/ninja.png)
 
 ## Magic Cards
 
-Several cards are displayed. When the player stares at one card, it is turned. One of the card hides an image. A reward is given to the player when (s)he finds the image.
+Several cards are displayed. When the player stares at one card, it turns over. Behind one card is an image. A reward is given to the player when they find the image.
 
 ![magic-card-2]({{ site.thumbnail_base }}/magicCard.png)
 
-## Blocs
+## Blocks
 
-A big image is hidden by colored blocs. The player looks at a block to destroy it. When all blocs have disappeared, a reward is shown.
+A big image is hidden by colored blocks. The player looks at a block to destroy it. When all blocs have disappeared, a reward is shown.
 
 ![blocs]({{ site.thumbnail_base }}/block.png)
 
 ## Scratchcard
 
-A big image is hidden under a scratchcard. With his/her gaze, the player scratches the card. When most of the image is shown, a reward is displayed.
+A big image is hidden under a scratchcard. With their gaze, the player scratches the card. When most of the image is shown, a reward is displayed.
 
 ![Scratchcard]({{ site.thumbnail_base }}/scratchcard.png)
 
 ## Where is it?
 
-The player has to look at the image corresponding to the thing indicated in the beginning of the game. This game comes in five versions: Where is the Color?, Where is the Animal?, Where is the Letter? , Where is the Number? and Where is it? .For the latter the user can choose his own resources for the game.
+The player has to look at the image corresponding to the item indicated in the beginning of the game. This game comes in five versions: Where is the Color?, Where is the Animal?, Where is the Letter? , Where is the Number? and Where is it?  
+For the latter the user can choose their own resources for the game.
 
 ![WhereIsIt]({{ site.thumbnail_base }}/whereisit.png)
 
@@ -61,7 +62,7 @@ Look at the targets in the order that they appeared. If the order is correct you
 
 ## Biballs
 
-Look at the biballs that are escaping to take them back to their cage with your magic wand. The more biballs you capture the higher your score. 
+Look at the biballs that are escaping to take them back to their cage with your magic wand. The more biballs you capture, the higher your score. 
 
 ![Biboule]({{ site.thumbnail_base }}/biboules.png)
 
@@ -73,13 +74,13 @@ The bad robots are coming to conquer your planet! Destroy as much as you can wit
 
 ## Divisor
 
-Various targets move randomly on the screen. By looking at them you can divide them in two smaller targets. Continue dividing until there are no targets left. Try doing this in the shortest time possible !
+Various targets move randomly on the screen. By looking at them you can divide them in to two smaller targets. Continue dividing until there are no targets left. Try doing this in the shortest time possible!
 
 ![Divisor]({{ site.thumbnail_base }}/divisor.png)
 
 ## Rabbits
 
-Several rabbits move randomly on the screen. By looking at them you can divide them in two smaller rabbits. Continue dividing until there are no more rabbits left. Try doing this in the shortest time possible !
+Several rabbits move randomly on the screen. By looking at them you can divide them in to two smaller rabbits. Continue dividing until there are no more rabbits left. Try doing this in the shortest time possible!
 
 ![Rabbits]({{ site.thumbnail_base }}/rabbits.png)
 
@@ -97,7 +98,7 @@ Find the ball hidden under one of the cups afer they have been mixed.
 
 ## Open Memory
 
-Associate the cards that have the same image to each other by looking at them. This game comes in three versions : pictures, letters and numbers.
+Match the cards that have the same image to each other by looking at them. This game comes in three versions: pictures, letters and numbers.
 
 ![OpenMemory]({{ site.thumbnail_base }}/openMemory.png)
 
@@ -115,7 +116,7 @@ Take care of your Biball pet by feeding it, washing it, playing with it and pett
 
 ## Scribble 
 
-Draw through your gaze in the canvas. You can change the colour of your paint once you get out of the contours. 
+Draw through your gaze in the canvas. You can change the colour of your paint by moving out of the canvas. 
 
 ![Scribble]({{ site.thumbnail_base }}/gribouille.png)
 
@@ -127,7 +128,7 @@ Help the yellow taxi get out of the parking lot by moving the cars that block it
 
 ## Labyrinth
 
-Guide the mouse towards the cheese by choosing one of the options in the beginning of the game.
+Guide the mouse towards the cheese by choosing one of the options at the beginning of the game.
 
 ![Labyrinth]({{ site.thumbnail_base }}/labyrinth.png)
 
@@ -193,7 +194,7 @@ Remove all the blocks containing the specified letter.
 
 ## Magic Potions
 
-Mix the right colored potions to prepare Biball's order. Careful not to make a wrong mix !
+Mix the right colored potions to prepare Biball's order. Careful not to make a wrong mix!
 
 ![MagicPotions]({{ site.thumbnail_base }}/potions.jpg)
 
@@ -215,12 +216,56 @@ Kill the alien biballs with your spaceship's lasers and increase your score. Be 
 
 ## Media Player 
 
+Play your own videos or those from YouTube.
+
 ![Media]({{ site.thumbnail_base }}/gazeMedia.png)
 
-## The room 
+## The Room
 
 ![room]({{ site.thumbnail_base }}/home.png)
 
 ## Coloring
 
+Color in the images with your gaze.
+
 ![coloring]({{ site.thumbnail_base }}/colors.png)
+
+## Math 
+
+![math]({{ site.thumbnail_base }}/math101.png)
+
+## Video Grid
+
+Play multiple videos by looking at them to play them.
+
+![video grid]({{ site.thumbnail_base }}/videogrid.png)
+
+## Little Horses
+
+Move your horses around the board and be the first to make it to the center.
+
+![horses]({{ site.thumbnail_base }}/horses.png)
+
+## Little Horses Simplified
+
+Move your horses around the board and be the first to make it to the center.
+
+![horses simplified]({{ site.thumbnail_base }}/horsesSimplified.png)
+
+## Farm
+
+Listen to the sounds of the Farm animals by looking at them.
+
+![coloring]({{ site.thumbnail_base }}/farm.png)
+
+## Jungle
+
+Listen to the sounds of the Jungle animals by looking at them.
+
+![jungle]({{ site.thumbnail_base }}/jungle.png)
+
+## Savana
+
+Listen to the sounds of the animals on the Savana by looking at them.
+
+![savana]({{ site.thumbnail_base }}/savana.png)
