@@ -20,7 +20,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import tobii.Tobii;
 
