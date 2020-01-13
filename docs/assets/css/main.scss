@@ -1,20 +1,6 @@
----
-# Only the main Sass file needs front matter (the dashes are enough)
----
-
 @charset "utf-8";
+
+$text-color : #000;
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
-
-.page__title {
-    color: #000
-}
-
-.page__lead {
-    color: #000
-}
-
-.btn {
-    color: #000
-}
