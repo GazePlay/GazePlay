@@ -425,8 +425,6 @@ public class Race extends Parent implements GameLifeCycle {
 
         ParallelTransition pt = new ParallelTransition();
         pt.getChildren().addAll(ft, ft2);
-        pt.play();
-
         pt.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -437,6 +435,7 @@ public class Race extends Parent implements GameLifeCycle {
                     newCircle();
             }
         });
+        pt.play();
         if (score % movementPerBug == 0) {
             racerMovement++;
             movePlayer(playerRacer, racerMovement);
@@ -664,8 +663,6 @@ public class Race extends Parent implements GameLifeCycle {
         sp.t = pt;
 
         pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-        pt.play();
-
         pt.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -677,7 +674,7 @@ public class Race extends Parent implements GameLifeCycle {
                 }
             }
         });
-
+        pt.play();
     }
 
 }

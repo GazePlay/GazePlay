@@ -483,15 +483,13 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         ParallelTransition pt = new ParallelTransition();
         pt.getChildren().addAll(ft, ft2);
-        pt.play();
-
         pt.setOnFinished(actionEvent -> {
             int i = getChildren().indexOf(t);
             if (i != -1)
                 getChildren().remove(i);
             newCircle();
         });
-
+        pt.play();
     }
 
     private void newCircle() {

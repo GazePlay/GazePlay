@@ -219,10 +219,6 @@ public class Card extends Parent {
                 timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                currentTimeline.play();
-
-                timelineProgressBar.play();
-
                 timelineProgressBar.setOnFinished(actionEvent -> {
 
                     turned = true;
@@ -238,6 +234,10 @@ public class Card extends Parent {
                         onWrongCardSelected();
                     }
                 });
+
+                currentTimeline.play();
+                timelineProgressBar.play();
+
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
                 currentTimeline.stop();

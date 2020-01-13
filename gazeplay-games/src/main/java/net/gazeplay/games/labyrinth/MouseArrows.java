@@ -131,7 +131,6 @@ public abstract class MouseArrows extends Mouse {
                 timelineProgressBar = new Timeline();
                 timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
                     new KeyValue(indicatorUp.progressProperty(), 1)));
-                timelineProgressBar.play();
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
                     indicatorUp.setOpacity(0);
@@ -143,6 +142,7 @@ public abstract class MouseArrows extends Mouse {
                     updateArrowsColor();
                     gameInstance.testIfCheese(indiceY, indiceX);
                 });
+                timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
@@ -168,7 +168,6 @@ public abstract class MouseArrows extends Mouse {
                 timelineProgressBar = new Timeline();
                 timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
                     new KeyValue(indicatorDown.progressProperty(), 1)));
-                timelineProgressBar.play();
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
                     indicatorDown.setOpacity(0);
@@ -181,6 +180,7 @@ public abstract class MouseArrows extends Mouse {
 
                     gameInstance.testIfCheese(indiceY, indiceX);
                 });
+                timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
@@ -205,7 +205,6 @@ public abstract class MouseArrows extends Mouse {
                 timelineProgressBar = new Timeline();
                 timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
                     new KeyValue(indicatorRight.progressProperty(), 1)));
-                timelineProgressBar.play();
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
                     indicatorRight.setOpacity(0);
@@ -217,6 +216,7 @@ public abstract class MouseArrows extends Mouse {
                     updateArrowsColor();
                     gameInstance.testIfCheese(indiceY, indiceX);
                 });
+                timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
@@ -242,7 +242,6 @@ public abstract class MouseArrows extends Mouse {
                 timelineProgressBar = new Timeline();
                 timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
                     new KeyValue(indicatorLeft.progressProperty(), 1)));
-                timelineProgressBar.play();
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
                     indicatorLeft.setOpacity(0);
@@ -254,6 +253,7 @@ public abstract class MouseArrows extends Mouse {
                     updateArrowsColor();
                     gameInstance.testIfCheese(indiceY, indiceX);
                 });
+                timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 

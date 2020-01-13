@@ -127,13 +127,13 @@ public class MouseV4 extends Mouse {
                 timelineProgressBar = new Timeline();
                 timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
                     new KeyValue(indicator.progressProperty(), 1)));
-                timelineProgressBar.play();
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
                     isSelectioned = true;
                     putInBold();
                     indicator.setOpacity(0);
                 });
+                timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
                 Timeline timeline = new Timeline();

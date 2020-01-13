@@ -246,12 +246,12 @@ public class GooseGame implements GameLifeCycle {
      */
     private void roll() {
         rollButton.setLayoutY(dimensions.getHeight() * 2);
-        moveDiceIn.play();
         moveDiceIn.setOnFinished(e -> {
             for (int i = 0; i < diceRollers.size(); i++) {
                 rolls[i] = diceRollers.get(i).roll(i == 0 ? action -> playTurn() : null);
             }
         });
+        moveDiceIn.play();
     }
 
     /***
