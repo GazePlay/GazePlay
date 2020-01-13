@@ -43,11 +43,6 @@ public class Egg extends Parent {
 
     final EventHandler<Event> enterEvent;
 
-    /**
-     * Use a comme Timeline object so we can stop the current animation to prevent overlapses.
-     */
-    private Timeline currentTimeline;
-
     public Egg(double positionX, double positionY, double width, double height, IGameContext gameContext, Stats stats,
                EggGame gameInstance, int fixationlength) {
 
@@ -74,8 +69,6 @@ public class Egg extends Parent {
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
-        // Prevent null pointer exception
-        currentTimeline = new Timeline();
     }
 
     private ProgressIndicator createProgressIndicator(double width, double height) {
@@ -89,6 +82,7 @@ public class Egg extends Parent {
     }
 
     private EventHandler<Event> buildEvent() {
+        Egg that = this;
 
         return new EventHandler<Event>() {
             @Override
@@ -101,13 +95,10 @@ public class Egg extends Parent {
                         progressIndicator.setOpacity(0.5);
                         progressIndicator.setProgress(0);
 
-                        currentTimeline.stop();
-                        currentTimeline = new Timeline(500);
-
                         timelineProgressBar = new Timeline();
 
                         timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
-                                new KeyValue(progressIndicator.progressProperty(), 1)));
+                            new KeyValue(progressIndicator.progressProperty(), 1)));
 
                         timelineProgressBar.play();
 
@@ -116,18 +107,23 @@ public class Egg extends Parent {
                             if (turned == 0) {
 
                                 card.setFill(
-                                        new ImagePattern(new Image("data/egg/images/egg2.jpg"), 0, 0, 1, 1, true));
+                                    new ImagePattern(new Image("data/egg/images/egg2.jpg"), 0, 0, 1, 1, true));
                                 turned = 1;
                                 stats.incNbGoals();
-                                playSound(2);
+                                playSound(1);
 
                             } else if (turned == 1) {
+
+                                gameContext.getGazeDeviceManager().removeEventFilter(card);
+                                that.removeEventFilter(MouseEvent.ANY, enterEvent);
+                                that.removeEventFilter(GazeEvent.ANY, enterEvent);
+
                                 card.setFill(
-                                        new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
+                                    new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
                                 progressIndicator.setOpacity(0);
                                 stats.notifyNewRoundReady();
                                 stats.incNbGoals();
-                                playSound(1);
+                                playSound(2);
 
                                 PauseTransition t = new PauseTransition(Duration.seconds(2));
                                 t.setOnFinished(actionEvent1 -> {
@@ -146,9 +142,6 @@ public class Egg extends Parent {
                     }
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                    currentTimeline.stop();
-                    currentTimeline = new Timeline();
-                    currentTimeline.play();
                     timelineProgressBar.stop();
                     progressIndicator.setOpacity(0);
                     progressIndicator.setProgress(0);

@@ -9,7 +9,7 @@ public class EggGameGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("EggGame").gameThumbnail("data/Thumbnails/creamPie.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("EggGame").gameThumbnail("data/Thumbnails/egg.png").category(GameCategories.Category.ACTION_REACTION).build(),
             new EggGameGameLauncher());
     }
 }
