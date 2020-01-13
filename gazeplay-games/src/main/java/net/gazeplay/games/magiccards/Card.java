@@ -193,8 +193,6 @@ public class Card extends Parent {
 
                 currentTimeline.play();
 
-                timelineProgressBar.play();
-
                 timelineProgressBar.setOnFinished(actionEvent -> {
 
                     turned = true;
@@ -210,6 +208,8 @@ public class Card extends Parent {
                         onWrongCardSelected();
                     }
                 });
+                timelineProgressBar.play();
+
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
                 currentTimeline.stop();

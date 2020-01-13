@@ -203,10 +203,6 @@ class SlidingPuzzleCard extends Parent {
                 timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                currentTimeline.play();
-
-                timelineProgressBar.play();
-
                 timelineProgressBar.setOnFinished(actionEvent -> {
 
                         progressIndicator.setTranslateX(kingPosX);
@@ -225,6 +221,9 @@ class SlidingPuzzleCard extends Parent {
                             onGameOver();
 
                 });
+
+                currentTimeline.play();
+                timelineProgressBar.play();
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
                 timelineProgressBar.stop();
                 progressIndicator.setOpacity(0);
