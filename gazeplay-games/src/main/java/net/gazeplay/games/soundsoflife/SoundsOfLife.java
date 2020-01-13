@@ -22,9 +22,6 @@ import java.util.Objects;
 @Slf4j
 public class SoundsOfLife implements GameLifeCycle {
 
-
-    private double scaleRatio;
-
     public SoundsOfLife(IGameContext gameContext, Stats stats, int gameVariant) {
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = gameContext.getConfiguration();
@@ -51,11 +48,11 @@ public class SoundsOfLife implements GameLifeCycle {
         ImageView background = new ImageView(backgroundImage);
 
         // use ratio in order to adapt images to screen
-        scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
+        double scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
             dimensions.getHeight() / backgroundImage.getHeight());
 
         if (!config.isBackgroundWhite()) {
-            createBackground(background, dimensions, gameContext);
+            createBackground(background, dimensions, scaleRatio, gameContext);
         }
 
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
@@ -98,7 +95,7 @@ public class SoundsOfLife implements GameLifeCycle {
 
     }
 
-    private void createBackground(ImageView background, Dimension2D dimensions, IGameContext gameContext) {
+    private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
 
         background.setFitWidth(background.getImage().getWidth() * scaleRatio);
         background.setFitHeight(background.getImage().getHeight() * scaleRatio);
