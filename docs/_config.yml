@@ -28,6 +28,7 @@ baseurl: "/GazePlay" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: GazePlay
 thumbnail_base: https://raw.githubusercontent.com/GazePlay/GazePlay/master/gazeplay/src/main/resources/data/Thumbnails
+zip_url: https://github.com/GazePlay/GazePlay/releases/download/gazeplay-project-1.6.1/gazeplay-dist-1.6.1.zip
 
 # Build settings
 remote_theme: mmistakes/minimal-mistakes
