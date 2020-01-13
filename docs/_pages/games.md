@@ -4,13 +4,11 @@ permalink: /games/
 layout: single
 ---
 
-https://raw.githubusercontent.com/GazePlay/GazePlay/master
-
 ## Cream Pies
 
 Throw a cream pie on the target by looking at it.
 
-![Creampie](https://raw.githubusercontent.com/GazePlay/GazePlay/master/gazeplay/src/main/resources/data/Thumbnails/creamPie.png)
+![Creampie]({{ site.thumbnail_base }}/creamPie.png)
 
 ## Ninja
 
