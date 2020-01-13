@@ -9,6 +9,6 @@ GazePlay has been conducted by Didier Schwab in the framework of a research proj
 
 You can find a list of GazePlay developers [here](https://github.com/GazePlay/GazePlay/graphs/contributors).
 
-#### Contacts
-__Didier Schwab__: <didier.schwab@univ-grenoble-alpes.fr>
+## Contacts
+__Didier Schwab__: <didier.schwab@univ-grenoble-alpes.fr>  
 __Gazeplay__: <gazeplay.net@gmail.com>
