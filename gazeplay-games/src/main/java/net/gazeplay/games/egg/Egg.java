@@ -31,10 +31,7 @@ public class Egg extends Parent {
 
     private final EggGame gameInstance;
 
-    /**
-     * true if the card has been turned
-     */
-    private int turned = 0;
+    private int turnNumber = 0;
 
     private final ProgressIndicator progressIndicator;
 
@@ -90,7 +87,7 @@ public class Egg extends Parent {
 
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                    if (turned <= 1) {
+                    if (turnNumber <= 1) {
 
                         progressIndicator.setOpacity(0.5);
                         progressIndicator.setProgress(0);
@@ -100,20 +97,19 @@ public class Egg extends Parent {
                         timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
                             new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                        timelineProgressBar.play();
-
                         timelineProgressBar.setOnFinished(actionEvent -> {
 
-                            if (turned == 0) {
+                            if (turnNumber == 0) {
 
+                                turnNumber = 1;
                                 card.setFill(
                                     new ImagePattern(new Image("data/egg/images/egg2.jpg"), 0, 0, 1, 1, true));
-                                turned = 1;
                                 stats.incNbGoals();
                                 playSound(1);
 
-                            } else if (turned == 1) {
+                            } else if (turnNumber == 1) {
 
+                                turnNumber = 2;
                                 gameContext.getGazeDeviceManager().removeEventFilter(card);
                                 that.removeEventFilter(MouseEvent.ANY, enterEvent);
                                 that.removeEventFilter(GazeEvent.ANY, enterEvent);
@@ -126,6 +122,7 @@ public class Egg extends Parent {
                                 playSound(2);
 
                                 PauseTransition t = new PauseTransition(Duration.seconds(2));
+
                                 t.setOnFinished(actionEvent1 -> {
 
                                     ForegroundSoundsUtils.stopSound();
@@ -135,10 +132,13 @@ public class Egg extends Parent {
                                     gameContext.showRoundStats(stats, gameInstance);
 
                                 });
+
                                 t.play();
 
                             }
                         });
+
+                        timelineProgressBar.play();
                     }
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
