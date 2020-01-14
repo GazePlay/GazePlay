@@ -115,10 +115,10 @@ public class Egg extends Parent {
 
                     timelineProgressBar.setOnFinished(actionEvent -> {
 
-                        if (turnNumber < numberTotalOfTurns -1) {
+                        if (turnNumber < numberTotalOfTurns - 1) {
 
                             turnNumber++;
-                            cards.getChildren().get(2).setOpacity( 1 - turnNumber/(float)(numberTotalOfTurns-1));
+                            cards.getChildren().get(2).setOpacity(1 - turnNumber / (float) (numberTotalOfTurns - 1));
                             stats.incNbGoals();
                             playSound(1);
 
