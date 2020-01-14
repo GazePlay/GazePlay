@@ -41,8 +41,10 @@ thumbnail_base: https://raw.githubusercontent.com/GazePlay/GazePlay/master/gazep
 
 
 # Build settings
-theme: minimal-mistakes-jekyll
-# remote_theme: mmistakes/minimal-mistakes
+
+# Uncomment this line when running locally
+# theme: minimal-mistakes-jekyll
+remote_theme: mmistakes/minimal-mistakes
 minimal_mistakes_skin: "air"
 
 # Plugins (previously gems:)

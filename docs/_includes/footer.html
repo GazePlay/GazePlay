@@ -1,3 +1,16 @@
+<script>
+  function getUrl(lang) {
+    var url = document.URL;
+    if (url.includes("fr") && lang === "English") {
+      return url.replace("fr", "");
+    } else if (!url.includes("fr") && lang === "French") {
+      return url.concat("fr");
+    } else {
+      return url;
+    }
+  }
+</script>
+
 <div class="page__footer-follow">
   <ul class="social-icons">
     {% if site.data.ui-text[site.locale].follow_label %}
@@ -14,6 +27,13 @@
       >
     </li>
     {% endif %} {% endfor %} {% endif %}
+
+    <li style="float: right;">
+      <a href="javascript:document.location.href=getUrl('French');">French</a>
+    </li>
+    <li style="float: right;">
+      <a href="javascript:document.location.href=getUrl('English');">English</a>
+    </li>
   </ul>
 </div>
 
