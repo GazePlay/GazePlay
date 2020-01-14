@@ -10,6 +10,6 @@ public class EggGameGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("EggGame").gameThumbnail("data/Thumbnails/egg.png").category(GameCategories.Category.ACTION_REACTION).build(),
-            new EggGameGameLauncher());
+            new EggGameVariantGenerator(), new EggGameGameLauncher());
     }
 }

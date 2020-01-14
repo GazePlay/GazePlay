@@ -16,10 +16,13 @@ public class EggGame implements GameLifeCycle {
 
     private Egg egg;
 
-    public EggGame(IGameContext gameContext, Stats stats) {
+    private int numberOfTurns;
+
+    public EggGame(IGameContext gameContext, Stats stats, int numOfTurns) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
+        this.numberOfTurns = numOfTurns;
     }
 
     @Override
@@ -52,9 +55,7 @@ public class EggGame implements GameLifeCycle {
         double positionX = gameDimension2D.getWidth() / 2 - EggWidth / 2;
         double positionY = gameDimension2D.getHeight() / 2 - EggHeight / 2;
 
-        Egg egg1 = new Egg(positionX, positionY, EggWidth, EggHeight, gameContext, stats, this, fixationlength);
-
-        return egg1;
+        return new Egg(positionX, positionY, EggWidth, EggHeight, gameContext, stats, this, fixationlength, numberOfTurns);
     }
 
 }
