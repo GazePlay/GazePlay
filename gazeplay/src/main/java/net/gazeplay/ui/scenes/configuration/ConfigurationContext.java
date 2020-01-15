@@ -953,10 +953,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
 
+        boolean wasPlaying = musicManager.isPlaying();
+
         musicManager.emptyPlaylist();
         musicManager.getAudioFromFolder(musicFolder);
 
-        if (musicManager.isPlaying())
+        if (wasPlaying)
             musicManager.play();
     }
 
