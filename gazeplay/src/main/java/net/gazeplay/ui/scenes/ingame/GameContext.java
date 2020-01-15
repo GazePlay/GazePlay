@@ -124,6 +124,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             pointer.toFront();
         };
         root.addEventFilter(MouseEvent.ANY, pointerEvent);
+        root.addEventFilter(GazeEvent.ANY, pointerEvent);
     }
 
     @Override
