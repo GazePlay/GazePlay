@@ -8,7 +8,6 @@ import mockit.Mocked;
 import mockit.Verifications;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
