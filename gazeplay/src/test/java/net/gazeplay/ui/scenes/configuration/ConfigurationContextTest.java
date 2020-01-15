@@ -8,6 +8,7 @@ import mockit.Mocked;
 import mockit.Verifications;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -109,6 +110,30 @@ class ConfigurationContextTest {
         new Verifications() {{
             mockMusicManager.play();
             times = 0;
+        }};
+    }
+
+    @Test
+    void canChangeTheMusicFolderWithBlankFolder(@Mocked BackgroundMusicManager mockMusicManager,
+                                                @Mocked Configuration mockConfiguration) {
+        StringProperty mockMusicFolderProperty = new SimpleStringProperty();
+        String expectedFolder = System.getProperty("user.home") + File.separator + "GazePlay" + File.separator + "music";
+
+        new Expectations() {{
+            mockMusicManager.isPlaying();
+            result = false;
+
+            BackgroundMusicManager.getInstance();
+            result = mockMusicManager;
+
+            mockConfiguration.getMusicFolderProperty();
+            result = mockMusicFolderProperty;
+        }};
+
+        ConfigurationContext.changeMusicFolder("", mockConfiguration);
+
+        new Verifications() {{
+            mockMusicManager.getAudioFromFolder(expectedFolder);
         }};
     }
 }
