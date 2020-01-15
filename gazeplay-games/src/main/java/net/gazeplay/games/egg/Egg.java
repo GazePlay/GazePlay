@@ -33,7 +33,7 @@ public class Egg extends Parent {
     private final EggGame gameInstance;
 
     private int turnNumber = 0;
-    private final int numberTotalOfTurns;
+    private final int totalNumberOfTurns;
 
     private final ProgressIndicator progressIndicator;
 
@@ -45,7 +45,7 @@ public class Egg extends Parent {
     public Egg(double positionX, double positionY, double width, double height, IGameContext gameContext, Stats stats,
                EggGame gameInstance, int fixationlength, int numberOfTurn) {
 
-        this.numberTotalOfTurns = numberOfTurn;
+        this.totalNumberOfTurns = numberOfTurn;
 
         this.cards = new StackPane();
         this.cards.setLayoutX(positionX);
@@ -103,7 +103,7 @@ public class Egg extends Parent {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                if (turnNumber < numberTotalOfTurns) {
+                if (turnNumber < totalNumberOfTurns) {
 
                     progressIndicator.setOpacity(0.5);
                     progressIndicator.setProgress(0);
@@ -115,14 +115,14 @@ public class Egg extends Parent {
 
                     timelineProgressBar.setOnFinished(actionEvent -> {
 
-                        if (turnNumber < numberTotalOfTurns - 1) {
+                        if (turnNumber < totalNumberOfTurns - 1) {
 
                             turnNumber++;
-                            cards.getChildren().get(2).setOpacity(1 - turnNumber / (float) (numberTotalOfTurns - 1));
+                            cards.getChildren().get(2).setOpacity(1 - turnNumber / (float) (totalNumberOfTurns - 1));
                             stats.incNbGoals();
                             playSound(1);
 
-                        } else if (turnNumber == numberTotalOfTurns - 1) {
+                        } else if (turnNumber == totalNumberOfTurns - 1) {
 
                             turnNumber++;
                             gameContext.getGazeDeviceManager().removeEventFilter(cards);
