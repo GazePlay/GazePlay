@@ -14,6 +14,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.NonNull;
@@ -28,6 +30,7 @@ import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.DefaultAnimationSpeedRatioSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
@@ -76,6 +79,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     private final Pane gamingRoot;
 
+    private EventHandler<Event> pointerEvent;
+    private Circle pointer;
+
     protected GameContext(
         @NonNull GazePlay gazePlay,
         @NonNull Translator translator,
@@ -96,6 +102,29 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         this.gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
         this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
+
+        if (this.getConfiguration().isVideoRecordingEnabled()) {
+            this.createPointer();
+        }
+    }
+
+    public void createPointer() {
+        pointer = new Circle(10, Color.RED);
+        pointer.setMouseTransparent(true);
+        pointer.setOpacity(0.5);
+        root.getChildren().add(pointer);
+        pointerEvent = e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                pointer.setCenterX(((MouseEvent) e).getX());
+                pointer.setCenterY(((MouseEvent) e).getY());
+            } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
+                pointer.setCenterX(((GazeEvent) e).getX());
+                pointer.setCenterY(((GazeEvent) e).getY());
+            }
+            pointer.toFront();
+        };
+        root.addEventFilter(MouseEvent.ANY, pointerEvent);
+        root.addEventFilter(GazeEvent.ANY, pointerEvent);
     }
 
     @Override
@@ -121,11 +150,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
             public void handle(KeyEvent event) {
 
-                try {
-                    exitGame(stats, gazePlay, currentGame);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                exitGame(stats, gazePlay, currentGame);
                 scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                 scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
             }
@@ -170,12 +195,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         EventHandler<Event> homeEvent = e -> {
             root.setCursor(Cursor.WAIT); // Change cursor to wait style
-            try {
-                exitGame(stats, gazePlay, currentGame);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            // BackgroundMusicManager.getInstance().pause();
+            exitGame(stats, gazePlay, currentGame);
             root.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 
@@ -184,8 +204,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         return homeButton;
     }
 
-    private void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame)
-        throws IOException {
+    private void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
+
         currentGame.dispose();
         ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
         stats.stop();
@@ -256,6 +276,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         CustomButton continueButton = new CustomButton("data/common/images/continue.png");
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             getGazePlay().onGameLaunch(this);
+            stats.reset();
             currentGame.launch();
         });
 
@@ -264,7 +285,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         this.clear();
         getGazePlay().onDisplayStats(statsContext);
 
-        stats.reset();
     }
 
     @Override
