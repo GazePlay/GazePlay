@@ -68,7 +68,6 @@ public class MouseV0 extends Mouse {
                 timelineProgressBar = new Timeline();
                 timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
                     new KeyValue(gb.getIndicator().progressProperty(), 1)));
-                timelineProgressBar.play();
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
                     gb.getIndicator().setOpacity(0);
@@ -80,6 +79,7 @@ public class MouseV0 extends Mouse {
                     gameInstance.testIfCheese(indiceY, indiceX);
                     mettreAJourLesEventHandler();
                 });
+                timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 

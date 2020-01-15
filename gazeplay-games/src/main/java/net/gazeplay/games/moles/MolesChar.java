@@ -135,7 +135,7 @@ public class MolesChar extends Parent {
         TranslateTransition translation = new TranslateTransition(new Duration(1500), this);
         translation.setByX(0);
         translation.setByY(-this.distTranslation);
-        translation.play();
+        
         this.mole.opacityProperty().set(1);
 
         translation.setOnFinished(actionEvent -> {
@@ -157,7 +157,6 @@ public class MolesChar extends Parent {
                 .add(new KeyFrame(new Duration(time),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
             timeMoleOut.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-            timeMoleOut.play();
             /* If the Mole is stay out without being touching */
             timeMoleOut.setOnFinished(actionEvent1 -> {
                 if (!touched && out) {
@@ -165,8 +164,10 @@ public class MolesChar extends Parent {
                     goIn(); // Go back in the hole
                 }
             });
-
+            timeMoleOut.play();
         });
+
+        translation.play();
     }
 
     private void goIn() {
@@ -185,12 +186,12 @@ public class MolesChar extends Parent {
         TranslateTransition translation = new TranslateTransition(new Duration(timeGoIn), this);
         translation.setByX(0);
         translation.setByY(this.distTranslation);
-        translation.play();
         translation.setOnFinished(actionEvent -> {
             gameInstance.getNbMolesOut().decrementAndGet();
             mole.opacityProperty().set(0);
             canGoOut = true;
         });
+        translation.play();
     }
 
 }

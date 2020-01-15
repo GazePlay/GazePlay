@@ -110,11 +110,11 @@ public class CupsAndBalls implements GameLifeCycle {
             cup.setActionsToDo(actions.size());
         }
         if (revealBallTransition != null) {
-            revealBallTransition.play();
             revealBallTransition.setOnFinished(e -> {
                 ball.getItem().setVisible(false);
                 createNewTransition(actions);
             });
+            revealBallTransition.play();
         }
         stats.notifyNewRoundReady();
     }

@@ -182,8 +182,6 @@ class Potion extends Parent {
                 timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationLength),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                timelineProgressBar.play();
-
                 timelineProgressBar.setOnFinished(event1 -> {
                     chosen = true;
                     gameInstance.currentRoundDetails.getMixture().add(potionColor); // we add the color of the potion to our mixture
@@ -218,6 +216,8 @@ class Potion extends Parent {
                             throw new IllegalArgumentException("value : " + gameInstance.currentRoundDetails.getMixture().size());
                     }
                 });
+                timelineProgressBar.play();
+
             } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
                 || event.getEventType() == GazeEvent.GAZE_EXITED) {
                 timelineProgressBar.stop();

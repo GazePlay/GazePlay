@@ -43,6 +43,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.monte.media.FormatKeys.*;
+import static org.monte.screenrecorder.ScreenRecorder.ENCODING_BLACK_CURSOR;
+
 /**
  * Created by schwab on 16/08/2017.
  */
@@ -167,13 +170,16 @@ public class Stats implements GazeMotionListener {
             this.screenRecorder = new ScreenRecorder(cfg, areaRect,
                     new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.FILE, VideoFormatKeys.MimeTypeKey,
                             mimeType),
-                    new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.VIDEO, VideoFormatKeys.EncodingKey,
+                    new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.VIDEO, EncodingKey,
                             videoFormatName, VideoFormatKeys.CompressorNameKey, compressorName,
                             VideoFormatKeys.WidthKey, outputDimension.width, VideoFormatKeys.HeightKey,
                             outputDimension.height, VideoFormatKeys.DepthKey, (int) bitDepth,
-                            VideoFormatKeys.FrameRateKey, Rational.valueOf((double) screenRate),
+                            FrameRateKey, Rational.valueOf((double) screenRate),
                             VideoFormatKeys.QualityKey, quality, VideoFormatKeys.KeyFrameIntervalKey, screenRate * 60),
-                    null, null, this.movieFolder);
+                new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.VIDEO,
+                    EncodingKey, ENCODING_BLACK_CURSOR,
+                    FrameRateKey, new Rational(30, 1))
+                    , null, this.movieFolder);
             this.screenRecorder.start();
         } catch (IOException | AWTException e) {
             e.printStackTrace();

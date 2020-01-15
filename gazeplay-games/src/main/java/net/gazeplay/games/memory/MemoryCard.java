@@ -194,7 +194,6 @@ public class MemoryCard extends Parent {
                     timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
                         new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                    timelineProgressBar.play();
                     timelineProgressBar.setOnFinished(actionEvent -> {
                         gameInstance.nbTurnedCards = gameInstance.nbTurnedCards + 1;
                         turned = true;
@@ -209,6 +208,7 @@ public class MemoryCard extends Parent {
                         progressIndicator.setOpacity(isOpen ? 0.35 : 0);
 
                     });
+                    timelineProgressBar.play();
                 } else { /* 2nd card */
 
                     progressIndicator.setOpacity(1);
@@ -218,8 +218,6 @@ public class MemoryCard extends Parent {
 
                     timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
                         new KeyValue(progressIndicator.progressProperty(), 1)));
-
-                    timelineProgressBar.play();
 
                     timelineProgressBar.setOnFinished(actionEvent -> {
 
@@ -242,8 +240,6 @@ public class MemoryCard extends Parent {
 
                             timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1000)));
 
-                            timelineCard.play();
-
                             timelineCard.setOnFinished(actionEvent1 -> {
 
                                 if (timelineCard != null)
@@ -255,8 +251,10 @@ public class MemoryCard extends Parent {
                                     onWrongCardSelected();
                                 }
                             });
+                            timelineCard.play();
                         }
                     });
+                    timelineProgressBar.play();
                 }
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {

@@ -86,8 +86,8 @@ public class ColorBox extends StackPane {
         double totalHeight = dimension2D.getHeight();
 
         // Compute free space taking into account every elements in the tool box
-        double freeSpace = totalHeight - ((ColorToolBox.SPACING_PX + 2 * COLOR_BOX_PADDING) * (5 + 1) + toolBox.getImageManager().getBoundsInLocal().getHeight()
-            + toolBox.getColorziationPane().getBoundsInLocal().getHeight() + ColorToolBox.COLORIZE_BUTTONS_SIZE_PX) - COLOR_BOX_PADDING * 2;
+        double freeSpace = totalHeight - ((ColorToolBox.SPACING_PX + 2 * COLOR_BOX_PADDING) * (ColorToolBox.NB_COLORS_DISPLAYED)
+            + 3 * ColorToolBox.COLORIZE_BUTTONS_SIZE_PX);
 
 
         // + 1 for the curstom color box

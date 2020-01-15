@@ -226,8 +226,6 @@ public class Bloc extends Parent {// Rectangle {
                 currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                currentTimeline.play();
-
                 // timelineProgressBar.play();
 
                 // timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
@@ -242,6 +240,7 @@ public class Bloc extends Parent {// Rectangle {
                         onWrongBlocSelected();
                     }
                 });
+                currentTimeline.play();
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
                 currentTimeline.stop();

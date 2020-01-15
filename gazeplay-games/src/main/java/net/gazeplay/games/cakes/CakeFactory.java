@@ -394,10 +394,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             log.warn("file doesn't exist : {}", soundResource);
             log.warn(e.getMessage());
         }
-        sq.play();
-
         sq.setOnFinished(actionEvent -> {
-
             TranslateTransition tt1 = new TranslateTransition(Duration.millis(500), aerograph);
             tt1.setToX(0);
             TranslateTransition tt21 = new TranslateTransition(Duration.millis(500), aerograph2);
@@ -407,8 +404,8 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             pt1.play();
             cake[currentCake].getChildren().remove(temp2);
             gameContext.getChildren().removeAll(spray, spray2);
-
         });
+        sq.play();
     }
 
     private void otherPages(int j, int k) {
