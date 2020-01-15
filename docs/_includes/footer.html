@@ -1,9 +1,9 @@
 <script>
   function getUrl(lang) {
     var url = document.URL;
-    if (url.includes("fr") && lang === "English") {
+    if (url.includes("fr") && lang === "en") {
       return url.replace("fr", "");
-    } else if (!url.includes("fr") && lang === "French") {
+    } else if (!url.includes("fr") && lang === "fr") {
       return url.concat("fr");
     } else {
       return url;
@@ -29,10 +29,10 @@
     {% endif %} {% endfor %} {% endif %}
 
     <li style="float: right;">
-      <a href="javascript:document.location.href=getUrl('French');">French</a>
+      <a href="javascript:document.location.href=getUrl('fr');">Francais</a>
     </li>
     <li style="float: right;">
-      <a href="javascript:document.location.href=getUrl('English');">English</a>
+      <a href="javascript:document.location.href=getUrl('en');">English</a>
     </li>
   </ul>
 </div>
