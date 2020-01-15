@@ -1,0 +1,49 @@
+<script>
+  function getUrl(lang) {
+    var url = document.URL;
+    if (url.includes("fr") && lang === "English") {
+      return url.replace("fr", "");
+    } else if (!url.includes("fr") && lang === "French") {
+      return url.concat("fr");
+    } else {
+      return url;
+    }
+  }
+</script>
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    {% if site.data.ui-text[site.locale].follow_label %}
+    <li><strong>{{ site.data.ui-text[site.locale].follow_label }}</strong></li>
+    {% endif %} {% if site.footer.links %} {% for link in site.footer.links %}
+    {% if link.label and link.url %}
+    <li>
+      <a href="{{ link.url }}" rel="nofollow noopener noreferrer"
+        ><i
+          class="{{ link.icon | default: 'fas fa-link' }}"
+          aria-hidden="true"
+        ></i>
+        {{ link.label }}</a
+      >
+    </li>
+    {% endif %} {% endfor %} {% endif %}
+
+    <li style="float: right;">
+      <a href="javascript:document.location.href=getUrl('French');">French</a>
+    </li>
+    <li style="float: right;">
+      <a href="javascript:document.location.href=getUrl('English');">English</a>
+    </li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">
+  &copy; {{ site.time | date: '%Y' }} {{ site.name | default: site.title }}. {{
+  site.data.ui-text[site.locale].powered_by | default: "Powered by" }}
+  <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp;
+  <a
+    href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/"
+    rel="nofollow"
+    >Minimal Mistakes</a
+  >.
+</div>
