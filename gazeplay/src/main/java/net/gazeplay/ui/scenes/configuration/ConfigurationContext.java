@@ -935,7 +935,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return pane;
     }
 
-    private static void changeMusicFolder(final String newMusicFolder, Configuration config) {
+    static void changeMusicFolder(final String newMusicFolder, Configuration config) {
 
         String musicFolder = newMusicFolder;
 
@@ -955,7 +955,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         musicManager.emptyPlaylist();
         musicManager.getAudioFromFolder(musicFolder);
-        musicManager.play();
+
+        if (musicManager.isPlaying())
+            musicManager.play();
     }
 
     static void setupNewMusicFolder(File gazePlayMusicFolder, String defaultSong) {
