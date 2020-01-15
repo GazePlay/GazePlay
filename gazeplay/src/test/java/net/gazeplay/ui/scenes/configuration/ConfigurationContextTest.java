@@ -2,35 +2,21 @@ package net.gazeplay.ui.scenes.configuration;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import lombok.extern.slf4j.Slf4j;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Verifications;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(BackgroundMusicManager.class)
+@Slf4j
 class ConfigurationContextTest {
-
-    private BackgroundMusicManager mockMusicManager;
-    private Configuration mockConfiguration;
-
-    @BeforeEach
-    void setup() {
-        mockMusicManager = mock(BackgroundMusicManager.class);
-        mockConfiguration = mock(Configuration.class);
-        mockStatic(BackgroundMusicManager.class);
-        when(BackgroundMusicManager.getInstance()).thenReturn(mockMusicManager);
-    }
 
     @Test
     void canSetupANewMusicFolder() {
@@ -79,14 +65,50 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void canChangeTheMusicFolderAndPlayIfWasPlaying() {
+    void canChangeTheMusicFolderAndPlayIfWasPlaying(@Mocked BackgroundMusicManager mockMusicManager,
+                                                    @Mocked Configuration mockConfiguration) {
         StringProperty mockMusicFolderProperty = new SimpleStringProperty();
 
-        when(mockMusicManager.isPlaying()).thenReturn(true);
-        when(mockConfiguration.getMusicFolderProperty()).thenReturn(mockMusicFolderProperty);
+        new Expectations() {{
+            mockMusicManager.isPlaying();
+            result = true;
+
+            BackgroundMusicManager.getInstance();
+            result = mockMusicManager;
+
+            mockConfiguration.getMusicFolderProperty();
+            result = mockMusicFolderProperty;
+        }};
 
         ConfigurationContext.changeMusicFolder("mockFolder", mockConfiguration);
 
-        verify(mockMusicManager).play();
+        new Verifications() {{
+            mockMusicManager.play();
+            times = 1;
+        }};
+    }
+
+    @Test
+    void canChangeTheMusicFolderAndNotPlayIfWasntPlaying(@Mocked BackgroundMusicManager mockMusicManager,
+                                                         @Mocked Configuration mockConfiguration) {
+        StringProperty mockMusicFolderProperty = new SimpleStringProperty();
+
+        new Expectations() {{
+            mockMusicManager.isPlaying();
+            result = false;
+
+            BackgroundMusicManager.getInstance();
+            result = mockMusicManager;
+
+            mockConfiguration.getMusicFolderProperty();
+            result = mockMusicFolderProperty;
+        }};
+
+        ConfigurationContext.changeMusicFolder("mockFolder", mockConfiguration);
+
+        new Verifications() {{
+            mockMusicManager.play();
+            times = 0;
+        }};
     }
 }
