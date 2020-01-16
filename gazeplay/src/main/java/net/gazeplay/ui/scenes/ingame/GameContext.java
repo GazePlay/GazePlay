@@ -80,7 +80,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     private final Pane gamingRoot;
 
     private EventHandler<Event> pointerEvent;
-    private Circle pointer;
+    private Circle mousePointer;
+    private Circle gazePointer;
 
     protected GameContext(
         @NonNull GazePlay gazePlay,
@@ -104,34 +105,43 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
         if (this.getConfiguration().isVideoRecordingEnabled()) {
-            this.pointerInit();
+            this.pointersInit();
         }
     }
 
-    public void pointerInit() {
-        pointer = new Circle(10, Color.RED);
-        pointer.setMouseTransparent(true);
-        pointer.setOpacity(0.5);
-        root.getChildren().add(pointer);
+    public void pointersInit() {
+        mousePointer = new Circle(10, Color.RED);
+        mousePointer.setMouseTransparent(true);
+        mousePointer.setOpacity(0.5);
+        root.getChildren().add(mousePointer);
+
+
+        gazePointer = new Circle(10, Color.BLUE);
+        gazePointer.setMouseTransparent(true);
+        gazePointer.setOpacity(0.5);
+        root.getChildren().add(gazePointer);
+
         pointerEvent = e -> {
             if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                pointer.setCenterX(((MouseEvent) e).getX());
-                pointer.setCenterY(((MouseEvent) e).getY());
+                mousePointer.setCenterX(((MouseEvent) e).getX());
+                mousePointer.setCenterY(((MouseEvent) e).getY());
+                mousePointer.toFront();
             } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
-                pointer.setCenterX(((GazeEvent) e).getX());
-                pointer.setCenterY(((GazeEvent) e).getY());
+                gazePointer.setCenterX(((GazeEvent) e).getX());
+                gazePointer.setCenterY(((GazeEvent) e).getY());
+                gazePointer.toFront();
             }
-            pointer.toFront();
         };
         root.addEventFilter(MouseEvent.ANY, pointerEvent);
         root.addEventFilter(GazeEvent.ANY, pointerEvent);
     }
 
 
-    public void pointerClear() {
+    public void pointersClear() {
         root.removeEventFilter(MouseEvent.ANY, pointerEvent);
         root.removeEventFilter(GazeEvent.ANY, pointerEvent);
-        root.getChildren().remove(pointer);
+        root.getChildren().remove(gazePointer);
+        root.getChildren().remove(mousePointer);
     }
 
     @Override
@@ -213,7 +223,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     private void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
-        pointerClear();
+        pointersClear();
 
         currentGame.dispose();
         ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
