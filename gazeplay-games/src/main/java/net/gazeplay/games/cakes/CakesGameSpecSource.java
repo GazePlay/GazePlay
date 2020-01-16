@@ -9,7 +9,12 @@ public class CakesGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Cakes").gameThumbnail("data/Thumbnails/cakes.png").category(GameCategories.Category.MEMORIZATION).build(),
+            GameSummary.builder().nameCode("Cakes").gameThumbnail("data/Thumbnails/cakes.png")
+                .category(GameCategories.Category.ACTION_REACTION)
+                .category(GameCategories.Category.SELECTION)
+                .category(GameCategories.Category.LOGIC_MATHS)
+                .category(GameCategories.Category.MEMORIZATION)
+                .build(),
             new CakesGameVariantGenerator(), new CakesGameLauncher());
     }
 }

@@ -9,7 +9,7 @@ public class BibouleJumpGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("BibJump").gameThumbnail("data/Thumbnails/biboulejump.png").category(GameCategories.Category.SELECTION).build(),
+            GameSummary.builder().nameCode("BibJump").gameThumbnail("data/Thumbnails/biboulejump.png").category(GameCategories.Category.ACTION_REACTION).build(),
             new BibouleJumpGameVariantGenerator(), new BibouleJumpGameLauncher());
     }
 }

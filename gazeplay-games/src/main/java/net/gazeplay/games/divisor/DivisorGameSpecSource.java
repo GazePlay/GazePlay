@@ -9,7 +9,9 @@ public class DivisorGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Divisor").gameThumbnail("data/Thumbnails/divisor.png").category(GameCategories.Category.SELECTION).build(),
+            GameSummary.builder().nameCode("Divisor").gameThumbnail("data/Thumbnails/divisor.png")
+                .category(GameCategories.Category.ACTION_REACTION)
+                .category(GameCategories.Category.LOGIC_MATHS).build(),
             new DivisorGameLauncher());
     }
 }
