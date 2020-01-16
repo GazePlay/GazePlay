@@ -104,11 +104,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
         if (this.getConfiguration().isVideoRecordingEnabled()) {
-            this.createPointer();
+            this.pointerInit();
         }
     }
 
-    public void createPointer() {
+    public void pointerInit() {
         pointer = new Circle(10, Color.RED);
         pointer.setMouseTransparent(true);
         pointer.setOpacity(0.5);
@@ -125,6 +125,13 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         };
         root.addEventFilter(MouseEvent.ANY, pointerEvent);
         root.addEventFilter(GazeEvent.ANY, pointerEvent);
+    }
+
+
+    public void pointerClear() {
+        root.removeEventFilter(MouseEvent.ANY, pointerEvent);
+        root.removeEventFilter(GazeEvent.ANY, pointerEvent);
+        root.getChildren().remove(pointer);
     }
 
     @Override
@@ -205,6 +212,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     private void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
+
+        pointerClear();
 
         currentGame.dispose();
         ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
