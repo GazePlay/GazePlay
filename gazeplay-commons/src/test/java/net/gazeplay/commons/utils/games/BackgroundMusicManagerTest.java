@@ -8,16 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(ApplicationExtension.class)
-@RunWith(MockitoJUnitRunner.class)
 class BackgroundMusicManagerTest {
 
     private BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
@@ -43,7 +40,7 @@ class BackgroundMusicManagerTest {
 
     @AfterEach
     void teardown() {
-        musicManager.getCurrentMusic().setVolume(previousVolume);
+        if (musicManager.getCurrentMusic() != null) musicManager.getCurrentMusic().setVolume(previousVolume);
     }
 
     @Test
@@ -76,5 +73,49 @@ class BackgroundMusicManagerTest {
     @ValueSource(doubles = {-0.1, 100, 1.1})
     void shouldNotSetTheVolume(double volume) {
         assertThrows(IllegalArgumentException.class, () -> musicManager.setVolume(volume));
+    }
+
+    @Test
+    void shouldBackupAndRestorePlaylist() {
+        int numberOfTracks = musicManager.getPlaylist().size();
+        musicManager.backupPlaylist();
+        musicManager.emptyPlaylist();
+        musicManager.restorePlaylist();
+        assertEquals(numberOfTracks, musicManager.getPlaylist().size());
+    }
+
+    @Test
+    void shouldNotBackupOrRestoreEmptyPlaylist() {
+        int numberOfTracks = musicManager.getPlaylist().size();
+        musicManager.emptyPlaylist();
+
+        musicManager.backupPlaylist();
+        musicManager.restorePlaylist();
+
+        assertNotEquals(numberOfTracks, musicManager.getPlaylist().size());
+    }
+
+    @Test
+    void shouldOnlyBackupThePlaylistOnce() {
+        int numberOfTracks = musicManager.getPlaylist().size();
+        musicManager.backupPlaylist();
+        musicManager.backupPlaylist();
+
+        musicManager.emptyPlaylist();
+
+        musicManager.restorePlaylist();
+        assertEquals(numberOfTracks, musicManager.getPlaylist().size());
+    }
+
+    @Test
+    void shouldOnlyRestoreThePlaylistOnce() {
+        int numberOfTracks = musicManager.getPlaylist().size();
+        musicManager.backupPlaylist();
+
+        musicManager.emptyPlaylist();
+
+        musicManager.restorePlaylist();
+        musicManager.restorePlaylist();
+        assertEquals(numberOfTracks, musicManager.getPlaylist().size());
     }
 }

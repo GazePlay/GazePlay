@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
@@ -67,14 +68,6 @@ public class GameMenuController {
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);
 
-        // if (config.isHeatMapDisabled()) {
-        // log.info("HeatMap is disabled, skipping instantiation of the HeatMap Data model");
-        // } else {
-        // // gameContext.getGazeDeviceManager().addGazeMotionListener(stats);
-        // }
-
-        // gameContext.getGazeDeviceManager().addGazeMotionListener(secondScreen);
-
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
 
         gameContext.createControlPanel(gazePlay, stats, currentGame);
@@ -82,18 +75,24 @@ public class GameMenuController {
         gameContext.createQuitShortcut(gazePlay, stats, currentGame);
 
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
-
             final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
-            log.info("is default music set : {}", musicManager.getIsCustomMusicSet().getValue());
-            if (!musicManager.getIsCustomMusicSet().getValue() || musicManager.getPlaylist().isEmpty()) {
-                musicManager.emptyPlaylist();
-                musicManager.playMusicAlone(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
-                gameContext.getMusicControl().updateMusicController();
-            }
+            playBackgroundMusic(gameContext, selectedGameSpec, musicManager);
         }
 
         stats.start();
         currentGame.launch();
+    }
+
+    void playBackgroundMusic(GameContext gameContext, GameSpec selectedGameSpec, BackgroundMusicManager musicManager) {
+        boolean defaultMusicPlaying = musicManager.getCurrentMusic().getMedia().getSource().contains(Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC);
+        log.info("is default music set : {}", defaultMusicPlaying);
+
+        if (defaultMusicPlaying || musicManager.getPlaylist().isEmpty()) {
+            musicManager.backupPlaylist();
+            musicManager.emptyPlaylist();
+            musicManager.playMusicAlone(selectedGameSpec.getGameSummary().getBackgroundMusicUrl());
+            gameContext.getMusicControl().updateMusicController();
+        }
     }
 
 }

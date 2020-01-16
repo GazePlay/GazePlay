@@ -943,7 +943,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             File gazePlayFolder = GazePlayDirectories.getGazePlayFolder();
             File gazePlayMusicFolder = new File(gazePlayFolder, "music");
 
-            String songName = "songidea(copycat)_0.mp3";
+            String songName = Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC;
             setupNewMusicFolder(gazePlayMusicFolder, songName);
 
             musicFolder = gazePlayMusicFolder.getAbsolutePath();
