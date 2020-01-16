@@ -11,9 +11,9 @@ public class GameCategories {
         ACTION_REACTION("ActionReaction games", categoryThumbnailsPath + "searching-magnifying-glass.png"),
         SELECTION("Selection games", categoryThumbnailsPath + "target.png"),
         MEMORIZATION("Memorization games", categoryThumbnailsPath + "male-brain.png"),
-        LOGIC("Logic games", categoryThumbnailsPath + "logic_gear.png"),
-        CREATIVITY("Creativity games", categoryThumbnailsPath + "creativity-icon.png"),
-        UTILITY("Utilities", categoryThumbnailsPath + "utility-icon.png");
+        LOGIC_MATHS("Logic and Maths games", categoryThumbnailsPath + "creativity-icon.png"),
+        LITERACY("Literacy games", categoryThumbnailsPath + "logic_gear.png"),
+        MULTIMEDIA("Multimedia", categoryThumbnailsPath + "utility-icon.png");
 
         @NonNull
         @Getter

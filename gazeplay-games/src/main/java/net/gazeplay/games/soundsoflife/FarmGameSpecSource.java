@@ -9,7 +9,9 @@ public class FarmGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Farm").gameThumbnail("data/Thumbnails/farm.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("Farm").gameThumbnail("data/Thumbnails/farm.png")
+                .category(GameCategories.Category.ACTION_REACTION)
+                .category(GameCategories.Category.SELECTION).build(),
             new FarmGameLauncher());
     }
 }

@@ -9,7 +9,9 @@ public class ColorsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Colorsss").gameThumbnail("data/Thumbnails/colors.png").category(GameCategories.Category.ACTION_REACTION).description("ColorDesc").build(),
+            GameSummary.builder().nameCode("Colorsss").gameThumbnail("data/Thumbnails/colors.png")
+                .category(GameCategories.Category.ACTION_REACTION)
+                .category(GameCategories.Category.SELECTION).description("ColorDesc").build(),
             new ColorsGameLauncher());
     }
 }
