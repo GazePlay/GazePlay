@@ -38,10 +38,7 @@ public class EggGame implements GameLifeCycle {
 
     @Override
     public void dispose() {
-        if (egg != null) {
-            gameContext.getChildren().remove(egg);
-            egg = null;
-        }
+        gameContext.getChildren().clear();
     }
 
     private Egg createEgg(Configuration config) {

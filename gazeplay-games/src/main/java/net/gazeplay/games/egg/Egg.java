@@ -132,7 +132,6 @@ public class Egg extends Parent {
                             cards.getChildren().get(1).setOpacity(0);
 
                             progressIndicator.setOpacity(0);
-                            stats.notifyNewRoundReady();
                             stats.incNbGoals();
                             playSound(2);
 
@@ -142,9 +141,14 @@ public class Egg extends Parent {
 
                                 ForegroundSoundsUtils.stopSound();
 
-                                gameInstance.dispose();
+                                gameContext.playWinTransition(0, event -> {
+                                    gameInstance.dispose();
 
-                                gameContext.showRoundStats(stats, gameInstance);
+                                    gameContext.clear();
+
+                                    gameContext.showRoundStats(stats, gameInstance);
+
+                                });
 
                             });
 
@@ -166,13 +170,7 @@ public class Egg extends Parent {
 
     public void playSound(int i) {
         String soundResource = "data/egg/sounds/" + i + ".mp3";
-        try {
-            ForegroundSoundsUtils.playSound(soundResource);
-        } catch (Exception e) {
-
-            log.warn("file doesn't exist : {}", soundResource);
-            log.warn(e.getMessage());
-        }
+        ForegroundSoundsUtils.playSound(soundResource);
     }
 
 }
