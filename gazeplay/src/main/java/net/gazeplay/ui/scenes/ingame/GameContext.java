@@ -120,6 +120,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         gazePointer.setMouseTransparent(true);
         gazePointer.setOpacity(0.5);
         root.getChildren().add(gazePointer);
+        getGazeDeviceManager().addEventFilter(root);
 
         pointerEvent = e -> {
             if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
@@ -142,6 +143,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         root.removeEventFilter(GazeEvent.ANY, pointerEvent);
         root.getChildren().remove(gazePointer);
         root.getChildren().remove(mousePointer);
+        getGazeDeviceManager().removeEventFilter(root);
     }
 
     @Override

@@ -55,9 +55,11 @@ public class Egg extends Parent {
 
         Rectangle image1 = new Rectangle(positionX, positionY, width, height);
         image1.setFill(new ImagePattern(new Image("data/egg/images/egg1.jpg"), 0, 0, 1, 1, true));
+        image1.setMouseTransparent(true);
 
         Rectangle image2 = new Rectangle(positionX, positionY, width, height);
         image2.setFill(new ImagePattern(new Image("data/egg/images/egg2.jpg"), 0, 0, 1, 1, true));
+        image2.setMouseTransparent(true);
 
         Rectangle image3 = new Rectangle(positionX, positionY, width, height);
         image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
@@ -79,10 +81,10 @@ public class Egg extends Parent {
 
         this.enterEvent = buildEvent();
 
-        gameContext.getGazeDeviceManager().addEventFilter(cards);
+        gameContext.getGazeDeviceManager().addEventFilter(image3);
 
-        this.addEventFilter(MouseEvent.ANY, enterEvent);
-        this.addEventFilter(GazeEvent.ANY, enterEvent);
+        image3.addEventFilter(MouseEvent.ANY, enterEvent);
+        image3.addEventFilter(GazeEvent.ANY, enterEvent);
 
     }
 
@@ -93,6 +95,7 @@ public class Egg extends Parent {
         indicator.setMinWidth(width);
         indicator.setMinHeight(width);
         indicator.setOpacity(0);
+        indicator.setMouseTransparent(true);
         return indicator;
     }
 
@@ -114,6 +117,8 @@ public class Egg extends Parent {
                         new KeyValue(progressIndicator.progressProperty(), 1)));
 
                     timelineProgressBar.setOnFinished(actionEvent -> {
+
+                        log.info("enter in the image 3");
 
                         if (turnNumber < totalNumberOfTurns - 1) {
 
