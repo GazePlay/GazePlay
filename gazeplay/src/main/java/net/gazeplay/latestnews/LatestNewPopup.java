@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class LatestNewPopup {
 
-    private static final String serviceBaseUrl = "https://gazeplayreleases.wordpress.com";
+    private static final String serviceBaseUrl = "https://gazeplay.github.io/GazePlay/updates";
 
     private final Configuration config;
 
