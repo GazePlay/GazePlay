@@ -1,6 +1,6 @@
 ---
 title: Close this window to start GazePlay
-permalink: /updates/gazeplay-1-6-1-eng/
+permalink: /updates/gazeplay-1-7-0-eng/
 layout: single
 ---
 
@@ -16,5 +16,5 @@ It is possible to support the development of GazePlay through donations. These d
 
 ---
 
-GazePlay 1.6.1 – http://www.gazeplay.net – <gazeplay.net@gmail.com>  
-GAZEPLAY Copyright (C) 2016-2019 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
+GazePlay 1.7.0 – http://www.gazeplay.net – <gazeplay.net@gmail.com>  
+GAZEPLAY Copyright (C) 2016-2020 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
