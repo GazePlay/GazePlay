@@ -24,12 +24,12 @@
     }
   }
 
-  function determineHomePage(relative_url) {
+  function determineHomePage() {
     var current = document.URL;
     if (current.includes("fr")) {
       return "/GazePlay/fr";
     } else {
-      return relative_url;
+      return "/GazePlay";
     }
   }
 </script>
@@ -49,7 +49,7 @@ endcapture %} {% endif %}
         {% endunless %}
         <a
           class="site-title"
-          href="javascript:document.location.href=determineHomePage('{{ relative_url }}')"
+          href="javascript:document.location.href=determineHomePage()"
         >
           {{ site.masthead_title | default: site.title }} {% if site.subtitle
           %}<span class="site-subtitle">{{ site.subtitle }}</span>{% endif %}
@@ -61,13 +61,7 @@ endcapture %} {% endif %}
           <li class="masthead__menu-item-{{ link.title }}">
             <a
               href="javascript:document.location.href=getLinkUrl('{{ url }}')"
-              {%
-              if
-              link.description
-              %}title="{{ link.description }}"
-              {%
-              endif
-              %}
+              {% if link.description %}title="{{ link.description }}" {% endif %}
               >{{ link.title }}</a
             >
             <script>
