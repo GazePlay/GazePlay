@@ -1,10 +1,13 @@
 ---
-title: Close this window to start GazePlay
+title: Gazeplay 1.7 just released !
 permalink: /updates/gazeplay-1-6-1-eng/
 layout: single
 ---
 
 <img src="{{site.baseurl}}/assets/images/gazeplayClassicLogo.png"/>
+
+[Click here](https://gazeplay.github.io/GazePlay/installation/) to download the new version.
+
 
 Visit our website <gazeplay.net> to learn more about GazePlay’s games and features.
 
