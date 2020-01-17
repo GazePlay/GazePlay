@@ -34,7 +34,7 @@ public class VersionInfo {
             if (implementationTitle != null && implementationTitle.equals(applicationName)) {
                 String implementationVersion = mainAttributes.getValue("Implementation-Version");
                 StringBuilder resultBuilder = new StringBuilder();
-                resultBuilder.append(implementationVersion.replace('.','-'));
+                resultBuilder.append(implementationVersion);
                 if (includBuildTime) {
                     String buildTime = mainAttributes.getValue("Build-Time");
                     resultBuilder.append(" (").append(buildTime).append(")");

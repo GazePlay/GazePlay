@@ -179,7 +179,7 @@ public class LatestNewPopup {
 
 
     private String createDocumentUri() {
-        if (!versionNumber.isPresent()) {
+        if (versionNumber.isEmpty()) {
             return "";
         }
         //
@@ -189,9 +189,7 @@ public class LatestNewPopup {
         }
         StringBuilder documentUri = new StringBuilder();
         documentUri.append("gazeplay");
-        if (versionNumber.isPresent()) {
-            documentUri.append("-").append(versionNumber.orElse(""));
-        }
+        versionNumber.ifPresent(s -> documentUri.append("-").append(s.replace('.', '-')));
         documentUri.append("-").append(languageCode);
         return documentUri.toString();
     }
