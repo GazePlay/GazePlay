@@ -88,7 +88,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         intereatorAOI = 0;
         grid.setPadding(new Insets(50, 50, 50, 50));
         allAOIList = new ArrayList<>();
-        I18NLabel screenTitleText = new I18NLabel(gazePlay.getTranslator(),"AreaOfInterest");
+        I18NLabel screenTitleText = new I18NLabel(gazePlay.getTranslator(), "AreaOfInterest");
         screenTitleText.setId("title");
         HBox topPane;
         VBox centerPane = new VBox();
@@ -549,8 +549,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             graphicsPane.getChildren().remove(currentInfoBox);
 
             if (config.isVideoRecordingEnabled()) {
-
-                // player.setRate(1);
                 player.stop();
                 player.play();
             }

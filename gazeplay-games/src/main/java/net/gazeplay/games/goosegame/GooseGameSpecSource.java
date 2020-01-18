@@ -9,7 +9,10 @@ public class GooseGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("GooseGame").gameThumbnail("data/Thumbnails/goosegame.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("GooseGame").gameThumbnail("data/Thumbnails/goosegame.png")
+                .category(GameCategories.Category.ACTION_REACTION)
+                .category(GameCategories.Category.SELECTION)
+                .category(GameCategories.Category.LITERACY).build(),
             new GooseGameVariantGenerator(), new GooseGameLauncher());
     }
 }

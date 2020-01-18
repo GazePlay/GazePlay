@@ -935,7 +935,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return pane;
     }
 
-    private static void changeMusicFolder(final String newMusicFolder, Configuration config) {
+    static void changeMusicFolder(final String newMusicFolder, Configuration config) {
 
         String musicFolder = newMusicFolder;
 
@@ -943,7 +943,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             File gazePlayFolder = GazePlayDirectories.getGazePlayFolder();
             File gazePlayMusicFolder = new File(gazePlayFolder, "music");
 
-            String songName = "songidea(copycat)_0.mp3";
+            String songName = Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC;
             setupNewMusicFolder(gazePlayMusicFolder, songName);
 
             musicFolder = gazePlayMusicFolder.getAbsolutePath();
@@ -953,9 +953,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
 
+        boolean wasPlaying = musicManager.isPlaying();
+
         musicManager.emptyPlaylist();
         musicManager.getAudioFromFolder(musicFolder);
-        musicManager.play();
+
+        if (wasPlaying)
+            musicManager.play();
     }
 
     static void setupNewMusicFolder(File gazePlayMusicFolder, String defaultSong) {

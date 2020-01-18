@@ -98,6 +98,10 @@ subprojects {
         }
     }
 
+    jacoco {
+        toolVersion '0.8.3' // We need this version for JMockit to work.
+    }
+
     tasks.jacocoTestReport.dependsOn('test')
 }
 

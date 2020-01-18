@@ -9,7 +9,10 @@ public class CupsBallsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("CupsBalls").gameThumbnail("data/Thumbnails/passpass.png").category(GameCategories.Category.MEMORIZATION).build(),
+            GameSummary.builder().nameCode("CupsBalls").gameThumbnail("data/Thumbnails/passpass.png")
+                .category(GameCategories.Category.MEMORIZATION)
+                .category(GameCategories.Category.SELECTION)
+                .category(GameCategories.Category.LOGIC_MATHS).build(),
             new CupsBallsGameVariantGenerator(), new CupsBallsGameLauncher());
     }
 }
