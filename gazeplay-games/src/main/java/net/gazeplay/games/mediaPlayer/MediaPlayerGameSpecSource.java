@@ -9,7 +9,8 @@ public class MediaPlayerGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("MediaPlayer").gameThumbnail("data/Thumbnails/gazeMedia.png").category(GameCategories.Category.ACTION_REACTION).category(GameCategories.Category.UTILITY).build(),
+            GameSummary.builder().nameCode("MediaPlayer").gameThumbnail("data/Thumbnails/gazeMedia.png")
+                .category(GameCategories.Category.MULTIMEDIA).build(),
             new MediaPlayerGameLauncher());
     }
 }

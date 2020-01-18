@@ -9,7 +9,9 @@ public class JungleGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Jungle").gameThumbnail("data/Thumbnails/jungle.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("Jungle").gameThumbnail("data/Thumbnails/jungle.png")
+                .category(GameCategories.Category.ACTION_REACTION)
+                .category(GameCategories.Category.SELECTION).build(),
             new JungleGameLauncher());
     }
 }

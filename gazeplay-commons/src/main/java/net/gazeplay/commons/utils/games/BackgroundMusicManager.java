@@ -52,6 +52,9 @@ public class BackgroundMusicManager {
     private final List<MediaPlayer> defaultPlayList = new ArrayList<>();
 
     @Getter
+    private final List<MediaPlayer> backupPlaylist = new ArrayList<>();
+
+    @Getter
     private MediaPlayer currentMusic;
 
     private final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
@@ -223,6 +226,28 @@ public class BackgroundMusicManager {
         isMusicChanging.setValue(false);
     }
 
+    /**
+     * Save the current playlist.
+     */
+    public void backupPlaylist() {
+        if (!playlist.isEmpty()) {
+            backupPlaylist.clear();
+            log.info("Backing up playlist");
+            backupPlaylist.addAll(playlist);
+        }
+    }
+
+    /**
+     * Restores the playlist from backup if it's empty.
+     */
+    public void restorePlaylist() {
+        if (!backupPlaylist.isEmpty()) {
+            log.info("Restoring playlist");
+            playlist.addAll(backupPlaylist);
+            backupPlaylist.clear();
+        }
+    }
+
     public void pause() {
         this.isPlayingProperty.setValue(false);
     }
@@ -267,52 +292,6 @@ public class BackgroundMusicManager {
             throw new IllegalArgumentException("volume must be between 0 and 1");
         }
         currentMusic.setVolume(value);
-    }
-
-    public void playRemoteSound(String resourceUrlAsString) {
-
-        Runnable asyncTask = () -> {
-
-            MediaPlayer localMediaPlayer = getMediaPlayerFromSource(resourceUrlAsString);
-            // If there is already the music in playlist, just play it
-            if (localMediaPlayer == null) {
-
-                // parse the URL early
-                // in order to fail early if the URL is invalid
-                URL resourceURL;
-                try {
-                    resourceURL = new URL(resourceUrlAsString);
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException("Invalid URL provided as sound resource : " + resourceUrlAsString, e);
-                }
-
-                final String resourceUrlExternalForm = resourceURL.toExternalForm();
-                final File mediaFile = downloadAndGetFromCache(resourceURL, resourceUrlExternalForm);
-
-                final String localResourceName = mediaFile.toURI().toString();
-                log.info("Playing sound {}", localResourceName);
-
-                try {
-                    localMediaPlayer = createMediaPlayer(resourceUrlAsString);
-                } catch (RuntimeException e) {
-                    log.error("Exception while playing media file {} ", localResourceName, e);
-                }
-
-            }
-
-            if (localMediaPlayer != null) {
-                playlist.add(localMediaPlayer);
-                changeMusic(playlist.indexOf(localMediaPlayer));
-                // Music hasn't changed (for exemple if previous index is the same),
-                // then do the change manually
-                if (currentMusic != localMediaPlayer) {
-                    changeCurrentMusic();
-                }
-                play();
-            }
-        };
-
-        executorService.execute(asyncTask);
     }
 
     /**

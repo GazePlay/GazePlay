@@ -79,6 +79,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED = false;
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25d;
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
+    public static final String DEFAULT_VALUE_BACKGROUND_MUSIC = "songidea(copycat)_0.mp3";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
 
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;

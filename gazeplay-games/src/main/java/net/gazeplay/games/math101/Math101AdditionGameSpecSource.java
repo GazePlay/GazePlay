@@ -9,7 +9,10 @@ public class Math101AdditionGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Math101: Addition").priority(5).gameThumbnail("data/Thumbnails/math101.png").category(GameCategories.Category.LOGIC).description("MathDescAdd").build(),
+            GameSummary.builder().nameCode("Math101: Addition").priority(5).gameThumbnail("data/Thumbnails/math101.png")
+                .category(GameCategories.Category.SELECTION)
+                .category(GameCategories.Category.LOGIC_MATHS)
+                .category(GameCategories.Category.MEMORIZATION).description("MathDescAdd").build(),
             new Math101AdditionGameVariantGenerator(), new MathGameLauncher(MathGameType.ADDITION));
     }
 }

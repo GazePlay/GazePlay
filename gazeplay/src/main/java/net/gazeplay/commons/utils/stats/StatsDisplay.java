@@ -15,10 +15,11 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
-import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.stats.ShootGamesStats;
+import net.gazeplay.ui.scenes.stats.StatsContext;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,22 +30,22 @@ public class StatsDisplay {
 
     public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
 
-        EventHandler<Event> homeEvent = e -> {
-
-            // if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
-            statsContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
-
-            gazePlay.onReturnToMenu();
-
-            statsContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
-            // }
-        };
+        EventHandler<Event> homeEvent = e -> returnToMenu(gazePlay, statsContext);
 
         HomeButton homeButton = new HomeButton();
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
         return homeButton;
+    }
+
+    static void returnToMenu(GazePlay gazePlay, StatsContext statsContext) {
+        statsContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
+
+        BackgroundMusicManager.getInstance().restorePlaylist();
+        BackgroundMusicManager.getInstance().previous();
+        gazePlay.onReturnToMenu();
+
+        statsContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
     }
 
     public static LineChart<String, Number> buildLineChart(Stats stats, final Region root) {
