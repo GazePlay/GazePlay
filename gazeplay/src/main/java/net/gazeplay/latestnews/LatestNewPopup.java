@@ -76,7 +76,7 @@ public class LatestNewPopup {
         if (wasDisplayRecently(config)) {
             // popup was already show recently
             // we do not want to bother the user again with this popup
-            return;
+           // return;
         }
 
         LatestNewPopup latestNewPopup = new LatestNewPopup(config, translator);
@@ -127,7 +127,6 @@ public class LatestNewPopup {
 
         CustomButton continueButton = new CustomButton("data/common/images/continue.png");
 
-
         topPane.getChildren().addAll(userAgentLabel, locationUrlLabel);
         bottomPane.getChildren().addAll(closeInstructionLabel, continueButton);
 
@@ -151,6 +150,7 @@ public class LatestNewPopup {
                 markDisplayedNow(config);
             }
             locationUrlLabel.setText(webEngine.getLocation());
+
         });
 
         stage.titleProperty().bind(new SimpleStringProperty() {
@@ -170,6 +170,7 @@ public class LatestNewPopup {
                 if (originalPageTitle != null) {
                     titleBuilder.append(" - ").append(originalPageTitle);
                 }
+
                 return titleBuilder.toString();
             }
         });
