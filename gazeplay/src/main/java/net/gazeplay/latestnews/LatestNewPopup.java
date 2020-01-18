@@ -23,7 +23,6 @@ import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
 import org.apache.commons.io.IOUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -50,10 +49,7 @@ public class LatestNewPopup {
 
     private final Stage stage;
 
-    @Nullable
     private final Optional<String> versionNumber = VersionInfo.findVersionInfo(VersionInfo.artifactId, false);
-
-    private final String envInfo = findEnvInfo();
 
     private static String findEnvInfo() {
         String osName = System.getProperty("os.name");
@@ -92,12 +88,12 @@ public class LatestNewPopup {
         config.getLatestNewsPopupShownTime().set(System.currentTimeMillis());
     }
 
-    private LatestNewPopup(Configuration config, Translator translator) {
+    LatestNewPopup(Configuration config, Translator translator) {
         this.config = config;
 
         final Dimension2D preferredDimension = computePreferedDimension();
 
-        final String userAgentString = "GazePlay " + versionNumber.orElse("unknown version") + " - " + envInfo;
+        final String userAgentString = "GazePlay " + versionNumber.orElse("unknown version") + " - " + findEnvInfo();
 
         locationUrlLabel.setEditable(false);
         locationUrlLabel.setDisable(true);
@@ -178,7 +174,7 @@ public class LatestNewPopup {
     }
 
 
-    private String createDocumentUri() {
+    String createDocumentUri() {
         if (versionNumber.isEmpty()) {
             return "";
         }
