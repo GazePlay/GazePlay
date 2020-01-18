@@ -27,9 +27,9 @@
   function determineHomePage() {
     var current = document.URL;
     if (current.includes("fr")) {
-      return "/GazePlay/fr";
+      return "/GazePlay/fr/";
     } else {
-      return "/GazePlay";
+      return "/GazePlay/";
     }
   }
 </script>
@@ -54,6 +54,15 @@ endcapture %} {% endif %}
           {{ site.masthead_title | default: site.title }} {% if site.subtitle
           %}<span class="site-subtitle">{{ site.subtitle }}</span>{% endif %}
         </a>
+
+        <li class="lang-switcher">
+          <a href="javascript:document.location.href=getUrl('en');">EN</a>
+        </li>
+
+        <li class="lang-switcher">
+          <a href="javascript:document.location.href=getUrl('fr');">FR</a>
+        </li>
+
         <ul class="visible-links">
           {%- for link in site.data.navigation.main -%} {%- if link.url contains
           '://' -%} {%- assign url = link.url -%} {%- else -%} {%- assign url =
@@ -61,7 +70,13 @@ endcapture %} {% endif %}
           <li class="masthead__menu-item-{{ link.title }}">
             <a
               href="javascript:document.location.href=getLinkUrl('{{ url }}')"
-              {% if link.description %}title="{{ link.description }}" {% endif %}
+              {%
+              if
+              link.description
+              %}title="{{ link.description }}"
+              {%
+              endif
+              %}
               >{{ link.title }}</a
             >
             <script>
@@ -97,6 +112,7 @@ endcapture %} {% endif %}
           </svg>
         </button>
         {% endif %}
+
         <button class="greedy-nav__toggle hidden" type="button">
           <span class="visually-hidden"
             >{{ site.data.ui-text[site.locale].menu_label | default: "Toggle
