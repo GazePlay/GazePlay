@@ -164,8 +164,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         Configuration config = ActiveConfigurationContext.getInstance();
         final Scene scene = gazePlay.getPrimaryScene();
 
-        // gamingRoot.getChildren().add(scene);
-        EventHandler buttonHandler = new EventHandler<KeyEvent>() {
+        EventHandler<KeyEvent> buttonHandler = new EventHandler<>() {
 
             public void handle(KeyEvent event) {
 
@@ -174,7 +173,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
                 scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
             }
         };
-        // scene.addEventHandler(KeyEvent.KEY_PRESSED, buttonHandler);
+
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if (key.getCode().getChar().equals(config.getQuitKey())) {
                 scene.addEventHandler(KeyEvent.KEY_RELEASED, buttonHandler);
@@ -223,7 +222,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         return homeButton;
     }
 
-    private void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
+    void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
         if (this.getConfiguration().isVideoRecordingEnabled()) {
             pointersClear();
