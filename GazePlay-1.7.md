@@ -21,12 +21,14 @@ Egg (Sébastien Riou)
 * Arrange favorites and categories management (Yann Robert)
 * Game summary improvements (Yann Robert)
 * Spring (Yann Robert)
+* Gaze Pointer in Video Recording (Sébastien Riou)
 
 ## Various translations and bug resolution
 
 * Improvements to launch scripts _(Yann Robert and Miles Bardon)_
 * Music Volume Slider now responds in the application _(Miles Bardon)
 * Multilinguism improvments (Yann Robert)
+* Video Recording (Sébastien Riou)
 * Lot of bugs resolved
 
 ## Tests and Supervision
