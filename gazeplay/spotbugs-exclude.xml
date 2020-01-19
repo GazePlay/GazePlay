@@ -1,7 +1,7 @@
 <FindBugsFilter>
     <Match>
         <Source name="~.*Test\.java" />
-        <Bug code="RV"/>
+        <Bug code="RV, UMAC"/>
     </Match>
     <Match>
         <Package name="~.*"/>
