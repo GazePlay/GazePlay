@@ -225,7 +225,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     private void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
-        pointersClear();
+        if (this.getConfiguration().isVideoRecordingEnabled()) {
+            pointersClear();
+        }
 
         currentGame.dispose();
         ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
