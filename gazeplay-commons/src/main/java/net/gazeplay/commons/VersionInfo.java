@@ -15,15 +15,15 @@ public class VersionInfo {
         return findVersionInfo(artifactId, true).orElse("Current Version");
     }
 
-    public static Optional<String> findVersionInfo(String applicationName, boolean includBuildTime) {
+    public static Optional<String> findVersionInfo(String applicationName, boolean includeBuildTime) {
         try {
-            return locateVersionInfo(applicationName, includBuildTime);
+            return locateVersionInfo(applicationName, includeBuildTime);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load the version info", e);
         }
     }
 
-    private static Optional<String> locateVersionInfo(String applicationName, boolean includBuildTime) throws IOException {
+    private static Optional<String> locateVersionInfo(String applicationName, boolean includeBuildTime) throws IOException {
         Enumeration<URL> resources = Thread.currentThread().getContextClassLoader()
             .getResources("META-INF/MANIFEST.MF");
         while (resources.hasMoreElements()) {
@@ -35,7 +35,7 @@ public class VersionInfo {
                 String implementationVersion = mainAttributes.getValue("Implementation-Version");
                 StringBuilder resultBuilder = new StringBuilder();
                 resultBuilder.append(implementationVersion);
-                if (includBuildTime) {
+                if (includeBuildTime) {
                     String buildTime = mainAttributes.getValue("Build-Time");
                     resultBuilder.append(" (").append(buildTime).append(")");
                 }
