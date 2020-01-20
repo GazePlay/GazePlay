@@ -14,8 +14,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.NonNull;
@@ -30,7 +28,6 @@ import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.DefaultAnimationSpeedRatioSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
@@ -79,9 +76,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     private final Pane gamingRoot;
 
-    private EventHandler<Event> pointerEvent;
-    private Circle mousePointer;
-    private Circle gazePointer;
+    private VideoRecordingContext videoRecordingContext;
 
     protected GameContext(
         @NonNull GazePlay gazePlay,
@@ -105,46 +100,10 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
 
         if (this.getConfiguration().isVideoRecordingEnabled()) {
-            this.pointersInit();
+            videoRecordingContext = new VideoRecordingContext(root, this);
         }
     }
 
-    public void pointersInit() {
-        mousePointer = new Circle(10, Color.RED);
-        mousePointer.setMouseTransparent(true);
-        mousePointer.setOpacity(0.5);
-        root.getChildren().add(mousePointer);
-
-
-        gazePointer = new Circle(10, Color.BLUE);
-        gazePointer.setMouseTransparent(true);
-        gazePointer.setOpacity(0.5);
-        root.getChildren().add(gazePointer);
-        getGazeDeviceManager().addEventFilter(root);
-
-        pointerEvent = e -> {
-            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                mousePointer.setCenterX(((MouseEvent) e).getX());
-                mousePointer.setCenterY(((MouseEvent) e).getY());
-                mousePointer.toFront();
-            } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
-                gazePointer.setCenterX(((GazeEvent) e).getX());
-                gazePointer.setCenterY(((GazeEvent) e).getY());
-                gazePointer.toFront();
-            }
-        };
-        root.addEventFilter(MouseEvent.ANY, pointerEvent);
-        root.addEventFilter(GazeEvent.ANY, pointerEvent);
-    }
-
-
-    public void pointersClear() {
-        root.removeEventFilter(MouseEvent.ANY, pointerEvent);
-        root.removeEventFilter(GazeEvent.ANY, pointerEvent);
-        root.getChildren().remove(gazePointer);
-        root.getChildren().remove(mousePointer);
-        getGazeDeviceManager().removeEventFilter(root);
-    }
 
     @Override
     public void setUpOnStage(final Scene scene) {
@@ -224,8 +183,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
-        if (this.getConfiguration().isVideoRecordingEnabled()) {
-            pointersClear();
+        if (videoRecordingContext != null) {
+            videoRecordingContext.pointersClear();
         }
 
         currentGame.dispose();
