@@ -5,7 +5,7 @@
             <pattern>%date{ISO8601} %-5level %logger - %msg%n</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
+            <level>NONE</level>
         </filter>
     </appender>
 
@@ -32,9 +32,9 @@
         <appender-ref ref="STDOUT"/>
     </appender>
 
-    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework" level="NONE"/>
 
-    <root level="DEBUG">
+    <root level="NONE">
         <appender-ref ref="ASYNC_FILE"/>
         <appender-ref ref="ASYNC_STDOUT"/>
     </root>

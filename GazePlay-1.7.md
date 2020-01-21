@@ -4,17 +4,7 @@
 
 ### Action-Reaction games
 
-### Literacy games
-
-### Logic games
-
-### Long-term memory games
-
-### Short-term Memory games
-
-### Multimedia
-
-### Other games
+Egg (Sébastien Riou)
 
 ## Various games improvement
 
@@ -25,12 +15,22 @@
 * Windows installer _(Miles Bardon)_
 * OpenJDK _(Miles Bardon)_
 * Open JavaFx _(Miles Bardon)_
+* Animated Logo (Yann Robert)
+* Version Popup improvment (Yann Robert)
+* Improved Categories (Sébastien Riou and Didier Schwab)
+* Arrange favorites and categories management (Yann Robert)
+* Game summary improvements (Yann Robert)
+* Spring (Yann Robert)
+* Gaze Pointer in Video Recording (Sébastien Riou)
 
 ## Various translations and bug resolution
 
 * Improvements to launch scripts _(Yann Robert and Miles Bardon)_
-* Music Volume Slider now responds in the application _(Miles Bardon)_
+* Music Volume Slider now responds in the application _(Miles Bardon)
+* Multilinguism improvments (Yann Robert)
+* Video Recording (Sébastien Riou)
+* Lot of bugs resolved
 
 ## Tests and Supervision
 
-Consult GitHub for more information (XXX commits)
+Consult GitHub for more information (623 commits)
