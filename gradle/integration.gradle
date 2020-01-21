@@ -1,0 +1,9 @@
+task integrationTest(type: Test) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+//Ensure that the check task fails the build if there are failing integration tests.
+check.dependsOn integrationTest
+//Ensure that our unit tests are run before our integration tests
+integrationTest.mustRunAfter test

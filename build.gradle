@@ -48,6 +48,22 @@ subprojects {
     apply plugin: 'com.github.spotbugs'
     apply plugin: 'distribution'
 
+    sourceSets {
+        integrationTest {
+            java {
+                compileClasspath += main.output + test.output
+                runtimeClasspath += main.output + test.output
+                srcDir file('src/integration-test/java')
+            }
+            resources.srcDir file('src/integration-test/resources')
+        }
+    }
+
+    configurations {
+        intTestImplementation.extendsFrom testImplementation
+        intTestRuntime.extendsFrom testRuntime
+    }
+
     javafx {
         version = javafxVersion
         modules = ['javafx.controls', 'javafx.swing', 'javafx.media', 'javafx.web']
@@ -107,6 +123,7 @@ subprojects {
 
 apply from: "${rootDir}/gradle/package.gradle"
 apply from: "${rootDir}/gradle/installer.gradle"
+apply from: "${rootDir}/gradle/integration.gradle"
 apply from: "${rootDir}/gazeplay-dist/build.gradle"
 
 dependencies {
