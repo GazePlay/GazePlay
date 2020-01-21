@@ -135,9 +135,15 @@ distributions {
     }
 }
 
+distTar {
+    enabled = true
+    compression = Compression.GZIP
+    extension = 'tar.gz'
+}
 distZip {
     duplicatesStrategy = 'exclude'
 }
+[bootJar, bootDistTar, bootDistZip]*.enabled = false
 
 runtime {
     options = ['--compress', '2', '--no-header-files', '--no-man-pages']
