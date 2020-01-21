@@ -59,9 +59,11 @@ subprojects {
         }
     }
 
+    apply from: "${rootDir}/gradle/integration.gradle"
+
     configurations {
-        intTestImplementation.extendsFrom testImplementation
-        intTestRuntime.extendsFrom testRuntime
+        integrationTestImplementation.extendsFrom testImplementation
+        integrationTestRuntime.extendsFrom testRuntime
     }
 
     javafx {
@@ -123,7 +125,6 @@ subprojects {
 
 apply from: "${rootDir}/gradle/package.gradle"
 apply from: "${rootDir}/gradle/installer.gradle"
-apply from: "${rootDir}/gradle/integration.gradle"
 apply from: "${rootDir}/gazeplay-dist/build.gradle"
 
 dependencies {
