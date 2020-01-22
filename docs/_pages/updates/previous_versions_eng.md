@@ -1,13 +1,17 @@
 ---
-title: GazePlay 1.7.1 is out !
-permalink: /updates/gazeplay-1-6-1-eng/
+title: GazePlay 1.7.1 is out now !
+redirect_from:
+- /updates/gazeplay-1-6-1-eng/
+- /updates/gazeplay-1-7-0-eng/
+permalink: /updates/gazeplay-old-version-eng/
 layout: single
 ---
 
 <img src="{{site.baseurl}}/assets/images/gazeplayClassicLogo.png"/>
 
-[Click here](https://gazeplay.github.io/GazePlay/installation/fr) to download the new version.
+You're using an old version of Gazeplay.
 
+[Click here](https://gazeplay.github.io/GazePlay/installation) to download the new version.
 
 Visit our website <gazeplay.net> to learn more about GazePlay’s games and features.
 
