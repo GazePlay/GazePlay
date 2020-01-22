@@ -33,8 +33,9 @@ DefaultDirName={pf}\\GazePlay
 DefaultGroupName=GazePlay
 LicenseFile=licence.txt
 
-OutputBaseFilename=GazePlayInstaller
-Compression=lzma
+OutputDir=..\\distributions
+OutputBaseFilename=GazePlay-installer-${applicationVersion}
+;Compression=lzma
 SolidCompression=yes
 
 [Tasks]

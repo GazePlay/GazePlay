@@ -19,9 +19,10 @@ jobs:
       - name: Package with Gradle (no test)
         run: |
           ./gradlew --stacktrace --info packageApp -x test
-      - name: Remove files that should not be saved
+      - name: Generate Windows Installer with InnoSetup
         run: |
-          find build/distributions/ -type f -not -name "gazeplay-project-*.zip" -delete
+          chmod 777 build/distributions
+          ./gradlew --stacktrace --info generateInstaller
       - name: Save Package Job Artifacts
         uses: actions/upload-artifact@v1
         with:
