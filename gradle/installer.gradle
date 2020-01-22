@@ -33,7 +33,7 @@ task prepareInnoSetupFiles(type: Copy) {
     copy {
         from("${rootDir}/gazeplay/src/main/resources/data/common/licence.txt")
         expand([
-                "version": project.version,
+                "version": version,
                 "date"   : new Date().format('yyyy-MM-dd')
         ])
         into(innoSetupDir)

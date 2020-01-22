@@ -19,6 +19,10 @@ boolean SpotBugs = Boolean.parseBoolean(value) ?: true
 
 ext.javafxVersion = "11.0.2"
 
+apply from: "${rootDir}/gradle/package.gradle"
+apply from: "${rootDir}/gradle/installer.gradle"
+apply from: "${rootDir}/gazeplay-dist/build.gradle"
+
 allprojects {
     group = 'com.github.schwabdidier'
 
@@ -105,10 +109,6 @@ subprojects {
     tasks.jacocoTestReport.dependsOn('test')
 }
 
-apply from: "${rootDir}/gradle/package.gradle"
-apply from: "${rootDir}/gradle/installer.gradle"
-apply from: "${rootDir}/gazeplay-dist/build.gradle"
-
 dependencies {
     runtime project(':gazeplay')
 
@@ -138,7 +138,7 @@ distributions {
 distTar {
     enabled = true
     compression = Compression.GZIP
-    extension = 'tar.gz'
+    archiveExtension.set('tar.gz')
 }
 distZip {
     duplicatesStrategy = 'exclude'
@@ -158,7 +158,7 @@ task cleanJre(type: Delete) {
 release {
     failOnPublishNeeded = false
     failOnCommitNeeded = false
-    versionPropertyFile = 'release.properties'
+    versionPropertyFile = 'gradle.properties'
 }
 
 mainClassName = 'net.gazeplay.GazePlayLauncher'
