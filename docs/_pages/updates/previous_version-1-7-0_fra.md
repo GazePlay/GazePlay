@@ -1,12 +1,12 @@
 ---
-title: Fermez cette fenêtre pour démarrer GazePlay
+title:  GazePlay 1.7.1 vient de sortir !
 permalink: /updates/gazeplay-1-7-0-fra/
 layout: single
 ---
 
-<img src="{{site.baseurl}}/assets/images/gazeplayLogo1-7.png"/>
+<img src="{{site.baseurl}}/assets/images/gazeplayClassicLogo.png"/>
 
-Votre version est à jour.
+[Cliquez-ici](https://gazeplay.github.io/GazePlay/installation/fr) pour télécharger la nouvelle version.
 
 Visitez notre site Web <gazeplay.net> pour en savoir plus sur les jeux et les fonctionnalités de GazePlay.
 
