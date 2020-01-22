@@ -1,8 +1,9 @@
 ---
 title:  GazePlay 1.7.1 vient de sortir !
 redirect_from: 
-/updates/gazeplay-1-6-1-fra
-/updates/gazeplay-1-7-0-fra
+/updates/gazeplay-1-6-1-fra/
+/updates/gazeplay-1-7-0-fra/
+layout: redirected
 ---
 
 <img src="{{site.baseurl}}/assets/images/gazeplayClassicLogo.png"/>
