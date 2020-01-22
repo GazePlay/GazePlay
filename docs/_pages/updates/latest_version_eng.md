@@ -1,10 +1,12 @@
 ---
 title: Close this window to start GazePlay
-permalink: /updates/gazeplay-1-6-1-eng/
+permalink: /updates/gazeplay-1-7-1-eng/
 layout: single
 ---
 
-<img src="{{site.baseurl}}/assets/images/gazeplayClassicLogo.png"/>
+<img src="{{site.baseurl}}/assets/images/gazeplayLogo1-7.png"/>
+
+Your version is up to date.
 
 Visit our website <gazeplay.net> to learn more about GazePlay’s games and features.
 
@@ -16,5 +18,5 @@ It is possible to support the development of GazePlay through donations. These d
 
 ---
 
-GazePlay 1.6.1 – http://www.gazeplay.net – <gazeplay.net@gmail.com>  
+GazePlay 1.7.0 – <http://www.gazeplay.net> – <gazeplay.net@gmail.com>  
 GAZEPLAY Copyright (C) 2016-2020 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
