@@ -3,8 +3,6 @@ title: GazePlay 1.7.1 is out !
 redirect_from: 
 /updates/gazeplay-1-6-1-eng
 /updates/gazeplay-1-7-0-eng
-permalink: /updates/gazeplay-old-eng
-layout: single
 ---
 
 <img src="{{site.baseurl}}/assets/images/gazeplayClassicLogo.png"/>
