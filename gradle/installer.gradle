@@ -13,9 +13,11 @@ task generateInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles']
 }
 
 task generateInstallerCI(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles']) {
-    exec {
-        workingDir rootDir
-        commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup.iss"
+    doLast {
+        exec {
+            workingDir rootDir
+            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup.iss"
+        }
     }
 }
 
