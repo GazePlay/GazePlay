@@ -11,7 +11,7 @@ header:
           url: https://github.com/GazePlay/GazePlay/releases/download/1.7.1/GazePlayInstaller.exe
 excerpt: >
   Gazeplay is free and open-source software, gathering nearly 60 mini-games playable with an eye-tracker.<br />
-  <small><a href="https://github.com/GazePlay/GazePlay/releases/tag/1.7.1">Latest release v1.7.0</a></small>
+  <small><a href="https://github.com/GazePlay/GazePlay/releases/tag/1.7.1">Latest release v1.7.1</a></small>
 ---
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/xGKCIiYNu2c" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
