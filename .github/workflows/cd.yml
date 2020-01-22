@@ -22,7 +22,7 @@ jobs:
       - name: Generate Windows Installer with InnoSetup
         run: |
           chmod 777 build/distributions
-          ./gradlew --stacktrace --info generateInstaller
+          ./gradlew --stacktrace --info generateInstallerCI
       - name: Save Package Job Artifacts
         uses: actions/upload-artifact@v1
         with:
