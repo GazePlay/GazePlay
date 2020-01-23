@@ -1,0 +1,9 @@
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    shouldRunAfter test
+}
+
+//Ensure that the check task fails the build if there are failing integration tests.
+check.dependsOn integrationTest
