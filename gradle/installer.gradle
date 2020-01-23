@@ -12,7 +12,7 @@ task generateInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles']
     }
 }
 
-task generateInstallerCI(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles']) {
+task generateInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles']) {
     doLast {
         exec {
             workingDir rootDir
