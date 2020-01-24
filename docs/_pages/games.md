@@ -2,6 +2,7 @@
 title: Games
 permalink: /games/
 layout: single
+toc: true
 ---
 
 ## Cream Pies

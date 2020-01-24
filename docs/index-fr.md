@@ -14,7 +14,7 @@ excerpt: >
   <small><a href="https://github.com/GazePlay/GazePlay/releases/tag/1.7.1">Dernière version v1.7.1</a></small>
 ---
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Ml8Plf3sVvk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+{% include video id="Ml8Plf3sVvk" provider="youtube" %}
 
 ## Système Requis
 
