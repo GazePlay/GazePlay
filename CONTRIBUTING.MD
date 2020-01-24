@@ -34,6 +34,28 @@ In order to make a *pull request*, always run `gradlew` which will run all tests
 
 Each request will be examined by one of the contributors.
 
+### Updating your own fork
+You will often find that your own fork of GazePlay is lagging behind the main GazePlay repo. To update your fork, follow 
+these steps:
+
+```shell script
+# Set your upstream repository if you haven't already
+git remote add upstream https://github.com/GazePlay/GazePlay.git
+
+# Pull the latest master into your master
+git checkout master
+git pull upstream master
+git push <myrepo> master
+
+# Make your changes
+git checkout -b MyChange
+# - your commits go here -
+git push <myrepo> MyChange
+
+# Reset to master and repeat the process for the next PR
+git checkout master
+```
+
 ## Gradle
 
 [Gradle](https://gradle.org/) is an open-source build-automation system that uses a Groovy-based domain-specific language (DSL). 
@@ -49,11 +71,41 @@ $ ./gradlew
 
 All required components will be installed from the internet, so make sure you're online.
 
-##Java
+## Java
 
 GazePlay is compiled with Java 11 built with OpenJDK 11. If you need a distribution, [AdoptOpenJDK](https://adoptopenjdk.net/) 
 offer a simple package to install on any Windows or Unix computer. Gradle will tell you if you're not running a 
 compatible version of Java and prevent builds on anything lower than Java 11.
+
+## Testing
+
+It is good practise, and necessary for finding breaking bugs, to write Unit Tests for the code you write. To start writing
+tests, use your IDE to find if any test file already exists. In IntelliJ, this is done with `CMD + SHIFT + T` (MacOS) or 
+`CTRL + SHIFT + T` (Windows and Linux). You can also look for the file in `src/test/java/<java package name>` (such as 
+`src/test/java/net/gazeplay`).
+
+A good test will cover as much of the tested method as possible. Each one should set up the object-under-test and 
+cover a single path through the method. For example, if your method has an `if` statement in it, you should write a test
+for when that resolves to `true`, and one where it resolves to `false`. You can get a visualisation of which code has 
+been tested by running `./gradlew jacocoTestReport`. This will run all the tests and output an HTML index that you can
+open in your browser. It will highlight all code that has been tested and what has not. 
+
+Give your tests meaningful names. If a method should play a sound when a button is clicked, name it 
+`shouldPlaySoundWhenButtonClicks`. This helps other developers understand what your code should be doing, and helps with
+debugging tests if other dependant code has changed.
+
+**There are lot of good resources online on how to write good unit tests. If you need somewhere to start, read 
+[this article](https://manifesto.co.uk/unit-testing-best-practices-java/**
+
+GazePlay uses [JUnit 5](https://junit.org/junit5/docs) as its testing framework, and you can find many examples of how
+these tests are written both online and in the test files themselves.
+
+You will often need to use [TestFX](https://github.com/TestFX/TestFX/wiki) in your tests to access JavaFX components, see
+existing tests on how to add this to your own.
+
+Mocking of objects is done using [Mockito](site.mockito.org), whilst static objects should be mocked with 
+[JMockit](https://jmockit.github.io/). You can find examples in this repo, whilst far more are available online. Please
+feel free to suggest new alternatives if they provide a better testing experience.
 
 ## Utilities
 
