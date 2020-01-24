@@ -2,6 +2,8 @@
 title: Jeux
 permalink: /games/fr
 layout: single
+toc: true
+toc_label: "Sur cette page"
 ---
 
 ## Tartes à la crème

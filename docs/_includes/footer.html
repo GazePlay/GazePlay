@@ -1,6 +1,6 @@
 <script>
   function getUrl(lang) {
-    var url = document.URL;
+    var url = document.URL.split('#')[0];
     if (url.includes("fr") && lang === "en") {
       return url.replace("fr", "");
     } else if (!url.includes("fr") && lang === "fr") {
