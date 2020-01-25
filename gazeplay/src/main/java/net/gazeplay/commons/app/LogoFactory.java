@@ -16,7 +16,11 @@ public class LogoFactory {
 
     final static String staticLogoImagePath = "data/common/images/logos/gazeplay-top-logo.png";
 
-    // public final static String LOGO_PATH = "data/common/images/logos/gazeplayClassicLogo.png";
+    static class LogoCreationException extends RuntimeException {
+        LogoCreationException(Throwable cause) {
+            super(cause);
+        }
+    }
 
     public Node createLogoAnimated(Stage stage) {
         final double preferredHeight = stage.getHeight() * 0.1d;
@@ -28,11 +32,10 @@ public class LogoFactory {
             try {
                 Thread.sleep(2 * 1000);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                throw new LogoCreationException(e);
             }
             SequentialTransition animation = gazePlayAnimatedLogo.createAnimation();
             animation.setCycleCount(-1);
-            //animation.setCycleCount(3);
             animation.play();
         });
         t.start();
@@ -44,7 +47,7 @@ public class LogoFactory {
         final ImageView logoView = new ImageView(logoImage);
         logoView.setPreserveRatio(true);
         fitStaticLogo(logoView, stage);
-        //
+
         stage.heightProperty().addListener((observable, oldValue, newValue) -> {
             fitStaticLogo(logoView, stage);
         });
