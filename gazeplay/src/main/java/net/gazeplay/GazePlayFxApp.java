@@ -20,7 +20,6 @@ import net.gazeplay.cli.UserSelectionOptions;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.ApplicationIconImageLocator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.latestnews.LatestNewPopup;
@@ -47,8 +46,6 @@ public class GazePlayFxApp extends Application {
 
     private GazePlay gazePlay;
 
-    private ApplicationIconImageLocator applicationIconImageLocator;
-
     private GameMenuController gameMenuController;
 
     private GamesLocator gamesLocator;
@@ -62,7 +59,6 @@ public class GazePlayFxApp extends Application {
         //
         log.info("options = {}", options);
         //
-        applicationIconImageLocator = context.getBean(ApplicationIconImageLocator.class);
         gazePlay = context.getBean(GazePlay.class);
         gameMenuController = context.getBean(GameMenuController.class);
         gamesLocator = context.getBean(GamesLocator.class);
@@ -151,10 +147,9 @@ public class GazePlayFxApp extends Application {
         primaryStage.setTitle("GazePlay");
         primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
 
-        Image icon = applicationIconImageLocator.findApplicationIcon();
-        if (icon != null) {
-            primaryStage.getIcons().add(icon);
-        }
+        String iconImagePath = "data/common/images/gazeplayicon.png";
+        Image icon = new Image(iconImagePath);
+        primaryStage.getIcons().add(icon);
     }
 
     private void autosize(Stage primaryStage) {
