@@ -13,9 +13,11 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 }
 
-// Add -PSpotBugs=false to the Gradle Command Line to not run spotbugs.
-String value = project.getProperties().get('SpotBugs')
-boolean SpotBugs = Boolean.parseBoolean(value) ?: true
+// Add -PSpotBugs=false to the Gradle Command Line to not run spotbugs
+boolean spotbugsEnabled = Boolean.parseBoolean(project.getProperties().get('SpotBugs')) ?: true
+
+// Add -Ppmd=false to the Gradle Command Line to not run spotbugs
+boolean pmdEnabled = Boolean.parseBoolean(project.getProperties().get('pmd')) ?: true
 
 ext.javafxVersion = "11.0.2"
 
@@ -50,6 +52,7 @@ subprojects {
     apply plugin: 'io.freefair.lombok'
     apply plugin: 'com.github.hierynomus.license-report'
     apply plugin: 'com.github.spotbugs'
+    apply plugin: "pmd"
     apply plugin: 'distribution'
 
     sourceSets {
@@ -84,8 +87,8 @@ subprojects {
         excludeFilter = file("spotbugs-exclude.xml")
     }
 
-    spotbugsMain.enabled = SpotBugs
-    spotbugsTest.enabled = SpotBugs
+    spotbugsMain.enabled = spotbugsEnabled
+    spotbugsTest.enabled = spotbugsEnabled
 
     downloadLicenses {
         dependencyConfiguration = 'compileClasspath'
@@ -125,6 +128,19 @@ subprojects {
     }
 
     tasks.jacocoTestReport.dependsOn('test')
+
+    pmd {
+        ignoreFailures = true
+        rulePriority = 1
+        sourceSets = [sourceSets.main, sourceSets.test]
+        reportsDir = file("$project.buildDir/reports/pmd")
+        ruleSets = []
+        ruleSetFiles = files(rootProject.file("pmd-ruleset.xml"))
+    }
+    
+    pmdMain.enabled = pmdEnabled
+    pmdTest.enabled = pmdEnabled
+
 }
 
 dependencies {
