@@ -16,7 +16,7 @@ plugins {
 // Add -PSpotBugs=false to the Gradle Command Line to not run spotbugs
 boolean spotbugsEnabled = Boolean.parseBoolean(project.getProperties().get('SpotBugs')) ?: true
 
-// Add -Ppmd=false to the Gradle Command Line to not run spotbugs
+// Add -Ppmd=false to the Gradle Command Line to not run PMD
 boolean pmdEnabled = Boolean.parseBoolean(project.getProperties().get('pmd')) ?: true
 
 ext.javafxVersion = "11.0.2"
