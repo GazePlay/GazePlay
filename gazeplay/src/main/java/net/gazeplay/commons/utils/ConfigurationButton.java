@@ -9,7 +9,7 @@ import net.gazeplay.GazePlay;
  */
 
 @Slf4j
-public class ConfigurationButton extends CustomButton {
+public final class ConfigurationButton extends CustomButton {
 
     public static ConfigurationButton createConfigurationButton(GazePlay gazePlay) {
         ConfigurationButton configurationButton = new ConfigurationButton();
