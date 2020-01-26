@@ -71,7 +71,7 @@ Donnez des noms explicites à vos tests. Par exemple, si une méthode doit émet
 des tests de débogage si un autre code dépendant a changé.
 
 **Il existe en ligne de nombreuses et très bonnes ressources sur la manière d'écrire des tests. Si vous cherchez un endroit par lequel commencer, lisez 
-[this article](https://manifesto.co.uk/unit-testing-best-practices-java/**
+[this article](https://manifesto.co.uk/unit-testing-best-practices-java/ **
 
 GazePlay utilise [JUnit 5](https://junit.org/junit5/docs) comme framework de test, Vous pouvez trouver de nombreux exemples de construction 
 de ces tests en ligne et dans les fichiers de tests eux-mêmes.
@@ -79,7 +79,7 @@ de ces tests en ligne et dans les fichiers de tests eux-mêmes.
 Vous aurez souvent besoin d'utiliser [TestFX](https://github.com/TestFX/TestFX/wiki) dans vos tests pour accéder aux composants JavaFX. Ici encore,
 n'oubliez de vous inspirer de tests existants pour créer les votres.
 
-En programmation orientée objet, les mocks (simulacres, objets fantaisie, 'mock object') sont des objets simulés qui reproduisent le comportement d'objets réels de manière contrôlée ([Wikipedia](https://fr.wikipedia.org/wiki/Mock_(programmation_orientée_objet\)))
+En programmation orientée objet, les mocks (simulacres, objets fantaisie, 'mock object') sont des objets simulés qui reproduisent le comportement d'objets réels de manière contrôlée ([Wikipedia])(https://fr.wikipedia.org/wiki/Mock_(programmation_orientée_objet\)))
 Dans GazePlay, nous utilisons [Mockito](http://site.mockito.org). Pour les objets statiques, nous utilisons
 [JMockit](https://jmockit.github.io/). Vous trouverez des exemples dans ce dépôt et en ligne. N'hésitez pas à proposer des alternatives qui faciliteraient l'utilisation de tests.
 
