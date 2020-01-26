@@ -97,7 +97,7 @@ debugging tests if other dependant code has changed.
 **There are lot of good resources online on how to write good unit tests. If you need somewhere to start, read 
 [this article](https://manifesto.co.uk/unit-testing-best-practices-java/**
 
-GazePlay uses [JUnit 5](https://junit.org/junit5/docs) as its testing framework, and you can find many examples of how
+GazePlay uses [JUnit 5](https://junit.org/junit5) as its testing framework, and you can find many examples of how
 these tests are written both online and in the test files themselves.
 
 You will often need to use [TestFX](https://github.com/TestFX/TestFX/wiki) in your tests to access JavaFX components, see
