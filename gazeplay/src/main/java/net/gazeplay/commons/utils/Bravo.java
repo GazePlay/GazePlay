@@ -7,14 +7,13 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
+import net.gazeplay.ui.scenes.ingame.GameContext;
 
 /**
  * Created by schwab on 30/10/2016.
@@ -50,15 +49,17 @@ public class Bravo extends Rectangle {
 
     private final String pictureResourceLocation;
 
-    // private final String soundResourceLocation;
-
     private final String soundResource;
 
     private final boolean enableRewardSound;
 
-    private AudioClip soundClip;
-
     private SequentialTransition fullTransition;
+
+    static class BravoException extends RuntimeException {
+        BravoException(Throwable cause) {
+            super(cause);
+        }
+    }
 
     public Bravo() {
         this(defaultPictureResourceLocation, defaultSoundResourceLocation,
@@ -68,7 +69,6 @@ public class Bravo extends Rectangle {
     public Bravo(String pictureResourceLocation, String soundResourceLocation, boolean enableRewardSound) {
         super(0, 0, 0, 0);
         this.pictureResourceLocation = pictureResourceLocation;
-        // this.soundResourceLocation = soundResourceLocation;
 
         soundResource = soundResourceLocation;
 
@@ -97,7 +97,7 @@ public class Bravo extends Rectangle {
         delayedStart(initialDelay);
     }
 
-    public void setConfetiOnStart(GameContext gc) {
+    public void setConfettiOnStart(GameContext gc) {
         Dimension2D dim = gc.getGamePanelDimensionProvider().getDimension2D();
         final RandomColorGenerator randomColorGenerator = RandomColorGenerator.getInstance();
         for (int i = 0; i <= 100; i++) {
@@ -133,7 +133,7 @@ public class Bravo extends Rectangle {
 
     private void delayedStart(long initialDelay) {
         final Runnable uiRunnable = () -> {
-            // set visible only after all other property as been set
+            // set visible only after all other properties have been set
             // and just before the animation starts
             setVisible(true);
 
@@ -154,18 +154,18 @@ public class Bravo extends Rectangle {
             log.debug("Finished JavaFX task");
         };
 
-        final Runnable deferedAnimationRunnable = () -> {
+        final Runnable deferredAnimationRunnable = () -> {
             try {
                 Thread.sleep(initialDelay);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                throw new BravoException(e);
             }
             log.debug("Adding task to JavaFX thread queue ...");
             Platform.runLater(uiRunnable);
             log.debug("Task added");
         };
 
-        AsyncUiTaskExecutor.getInstance().getExecutorService().submit(deferedAnimationRunnable);
+        AsyncUiTaskExecutor.getInstance().getExecutorService().submit(deferredAnimationRunnable);
     }
 
     private SequentialTransition createFullTransition() {

@@ -272,7 +272,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
         getChildren().add(bravo);
         bravo.toFront();
-        bravo.setConfetiOnStart(this);
+        bravo.setConfettiOnStart(this);
         bravo.playWinTransition(root, delay, onFinishedEventHandler);
     }
 
