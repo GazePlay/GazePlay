@@ -73,7 +73,7 @@ des tests de débogage si un autre code dépendant a changé.
 **Il existe en ligne de nombreuses et très bonnes ressources sur la manière d'écrire des tests. Si vous cherchez un endroit par lequel commencer, lisez 
 [this article](https://manifesto.co.uk/unit-testing-best-practices-java/ **
 
-GazePlay utilise [JUnit 5](https://junit.org/junit5/docs) comme framework de test, Vous pouvez trouver de nombreux exemples de construction 
+GazePlay utilise [JUnit 5](https://junit.org/junit5) comme framework de test, Vous pouvez trouver de nombreux exemples de construction 
 de ces tests en ligne et dans les fichiers de tests eux-mêmes.
 
 Vous aurez souvent besoin d'utiliser [TestFX](https://github.com/TestFX/TestFX/wiki) dans vos tests pour accéder aux composants JavaFX. Ici encore,
