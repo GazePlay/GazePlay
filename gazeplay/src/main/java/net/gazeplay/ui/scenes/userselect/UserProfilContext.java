@@ -34,12 +34,11 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationSource;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
-import net.gazeplay.commons.utils.FilesUtility;
+import net.gazeplay.commons.utils.FileUtils;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
-import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -321,7 +320,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             dialog.close();
             choicePanel.getChildren().remove(user);
             File userDirectory = GazePlayDirectories.getUserProfileDirectory(user.getName());
-            FilesUtility.deleteDirectoryRecursivly(userDirectory);
+            FileUtils.deleteDirectoryRecursively(userDirectory);
             log.info("Profile: " + user.getName() + " deleted");
         });
 
@@ -563,7 +562,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
     private static boolean copyFile(File source, File dest) {
         try {
-            FileUtils.copyFile(source, dest);
+            org.apache.commons.io.FileUtils.copyFile(source, dest);
             return true;
         } catch (Exception e) {
             log.info("Unable to copy the profile picture");
