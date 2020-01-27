@@ -23,6 +23,12 @@
         <exclude name="FieldNamingConventions"/>
     </rule>
 
+    <rule ref="category/java/codestyle.xml/ClassNamingConventions">
+        <properties>
+            <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(Utils?|Helper|Factory)" />
+        </properties>
+    </rule>
+
     <rule ref="category/java/design.xml">
     </rule>
     

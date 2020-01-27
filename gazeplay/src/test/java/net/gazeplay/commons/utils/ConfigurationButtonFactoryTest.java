@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(ApplicationExtension.class)
 @RunWith(MockitoJUnitRunner.class)
-class ConfigurationButtonTest {
+class ConfigurationButtonFactoryTest {
 
     @Mock
     private GazePlay mockGazePlay;
@@ -29,7 +29,7 @@ class ConfigurationButtonTest {
 
     @Test
     void shouldCreateConfigurationButton() {
-        ConfigurationButton button = ConfigurationButton.createConfigurationButton(mockGazePlay);
+        ConfigurationButton button = ConfigurationButtonFactory.createConfigurationButton(mockGazePlay);
         button.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, false, false, new PickResult(button, 0, 0)));
 
         verify(mockGazePlay).onDisplayConfigurationManagement();
