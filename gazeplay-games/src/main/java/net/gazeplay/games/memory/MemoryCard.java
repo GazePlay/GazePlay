@@ -52,7 +52,7 @@ public class MemoryCard extends Parent {
     final boolean isOpen;
 
     public MemoryCard(double positionX, double positionY, double width, double height, Image image, int idc,
-            IGameContext gameContext, Stats stats, Memory gameInstance, int fixationlength, boolean isOpen) {
+                      IGameContext gameContext, Stats stats, Memory gameInstance, int fixationlength, boolean isOpen) {
 
         this.isOpen = isOpen;
 
@@ -62,7 +62,7 @@ public class MemoryCard extends Parent {
             this.card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
         } else {
             this.card
-                    .setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
+                .setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
         }
 
         this.image = image;
@@ -123,7 +123,7 @@ public class MemoryCard extends Parent {
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(MouseEvent.ANY, enterEvent);
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(GazeEvent.ANY, enterEvent);
                 gameContext.getGazeDeviceManager()
-                        .removeEventFilter(gameInstance.currentRoundDetails.cardList.get(i).card);
+                    .removeEventFilter(gameInstance.currentRoundDetails.cardList.get(i).card);
 
             }
         }
@@ -154,7 +154,9 @@ public class MemoryCard extends Parent {
     /* The 2 turned cards are not matching */
     private void onWrongCardSelected() {
 
-        Timeline timeline = new Timeline();
+        if (gameInstance.currentRoundDetails == null) {
+            return;
+        }
 
         /* No cards are turned now */
         for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
@@ -163,38 +165,42 @@ public class MemoryCard extends Parent {
                 gameInstance.currentRoundDetails.cardList.get(i).progressIndicator.setOpacity(0);
                 if (!isOpen) {
                     gameInstance.currentRoundDetails.cardList.get(i).card.setFill(
-                            new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
+                        new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
                 }
             }
             gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = -1;
         }
         gameInstance.nbTurnedCards = 0;
-        timeline.play();
 
     }
 
     private EventHandler<Event> buildEvent() {
         return e -> {
 
-            if (turned)
+            if (turned) {
                 return;
+            }
             if (gameInstance.nbTurnedCards == 2) {
                 return;
             }
             /* First card */
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                if (cardAlreadyTurned == -1) {
+                if (timelineProgressBar != null) {
+                    timelineProgressBar.stop();
+                }
 
-                    progressIndicator.setOpacity(1);
-                    progressIndicator.setProgress(0);
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
 
-                    timelineProgressBar = new Timeline();
+                timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
-                        new KeyValue(progressIndicator.progressProperty(), 1)));
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                    timelineProgressBar.setOnFinished(actionEvent -> {
+                timelineProgressBar.setOnFinished(actionEvent -> {
+
+                    if (cardAlreadyTurned == -1) { /* 1st card */
                         gameInstance.nbTurnedCards = gameInstance.nbTurnedCards + 1;
                         turned = true;
                         if (!isOpen) {
@@ -207,20 +213,7 @@ public class MemoryCard extends Parent {
                         }
                         progressIndicator.setOpacity(isOpen ? 0.35 : 0);
 
-                    });
-                    timelineProgressBar.play();
-                } else { /* 2nd card */
-
-                    progressIndicator.setOpacity(1);
-                    progressIndicator.setProgress(0);
-
-                    timelineProgressBar = new Timeline();
-
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
-                        new KeyValue(progressIndicator.progressProperty(), 1)));
-
-                    timelineProgressBar.setOnFinished(actionEvent -> {
-
+                    } else { /* 2nd card */
                         gameInstance.nbTurnedCards = gameInstance.nbTurnedCards + 1;
                         turned = true;
                         if (!isOpen) {
@@ -242,8 +235,9 @@ public class MemoryCard extends Parent {
 
                             timelineCard.setOnFinished(actionEvent1 -> {
 
-                                if (timelineCard != null)
+                                if (timelineCard != null) {
                                     timelineCard.stop();
+                                }
 
                                 if (id == cardAlreadyTurned) {
                                     onCorrectCardSelected();
@@ -253,17 +247,17 @@ public class MemoryCard extends Parent {
                             });
                             timelineCard.play();
                         }
-                    });
-                    timelineProgressBar.play();
-                }
+                    }
+
+                });
+
+                timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                Timeline timeline = new Timeline();
-
-                timeline.play();
-                if (timelineProgressBar != null)
+                if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
+                }
 
                 progressIndicator.setOpacity(0);
                 progressIndicator.setProgress(0);
@@ -271,12 +265,9 @@ public class MemoryCard extends Parent {
         };
     }
 
+
     public boolean isTurned() {
         return turned;
-    }
-
-    public void setImageDejaRetournee(int id) {
-        this.cardAlreadyTurned = id;
     }
 
 }

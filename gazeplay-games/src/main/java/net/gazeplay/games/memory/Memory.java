@@ -167,8 +167,8 @@ public class Memory implements GameLifeCycle {
         for (int currentLineIndex = 0; currentLineIndex < nbLines; currentLineIndex++) {
             for (int currentColumnIndex = 0; currentColumnIndex < nbColumns; currentColumnIndex++) {
 
-                double positionX = width / 2 + (width + cardWidth) * currentColumnIndex;
-                double positionY = minHeight / 2 + (minHeight + cardHeight) * currentLineIndex;
+                double positionX = width / 2d + (width + cardWidth) * currentColumnIndex;
+                double positionY = minHeight / 2d + (minHeight + cardHeight) * currentLineIndex;
 
                 log.debug("positionX : {} ; positionY : {}", positionX, positionY);
 
