@@ -58,7 +58,7 @@ public class BravoTest {
         bravoTestApp.finishedAnimation.await();
 
         FxToolkit.cleanupStages();
-        assertTrue(bravoTestApp.duration.get() < 14000);
+        assertTrue(bravoTestApp.duration.get() < 10000);
     }
 
     @Test

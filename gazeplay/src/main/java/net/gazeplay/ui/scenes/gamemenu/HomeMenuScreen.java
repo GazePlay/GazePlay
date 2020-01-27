@@ -29,6 +29,7 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
+import net.gazeplay.commons.utils.ConfigurationButtonFactory;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.LicenseUtils;
@@ -65,7 +66,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton exitButton = createExitButton();
         CustomButton logoutButton = createLogoutButton(gazePlay);
 
-        ConfigurationButton configurationButton = ConfigurationButton.createConfigurationButton(gazePlay);
+        ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
