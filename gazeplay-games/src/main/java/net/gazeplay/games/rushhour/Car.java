@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
@@ -15,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,6 +50,8 @@ public class Car extends Rectangle {
 
     private boolean selected = false;
 
+    private double offsetX, offsetY;
+
     /**
      * Creates a new instance of a Car with the size and direction.
      * 
@@ -67,6 +71,16 @@ public class Car extends Rectangle {
             this.setFill(new ImagePattern(new Image("data/rushHour/carH.png")));
         } else {
             this.setFill(new ImagePattern(new Image("data/rushHour/carV.png")));
+        }
+
+        Scene scene =  gameContext.getPrimaryStage().getScene();
+        if (scene != null) {
+            Window window = scene.getWindow();
+            offsetX = window.getX();
+            offsetY = window.getY();
+        } else {
+            offsetX = 0;
+            offsetY = 0;
         }
 
         Lighting lighting = new Lighting();
@@ -122,7 +136,7 @@ public class Car extends Rectangle {
                 final double positionY = yRatio * screenHeight;
 
                 mouse = new Point();
-                mouse.setLocation(positionX, positionY);
+                mouse.setLocation(positionX + offsetX, positionY + offsetY);
             }
 
             int way = checkPos(mouse);
