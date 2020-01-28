@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
 @RunWith(MockitoJUnitRunner.class)
- class MemoryCardTest {
+class MemoryCardTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     IGameContext mockGameContext;
@@ -45,9 +45,9 @@ import static org.mockito.Mockito.when;
     @Test
     void shouldCreateCardFromResourceInOpenMode() {
         String resource = "images/blue/blue.jpg";
-        Image img  = new Image(resource);
-        MemoryCard memoryCard = new MemoryCard( 2,  2,  2,  2,  img,  2,
-            mockGameContext,  mockStats,  mockMemory,  mockConfig.getFixationLength(),  true);
+        Image img = new Image(resource);
+        MemoryCard memoryCard = new MemoryCard(2, 2, 2, 2, img, 2,
+            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), true);
         Image image = ((ImagePattern) memoryCard.getImageRectangle().getFill()).getImage();
         assert image.getUrl().contains(resource);
     }
@@ -55,9 +55,9 @@ import static org.mockito.Mockito.when;
     @Test
     void shouldCreateCardFromFileInOpenMode() {
         String resource = "file:" + System.getProperty("user.dir") + "src/test/resources/images/blue/blue.jpg";
-        Image img  = new Image(resource);
-        MemoryCard memoryCard = new MemoryCard( 2,  2,  2,  2,  img,  2,
-            mockGameContext,  mockStats,  mockMemory,  mockConfig.getFixationLength(),  true);
+        Image img = new Image(resource);
+        MemoryCard memoryCard = new MemoryCard(2, 2, 2, 2, img, 2,
+            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), true);
         Image image = ((ImagePattern) memoryCard.getImageRectangle().getFill()).getImage();
         assert image.getUrl().contains("blue.jpg");
     }
@@ -65,9 +65,9 @@ import static org.mockito.Mockito.when;
     @Test
     void shouldCreateCardFromFileInNotOpenModeAndFillWithBackCardImage() {
         String resource = "file:" + System.getProperty("user.dir") + "src/test/resources/images/blue/blue.jpg";
-        Image img  = new Image(resource);
-        MemoryCard memoryCard = new MemoryCard( 2,  2,  2,  2,  img,  2,
-            mockGameContext,  mockStats,  mockMemory,  mockConfig.getFixationLength(),  false);
+        Image img = new Image(resource);
+        MemoryCard memoryCard = new MemoryCard(2, 2, 2, 2, img, 2,
+            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), false);
         Image image = ((ImagePattern) memoryCard.getImageRectangle().getFill()).getImage();
         assert image.getUrl().contains("data/magiccards/images/red-card-game.png");
     }
@@ -75,9 +75,9 @@ import static org.mockito.Mockito.when;
     @Test
     void shouldCreateCardFromResourceInNotOpenModeAndFillWithBackCardImage() {
         String resource = "images/blue/blue.jpg";
-        Image img  = new Image(resource);
-        MemoryCard memoryCard = new MemoryCard( 2,  2,  2,  2,  img,  2,
-            mockGameContext,  mockStats,  mockMemory,  mockConfig.getFixationLength(),  false);
+        Image img = new Image(resource);
+        MemoryCard memoryCard = new MemoryCard(2, 2, 2, 2, img, 2,
+            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), false);
         Image image = ((ImagePattern) memoryCard.getImageRectangle().getFill()).getImage();
         assert image.getUrl().contains("data/magiccards/images/red-card-game.png");
     }
