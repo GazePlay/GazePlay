@@ -181,7 +181,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         root.getChildren().add(gamingRoot);
         root.getChildren().add(configPane);
 
-        return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gazeDeviceManagerFactory.get(), configPane);
+        return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gazeDeviceManagerFactory.get(primaryStage.getScene()), configPane);
     }
 
     private void buttonTransparentHandler(Button bt) {

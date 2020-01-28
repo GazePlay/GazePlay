@@ -4,6 +4,7 @@ import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
 import com.theeyetribe.clientsdk.data.GazeData;
 import javafx.geometry.Point2D;
+import javafx.scene.Scene;
 
 /**
  * Created by schwab on 16/08/2016.
@@ -12,8 +13,8 @@ class EyeTribeGazeDeviceManager extends AbstractGazeDeviceManager implements IGa
 
     private GazeManager gazeManager;
 
-    public EyeTribeGazeDeviceManager() {
-        super();
+    public EyeTribeGazeDeviceManager(Scene scene) {
+        super(scene);
     }
 
     @Override

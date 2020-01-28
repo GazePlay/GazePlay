@@ -1,6 +1,7 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
 import javafx.geometry.Dimension2D;
+import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.CachingSupplier;
 import net.gazeplay.commons.utils.ScreenDimensionSupplier;
@@ -16,8 +17,8 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
 
     private PositionPollerRunnable positionPollerRunnable;
 
-    public TobiiGazeDeviceManager() {
-        super();
+    public TobiiGazeDeviceManager(Scene scene) {
+        super(scene);
     }
 
     public void init() {

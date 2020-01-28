@@ -30,7 +30,7 @@ public class Pictogrammes extends Application {
         Scene scene = new Scene(root, 1200, 700, Color.BLACK);
 
         GazeDeviceManagerFactory gazeDeviceManagerFactory = new GazeDeviceManagerFactory();
-        GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get();
+        GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get(scene);
 
         Pictos pictos = new Pictos(scene, gazeDeviceManager);
 

@@ -1,5 +1,6 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
+import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -17,18 +18,18 @@ public class GazeDeviceManagerFactory {
     public GazeDeviceManagerFactory() {
     }
 
-    public synchronized GazeDeviceManager get() {
+    public synchronized GazeDeviceManager get(Scene scene) {
         GazeDeviceManager gazeDeviceManager = currentInstanceReference.get();
         if (gazeDeviceManager != null) {
             gazeDeviceManager.clear();
             gazeDeviceManager.destroy();
         }
-        gazeDeviceManager = create();
+        gazeDeviceManager = create(scene);
         currentInstanceReference.set(gazeDeviceManager);
         return gazeDeviceManager;
     }
 
-    private GazeDeviceManager create() {
+    private GazeDeviceManager create(Scene scene) {
         final Configuration config = ActiveConfigurationContext.getInstance();
 
         final String eyetrackerConfigValue = config.getEyeTracker();
@@ -39,13 +40,13 @@ public class GazeDeviceManagerFactory {
 
         switch (eyeTracker) {
             case tobii_eyeX_4C:
-                gazeDeviceManager = new TobiiGazeDeviceManager();
+                gazeDeviceManager = new TobiiGazeDeviceManager(scene);
                 break;
             case eyetribe:
-                gazeDeviceManager = new EyeTribeGazeDeviceManager();
+                gazeDeviceManager = new EyeTribeGazeDeviceManager(scene);
                 break;
             default:
-                gazeDeviceManager = new AbstractGazeDeviceManager() {
+                gazeDeviceManager = new AbstractGazeDeviceManager(scene) {
                     @Override
                     public void init() {
                     }

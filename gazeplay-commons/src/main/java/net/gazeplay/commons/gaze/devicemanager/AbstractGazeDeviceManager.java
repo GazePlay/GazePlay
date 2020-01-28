@@ -39,9 +39,20 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     private final Supplier<Robot> robotSupplier = new CachingSupplier<>(new RobotSupplier());
 
-    public AbstractGazeDeviceManager() {
+    private final double offsetX;
+    private final double offsetY;
 
+    public AbstractGazeDeviceManager(Scene scene) {
+        if (scene != null) {
+            Window window = scene.getWindow();
+            offsetX = window.getX();
+            offsetY = window.getY();
+        } else {
+            offsetX = 0;
+            offsetY = 0;
+        }
     }
+
 
     @Override
     public abstract void init();
@@ -194,13 +205,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         // log.info("GazeInfo: " + gi);
         if (!node.isDisable()) {
 
-            Point2D localPosition = node.screenToLocal(positionX, positionY);
-
-            Scene scene = node.getScene();
-            if (scene != null) {
-                Window window = scene.getWindow();
-                localPosition = localPosition.add(window.getX(), window.getY());
-            }
+            Point2D localPosition = node.screenToLocal(positionX + offsetX, positionY + offsetY);
 
             if (localPosition != null && node.contains(localPosition)) {
                 if (gi.isOn()) {

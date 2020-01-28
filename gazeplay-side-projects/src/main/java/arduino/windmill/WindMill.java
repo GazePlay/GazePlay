@@ -33,7 +33,7 @@ public class WindMill extends Application {
                 Color.BLACK);
 
         GazeDeviceManagerFactory gazeDeviceManagerFactory = new GazeDeviceManagerFactory();
-        GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get();
+        GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get(scene);
 
         Choices pictos = new Choices(scene, gazeDeviceManager);
 

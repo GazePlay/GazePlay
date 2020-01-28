@@ -29,7 +29,7 @@ public class Test extends Application {
         root.getChildren().add(circle);
 
         GazeDeviceManagerFactory gazeDeviceManagerFactory = new GazeDeviceManagerFactory();
-        GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get();
+        GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get(scene);
 
         gazeDeviceManager.addEventFilter(circle);
 
