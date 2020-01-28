@@ -40,7 +40,6 @@ class MemoryTest {
         when(mockGameContext.getGamePanelDimensionProvider().getDimension2D()).thenReturn(mockDimension);
         when(mockGameContext.getConfiguration()).thenReturn(mockConfig);
 
-        Random random = new Random();
         HashMap<Integer, Image> randomPictures = memory.selectionAleaImages();
         assert randomPictures.size() == 4;
     }
