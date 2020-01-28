@@ -14,6 +14,7 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
     public static final double GAZE_PROGRESS_INDICATOR_WIDTH = 100;
     public static final double GAZE_PROGRESS_INDICATOR_HEIGHT = GAZE_PROGRESS_INDICATOR_WIDTH;
     public static final double GAZE_PROGRESS_INDICATOR_OFFSET = GAZE_PROGRESS_INDICATOR_HEIGHT / 4;
+    private final Polygon triangle;
 
     public GazeFollowerIndicator(IGameContext gameContext, final Pane root) {
 
@@ -25,39 +26,17 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
         this.setMinWidth(GAZE_PROGRESS_INDICATOR_WIDTH);
         this.setMinHeight(GAZE_PROGRESS_INDICATOR_HEIGHT);
 
-        Polygon triangle = new Polygon();
+        triangle = new Polygon();
         triangle.getPoints().addAll(0.0, 0.0, 10.0, 20.0, 20.0, 10.0);
 
         root.addEventFilter(MouseEvent.ANY, (event) -> {
-            triangle.toFront();
-            triangle.setTranslateX(event.getX());
-            triangle.setTranslateY(event.getY());
+            moveGazeIndicator(event.getX(), event.getY());
         });
 
         root.getChildren().add(triangle);
 
-        root.addEventFilter(MouseEvent.ANY, (event) -> {
-
-            this.toFront();
-            moveGazeIndicator(event.getX(), event.getY());
-        });
         root.addEventFilter(GazeEvent.ANY, (event) -> {
-
-
-            this.toFront();
-
-            double x = event.getX();
-            double y = event.getY();
-
-            Point2D eventCoord = new Point2D(x, y);
-            Point2D localCoord = root.screenToLocal(eventCoord);
-
-            if (localCoord != null) {
-                x = localCoord.getX();
-                y = localCoord.getY();
-            }
-
-            moveGazeIndicator(x, y);
+            moveGazeIndicator(event.getX(), event.getY());
         });
     }
 
@@ -65,5 +44,10 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
         this.setTranslateX(x);
         this.setTranslateY(y);
 
+        triangle.setTranslateX(x);
+        triangle.setTranslateY(y);
+
+        triangle.toFront();
+        this.toFront();
     }
 }
