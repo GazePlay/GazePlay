@@ -137,7 +137,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(this);
 
 
-        Scene scene =  gameContext.getPrimaryStage().getScene();
+        Scene scene = gameContext.getPrimaryStage().getScene();
         if (scene != null) {
             Window window = scene.getWindow();
             offsetX = window.getX();
@@ -147,7 +147,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             offsetY = 0;
         }
 
-        log.debug("the offset for the gaze is equal to {} and {}", offsetX,offsetY);
+        log.debug("the offset for the gaze is equal to {} and {}", offsetX, offsetY);
 
     }
 
@@ -189,7 +189,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             handOffsetY = -hand.getHeight() / 4;
         }
         if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-            updateMousePosition(handOffsetX,handOffsetY);
+            updateMousePosition(handOffsetX, handOffsetY);
         } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
             updateGazePosition(handOffsetX, handOffsetY);
         }

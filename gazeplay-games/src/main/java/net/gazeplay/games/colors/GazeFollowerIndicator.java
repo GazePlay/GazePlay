@@ -1,6 +1,5 @@
 package net.gazeplay.games.colors;
 
-import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;

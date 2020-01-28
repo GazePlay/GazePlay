@@ -51,14 +51,14 @@ public class RushHour extends Parent implements GameLifeCycle {
 
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                    ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         });
         gameContext.getPrimaryStage().heightProperty().addListener((observable, oldValue, newValue) -> {
 
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                    ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         });
 
@@ -183,10 +183,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -229,10 +229,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -287,10 +287,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -333,10 +333,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -391,10 +391,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -460,10 +460,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -534,10 +534,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -604,10 +604,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -674,10 +674,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -736,10 +736,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -802,10 +802,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -868,10 +868,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -938,10 +938,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1004,10 +1004,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1070,10 +1070,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1148,10 +1148,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1226,10 +1226,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1292,10 +1292,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1358,10 +1358,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1428,10 +1428,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1514,10 +1514,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1580,10 +1580,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1654,10 +1654,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1724,10 +1724,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1794,10 +1794,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1864,10 +1864,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1930,10 +1930,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1996,10 +1996,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2058,10 +2058,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2132,10 +2132,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2206,10 +2206,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2276,10 +2276,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2354,10 +2354,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2480,9 +2480,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         if (Shape.intersect(car, door).getBoundsInLocal().getWidth() != -1) {
             // do nothingnothing
         } else if ((Shape.intersect(car, up).getBoundsInLocal().getWidth() != -1)
-                || (Shape.intersect(car, down).getBoundsInLocal().getWidth() != -1)
-                || (Shape.intersect(car, left).getBoundsInLocal().getWidth() != -1)
-                || (Shape.intersect(car, right).getBoundsInLocal().getWidth() != -1)) {
+            || (Shape.intersect(car, down).getBoundsInLocal().getWidth() != -1)
+            || (Shape.intersect(car, left).getBoundsInLocal().getWidth() != -1)
+            || (Shape.intersect(car, right).getBoundsInLocal().getWidth() != -1)) {
             log.debug("intersect");
             car.setIntersect(true);
             car.setSelected(false);

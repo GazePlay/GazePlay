@@ -161,7 +161,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
             if (event.getEventType() == MouseEvent.MOUSE_ENTERED || event.getEventType() == GazeEvent.GAZE_ENTERED) {
                 thisIndicator.start();
             } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
-                    || event.getEventType() == GazeEvent.GAZE_EXITED) {
+                || event.getEventType() == GazeEvent.GAZE_EXITED) {
                 thisIndicator.stop();
             }
         };
