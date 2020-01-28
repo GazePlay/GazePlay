@@ -270,4 +270,8 @@ public class MemoryCard extends Parent {
         return turned;
     }
 
+    public Rectangle getImageRectangle() {
+        return this.card;
+    }
+
 }

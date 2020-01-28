@@ -85,7 +85,7 @@ public class Memory implements GameLifeCycle {
 
     }
 
-    private HashMap<Integer, Image> selectionAleaImages() {
+    HashMap<Integer, Image> selectionAleaImages() {
         final int cardsCount = nbColumns * nbLines;
         HashMap<Integer, Image> res = new HashMap<>();
 
