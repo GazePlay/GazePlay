@@ -10,6 +10,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -18,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
@@ -93,7 +95,10 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private final int screenWidth;
     private final int screenHeight;
 
+    private double offsetX, offsetY;
+
     PetHouse(IGameContext gameContext, Stats stats) {
+
         this.gameContext = gameContext;
         this.stats = stats;
 
@@ -130,6 +135,20 @@ public class PetHouse extends Parent implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(zone);
 
         gameContext.getChildren().add(this);
+
+
+        Scene scene =  gameContext.getPrimaryStage().getScene();
+        if (scene != null) {
+            Window window = scene.getWindow();
+            offsetX = window.getX();
+            offsetY = window.getY();
+        } else {
+            offsetX = 0;
+            offsetY = 0;
+        }
+
+        log.debug("the offset for the gaze is equal to {} and {}", offsetX,offsetY);
+
     }
 
     @Override
@@ -184,9 +203,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
             final double positionX = xRatio * screenWidth;
             final double positionY = yRatio * screenHeight;
 
-            hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
+            hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX() + offsetX
                 - hand.getWidth() / 2);
-            hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY()
+            hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY() + offsetY
                 - hand.getHeight() / 2);
         }
 
@@ -223,9 +242,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 final double positionX = xRatio * screenWidth;
                 final double positionY = yRatio * screenHeight;
 
-                hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
+                hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX() + offsetX
                     - hand.getWidth() / 2);
-                hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY()
+                hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY() + offsetY
                     - hand.getHeight() / 2);
             }
         };
@@ -259,9 +278,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 final double positionX = xRatio * screenWidth;
                 final double positionY = yRatio * screenHeight;
 
-                hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
+                hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX() + offsetX
                     - hand.getWidth() / 2);
-                hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY()
+                hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY() + offsetY
                     - hand.getHeight() / 2);
             }
         };
