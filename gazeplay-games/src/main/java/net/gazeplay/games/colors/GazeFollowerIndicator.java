@@ -29,13 +29,13 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
         triangle = new Polygon();
         triangle.getPoints().addAll(0.0, 0.0, 10.0, 20.0, 20.0, 10.0);
 
-        root.addEventFilter(MouseEvent.ANY, (event) -> {
+        root.addEventFilter(MouseEvent.MOUSE_MOVED, (event) -> {
             moveGazeIndicator(event.getX(), event.getY());
         });
 
         root.getChildren().add(triangle);
 
-        root.addEventFilter(GazeEvent.ANY, (event) -> {
+        root.addEventFilter(GazeEvent.GAZE_MOVED, (event) -> {
             moveGazeIndicator(event.getX(), event.getY());
         });
     }

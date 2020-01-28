@@ -612,13 +612,6 @@ public class ColorsGame implements GameLifeCycle {
             currentX = event.getX();
             currentY = event.getY();
 
-            Point2D eventCoord = new Point2D(currentX, currentY);
-            Point2D localCoord = root.screenToLocal(eventCoord);
-
-            if (localCoord != null) {
-                currentX = localCoord.getX();
-                currentY = localCoord.getY();
-            }
 
             // If gaze still around first point
             if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
