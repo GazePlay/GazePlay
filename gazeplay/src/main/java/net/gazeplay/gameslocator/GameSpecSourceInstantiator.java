@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 public class GameSpecSourceInstantiator {
 
-    static class GameSpecException extends RuntimeException {
-        GameSpecException(String message, Throwable cause) {
+    static class GameSpecInstantiationException extends RuntimeException {
+        GameSpecInstantiationException(String message, Throwable cause) {
             super(message, cause);
         }
     }
@@ -28,7 +28,7 @@ public class GameSpecSourceInstantiator {
                     InstantiationException |
                     InvocationTargetException |
                     ClassCastException e) {
-                    throw new GameSpecException("Failed to create new instance of class " + gameClass, e);
+                    throw new GameSpecInstantiationException("Failed to create new instance of class " + gameClass, e);
                 }
             })
             .collect(Collectors.toList());

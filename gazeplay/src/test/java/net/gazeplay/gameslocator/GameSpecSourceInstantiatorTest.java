@@ -38,7 +38,7 @@ class GameSpecSourceInstantiatorTest {
 
     @Test
     void shouldThrowExceptionForIncorrectClass() {
-        assertThrows(GameSpecSourceInstantiator.GameSpecException.class, () -> {
+        assertThrows(GameSpecSourceInstantiator.GameSpecInstantiationException.class, () -> {
             List<Class> classList = new ArrayList<>(List.of(
                 Class.forName("net.gazeplay.commons.utils.FileUtils")
             ));
