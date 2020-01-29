@@ -8,6 +8,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.*;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -21,15 +22,18 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
+import static javafx.scene.chart.XYChart.Data;
 
 @Slf4j
-public class StatsDisplay {
+public class StatDisplayUtils {
 
     public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
-
         EventHandler<Event> homeEvent = e -> returnToMenu(gazePlay, statsContext);
 
         HomeButton homeButton = new HomeButton();
@@ -55,49 +59,44 @@ public class StatsDisplay {
 
         LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);
 
-        // lineChart.setTitle("Réaction");
         // defining a series
-        XYChart.Series series = new XYChart.Series();
-        // series.setName("Temps de réaction");
-
-        XYChart.Series average = new XYChart.Series();
-
-        XYChart.Series sdp = new XYChart.Series();
-
-        XYChart.Series sdm = new XYChart.Series();
+        Series<String, Number> series = new Series<>();
+        Series<String, Number> average = new Series<>();
+        Series<String, Number> sdp = new Series<>();
+        Series<String, Number> sdm = new Series<>();
         // populating the series with data
 
-        final List<Long> shoots;
+        final List<Long> shots;
         if (stats instanceof ShootGamesStats) {
-            shoots = stats.getSortedDurationsBetweenGoals();
+            shots = stats.getSortedDurationsBetweenGoals();
         } else {
-            shoots = stats.getOriginalDurationsBetweenGoals();
+            shots = stats.getOriginalDurationsBetweenGoals();
         }
-        // for (Long shoot : shoots) {
-        // System.out.println("The interval is at " + shoot);
-        // }
+
         double sd = stats.computeRoundsDurationStandardDeviation();
 
-        int i = 0;
+        String xValue = "0";
 
-        average.getData().add(new XYChart.Data(0 + "", stats.computeRoundsDurationAverageDuration()));
-        sdp.getData().add(new XYChart.Data(0 + "", stats.computeRoundsDurationAverageDuration() + sd));
-        sdm.getData().add(new XYChart.Data(0 + "", stats.computeRoundsDurationAverageDuration() - sd));
+        average.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration()));
+        sdp.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() + sd));
+        sdm.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() - sd));
 
-        for (Long duration : shoots) {
+        int i = 1;
 
+        for (Long duration : shots) {
+            xValue = Integer.toString(i);
+            series.getData().add(new Data<>(xValue, duration));
+            average.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration()));
+
+            sdp.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() + sd));
+            sdm.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() - sd));
             i++;
-            series.getData().add(new XYChart.Data(i + "", duration.intValue()));
-            average.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration()));
-
-            sdp.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() + sd));
-            sdm.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() - sd));
         }
 
-        i++;
-        average.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration()));
-        sdp.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() + sd));
-        sdm.getData().add(new XYChart.Data(i + "", stats.computeRoundsDurationAverageDuration() - sd));
+        xValue = Integer.toString(i);
+        average.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration()));
+        sdp.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() + sd));
+        sdm.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() - sd));
 
         lineChart.setCreateSymbols(false);
 
@@ -129,6 +128,8 @@ public class StatsDisplay {
 
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
+
+        xAxis.setTickLabelsVisible(false);
         yAxis.setLabel("Coordinates");
 
         AreaChart<Number, Number> colorBands = new AreaChart<>(xAxis, yAxis);
@@ -137,20 +138,18 @@ public class StatsDisplay {
         colorBands.setCreateSymbols(true);
         colorBands.setLegendVisible(true);
 
-        XYChart.Series xEyeCoordinates = new XYChart.Series();
-        xEyeCoordinates.setName("X coordinate");
         if (points.size() > 0) {
 
-            for (FixationPoint p : points) {
-                xEyeCoordinates.getData().add(new XYChart.Data(p.getTimeGaze(), p.getY()));
-            }
+            Series<Number, Number> xEyeCoordinates = new Series<>();
+            xEyeCoordinates.setName("X coordinate");
 
-            XYChart.Series yEyeCoordinates = new XYChart.Series();
+            Series<Number, Number> yEyeCoordinates = new Series<>();
             yEyeCoordinates.setName("Y coordinate");
+
             for (FixationPoint p : points) {
-                yEyeCoordinates.getData().add(new XYChart.Data(p.getTimeGaze(), p.getX()));
+                xEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getY()));
+                yEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getX()));
             }
-            xAxis.setTickLabelsVisible(false);
 
             colorBands.getData().addAll(xEyeCoordinates, yEyeCoordinates);
 
@@ -158,8 +157,10 @@ public class StatsDisplay {
 
             colorBands.addEventHandler(MouseEvent.MOUSE_CLICKED, openAreaChartEvent);
 
-            root.widthProperty().addListener((observable, oldValue, newValue) -> colorBands.setMaxWidth(newValue.doubleValue() * 0.4));
-            root.heightProperty().addListener((observable, oldValue, newValue) -> colorBands.setMaxHeight(newValue.doubleValue() * 0.4));
+            root.widthProperty().addListener(
+                (observable, oldValue, newValue) -> colorBands.setMaxWidth(newValue.doubleValue() * 0.4));
+            root.heightProperty().addListener(
+                (observable, oldValue, newValue) -> colorBands.setMaxHeight(newValue.doubleValue() * 0.4));
             colorBands.setMaxWidth(root.getWidth() * 0.4);
             colorBands.setMaxHeight(root.getHeight() * 0.4);
 
@@ -308,8 +309,6 @@ public class StatsDisplay {
     }
 
     private static void zoomInAndCenter(Node node, double initialWidth, double initialHeight, boolean preserveRatio) {
-
-        // if(ActiveConfigurationContext.getInstance().isFixationSequenceDisabled()) {
         Parent parent = node.getParent();
 
         node.toFront();
@@ -335,71 +334,12 @@ public class StatsDisplay {
 
         node.setTranslateX(translateX);
         node.setTranslateY(translateY);
-        // }
-        //
-        // else{
-        //
-        // if(node.getParent() instanceof VBox){
-        // VBox n1 = (VBox) node.getParent();
-        // if(n1.getParent() instanceof StackPane){
-        // StackPane n2 = (StackPane) n1.getParent();
-        // if(n2.getParent() instanceof BorderPane){
-        // BorderPane root = (BorderPane) n2.getParent();
-        // ImageView scanpath = (ImageView) node;
-        // scanpath.setFitHeight(scanpath.getImage().getHeight());
-        // scanpath.setFitWidth(scanpath.getImage().getWidth());
-        //
-        // StackPane scanPath = new StackPane(scanpath);
-        // scanPath.setAlignment(Pos.CENTER);
-        // scanPath.setPrefHeight(root.getHeight());
-        // scanPath.setPrefWidth(root.getWidth());
-        // //root.getChildren().add(scanPath);
-        // root.setCenter(scanPath);
-        // scanPath.toFront();
-        // }
-        // }
-        // }
-        // }
-
     }
 
     public static String convert(long totalTime) {
+        Date date = new Date(totalTime);
+        DateFormat df = new SimpleDateFormat("dd 'd' HH 'h' mm 'm' ss 's' S 'ms'");
 
-        long days = TimeUnit.MILLISECONDS.toDays(totalTime);
-        totalTime -= TimeUnit.DAYS.toMillis(days);
-
-        long hours = TimeUnit.MILLISECONDS.toHours(totalTime);
-        totalTime -= TimeUnit.HOURS.toMillis(hours);
-
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTime);
-        totalTime -= TimeUnit.MINUTES.toMillis(minutes);
-
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(totalTime);
-        totalTime -= TimeUnit.SECONDS.toMillis(seconds);
-
-        StringBuilder builder = new StringBuilder(1000);
-
-        if (days > 0) {
-            builder.append(days);
-            builder.append(" d ");
-        }
-        if (hours > 0) {
-            builder.append(hours);
-            builder.append(" h ");
-        }
-        if (minutes > 0) {
-            builder.append(minutes);
-            builder.append(" m ");
-        }
-        if (seconds > 0) {
-            builder.append(seconds);
-            builder.append(" s ");
-        }
-        if (totalTime > 0) {
-            builder.append(totalTime);
-            builder.append(" ms");
-        }
-
-        return builder.toString();
+        return df.format(date);
     }
 }
