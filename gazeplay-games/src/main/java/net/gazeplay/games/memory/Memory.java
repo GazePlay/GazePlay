@@ -85,7 +85,7 @@ public class Memory implements GameLifeCycle {
 
     }
 
-    HashMap<Integer, Image> selectionAleaImages() {
+    HashMap<Integer, Image> pickRandomImages() {
         final int cardsCount = nbColumns * nbLines;
         HashMap<Integer, Image> res = new HashMap<>();
 
@@ -104,7 +104,7 @@ public class Memory implements GameLifeCycle {
         Configuration config = gameContext.getConfiguration();
         final int cardsCount = nbColumns * nbLines;
 
-        images = selectionAleaImages();
+        images = pickRandomImages();
 
         List<MemoryCard> cardList = createCards(images, config);
 

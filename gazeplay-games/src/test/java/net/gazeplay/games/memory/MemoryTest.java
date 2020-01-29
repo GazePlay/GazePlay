@@ -14,7 +14,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import static org.mockito.Mockito.when;
 
@@ -40,7 +39,7 @@ class MemoryTest {
         when(mockGameContext.getGamePanelDimensionProvider().getDimension2D()).thenReturn(mockDimension);
         when(mockGameContext.getConfiguration()).thenReturn(mockConfig);
 
-        HashMap<Integer, Image> randomPictures = memory.selectionAleaImages();
+        HashMap<Integer, Image> randomPictures = memory.pickRandomImages();
         assert randomPictures.size() == 4;
     }
 
