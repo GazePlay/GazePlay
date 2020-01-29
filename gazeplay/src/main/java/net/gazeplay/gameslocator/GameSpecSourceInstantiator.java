@@ -9,6 +9,12 @@ import java.util.stream.Collectors;
 
 public class GameSpecSourceInstantiator {
 
+    static class GameSpecException extends RuntimeException {
+        GameSpecException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
+
     public List<GameSpecSource> instantiateGameSpecSources(List<Class> gamesClasses) {
         return gamesClasses
             .stream()
@@ -16,8 +22,13 @@ public class GameSpecSourceInstantiator {
                 try {
                     Constructor<GameSpecSource> defaultConstructor = gameClass.getConstructor();
                     return defaultConstructor.newInstance();
-                } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                    throw new RuntimeException("Failed to create new instance of class " + gameClass, e);
+                } catch (
+                    NoSuchMethodException |
+                    IllegalAccessException |
+                    InstantiationException |
+                    InvocationTargetException |
+                    ClassCastException e) {
+                    throw new GameSpecException("Failed to create new instance of class " + gameClass, e);
                 }
             })
             .collect(Collectors.toList());
