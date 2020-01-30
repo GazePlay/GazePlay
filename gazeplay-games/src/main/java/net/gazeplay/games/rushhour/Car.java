@@ -34,9 +34,8 @@ public class Car extends Rectangle {
     private boolean endOfGame = false;
 
     @Getter
-    private boolean direction;
+    private Orientation orientation;
     private int size;
-    private int move = 0;
     private int x;
     private int y;
     private int l;
@@ -50,33 +49,18 @@ public class Car extends Rectangle {
 
     private boolean selected = false;
 
-    private double offsetX, offsetY;
+    static enum Orientation{
+        horizontal,
+        vertical
+    }
 
-    /**
-     * Creates a new instance of a Car with the size and direction.
-     *
-     * @param l         length of the car
-     * @param h         height of the car
-     * @param direction of the car, true for horizontal, false for vertical
-     * @param size,     the size of one block
-     */
-    Car(int x, int y, int l, int h, Color c, boolean direction, int size, ProgressIndicator pi,
+    Car(int carX, int carY, int carLength, int carHeight, Color carColor, Orientation orientation, int blockSize, ProgressIndicator pi,
         IGameContext gameContext) {
-        super(0, 0, l * size, h * size);
-        if (direction) {
+        super(0, 0, carLength * blockSize, carHeight * blockSize);
+        if (orientation == Orientation.horizontal) {
             this.setFill(new ImagePattern(new Image("data/rushHour/carH.png")));
-        } else {
+        } else if (orientation == Orientation.vertical) {
             this.setFill(new ImagePattern(new Image("data/rushHour/carV.png")));
-        }
-
-        Scene scene = gameContext.getPrimaryStage().getScene();
-        if (scene != null) {
-            Window window = scene.getWindow();
-            offsetX = window.getX();
-            offsetY = window.getY();
-        } else {
-            offsetX = 0;
-            offsetY = 0;
         }
 
         Lighting lighting = new Lighting();
@@ -84,20 +68,18 @@ public class Car extends Rectangle {
         lighting.setSpecularConstant(0.0);
         lighting.setSpecularExponent(0.0);
         lighting.setSurfaceScale(0.0);
-        lighting.setLight(new Light.Distant(30, 30, c));
+        lighting.setLight(new Light.Distant(30, 30, carColor));
 
         this.setEffect(lighting);
         this.gameContext = gameContext;
-        this.direction = direction;
-        this.size = size;
+        this.orientation = orientation;
+        this.size = blockSize;
         this.setOpacity(0.7);
         this.pi = pi;
-        this.l = l;
-        this.h = h;
-        this.x = x;
-        this.y = y;
-
-        log.debug("" + x + " " + y + " " + l + " " + h + " " + c);
+        this.l = carLength;
+        this.h = carHeight;
+        this.x = carX;
+        this.y = carY;
 
         EventHandler<Event> enterEvent = e -> {
             pi.setLayoutX(getX() + getWidth() / 2 - pi.getWidth() / 2);
@@ -116,45 +98,37 @@ public class Car extends Rectangle {
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
 
         EventHandler<Event> exitEvent = e -> {
-            Point mouse = MouseInfo.getPointerInfo().getLocation();
+            Point2D mouse;
             if (e.getEventType() == GazeEvent.GAZE_EXITED) {
-                Screen mainScreen = Screen.getMainScreen();
-
-                double screenWidth = mainScreen.getWidth();
-                double screenHeight = mainScreen.getHeight();
-
-                float[] pointAsFloatArray = Tobii.gazePosition();
-
-                final float xRatio = pointAsFloatArray[0];
-                final float yRatio = pointAsFloatArray[1];
-
-                final double positionX = xRatio * screenWidth;
-                final double positionY = yRatio * screenHeight;
-
-                mouse = new Point();
-                mouse.setLocation(positionX + offsetX, positionY + offsetY);
+                double offsetX = 0, offsetY = 0;
+                Scene scene = gameContext.getPrimaryStage().getScene();
+                if (scene != null) {
+                    Window window = scene.getWindow();
+                    offsetX = window.getX() + scene.getX();
+                    offsetY = window.getY() + scene.getY();
+                }
+                mouse = this.screenToLocal((int)((GazeEvent)e).getX() +offsetX ,(int)((GazeEvent)e).getY() +offsetY);
+            } else {
+                mouse = new Point2D((int)((MouseEvent)e).getX(),(int)((MouseEvent)e).getY());
             }
+                int way = checkPos(mouse);
+                if (selected && !endOfGame && !intersect && !onMouse(mouse)) {
+                    moveTo(way);
+                }
+                intersect = false;
 
-            int way = checkPos(mouse);
-            if (selected && !endOfGame && !intersect && !onMouse(mouse)) {
-                // moveToMouse(mouse);
-                moveTo(way, mouse);
-            }
-            intersect = false;
-            // }
-
-            if (!selected) {
-                timelineProgressBar.stop();
-                pi.setProgress(0);
-                pi.setOpacity(0);
-            }
+                if (!selected) {
+                    timelineProgressBar.stop();
+                    pi.setProgress(0);
+                    pi.setOpacity(0);
+                }
         };
 
         this.addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
         this.addEventFilter(GazeEvent.GAZE_EXITED, exitEvent);
 
-        this.setToX(x);
-        this.setToY(y);
+        this.setToX(carX);
+        this.setToY(carY);
 
     }
 
@@ -166,17 +140,11 @@ public class Car extends Rectangle {
         this.setToY(y);
     }
 
-    private int checkPos(Point mouse) {
-        Point2D coord = this.sceneToLocal(
-            mouse.getX() - gameContext.getPrimaryScene().getX()
-                - gameContext.getPrimaryStage().getX(),
-            mouse.getY() - gameContext.getPrimaryScene().getY()
-                - gameContext.getPrimaryStage().getY());
-
-        if (!direction && (this.getX() < coord.getX()) && (coord.getX() < this.getX() + this.getWidth())) {
-            return (this.getY() > coord.getY()) ? -1 : 1;
-        } else if (direction && (this.getY() < coord.getY()) && (coord.getY() < this.getY() + this.getHeight())) {
-            return (this.getX() > coord.getX()) ? -1 : 1;
+    private int checkPos(Point2D mouse) {
+        if (orientation == Orientation.vertical && (this.getX() < mouse.getX()) && (mouse.getX() < this.getX() + this.getWidth())) {
+            return (this.getY() > mouse.getY()) ? -1 : 1;
+        } else if (orientation == Orientation.horizontal && (this.getY() < mouse.getY()) && (mouse.getY() < this.getY() + this.getHeight())) {
+            return (this.getX() > mouse.getX()) ? -1 : 1;
         }
 
         setSelected(false);
@@ -186,12 +154,12 @@ public class Car extends Rectangle {
         return 0;
     }
 
-    private void moveTo(int way, Point mouse) {
+    private void moveTo(int way) {
         double saveX = this.getX();
         double saveY = this.getY();
         int prevx = x;
         int prevy = y;
-        if (this.isDirection()) {
+        if (orientation == Orientation.horizontal) {
             this.setX(saveX + way * size);
             x = x + way;
         } else {
@@ -206,14 +174,9 @@ public class Car extends Rectangle {
         }
     }
 
-    private boolean onMouse(Point mouse) {
-        Point2D coord = this.sceneToLocal(
-            mouse.getX() - gameContext.getPrimaryScene().getX()
-                - gameContext.getPrimaryStage().getX(),
-            mouse.getY() - gameContext.getPrimaryScene().getY()
-                - gameContext.getPrimaryStage().getY());
-        return (this.getX() < coord.getX()) && (coord.getX() < this.getX() + this.getWidth())
-            && (this.getY() < coord.getY()) && (coord.getY() < this.getY() + this.getHeight());
+    private boolean onMouse(Point2D mouse) {
+        return (this.getX() < mouse.getX()) && (mouse.getX() < this.getX() + this.getWidth())
+            && (this.getY() < mouse.getY()) && (mouse.getY() < this.getY() + this.getHeight());
     }
 
     public void setToX(int i) {

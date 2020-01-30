@@ -197,25 +197,25 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(0, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(0, 3, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(1, 5, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(3, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
@@ -243,37 +243,37 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(1, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(0, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(0, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(3, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(5, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(4, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(3, 5, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
@@ -301,25 +301,25 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(5, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(4, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(0, 3, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c7 = new Car(2, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(2, 0, 1, 3, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
@@ -347,37 +347,37 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(1, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(3, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(0, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(0, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(1, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c5 = new Car(1, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(2, 5, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(5, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(5, 3, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
@@ -405,49 +405,49 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(0, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(1, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(2, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(3, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c5 = new Car(3, 0, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(3, 1, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(2, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(3, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(3, 2, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c9 = new Car(5, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c10 = new Car(5, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
     }
@@ -474,53 +474,53 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(1, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(2, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(4, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(4, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(5, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(2, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(3, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(1, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(4, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(3, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c10 = new Car(2, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c11 = new Car(5, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
@@ -548,49 +548,49 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 1, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(3, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(4, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(0, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(1, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(3, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(5, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(5, 2, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(0, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c10 = new Car(4, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -618,49 +618,49 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(1, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(2, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(4, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(2, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(2, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(3, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c5 = new Car(3, 1, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(3, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(4, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(0, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c9 = new Car(5, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c10 = new Car(2, 5, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -688,41 +688,41 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(3, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c5 = new Car(0, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(2, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(3, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(0, 5, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
@@ -750,45 +750,45 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(1, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(3, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(4, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(1, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(1, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(2, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(0, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(3, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(3, 4, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -816,45 +816,45 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(3, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(4, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(4, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(2, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(2, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(1, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(1, 3, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(3, 3, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(2, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(2, 4, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(2, 5, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c9 = new Car(5, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -882,49 +882,49 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(3, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(2, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(5, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(5, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(2, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(0, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(3, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(2, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(4, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c10 = new Car(4, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -952,45 +952,45 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 0, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(1, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(5, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(2, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(1, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(1, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(2, 4, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c9 = new Car(5, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1018,45 +1018,45 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(1, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(2, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(3, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(5, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c5 = new Car(1, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(4, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(0, 4, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(0, 5, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c9 = new Car(4, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1084,57 +1084,57 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(3, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(0, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(2, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(0, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(1, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(3, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(5, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(0, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c10 = new Car(4, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c11 = new Car(4, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        Car c12 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c12 = new Car(3, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c12);
         p.getChildren().add(c12);
 
@@ -1162,57 +1162,57 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(0, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(2, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(5, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(0, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(1, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(1, 2, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(2, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(3, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c10 = new Car(0, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c11 = new Car(3, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        Car c12 = new Car(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c12 = new Car(1, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c12);
         p.getChildren().add(c12);
 
@@ -1240,45 +1240,45 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(2, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(2, 0, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(2, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(4, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(5, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(0, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(1, 3, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(2, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(3, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(4, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1306,45 +1306,45 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(3, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(2, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(3, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(4, 2, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(1, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(1, 4, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(2, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1372,49 +1372,49 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(2, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c4 = new Car(3, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(4, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(5, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(0, 4, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(4, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(4, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(0, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c10 = new Car(2, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -1442,65 +1442,65 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(1, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(3, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(4, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(5, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(3, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(0, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(1, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c10 = new Car(5, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c11 = new Car(0, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        Car c12 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c12 = new Car(2, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c12);
         p.getChildren().add(c12);
 
-        Car c13 = new Car(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c13 = new Car(3, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c13);
         p.getChildren().add(c13);
 
-        Car c14 = new Car(3, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c14 = new Car(3, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c14);
         p.getChildren().add(c14);
 
@@ -1528,45 +1528,45 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(2, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c4 = new Car(3, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(4, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(4, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(5, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(5, 2, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(0, 4, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(0, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1594,53 +1594,53 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(2, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(5, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(0, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(0, 3, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(1, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(1, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(2, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(2, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(2, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(2, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(1, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(4, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c10 = new Car(4, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(3, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c11 = new Car(3, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
@@ -1668,49 +1668,49 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(2, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(3, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c5 = new Car(4, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(2, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(0, 4, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(1, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c9 = new Car(5, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c10 = new Car(5, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -1738,49 +1738,49 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 0, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(5, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(0, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(1, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(0, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(4, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c9 = new Car(2, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(3, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c10 = new Car(3, 3, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -1808,49 +1808,49 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(3, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(3, 0, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(2, 1, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(3, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(4, 2, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(0, 3, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(0, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(2, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c9 = new Car(5, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c10 = new Car(5, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -1878,45 +1878,45 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(2, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(1, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(2, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(3, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(0, 5, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(3, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(4, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1944,45 +1944,45 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(5, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c4 = new Car(0, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(0, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(4, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(3, 5, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(2, 3, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c9 = new Car(3, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -2010,41 +2010,41 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(1, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(1, 3, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(4, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(0, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(3, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(4, 2, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(0, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(3, 5, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(2, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
@@ -2072,53 +2072,53 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(3, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(2, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(3, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c5 = new Car(4, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(5, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(0, 3, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(3, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(4, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c10 = new Car(0, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c11 = new Car(2, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
@@ -2146,53 +2146,53 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(0, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c3 = new Car(3, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(5, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(2, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(3, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(1, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(3, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c9 = new Car(4, 2, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c10 = new Car(0, 4, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c11 = new Car(0, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
@@ -2220,49 +2220,49 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 3, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(0, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(0, 2, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(5, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(5, 3, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c7 = new Car(0, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(2, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c9 = new Car(3, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c10 = new Car(4, 5, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -2290,57 +2290,57 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(2, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c1 = new Car(1, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(0, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(3, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c6 = new Car(4, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(5, 1, 1, 3, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c8 = new Car(0, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(2, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(2, 3, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c10 = new Car(2, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(3, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c11 = new Car(3, 4, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        Car c12 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c12 = new Car(3, 5, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c12);
         p.getChildren().add(c12);
 
@@ -2368,49 +2368,49 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        Car red = new Car(3, 2, 2, 1, Color.RED, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c3 = new Car(1, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c4 = new Car(2, 1, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c5 = new Car(3, 0, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c6 = new Car(4, 1, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c7 = new Car(5, 2, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        Car c8 = new Car(5, 4, 1, 2, Color.BROWN, Car.Orientation.vertical, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c9 = new Car(0, 3, 3, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        Car c10 = new Car(0, 4, 2, 1, Color.BROWN, Car.Orientation.horizontal, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -2420,7 +2420,7 @@ public class RushHour extends Parent implements GameLifeCycle {
     public void launch() {
         endOfGame = false;
         setLevel(level);
-        if (toWin.isDirection()) {
+        if (toWin.getOrientation() == Car.Orientation.horizontal) {
             toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
         } else {
             toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiV.png")));
@@ -2459,7 +2459,7 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     private void setIntersections() {
         for (Car car : garage) {
-            if (car.isDirection()) {
+            if (car.getOrientation() == Car.Orientation.horizontal) {
                 car.xProperty().addListener((o) -> checkIntersections(car));
             } else {
                 car.yProperty().addListener((o) -> checkIntersections(car));
