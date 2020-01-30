@@ -64,7 +64,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static final double PREF_HEIGHT = 25;
 
-    private final boolean currentLanguageAlignementIsLeftAligned;
+    private final boolean currentLanguageAlignmentIsLeftAligned;
 
     ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
@@ -73,7 +73,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         Locale currentLocale = translator.currentLocale();
         LanguageDetails languageDetails = Languages.getLocale(currentLocale);
-        currentLanguageAlignementIsLeftAligned = languageDetails.isLeftAligned();
+        currentLanguageAlignmentIsLeftAligned = languageDetails.isLeftAligned();
 
         // Bottom Pane
         HomeButton homeButton = createHomeButtonInConfigurationManagementScreen(gazePlay);
@@ -81,7 +81,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
         rightControlPane.setAlignment(Pos.CENTER_RIGHT);
-        if (currentLanguageAlignementIsLeftAligned) {
+        if (currentLanguageAlignmentIsLeftAligned) {
             rightControlPane.getChildren().add(homeButton);
         }
 
@@ -89,7 +89,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
         leftControlPane.setAlignment(Pos.CENTER_LEFT);
         // HomeButton on the Left for Arabic Language
-        if (!currentLanguageAlignementIsLeftAligned) {
+        if (!currentLanguageAlignmentIsLeftAligned) {
             leftControlPane.getChildren().add(homeButton);
         }
 
@@ -106,7 +106,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         configTitleText.setTextAlignment(TextAlignment.CENTER);
 
         // Arabic title alignment
-        if (!currentLanguageAlignementIsLeftAligned) {
+        if (!currentLanguageAlignmentIsLeftAligned) {
             BorderPane.setAlignment(configTitleText, Pos.BOTTOM_RIGHT);
         }
 
@@ -126,7 +126,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         centerCenterPane.setSpacing(40);
         centerCenterPane.setAlignment(Pos.TOP_CENTER);
         // Arabic title alignment
-        if (!currentLanguageAlignementIsLeftAligned) {
+        if (!currentLanguageAlignmentIsLeftAligned) {
             gridPane.setAlignment(Pos.TOP_RIGHT);
         } else {
             gridPane.setAlignment(Pos.TOP_LEFT);
@@ -373,7 +373,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         grid.add(s, 0, currentRowIndex, 3, 1);
         GridPane.setHalignment(s, HPos.CENTER);
 
-        if (currentLanguageAlignementIsLeftAligned) {
+        if (currentLanguageAlignmentIsLeftAligned) {
             int newCurrentRowIndex = currentFormRow.incrementAndGet();
             grid.add(label, columnIndexLabelLeft, newCurrentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
@@ -396,7 +396,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         Separator s = new Separator();
 
-        if (currentLanguageAlignementIsLeftAligned) {
+        if (currentLanguageAlignmentIsLeftAligned) {
             grid.add(label, columnIndexLabelLeft, currentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
             grid.add(s, columnIndexInputLeft, currentRowIndex, 2, 1);
@@ -420,7 +420,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         label.setId("item");
 
-        if (currentLanguageAlignementIsLeftAligned) {
+        if (currentLanguageAlignmentIsLeftAligned) {
             grid.add(label, columnIndexLabelLeft, currentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
             grid.add(input, columnIndexInputLeft, currentRowIndex);
@@ -620,7 +620,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final HBox pane = new HBox(5);
 
         // Arabic Alignment
-        if (!currentLanguageAlignementIsLeftAligned) {
+        if (!currentLanguageAlignmentIsLeftAligned) {
             pane.setAlignment(Pos.BASELINE_RIGHT);
         }
 
@@ -704,7 +704,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     newImage.setFitHeight(25);
                     languageBox.setGraphic(newImage);
 
-                    if (language.isLeftAligned() != currentLanguageAlignementIsLeftAligned) {
+                    if (language.isLeftAligned() != currentLanguageAlignmentIsLeftAligned) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Language information");
                         alert.setHeaderText(
@@ -868,7 +868,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final HBox pane = new HBox(5);
 
         // Arabic Alignment
-        if (!currentLanguageAlignementIsLeftAligned) {
+        if (!currentLanguageAlignmentIsLeftAligned) {
             pane.setAlignment(Pos.BASELINE_RIGHT);
         }
 
