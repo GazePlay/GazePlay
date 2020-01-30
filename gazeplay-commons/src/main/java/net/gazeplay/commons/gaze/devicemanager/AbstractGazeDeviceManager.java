@@ -3,9 +3,7 @@ package net.gazeplay.commons.gaze.devicemanager;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.stage.Window;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -196,11 +194,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
             Point2D localPosition = node.screenToLocal(positionX, positionY);
 
-            Scene scene = node.getScene();
-            if (scene != null) {
-                Window window = scene.getWindow();
-                localPosition = localPosition.add(window.getX(), window.getY());
-            }
 
             if (localPosition != null && node.contains(localPosition)) {
                 if (gi.isOn()) {
