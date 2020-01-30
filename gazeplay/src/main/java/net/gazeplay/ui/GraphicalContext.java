@@ -3,19 +3,20 @@ package net.gazeplay.ui;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Screen;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NTooltip;
+import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 
 @Slf4j
 public abstract class GraphicalContext<T extends Parent> {
@@ -74,9 +75,12 @@ public abstract class GraphicalContext<T extends Parent> {
             buttonGraphics = new Image("data/common/images/fullscreen-enter.png");
             label = "Enter FullScreen";
         }
+
+        final Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+
         ImageView imageView = new ImageView(buttonGraphics);
         imageView.setPreserveRatio(true);
-        imageView.setFitWidth(Screen.getPrimary().getBounds().getWidth() / 40);
+        imageView.setFitWidth(screenDimension.getWidth() / 40);
         button.heightProperty().addListener((observable, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() / 2d));
         button.setGraphic(imageView);
         button.setTooltip(new I18NTooltip(gazePlay.getTranslator(), label));

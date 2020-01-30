@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -32,6 +33,7 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
+import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
 import net.gazeplay.ui.AnimationSpeedRatioControl;
@@ -176,7 +178,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             root.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 
-        HomeButton homeButton = new HomeButton();
+        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+
+        HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
         return homeButton;
     }
@@ -254,7 +258,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             asynchronousStatsPersistTask.run();
         }
 
-        CustomButton continueButton = new CustomButton("data/common/images/continue.png");
+        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+
+        CustomButton continueButton = new CustomButton("data/common/images/continue.png", screenDimension);
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             getGazePlay().onGameLaunch(this);
             stats.reset();

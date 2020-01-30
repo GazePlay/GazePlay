@@ -4,7 +4,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Worker;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -14,7 +13,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.VersionInfo;
@@ -22,6 +20,8 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
+import net.gazeplay.commons.utils.screen.CurrentScreenDimensionSupplier;
+import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -59,12 +59,12 @@ public class LatestNewPopup {
         return osName + " " + osVersion + " - " + javaVmVendor + " " + javaVmVersion;
     }
 
-    private static Dimension2D computePreferedDimension() {
-        Rectangle2D screen = Screen.getPrimary().getBounds();
+    private static Dimension2D computePreferedDimension(Stage stage) {
+        Dimension2D screenDimension = new CurrentScreenDimensionSupplier().get();
         float ratio = 3f / 4f;
 
-        double width = screen.getWidth() * ratio;
-        double height = screen.getHeight() * ratio;
+        double width = screenDimension.getWidth() * ratio;
+        double height = screenDimension.getHeight() * ratio;
         return new Dimension2D(width, height);
     }
 
@@ -91,7 +91,9 @@ public class LatestNewPopup {
     LatestNewPopup(Configuration config, Translator translator) {
         this.config = config;
 
-        final Dimension2D preferredDimension = computePreferedDimension();
+        stage = new Stage();
+
+        final Dimension2D preferredDimension = computePreferedDimension(stage);
 
         final String userAgentString = "GazePlay " + versionNumber.orElse("unknown version") + " - " + findEnvInfo();
 
@@ -121,7 +123,9 @@ public class LatestNewPopup {
         I18NLabel closeInstructionLabel = new I18NLabel(translator, "closeWindowToContinueToGazePlay");
         closeInstructionLabel.setStyle("-fx-font-weight: bold");
 
-        CustomButton continueButton = new CustomButton("data/common/images/continue.png");
+        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+
+        CustomButton continueButton = new CustomButton("data/common/images/continue.png", screenDimension);
 
         topPane.getChildren().addAll(userAgentLabel, locationUrlLabel);
         bottomPane.getChildren().addAll(closeInstructionLabel, continueButton);
@@ -130,7 +134,6 @@ public class LatestNewPopup {
         root.setCenter(browser);
         root.setBottom(bottomPane);
 
-        stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("GazePlay News");
 

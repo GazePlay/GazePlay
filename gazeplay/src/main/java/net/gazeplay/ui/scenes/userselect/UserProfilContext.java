@@ -3,6 +3,7 @@ package net.gazeplay.ui.scenes.userselect;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -22,8 +23,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GamePanelDimensionProvider;
@@ -37,6 +41,7 @@ import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.FileUtils;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
 
@@ -78,6 +83,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
 
+        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+
         cardHeight = gamePanelDimensionProvider.getDimension2D().getHeight() / 4;
         cardWidth = gamePanelDimensionProvider.getDimension2D().getWidth() / 8;
 
@@ -86,7 +93,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
-        CustomButton exitButton = createExitButton();
+        CustomButton exitButton = createExitButton(screenDimension);
         topRightPane.getChildren().addAll(exitButton);
 
         Node userPickerChoicePane = createuUserPickerChoicePane(gazePlay);
@@ -196,9 +203,12 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         user.setAlignment(Pos.TOP_RIGHT);
         user.getChildren().add(content);
 
+        final Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+
         if (editable) {
-            BorderPane editUserButton = createEditUserButton(getGazePlay(), choicePanel, user);
-            BorderPane deleteUserButton = createDeleteUserButton(getGazePlay(), choicePanel, user);
+            double buttonsSize = screenDimension.getWidth() / 50;
+            BorderPane editUserButton = createEditUserButton(getGazePlay(), choicePanel, user, buttonsSize);
+            BorderPane deleteUserButton = createDeleteUserButton(getGazePlay(), choicePanel, user, buttonsSize);
             VBox buttonBox = new VBox();
             // buttonBox.setSpacing(10);
             buttonBox.getChildren().addAll(editUserButton, deleteUserButton);
@@ -240,8 +250,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return user;
     }
 
-    private BorderPane createDeleteUserButton(GazePlay gazePlay, FlowPane choicePanel, User user) {
-        final double size = Screen.getPrimary().getBounds().getWidth() / 50;
+    private BorderPane createDeleteUserButton(GazePlay gazePlay, FlowPane choicePanel, User user, final double size) {
         CustomButton button = new CustomButton("data/common/images/error.png", size);
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
@@ -268,8 +277,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return rbp;
     }
 
-    private BorderPane createEditUserButton(GazePlay gazePlay, FlowPane choicePanel, User user) {
-        double size = Screen.getPrimary().getBounds().getWidth() / 50;
+    private BorderPane createEditUserButton(GazePlay gazePlay, FlowPane choicePanel, User user, final double size) {
         CustomButton button = new CustomButton("data/common/images/configuration-button-alt3.png", size);
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
@@ -296,8 +304,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return rbp;
     }
 
-    private CustomButton createExitButton() {
-        CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
+    private CustomButton createExitButton(Dimension2D screenDimension) {
+        CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
         return exitButton;
     }

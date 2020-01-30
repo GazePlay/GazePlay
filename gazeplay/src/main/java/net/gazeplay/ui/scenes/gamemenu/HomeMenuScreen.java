@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -33,6 +34,7 @@ import net.gazeplay.commons.utils.ConfigurationButtonFactory;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.LicenseUtils;
+import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
@@ -63,8 +65,10 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         this.gazeDeviceManager = gazeDeviceManager;
         this.gameMenuFactory = gameMenuFactory;
 
-        CustomButton exitButton = createExitButton();
-        CustomButton logoutButton = createLogoutButton(gazePlay);
+        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+
+        CustomButton exitButton = createExitButton(screenDimension);
+        CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
 
         ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
@@ -309,14 +313,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return configuration.getFavoriteGamesProperty().contains(g.getGameSummary().getNameCode());
     }
 
-    private CustomButton createExitButton() {
-        CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
+    private CustomButton createExitButton(Dimension2D screenDimension) {
+        CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
         return exitButton;
     }
 
-    private CustomButton createLogoutButton(GazePlay gazePlay) {
-        CustomButton logoutButton = new CustomButton("data/common/images/logout.png");
+    private CustomButton createLogoutButton(GazePlay gazePlay, Dimension2D screenDimension) {
+        CustomButton logoutButton = new CustomButton("data/common/images/logout.png", screenDimension);
         logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
         return logoutButton;
     }

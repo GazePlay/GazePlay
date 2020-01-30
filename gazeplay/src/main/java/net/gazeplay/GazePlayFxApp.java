@@ -2,14 +2,13 @@ package net.gazeplay;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Rectangle2D;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Setter;
@@ -20,6 +19,7 @@ import net.gazeplay.cli.UserSelectionOptions;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.latestnews.LatestNewPopup;
@@ -153,10 +153,10 @@ public class GazePlayFxApp extends Application {
     }
 
     private void autosize(Stage primaryStage) {
-        Screen screen = Screen.getPrimary();
-        Rectangle2D screenBounds = screen.getBounds();
-        primaryStage.setWidth(screenBounds.getWidth() * 0.95);
-        primaryStage.setHeight(screenBounds.getHeight() * 0.90);
+        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+        //
+        primaryStage.setWidth(screenDimension.getWidth() * 0.95);
+        primaryStage.setHeight(screenDimension.getHeight() * 0.90);
         primaryStage.setMaximized(false);
 
         primaryStage.setFullScreen(true);

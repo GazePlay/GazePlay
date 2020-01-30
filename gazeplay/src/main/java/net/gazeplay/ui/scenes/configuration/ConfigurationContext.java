@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -40,6 +41,7 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
+import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
@@ -144,7 +146,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
 
-        HomeButton homeButton = new HomeButton();
+        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+
+        HomeButton homeButton = new HomeButton(screenDimension);
 
         EventHandler<Event> homeEvent = e -> {
 
