@@ -14,3 +14,7 @@ Vous pouvez soutenir le développement de GazePlay avec un don. Les dons nous ai
 
 ## Suivez notre page Facebook
 Nous publions des mises à jour et d'autres informations sur [notre page Facebook](https://www.facebook.com/GazePlay.root/)
+
+## Compteur de téléchargement
+[Compteur](https://somsubhra.com/github-release-stats/?username=GazePlay&repository=GazePlay)
+
