@@ -198,20 +198,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "QuitKey", COLON);
 
-            ChoiceBox<String> input = buildQuitKeyChooser(config, configurationContext);
+            ChoiceBox<String> input = buildQuitKeyChooser(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "QuestionLength", COLON);
 
-            ChoiceBox<Double> input = buildQuestionLengthChooserMenu(config, configurationContext);
+            ChoiceBox<Double> input = buildQuestionLengthChooserMenu(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
-            CheckBox input = buildEnableRewardSoundBox(config, configurationContext);
+            CheckBox input = buildEnableRewardSoundBox(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -222,14 +222,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "EyeTracker", COLON);
 
-            ChoiceBox<EyeTracker> input = buildEyeTrackerConfigChooser(config, configurationContext);
+            ChoiceBox<EyeTracker> input = buildEyeTrackerConfigChooser(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "FixationLength", COLON);
 
-            ChoiceBox<Double> input = buildFixLengthChooserMenu(config, configurationContext);
+            ChoiceBox<Double> input = buildFixLengthChooserMenu(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -246,13 +246,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "WhiteBackground", COLON);
-            CheckBox input = buildEnabledWhiteBackground(config, configurationContext);
+            CheckBox input = buildEnabledWhiteBackground(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "MenuOrientation", COLON);
-            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config, configurationContext);
+            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -292,7 +292,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // HeatMap settings
         {
             I18NText label = new I18NText(translator, "DisableHeatMap", COLON);
-            CheckBox input = buildDisableHeatMapSoundBox(config, configurationContext);
+            CheckBox input = buildDisableHeatMapSoundBox(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -313,13 +313,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // AOI settings
         {
             I18NText label = new I18NText(translator, "EnableAreaOfInterest", COLON);
-            CheckBox input = buildDisableAreaOfInterest(config, configurationContext);
+            CheckBox input = buildDisableAreaOfInterest(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableConvexHull", COLON);
-            CheckBox input = buildDisableConvexHull(config, configurationContext);
+            CheckBox input = buildDisableConvexHull(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -327,13 +327,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // More Stats settings
         {
             I18NText label = new I18NText(translator, "DisableSequence", COLON);
-            CheckBox input = buildDisableFixationSequenceCheckBox(config, configurationContext);
+            CheckBox input = buildDisableFixationSequenceCheckBox(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
-            CheckBox input = buildEnableVideoRecordingCheckbox(config, configurationContext);
+            CheckBox input = buildEnableVideoRecordingCheckbox(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -342,13 +342,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // Beta settings
         {
             I18NText label = new I18NText(translator, "EnableGazeMenu", COLON);
-            CheckBox input = buildGazeMenu(config, configurationContext);
+            CheckBox input = buildGazeMenu(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableGazeMouse", COLON);
-            CheckBox input = buildGazeMouseEnabledCheckBox(config, configurationContext);
+            CheckBox input = buildGazeMouseEnabledCheckBox(config);
             String[] labelParts = label.getText().split(";");
             StringBuilder concatenateLabel = new StringBuilder();
             for (String labels : labelParts) {
@@ -362,91 +362,79 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private void addCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
-        int COLUMN_INDEX_LABEL_LEFT = 0;
-        int COLUMN_INDEX_LABEL_RIGHT = 2;
-
+        int columnIndexLabelLeft = 0;
+        int columnIndexLabelRight = 2;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
         label.setId("item");
-        // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
 
         Separator s = new Separator();
         grid.add(s, 0, currentRowIndex, 3, 1);
         GridPane.setHalignment(s, HPos.CENTER);
 
         if (currentLanguageAlignementIsLeftAligned) {
-            int newcurrentRowIndex = currentFormRow.incrementAndGet();
-            grid.add(label, COLUMN_INDEX_LABEL_LEFT, newcurrentRowIndex);
+            int newCurrentRowIndex = currentFormRow.incrementAndGet();
+            grid.add(label, columnIndexLabelLeft, newCurrentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
         } else {
-            int newcurrentRowIndex = currentFormRow.incrementAndGet();
-            grid.add(label, COLUMN_INDEX_LABEL_RIGHT, newcurrentRowIndex);
+            int newCurrentRowIndex = currentFormRow.incrementAndGet();
+            grid.add(label, columnIndexLabelRight, newCurrentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
         }
     }
 
     private void addSubCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
-        int COLUMN_INDEX_LABEL_LEFT = 0;
-        int COLUMN_INDEX_LABEL_RIGHT = 2;
-        int COLUMN_INDEX_INPUT_LEFT = 1;
-        int COLUMN_INDEX_INPUT_RIGHT = 0;
+        int columnIndexLabelLeft = 0;
+        int columnIndexLabelRight = 2;
+        int columnIndexInputLeft = 1;
+        int columnIndexInputRight = 0;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
         label.setId("item");
-        // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
+
+        Separator s = new Separator();
 
         if (currentLanguageAlignementIsLeftAligned) {
-            grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
+            grid.add(label, columnIndexLabelLeft, currentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
-            Separator s = new Separator();
-            grid.add(s, COLUMN_INDEX_INPUT_LEFT, currentRowIndex, 2, 1);
+            grid.add(s, columnIndexInputLeft, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.LEFT);
         } else {
-            grid.add(label, COLUMN_INDEX_LABEL_RIGHT, currentRowIndex);
+            grid.add(label, columnIndexLabelRight, currentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
-            Separator s = new Separator();
-            grid.add(s, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex, 2, 1);
+            grid.add(s, columnIndexInputRight, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.RIGHT);
         }
     }
 
 
     private void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
-
-        int COLUMN_INDEX_LABEL_LEFT = 1;
-        int COLUMN_INDEX_INPUT_LEFT = 2;
-
-        int COLUMN_INDEX_LABEL_RIGHT = 1;
-        int COLUMN_INDEX_INPUT_RIGHT = 0;
-
+        int columnIndexLabelLeft = 1;
+        int columnIndexInputLeft = 2;
+        int columnIndexLabelRight = 1;
+        int columnIndexInputRight = 0;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
         label.setId("item");
-        // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); //should be managed with css
 
         if (currentLanguageAlignementIsLeftAligned) {
-
-            grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
+            grid.add(label, columnIndexLabelLeft, currentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
-            grid.add(input, COLUMN_INDEX_INPUT_LEFT, currentRowIndex);
+            grid.add(input, columnIndexInputLeft, currentRowIndex);
             GridPane.setHalignment(input, HPos.LEFT);
-
         } else {
-
-            grid.add(label, COLUMN_INDEX_LABEL_RIGHT, currentRowIndex);
+            grid.add(label, columnIndexLabelRight, currentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
-            grid.add(input, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex);
+            grid.add(input, columnIndexInputRight, currentRowIndex);
             GridPane.setHalignment(input, HPos.RIGHT);
-
         }
     }
 
     private static ChoiceBox<Double> buildFixLengthChooserMenu(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         ChoiceBox<Double> choiceBox = new ChoiceBox<>();
 
@@ -473,8 +461,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static ChoiceBox<Double> buildQuestionLengthChooserMenu(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
 
         ChoiceBox<Double> choiceBox = new ChoiceBox<>();
@@ -485,7 +472,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         while (i <= 20000) {
 
             choiceBox.getItems().add(((double) i) / 1000);
-            i = i + 500;
+            i += 500;
         }
 
         choiceBox.getSelectionModel().select(0);
@@ -701,9 +688,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 imageView.setFitHeight(25);
 
 
-                MenuItem LanguagesItem = new MenuItem(language.getLabel(), imageView);
+                MenuItem languagesItem = new MenuItem(language.getLabel(), imageView);
 
-                LanguagesItem.setOnAction(eventMenuLanguages -> {
+                languagesItem.setOnAction(eventMenuLanguages -> {
 
                     configuration.getLanguageProperty().setValue(language.getLocale().getLanguage());
                     configuration.getCountryProperty().setValue(language.getLocale().getCountry());
@@ -733,7 +720,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     }
                 });
 
-                languageBox.getItems().add(LanguagesItem);
+                languageBox.getItems().add(languagesItem);
             }
         }
 
@@ -743,8 +730,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return languageBox;
     }
 
-    private static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration,
-                                                                      ConfigurationContext configurationContext) {
+    private static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration) {
         ChoiceBox<EyeTracker> choiceBox = new ChoiceBox<>();
 
         choiceBox.getItems().addAll(EyeTracker.values());
@@ -773,8 +759,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildEnableRewardSoundBox(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.isEnableRewardSound());
@@ -785,8 +770,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableHeatMapSoundBox(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.isHeatMapDisabled());
@@ -797,8 +781,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableAreaOfInterest(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getAreaOfInterestDisabledProperty().getValue());
@@ -807,8 +790,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableConvexHull(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getConvexHullDisabledProperty().getValue());
@@ -817,8 +799,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildEnableVideoRecordingCheckbox(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getVideoRecordingEnabledProperty().getValue());
@@ -827,8 +808,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableFixationSequenceCheckBox(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getFixationSequenceDisabledProperty().getValue());
@@ -837,8 +817,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private CheckBox buildEnabledWhiteBackground(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getWhiteBackgroundProperty().getValue());
@@ -846,7 +825,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private static CheckBox buildGazeMenu(Configuration configuration, ConfigurationContext configurationContext) {
+    private static CheckBox buildGazeMenu(Configuration configuration) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getGazeMenuEnabledProperty().getValue());
         checkBox.selectedProperty().bindBidirectional(configuration.getGazeMenuEnabledProperty());
@@ -859,7 +838,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private static CheckBox buildGazeMouseEnabledCheckBox(Configuration configuration, ConfigurationContext configurationContext) {
+    private static CheckBox buildGazeMouseEnabledCheckBox(Configuration configuration) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getGazeMouseEnabledProperty().getValue());
         checkBox.selectedProperty().bindBidirectional(configuration.getGazeMouseEnabledProperty());
@@ -867,8 +846,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         ChoiceBox<GameButtonOrientation> choiceBox = new ChoiceBox<>();
         choiceBox.getItems().addAll(GameButtonOrientation.values());
@@ -914,7 +892,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (file == null) {
                 return;
             }
-            // buttonLoad.setText(file.toString() + Utils.FILESEPARATOR);
 
             String newPropertyValue = file.getAbsolutePath();
 
@@ -1035,8 +1012,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private ChoiceBox<String> buildQuitKeyChooser(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
         choiceBox.setPrefWidth(PREF_WIDTH);
