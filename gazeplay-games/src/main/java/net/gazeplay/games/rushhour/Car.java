@@ -100,7 +100,8 @@ public class Car extends Rectangle {
         EventHandler<Event> exitEvent = e -> {
             Point2D mouse;
             if (e.getEventType() == GazeEvent.GAZE_EXITED) {
-                double offsetX = 0, offsetY = 0;
+                double offsetX = 0;
+                double offsetY = 0;
                 Scene scene = gameContext.getPrimaryStage().getScene();
                 if (scene != null) {
                     Window window = scene.getWindow();
