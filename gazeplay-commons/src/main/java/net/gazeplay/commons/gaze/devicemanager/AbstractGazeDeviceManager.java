@@ -193,8 +193,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         if (!node.isDisable()) {
 
             Point2D localPosition = node.screenToLocal(positionX, positionY);
-
-
             if (localPosition != null && node.contains(localPosition)) {
                 if (gi.isOn()) {
                     Platform.runLater(
