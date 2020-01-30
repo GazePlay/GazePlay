@@ -6,17 +6,54 @@ import lombok.extern.slf4j.Slf4j;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
+import net.gazeplay.GazePlay;
+import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Slf4j
+@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(ApplicationExtension.class)
 class ConfigurationContextTest {
+
+    @Mock
+    private GazePlay mockGazePlay;
+
+    @Mock
+    private Translator mockTranslator;
+
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.initMocks(this);
+        when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
+    }
+
+    @Test
+    void shouldReturnToMenuOnHomeButtonPress() {
+        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+
+        HomeButton button = context.createHomeButtonInConfigurationManagementScreen(mockGazePlay);
+        button.fireEvent(TestingUtils.clickOnTarget(button));
+
+        verify(mockGazePlay).onReturnToMenu();
+    }
 
     @Test
     void canSetupANewMusicFolder() {

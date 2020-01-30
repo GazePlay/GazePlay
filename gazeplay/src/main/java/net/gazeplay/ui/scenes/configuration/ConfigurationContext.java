@@ -101,7 +101,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         // Top Pane
         I18NText configTitleText = new I18NText(translator, "ConfigTitle");
-        // configTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20)); should be managed with css
         configTitleText.setId("title");
         configTitleText.setTextAlignment(TextAlignment.CENTER);
 
@@ -142,24 +141,18 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     }
 
-    private HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
-
+    HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
         HomeButton homeButton = new HomeButton();
 
         EventHandler<Event> homeEvent = e -> {
-
             if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
                 root.setCursor(Cursor.WAIT); // Change cursor to wait style
-
                 gazePlay.onReturnToMenu();
-
                 root.setCursor(Cursor.DEFAULT); // Change cursor to default style
             }
         };
 
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-
         return homeButton;
     }
 
