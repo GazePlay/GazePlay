@@ -28,8 +28,7 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -62,8 +61,8 @@ class LatestNewsPopupTest {
         Path fileEng = Paths.get("build/resources/test/updates-popup/offline-page-eng.html");
         Path fileFra = Paths.get("build/resources/test/updates-popup/offline-page-fra.html");
 
-        List<String> linesEng = Collections.singletonList("<html>Eng<html/>");
-        List<String> linesFra = Collections.singletonList("<html>Fra<html/>");
+        List<String> linesEng = Collections.singletonList("<html>Eng { version }<html/>");
+        List<String> linesFra = Collections.singletonList("<html>Fra { version }<html/>");
         Files.write(fileEng, linesEng, StandardCharsets.UTF_8);
         Files.write(fileFra, linesFra, StandardCharsets.UTF_8);
     }
@@ -209,7 +208,7 @@ class LatestNewsPopupTest {
 
         Platform.runLater(() -> {
             LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator);
-            assertEquals("<html>Eng<html/>\r\n", latestNewsPopup.getOfflinePageContent());
+            assertTrue(latestNewsPopup.getOfflinePageContent().contains("<html>Eng 1.7<html/>"));
             removeMockManifest();
         });
 
@@ -229,7 +228,7 @@ class LatestNewsPopupTest {
 
         Platform.runLater(() -> {
             LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator);
-            assertEquals("<html>Fra<html/>\r\n", latestNewsPopup.getOfflinePageContent());
+            assertTrue(latestNewsPopup.getOfflinePageContent().contains("<html>Fra 1.7<html/>"));
             removeMockManifest();
         });
 
@@ -249,7 +248,27 @@ class LatestNewsPopupTest {
 
         Platform.runLater(() -> {
             LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator);
-            assertEquals("<html>Eng<html/>\r\n", latestNewsPopup.getOfflinePageContent());
+            assertTrue(latestNewsPopup.getOfflinePageContent().contains("<html>Eng 1.7<html/>"));
+            removeMockManifest();
+        });
+
+        waitForRunLater();
+    }
+
+    @Test
+    void shouldShowUnknownVersionWhenNoVersionAvailable() throws IOException, InterruptedException {
+        List<String> lines = Arrays.asList("Implementation-Title: gazeplay");
+        createMockManifest(lines);
+        createMockOfflinePage();
+        long mockLastTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1);
+
+        when(mockConfig.getLatestNewsPopupShownTime()).thenReturn(new SimpleLongProperty(mockLastTime - 100));
+        when(mockConfig.getLanguage()).thenReturn("esp");
+        when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
+
+        Platform.runLater(() -> {
+            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator);
+            assertTrue(latestNewsPopup.getOfflinePageContent().contains("<html>Eng unknown version<html/>"));
             removeMockManifest();
         });
 
