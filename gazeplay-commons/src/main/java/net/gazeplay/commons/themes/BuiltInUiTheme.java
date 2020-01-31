@@ -54,7 +54,7 @@ public enum BuiltInUiTheme {
         return PRE_BUILD_STYLESHEETS_LOCATION + stylesheetResourceName;
     }
 
-    public static final BuiltInUiTheme DEFAULT_THEME = GREEN;
+    public static final BuiltInUiTheme DEFAULT_THEME = SILVER_AND_GOLD;
 
     public static Optional<BuiltInUiTheme> findFromConfigPropertyValue(String configPropertyValue) {
         for (BuiltInUiTheme builtInUiTheme : BuiltInUiTheme.values()) {
