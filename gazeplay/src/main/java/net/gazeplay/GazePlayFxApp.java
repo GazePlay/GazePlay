@@ -19,7 +19,6 @@ import net.gazeplay.cli.UserSelectionOptions;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.latestnews.LatestNewPopup;
@@ -68,7 +67,6 @@ public class GazePlayFxApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         autosize(primaryStage);
-
         boolean showUserSelectPage = true;
         if (options != null) {
             final UserSelectionOptions userSelectionOptions = options.getUserSelectionOptions();
@@ -92,7 +90,7 @@ public class GazePlayFxApp extends Application {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        LatestNewPopup.displayIfNeeded(config, gazePlay.getTranslator());
+        LatestNewPopup.displayIfNeeded(config, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
 
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);
@@ -153,7 +151,7 @@ public class GazePlayFxApp extends Application {
     }
 
     private void autosize(Stage primaryStage) {
-        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
         //
         primaryStage.setWidth(screenDimension.getWidth() * 0.95);
         primaryStage.setHeight(screenDimension.getHeight() * 0.90);

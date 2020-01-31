@@ -34,7 +34,6 @@ import net.gazeplay.commons.utils.ConfigurationButtonFactory;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.LicenseUtils;
-import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
@@ -65,7 +64,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         this.gazeDeviceManager = gazeDeviceManager;
         this.gameMenuFactory = gameMenuFactory;
 
-        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         CustomButton exitButton = createExitButton(screenDimension);
         CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);

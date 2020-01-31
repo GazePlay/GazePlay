@@ -35,7 +35,6 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.ui.GraphicalContext;
 import ws.schild.jave.Encoder;
@@ -273,8 +272,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         topPane.setPadding(new Insets(15, 15, 0, 15));
         topPane.setSpacing(10);
         topPane.setStyle("-fx-background-color: transparent; -fx-max-height: 80px;");
-        
-        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);

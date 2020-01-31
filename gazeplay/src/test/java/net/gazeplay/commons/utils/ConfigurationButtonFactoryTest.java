@@ -1,9 +1,11 @@
 package net.gazeplay.commons.utils;
 
+import javafx.geometry.Dimension2D;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.utils.screen.ScreenDimensionSupplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(ApplicationExtension.class)
@@ -22,9 +25,15 @@ class ConfigurationButtonFactoryTest {
     @Mock
     private GazePlay mockGazePlay;
 
+
+    @Mock
+    private ScreenDimensionSupplier screenDimensionSupplier;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
+        doReturn(screenDimensionSupplier).when(mockGazePlay).getCurrentScreenDimensionSupplier();
+        doReturn(new Dimension2D(1024, 768)).when(screenDimensionSupplier).get();
     }
 
     @Test

@@ -19,7 +19,6 @@ import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.GraphicalContext;
@@ -35,7 +34,7 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
 
         final Pane center = buildCenterPane(stats);
 
-        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {

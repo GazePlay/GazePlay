@@ -26,7 +26,6 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.stats.ExplorationGamesStats;
@@ -245,7 +244,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             gazePlay.onDisplayAOI(stats);
         };
 
-        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
         aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);

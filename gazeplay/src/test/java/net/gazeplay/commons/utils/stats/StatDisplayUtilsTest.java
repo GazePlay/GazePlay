@@ -3,7 +3,7 @@ package net.gazeplay.commons.utils.stats;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventTarget;
-import javafx.geometry.Bounds;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Cursor;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
@@ -11,12 +11,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.screen.ScreenDimensionSupplier;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -53,6 +56,9 @@ class StatDisplayUtilsTest {
     @Mock
     private Region mockRegion;
 
+    @Mock
+    private ScreenDimensionSupplier screenDimensionSupplier;
+
     @Captor
     private ArgumentCaptor<Cursor> captor;
 
@@ -63,6 +69,9 @@ class StatDisplayUtilsTest {
 
     void initMocks() {
         MockitoAnnotations.initMocks(this);
+
+        doReturn(screenDimensionSupplier).when(mockGazePlay).getCurrentScreenDimensionSupplier();
+        doReturn(new Dimension2D(1024, 768)).when(screenDimensionSupplier).get();
 
         DoubleProperty mockWidth = new SimpleDoubleProperty(100);
         DoubleProperty mockHeight = new SimpleDoubleProperty(100);

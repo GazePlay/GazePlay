@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NTooltip;
-import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 
 @Slf4j
 public abstract class GraphicalContext<T extends Parent> {
@@ -76,7 +75,7 @@ public abstract class GraphicalContext<T extends Parent> {
             label = "Enter FullScreen";
         }
 
-        final Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         ImageView imageView = new ImageView(buttonGraphics);
         imageView.setPreserveRatio(true);

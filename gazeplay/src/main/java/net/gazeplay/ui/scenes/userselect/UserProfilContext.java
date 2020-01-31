@@ -41,7 +41,6 @@ import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.FileUtils;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
 
@@ -83,7 +82,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
 
-        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         cardHeight = gamePanelDimensionProvider.getDimension2D().getHeight() / 4;
         cardWidth = gamePanelDimensionProvider.getDimension2D().getWidth() / 8;
@@ -135,18 +134,20 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         final List<String> allUsersProfiles = findAllUsersProfiles();
 
-        HBox configUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("DefaultUser"), new ImagePattern(new Image("data/common/images/ConfigUser.png")), false, false);
+        final Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        HBox configUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("DefaultUser"), new ImagePattern(new Image("data/common/images/ConfigUser.png")), false, false, screenDimension);
         choicePanel.getChildren().add(configUserCard);
 
         for (final String currentUserProfile : allUsersProfiles) {
             log.info("Profile founded : {}", currentUserProfile);
             Configuration currentUserProfileConfiguration = ConfigurationSource.createFromProfile(currentUserProfile);
             ImagePattern imagePattern = lookupForProfilePicture(currentUserProfileConfiguration);
-            HBox userCard = createUser(gazePlay, choicePanel, currentUserProfile, imagePattern, true, false);
+            HBox userCard = createUser(gazePlay, choicePanel, currentUserProfile, imagePattern, true, false, screenDimension);
             choicePanel.getChildren().add(userCard);
         }
 
-        HBox newUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("AddUser"), new ImagePattern(new Image("data/common/images/AddUser.png")), false, true);
+        HBox newUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("AddUser"), new ImagePattern(new Image("data/common/images/AddUser.png")), false, true, screenDimension);
         choicePanel.getChildren().add(newUserCard);
 
         return choicePanelScroller;
@@ -177,7 +178,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         @NonNull final String userProfileName,
         @NonNull final ImagePattern imagePattern,
         final boolean editable,
-        final boolean newUser
+        final boolean newUser,
+        Dimension2D screenDimension
     ) {
         if (userProfileName.trim().isEmpty()) {
             throw new IllegalArgumentException("userProfileName should not be empty");
@@ -203,11 +205,10 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         user.setAlignment(Pos.TOP_RIGHT);
         user.getChildren().add(content);
 
-        final Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
 
         if (editable) {
             double buttonsSize = screenDimension.getWidth() / 50;
-            BorderPane editUserButton = createEditUserButton(getGazePlay(), choicePanel, user, buttonsSize);
+            BorderPane editUserButton = createEditUserButton(getGazePlay(), choicePanel, user, buttonsSize, screenDimension);
             BorderPane deleteUserButton = createDeleteUserButton(getGazePlay(), choicePanel, user, buttonsSize);
             VBox buttonBox = new VBox();
             // buttonBox.setSpacing(10);
@@ -220,7 +221,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             mouseClickedEventHandler = event -> {
                 log.info("Adding user");
                 root.setEffect(new BoxBlur());
-                Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, true);
+                Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, true, screenDimension);
 
                 String dialogTitle = getGazePlay().getTranslator().translate("NewUser");
                 dialog.setTitle(dialogTitle);
@@ -277,11 +278,11 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return rbp;
     }
 
-    private BorderPane createEditUserButton(GazePlay gazePlay, FlowPane choicePanel, User user, final double size) {
+    private BorderPane createEditUserButton(GazePlay gazePlay, FlowPane choicePanel, User user, final double size, Dimension2D screenDimension) {
         CustomButton button = new CustomButton("data/common/images/configuration-button-alt3.png", size);
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
-            Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, false);
+            Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, false, screenDimension);
 
             String dialogTitle = getGazePlay().getTranslator().translate("UserModif");
             dialog.setTitle(dialogTitle);
@@ -361,7 +362,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
     }
 
     private Stage createDialog(GazePlay gazePlay, Stage primaryStage, FlowPane choicePanel, User user,
-                               boolean newUser) {
+                               boolean newUser, Dimension2D screenDimension) {
         // initialize the confirmation dialog
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -449,7 +450,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
                 }
 
-                final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, false, false);
+                final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, false, false, screenDimension);
 
                 if (checkNewName(newUser1.getName())) {
 

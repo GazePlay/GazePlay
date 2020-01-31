@@ -41,7 +41,6 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
-import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
@@ -146,7 +145,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
 
-        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         HomeButton homeButton = new HomeButton(screenDimension);
 

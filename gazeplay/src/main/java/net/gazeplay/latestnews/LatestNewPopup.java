@@ -20,8 +20,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
-import net.gazeplay.commons.utils.screen.CurrentScreenDimensionSupplier;
-import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
+import net.gazeplay.commons.utils.screen.ScreenDimensionSupplier;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -42,7 +41,7 @@ public class LatestNewPopup {
     private static final String serviceBaseUrl = "https://gazeplay.github.io/GazePlay/updates";
 
     private final Configuration config;
-
+    
     private final WebEngine webEngine;
 
     private final TextField locationUrlLabel = new TextField();
@@ -59,8 +58,8 @@ public class LatestNewPopup {
         return osName + " " + osVersion + " - " + javaVmVendor + " " + javaVmVersion;
     }
 
-    private static Dimension2D computePreferedDimension(Stage stage) {
-        Dimension2D screenDimension = new CurrentScreenDimensionSupplier().get();
+    private static Dimension2D computePreferedDimension(ScreenDimensionSupplier screenDimensionSupplier) {
+        Dimension2D screenDimension = screenDimensionSupplier.get();
         float ratio = 3f / 4f;
 
         double width = screenDimension.getWidth() * ratio;
@@ -68,14 +67,18 @@ public class LatestNewPopup {
         return new Dimension2D(width, height);
     }
 
-    public static void displayIfNeeded(Configuration config, Translator translator) {
+    public static void displayIfNeeded(
+        Configuration config,
+        Translator translator,
+        ScreenDimensionSupplier screenDimensionSupplier
+    ) {
         if (wasDisplayRecently(config)) {
             // popup was already show recently
             // we do not want to bother the user again with this popup
-           // return;
+            // return;
         }
 
-        LatestNewPopup latestNewPopup = new LatestNewPopup(config, translator);
+        LatestNewPopup latestNewPopup = new LatestNewPopup(config, translator, screenDimensionSupplier);
         latestNewPopup.loadPage();
         latestNewPopup.showAndWait();
     }
@@ -88,12 +91,16 @@ public class LatestNewPopup {
         config.getLatestNewsPopupShownTime().set(System.currentTimeMillis());
     }
 
-    LatestNewPopup(Configuration config, Translator translator) {
+    LatestNewPopup(
+        Configuration config,
+        Translator translator,
+        ScreenDimensionSupplier screenDimensionSupplier
+    ) {
         this.config = config;
 
         stage = new Stage();
 
-        final Dimension2D preferredDimension = computePreferedDimension(stage);
+        final Dimension2D preferredDimension = computePreferedDimension(screenDimensionSupplier);
 
         final String userAgentString = "GazePlay " + versionNumber.orElse("unknown version") + " - " + findEnvInfo();
 
@@ -123,7 +130,7 @@ public class LatestNewPopup {
         I18NLabel closeInstructionLabel = new I18NLabel(translator, "closeWindowToContinueToGazePlay");
         closeInstructionLabel.setStyle("-fx-font-weight: bold");
 
-        Dimension2D screenDimension = new PrimaryScreenDimensionSupplier().get();
+        Dimension2D screenDimension = screenDimensionSupplier.get();
 
         CustomButton continueButton = new CustomButton("data/common/images/continue.png", screenDimension);
 
