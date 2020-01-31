@@ -22,38 +22,39 @@ task generateInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetu
 }
 
 task prepareInnoSetupFiles(type: Copy) {
+    doLast {
+        def innoSetupDir = new File("${buildDir}/innosetup")
 
-    def innoSetupDir = new File("${buildDir}/innosetup")
+        innoSetupDir.mkdir()
 
-    innoSetupDir.mkdir()
+        copy {
+            from("${rootDir}/gradle/innosetup/setup.iss.skel")
+            rename("setup.iss.skel", "setup.iss")
+            expand([
+                    applicationVersion: "${version}",
+                    unpackedDirectory : "gazeplay-project-${version}"
+            ])
+            into(innoSetupDir)
+        }
 
-    copy {
-        from("${rootDir}/gradle/innosetup/setup.iss.skel")
-        rename("setup.iss.skel", "setup.iss")
-        expand([
-                applicationVersion: "${version}",
-                unpackedDirectory : "gazeplay-project-${version}"
-        ])
-        into(innoSetupDir)
-    }
+        copy {
+            from("${rootDir}/gazeplay/src/main/resources/data/common/licence.txt")
+            expand([
+                    "version": version,
+                    "date"   : new Date().format('yyyy-MM-dd')
+            ])
+            into(innoSetupDir)
+        }
 
-    copy {
-        from("${rootDir}/gazeplay/src/main/resources/data/common/licence.txt")
-        expand([
-                "version": version,
-                "date"   : new Date().format('yyyy-MM-dd')
-        ])
-        into(innoSetupDir)
-    }
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.ico")
+            into(innoSetupDir)
+        }
 
-    copy {
-        from("${rootDir}/gradle/innosetup/gazeplayicon.ico")
-        into(innoSetupDir)
-    }
-
-    copy {
-        from("${rootDir}/gradle/innosetup/gazeplayicon.bmp")
-        into(innoSetupDir)
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.bmp")
+            into(innoSetupDir)
+        }
     }
 }
 
