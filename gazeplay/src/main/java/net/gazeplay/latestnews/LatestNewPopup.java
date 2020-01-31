@@ -20,7 +20,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
-import net.gazeplay.commons.utils.screen.ScreenDimensionSupplier;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -28,6 +27,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * Created by schwab on 24/08/2019.
@@ -58,7 +58,7 @@ public class LatestNewPopup {
         return osName + " " + osVersion + " - " + javaVmVendor + " " + javaVmVersion;
     }
 
-    private static Dimension2D computePreferedDimension(ScreenDimensionSupplier screenDimensionSupplier) {
+    private static Dimension2D computePreferedDimension(Supplier<Dimension2D> screenDimensionSupplier) {
         Dimension2D screenDimension = screenDimensionSupplier.get();
         float ratio = 3f / 4f;
 
@@ -70,7 +70,7 @@ public class LatestNewPopup {
     public static void displayIfNeeded(
         Configuration config,
         Translator translator,
-        ScreenDimensionSupplier screenDimensionSupplier
+        Supplier<Dimension2D> screenDimensionSupplier
     ) {
         if (wasDisplayRecently(config)) {
             // popup was already show recently
@@ -94,7 +94,7 @@ public class LatestNewPopup {
     LatestNewPopup(
         Configuration config,
         Translator translator,
-        ScreenDimensionSupplier screenDimensionSupplier
+        Supplier<Dimension2D> screenDimensionSupplier
     ) {
         this.config = config;
 

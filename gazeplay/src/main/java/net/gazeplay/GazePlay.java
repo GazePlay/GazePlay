@@ -2,6 +2,7 @@ package net.gazeplay;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.collections.ObservableList;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.CachingSupplier;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.commons.utils.screen.PrimaryScreenSupplier;
@@ -59,7 +61,7 @@ public class GazePlay {
     private PrimaryScreenDimensionSupplier primaryScreenDimensionSupplier;
 
     @Getter
-    private ScreenDimensionSupplier currentScreenDimensionSupplier = new ScreenDimensionSupplier(new CurrentScreenSupplier(this));
+    private Supplier<Dimension2D> currentScreenDimensionSupplier = new CachingSupplier<>(new ScreenDimensionSupplier(new CurrentScreenSupplier(this)));
 
     @Autowired
     private ApplicationContext applicationContext;
