@@ -1,7 +1,6 @@
 package net.gazeplay.latestnews;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
@@ -24,12 +23,15 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -107,7 +109,7 @@ class LatestNewsPopupTest {
         when(mockConfig.getLatestNewsPopupShownTime()).thenReturn(new SimpleLongProperty(mockLastTime - 100));
         when(mockConfig.getLanguage()).thenReturn("eng");
         when(mockConfig.getLatestNewsPopupShownTime()).thenReturn(new SimpleLongProperty(0L));
-        when(mockConfig.isDebugEnabled()).thenReturn(false);
+        when(mockConfig.isNewsEnabled()).thenReturn(true);
         when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
 
         Platform.runLater(() -> {
@@ -132,7 +134,7 @@ class LatestNewsPopupTest {
     void shouldNotDisplayIfDebugEnabled() {
         long lastTime = 0;
         when(mockConfig.getLatestNewsPopupShownTime()).thenReturn(new SimpleLongProperty(lastTime));
-        when(mockConfig.isDebugEnabled()).thenReturn(true);
+        when(mockConfig.isNewsEnabled()).thenReturn(false);
 
         LatestNewsPopup.displayIfNeeded(mockConfig, mockTranslator);
         assertEquals(lastTime, mockConfig.getLatestNewsPopupShownTime().get());

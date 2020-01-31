@@ -53,7 +53,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
     private static final String PROPERTY_NAME_VIDEO_FOLDER = "VIDEO_FOLDER";
     private static final String PROPERTY_NAME_COLORS_DEFAULT_IMAGE = "COLORS_DEFAULT_IMAGE";
-    private static final String PROPERTY_NAME_ENABLE_DEBUG = "ENABLE_DEBUG";
+    private static final String PROPERTY_NAME_ENABLE_NEWS = "ENABLE_NEWS";
 
     private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
 
@@ -82,7 +82,7 @@ public class Configuration {
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     public static final String DEFAULT_VALUE_BACKGROUND_MUSIC = "songidea(copycat)_0.mp3";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
-    private static final boolean DEFAULT_VALUE_ENABLE_DEBUG = false;
+    private static final boolean DEFAULT_VALUE_ENABLE_NEWS = true;
 
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
@@ -199,7 +199,7 @@ public class Configuration {
     private final StringProperty colorsDefaultImageProperty;
 
     @Getter
-    private final BooleanProperty debugEnabled;
+    private final BooleanProperty newsEnabled;
 
     private final File configFile;
 
@@ -259,7 +259,7 @@ public class Configuration {
         favoriteGamesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_FAVORITE_GAMES, Sets.newLinkedHashSet(), propertyChangeListener);
         hiddenCategoriesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_HIDDEN_CATEGORIES, Sets.newLinkedHashSet(), propertyChangeListener);
 
-        debugEnabled = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_DEBUG, DEFAULT_VALUE_ENABLE_DEBUG, propertyChangeListener);
+        newsEnabled = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_NEWS, DEFAULT_VALUE_ENABLE_NEWS, propertyChangeListener);
         populateFromApplicationConfig(applicationConfig);
 
     }
@@ -394,8 +394,8 @@ public class Configuration {
         userPictureProperty.setValue(newPicture);
     }
 
-    public Boolean isDebugEnabled() {
-        return debugEnabled.getValue();
+    public Boolean isNewsEnabled() {
+        return newsEnabled.getValue();
     }
 
 }
