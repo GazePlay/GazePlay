@@ -10,22 +10,21 @@ import java.util.function.Supplier;
 /**
  * Supplier that caches the value to prevent multiple calls.
  * but also supports cache expiry
- *
- * @see org.springframework.boot.context.properties.PropertyMapper.CachingSupplier
  */
 public class CachingSupplier<T> implements Supplier<T> {
 
     private final Supplier<T> supplier;
 
-    private final Cache<String, T> cache = CacheBuilder.newBuilder()
-        .initialCapacity(1)
-        .maximumSize(1)
-        //.refreshAfterWrite(2, TimeUnit.SECONDS)
-        .expireAfterWrite(2, TimeUnit.SECONDS)
-        .build();
+    private final Cache<String, T> cache;
 
-    public CachingSupplier(Supplier<T> supplier) {
+    public CachingSupplier(Supplier<T> supplier, long expiryDuration, TimeUnit expiryDurationUnit) {
         this.supplier = supplier;
+
+        cache = CacheBuilder.newBuilder()
+            .initialCapacity(1)
+            .maximumSize(1)
+            .expireAfterWrite(expiryDuration, expiryDurationUnit)
+            .build();
     }
 
     @Override

@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -61,7 +62,7 @@ public class GazePlay {
     private PrimaryScreenDimensionSupplier primaryScreenDimensionSupplier;
 
     @Getter
-    private Supplier<Dimension2D> currentScreenDimensionSupplier = new CachingSupplier<>(new ScreenDimensionSupplier(new CurrentScreenSupplier(this)));
+    private Supplier<Dimension2D> currentScreenDimensionSupplier = new CachingSupplier<>(new ScreenDimensionSupplier(new CurrentScreenSupplier(this)), 2, TimeUnit.SECONDS);
 
     @Autowired
     private ApplicationContext applicationContext;

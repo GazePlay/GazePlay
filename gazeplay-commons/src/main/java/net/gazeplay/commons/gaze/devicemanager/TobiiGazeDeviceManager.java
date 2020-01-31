@@ -7,6 +7,7 @@ import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -21,7 +22,7 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
     }
 
     public void init() {
-        final Supplier<Dimension2D> screenDimensionSupplier = new CachingSupplier<>(new PrimaryScreenDimensionSupplier());
+        final Supplier<Dimension2D> screenDimensionSupplier = new CachingSupplier<>(new PrimaryScreenDimensionSupplier(), 2, TimeUnit.SECONDS);
         positionPollerRunnable = new PositionPollerRunnable(screenDimensionSupplier, this);
         executorService = Executors.newSingleThreadExecutor();
         executorService.submit(positionPollerRunnable);
