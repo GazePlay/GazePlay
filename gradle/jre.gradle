@@ -23,13 +23,11 @@ runtime {
 task downloadLinuxJDK(type: Download, group: 'custom jre') {
     src "${jdkSource}/jdk-${jdkTag}/OpenJDK11U-jdk_x64_linux_hotspot_${jdkVersion}.tar.gz"
     dest new File("${buildDir}/jre", 'linux.tar.gz')
-    overwrite false
 }
 
 task downloadLinuxJmods(type: Download, group: 'custom jre') {
     src "${jmodsSource}-linux"
     dest new File("${buildDir}/jre", 'linux-jmods.zip')
-    overwrite false
 }
 
 task downloadAndExtractLinuxJDK(dependsOn: downloadLinuxJDK, type: Copy, group: 'custom jre') {
@@ -50,13 +48,11 @@ task addJmodsToLinuxJDK(dependsOn: [downloadAndExtractLinuxJmods, downloadAndExt
 task downloadWindowsJDK(type: Download, group: 'custom jre') {
     src "${jdkSource}/jdk-${jdkTag}/OpenJDK11U-jdk_x64_windows_hotspot_${jdkVersion}.zip"
     dest new File("${buildDir}/jre", 'windows.zip')
-    overwrite false
 }
 
 task downloadWindowsJmods(type: Download, group: 'custom jre') {
     src "${jmodsSource}-windows"
     dest new File("${buildDir}/jre", 'windows-jmods.zip')
-    overwrite false
 }
 
 task downloadAndExtractWindowsJDK(dependsOn: downloadWindowsJDK, type: Copy, group: 'custom jre') {
@@ -77,13 +73,11 @@ task addJmodsToWindowsJDK(dependsOn: [downloadAndExtractWindowsJmods, downloadAn
 task downloadMacosJDK(type: Download, group: 'custom jre') {
     src "${jdkSource}/jdk-${jdkTag}/OpenJDK11U-jdk_x64_mac_hotspot_${jdkVersion}.tar.gz"
     dest new File("${buildDir}/jre", 'macos.tar.gz')
-    overwrite false
 }
 
 task downloadMacosJmods(type: Download, group: 'custom jre') {
     src "${jmodsSource}-mac"
     dest new File("${buildDir}/jre", 'mac-jmods.zip')
-    overwrite false
 }
 
 task downloadAndExtractMacosJDK(dependsOn: downloadMacosJDK, type: Copy, group: 'custom jre') {
@@ -102,9 +96,17 @@ task addJmodsToMacosJDK(dependsOn: [downloadAndExtractMacosJmods, downloadAndExt
 }
 
 task('downloadAndExtractJDKs', group: 'custom jre').dependsOn(addJmodsToLinuxJDK, addJmodsToWindowsJDK, addJmodsToMacosJDK)
+task('createWindowsJRE', group: 'custom jre') {
+    dependsOn addJmodsToWindowsJDK
+    finalizedBy jre
+}
+task('createLinuxJRE', group: 'custom jre') {
+    dependsOn addJmodsToLinuxJDK
+    finalizedBy jre
+}
+task('createMacosJRE', group: 'custom jre') {
+    dependsOn addJmodsToMacosJDK
+    finalizedBy jre
+}
 
 jre.dependsOn(downloadAndExtractJDKs)
-
-task cleanJre(type: Delete) {
-    delete 'gazeplay-dist/src/jre'
-}
