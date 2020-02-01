@@ -16,8 +16,8 @@ platform has the same tasks;
 
 To run the JRE creation script for Linux x64, MacOS and Windows x64, simply run
 ```
-> gradlew jre
-$ ./gradlew jre
+> gradlew downloadAndExtractJDKs
+$ ./gradlew downloadAndExtractJDKs
 ```
 
 The JRE can then be found in [the build folder](../build/jre) and will be built into the distribution for the relevant OS.
@@ -26,3 +26,5 @@ The JRE can then be found in [the build folder](../build/jre) and will be built 
 
 The task `create<OS>JDK` where `<OS>` can be any of `Windows`, `Linux`, or `Macos` will perform the tasks defined above
 for only the OS you need. 
+_Note_: Due to the nature of the `jre` task, you will also see JRE folders for the other OSs, however these will be 
+invalid and safe to delete.

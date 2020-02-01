@@ -95,18 +95,22 @@ task addJmodsToMacosJDK(dependsOn: [downloadAndExtractMacosJmods, downloadAndExt
     into "${downloadAndExtractMacosJDK.destinationDir}/${jdkFolder}/Contents/Home/jmods"
 }
 
-task('downloadAndExtractJDKs', group: 'custom jre').dependsOn(addJmodsToLinuxJDK, addJmodsToWindowsJDK, addJmodsToMacosJDK)
+task('downloadAndExtractJDKs', group: 'custom jre') {
+    dependsOn addJmodsToLinuxJDK, addJmodsToWindowsJDK, addJmodsToMacosJDK
+    finalizedBy jre
+}
+
 task('createWindowsJRE', group: 'custom jre') {
     dependsOn addJmodsToWindowsJDK
     finalizedBy jre
 }
+
 task('createLinuxJRE', group: 'custom jre') {
     dependsOn addJmodsToLinuxJDK
     finalizedBy jre
 }
+
 task('createMacosJRE', group: 'custom jre') {
     dependsOn addJmodsToMacosJDK
     finalizedBy jre
 }
-
-jre.dependsOn(downloadAndExtractJDKs)
