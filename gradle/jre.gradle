@@ -7,6 +7,9 @@ def jdkVersion = '11.0.6_10'
 def jdkTag = jdkVersion.replace('_', '+').encodeURL()
 def jdkFolder = "jdk-${jdkVersion.replace('_', '+')}"
 
+def jmodsVersion = '11.0.2'
+def jmodsSource = "https://gluonhq.com/download/javafx-${jmodsVersion.replace('.', '-')}-jmods"
+
 runtime {
     options = ['--compress', '2', '--no-header-files', '--no-man-pages']
     modules = jreModules
@@ -14,43 +17,91 @@ runtime {
 
     targetPlatform('linux', "${buildDir}/jre/linux/${jdkFolder}")
     targetPlatform('windows', "${buildDir}/jre/windows/${jdkFolder}")
-    targetPlatform('macos', "${buildDir}/jre/macos/${jdkFolder}")
+    targetPlatform('macos', "${buildDir}/jre/macos/${jdkFolder}/Contents/Home")
 }
 
-task downloadLinuxJDK(type: Download) {
+task downloadLinuxJDK(type: Download, group: 'custom jre') {
     src "${jdkSource}/jdk-${jdkTag}/OpenJDK11U-jdk_x64_linux_hotspot_${jdkVersion}.tar.gz"
     dest new File("${buildDir}/jre", 'linux.tar.gz')
     overwrite false
 }
 
-task downloadAndExtractLinuxJDK(dependsOn: downloadLinuxJDK, type: Copy) {
+task downloadLinuxJmods(type: Download, group: 'custom jre') {
+    src "${jmodsSource}-linux"
+    dest new File("${buildDir}/jre", 'linux-jmods.zip')
+    overwrite false
+}
+
+task downloadAndExtractLinuxJDK(dependsOn: downloadLinuxJDK, type: Copy, group: 'custom jre') {
     from tarTree(downloadLinuxJDK.dest)
     into "${buildDir}/jre/linux"
 }
 
-task downloadWindowsJDK(type: Download) {
+task downloadAndExtractLinuxJmods(dependsOn: downloadLinuxJmods, type: Copy, group: 'custom jre') {
+    from zipTree(downloadLinuxJmods.dest)
+    into "${buildDir}/jre/linux"
+}
+
+task addJmodsToLinuxJDK(dependsOn: [downloadAndExtractLinuxJmods, downloadAndExtractLinuxJDK], type: Copy, group: 'custom jre') {
+    from "${downloadAndExtractLinuxJmods.destinationDir}/javafx-jmods-${jmodsVersion}"
+    into "${downloadAndExtractLinuxJDK.destinationDir}/${jdkFolder}/jmods"
+}
+
+task downloadWindowsJDK(type: Download, group: 'custom jre') {
     src "${jdkSource}/jdk-${jdkTag}/OpenJDK11U-jdk_x64_windows_hotspot_${jdkVersion}.zip"
     dest new File("${buildDir}/jre", 'windows.zip')
     overwrite false
 }
 
-task downloadAndExtractWindowsJDK(dependsOn: downloadWindowsJDK, type: Copy) {
+task downloadWindowsJmods(type: Download, group: 'custom jre') {
+    src "${jmodsSource}-windows"
+    dest new File("${buildDir}/jre", 'windows-jmods.zip')
+    overwrite false
+}
+
+task downloadAndExtractWindowsJDK(dependsOn: downloadWindowsJDK, type: Copy, group: 'custom jre') {
     from zipTree(downloadWindowsJDK.dest)
     into "${buildDir}/jre/windows"
 }
 
-task downloadMacJDK(type: Download) {
+task downloadAndExtractWindowsJmods(dependsOn: downloadWindowsJmods, type: Copy, group: 'custom jre') {
+    from zipTree(downloadWindowsJmods.dest)
+    into "${buildDir}/jre/windows"
+}
+
+task addJmodsToWindowsJDK(dependsOn: [downloadAndExtractWindowsJmods, downloadAndExtractWindowsJDK], type: Copy, group: 'custom jre') {
+    from "${downloadAndExtractWindowsJmods.destinationDir}/javafx-jmods-${jmodsVersion}"
+    into "${downloadAndExtractWindowsJDK.destinationDir}/${jdkFolder}/jmods"
+}
+
+task downloadMacosJDK(type: Download, group: 'custom jre') {
     src "${jdkSource}/jdk-${jdkTag}/OpenJDK11U-jdk_x64_mac_hotspot_${jdkVersion}.tar.gz"
     dest new File("${buildDir}/jre", 'macos.tar.gz')
     overwrite false
 }
 
-task downloadAndExtractMacosJDK(dependsOn: downloadMacJDK, type: Copy) {
-    from tarTree(downloadMacJDK.dest)
+task downloadMacosJmods(type: Download, group: 'custom jre') {
+    src "${jmodsSource}-mac"
+    dest new File("${buildDir}/jre", 'mac-jmods.zip')
+    overwrite false
+}
+
+task downloadAndExtractMacosJDK(dependsOn: downloadMacosJDK, type: Copy, group: 'custom jre') {
+    from tarTree(downloadMacosJDK.dest)
     into "${buildDir}/jre/macos"
 }
 
-task downloadAndExtractJDKs(dependsOn: [downloadAndExtractLinuxJDK, downloadAndExtractWindowsJDK, downloadAndExtractMacosJDK]) {}
+task downloadAndExtractMacosJmods(dependsOn: downloadMacosJmods, type: Copy, group: 'custom jre') {
+    from zipTree(downloadMacosJmods.dest)
+    into "${buildDir}/jre/macos"
+}
+
+task addJmodsToMacosJDK(dependsOn: [downloadAndExtractMacosJmods, downloadAndExtractMacosJDK], type: Copy, group: 'custom jre') {
+    from "${downloadAndExtractMacosJmods.destinationDir}/javafx-jmods-${jmodsVersion}"
+    into "${downloadAndExtractMacosJDK.destinationDir}/${jdkFolder}/Contents/Home/jmods"
+}
+
+task('downloadAndExtractJDKs', group: 'custom jre').dependsOn(addJmodsToLinuxJDK, addJmodsToWindowsJDK, addJmodsToMacosJDK)
 
 jre.dependsOn(downloadAndExtractJDKs)
 

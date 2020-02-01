@@ -2,13 +2,13 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 task('packageAllDists').dependsOn('linuxDistTar', 'windowsDistZip', 'macosDistTar')
 
-task packageApp(dependsOn: ['packageAllDists', 'downloadLicenses', 'scriptsForRelease', 'jre']) {
+task packageApp(dependsOn: ['packageAllDists', 'downloadLicenses', 'scriptsForRelease', 'jre'], group: 'distribution') {
     tasks.findByName('packageAllDists').mustRunAfter('downloadLicenses')
     tasks.findByName('packageAllDists').mustRunAfter('scriptsForRelease')
     tasks.findByName('packageAllDists').mustRunAfter('jre')
 }
 
-task scriptsForRelease(type: Copy) {
+task scriptsForRelease(type: Copy, group: 'distribution') {
     from "${rootDir}/gazeplay-dist/src/main/bin"
     into "${rootDir}/build/bin"
     filter(
