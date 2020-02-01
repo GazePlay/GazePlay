@@ -109,7 +109,7 @@ class LatestNewsPopupTest {
         when(mockConfig.getLatestNewsPopupShownTime()).thenReturn(new SimpleLongProperty(mockLastTime - 100));
         when(mockConfig.getLanguage()).thenReturn("eng");
         when(mockConfig.getLatestNewsPopupShownTime()).thenReturn(new SimpleLongProperty(0L));
-        when(mockConfig.isNewsEnabled()).thenReturn(true);
+        when(mockConfig.isLatestNewsDisplayForced()).thenReturn(true);
         when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
 
         Platform.runLater(() -> {
@@ -122,19 +122,31 @@ class LatestNewsPopupTest {
     }
 
     @Test
-    void shouldNotDisplayIfShownRecently() {
+    void shouldDisplayIfForced() throws IOException, InterruptedException {
+        List<String> lines = Arrays.asList("Implementation-Title: gazeplay", "Implementation-Version: 1.7");
+        createMockManifest(lines);
+
+        // Show recently, but we still want to force it shown.
         long lastTime = System.currentTimeMillis() - 100;
         when(mockConfig.getLatestNewsPopupShownTime()).thenReturn(new SimpleLongProperty(lastTime));
 
-        LatestNewsPopup.displayIfNeeded(mockConfig, mockTranslator);
-        assertEquals(lastTime, mockConfig.getLatestNewsPopupShownTime().get());
+        when(mockConfig.getLanguage()).thenReturn("eng");
+        when(mockConfig.isLatestNewsDisplayForced()).thenReturn(true);
+        when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
+
+        Platform.runLater(() -> {
+            LatestNewsPopup.displayIfNeeded(mockConfig, mockTranslator);
+            assertNotEquals(lastTime, mockConfig.getLatestNewsPopupShownTime().get());
+            removeMockManifest();
+        });
+
+        waitForRunLater();
     }
 
     @Test
-    void shouldNotDisplayIfDebugEnabled() {
-        long lastTime = 0;
+    void shouldNotDisplayIfShownRecently() {
+        long lastTime = System.currentTimeMillis() - 100;
         when(mockConfig.getLatestNewsPopupShownTime()).thenReturn(new SimpleLongProperty(lastTime));
-        when(mockConfig.isNewsEnabled()).thenReturn(false);
 
         LatestNewsPopup.displayIfNeeded(mockConfig, mockTranslator);
         assertEquals(lastTime, mockConfig.getLatestNewsPopupShownTime().get());

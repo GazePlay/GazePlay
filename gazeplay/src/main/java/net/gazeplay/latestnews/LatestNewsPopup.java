@@ -75,7 +75,7 @@ public class LatestNewsPopup {
     }
 
     public static void displayIfNeeded(Configuration config, Translator translator) {
-        if (wasDisplayRecently(config) || !config.isNewsEnabled()) {
+        if (wasDisplayRecently(config) && !config.isLatestNewsDisplayForced()) {
             // popup was already shown recently
             // we do not want to bother the user again with this popup
             return;
