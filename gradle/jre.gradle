@@ -20,6 +20,7 @@ runtime {
 task downloadLinuxJDK(type: Download) {
     src "${jdkSource}/jdk-${jdkTag}/OpenJDK11U-jdk_x64_linux_hotspot_${jdkVersion}.tar.gz"
     dest new File("${buildDir}/jre", 'linux.tar.gz')
+    overwrite false
 }
 
 task downloadAndExtractLinuxJDK(dependsOn: downloadLinuxJDK, type: Copy) {
