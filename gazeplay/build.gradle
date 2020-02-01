@@ -64,7 +64,9 @@ task generateGamesCatalog {
                 .unique()
 
         def file = new File(generatedResources, "games-catalog.txt")
-
+        if (file.exists()) {
+            file.delete()
+        }
         packages.each { file.append(it + '\n') }
     }
 }
