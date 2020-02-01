@@ -1,4 +1,4 @@
-task generateInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles']) {
+task generateWindowsInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
     doLast {
 
         def innoSetupDir = new File("${buildDir}/innosetup")
@@ -12,7 +12,7 @@ task generateInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles']
     }
 }
 
-task generateInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles']) {
+task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
     doLast {
         exec {
             workingDir rootDir
@@ -21,7 +21,7 @@ task generateInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetu
     }
 }
 
-task prepareInnoSetupFiles(type: Copy) {
+task prepareInnoSetupFiles(group: 'distribution') {
     doLast {
         def innoSetupDir = new File("${buildDir}/innosetup")
 
@@ -32,7 +32,7 @@ task prepareInnoSetupFiles(type: Copy) {
             rename("setup.iss.skel", "setup.iss")
             expand([
                     applicationVersion: "${version}",
-                    unpackedDirectory : "gazeplay-project-${version}"
+                    unpackedDirectory : "gazeplay-project-windows-${version}"
             ])
             into(innoSetupDir)
         }
@@ -58,7 +58,7 @@ task prepareInnoSetupFiles(type: Copy) {
     }
 }
 
-task unzipDistribution(dependsOn: ['packageApp'], type: Copy) {
-    from zipTree("${buildDir}/distributions/gazeplay-project-${version}.zip")
+task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
+    from zipTree("${buildDir}/distributions/gazeplay-project-windows-${version}.zip")
     into buildDir
 }
