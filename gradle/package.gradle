@@ -5,10 +5,10 @@ task('packageAllDists').dependsOn('linuxDistTar', 'windowsDistZip', 'macosDistTa
 task packageApp(dependsOn: ['packageAllDists',
                             'downloadLicenses',
                             'scriptsForRelease',
-                            'downloadAndExtractJDKs'], group: 'distribution') {
+                            'jre'], group: 'distribution') {
     tasks.findByName('packageAllDists').mustRunAfter('downloadLicenses')
     tasks.findByName('packageAllDists').mustRunAfter('scriptsForRelease')
-    tasks.findByName('packageAllDists').mustRunAfter('downloadAndExtractJDKs')
+    tasks.findByName('packageAllDists').mustRunAfter('jre')
 }
 
 task scriptsForRelease(type: Copy, group: 'distribution') {

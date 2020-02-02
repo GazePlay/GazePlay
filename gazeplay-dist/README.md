@@ -12,19 +12,20 @@ platform has the same tasks;
 * Download the JDK
 * Download the JMods
 * Placing the JMods into the JDK
-* Creating a JRE for that platform.
 
-To run the JRE creation script for Linux x64, MacOS and Windows x64, simply run
+There is a separate task that will run at build time, `jre`, that will used the stored JDKs to create the JREs for the
+platform.
+
+Before running `distribution` for the first time, you must run
 ```
 > gradlew downloadAndExtractJDKs
 $ ./gradlew downloadAndExtractJDKs
 ```
 
+The JDKs will be downloaded to your local Maven repository. By default, this will be `/home/user/.m2/repository/jre` on 
+UNIX, and `C:\Users\current user\.m2\repository\jre` on Windows.
+
+Any future builds will rely on these folders being present locally. You can always rerun the task to restore your 
+repository.
+
 The JRE can then be found in [the build folder](../build/jre) and will be built into the distribution for the relevant OS.
-
-## Creating JREs for a single platform
-
-The task `create<OS>JDK` where `<OS>` can be any of `Windows`, `Linux`, or `Macos` will perform the tasks defined above
-for only the OS you need. 
-_Note_: Due to the nature of the `jre` task, you will also see JRE folders for the other OSs, however these will be 
-invalid and safe to delete.
