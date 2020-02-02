@@ -1,6 +1,5 @@
 package net.gazeplay.ui.scenes.configuration;
 
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
@@ -22,7 +21,6 @@ import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.multilinguism.I18N;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -109,9 +107,9 @@ class ConfigurationContextTest {
         context.addCategoryTitle(grid, currentFormRow, label);
 
         assertTrue(grid.getChildren().get(0) instanceof Separator);
-        assertEquals(grid.getChildren().get(0).getProperties().get("gridpane-halignment"), HPos.CENTER);
+        assertEquals(HPos.CENTER, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
         assertTrue(grid.getChildren().contains(label));
-        assertEquals(grid.getChildren().get(1).getProperties().get("gridpane-halignment"), HPos.LEFT);
+        assertEquals(HPos.LEFT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
     }
 
     @Test
@@ -127,9 +125,83 @@ class ConfigurationContextTest {
         context.addCategoryTitle(grid, currentFormRow, label);
 
         assertTrue(grid.getChildren().get(0) instanceof Separator);
-        assertEquals(grid.getChildren().get(0).getProperties().get("gridpane-halignment"), HPos.CENTER);
+        assertEquals(HPos.CENTER, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
         assertTrue(grid.getChildren().contains(label));
-        assertEquals(grid.getChildren().get(1).getProperties().get("gridpane-halignment"), HPos.RIGHT);
+        assertEquals(HPos.RIGHT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
+    }
+
+    @Test
+    void shouldAddSubcategoryTitleLeftAligned() {
+        when(mockTranslator.currentLocale()).thenReturn(Locale.FRANCE);
+        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+
+        when(mockTranslator.translate(anyString())).thenReturn("category");
+        GridPane grid = new GridPane();
+        AtomicInteger currentFormRow = new AtomicInteger(1);
+        I18NText label = new I18NText(mockTranslator, "category");
+
+        context.addSubCategoryTitle(grid, currentFormRow, label);
+
+        assertTrue(grid.getChildren().contains(label));
+        assertEquals(HPos.LEFT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
+        assertTrue(grid.getChildren().get(1) instanceof Separator);
+        assertEquals(HPos.LEFT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
+    }
+
+    @Test
+    void shouldAddSubcategoryTitleRightAligned() {
+        when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
+        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+
+        when(mockTranslator.translate(anyString())).thenReturn("category");
+        GridPane grid = new GridPane();
+        AtomicInteger currentFormRow = new AtomicInteger(1);
+        I18NText label = new I18NText(mockTranslator, "category");
+
+        context.addSubCategoryTitle(grid, currentFormRow, label);
+
+        assertTrue(grid.getChildren().contains(label));
+        assertEquals(HPos.RIGHT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
+        assertTrue(grid.getChildren().get(1) instanceof Separator);
+        assertEquals(HPos.RIGHT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
+    }
+
+    @Test
+    void shouldAddNodeToGridTitleLeftAligned() {
+        when(mockTranslator.currentLocale()).thenReturn(Locale.FRANCE);
+        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+
+        when(mockTranslator.translate(anyString())).thenReturn("category");
+        GridPane grid = new GridPane();
+        AtomicInteger currentFormRow = new AtomicInteger(1);
+        I18NText label = new I18NText(mockTranslator, "category");
+        CheckBox input = new CheckBox();
+
+        context.addToGrid(grid, currentFormRow, label, input);
+
+        assertTrue(grid.getChildren().contains(label));
+        assertEquals(HPos.LEFT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
+        assertTrue(grid.getChildren().contains(input));
+        assertEquals(HPos.LEFT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
+    }
+
+    @Test
+    void shouldAddNodeToGridRightAligned() {
+        when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
+        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+
+        when(mockTranslator.translate(anyString())).thenReturn("category");
+        GridPane grid = new GridPane();
+        AtomicInteger currentFormRow = new AtomicInteger(1);
+        I18NText label = new I18NText(mockTranslator, "category");
+        CheckBox input = new CheckBox();
+
+        context.addToGrid(grid, currentFormRow, label, input);
+
+        assertTrue(grid.getChildren().contains(label));
+        assertEquals(HPos.RIGHT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
+        assertTrue(grid.getChildren().contains(input));
+        assertEquals(HPos.RIGHT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
     }
 
     @Test
@@ -180,7 +252,7 @@ class ConfigurationContextTest {
 
     @Test
     void shouldChangeTheMusicFolderAndPlayIfWasPlaying(@Mocked BackgroundMusicManager mockMusicManager,
-                                                    @Mocked Configuration mockConfiguration) {
+                                                       @Mocked Configuration mockConfiguration) {
         StringProperty mockMusicFolderProperty = new SimpleStringProperty();
 
         new Expectations() {{
@@ -204,7 +276,7 @@ class ConfigurationContextTest {
 
     @Test
     void shouldChangeTheMusicFolderAndNotPlayIfWasNotPlaying(@Mocked BackgroundMusicManager mockMusicManager,
-                                                         @Mocked Configuration mockConfiguration) {
+                                                             @Mocked Configuration mockConfiguration) {
         StringProperty mockMusicFolderProperty = new SimpleStringProperty();
 
         new Expectations() {{
@@ -228,7 +300,7 @@ class ConfigurationContextTest {
 
     @Test
     void shouldChangeTheMusicFolderWithBlankFolder(@Mocked BackgroundMusicManager mockMusicManager,
-                                                @Mocked Configuration mockConfiguration) {
+                                                   @Mocked Configuration mockConfiguration) {
         StringProperty mockMusicFolderProperty = new SimpleStringProperty();
         String expectedFolder = System.getProperty("user.home") + File.separator + "GazePlay" + File.separator + "music";
 

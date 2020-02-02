@@ -375,7 +375,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private void addSubCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
+    void addSubCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
         int columnIndexLabelLeft = 0;
         int columnIndexLabelRight = 2;
         int columnIndexInputLeft = 1;
@@ -400,8 +400,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-
-    private void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
+    void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
         int columnIndexLabelLeft = 1;
         int columnIndexInputLeft = 2;
         int columnIndexLabelRight = 1;
