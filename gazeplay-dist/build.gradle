@@ -21,7 +21,6 @@ ext.jreModules=['java.base',\
   'java.xml',\
   'java.xml.crypto',\
   'jdk.accessibility',\
-  'jdk.aot',\
   'jdk.attach',\
   'jdk.charsets',\
   'jdk.compiler',\
@@ -35,9 +34,6 @@ ext.jreModules=['java.base',\
   'jdk.internal.jvmstat',\
   'jdk.internal.le',\
   'jdk.internal.opt',\
-  'jdk.internal.vm.ci',\
-  'jdk.internal.vm.compiler',\
-  'jdk.internal.vm.compiler.management',\
   'jdk.jartool',\
   'jdk.javadoc',\
   'jdk.jcmd',\
