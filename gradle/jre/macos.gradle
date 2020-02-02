@@ -1,0 +1,34 @@
+def jdkSource = project.ext.jdkSource
+def jdkTag = project.ext.jdkTag
+def jdkVersion = project.ext.jdkVersion
+def jdkFolder = project.ext.jdkFolder
+def downloadLocation = project.ext.downloadLocation
+def jmodsSource = project.ext.jmodsSource
+def jmodsVersion = project.ext.jmodsVersion
+
+task downloadMacosJDK(type: Download, group: 'custom jre') {
+    src "${jdkSource}/jdk-${jdkTag}/OpenJDK11U-jdk_x64_mac_hotspot_${jdkVersion}.tar.gz"
+    dest new File("${downloadLocation}/jre", 'macos.tar.gz')
+    overwrite false
+}
+
+task downloadMacosJmods(type: Download, group: 'custom jre') {
+    src "${jmodsSource}-mac"
+    dest new File("${downloadLocation}/jre", 'mac-jmods.zip')
+    overwrite false
+}
+
+task downloadAndExtractMacosJDK(dependsOn: downloadMacosJDK, type: Copy, group: 'custom jre') {
+    from tarTree(downloadMacosJDK.dest)
+    into "${downloadLocation}/jre/macos"
+}
+
+task downloadAndExtractMacosJmods(dependsOn: downloadMacosJmods, type: Copy, group: 'custom jre') {
+    from zipTree(downloadMacosJmods.dest)
+    into "${downloadLocation}/jre/macos"
+}
+
+task addJmodsToMacosJDK(dependsOn: [downloadAndExtractMacosJmods, downloadAndExtractMacosJDK], type: Copy, group: 'custom jre') {
+    from "${downloadAndExtractMacosJmods.destinationDir}/javafx-jmods-${jmodsVersion}"
+    into "${downloadAndExtractMacosJDK.destinationDir}/${jdkFolder}/Contents/Home/jmods"
+}

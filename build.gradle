@@ -169,7 +169,7 @@ distributions {
         }
     }
 
-    windows {
+    windowsX64 {
         setDistributionBaseName "${project.name}-windows-x64"
         contents {
             with distributions.main.contents
@@ -177,7 +177,21 @@ distributions {
             from("build/bin/gazeplay-windows.bat") {
                 into 'bin'
             }
-            from("build/jre/gazeplay-project-windows") {
+            from("build/jre/gazeplay-project-windows-x64") {
+                into 'lib/jre'
+            }
+        }
+    }
+
+    windowsX86 {
+        setDistributionBaseName "${project.name}-windows-x86"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-windows.bat") {
+                into 'bin'
+            }
+            from("build/jre/gazeplay-project-windows-x86") {
                 into 'lib/jre'
             }
         }
@@ -191,7 +205,7 @@ distributions {
             from("build/bin/gazeplay-linux.sh") {
                 into 'bin'
             }
-            from("build/jre/gazeplay-project-linux") {
+            from("build/jre/gazeplay-project-linux-x64") {
                 into 'lib/jre'
             }
         }
