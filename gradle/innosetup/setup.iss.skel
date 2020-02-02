@@ -34,7 +34,7 @@ DefaultGroupName=GazePlay
 LicenseFile=licence.txt
 
 OutputDir=..\\distributions
-OutputBaseFilename=GazePlay-installer-${applicationVersion}
+OutputBaseFilename=GazePlay-installer-${applicationVersion}-${architecture}
 ;Compression=lzma
 SolidCompression=yes
 

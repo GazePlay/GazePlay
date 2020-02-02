@@ -13,7 +13,7 @@ task downloadWindows64JDK(type: Download, group: 'custom jre') {
 }
 
 task downloadWindows86JDK(type: Download, group: 'custom jre') {
-    src "${jdkSource}/jdk-${jdkTag}/OpenJDK11U-jdk_x86_windows_hotspot_${jdkVersion}.zip"
+    src "${jdkSource}/jdk-${jdkTag}/OpenJDK11U-jdk_x86-32_windows_hotspot_${jdkVersion}.zip"
     dest new File("${downloadLocation}/jre", 'windows-x86.zip')
     overwrite false
 }
