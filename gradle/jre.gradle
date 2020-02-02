@@ -32,7 +32,9 @@ runtime {
 }
 
 task clearJREFolder(type: Delete) {
-    delete '*.tar.gz', '*.zip'
+    delete fileTree("${project.ext.downloadLocation}/jre") {
+        include '*.zip', '*.tar.gz'
+    }
 }
 
 task('downloadAndExtractJDKs', group: 'custom jre') {
