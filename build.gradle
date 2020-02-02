@@ -158,7 +158,19 @@ dependencies {
 }
 
 distributions {
+    noJRE {
+        setDistributionBaseName "${project.name}-no-jre"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin") {
+                into 'bin'
+            }
+        }
+    }
+
     windows {
+        setDistributionBaseName "${project.name}-windows-x64"
         contents {
             with distributions.main.contents
             from("build/reports")
@@ -172,6 +184,7 @@ distributions {
     }
 
     linux {
+        setDistributionBaseName "${project.name}-linux-x64"
         contents {
             with distributions.main.contents
             from("build/reports")
@@ -198,11 +211,11 @@ distributions {
     }
 }
 
-distTar {
-    enabled = true
+tasks.withType(Tar){
     compression = Compression.GZIP
     archiveExtension.set('tar.gz')
 }
+
 distZip {
     duplicatesStrategy = 'exclude'
 }
