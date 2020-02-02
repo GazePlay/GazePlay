@@ -161,7 +161,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    private GridPane buildConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
+    GridPane buildConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -169,7 +169,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(50);
         grid.setVgap(50);
-        // grid.setPadding(new Insets(50, 50, 50, 50));
 
         grid.getStyleClass().add("item");
 
@@ -291,7 +290,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "HeatMapOpacity", COLON);
-            ChoiceBox input = buildHeatMapOpacityChoiceBox(config);
+            ChoiceBox<Double> input = buildHeatMapOpacityChoiceBox(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -354,7 +353,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return grid;
     }
 
-    private void addCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
+    void addCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
         int columnIndexLabelLeft = 0;
         int columnIndexLabelRight = 2;
 
@@ -366,12 +365,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         grid.add(s, 0, currentRowIndex, 3, 1);
         GridPane.setHalignment(s, HPos.CENTER);
 
+        int newCurrentRowIndex = currentFormRow.incrementAndGet();
         if (currentLanguageAlignmentIsLeftAligned) {
-            int newCurrentRowIndex = currentFormRow.incrementAndGet();
             grid.add(label, columnIndexLabelLeft, newCurrentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
         } else {
-            int newCurrentRowIndex = currentFormRow.incrementAndGet();
             grid.add(label, columnIndexLabelRight, newCurrentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
         }
@@ -520,15 +518,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             configuration.getCssfileProperty().setValue(newPropertyValue);
 
             final GazePlay gazePlay = configurationContext.getGazePlay();
-            // final Scene scene = gazePlay.getPrimaryScene();
 
             CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
-
-            /*
-             * scene.getStylesheets().removeAll(scene.getStylesheets()); String styleSheetPath =
-             * newValue.getStyleSheetPath(); if (styleSheetPath != null) {
-             * scene.getStylesheets().add(styleSheetPath); }
-             */
         });
 
         return themesBox;
@@ -756,9 +747,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.isEnableRewardSound());
-        checkBox.selectedProperty().addListener((o) -> {
-            configuration.getEnableRewardSoundProperty().setValue(checkBox.isSelected());
-        });
+        checkBox.selectedProperty().addListener((o) ->
+            configuration.getEnableRewardSoundProperty().setValue(checkBox.isSelected()));
         return checkBox;
     }
 
@@ -767,9 +757,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.isHeatMapDisabled());
-        checkBox.selectedProperty().addListener((o) -> {
-            configuration.getHeatMapDisabledProperty().setValue(checkBox.isSelected());
-        });
+        checkBox.selectedProperty().addListener((o) -> configuration.getHeatMapDisabledProperty().setValue(checkBox.isSelected()));
         return checkBox;
     }
 
@@ -984,9 +972,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             config.getVideoFolderProperty().setValue(newPropertyValue);
         });
 
-        buttonReset.setOnAction(e -> {
-            config.getVideoFolderProperty().setValue(GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath());
-        });
+        buttonReset.setOnAction(e -> config.getVideoFolderProperty().setValue(GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath()));
 
         return hbox;
     }
@@ -1012,23 +998,21 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.setPrefHeight(PREF_HEIGHT);
         choiceBox.getItems().addAll("Q", "W", "E", "R", "T", "Y");
         choiceBox.getSelectionModel().select(configuration.getQuitKeyProperty().getValue());
-        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            configuration.getQuitKeyProperty().setValue(newValue);
-        });
+        choiceBox.getSelectionModel().selectedItemProperty()
+            .addListener((observable, oldValue, newValue) -> configuration.getQuitKeyProperty().setValue(newValue));
         return choiceBox;
     }
 
     private ChoiceBox<Double> buildHeatMapOpacityChoiceBox(Configuration config) {
-        ChoiceBox<Double> choiceBox = new ChoiceBox();
+        ChoiceBox<Double> choiceBox = new ChoiceBox<>();
         for (double i = 0; i <= 10; i++) {
             choiceBox.getItems().add(i / 10);
         }
         choiceBox.getSelectionModel().select(config.getHeatMapOpacity());
         choiceBox.setPrefSize(PREF_WIDTH, PREF_HEIGHT);
 
-        choiceBox.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-            config.getHeatMapOpacityProperty().setValue(newValue);
-        });
+        choiceBox.getSelectionModel().selectedItemProperty()
+            .addListener((observableValue, oldValue, newValue) -> config.getHeatMapOpacityProperty().setValue(newValue));
         return choiceBox;
     }
 
