@@ -21,7 +21,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
-import net.gazeplay.latestnews.LatestNewPopup;
+import net.gazeplay.latestnews.LatestNewsPopup;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import org.springframework.context.ApplicationContext;
 
@@ -90,7 +90,7 @@ public class GazePlayFxApp extends Application {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        LatestNewPopup.displayIfNeeded(config, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
+        LatestNewsPopup.displayIfNeeded(config, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
 
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);

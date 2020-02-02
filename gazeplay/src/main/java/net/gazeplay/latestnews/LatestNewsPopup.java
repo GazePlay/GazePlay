@@ -36,12 +36,12 @@ import java.util.function.Supplier;
  * default HTML page if no connexion
  */
 @Slf4j
-public class LatestNewPopup {
+public class LatestNewsPopup {
 
     private static final String serviceBaseUrl = "https://gazeplay.github.io/GazePlay/updates";
 
     private final Configuration config;
-    
+
     private final WebEngine webEngine;
 
     private final TextField locationUrlLabel = new TextField();
@@ -50,7 +50,13 @@ public class LatestNewPopup {
 
     private final Optional<String> versionNumber = VersionInfo.findVersionInfo(VersionInfo.artifactId, false);
 
-    private static String findEnvInfo() {
+    static class NewsPopupException extends RuntimeException {
+        NewsPopupException(Throwable cause) {
+            super(cause);
+        }
+    }
+
+    static String findEnvInfo() {
         String osName = System.getProperty("os.name");
         String osVersion = System.getProperty("os.version");
         String javaVmVendor = System.getProperty("java.vm.vendor");
@@ -58,7 +64,7 @@ public class LatestNewPopup {
         return osName + " " + osVersion + " - " + javaVmVendor + " " + javaVmVersion;
     }
 
-    private static Dimension2D computePreferedDimension(Supplier<Dimension2D> screenDimensionSupplier) {
+    public static Dimension2D computePreferredDimension(Supplier<Dimension2D> screenDimensionSupplier) {
         Dimension2D screenDimension = screenDimensionSupplier.get();
         float ratio = 3f / 4f;
 
@@ -70,17 +76,16 @@ public class LatestNewPopup {
     public static void displayIfNeeded(
         Configuration config,
         Translator translator,
-        Supplier<Dimension2D> screenDimensionSupplier
-    ) {
-        if (wasDisplayRecently(config)) {
-            // popup was already show recently
+        Supplier<Dimension2D> screenDimensionSupplier) {
+        if (wasDisplayRecently(config) && !config.isLatestNewsDisplayForced()) {
+            // popup was already shown recently
             // we do not want to bother the user again with this popup
-            // return;
+            return;
         }
 
-        LatestNewPopup latestNewPopup = new LatestNewPopup(config, translator, screenDimensionSupplier);
-        latestNewPopup.loadPage();
-        latestNewPopup.showAndWait();
+        LatestNewsPopup latestNewsPopup = new LatestNewsPopup(config, translator, screenDimensionSupplier);
+        latestNewsPopup.loadPage();
+        latestNewsPopup.showAndWait();
     }
 
     private static boolean wasDisplayRecently(Configuration config) {
@@ -91,7 +96,8 @@ public class LatestNewPopup {
         config.getLatestNewsPopupShownTime().set(System.currentTimeMillis());
     }
 
-    LatestNewPopup(
+
+    public LatestNewsPopup(
         Configuration config,
         Translator translator,
         Supplier<Dimension2D> screenDimensionSupplier
@@ -100,7 +106,7 @@ public class LatestNewPopup {
 
         stage = new Stage();
 
-        final Dimension2D preferredDimension = computePreferedDimension(screenDimensionSupplier);
+        final Dimension2D preferredDimension = computePreferredDimension(screenDimensionSupplier);
 
         final String userAgentString = "GazePlay " + versionNumber.orElse("unknown version") + " - " + findEnvInfo();
 
@@ -184,12 +190,11 @@ public class LatestNewPopup {
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> stage.close());
     }
 
-
     String createDocumentUri() {
         if (versionNumber.isEmpty()) {
             return "";
         }
-        //
+
         String languageCode = config.getLanguage();
         if (!languageCode.equals("fra")) {
             languageCode = "eng";
@@ -207,16 +212,12 @@ public class LatestNewPopup {
         webEngine.load(serviceUrl);
     }
 
-    public void show() {
-        stage.show();
-    }
-
     private void showAndWait() {
         stage.showAndWait();
     }
 
-    private String getOfflinePageContent() {
-        return loadOfflinePageTemplate().replaceAll("\\{ version \\}", versionNumber.orElse("unknown version"));
+    String getOfflinePageContent() {
+        return loadOfflinePageTemplate().replaceAll("\\{ version }", versionNumber.orElse("unknown version"));
     }
 
     private String loadOfflinePageTemplate() {
@@ -234,7 +235,7 @@ public class LatestNewPopup {
             return IOUtils.toString(resourceUrl, StandardCharsets.UTF_8);
         } catch (IOException e) {
             log.warn("Failed to load page", e);
-            throw new RuntimeException(e);
+            throw new NewsPopupException(e);
         }
     }
 
