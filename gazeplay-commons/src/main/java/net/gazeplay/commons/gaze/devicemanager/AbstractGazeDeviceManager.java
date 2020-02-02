@@ -1,6 +1,7 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
 import javafx.application.Platform;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -42,7 +43,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     }
 
     @Override
-    public abstract void init();
+    public abstract void init(Supplier<Dimension2D> currentScreenDimensionSupplier);
 
     @Override
     public abstract void destroy();
