@@ -29,7 +29,6 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -38,7 +37,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 class LatestNewsPopupTest {
 
     @Mock
-    Translator mockTranslator;
+    private Translator mockTranslator;
+
     @Mock
     private Configuration mockConfig;
 
@@ -51,8 +51,8 @@ class LatestNewsPopupTest {
     @BeforeEach
     void setup() {
         initMocks(this);
-        doReturn(screenDimensionSupplier).when(gazePlay).getCurrentScreenDimensionSupplier();
-        doReturn(new Dimension2D(1024, 768)).when(screenDimensionSupplier).get();
+        when(gazePlay.getCurrentScreenDimensionSupplier()).thenReturn(screenDimensionSupplier);
+        when(screenDimensionSupplier.get()).thenReturn(new Dimension2D(1024, 768));
     }
 
     void createMockManifest(List<String> lines) throws IOException {

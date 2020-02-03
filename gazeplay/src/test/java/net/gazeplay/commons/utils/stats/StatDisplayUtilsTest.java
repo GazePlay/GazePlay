@@ -42,7 +42,7 @@ import static org.mockito.Mockito.*;
 class StatDisplayUtilsTest {
 
     @Mock
-    private GazePlay mockGazePlay;
+    private GazePlay gazePlay;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private StatsContext mockStatsContext;
@@ -70,8 +70,8 @@ class StatDisplayUtilsTest {
     void initMocks() {
         MockitoAnnotations.initMocks(this);
 
-        doReturn(screenDimensionSupplier).when(mockGazePlay).getCurrentScreenDimensionSupplier();
-        doReturn(new Dimension2D(1024, 768)).when(screenDimensionSupplier).get();
+        when(gazePlay.getCurrentScreenDimensionSupplier()).thenReturn(screenDimensionSupplier);
+        when(screenDimensionSupplier.get()).thenReturn(new Dimension2D(1024, 768));
 
         DoubleProperty mockWidth = new SimpleDoubleProperty(100);
         DoubleProperty mockHeight = new SimpleDoubleProperty(100);
@@ -89,13 +89,13 @@ class StatDisplayUtilsTest {
 
     @Test
     void shouldCreateHomeButton() {
-        HomeButton button = StatDisplayUtils.createHomeButtonInStatsScreen(mockGazePlay, mockStatsContext);
+        HomeButton button = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, mockStatsContext);
         assert button.isVisible();
     }
 
     @Test
     void shouldSetTheCursorWhenPressed() {
-        StatDisplayUtils.returnToMenu(mockGazePlay, mockStatsContext);
+        StatDisplayUtils.returnToMenu(gazePlay, mockStatsContext);
 
         verify(mockStatsContext.getRoot(), times(2)).setCursor(captor.capture());
         assertTrue(captor.getAllValues().contains(Cursor.WAIT));

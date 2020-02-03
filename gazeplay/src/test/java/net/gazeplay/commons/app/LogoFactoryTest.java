@@ -18,7 +18,6 @@ import org.testfx.framework.junit5.ApplicationExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
@@ -36,8 +35,8 @@ class LogoFactoryTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
-        doReturn(screenDimensionSupplier).when(gazePlay).getCurrentScreenDimensionSupplier();
-        doReturn(new Dimension2D(1024, 768)).when(screenDimensionSupplier).get();
+        when(gazePlay.getCurrentScreenDimensionSupplier()).thenReturn(screenDimensionSupplier);
+        when(screenDimensionSupplier.get()).thenReturn(new Dimension2D(1024, 768));
     }
 
     @Test
