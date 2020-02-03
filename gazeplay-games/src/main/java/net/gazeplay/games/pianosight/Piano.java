@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -106,24 +105,26 @@ public class Piano extends Parent implements GameLifeCycle {
 
             final int worh = random.nextInt(4);
 
+            final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
+
             final double xEndValue;
             final double yEndValue;
             switch (worh) {
                 case 0:
                     xEndValue = 0;
-                    yEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getHeight();
+                    yEndValue = random.nextDouble() * screenDimension.getHeight();
                     break;
                 case 1:
-                    xEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getWidth();
+                    xEndValue = random.nextDouble() * screenDimension.getWidth();
                     yEndValue = 0;
                     break;
                 case 2:
-                    xEndValue = Screen.getPrimary().getBounds().getWidth();
-                    yEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getHeight();
+                    xEndValue = screenDimension.getWidth();
+                    yEndValue = random.nextDouble() * screenDimension.getHeight();
                     break;
                 case 3:
-                    xEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getWidth();
-                    yEndValue = Screen.getPrimary().getBounds().getHeight();
+                    xEndValue = random.nextDouble() * screenDimension.getWidth();
+                    yEndValue = screenDimension.getHeight();
                     break;
                 default:
                     throw new UnsupportedOperationException("Unsupported value : " + worh);

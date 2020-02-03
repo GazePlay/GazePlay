@@ -11,7 +11,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -162,8 +161,9 @@ public class Bubble extends Parent implements GameLifeCycle {
                 new KeyValue(fragment.centerYProperty(), Ycenter, Interpolator.EASE_OUT)));
             goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
-            double XendValue = Math.random() * Screen.getPrimary().getBounds().getWidth();
-            double YendValue = Math.random() * Screen.getPrimary().getBounds().getHeight();
+            final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
+            final double XendValue = Math.random() * screenDimension.getWidth();
+            final double YendValue = Math.random() * screenDimension.getHeight();
 
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
                 new KeyValue(fragment.centerXProperty(), XendValue, Interpolator.LINEAR)));
