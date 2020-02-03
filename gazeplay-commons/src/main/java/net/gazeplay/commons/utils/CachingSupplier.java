@@ -32,7 +32,7 @@ public class CachingSupplier<T> implements Supplier<T> {
         try {
             return (T) cache.get("UNIQ", () -> this.supplier.get());
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeExecutionException(e);
         }
     }
 
