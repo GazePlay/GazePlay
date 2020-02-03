@@ -3,9 +3,6 @@ package net.gazeplay.latestnews;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
-import mockit.MockUp;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
@@ -32,7 +29,8 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -46,7 +44,7 @@ class LatestNewsPopupTest {
 
     @Mock
     private GazePlay gazePlay;
-    
+
     @Mock
     private ScreenDimensionSupplier screenDimensionSupplier;
 
@@ -96,17 +94,7 @@ class LatestNewsPopupTest {
 
     @Test
     void shouldComputePreferredDimension() {
-        Screen mockScreen = mock(Screen.class);
-        when(mockScreen.getBounds()).thenReturn(new Rectangle2D(0, 0, 10, 10));
-
-        new MockUp<Screen>() {
-            @mockit.Mock
-            public Screen getPrimary() {
-                return mockScreen;
-            }
-        };
-
-        assertEquals(new Dimension2D(7.5, 7.5), LatestNewsPopup.computePreferredDimension(screenDimensionSupplier));
+        assertEquals(new Dimension2D(7.5, 7.5), LatestNewsPopup.computePreferredDimension(() -> new Dimension2D(10, 10)));
     }
 
     @Test
