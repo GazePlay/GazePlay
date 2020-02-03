@@ -54,12 +54,9 @@ public class CurrentScreenDimensionSupplierFactoryBean implements FactoryBean<Su
                 log.warn("primaryScene is null, using primary screen dimension");
                 return primaryScreenSupplier.get();
             }
-            //double x = gazePlay.primaryScene.getX();
-            //double y = gazePlay.primaryScene.getY();
 
             double x;
             double y;
-
             Window window = gazePlay.getPrimaryScene().getWindow();
             if (window == null) {
                 log.warn("window is null");
@@ -75,9 +72,8 @@ public class CurrentScreenDimensionSupplierFactoryBean implements FactoryBean<Su
                 y = window.getY() + 1;
             }
 
-            log.info("window position : x = {}, y = {}", x, y);
+            log.debug("window position : x = {}, y = {}", x, y);
             ObservableList<Screen> screensForRectangle = Screen.getScreensForRectangle(x, y, x, y);
-            log.info("screensForRectangle.size() = {}", screensForRectangle.size());
             if (screensForRectangle.isEmpty()) {
                 log.warn("no screen found for this position, using primary screen dimension");
                 return primaryScreenSupplier.get();
