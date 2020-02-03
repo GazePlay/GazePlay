@@ -27,7 +27,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
@@ -436,7 +435,9 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
         GridPane infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(TTFF),
             new DecimalFormat("##.###s").format(TimeSpent), Fixation + "", 0);
-        double screenWidthCenter = Screen.getPrimary().getBounds().getWidth() / 2;
+
+        Dimension2D screenDimension = getGazePlay().getCurrentScreenDimensionSupplier().get();
+        double screenWidthCenter = screenDimension.getWidth() / 2;
         double widthOfArea = currentAreaDisplay.getBoundsInLocal().getWidth();
 
         Line line = new Line();
