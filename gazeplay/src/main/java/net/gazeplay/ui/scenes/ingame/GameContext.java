@@ -41,6 +41,7 @@ import net.gazeplay.ui.MusicControl;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 
 import java.io.IOException;
+import java.util.function.Supplier;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
@@ -118,6 +119,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public void resetBordersToFront() {
         // rootBorderPane.setBottom(null);
         // rootBorderPane.setBottom(bottomPane);
+    }
+
+    @Override
+    public Supplier<Dimension2D> getCurrentScreenDimensionSupplier() {
+        return getGazePlay().getCurrentScreenDimensionSupplier();
     }
 
     public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {

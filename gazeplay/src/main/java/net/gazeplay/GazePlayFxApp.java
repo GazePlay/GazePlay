@@ -128,7 +128,7 @@ public class GazePlayFxApp extends Application {
             }
         }
 
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene());
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
         primaryStage.centerOnScreen();
         primaryStage.show();
     }
@@ -136,7 +136,7 @@ public class GazePlayFxApp extends Application {
     private Scene createPrimaryScene(Stage primaryStage) {
         Pane rootPane = new Pane();
         Scene primaryScene = new Scene(rootPane, primaryStage.getWidth(), primaryStage.getHeight(), Color.BLACK);
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene);
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene, gazePlay.getCurrentScreenDimensionSupplier());
         primaryStage.setScene(primaryScene);
         return primaryScene;
     }

@@ -11,7 +11,6 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.screen.PrimaryScreenDimensionSupplier;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
@@ -24,6 +23,7 @@ import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.ui.scenes.userselect.UserProfilContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Supplier;
@@ -50,10 +50,7 @@ public class GazePlay {
 
     @Autowired
     @Getter
-    private PrimaryScreenDimensionSupplier primaryScreenDimensionSupplier;
-
-    @Autowired
-    @Getter
+    @Lazy
     private Supplier<Dimension2D> currentScreenDimensionSupplier;
 
     @Autowired
@@ -98,7 +95,7 @@ public class GazePlay {
 
         translator.notifyLanguageChanged();
 
-        CssUtil.setPreferredStylesheets(config, getPrimaryScene());
+        CssUtil.setPreferredStylesheets(config, getPrimaryScene(), getCurrentScreenDimensionSupplier());
 
         BackgroundMusicManager.onConfigurationChanged();
 

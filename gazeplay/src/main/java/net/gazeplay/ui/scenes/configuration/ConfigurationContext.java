@@ -545,7 +545,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             final GazePlay gazePlay = configurationContext.getGazePlay();
             // final Scene scene = gazePlay.getPrimaryScene();
 
-            CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
+            CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
 
             /*
              * scene.getStylesheets().removeAll(scene.getStylesheets()); String styleSheetPath =

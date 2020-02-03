@@ -48,6 +48,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -238,7 +239,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                 gazePlay.getTranslator().notifyLanguageChanged();
 
                 Configuration config = ActiveConfigurationContext.getInstance();
-                CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
+                CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
 
                 BackgroundMusicManager.onConfigurationChanged();
 
@@ -255,7 +256,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         CustomButton button = new CustomButton("data/common/images/error.png", size);
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
-            Stage dialog = createRemoveDialog(gazePlay.getPrimaryStage(), choicePanel, user);
+            Stage dialog = createRemoveDialog(gazePlay.getPrimaryStage(), choicePanel, user, gazePlay.getCurrentScreenDimensionSupplier());
 
             String dialogTitle = getGazePlay().getTranslator().translate("Remove");
             dialog.setTitle(dialogTitle);
@@ -311,7 +312,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return exitButton;
     }
 
-    private Stage createRemoveDialog(Stage primaryStage, FlowPane choicePanel, User user) {
+    private Stage createRemoveDialog(Stage primaryStage, FlowPane choicePanel, User user, Supplier<Dimension2D> currentScreenDimensionSupplier) {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(primaryStage);
@@ -356,7 +357,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
         Configuration config = ActiveConfigurationContext.getInstance();
-        CssUtil.setPreferredStylesheets(config, scene);
+        CssUtil.setPreferredStylesheets(config, scene, currentScreenDimensionSupplier);
         dialog.setScene(scene);
         return dialog;
     }
@@ -517,7 +518,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
         Configuration config = ActiveConfigurationContext.getInstance();
-        CssUtil.setPreferredStylesheets(config, scene);
+        CssUtil.setPreferredStylesheets(config, scene, gazePlay.getCurrentScreenDimensionSupplier());
 
         dialog.setScene(scene);
 

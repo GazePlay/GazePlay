@@ -101,7 +101,7 @@ public class GameVariantDialog extends Stage {
 
         Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
 
-        CssUtil.setPreferredStylesheets(config, scene);
+        CssUtil.setPreferredStylesheets(config, scene, gazePlay.getCurrentScreenDimensionSupplier());
 
         setScene(scene);
         setWidth(primaryStage.getWidth() / 2);

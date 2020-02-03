@@ -1,8 +1,8 @@
 package net.gazeplay.components;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
-import javafx.stage.Screen;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
@@ -10,13 +10,14 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.io.File;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Slf4j
 public class CssUtil {
 
     private static int[] supportedWidth = {2560, 1920, 1600, 1440, 1280, 1024, 800};
 
-    public static void setPreferredStylesheets(Configuration config, Scene scene) {
+    public static void setPreferredStylesheets(Configuration config, Scene scene, Supplier<Dimension2D> screenDimensionSupplier) {
         ObservableList<String> stylesheets = scene.getStylesheets();
 
         String cssfile = config.getCssFile();
@@ -39,7 +40,7 @@ public class CssUtil {
 
         stylesheets.add("data/stylesheets/base.css");
 
-        addMediaWidthStylesheet(stylesheets);
+        addMediaWidthStylesheet(stylesheets, screenDimensionSupplier);
 
         if (styleSheetPath != null) {
             stylesheets.add(styleSheetPath);
@@ -49,8 +50,8 @@ public class CssUtil {
         log.info(stylesheets.toString());
     }
 
-    private static void addMediaWidthStylesheet(ObservableList<String> stylesheets) {
-        final int actualScreenWidth = (int) Screen.getPrimary().getBounds().getWidth();
+    private static void addMediaWidthStylesheet(ObservableList<String> stylesheets, Supplier<Dimension2D> screenDimensionSupplier) {
+        final int actualScreenWidth = (int) screenDimensionSupplier.get().getWidth();
         log.info("actualScreenWidth = {}", actualScreenWidth);
 
         for (int width : supportedWidth) {

@@ -7,7 +7,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.CachingSupplier;
 import net.gazeplay.commons.utils.screen.PrimaryScreenSupplier;
@@ -22,8 +21,7 @@ import java.util.function.Supplier;
 @Component("currentScreenDimensionSupplier")
 public class CurrentScreenDimensionSupplierFactoryBean implements FactoryBean<Supplier<Dimension2D>> {
 
-    @Autowired
-    @Setter
+    @Autowired(required = true)
     private GazePlay gazePlay;
 
     @Override
