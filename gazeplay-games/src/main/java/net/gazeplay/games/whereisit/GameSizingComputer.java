@@ -15,12 +15,6 @@ public class GameSizingComputer {
     private final int nbColumns;
     private final boolean fourThree;
 
-    public GameSizing computeGameSizing() {
-        Rectangle2D bounds = javafx.stage.Screen.getPrimary().getBounds();
-
-        return computeGameSizing(bounds);
-    }
-
     public GameSizing computeGameSizing(Scene scene) {
         Rectangle2D bounds = new Rectangle2D(0, 0, scene.getWidth(), scene.getHeight());
 
