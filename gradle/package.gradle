@@ -1,14 +1,12 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-task('packageAllDists').dependsOn('linuxDistTar', 'windowsX86DistZip', 'windowsX64DistZip', 'macosDistTar', 'assembleNoJREDist')
+task('packageAllDists').dependsOn('linuxDistTar', 'windowsDistZip', 'macosDistTar', 'assembleNoJREDist')
 
 task packageApp(dependsOn: ['packageAllDists',
                             'downloadLicenses',
-                            'scriptsForRelease',
-                            'jre'], group: 'distribution') {
+                            'scriptsForRelease'], group: 'distribution') {
     tasks.findByName('packageAllDists').mustRunAfter('downloadLicenses')
     tasks.findByName('packageAllDists').mustRunAfter('scriptsForRelease')
-    tasks.findByName('packageAllDists').mustRunAfter('jre')
 }
 
 task scriptsForRelease(type: Copy, group: 'distribution') {

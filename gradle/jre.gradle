@@ -1,18 +1,7 @@
-String.metaClass.encodeURL = {
-    java.net.URLEncoder.encode(delegate, "UTF-8")
-}
-
-String.metaClass.decodeURL = {
-    java.net.URLDecoder.decode(delegate, "UTF-8")
-}
-
-ext.jdkSource = 'https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download'
-ext.jdkVersion = '11.0.6_10'
-ext.jdkTag = jdkVersion.replace('_', '+').encodeURL()
-ext.jdkFolder = "jdk-${jdkVersion.replace('_', '+')}"
-
-ext.jmodsVersion = '11.0.2'
-ext.jmodsSource = "https://gluonhq.com/download/javafx-${jmodsVersion.replace('.', '-')}-jmods"
+ext.jreSource = 'https://cdn.azul.com/zulu/bin/'
+ext.zuluVersion = '11.35.15'
+ext.jreVersion = '11.0.5'
+ext.jreFolder = "${buildDir}/jre"
 
 ext.downloadLocation = new File(project.repositories.mavenLocal().url).getAbsolutePath();
 
@@ -20,24 +9,13 @@ apply from: "${rootDir}/gradle/jre/linux.gradle"
 apply from: "${rootDir}/gradle/jre/macos.gradle"
 apply from: "${rootDir}/gradle/jre/windows.gradle"
 
-runtime {
-    options = ['--compress', '2', '--no-header-files', '--no-man-pages']
-    modules = jreModules
-    jreDir = file("${buildDir}/jre")
-
-    targetPlatform('linux-x64', "${project.ext.downloadLocation}/jre/linux-x64/${project.ext.jdkFolder}")
-    targetPlatform('windows-x64', "${project.ext.downloadLocation}/jre/windows-x64/${project.ext.jdkFolder}")
-    targetPlatform('windows-x86', "${project.ext.downloadLocation}/jre/windows-x86/${project.ext.jdkFolder}")
-    targetPlatform('macos', "${project.ext.downloadLocation}/jre/macos/${project.ext.jdkFolder}/Contents/Home")
-}
-
 task clearJREFolder(type: Delete) {
     delete fileTree("${project.ext.downloadLocation}/jre") {
         include '*.zip', '*.tar.gz'
     }
 }
 
-task('downloadAndExtractJDKs', group: 'custom jre') {
-    dependsOn addJmodsToLinux64JDK, addJmodsToWindows64JDK, addJmodsToWindows86JDK, addJmodsToMacosJDK
+task('downloadAndExtractJREs', group: 'custom jre') {
+    dependsOn downloadAndExtractLinuxJRE, downloadAndExtractWindowsJRE, downloadAndExtractMacosJRE
     finalizedBy clearJREFolder
 }

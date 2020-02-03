@@ -1,34 +1,24 @@
-def jdkSource = project.ext.jdkSource
-def jdkTag = project.ext.jdkTag
-def jdkVersion = project.ext.jdkVersion
-def jdkFolder = project.ext.jdkFolder
 def downloadLocation = project.ext.downloadLocation
-def jmodsSource = project.ext.jmodsSource
-def jmodsVersion = project.ext.jmodsVersion
 
-task downloadLinux64JDK(type: Download, group: 'custom jre') {
-    src "${jdkSource}/jdk-${jdkTag}/OpenJDK11U-jdk_x64_linux_hotspot_${jdkVersion}.tar.gz"
-    dest new File("${downloadLocation}/jre", 'linux-x64.tar.gz')
+def jreSource = project.ext.jreSource
+def zuluVersion = project.ext.zuluVersion
+def jreVersion = project.ext.jreVersion
+def jreFolder = project.ext.jreFolder
+
+def filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-linux_x64"
+
+task downloadLinuxJRE(type: Download, group: 'custom jre') {
+    src "${jreSource}/${filename}.tar.gz"
+    dest new File("${downloadLocation}/jre", 'linux.tar.gz')
     overwrite false
 }
 
-task downloadLinuxJmods(type: Download, group: 'custom jre') {
-    src "${jmodsSource}-linux"
-    dest new File("${downloadLocation}/jre", 'linux-jmods.zip')
-    overwrite false
-}
-
-task downloadAndExtractLinux64JDK(dependsOn: downloadLinux64JDK, type: Copy, group: 'custom jre') {
-    from tarTree(downloadLinux64JDK.dest)
+task downloadAndExtractLinuxJRE(dependsOn: downloadLinuxJRE, type: Copy, group: 'custom jre') {
+    from tarTree(downloadLinuxJRE.dest)
     into "${downloadLocation}/jre/linux-x64"
 }
 
-task downloadAndExtractLinuxJmods(dependsOn: downloadLinuxJmods, type: Copy, group: 'custom jre') {
-    from zipTree(downloadLinuxJmods.dest)
-    into "${downloadLocation}/jre/linux-jmods"
-}
-
-task addJmodsToLinux64JDK(dependsOn: [downloadAndExtractLinuxJmods, downloadAndExtractLinux64JDK], type: Copy, group: 'custom jre') {
-    from "${downloadAndExtractLinuxJmods.destinationDir}/javafx-jmods-${jmodsVersion}"
-    into "${downloadAndExtractLinux64JDK.destinationDir}/${jdkFolder}/jmods"
+task copyLinuxJRE(type: Copy, group: 'custom jre') {
+    from "${downloadAndExtractLinuxJRE.destinationDir}/${filename}"
+    into "${jreFolder}/linux-x64"
 }

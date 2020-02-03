@@ -2,28 +2,26 @@ task generateWindowsInstaller(dependsOn: ['unzipx64Distribution', 'unzipx86Distr
     doLast {
 
         def innoSetupDir = new File("${buildDir}/innosetup")
-        
+
         // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
         // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
 
-        ['x64', 'x86'].each { arch ->
-            exec {
-                commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setup-${arch}.iss"
-            }
+        exec {
+            commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setup.iss"
         }
+
     }
 }
 
 task generateWindowsInstallerInDocker(dependsOn: ['unzipx64Distribution', 'unzipx86Distribution', 'prepareInnoSetupFiles'], group: 'distribution') {
     doLast {
-        ['x64', 'x86'].each {
-            exec {
-                workingDir rootDir
-                commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup-${it}.iss"
-            }
+        exec {
+            workingDir rootDir
+            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup.iss"
         }
     }
 }
+
 
 task prepareInnoSetupFiles(group: 'distribution') {
     doLast {
@@ -31,18 +29,16 @@ task prepareInnoSetupFiles(group: 'distribution') {
 
         innoSetupDir.mkdir()
 
-        ['x64', 'x86'].each { arch ->
-            copy {
-                from("${rootDir}/gradle/innosetup/setup.iss.skel")
-                rename("setup.iss.skel", "setup-${arch}.iss")
-                expand([
-                        applicationVersion: "${version}",
-                        architecture: "${arch}",
-                        unpackedDirectory : "gazeplay-project-windows-${arch}-${version}"
-                ])
-                into(innoSetupDir)
-            }
+        copy {
+            from("${rootDir}/gradle/innosetup/setup.iss.skel")
+            rename("setup.iss.skel", "setup.iss")
+            expand([
+                    applicationVersion: "${version}",
+                    unpackedDirectory : "gazeplay-project-windows-${version}"
+            ])
+            into(innoSetupDir)
         }
+
 
         copy {
             from("${rootDir}/gazeplay/src/main/resources/data/common/licence.txt")
@@ -65,12 +61,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
     }
 }
 
-task unzipx64Distribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
+task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
     from zipTree("${buildDir}/distributions/gazeplay-project-windows-x64-${version}.zip")
-    into buildDir
-}
-
-task unzipx86Distribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
-    from zipTree("${buildDir}/distributions/gazeplay-project-windows-x86-${version}.zip")
     into buildDir
 }

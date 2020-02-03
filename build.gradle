@@ -7,7 +7,6 @@ plugins {
     id 'com.github.hierynomus.license-report' version '0.15.0'
     id 'com.github.spotbugs' version '2.0.0'
     id 'net.researchgate.release' version '2.6.0'
-    id 'org.beryx.runtime' version '1.3.0'
     id "de.undercouch.download" version '4.0.4'
 
     id 'org.springframework.boot' version '2.2.1.RELEASE'
@@ -24,7 +23,6 @@ ext.javafxVersion = "11.0.2"
 
 apply from: "${rootDir}/gradle/package.gradle"
 apply from: "${rootDir}/gradle/installer.gradle"
-apply from: "${rootDir}/gazeplay-dist/build.gradle"
 apply from: "${rootDir}/gradle/jre.gradle"
 
 allprojects {
@@ -169,7 +167,7 @@ distributions {
         }
     }
 
-    windowsX64 {
+    windows {
         setDistributionBaseName "${project.name}-windows-x64"
         contents {
             with distributions.main.contents
@@ -177,21 +175,7 @@ distributions {
             from("build/bin/gazeplay-windows.bat") {
                 into 'bin'
             }
-            from("build/jre/gazeplay-project-windows-x64") {
-                into 'lib/jre'
-            }
-        }
-    }
-
-    windowsX86 {
-        setDistributionBaseName "${project.name}-windows-x86"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
-            from("build/bin/gazeplay-windows.bat") {
-                into 'bin'
-            }
-            from("build/jre/gazeplay-project-windows-x86") {
+            from("build/jre/windows-x64") {
                 into 'lib/jre'
             }
         }
@@ -205,7 +189,7 @@ distributions {
             from("build/bin/gazeplay-linux.sh") {
                 into 'bin'
             }
-            from("build/jre/gazeplay-project-linux-x64") {
+            from("build/jre/linux-x64") {
                 into 'lib/jre'
             }
         }
@@ -218,12 +202,16 @@ distributions {
             from("build/bin/gazeplay-macos.sh") {
                 into 'bin'
             }
-            from("build/jre/gazeplay-project-macos") {
+            from("build/jre/macos") {
                 into 'lib/jre'
             }
         }
     }
 }
+
+macosDistTar.dependsOn(copyMacosJRE)
+linuxDistTar.dependsOn(copyLinuxJRE)
+windowsDistZip.dependsOn(copyWindowsJRE)
 
 tasks.withType(Tar){
     compression = Compression.GZIP
