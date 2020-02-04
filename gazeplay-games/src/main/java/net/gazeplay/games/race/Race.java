@@ -24,8 +24,6 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.time.LocalDate;
-
 @Slf4j
 public class Race extends Parent implements GameLifeCycle {
 
@@ -75,7 +73,6 @@ public class Race extends Parent implements GameLifeCycle {
     public Race(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
         this.stats = stats;
-        final LocalDate localDate = LocalDate.now();
         score = 0;
         gameType = type;
 
@@ -305,7 +302,6 @@ public class Race extends Parent implements GameLifeCycle {
         });
 
         cage.toBack();
-        final Boolean left = true;
         this.getChildren().add(cage);
 
         final Timeline waitbeforestart = new Timeline();
