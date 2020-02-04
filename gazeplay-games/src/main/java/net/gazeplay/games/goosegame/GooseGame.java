@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -77,8 +76,6 @@ public class GooseGame implements GameLifeCycle {
         final Configuration config = gameContext.getConfiguration();
 
         this.random = new Random();
-
-        final AudioClip mvmt = new AudioClip(ClassLoader.getSystemResource("data/goosegame/sounds/mvmt0.wav").toString());
 
         // JSON file used to store the position of each square, later used for pawn movement
         final JsonParser parser = new JsonParser();

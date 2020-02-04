@@ -25,12 +25,10 @@ import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Slf4j
 public class Race extends Parent implements GameLifeCycle {
 
-    private static final int MAX_RADIUS = 70;
     private static final int MIN_RADIUS = 40;
 
     private static final int MAX_TIME_LENGTH = 7;
@@ -54,12 +52,10 @@ public class Race extends Parent implements GameLifeCycle {
 
     private Target playerRacer;
     private boolean raceIsFinished = false;
-    private int level = 1;
     private int racerMovement = 0;
 
     private Label text;
     private int score;
-    private int scoreNeeded = 38; // 38
 
     private StackPane hand;
     private final ImageView cage;
@@ -80,13 +76,10 @@ public class Race extends Parent implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         final LocalDate localDate = LocalDate.now();
-        final String date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
         score = 0;
         gameType = type;
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final double centerX = 8.7 * dimension2D.getWidth() / 29.7;
-        final double centerY = 10 * dimension2D.getHeight() / 21;
         hand = new StackPane();
 
         final Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
