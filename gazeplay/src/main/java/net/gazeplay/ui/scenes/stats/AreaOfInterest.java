@@ -136,10 +136,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         final Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),
                             areaOfInterestProps.getAreaOfInterest());
                         if (intersect.getBoundsInLocal().getWidth() != -1) {
-
-                            System.out.println("The intersection width is " + intersect.getBoundsInLocal().getWidth());
-                            System.out.println("The width of is "
-                                + areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth());
                             score += (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
                                 / intersect.getBoundsInLocal().getWidth();
                         }
@@ -203,7 +199,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             final File source;
             final File target;
             try {
-                System.out.println("The name of the video is " + stats.getDirectoryOfVideo());
                 source = new File(stats.getDirectoryOfVideo() + ".avi");
                 target = new File(stats.getDirectoryOfVideo() + ".mp4");
                 // Audio Attributes
