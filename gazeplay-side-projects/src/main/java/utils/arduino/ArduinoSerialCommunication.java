@@ -111,9 +111,6 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
         } catch (final IOException e) {
             log.error("Exception", e);
         }
-        /*
-         * PrintWriter writer = new PrintWriter(output); writer.println(s); writer.flush(); writer.close();
-         */
     }
 
     /**

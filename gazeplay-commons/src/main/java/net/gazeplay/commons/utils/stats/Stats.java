@@ -125,7 +125,6 @@ public class Stats implements GazeMotionListener {
         for (int i = 0; i < targetAOIList.size() - 1; i++) {
             final long duration = targetAOIList.get(i + 1).getTimeStarted() - targetAOIList.get(i).getTimeStarted();
             this.targetAOIList.get(i).setDuration(duration);
-            System.out.println("The duration is " + duration);
         }
         if (targetAOIList.size() >= 1) {
             targetAOIList.get(targetAOIList.size() - 1).setDuration(0);
@@ -166,7 +165,6 @@ public class Stats implements GazeMotionListener {
         try {
             final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 'at' HH.mm.ss");
             nameOfVideo = this.movieFolder + "/ScreenRecording " + dateFormat.format(new Date());
-            System.out.println("The name of the video is " + nameOfVideo);
             this.screenRecorder = new ScreenRecorder(cfg, areaRect,
                 new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.FILE, VideoFormatKeys.MimeTypeKey,
                     mimeType),
@@ -451,7 +449,6 @@ public class Stats implements GazeMotionListener {
         final File outputDirectory = getGameStatsOfTheDayDirectory();
 
         final String fileName = Utils.now() + "-info-game.csv";
-        System.out.println("The output directory is " + outputDirectory.toURI());
         return new File(outputDirectory, fileName);
     }
 

@@ -385,7 +385,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 areaOfInterestList.add(movementHistory.get(index));
             } else if (areaOfInterestList.size() != 0) {
                 if (areaOfInterestList.size() > 2) {
-                    // System.out.println("End of AOE");
                     final double AreaStartTime = areaOfInterestList.get(0).getTimeStarted();
                     final double AreaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
                         + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
@@ -424,9 +423,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         areaOfInterest, infoBox, (long) AreaStartTime, (long) AreaEndTime);
                     allAOIList.add(areaOfInterestProps);
                 }
-                // else {
-                // System.out.println("Not enough points to make a convex hull" + areaOfInterestList.size());
-                // }
                 areaOfInterestList = new ArrayList<>();
             }
         }
