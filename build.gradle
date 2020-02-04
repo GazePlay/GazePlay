@@ -234,7 +234,7 @@ release {
 
 mainClassName = 'net.gazeplay.GazePlayLauncher'
 
-defaultTasks 'clean', 'build'
+defaultTasks 'clean', 'build', 'checkPMDReport'
 startScripts.enabled = false
 
 afterReleaseBuild.dependsOn generateInstaller

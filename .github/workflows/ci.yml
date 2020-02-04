@@ -14,7 +14,7 @@ jobs:
         with:
           java-version: 11
       - name: Build with Gradle (no test)
-        run: ./gradlew --stacktrace --info build -x test
+        run: ./gradlew --stacktrace --info build checkPMDReport -x test
       - name: Set up xvfb for non headless tests
         run: sudo apt-get install xvfb
       - name: Run tests with Gradle
