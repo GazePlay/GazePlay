@@ -23,7 +23,6 @@ public class ProgressButton extends StackPane {
     private final Circle button;
     private ProgressIndicator indicator;
     private Timeline timelineProgressBar;
-    private double buttonWidth;
     private double buttonHeight;
     private EventHandler<Event> enterbuttonHandler;
     private EventHandler<Event> exitbuttonHandler;
@@ -83,7 +82,7 @@ public class ProgressButton extends StackPane {
     }
 
     public void init() {
-        buttonWidth = 0;
+        final double buttonWidth = 0;
         buttonHeight = 0;
         indicator = new ProgressIndicator(0);
         indicator.setMouseTransparent(true);

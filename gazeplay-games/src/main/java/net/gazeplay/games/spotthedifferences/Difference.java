@@ -20,12 +20,10 @@ public class Difference extends Circle {
     @Setter
     private Difference pair;
     private long timer;
-    private final SpotTheDifferences mainGame;
 
     public Difference(final IGameContext gameContext, final SpotTheDifferences mainGame, final double centerX, final double centerY,
                       final double radius) {
         super(centerX, centerY, radius, Color.TRANSPARENT);
-        this.mainGame = mainGame;
         setStrokeWidth(5);
         setStroke(Color.RED);
         timer = 0;

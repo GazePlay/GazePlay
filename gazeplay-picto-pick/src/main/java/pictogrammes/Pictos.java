@@ -27,13 +27,8 @@ import java.util.HashMap;
  */
 public class Pictos extends Parent {
 
-    private final int min_X = 100;
-    private final int min_Y = 50;
-    private final int sep = 100;
-
     private final double min_time = Math.sqrt(2) * 1000;
     private final float zoom_factor = 1.1f;
-    private final float strokeFactor = 0.01f;
 
     boolean found = false;
 
@@ -67,7 +62,10 @@ public class Pictos extends Parent {
 
         // log.info(scene.getWidth());
         // log.info(scene.getHeight());
+        int sep = 100;
+        int min_X = 100;
         final double imagesWidth = scene.getWidth() / 2 - min_X / 2 - sep / 2;
+        int min_Y = 50;
         final double imagesHeight = scene.getHeight() - min_Y * 2;
 
         for (int i = 0; i < currentPictos.size(); i++) {
@@ -78,6 +76,7 @@ public class Pictos extends Parent {
             R.rectangle.setTranslateY(min_Y);
             R.rectangle.setWidth(imagesWidth);
             R.rectangle.setHeight(imagesHeight);
+            float strokeFactor = 0.01f;
             R.rectangle.setStrokeWidth(imagesWidth * strokeFactor);
 
             this.getChildren().add(R.rectangle);

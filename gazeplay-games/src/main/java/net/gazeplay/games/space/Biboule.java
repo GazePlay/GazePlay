@@ -14,7 +14,6 @@ public class Biboule extends Rectangle {
     private final Rectangle collider;
     private final Timeline leftMovement;
     private final Timeline rightMovement;
-    private final double animTime;
 
     public Biboule(final double x, final double y, final double width, final double height, final String soundFileLocation, final double windowWidth,
                    final double speed) {
@@ -41,7 +40,7 @@ public class Biboule extends Rectangle {
 
         collider.setX(leftLimit);
 
-        animTime = speed * 2;
+        final double animTime = speed * 2;
         leftMovement = new Timeline(new KeyFrame(Duration.seconds(animTime), new KeyValue(this.xProperty(), rightLimit),
             new KeyValue(collider.xProperty(), rightLimit)));
         rightMovement = new Timeline(new KeyFrame(Duration.seconds(animTime), new KeyValue(this.xProperty(), leftLimit),

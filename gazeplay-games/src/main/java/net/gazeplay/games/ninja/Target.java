@@ -43,8 +43,6 @@ public class Target extends Portrait {
 
     private final ImageLibrary imageLibrary;
 
-    private final EventHandler<Event> enterEvent;
-
     private static final String audioClipResourceLocation = "data/ninja/sounds/2009.wav";
 
     private boolean animationStopped = true;
@@ -69,7 +67,7 @@ public class Target extends Portrait {
         this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, imageLibrary, nbBall);
         gameContext.getChildren().addAll(miniBallsPortraits);
 
-        enterEvent = buildEvent();
+        final EventHandler<Event> enterEvent = buildEvent();
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
 

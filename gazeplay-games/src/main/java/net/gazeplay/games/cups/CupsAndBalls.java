@@ -29,9 +29,7 @@ public class CupsAndBalls implements GameLifeCycle {
     private final int nbColumns;
     private int nbExchanges;
 
-    private javafx.geometry.Dimension2D dimension2D;
     private final int openCupSpeed = 1000;
-    private final int exchangeCupDuration = 1000;
     private final int ballRadius = 20;
 
     private final Random random = new Random();
@@ -56,7 +54,7 @@ public class CupsAndBalls implements GameLifeCycle {
     }
 
     private void init() {
-        dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         final Image cupPicture = new Image("data/cups/images/cup.png");
         final double imageWidth = dimension2D.getHeight() / (nbColumns * 1.5);
@@ -153,6 +151,7 @@ public class CupsAndBalls implements GameLifeCycle {
             throw new IllegalStateException("The cup positions haven't been set up properly");
         }
 
+        final int exchangeCupDuration = 1000;
         final TranslateTransition movementTransition = new TranslateTransition(
             Duration.millis(exchangeCupDuration), cupToMove);
         movementTransition.setByX(newPos.getX() - initPos.getX());

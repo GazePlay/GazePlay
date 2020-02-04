@@ -54,14 +54,11 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     private final Group backgroundLayer;
     private final Group middleLayer;
-    private final Group foregroundLayer;
     private final Rectangle interactionOverlay;
 
     private Point2D gazeTarget;
     private Point2D velocity;
-    private final double gravity = 0.005;
     private final double terminalVelocity = 0.8;
-    private final double maxSpeed = 0.7;
 
     private final double platformWidth;
     private final double platformHeight;
@@ -71,7 +68,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private long minFPS = 1000;
 
     private Rectangle biboule;
-    private final Label onScreenText;
     private final Text scoreText;
     private final ArrayList<Platform> platforms;
 
@@ -80,7 +76,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private final Rectangle shade;
     private final ProgressButton restartButton;
     private final Text finalScoreText;
-    private final int fixationLength;
 
     public BibouleJump(final IGameContext gameContext, final BibouleJumpStats stats, final BibouleJumpVariant variant) {
         this.gameContext = gameContext;
@@ -95,7 +90,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
-        this.foregroundLayer = new Group();
+        final Group foregroundLayer = new Group();
         this.gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
 
         this.platforms = new ArrayList();
@@ -106,7 +101,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         backgroundImage.setFill(Color.SKYBLUE);
         this.backgroundLayer.getChildren().add(backgroundImage);
 
-        onScreenText = new Label();
+        final Label onScreenText = new Label();
         foregroundLayer.getChildren().add(onScreenText);
 
         scoreText = new Text(0, 50, "0");
@@ -116,7 +111,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         foregroundLayer.getChildren().add(scoreText);
 
         // Menu
-        fixationLength = config.getFixationLength();
+        final int fixationLength = config.getFixationLength();
 
         shade = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));
@@ -392,6 +387,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
         // Movement
         /// Gravity
+        final double gravity = 0.005;
         velocity = velocity.add(0, gravity * timeElapsed);
         if (velocity.getY() > terminalVelocity) {
             velocity = new Point2D(velocity.getX(), terminalVelocity);
@@ -401,6 +397,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         final double distance = Math.abs(gazeTarget.getX() - (biboule.getX() + biboule.getWidth() / 2));
         final double direction = distance == 0 ? 1
             : (gazeTarget.getX() - (biboule.getX() + biboule.getWidth() / 2)) / distance;
+        final double maxSpeed = 0.7;
         if (distance > maxSpeed) {
             velocity = new Point2D(maxSpeed * direction, velocity.getY());
         } else {

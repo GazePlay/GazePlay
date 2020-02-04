@@ -39,9 +39,6 @@ public class Race extends Parent implements GameLifeCycle {
     private static final int MAX_RACE_TIME_LENGTH = 30;
     private static final int MIN_RACE_TIME_LENGTH = 15;
 
-    private final double centerX;
-    private final double centerY;
-
     private final IGameContext gameContext;
 
     private final Image blue;
@@ -60,15 +57,12 @@ public class Race extends Parent implements GameLifeCycle {
     private int level = 1;
     private int racerMovement = 0;
 
-    private final String date;
     private Label text;
     private int score;
     private int scoreNeeded = 38; // 38
 
     private StackPane hand;
     private final ImageView cage;
-
-    private Boolean left;
 
     private final String gameType;
 
@@ -86,13 +80,13 @@ public class Race extends Parent implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         final LocalDate localDate = LocalDate.now();
-        date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
+        final String date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
         score = 0;
         gameType = type;
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        centerX = 8.7 * dimension2D.getWidth() / 29.7;
-        centerY = 10 * dimension2D.getHeight() / 21;
+        final double centerX = 8.7 * dimension2D.getWidth() / 29.7;
+        final double centerY = 10 * dimension2D.getHeight() / 21;
         hand = new StackPane();
 
         final Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -318,7 +312,7 @@ public class Race extends Parent implements GameLifeCycle {
         });
 
         cage.toBack();
-        left = true;
+        final Boolean left = true;
         this.getChildren().add(cage);
 
         final Timeline waitbeforestart = new Timeline();
@@ -545,13 +539,11 @@ public class Race extends Parent implements GameLifeCycle {
         frogRacer.centerX = 0;
         frogRacer.centerY = y;
 
-        final double timebasic = ((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH)
-            * 1000;
-        final double timelength = timebasic;
-
-        final TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), frogRacer);
+        final TranslateTransition tt1 = new TranslateTransition(new Duration(((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH)
+            * 1000), frogRacer);
         tt1.setToX(dimension2D.getWidth() - dimension2D.getWidth() * 0.1);
-        final ScaleTransition st = new ScaleTransition(new Duration(timelength), frogRacer);
+        final ScaleTransition st = new ScaleTransition(new Duration(((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH)
+            * 1000), frogRacer);
         st.setByX(1);
         st.setByY(1);
         final ParallelTransition pt = new ParallelTransition();

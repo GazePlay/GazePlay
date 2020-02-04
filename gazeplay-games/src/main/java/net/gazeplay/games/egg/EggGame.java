@@ -14,8 +14,6 @@ public class EggGame implements GameLifeCycle {
 
     private final Stats stats;
 
-    private Egg egg;
-
     private final int numberOfTurns;
 
     public EggGame(final IGameContext gameContext, final Stats stats, final int numOfTurns) {
@@ -29,7 +27,7 @@ public class EggGame implements GameLifeCycle {
     public void launch() {
         final Configuration config = gameContext.getConfiguration();
 
-        egg = createEgg(config);
+        final Egg egg = createEgg(config);
 
         gameContext.getChildren().add(egg);
 

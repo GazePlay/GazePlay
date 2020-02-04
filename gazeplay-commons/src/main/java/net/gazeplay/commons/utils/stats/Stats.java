@@ -427,8 +427,7 @@ public class Stats implements GazeMotionListener {
         if (this.nbGoals == this.nbShots || this.nbShots == 0) {
             return 100;
         } else {
-            final int ratioRate = (int) ((float) this.nbGoals / (float) this.nbShots * 100.0);
-            return ratioRate;
+            return (int) ((float) this.nbGoals / (float) this.nbShots * 100.0);
         }
     }
 
@@ -507,9 +506,7 @@ public class Stats implements GazeMotionListener {
 
         // int x = (int) (Y / heatMapPixelSize);
         // int y = (int) (X / heatMapPixelSize);
-        final int x = Y;
-        final int y = X;
-        final FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(), 0, x, y);
+        final FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(), 0, Y, X);
         if (fixationSequence.size() != 0) {
             gazeDuration = newGazePoint.getTimeGaze()
                 - (fixationSequence.get(fixationSequence.size() - 1)).getTimeGaze();

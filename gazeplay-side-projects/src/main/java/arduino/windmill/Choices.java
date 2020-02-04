@@ -27,13 +27,8 @@ import java.util.HashMap;
  */
 public class Choices extends Parent {
 
-    private final double min_X = 100d;
-    private final double min_Y = 50d;
-    private final double sep = 100d;
-
     private final double min_time = 500;// Math.sqrt(2) * 1000;
     private final float zoom_factor = 1.1f;
-    private final float strokeFactor = 0.01f;
 
     String current = "";
 
@@ -43,8 +38,6 @@ public class Choices extends Parent {
 
     final ArrayList<Choice> currentChoice;
 
-    private final Scene scene;
-
     final EventHandler<Event> enterEvent;
 
     final ArduinoSerialCommunication arduino;
@@ -53,8 +46,6 @@ public class Choices extends Parent {
 
         arduino = new ArduinoSerialCommunication();
         arduino.initialize();
-
-        this.scene = scene;
 
         buildPictos();
 
@@ -69,7 +60,10 @@ public class Choices extends Parent {
         currentChoice.add(R1);
         currentChoice.add(R2);
 
+        double sep = 100d;
+        double min_X = 100d;
         final double imagesWidth = scene.getWidth() / 2 - min_X / 2d - sep / 2d;
+        double min_Y = 50d;
         final double imagesHeight = scene.getHeight() - min_Y * 2d;
 
         for (int i = 0; i < currentChoice.size(); i++) {
@@ -80,6 +74,7 @@ public class Choices extends Parent {
             R.rectangle.setTranslateY(min_Y);
             R.rectangle.setWidth(imagesWidth);
             R.rectangle.setHeight(imagesHeight);
+            float strokeFactor = 0.01f;
             R.rectangle.setStrokeWidth(imagesWidth * strokeFactor);
 
             this.getChildren().add(R.rectangle);

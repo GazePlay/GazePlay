@@ -45,10 +45,8 @@ public class GooseGame implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     private final Dimension2D dimensions;
-    private final Configuration config;
     private final int nbPlayers;
 
-    private Rectangle background;
     private final ImageView boardImage;
     private final ArrayList<String> bibouleColors;
 
@@ -61,8 +59,6 @@ public class GooseGame implements GameLifeCycle {
 
     private final VBox messages;
 
-    private final JsonArray positions;
-
     private final ArrayList<Pawn> pawns;
     private int currentPawn;
     private Square firstSquare;
@@ -71,7 +67,6 @@ public class GooseGame implements GameLifeCycle {
     private final Timeline showPlayingBiboule;
 
     private final Random random;
-    private final AudioClip mvmt;
 
     public GooseGame(final IGameContext gameContext, final Stats stats, final int nbPlayers) {
         this.gameContext = gameContext;
@@ -79,15 +74,15 @@ public class GooseGame implements GameLifeCycle {
         this.nbPlayers = nbPlayers;
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.config = gameContext.getConfiguration();
+        final Configuration config = gameContext.getConfiguration();
 
         this.random = new Random();
 
-        mvmt = new AudioClip(ClassLoader.getSystemResource("data/goosegame/sounds/mvmt0.wav").toString());
+        final AudioClip mvmt = new AudioClip(ClassLoader.getSystemResource("data/goosegame/sounds/mvmt0.wav").toString());
 
         // JSON file used to store the position of each square, later used for pawn movement
         final JsonParser parser = new JsonParser();
-        positions = (JsonArray) parser.parse(new InputStreamReader(
+        final JsonArray positions = (JsonArray) parser.parse(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("data/goosegame/positions.json")),
             StandardCharsets.UTF_8));
 
@@ -268,7 +263,7 @@ public class GooseGame implements GameLifeCycle {
      */
     @Override
     public void launch() {
-        background = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+        final Rectangle background = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         background.setFill(Color.GRAY);
 
         gameContext.getChildren().addAll(background, boardImage);

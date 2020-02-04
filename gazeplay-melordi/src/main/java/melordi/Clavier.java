@@ -13,13 +13,7 @@ import javafx.scene.shape.Rectangle;
  */
 public class Clavier extends Parent {
 
-    private final Touche[] touches;
-
-    private final Instru instru;
-
     public Clavier(final Instru instru) {
-
-        this.instru = instru;// l'objet de type Instru prend la valeur de l'objet passé en paramètre
 
         final Rectangle fond_clavier = new Rectangle();
         fond_clavier.setWidth(400);
@@ -35,7 +29,7 @@ public class Clavier extends Parent {
         r.setTopOpacity(0.5);
         fond_clavier.setEffect(r);
 
-        touches = new Touche[]{new Touche("U", 50, 20, 60, instru), new Touche("I", 128, 20, 62, instru),
+        final Touche[] touches = new Touche[]{new Touche("U", 50, 20, 60, instru), new Touche("I", 128, 20, 62, instru),
             new Touche("O", 206, 20, 64, instru), new Touche("P", 284, 20, 65, instru),
             new Touche("J", 75, 98, 67, instru), new Touche("K", 153, 98, 69, instru),
             new Touche("L", 231, 98, 71, instru), new Touche("M", 309, 98, 72, instru)};

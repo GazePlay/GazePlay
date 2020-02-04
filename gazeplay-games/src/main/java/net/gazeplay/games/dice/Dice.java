@@ -30,7 +30,6 @@ public class Dice implements GameLifeCycle {
     private final Stats stats;
     private final GridPane gridpane;
     private ArrayList<DiceRoller> diceRollers;
-    private final Dimension2D dimensions;
     private Text totalText;
     private boolean active;
     private final int[] rolls;
@@ -39,7 +38,7 @@ public class Dice implements GameLifeCycle {
     public Dice(final IGameContext gameContext, final Stats stats, final int nbDice) {
         this.gameContext = gameContext;
         this.stats = stats;
-        dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         active = true;
 
         rolls = new int[nbDice];

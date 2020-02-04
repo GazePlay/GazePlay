@@ -72,8 +72,6 @@ public class ColorsGame implements GameLifeCycle {
 
     private final ColorsGamesStats stats;
 
-    private final Translator translator;
-
     private final Deque<HorizontalZone> horiZones = new ArrayDeque<>();
 
     /**
@@ -115,7 +113,6 @@ public class ColorsGame implements GameLifeCycle {
     ColorsGame(final IGameContext gameContext, final ColorsGamesStats stats, final Translator translator) {
         this.gameContext = gameContext;
         this.stats = stats;
-        this.translator = translator;
 
         root = gameContext.getRoot();
 
@@ -570,9 +567,8 @@ public class ColorsGame implements GameLifeCycle {
         }
 
         private void onMouseMoved(final MouseEvent event) {
-            final MouseEvent mouseEvent = event;
-            currentX = mouseEvent.getX();
-            currentY = mouseEvent.getY();
+            currentX = event.getX();
+            currentY = event.getY();
 
             // If mouse still around first point
             if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX

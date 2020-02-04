@@ -99,8 +99,7 @@ class Target extends Parent {
                     final double newCenterX = Target.this.pos.getX() + dx;
                     final double newCenterY = Target.this.pos.getY() + dy;
 
-                    final Position newPos = new Position(newCenterX, newCenterY);
-                    Target.this.pos = newPos;
+                    Target.this.pos = new Position(newCenterX, newCenterY);
 
                     Target.this.cercle.setCenterX(newCenterX);
                     Target.this.cercle.setCenterY(newCenterY);

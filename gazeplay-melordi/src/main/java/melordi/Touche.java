@@ -12,8 +12,6 @@ import javafx.scene.text.Text;
 public class Touche extends Parent {
 
     public final String lettre;// lettre de la touche, c'est une variable public pour qu'elle puisse être lue depuis les
-    // autres classes
-    private final int positionX;// abscisse
     private final int positionY;// ordonnée de la touche
     private final int note;// note correspond au numéro MIDI de la note qui doit être jouée quand on appuie sur la touche
     private final Instru instru;
@@ -23,7 +21,8 @@ public class Touche extends Parent {
 
     public Touche(final String l, final int posX, final int posY, final int note, final Instru instru) {
         lettre = l;
-        positionX = posX;
+        // autres classes
+        // abscisse
         positionY = posY;
         this.note = note;
         this.instru = instru;
@@ -45,7 +44,7 @@ public class Touche extends Parent {
          * li.setLight(light); fond_touche.setEffect(li);
          */
 
-        this.setTranslateX(positionX);// positionnement de la touche sur le clavier
+        this.setTranslateX(posX);// positionnement de la touche sur le clavier
         this.setTranslateY(positionY);
 
         this.setOnMouseEntered(me -> fond_touche.setFill(Color.LIGHTGREY));

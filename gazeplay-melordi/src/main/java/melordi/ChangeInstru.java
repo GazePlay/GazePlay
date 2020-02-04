@@ -13,14 +13,11 @@ import javafx.scene.layout.GridPane;
  */
 public class ChangeInstru extends Parent {
 
-    private final Instru instru;
     private final RadioButton rb_piano;
     private final RadioButton rb_guitare;
-    private final RadioButton rb_orgue;
 
     public ChangeInstru(final Instru instru) {
 
-        this.instru = instru;
         final GridPane gridpane = new GridPane();
 
         // création des images des 3 instruments
@@ -44,7 +41,7 @@ public class ChangeInstru extends Parent {
         final ToggleGroup groupe = new ToggleGroup();
         rb_piano = new RadioButton();
         rb_guitare = new RadioButton();
-        rb_orgue = new RadioButton();
+        final RadioButton rb_orgue = new RadioButton();
         rb_piano.setToggleGroup(groupe);
         rb_guitare.setToggleGroup(groupe);
         rb_orgue.setToggleGroup(groupe);

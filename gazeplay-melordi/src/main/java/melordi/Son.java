@@ -12,11 +12,8 @@ import javafx.scene.control.Slider;
 public class Son extends Parent {
 
     public final Slider slider;
-    private final Clavier clavier;
 
     public Son(final Clavier clavier) {
-
-        this.clavier = clavier;
 
         slider = new Slider(0, 127, 60);
         slider.setOrientation(Orientation.VERTICAL);

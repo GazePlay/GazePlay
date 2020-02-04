@@ -109,8 +109,6 @@ public class ColorToolBox extends Pane {
 
     private EventHandler disableColorizeButton = null;
 
-    private CustomColorPicker CustomColorPicker;
-
     private boolean previousEnableColor;
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame, final IGameContext gameContext) {
@@ -471,9 +469,7 @@ public class ColorToolBox extends Pane {
         stopColorizeButtonPane.setVisible(false);
         root.getChildren().add(colorizeButtonIndicator);
 
-        final Pane colorPane = new StackPane(colorizeButtonPane, stopColorizeButtonPane);
-
-        return colorPane;
+        return new StackPane(colorizeButtonPane, stopColorizeButtonPane);
     }
 
     private Stage buildCustomColorDialog() {
@@ -490,9 +486,9 @@ public class ColorToolBox extends Pane {
         dialog.setTitle(translator.translate("customColorDialogTitle"));
         dialog.setAlwaysOnTop(true);
 
-        CustomColorPicker = new CustomColorPicker(gameContext, root, this, customBox, dialog);
+        final net.gazeplay.games.colors.CustomColorPicker customColorPicker = new CustomColorPicker(gameContext, root, this, customBox, dialog);
 
-        final Scene scene = new Scene(CustomColorPicker, Color.TRANSPARENT);
+        final Scene scene = new Scene(customColorPicker, Color.TRANSPARENT);
 
         final Configuration config = gameContext.getConfiguration();
         CssUtil.setPreferredStylesheets(config, scene, gameContext.getCurrentScreenDimensionSupplier());

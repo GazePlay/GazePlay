@@ -41,7 +41,6 @@ public class RushHour extends Parent implements GameLifeCycle {
     private List<Car> garage;
 
     private int level;
-    private final int numberLevels = 33;
 
     public RushHour(final IGameContext gameContext) {
         this.gameContext = gameContext;
@@ -2426,6 +2425,7 @@ public class RushHour extends Parent implements GameLifeCycle {
             toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiV.png")));
         }
         toWin.setEffect(null);
+        final int numberLevels = 33;
         level = (level + 1) % numberLevels;
     }
 

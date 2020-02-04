@@ -50,8 +50,6 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final Stats stats;
 
-    private final boolean image;
-
     private final ImageLibrary imageLibrary;
 
     private final List<Circle> fragments;
@@ -64,7 +62,6 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.gameContext = gameContext;
         this.type = type;
         this.stats = stats;
-        this.image = useBackgroundImage;
         this.direction = direction;
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("portraits"));

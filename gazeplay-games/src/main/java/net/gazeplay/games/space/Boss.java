@@ -12,7 +12,6 @@ public class Boss extends Rectangle {
     private final Rectangle collider;
     private final Timeline leftMovement;
     private final Timeline rightMovement;
-    private final double animTime;
     private final int healthPoint;
 
     public Boss(final double x, final double y, final double width, final double height, final String soundFileLocation, final double windowWidth,
@@ -41,7 +40,7 @@ public class Boss extends Rectangle {
 
         collider.setX(leftLimit);
 
-        animTime = speed * 2;
+        final double animTime = speed * 2;
         leftMovement = new Timeline(new KeyFrame(Duration.seconds(animTime), new KeyValue(this.xProperty(), rightLimit),
             new KeyValue(collider.xProperty(), rightLimit)));
         rightMovement = new Timeline(new KeyFrame(Duration.seconds(animTime), new KeyValue(this.xProperty(), leftLimit),

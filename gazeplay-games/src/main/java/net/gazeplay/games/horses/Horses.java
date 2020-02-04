@@ -45,19 +45,16 @@ public class Horses implements GameLifeCycle {
     }
 
     private final IGameContext gameContext;
-    private final Stats stats;
     private final Dimension2D dimensions;
     private final Configuration config;
     private final int nbPlayers;
     @Getter
     private final Multilinguism translate;
-    private final String jsonPath;
     private final int nbPawns;
 
     private final Group backgroundLayer;
     private final Group foregroundLayer;
 
-    private final ImageView boardImage;
     private final double gridElementSize;
 
     private final DiceRoller die;
@@ -78,7 +75,6 @@ public class Horses implements GameLifeCycle {
 
     public Horses(final IGameContext gameContext, final Stats stats, final int gameVersion, final int nbPlayers) {
         this.gameContext = gameContext;
-        this.stats = stats;
         this.nbPlayers = nbPlayers;
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -91,6 +87,7 @@ public class Horses implements GameLifeCycle {
         messages.setAlignment(Pos.CENTER);
         this.gameContext.getChildren().addAll(backgroundLayer, messages, foregroundLayer);
 
+        final String jsonPath;
         if (gameVersion == 0) {
             jsonPath = "data/horses/positions.json";
         } else {
@@ -104,7 +101,7 @@ public class Horses implements GameLifeCycle {
 
         nbPawns = positions.get("nbPawns").getAsInt();
         final int nbElementsPerSide = positions.get("elementsPerSide").getAsInt();
-        boardImage = new ImageView("data/horses/" + positions.get("imageName").getAsString());
+        final ImageView boardImage = new ImageView("data/horses/" + positions.get("imageName").getAsString());
         final double imageSize = Math.min(dimensions.getHeight(), dimensions.getWidth());
         gridElementSize = imageSize / nbElementsPerSide;
         final double xOffset = (dimensions.getWidth() - imageSize) / 2;
