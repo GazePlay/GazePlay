@@ -31,16 +31,16 @@ public class FixationSequence {
     @Getter
     private LinkedList<FixationPoint> sequence;
 
-    public FixationSequence(int width, int height, LinkedList<FixationPoint> fixSeq) {
+    public FixationSequence(final int width, final int height, LinkedList<FixationPoint> fixSeq) {
 
         sequence = new LinkedList<>();
         this.image = new WritableImage(width, height);
-        Canvas canvas = new Canvas(width, height);
+        final Canvas canvas = new Canvas(width, height);
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        final GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // draw the line of the sequence
-        GaussianBlur gaussianBlur = new GaussianBlur();
+        final GaussianBlur gaussianBlur = new GaussianBlur();
         gaussianBlur.setRadius(2.5);
         gc.setEffect(gaussianBlur);
         gc.setStroke(Color.rgb(255, 157, 6, 1));
@@ -94,13 +94,13 @@ public class FixationSequence {
             }
         }
 
-        SnapshotParameters params = new SnapshotParameters();
+        final SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
         try {
             canvas.snapshot(params, image);
-        } catch (Exception e) {
+        } catch (final Exception e) {
 
-            log.error("Can\'t make properly Snapshot in Fixation Sequence");
+            log.error("Can't make properly Snapshot in Fixation Sequence");
         }
 
         fixSeq.removeIf(fixationPoint -> fixationPoint.getGazeDuration() == -1);
@@ -113,22 +113,22 @@ public class FixationSequence {
      * @param outputFile The output file (Must be open and writable)
      */
     // creates a clear background image
-    public void saveToFile(File outputFile) {
-        BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+    public void saveToFile(final File outputFile) {
+        final BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
         try {
             ImageIO.write(bImage, "png", outputFile);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static LinkedList<FixationPoint> vertexReduction(LinkedList<FixationPoint> allPoints, double tolerance) {
+    public static LinkedList<FixationPoint> vertexReduction(final LinkedList<FixationPoint> allPoints, final double tolerance) {
 
         int accepted = 0;
         double distance;
         FixationPoint pivotVertex = allPoints.get(accepted);
 
-        LinkedList<FixationPoint> reducedPolyline = new LinkedList<>();
+        final LinkedList<FixationPoint> reducedPolyline = new LinkedList<>();
         reducedPolyline.add(pivotVertex);
 
         for (int i = 1; i < allPoints.size() - 1; i++) {

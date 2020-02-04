@@ -164,7 +164,7 @@ subprojects {
                         priorityLevel, violationsThreshold ->
 
                             def violationsCount = rootNode.children().children().findAll({ node -> node.name() == 'violation' && node.@priority == priorityLevel }).size()
-                            def violationsMessage = "$violationsCount PMD rule 'priority $priorityLevel' violations were found. See the report at: file://$pmdReportHtml";
+                            def violationsMessage = "$violationsCount PMD rule 'priority $priorityLevel' violations were found. See the report at: file://$pmdReportHtml" 
                             if (violationsCount > violationsThreshold) {
                                 throw new GradleException(violationsMessage)
                             } else {
@@ -172,7 +172,7 @@ subprojects {
                                     println violationsMessage
                                 }
                             }
-                    };
+                    }
                 }
             }
         }

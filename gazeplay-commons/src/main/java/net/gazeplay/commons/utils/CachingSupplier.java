@@ -17,7 +17,7 @@ public class CachingSupplier<T> implements Supplier<T> {
 
     private final Cache<String, T> cache;
 
-    public CachingSupplier(Supplier<T> supplier, long expiryDuration, TimeUnit expiryDurationUnit) {
+    public CachingSupplier(final Supplier<T> supplier, final long expiryDuration, final TimeUnit expiryDurationUnit) {
         this.supplier = supplier;
 
         cache = CacheBuilder.newBuilder()
@@ -30,8 +30,8 @@ public class CachingSupplier<T> implements Supplier<T> {
     @Override
     public T get() {
         try {
-            return (T) cache.get("UNIQ", () -> this.supplier.get());
-        } catch (ExecutionException e) {
+            return cache.get("UNIQ", () -> this.supplier.get());
+        } catch (final ExecutionException e) {
             throw new RuntimeExecutionException(e);
         }
     }
