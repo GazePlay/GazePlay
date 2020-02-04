@@ -2,14 +2,13 @@ package net.gazeplay;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Rectangle2D;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Setter;
@@ -68,7 +67,6 @@ public class GazePlayFxApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         autosize(primaryStage);
-
         boolean showUserSelectPage = true;
         if (options != null) {
             final UserSelectionOptions userSelectionOptions = options.getUserSelectionOptions();
@@ -92,7 +90,7 @@ public class GazePlayFxApp extends Application {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        LatestNewsPopup.displayIfNeeded(config, gazePlay.getTranslator());
+        LatestNewsPopup.displayIfNeeded(config, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
 
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);
@@ -130,7 +128,7 @@ public class GazePlayFxApp extends Application {
             }
         }
 
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene());
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
         primaryStage.centerOnScreen();
         primaryStage.show();
     }
@@ -138,7 +136,7 @@ public class GazePlayFxApp extends Application {
     private Scene createPrimaryScene(Stage primaryStage) {
         Pane rootPane = new Pane();
         Scene primaryScene = new Scene(rootPane, primaryStage.getWidth(), primaryStage.getHeight(), Color.BLACK);
-        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene);
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene, gazePlay.getCurrentScreenDimensionSupplier());
         primaryStage.setScene(primaryScene);
         return primaryScene;
     }
@@ -153,10 +151,10 @@ public class GazePlayFxApp extends Application {
     }
 
     private void autosize(Stage primaryStage) {
-        Screen screen = Screen.getPrimary();
-        Rectangle2D screenBounds = screen.getBounds();
-        primaryStage.setWidth(screenBounds.getWidth() * 0.95);
-        primaryStage.setHeight(screenBounds.getHeight() * 0.90);
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+        //
+        primaryStage.setWidth(screenDimension.getWidth() * 0.95);
+        primaryStage.setHeight(screenDimension.getHeight() * 0.90);
         primaryStage.setMaximized(false);
 
         primaryStage.setFullScreen(true);

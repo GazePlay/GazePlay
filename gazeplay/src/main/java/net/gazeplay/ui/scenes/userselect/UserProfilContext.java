@@ -3,6 +3,7 @@ package net.gazeplay.ui.scenes.userselect;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -22,8 +23,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GamePanelDimensionProvider;
@@ -44,6 +48,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -78,6 +83,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
 
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
         cardHeight = gamePanelDimensionProvider.getDimension2D().getHeight() / 4;
         cardWidth = gamePanelDimensionProvider.getDimension2D().getWidth() / 8;
 
@@ -86,7 +93,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
-        CustomButton exitButton = createExitButton();
+        CustomButton exitButton = createExitButton(screenDimension);
         topRightPane.getChildren().addAll(exitButton);
 
         Node userPickerChoicePane = createuUserPickerChoicePane(gazePlay);
@@ -128,18 +135,20 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         final List<String> allUsersProfiles = findAllUsersProfiles();
 
-        HBox configUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("DefaultUser"), new ImagePattern(new Image("data/common/images/ConfigUser.png")), false, false);
+        final Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        HBox configUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("DefaultUser"), new ImagePattern(new Image("data/common/images/ConfigUser.png")), false, false, screenDimension);
         choicePanel.getChildren().add(configUserCard);
 
         for (final String currentUserProfile : allUsersProfiles) {
             log.info("Profile founded : {}", currentUserProfile);
             Configuration currentUserProfileConfiguration = ConfigurationSource.createFromProfile(currentUserProfile);
             ImagePattern imagePattern = lookupForProfilePicture(currentUserProfileConfiguration);
-            HBox userCard = createUser(gazePlay, choicePanel, currentUserProfile, imagePattern, true, false);
+            HBox userCard = createUser(gazePlay, choicePanel, currentUserProfile, imagePattern, true, false, screenDimension);
             choicePanel.getChildren().add(userCard);
         }
 
-        HBox newUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("AddUser"), new ImagePattern(new Image("data/common/images/AddUser.png")), false, true);
+        HBox newUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("AddUser"), new ImagePattern(new Image("data/common/images/AddUser.png")), false, true, screenDimension);
         choicePanel.getChildren().add(newUserCard);
 
         return choicePanelScroller;
@@ -170,7 +179,8 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         @NonNull final String userProfileName,
         @NonNull final ImagePattern imagePattern,
         final boolean editable,
-        final boolean newUser
+        final boolean newUser,
+        Dimension2D screenDimension
     ) {
         if (userProfileName.trim().isEmpty()) {
             throw new IllegalArgumentException("userProfileName should not be empty");
@@ -196,9 +206,11 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         user.setAlignment(Pos.TOP_RIGHT);
         user.getChildren().add(content);
 
+
         if (editable) {
-            BorderPane editUserButton = createEditUserButton(getGazePlay(), choicePanel, user);
-            BorderPane deleteUserButton = createDeleteUserButton(getGazePlay(), choicePanel, user);
+            double buttonsSize = screenDimension.getWidth() / 50;
+            BorderPane editUserButton = createEditUserButton(getGazePlay(), choicePanel, user, buttonsSize, screenDimension);
+            BorderPane deleteUserButton = createDeleteUserButton(getGazePlay(), choicePanel, user, buttonsSize);
             VBox buttonBox = new VBox();
             // buttonBox.setSpacing(10);
             buttonBox.getChildren().addAll(editUserButton, deleteUserButton);
@@ -210,7 +222,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             mouseClickedEventHandler = event -> {
                 log.info("Adding user");
                 root.setEffect(new BoxBlur());
-                Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, true);
+                Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, true, screenDimension);
 
                 String dialogTitle = getGazePlay().getTranslator().translate("NewUser");
                 dialog.setTitle(dialogTitle);
@@ -227,7 +239,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                 gazePlay.getTranslator().notifyLanguageChanged();
 
                 Configuration config = ActiveConfigurationContext.getInstance();
-                CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene());
+                CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
 
                 BackgroundMusicManager.onConfigurationChanged();
 
@@ -240,12 +252,11 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return user;
     }
 
-    private BorderPane createDeleteUserButton(GazePlay gazePlay, FlowPane choicePanel, User user) {
-        final double size = Screen.getPrimary().getBounds().getWidth() / 50;
+    private BorderPane createDeleteUserButton(GazePlay gazePlay, FlowPane choicePanel, User user, final double size) {
         CustomButton button = new CustomButton("data/common/images/error.png", size);
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
-            Stage dialog = createRemoveDialog(gazePlay.getPrimaryStage(), choicePanel, user);
+            Stage dialog = createRemoveDialog(gazePlay.getPrimaryStage(), choicePanel, user, gazePlay.getCurrentScreenDimensionSupplier());
 
             String dialogTitle = getGazePlay().getTranslator().translate("Remove");
             dialog.setTitle(dialogTitle);
@@ -268,12 +279,11 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return rbp;
     }
 
-    private BorderPane createEditUserButton(GazePlay gazePlay, FlowPane choicePanel, User user) {
-        double size = Screen.getPrimary().getBounds().getWidth() / 50;
+    private BorderPane createEditUserButton(GazePlay gazePlay, FlowPane choicePanel, User user, final double size, Dimension2D screenDimension) {
         CustomButton button = new CustomButton("data/common/images/configuration-button-alt3.png", size);
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
-            Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, false);
+            Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, false, screenDimension);
 
             String dialogTitle = getGazePlay().getTranslator().translate("UserModif");
             dialog.setTitle(dialogTitle);
@@ -296,13 +306,13 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return rbp;
     }
 
-    private CustomButton createExitButton() {
-        CustomButton exitButton = new CustomButton("data/common/images/power-off.png");
+    private CustomButton createExitButton(Dimension2D screenDimension) {
+        CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
         return exitButton;
     }
 
-    private Stage createRemoveDialog(Stage primaryStage, FlowPane choicePanel, User user) {
+    private Stage createRemoveDialog(Stage primaryStage, FlowPane choicePanel, User user, Supplier<Dimension2D> currentScreenDimensionSupplier) {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(primaryStage);
@@ -347,13 +357,13 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
         Configuration config = ActiveConfigurationContext.getInstance();
-        CssUtil.setPreferredStylesheets(config, scene);
+        CssUtil.setPreferredStylesheets(config, scene, currentScreenDimensionSupplier);
         dialog.setScene(scene);
         return dialog;
     }
 
     private Stage createDialog(GazePlay gazePlay, Stage primaryStage, FlowPane choicePanel, User user,
-                               boolean newUser) {
+                               boolean newUser, Dimension2D screenDimension) {
         // initialize the confirmation dialog
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -441,7 +451,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
                 }
 
-                final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, false, false);
+                final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, false, false, screenDimension);
 
                 if (checkNewName(newUser1.getName())) {
 
@@ -508,7 +518,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
         Configuration config = ActiveConfigurationContext.getInstance();
-        CssUtil.setPreferredStylesheets(config, scene);
+        CssUtil.setPreferredStylesheets(config, scene, gazePlay.getCurrentScreenDimensionSupplier());
 
         dialog.setScene(scene);
 

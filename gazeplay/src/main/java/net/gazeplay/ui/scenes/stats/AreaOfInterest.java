@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -26,7 +27,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
@@ -271,7 +271,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         topPane.setPadding(new Insets(15, 15, 0, 15));
         topPane.setSpacing(10);
         topPane.setStyle("-fx-background-color: transparent; -fx-max-height: 80px;");
-        HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
+
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
 
         HBox homebox = new HBox(homeButton);
@@ -432,7 +435,9 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
         GridPane infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(TTFF),
             new DecimalFormat("##.###s").format(TimeSpent), Fixation + "", 0);
-        double screenWidthCenter = Screen.getPrimary().getBounds().getWidth() / 2;
+
+        Dimension2D screenDimension = getGazePlay().getCurrentScreenDimensionSupplier().get();
+        double screenWidthCenter = screenDimension.getWidth() / 2;
         double widthOfArea = currentAreaDisplay.getBoundsInLocal().getWidth();
 
         Line line = new Line();

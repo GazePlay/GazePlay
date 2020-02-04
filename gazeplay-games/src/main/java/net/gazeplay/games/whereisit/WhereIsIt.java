@@ -13,7 +13,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -110,7 +109,8 @@ public class WhereIsIt implements GameLifeCycle {
 
         if (Pictos != null && !Pictos.isEmpty() && Pictos.size() <= NBMAXPICTO) {
 
-            double screenWidth = Screen.getPrimary().getBounds().getWidth();
+            final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
+            double screenWidth = screenDimension.getWidth();
 
             double nbPicto = Pictos.size();
 

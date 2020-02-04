@@ -1,6 +1,7 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
 import javafx.application.Platform;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -9,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.GazeMotionListener;
-import net.gazeplay.commons.utils.CachingSupplier;
+import net.gazeplay.commons.utils.ImmutableCachingSupplier;
 import net.gazeplay.commons.utils.RobotSupplier;
 
 import java.awt.*;
@@ -35,14 +36,14 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     private final List<Node> toRemove = new LinkedList<>();
     private final List<Node> toAdd = new LinkedList<>();
 
-    private final Supplier<Robot> robotSupplier = new CachingSupplier<>(new RobotSupplier());
+    private final Supplier<Robot> robotSupplier = new ImmutableCachingSupplier<>(new RobotSupplier());
 
     public AbstractGazeDeviceManager() {
 
     }
 
     @Override
-    public abstract void init();
+    public abstract void init(Supplier<Dimension2D> currentScreenDimensionSupplier);
 
     @Override
     public abstract void destroy();

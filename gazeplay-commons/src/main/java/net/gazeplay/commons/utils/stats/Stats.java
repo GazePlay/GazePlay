@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Screen;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -53,7 +52,7 @@ public class Stats implements GazeMotionListener {
 
     private static final int trail = 10;
     private static final int fixationTrail = 50;
-    private final double heatMapPixelSize = computeHeatMapPixelSize();
+    private final double heatMapPixelSize;
     private final Scene gameContextScene;
     protected String gameName;
     @Getter
@@ -105,6 +104,8 @@ public class Stats implements GazeMotionListener {
     public Stats(Scene gameContextScene, String gameName) {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
+
+        heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
 
     private static double[][] instanciateHeatMapData(Scene gameContextScene, double heatMapPixelSize) {
@@ -554,9 +555,9 @@ public class Stats implements GazeMotionListener {
      * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px) if maximum memory is more
      * than 1Gb, only 200
      */
-    private double computeHeatMapPixelSize() {
+    private double computeHeatMapPixelSize(Scene gameContextScene) {
         long maxMemory = Runtime.getRuntime().maxMemory();
-        double width = Screen.getPrimary().getBounds().getWidth();
+        double width = gameContextScene.getWidth();
         double result;
         if (maxMemory < 1024 * 1024 * 1024) {
             // size is less than 1Gb (2^30)
