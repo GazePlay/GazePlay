@@ -156,8 +156,8 @@ public class Stats implements GazeMotionListener {
         System.setProperty("java.awt.headless", "false");
         final GraphicsConfiguration cfg = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
             .getDefaultConfiguration();
-        Rectangle areaRect = null;
-        Dimension outputDimension = null;
+        final Rectangle areaRect;
+        final Dimension outputDimension;
         areaRect = cfg.getBounds();
 
         outputDimension = areaRect.getSize();

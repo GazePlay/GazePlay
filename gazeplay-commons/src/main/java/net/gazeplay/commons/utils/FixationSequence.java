@@ -61,10 +61,10 @@ public class FixationSequence {
         gc.setLineWidth(1);
 
         int label_count = 0;// for the labels of the fixation sequence
-        int x = fixSeq.get(0).getY();
-        int y = fixSeq.get(0).getX();
+        int x;
+        int y;
 
-        double radius = 45;
+        double radius;
 
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font("Verdana", 25));

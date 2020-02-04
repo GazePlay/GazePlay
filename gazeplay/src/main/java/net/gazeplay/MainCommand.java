@@ -26,7 +26,7 @@ public class MainCommand implements Callable<Integer> {
         GazePlayFxApp.setApplicationContext(applicationContext);
         GazePlayFxApp.setApplicationOptions(options);
         //
-        Application.launch(GazePlayFxApp.class, null);
+        Application.launch(GazePlayFxApp.class, (String[]) null);
         //
         return 0;
     }

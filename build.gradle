@@ -156,9 +156,9 @@ subprojects {
                     def violationsThresholds = [
                             1: 42,
                             2: 9,
-                            3: 5969,
-                            4: 199,
-                            5: 438
+                            3: 5201,
+                            4: 197,
+                            5: 449
                     ]
                     violationsThresholds.each {
                         priorityLevel, violationsThreshold ->
