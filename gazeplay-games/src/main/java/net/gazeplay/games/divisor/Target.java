@@ -91,8 +91,8 @@ class Target extends Parent {
                 int dx = randomDirection();
                 int dy = randomDirection();
 
-                double height = dimension.getHeight();
-                double width = dimension.getWidth();
+                final double height = dimension.getHeight();
+                final double width = dimension.getWidth();
 
                 @Override
                 public void handle(final ActionEvent t) {

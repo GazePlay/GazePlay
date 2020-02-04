@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Wall {
 
     Box box;
-    String name;
+    final String name;
 
     public Wall(final MoveDirection moveDirection, final int positiveAxisMultiplier, final String name, final double xLength, final double yLength) {
         // The short size of a side of the cube (this is the thickness of each side)

@@ -35,19 +35,19 @@ public class SpotTheDifferences implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Dimension2D dimensions;
 
-    private ImageView leftImage;
+    private final ImageView leftImage;
     private double leftGap;
-    private ImageView rightImage;
+    private final ImageView rightImage;
     private double rightGap;
-    private BorderPane borderPane;
-    private GridPane gridPane;
-    private Text scoreText;
-    private ProgressButton nextButton;
+    private final BorderPane borderPane;
+    private final GridPane gridPane;
+    private final Text scoreText;
+    private final ProgressButton nextButton;
 
     private int numberDiffFound;
     private int totalNumberDiff;
 
-    private JsonArray instances;
+    private final JsonArray instances;
 
     private int currentInstance;
 

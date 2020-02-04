@@ -12,9 +12,9 @@ public class Multilinguism {
     private final static String mainFilePath = "data/multilinguism/multilinguism.csv";
 
     @Getter
-    private static Multilinguism singleton = new Multilinguism(new I18N(mainFilePath));
+    private static final Multilinguism singleton = new Multilinguism(new I18N(mainFilePath));
 
-    private static Map<String, Multilinguism> byResourceLocation = new HashMap<>();
+    private static final Map<String, Multilinguism> byResourceLocation = new HashMap<>();
 
     public static Multilinguism getForResource(final String resourceLocation) {
         Multilinguism result = byResourceLocation.get(resourceLocation);

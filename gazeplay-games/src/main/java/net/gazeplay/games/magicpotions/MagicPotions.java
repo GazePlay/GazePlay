@@ -56,7 +56,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
     public MagicPotions.RoundDetails currentRoundDetails;
 
-    private Dimension2D gameDimension2D;
+    private final Dimension2D gameDimension2D;
 
 
     @Getter

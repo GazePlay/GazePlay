@@ -112,7 +112,7 @@ public class ColorsGame implements GameLifeCycle {
      */
     private CustomEventHandler colorizationEventHandler;
 
-    ColorsGame(IGameContext gameContext, final ColorsGamesStats stats, final Translator translator) {
+    ColorsGame(final IGameContext gameContext, final ColorsGamesStats stats, final Translator translator) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.translator = translator;
@@ -145,7 +145,7 @@ public class ColorsGame implements GameLifeCycle {
      */
     private static boolean isEqualColors(final Color color1, final Color color2) {
         // Scalar distance calculation
-        double dist = Math.sqrt(
+        final double dist = Math.sqrt(
             Math.pow(color1.getRed() - color2.getRed(), 2) + Math.pow(color1.getGreen() - color2.getGreen(), 2)
                 + Math.pow(color1.getBlue() - color2.getBlue(), 2));
 
@@ -159,10 +159,10 @@ public class ColorsGame implements GameLifeCycle {
 
         this.root.getChildren().add(gazeProgressIndicator);
 
-        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        double width = dimension2D.getWidth();
-        double height = dimension2D.getHeight();
+        final double width = dimension2D.getWidth();
+        final double height = dimension2D.getHeight();
 
 
         buildToolBox(width, height);
@@ -180,7 +180,7 @@ public class ColorsGame implements GameLifeCycle {
 
     }
 
-    private void buildToolBox(double width, double height) {
+    private void buildToolBox(final double width, final double height) {
 
         this.colorToolBox = new ColorToolBox(this.root, this, gameContext);
         this.root.getChildren().add(colorToolBox);
@@ -198,15 +198,15 @@ public class ColorsGame implements GameLifeCycle {
         colorToolBox.minHeightProperty().bind(gameContext.getRoot().heightProperty());
     }
 
-    private void buildDraw(String imgURL, double width, double height) {
+    private void buildDraw(final String imgURL, final double width, final double height) {
 
         rectangle = new Rectangle(width, height);
 
         // When size will be calculated, update size of rectangle, but do this only
         // once
-        ChangeListener listener = new ChangeListener() {
+        final ChangeListener listener = new ChangeListener() {
             @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+            public void changed(final ObservableValue observable, final Object oldValue, final Object newValue) {
                 updateRectangle();
                 updateToolBox();
                 colorToolBox.widthProperty().removeListener(this);
@@ -214,7 +214,7 @@ public class ColorsGame implements GameLifeCycle {
         };
 
         colorToolBox.widthProperty().addListener(listener);
-        Image img = getDrawingImage(imgURL);
+        final Image img = getDrawingImage(imgURL);
 
 
         if (!img.isError()) {
@@ -231,7 +231,7 @@ public class ColorsGame implements GameLifeCycle {
         Image img;
         try {
             img = new Image(new FileInputStream(imgURL));
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
 
             log.debug("Drawing image " + imgURL + " cannot be found");
 
@@ -243,7 +243,7 @@ public class ColorsGame implements GameLifeCycle {
         return img;
     }
 
-    private void javaFXEditing(Image image, final String imageName) {
+    private void javaFXEditing(final Image image, final String imageName) {
 
         this.updateImage(image, imageName);
 
@@ -273,17 +273,17 @@ public class ColorsGame implements GameLifeCycle {
 
     private void updateRectangle() {
 
-        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        double width = dimension2D.getWidth() - colorToolBox.getWidth();
-        double height = dimension2D.getHeight();
+        final double width = dimension2D.getWidth() - colorToolBox.getWidth();
+        final double height = dimension2D.getHeight();
 
         rectangle.setWidth(width);
         rectangle.setHeight(height);
 
         rectangle.setFill(this.createImagePattern(writableImg, rectangle));
 
-        double ratio = writableImg.getHeight() / writableImg.getWidth();
+        final double ratio = writableImg.getHeight() / writableImg.getWidth();
         rectangle.setWidth(rectangle.getHeight() / ratio);
 
         rectangle.setX((width - rectangle.getHeight() / ratio) / 2);
@@ -292,12 +292,12 @@ public class ColorsGame implements GameLifeCycle {
 
     private void updateToolBox() {
 
-        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        double width = dimension2D.getWidth();
+        final double width = dimension2D.getWidth();
 
-        double ToolBoxWidth = colorToolBox.getWidth();
-        double x = width - ToolBoxWidth;
+        final double ToolBoxWidth = colorToolBox.getWidth();
+        final double x = width - ToolBoxWidth;
         log.debug("translated tool box to : {}, x toolBoxWidth : {}", x, ToolBoxWidth);
         colorToolBox.setTranslateX(x);
     }
@@ -365,7 +365,7 @@ public class ColorsGame implements GameLifeCycle {
         double sum = 0;
         for (int i = 0; i < writableImg.getWidth(); ++i) {
             for (int j = 0; j < writableImg.getHeight(); ++j) {
-                Color pixCol = pixelReader.getColor(i, j);
+                final Color pixCol = pixelReader.getColor(i, j);
                 sum = sum + (pixCol.getRed() + pixCol.getGreen() + pixCol.getBlue()) / 3;
             }
         }
@@ -376,15 +376,15 @@ public class ColorsGame implements GameLifeCycle {
     private void toBlackAndWhite() {
 
 
-        double avgThresholdValue = getAvgThresholdValue();
+        final double avgThresholdValue = getAvgThresholdValue();
 
         for (int i = 0; i < writableImg.getWidth(); ++i) {
             for (int j = 0; j < writableImg.getHeight(); ++j) {
 
-                Color pixCol = pixelReader.getColor(i, j);
-                double avg = (pixCol.getRed() + pixCol.getGreen() + pixCol.getBlue()) / 3;
+                final Color pixCol = pixelReader.getColor(i, j);
+                final double avg = (pixCol.getRed() + pixCol.getGreen() + pixCol.getBlue()) / 3;
 
-                Color newCol = avg > avgThresholdValue ? Color.WHITE : Color.BLACK;
+                final Color newCol = avg > avgThresholdValue ? Color.WHITE : Color.BLACK;
                 pixelWriter.setColor(i, j, newCol);
             }
         }
@@ -401,11 +401,11 @@ public class ColorsGame implements GameLifeCycle {
      */
     private void colorize(final double x, final double y) {
 
-        int pixelX = (int) ((x - rectangle.getX()) * writableImg.getWidth() / rectangle.getWidth());
-        int pixelY = (int) ((y - rectangle.getY()) * writableImg.getHeight() / rectangle.getHeight());
+        final int pixelX = (int) ((x - rectangle.getX()) * writableImg.getWidth() / rectangle.getWidth());
+        final int pixelY = (int) ((y - rectangle.getY()) * writableImg.getHeight() / rectangle.getHeight());
         // log.info("pixel at x= {}, y = {}", pixelX, pixelY);
 
-        Color color = pixelReader.getColor(pixelX, pixelY);
+        final Color color = pixelReader.getColor(pixelX, pixelY);
         // log.info("R = {}, G = {}, B = {}, A = {}", color.getRed(), color.getGreen(), color.getBlue(),
         // color.getOpacity());
 
@@ -423,8 +423,8 @@ public class ColorsGame implements GameLifeCycle {
         }
     }
 
-    private void javaFXFloodFill(final PixelWriter pixelWriter, final PixelReader pixelReader, Color newColor, int x,
-                                 int y, int width, int height) {
+    private void javaFXFloodFill(final PixelWriter pixelWriter, final PixelReader pixelReader, final Color newColor, final int x,
+                                 final int y, final int width, final int height) {
 
         final Color oldColor = pixelReader.getColor(x, y);
 
@@ -432,22 +432,22 @@ public class ColorsGame implements GameLifeCycle {
         floodInColumnAndLine(pixelWriter, pixelReader, newColor, x, y, width, height, oldColor);
     }
 
-    public ImagePattern createImagePattern(Image img, Rectangle r) {
+    public ImagePattern createImagePattern(final Image img, final Rectangle r) {
         return new ImagePattern(img, 0, 0, 1, 1, true);
     }
 
     private void floodInColumnAndLine(final PixelWriter pixelWriter, final PixelReader pixelReader,
                                       final Color newColor, final int x, final int y, final int width, final int height, final Color oldColor) {
 
-        int leftX = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, true, oldColor);
-        int rightX = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, false, oldColor);
+        final int leftX = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, true, oldColor);
+        final int rightX = floodInLine(pixelWriter, pixelReader, newColor, x, y, width, false, oldColor);
 
-        HorizontalZone firstZone = new HorizontalZone(leftX, rightX, y);
+        final HorizontalZone firstZone = new HorizontalZone(leftX, rightX, y);
         searchZone(firstZone, oldColor, pixelReader, pixelWriter, newColor, width, height);
 
         while (horiZones.size() > 0) {
 
-            HorizontalZone zone = horiZones.pop();
+            final HorizontalZone zone = horiZones.pop();
             // log.info("zone : {}", zone.toString());
             searchZone(zone, oldColor, pixelReader, pixelWriter, newColor, width, height);
         }
@@ -457,24 +457,24 @@ public class ColorsGame implements GameLifeCycle {
                             final PixelWriter pixelWriter, final Color newColor, final int width, final int height) {
 
         // Search for left and right of the zone
-        int leftX = floodInLine(pixelWriter, pixelReader, newColor, zone.leftX, zone.y, width, true, oldColor);
-        int rightX = floodInLine(pixelWriter, pixelReader, newColor, zone.rightX, zone.y, width, false, oldColor);
+        final int leftX = floodInLine(pixelWriter, pixelReader, newColor, zone.leftX, zone.y, width, true, oldColor);
+        final int rightX = floodInLine(pixelWriter, pixelReader, newColor, zone.rightX, zone.y, width, false, oldColor);
 
         for (int i = leftX; i <= rightX; ++i) {
 
             // Search for available zone to colorize upward
             if (zone.y > 0 && isEqualColors(pixelReader.getColor(i, zone.y - 1), oldColor)) {
 
-                int newLeftX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y - 1, width, true, oldColor);
-                int newRightX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y - 1, width, false, oldColor);
+                final int newLeftX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y - 1, width, true, oldColor);
+                final int newRightX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y - 1, width, false, oldColor);
 
                 horiZones.add(new HorizontalZone(newLeftX, newRightX, zone.y - 1));
             }
             // Search for available zone to colorize downward
             if (zone.y < height - 1 && isEqualColors(pixelReader.getColor(i, zone.y + 1), oldColor)) {
 
-                int newLeftX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y + 1, width, true, oldColor);
-                int newRightX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y + 1, width, false, oldColor);
+                final int newLeftX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y + 1, width, true, oldColor);
+                final int newRightX = floodInLine(pixelWriter, pixelReader, newColor, i, zone.y + 1, width, false, oldColor);
 
                 horiZones.add(new HorizontalZone(newLeftX, newRightX, zone.y + 1));
             }
@@ -491,15 +491,16 @@ public class ColorsGame implements GameLifeCycle {
 
             pixelWriter.setColor(currentX, y, newColor);
 
-            if (isLeftFIll)
+            if (isLeftFIll) {
                 currentX--;
-            else
+            } else {
                 currentX++;
+            }
         } while (currentX >= 0 && currentX < width - 1 && isEqualColors(pixelReader.getColor(currentX, y), oldColor));
 
-        if (isLeftFIll)
+        if (isLeftFIll) {
             currentX++;
-        else {
+        } else {
 
             currentX--;
         }
@@ -507,7 +508,7 @@ public class ColorsGame implements GameLifeCycle {
         return currentX;
     }
 
-    void setEnableColorization(boolean enable) {
+    void setEnableColorization(final boolean enable) {
         this.drawingEnable.setValue(enable);
     }
 
@@ -515,11 +516,11 @@ public class ColorsGame implements GameLifeCycle {
      * Objects used internally that represents a horizontal line of pixels
      */
     private static class HorizontalZone {
-        int leftX;
-        int rightX;
-        int y;
+        final int leftX;
+        final int rightX;
+        final int y;
 
-        HorizontalZone(int lX, int rX, int y) {
+        HorizontalZone(final int lX, final int rX, final int y) {
             this.leftX = lX;
             this.rightX = rX;
             this.y = y;
@@ -563,13 +564,13 @@ public class ColorsGame implements GameLifeCycle {
             }
         };
 
-        private void onMouseExited(MouseEvent event) {
+        private void onMouseExited(final MouseEvent event) {
             // log.info("mouse exited = ({},{})", currentX, currentY);
             gazeProgressIndicator.stop();
         }
 
-        private void onMouseMoved(MouseEvent event) {
-            MouseEvent mouseEvent = event;
+        private void onMouseMoved(final MouseEvent event) {
+            final MouseEvent mouseEvent = event;
             currentX = mouseEvent.getX();
             currentY = mouseEvent.getY();
 
@@ -593,7 +594,7 @@ public class ColorsGame implements GameLifeCycle {
             }
         }
 
-        private void onMouseEntered(MouseEvent event) {
+        private void onMouseEntered(final MouseEvent event) {
             gazeXOrigin = event.getX();
             gazeYOrigin = event.getY();
             currentX = gazeXOrigin;
@@ -604,16 +605,16 @@ public class ColorsGame implements GameLifeCycle {
             gazeProgressIndicator.start();
         }
 
-        private void onGazeExited(GazeEvent event) {
+        private void onGazeExited(final GazeEvent event) {
             gazeProgressIndicator.stop();
         }
 
-        private void onGazeMove(GazeEvent event) {
+        private void onGazeMove(final GazeEvent event) {
             currentX = event.getX();
             currentY = event.getY();
 
-            Point2D eventCoord = new Point2D(currentX, currentY);
-            Point2D localCoord = root.screenToLocal(eventCoord);
+            final Point2D eventCoord = new Point2D(currentX, currentY);
+            final Point2D localCoord = root.screenToLocal(eventCoord);
 
             if (localCoord != null) {
                 currentX = localCoord.getX();
@@ -640,12 +641,12 @@ public class ColorsGame implements GameLifeCycle {
             }
         }
 
-        private void onGazeEntered(GazeEvent event) {
+        private void onGazeEntered(final GazeEvent event) {
             currentX = event.getX();
             currentY = event.getY();
 
-            Point2D eventCoord = new Point2D(currentX, currentY);
-            Point2D localCoord = root.screenToLocal(eventCoord);
+            final Point2D eventCoord = new Point2D(currentX, currentY);
+            final Point2D localCoord = root.screenToLocal(eventCoord);
 
             if (localCoord != null) {
                 currentX = localCoord.getX();
@@ -660,7 +661,7 @@ public class ColorsGame implements GameLifeCycle {
             gazeProgressIndicator.start();
         }
 
-        private void onMouseClicked(MouseEvent event) {
+        private void onMouseClicked(final MouseEvent event) {
             colorize(currentX, currentY);
         }
 

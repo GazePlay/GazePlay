@@ -15,7 +15,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 @Slf4j
 public class ProgressPane extends StackPane {
 
-    public BorderPane button;
+    public final BorderPane button;
     ProgressIndicator indicator;
     Timeline timelineProgressBar;
     double buttonWidth;

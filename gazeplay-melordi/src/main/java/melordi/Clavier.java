@@ -13,15 +13,15 @@ import javafx.scene.shape.Rectangle;
  */
 public class Clavier extends Parent {
 
-    private Touche[] touches;
+    private final Touche[] touches;
 
-    private Instru instru;
+    private final Instru instru;
 
-    public Clavier(Instru instru) {
+    public Clavier(final Instru instru) {
 
         this.instru = instru;// l'objet de type Instru prend la valeur de l'objet passé en paramètre
 
-        Rectangle fond_clavier = new Rectangle();
+        final Rectangle fond_clavier = new Rectangle();
         fond_clavier.setWidth(400);
         fond_clavier.setHeight(200);
         fond_clavier.setArcWidth(30);
@@ -29,7 +29,7 @@ public class Clavier extends Parent {
         fond_clavier.setFill( // on remplie notre rectangle avec un dégradé
             new LinearGradient(0f, 0f, 0f, 1f, true, CycleMethod.NO_CYCLE,
                 new Stop(0, Color.web("#333333")), new Stop(1, Color.web("#000000"))));
-        Reflection r = new Reflection();// on applique un effet de réflection
+        final Reflection r = new Reflection();// on applique un effet de réflection
         r.setFraction(0.25);
         r.setBottomOpacity(0);
         r.setTopOpacity(0.5);
@@ -44,7 +44,7 @@ public class Clavier extends Parent {
         this.setTranslateY(250);
         this.getChildren().add(fond_clavier);
 
-        for (Touche touche : touches) { // on insère chaque touche une par une.
+        for (final Touche touche : touches) { // on insère chaque touche une par une.
             this.getChildren().add(touche);
         }
 

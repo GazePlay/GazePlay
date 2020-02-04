@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 public class RushHour extends Parent implements GameLifeCycle {
 
-    public IGameContext gameContext;
+    public final IGameContext gameContext;
     public IntegerProperty size;
     private Rectangle ground;
     private boolean endOfGame = false;
@@ -41,7 +41,7 @@ public class RushHour extends Parent implements GameLifeCycle {
     private List<Car> garage;
 
     private int level;
-    private int numberLevels = 33;
+    private final int numberLevels = 33;
 
     public RushHour(final IGameContext gameContext) {
         this.gameContext = gameContext;

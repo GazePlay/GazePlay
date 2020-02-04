@@ -25,7 +25,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
@@ -110,7 +109,7 @@ class GameContextTest {
     void shouldRemoveEventFiltersWhenRecording() {
         new MockUp<StatsContext>() {
             @mockit.Mock
-            public StatsContext newInstance(GazePlay gazePlay, Stats stats) {
+            public StatsContext newInstance(final GazePlay gazePlay, final Stats stats) {
                 return mock(StatsContext.class);
             }
         };
@@ -119,7 +118,7 @@ class GameContextTest {
         when(mockRoot.getChildren()).thenReturn(mockList);
         when(mockGamingRoot.getChildren()).thenReturn(mockList);
 
-        GameContext context =
+        final GameContext context =
             new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockConfigPane);
 
         context.exitGame(mockStats, mockGazePlay, mockGameLifeCycle);
@@ -134,7 +133,7 @@ class GameContextTest {
     void shouldNotRemoveEventFiltersWhenNotRecording() {
         new MockUp<StatsContext>() {
             @mockit.Mock
-            public StatsContext newInstance(GazePlay gazePlay, Stats stats) {
+            public StatsContext newInstance(final GazePlay gazePlay, final Stats stats) {
                 return mock(StatsContext.class);
             }
         };
@@ -143,7 +142,7 @@ class GameContextTest {
         when(mockRoot.getChildren()).thenReturn(mockList);
         when(mockGamingRoot.getChildren()).thenReturn(mockList);
 
-        GameContext context =
+        final GameContext context =
             new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockConfigPane);
 
         context.exitGame(mockStats, mockGazePlay, mockGameLifeCycle);

@@ -32,19 +32,19 @@ public class Car extends Rectangle {
     private boolean endOfGame = false;
 
     @Getter
-    private boolean direction;
+    private final boolean direction;
     private int size;
     private int move = 0;
     private int x;
     private int y;
-    private int l;
-    private int h;
+    private final int l;
+    private final int h;
 
     @Setter
     private boolean intersect = false;
     private Timeline timelineProgressBar;
-    IGameContext gameContext;
-    private ProgressIndicator pi;
+    final IGameContext gameContext;
+    private final ProgressIndicator pi;
 
     private boolean selected = false;
 

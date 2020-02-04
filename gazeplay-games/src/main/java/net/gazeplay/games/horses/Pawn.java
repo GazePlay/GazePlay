@@ -17,11 +17,11 @@ import net.gazeplay.components.ProgressButton;
 public class Pawn {
 
     @Getter
-    private Horses.TEAMS team;
-    private ImageView pawnDisplay;
-    private ProgressButton button;
-    private Position initialPosition;
-    private Square startSquare;
+    private final Horses.TEAMS team;
+    private final ImageView pawnDisplay;
+    private final ProgressButton button;
+    private final Position initialPosition;
+    private final Square startSquare;
     @Setter
     private Square currentSquare;
 

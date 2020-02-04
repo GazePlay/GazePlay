@@ -47,13 +47,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     private FadeTransition ft;
     @Getter
-    public Rectangle r;
+    public final Rectangle r;
 
-    Color[] col = {Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL};
+    final Color[] col = {Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL};
 
-    private int[][] layers = new int[3][4];
+    private final int[][] layers = new int[3][4];
 
-    private int[][] model = new int[3][4];
+    private final int[][] model = new int[3][4];
 
     @Getter
     private double buttonSize;
@@ -63,7 +63,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     private double centerY;
 
     @Getter
-    private int fixationLength;
+    private final int fixationLength;
 
     @Getter
     @Setter

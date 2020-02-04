@@ -22,8 +22,8 @@ import java.util.Random;
 @Slf4j
 public class DiceRoller extends MeshView {
 
-    private Random random;
-    private ArrayList<Rotate> rotations;
+    private final Random random;
+    private final ArrayList<Rotate> rotations;
 
     public DiceRoller(final float dieWidth) {
         super();

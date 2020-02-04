@@ -20,15 +20,15 @@ import java.util.Random;
 
 @Slf4j
 public class SoundMakingEntity extends Parent {
-    private ImageView imageView;
-    private ArrayList<String> audioClips;
-    private ProgressIndicator progressIndicator;
-    private Random random;
-    private int fixationLength;
-    private Timeline progressTimeline;
-    private Timeline movetimeline;
+    private final ImageView imageView;
+    private final ArrayList<String> audioClips;
+    private final ProgressIndicator progressIndicator;
+    private final Random random;
+    private final int fixationLength;
+    private final Timeline progressTimeline;
+    private final Timeline movetimeline;
     private int soundIter;
-    private Stats stats;
+    private final Stats stats;
 
     public SoundMakingEntity(final ImageView imageView, final Stats stats, final ArrayList<String> audioClips,
                              final ProgressIndicator progressIndicator, final int fixationLength) {

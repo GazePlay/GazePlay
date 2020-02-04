@@ -9,10 +9,10 @@ import java.util.logging.Logger;
 
 public class Instru {
 
-    public int volume = 100;
+    public final int volume = 100;
 
     private Synthesizer synthetiseur;
-    private MidiChannel canal;
+    private final MidiChannel canal;
 
     public Instru() {
 
@@ -20,7 +20,7 @@ public class Instru {
             // On récupère le synthétiseur, on l'ouvre et on obtient un canal
             synthetiseur = MidiSystem.getSynthesizer();
             synthetiseur.open();
-        } catch (MidiUnavailableException ex) {
+        } catch (final MidiUnavailableException ex) {
             Logger.getLogger(Instru.class.getName()).log(Level.SEVERE, null, ex);
         }
         canal = synthetiseur.getChannels()[0];
@@ -30,17 +30,17 @@ public class Instru {
     }
 
     // Joue la note dont le numéro est en paramètre
-    public void note_on(int note) {
+    public void note_on(final int note) {
         canal.noteOn(note, volume);
     }
 
     // Arrête de jouer la note dont le numéro est en paramètre
-    public void note_off(int note) {
+    public void note_off(final int note) {
         canal.noteOff(note);
     }
 
     // Set le type d'instrument dont le numéro MIDI est précisé en paramètre
-    public void set_instrument(int instru) {
+    public void set_instrument(final int instru) {
         canal.programChange(instru);
     }
 }

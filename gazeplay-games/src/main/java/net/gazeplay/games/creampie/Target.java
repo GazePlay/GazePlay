@@ -27,11 +27,11 @@ public class Target extends Portrait {
 
     private final Hand hand;
 
-    EventHandler<Event> enterEvent;
+    final EventHandler<Event> enterEvent;
 
     private boolean anniOff = true;
 
-    private static int radius = 100;
+    private static final int radius = 100;
 
     private final RandomPositionGenerator randomPositionGenerator;
 
@@ -39,7 +39,7 @@ public class Target extends Portrait {
 
     private final ImageLibrary imageLibrary;
 
-    private ArrayList<TargetAOI> targetAOIList;
+    private final ArrayList<TargetAOI> targetAOIList;
 
     private static final String SOUNDS_MISSILE = "data/creampie/sounds/missile.mp3";
 

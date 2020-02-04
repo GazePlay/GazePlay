@@ -22,9 +22,9 @@ import java.util.Random;
 @Slf4j
 public class MolesChar extends Parent {
 
-    private Rectangle mole;
+    private final Rectangle mole;
 
-    private Rectangle moleMoved;
+    private final Rectangle moleMoved;
 
     private final IGameContext gameContext;
 
@@ -37,7 +37,7 @@ public class MolesChar extends Parent {
     boolean canGoOut;
     public boolean out;
 
-    private ProgressIndicator progressIndicator;
+    private final ProgressIndicator progressIndicator;
 
     private Timeline timeMinToWhackTheMole;
 

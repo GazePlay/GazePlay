@@ -16,7 +16,7 @@ public class Ninja implements GameLifeCycle {
 
     private Target portrait;
 
-    private NinjaGameVariant gameVariant;
+    private final NinjaGameVariant gameVariant;
 
     public Ninja(final IGameContext gameContext, final Stats stats, final NinjaGameVariant gameVariant) {
         super();

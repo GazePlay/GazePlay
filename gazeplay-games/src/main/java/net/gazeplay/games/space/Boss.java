@@ -7,13 +7,13 @@ import lombok.Getter;
 
 public class Boss extends Rectangle {
     @Getter
-    private String soundFileLocation;
+    private final String soundFileLocation;
     @Getter
-    private Rectangle collider;
-    private Timeline leftMovement;
-    private Timeline rightMovement;
-    private double animTime;
-    private int healthPoint;
+    private final Rectangle collider;
+    private final Timeline leftMovement;
+    private final Timeline rightMovement;
+    private final double animTime;
+    private final int healthPoint;
 
     public Boss(final double x, final double y, final double width, final double height, final String soundFileLocation, final double windowWidth,
                 final double speed) {

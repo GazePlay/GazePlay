@@ -20,7 +20,7 @@ public class Difference extends Circle {
     @Setter
     private Difference pair;
     private long timer;
-    private SpotTheDifferences mainGame;
+    private final SpotTheDifferences mainGame;
 
     public Difference(final IGameContext gameContext, final SpotTheDifferences mainGame, final double centerX, final double centerY,
                       final double radius) {

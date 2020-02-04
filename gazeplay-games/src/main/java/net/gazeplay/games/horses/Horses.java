@@ -58,23 +58,23 @@ public class Horses implements GameLifeCycle {
     private final Group foregroundLayer;
 
     private final ImageView boardImage;
-    private double gridElementSize;
+    private final double gridElementSize;
 
     private final DiceRoller die;
     private final ProgressButton rollButton;
-    private HashMap<TEAMS, ImageView> rollImages;
+    private final HashMap<TEAMS, ImageView> rollImages;
     private int diceOutcome;
 
-    private ArrayList<ProgressButton> teamChoosers;
-    private ArrayList<TEAMS> chosenTeams;
+    private final ArrayList<ProgressButton> teamChoosers;
+    private final ArrayList<TEAMS> chosenTeams;
     private int currentTeam;
     private int nbTeamsChosen;
-    private HashMap<TEAMS, Square> startSquares;
-    private HashMap<TEAMS, ArrayList<Pawn>> pawns;
-    private HashMap<TEAMS, ArrayList<Position>> spawnPoints;
-    private HashMap<TEAMS, Color> fontColors;
+    private final HashMap<TEAMS, Square> startSquares;
+    private final HashMap<TEAMS, ArrayList<Pawn>> pawns;
+    private final HashMap<TEAMS, ArrayList<Position>> spawnPoints;
+    private final HashMap<TEAMS, Color> fontColors;
 
-    private VBox messages;
+    private final VBox messages;
 
     public Horses(final IGameContext gameContext, final Stats stats, final int gameVersion, final int nbPlayers) {
         this.gameContext = gameContext;

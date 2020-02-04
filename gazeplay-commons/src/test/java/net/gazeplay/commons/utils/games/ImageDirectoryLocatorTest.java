@@ -11,10 +11,10 @@ import java.io.IOException;
 @Slf4j
 class ImageDirectoryLocatorTest {
 
-    private static String folderName = "test_music_folder";
-    private static int numberOfFiles = 10;
+    private static final String folderName = "test_music_folder";
+    private static final int numberOfFiles = 10;
 
-    private static String FILESEPARATOR = File.separator;
+    private static final String FILESEPARATOR = File.separator;
 
     @BeforeAll
     static void createMockImageFolder() throws IOException {

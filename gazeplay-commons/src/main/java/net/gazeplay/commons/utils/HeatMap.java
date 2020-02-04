@@ -29,11 +29,11 @@ public class HeatMap {
      * Writable image used to create the heatmap image
      */
     @Getter
-    private WritableImage image;
+    private final WritableImage image;
     /**
      * Array of the different colors used to interpolate
      */
-    private List<Color> colors;
+    private final List<Color> colors;
     /**
      * Maximum value of the data
      */
@@ -45,12 +45,12 @@ public class HeatMap {
     /**
      * Value interval between each color
      */
-    private double subdivisionValue;
+    private final double subdivisionValue;
 
     /**
      * Opacity of each pixel
      */
-    private double opacity;
+    private final double opacity;
 
     /**
      * Custom colors constructor, builds a heatmap from the given data, by interpolating the values through the given

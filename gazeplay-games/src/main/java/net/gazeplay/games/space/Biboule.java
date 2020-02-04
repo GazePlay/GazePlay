@@ -9,12 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Biboule extends Rectangle {
     @Getter
-    private String soundFileLocation;
+    private final String soundFileLocation;
     @Getter
-    private Rectangle collider;
-    private Timeline leftMovement;
-    private Timeline rightMovement;
-    private double animTime;
+    private final Rectangle collider;
+    private final Timeline leftMovement;
+    private final Timeline rightMovement;
+    private final double animTime;
 
     public Biboule(final double x, final double y, final double width, final double height, final String soundFileLocation, final double windowWidth,
                    final double speed) {

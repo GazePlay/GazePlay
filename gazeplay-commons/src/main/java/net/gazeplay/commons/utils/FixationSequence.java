@@ -22,12 +22,12 @@ import java.util.LinkedList;
 @Slf4j
 public class FixationSequence {
 
-    private static Font sanSerifFont = new Font("SanSerif", 10);
+    private static final Font sanSerifFont = new Font("SanSerif", 10);
     /**
      * Writable image used to create the fixation Sequence image
      */
     @Getter
-    private WritableImage image;
+    private final WritableImage image;
     @Getter
     private LinkedList<FixationPoint> sequence;
 

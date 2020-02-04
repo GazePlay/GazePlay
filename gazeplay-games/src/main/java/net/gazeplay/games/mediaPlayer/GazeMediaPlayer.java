@@ -48,17 +48,25 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     private final IGameContext gameContext;
 
-    private Button[] titre;
-    private Button left, playPause, right, fullScreen, addVideo, upArrow, downArrow;
-    private BorderPane videoRoot;
-    private HBox window, tools;
-    private VBox scrollList, videoSide;
-    private Text musicTitle;
+    private final Button[] titre;
+    private final Button left;
+    private final Button playPause;
+    private final Button right;
+    private final Button fullScreen;
+    private final Button addVideo;
+    private final Button upArrow;
+    private final Button downArrow;
+    private final BorderPane videoRoot;
+    private final HBox window;
+    private final HBox tools;
+    private final VBox scrollList;
+    private final VBox videoSide;
+    private final Text musicTitle;
     private boolean full = false;
     private boolean play = false;
-    private MediaFileReader musicList;
+    private final MediaFileReader musicList;
 
-    private List<EventHandler<Event>> eventTitre;
+    private final List<EventHandler<Event>> eventTitre;
 
     GazeMediaPlayer(final IGameContext gameContext) {
         this.gameContext = gameContext;

@@ -40,7 +40,7 @@ import java.util.*;
 @Slf4j
 public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
-    private static String DATA_PATH = "data/biboulejump";
+    private static final String DATA_PATH = "data/biboulejump";
 
     private final IGameContext gameContext;
     private final BibouleJumpStats stats;
@@ -71,18 +71,18 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private long minFPS = 1000;
 
     private Rectangle biboule;
-    private Label onScreenText;
-    private Text scoreText;
-    private ArrayList<Platform> platforms;
+    private final Label onScreenText;
+    private final Text scoreText;
+    private final ArrayList<Platform> platforms;
 
     private int score;
 
     private final Rectangle shade;
     private final ProgressButton restartButton;
-    private Text finalScoreText;
+    private final Text finalScoreText;
     private final int fixationLength;
 
-    public BibouleJump(IGameContext gameContext, BibouleJumpStats stats, BibouleJumpVariant variant) {
+    public BibouleJump(final IGameContext gameContext, final BibouleJumpStats stats, final BibouleJumpVariant variant) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -102,7 +102,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.platformHeight = dimensions.getHeight() / 10;
         this.platformWidth = dimensions.getWidth() / 7;
 
-        Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+        final Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         backgroundImage.setFill(Color.SKYBLUE);
         this.backgroundLayer.getChildren().add(backgroundImage);
 
@@ -122,7 +122,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         shade.setFill(new Color(0, 0, 0, 0.75));
 
         restartButton = new ProgressButton();
-        ImageView restartImage = new ImageView(DATA_PATH + "/menu/restart.png");
+        final ImageView restartImage = new ImageView(DATA_PATH + "/menu/restart.png");
         restartImage.setFitHeight(dimensions.getHeight() / 6);
         restartImage.setFitWidth(dimensions.getHeight() / 6);
         restartButton.setImage(restartImage);
@@ -144,7 +144,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
         interactionOverlay = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
 
-        EventHandler<Event> movementEvent = (Event event) -> {
+        final EventHandler<Event> movementEvent = (Event event) -> {
             if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
                 gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
             } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
@@ -160,12 +160,12 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
     }
 
-    private void bounce(double intensity, String soundName) {
+    private void bounce(final double intensity, final String soundName) {
         velocity = new Point2D(velocity.getX(), -terminalVelocity * intensity);
 
         try {
             ForegroundSoundsUtils.playSound(DATA_PATH + "/sounds/" + soundName);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
         }
     }
@@ -218,14 +218,14 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
      * @param score new score
      * @return the highest score
      */
-    private int getsetHighscore(int score) {
+    private int getsetHighscore(final int score) {
 
-        File f = new File(GazePlayDirectories.getUserStatsFolder(config.getUserName()), "/biboule-jump/highscores.dat");
+        final File f = new File(GazePlayDirectories.getUserStatsFolder(config.getUserName()), "/biboule-jump/highscores.dat");
         log.info("Highscore file: " + f.getAbsolutePath());
         try {
             ArrayList<Integer> highscores = new ArrayList();
             if (!f.createNewFile()) {
-                Scanner scanner = new Scanner(f, StandardCharsets.UTF_8);
+                final Scanner scanner = new Scanner(f, StandardCharsets.UTF_8);
                 scanner.useDelimiter(":");
                 while (scanner.hasNextInt()) {
                     highscores.add(scanner.nextInt());
@@ -238,13 +238,14 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                 highscores = new ArrayList(highscores.subList(highscores.size() - 3, highscores.size()));
             }
 
-            Writer writer = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8);
-            for (int i : highscores)
+            final Writer writer = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8);
+            for (final int i : highscores) {
                 writer.write(i + ":");
+            }
             writer.close();
 
             return highscores.get(highscores.size() - 1);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             ex.printStackTrace();
         }
 
@@ -259,14 +260,15 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         // Show end menu (restart, quit, score)
         interactionOverlay.setDisable(true);
         shade.setOpacity(1);
-        int highscore = getsetHighscore(score);
-        StringBuilder sb = new StringBuilder();
+        final int highscore = getsetHighscore(score);
+        final StringBuilder sb = new StringBuilder();
         sb.append(Multilinguism.getSingleton().getTrad("Score", config.getLanguage()) + Multilinguism.getSingleton().getTrad("Colon", config.getLanguage())
             + " " + score + "\n");
         sb.append(Multilinguism.getSingleton().getTrad("Highscore", config.getLanguage())
             + Multilinguism.getSingleton().getTrad("Colon", config.getLanguage()) + " " + highscore + "\n");
-        if (highscore <= score)
+        if (highscore <= score) {
             sb.append(Multilinguism.getSingleton().getTrad("New highscore!", config.getLanguage()));
+        }
         finalScoreText.setText(sb.toString());
         finalScoreText.setOpacity(1);
         restartButton.active();
@@ -279,8 +281,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
      * @param platformX The other platform X position
      * @param platformY The other platform Y position
      */
-    private void createBouncepad(double platformX, double platformY) {
-        Platform b = new Platform(
+    private void createBouncepad(final double platformX, final double platformY) {
+        final Platform b = new Platform(
             platformX + randomGenerator.nextInt((int) (platformWidth * 4 / 5)) - platformWidth / 2,
             platformY - platformHeight / 3, platformWidth / 5, platformHeight / 3, "boing.wav", 6);
         b.setFill(new ImagePattern(new Image(DATA_PATH + "/bouncepad.png")));
@@ -295,8 +297,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
      * @param centerY Same as X
      * @param moving  moving platform or not
      */
-    private void createPlatform(double centerX, double centerY, boolean moving) {
-        Platform p;
+    private void createPlatform(final double centerX, final double centerY, final boolean moving) {
+        final Platform p;
         if (!moving) {
             p = new Platform(
                 centerX - platformWidth / 2, centerY - platformHeight / 2,
@@ -326,8 +328,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
      * separated so they are not too far and reachable, and not too close and overlapping. At random times, a moving
      * platform is created, a bouncepad can also added to the platform
      */
-    private void generatePlatforms(double bottomLimit) {
-        double top = -dimensions.getHeight();
+    private void generatePlatforms(final double bottomLimit) {
+        final double top = -dimensions.getHeight();
         double bottom = bottomLimit;
         while (bottom > top) {
             double newPlatX;
@@ -355,10 +357,10 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
      * Takes a list of platforms, and pushes them down to create the scrolling effect If the platform has left the
      * window, it is removed
      */
-    private void scrollList(ArrayList<Platform> rects, double difference) {
-        Iterator<Platform> rectIter = rects.iterator();
+    private void scrollList(final ArrayList<Platform> rects, final double difference) {
+        final Iterator<Platform> rectIter = rects.iterator();
         while (rectIter.hasNext()) {
-            Platform p = rectIter.next();
+            final Platform p = rectIter.next();
             p.scroll(difference);
             if (p.getY() >= dimensions.getHeight()) {
                 backgroundLayer.getChildren().remove(p);
@@ -375,7 +377,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
      * @param now Time when handle is called
      */
     @Override
-    public void handle(long now) {
+    public void handle(final long now) {
 
         if (lastTickTime == 0) {
             lastTickTime = now;
@@ -396,8 +398,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         }
 
         /// Lateral mouvement
-        double distance = Math.abs(gazeTarget.getX() - (biboule.getX() + biboule.getWidth() / 2));
-        double direction = distance == 0 ? 1
+        final double distance = Math.abs(gazeTarget.getX() - (biboule.getX() + biboule.getWidth() / 2));
+        final double direction = distance == 0 ? 1
             : (gazeTarget.getX() - (biboule.getX() + biboule.getWidth() / 2)) / distance;
         if (distance > maxSpeed) {
             velocity = new Point2D(maxSpeed * direction, velocity.getY());
@@ -410,9 +412,9 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
         // Collision detection
         if (velocity.getY() > 0) { // The biboule is falling
-            Rectangle bibouleCollider = new Rectangle(biboule.getX() + biboule.getWidth() / 4,
+            final Rectangle bibouleCollider = new Rectangle(biboule.getX() + biboule.getWidth() / 4,
                 biboule.getY() + biboule.getHeight() * 2 / 3, biboule.getWidth() / 2, biboule.getHeight() / 3);
-            for (Platform p : platforms) {
+            for (final Platform p : platforms) {
                 if (p.isColliding(bibouleCollider)) {
                     bounce(p.getBounceFactor(), p.getSoundFileLocation());
                 }
@@ -422,14 +424,15 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
         // Scrolling
         if (biboule.getY() <= dimensions.getHeight() / 3) {
-            double difference = dimensions.getHeight() / 3 - biboule.getY();
+            final double difference = dimensions.getHeight() / 3 - biboule.getY();
             updateScore(difference);
             scrollList(platforms, difference);
             biboule.setY(biboule.getY() + difference);
         }
 
-        if (highestPlatform.getY() >= -dimensions.getHeight() / 2)
+        if (highestPlatform.getY() >= -dimensions.getHeight() / 2) {
             generatePlatforms(highestPlatform.getY());
+        }
 
         // Fall out of screen
         if (biboule.getY() >= dimensions.getHeight()) {
@@ -443,8 +446,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     /**
      * Updates the score according to the pixel difference scrolled upwards by the player
      */
-    private void updateScore(double difference) {
-        int inc = (int) (difference / dimensions.getHeight() * 100);
+    private void updateScore(final double difference) {
+        final int inc = (int) (difference / dimensions.getHeight() * 100);
         score += inc;
         stats.incNbGoals(inc);
         scoreText.setText(String.valueOf(score));

@@ -41,15 +41,15 @@ public class Choices extends Parent {
 
     HashMap<String, Choice> choices;
 
-    ArrayList<Choice> currentChoice;
+    final ArrayList<Choice> currentChoice;
 
-    private Scene scene;
+    private final Scene scene;
 
-    EventHandler<Event> enterEvent;
+    final EventHandler<Event> enterEvent;
 
-    ArduinoSerialCommunication arduino;
+    final ArduinoSerialCommunication arduino;
 
-    public Choices(Scene scene, GazeDeviceManager gazeDeviceManager) {
+    public Choices(final Scene scene, final GazeDeviceManager gazeDeviceManager) {
 
         arduino = new ArduinoSerialCommunication();
         arduino.initialize();
@@ -62,19 +62,19 @@ public class Choices extends Parent {
 
         currentChoice = new ArrayList<>(2);
 
-        Choice R1 = choices.get("oui");
+        final Choice R1 = choices.get("oui");
 
-        Choice R2 = choices.get("non");
+        final Choice R2 = choices.get("non");
 
         currentChoice.add(R1);
         currentChoice.add(R2);
 
-        double imagesWidth = scene.getWidth() / 2 - min_X / 2d - sep / 2d;
-        double imagesHeight = scene.getHeight() - min_Y * 2d;
+        final double imagesWidth = scene.getWidth() / 2 - min_X / 2d - sep / 2d;
+        final double imagesHeight = scene.getHeight() - min_Y * 2d;
 
         for (int i = 0; i < currentChoice.size(); i++) {
 
-            Choice R = currentChoice.get(i);
+            final Choice R = currentChoice.get(i);
 
             R.rectangle.setTranslateX(min_X + (sep + imagesWidth) * i);
             R.rectangle.setTranslateY(min_Y);
@@ -104,20 +104,21 @@ public class Choices extends Parent {
     private EventHandler<Event> buildEvent() {
         return e -> {
 
-            Rectangle target = (Rectangle) e.getTarget();
+            final Rectangle target = (Rectangle) e.getTarget();
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
                 entry = (new Date()).getTime();
 
                 int i;
-                for (i = 0; i < currentChoice.size() && !target.equals(currentChoice.get(i).rectangle); i++)
-                    ;
+                for (i = 0; i < currentChoice.size() && !target.equals(currentChoice.get(i).rectangle); i++) {
+                }
 
-                if (i < currentChoice.size())
+                if (i < currentChoice.size()) {
                     currentChoice.get(i).sound.play();
+                }
 
-                Timeline timeline = new Timeline();
+                final Timeline timeline = new Timeline();
 
                 timeline.getKeyFrames()
                     .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.RED)));
@@ -126,7 +127,7 @@ public class Choices extends Parent {
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                Timeline timeline = new Timeline();
+                final Timeline timeline = new Timeline();
 
                 timeline.getKeyFrames()
                     .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.BLACK)));
@@ -138,11 +139,11 @@ public class Choices extends Parent {
 
                 // log.info("MOVE");
 
-                long now = (new Date()).getTime();
+                final long now = (new Date()).getTime();
 
                 if (entry != -1 && (now - entry) > min_time) {
 
-                    for (Choice P : currentChoice) {
+                    for (final Choice P : currentChoice) {
 
                         if (P.rectangle.equals(target)) {
 
@@ -170,13 +171,13 @@ public class Choices extends Parent {
 
 class Choice {
 
-    Rectangle rectangle;
+    final Rectangle rectangle;
 
-    AudioClip sound;
+    final AudioClip sound;
 
-    String name;
+    final String name;
 
-    public Choice(String name) {
+    public Choice(final String name) {
 
         this.rectangle = new Rectangle();
         this.sound = new AudioClip("file:sounds/" + name + ".m4a");

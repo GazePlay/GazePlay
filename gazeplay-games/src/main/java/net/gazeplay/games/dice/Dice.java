@@ -26,15 +26,15 @@ import java.util.ArrayList;
 @Slf4j
 public class Dice implements GameLifeCycle {
 
-    private IGameContext gameContext;
-    private Stats stats;
-    private GridPane gridpane;
+    private final IGameContext gameContext;
+    private final Stats stats;
+    private final GridPane gridpane;
     private ArrayList<DiceRoller> diceRollers;
-    private Dimension2D dimensions;
+    private final Dimension2D dimensions;
     private Text totalText;
     private boolean active;
-    private int[] rolls;
-    private ProgressButton rollButton;
+    private final int[] rolls;
+    private final ProgressButton rollButton;
 
     public Dice(final IGameContext gameContext, final Stats stats, final int nbDice) {
         this.gameContext = gameContext;

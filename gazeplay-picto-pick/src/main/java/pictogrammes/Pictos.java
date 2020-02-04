@@ -41,13 +41,13 @@ public class Pictos extends Parent {
 
     HashMap<String, Picto> pictos;
 
-    ArrayList<Picto> currentPictos;
+    final ArrayList<Picto> currentPictos;
 
-    private Scene scene;
+    private final Scene scene;
 
-    EventHandler<Event> enterEvent;
+    final EventHandler<Event> enterEvent;
 
-    public Pictos(Scene scene, GazeDeviceManager gazeDeviceManager) {
+    public Pictos(final Scene scene, final GazeDeviceManager gazeDeviceManager) {
 
         this.scene = scene;
 
@@ -58,21 +58,21 @@ public class Pictos extends Parent {
         currentPictos = new ArrayList<>(2);
 
         // Picto R1 = pictos.get("compote");
-        Picto R1 = pictos.get("minnie");
+        final Picto R1 = pictos.get("minnie");
 
-        Picto R2 = pictos.get("bulles");
+        final Picto R2 = pictos.get("bulles");
 
         currentPictos.add(R1);
         currentPictos.add(R2);
 
         // log.info(scene.getWidth());
         // log.info(scene.getHeight());
-        double imagesWidth = scene.getWidth() / 2 - min_X / 2 - sep / 2;
-        double imagesHeight = scene.getHeight() - min_Y * 2;
+        final double imagesWidth = scene.getWidth() / 2 - min_X / 2 - sep / 2;
+        final double imagesHeight = scene.getHeight() - min_Y * 2;
 
         for (int i = 0; i < currentPictos.size(); i++) {
 
-            Picto R = currentPictos.get(i);
+            final Picto R = currentPictos.get(i);
 
             R.rectangle.setTranslateX(min_X + (sep + imagesWidth) * i);
             R.rectangle.setTranslateY(min_Y);
@@ -128,7 +128,7 @@ public class Pictos extends Parent {
     private EventHandler<Event> buildEvent() {
         return e -> {
 
-            Rectangle target = (Rectangle) e.getTarget();
+            final Rectangle target = (Rectangle) e.getTarget();
 
             // log.debug("Rectangle " + Target.getTranslateX());
             // log.debug(e.getEventType());
@@ -144,17 +144,18 @@ public class Pictos extends Parent {
                 entry = (new Date()).getTime();
 
                 int i;
-                for (i = 0; i < currentPictos.size() && !target.equals(currentPictos.get(i).rectangle); i++)
-                    ;
+                for (i = 0; i < currentPictos.size() && !target.equals(currentPictos.get(i).rectangle); i++) {
+                }
 
-                if (i < currentPictos.size())
+                if (i < currentPictos.size()) {
                     currentPictos.get(i).sound.play();
+                }
 
             } else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
 
                 // log.debug("MOVE");
 
-                long now = (new Date()).getTime();
+                final long now = (new Date()).getTime();
 
                 if (entry != -1 && (now - entry) > min_time) {
 
@@ -162,11 +163,11 @@ public class Pictos extends Parent {
 
                     found = true;
 
-                    double finalWidth = target.getWidth() * zoom_factor;
+                    final double finalWidth = target.getWidth() * zoom_factor;
 
-                    double finalHeight = target.getHeight() * zoom_factor;
+                    final double finalHeight = target.getHeight() * zoom_factor;
 
-                    Timeline timeline = new Timeline();
+                    final Timeline timeline = new Timeline();
 
                     timeline.getKeyFrames().add(
                         new KeyFrame(new Duration(1000), new KeyValue(target.heightProperty(), finalHeight)));
@@ -177,11 +178,12 @@ public class Pictos extends Parent {
                     timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
                         new KeyValue(target.translateYProperty(), (scene.getHeight() - finalHeight) / 2)));
 
-                    for (Picto P : currentPictos) {
+                    for (final Picto P : currentPictos) {
 
-                        if (!P.rectangle.equals(target))
+                        if (!P.rectangle.equals(target)) {
                             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
                                 new KeyValue(P.rectangle.opacityProperty(), 0)));
+                        }
 
                     }
 
@@ -189,7 +191,7 @@ public class Pictos extends Parent {
 
                 } else {
 
-                    Timeline timeline = new Timeline();
+                    final Timeline timeline = new Timeline();
 
                     // timeline.getKeyFrames().add(new KeyFrame(new Duration(500),new KeyValue(R1.heightProperty(),
                     // R1.getHeight() * zoom_factor)));
@@ -205,7 +207,7 @@ public class Pictos extends Parent {
                 }
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                Timeline timeline = new Timeline();
+                final Timeline timeline = new Timeline();
 
                 // timeline.getKeyFrames().add(new KeyFrame(new Duration(500),new KeyValue(R1.heightProperty(),
                 // R1.getHeight() * zoom_factor)));
@@ -225,24 +227,24 @@ public class Pictos extends Parent {
 
     static class Picto {
 
-        Rectangle rectangle;
+        final Rectangle rectangle;
 
         AudioClip sound;
 
-        public Picto(String name) {
+        public Picto(final String name) {
 
             this.rectangle = new Rectangle();
 
-            String soundResourceName = "pictogrammes/sounds/" + name + ".m4a";
-            URL soundSourceResource = getClass().getClassLoader().getResource(soundResourceName);
+            final String soundResourceName = "pictogrammes/sounds/" + name + ".m4a";
+            final URL soundSourceResource = getClass().getClassLoader().getResource(soundResourceName);
             if (soundSourceResource == null) {
                 throw new RuntimeException("Resource not found : " + soundResourceName);
             }
 
             this.sound = new AudioClip(soundSourceResource.toExternalForm());
 
-            String imageResourceName = "pictogrammes/images/" + name + ".jpg";
-            URL imageResource = getClass().getClassLoader().getResource(imageResourceName);
+            final String imageResourceName = "pictogrammes/images/" + name + ".jpg";
+            final URL imageResource = getClass().getClassLoader().getResource(imageResourceName);
             if (imageResource == null) {
                 throw new RuntimeException("Resource not found : " + imageResourceName);
             }

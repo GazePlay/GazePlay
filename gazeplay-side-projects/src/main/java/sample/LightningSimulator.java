@@ -78,7 +78,7 @@ public class LightningSimulator extends Application {
         private final int i;
         private final int j;
 
-        private FillTransition fillTransition = new FillTransition(Duration.seconds(4));
+        private final FillTransition fillTransition = new FillTransition(Duration.seconds(4));
 
         public LightningReactor(final int i, final int j, final EventHandler<? super LightningEvent> lightningEventHandler) {
             super(SIZE, SIZE);

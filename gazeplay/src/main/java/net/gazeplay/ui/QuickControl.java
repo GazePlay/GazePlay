@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 public class QuickControl {
 
     @Getter
-    private static QuickControl instance = new QuickControl();
+    private static final QuickControl instance = new QuickControl();
 
     protected static final double ICON_SIZE = 64;
 
@@ -24,7 +24,7 @@ public class QuickControl {
     public static final double SLIDERS_MAX_WIDTH = SLIDERS_PREF_WIDTH;
 
     public Slider createVolumeSlider() {
-        Slider slider = new Slider();
+        final Slider slider = new Slider();
         slider.setMinWidth(SLIDERS_MIN_WIDTH);
         slider.setMaxWidth(SLIDERS_PREF_WIDTH);
         slider.setPrefWidth(SLIDERS_MAX_WIDTH);

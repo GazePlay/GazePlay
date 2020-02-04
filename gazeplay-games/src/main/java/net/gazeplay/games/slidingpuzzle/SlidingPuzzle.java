@@ -62,7 +62,7 @@ public class SlidingPuzzle implements GameLifeCycle {
 
     private final IGameContext gameContext;
 
-    private List<Coord> coordList = new ArrayList<>();
+    private final List<Coord> coordList = new ArrayList<>();
 
     private final double boxHeight;
     private final double boxWidth;
@@ -70,11 +70,11 @@ public class SlidingPuzzle implements GameLifeCycle {
     private final double cardHeight;
     private final double cardWidth;
 
-    private String picPath;
+    private final String picPath;
 
     private SlidingPuzzle.RoundDetails currentRoundDetails;
 
-    private javafx.geometry.Dimension2D gameDimension2D;
+    private final javafx.geometry.Dimension2D gameDimension2D;
 
     @Override
     public void launch() {

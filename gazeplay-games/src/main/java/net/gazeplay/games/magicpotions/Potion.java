@@ -35,7 +35,7 @@ class Potion extends Parent {
     private final Rectangle potion;
 
     @Getter
-    private Color potionColor;
+    private final Color potionColor;
 
     @Getter
     private final Image image;

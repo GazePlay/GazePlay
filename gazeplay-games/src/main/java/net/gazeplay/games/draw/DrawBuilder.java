@@ -52,7 +52,7 @@ public class DrawBuilder {
 
         canvas.addEventFilter(GazeEvent.GAZE_MOVED, new EventHandler<>() {
 
-            AtomicInteger rateLimiter = new AtomicInteger(0);
+            final AtomicInteger rateLimiter = new AtomicInteger(0);
 
             private static final int RATE_LIMIT = 5;
 

@@ -29,7 +29,7 @@ public class Target extends Parent {
     private final Position pos;
     private final double radius;
     private Timeline timelineProgressBar;
-    private double fixationLength;
+    private final double fixationLength;
 
     public Target(final Order gameInstance, final IGameContext gameContext, final int num, final double fixLength) {
         this.num = num;

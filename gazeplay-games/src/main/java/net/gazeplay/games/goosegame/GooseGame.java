@@ -49,29 +49,29 @@ public class GooseGame implements GameLifeCycle {
     private final int nbPlayers;
 
     private Rectangle background;
-    private ImageView boardImage;
-    private ArrayList<String> bibouleColors;
+    private final ImageView boardImage;
+    private final ArrayList<String> bibouleColors;
 
-    private ArrayList<DiceRoller> diceRollers;
-    private Timeline moveDiceIn;
-    private Timeline moveDiceOut;
-    private GridPane diceDisplay;
-    private int[] rolls;
+    private final ArrayList<DiceRoller> diceRollers;
+    private final Timeline moveDiceIn;
+    private final Timeline moveDiceOut;
+    private final GridPane diceDisplay;
+    private final int[] rolls;
     private ProgressButton rollButton;
 
-    private VBox messages;
+    private final VBox messages;
 
-    private JsonArray positions;
+    private final JsonArray positions;
 
-    private ArrayList<Pawn> pawns;
+    private final ArrayList<Pawn> pawns;
     private int currentPawn;
     private Square firstSquare;
 
-    private ImageView turnIndicator;
-    private Timeline showPlayingBiboule;
+    private final ImageView turnIndicator;
+    private final Timeline showPlayingBiboule;
 
-    private Random random;
-    private AudioClip mvmt;
+    private final Random random;
+    private final AudioClip mvmt;
 
     public GooseGame(final IGameContext gameContext, final Stats stats, final int nbPlayers) {
         this.gameContext = gameContext;
