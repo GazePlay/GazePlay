@@ -64,3 +64,19 @@
     -fx-background-color: linear-gradient(#98fb98, #008000);
     -fx-text-fill: black;
 }
+
+.spinner {
+    -fx-body-color: linear-gradient(lightpink, hotpink);
+    -fx-text-fill: black;
+    -fx-mark-color: silver;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-body-color: linear-gradient(lightpink, hotpink);
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-body-color: silver;
+}

@@ -1,14 +1,12 @@
 package net.gazeplay.ui.scenes.configuration;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import lombok.extern.slf4j.Slf4j;
 import mockit.Expectations;
@@ -77,10 +75,10 @@ class ConfigurationContextTest {
         assertEquals(64, children.size());
         assertTrue(children.get(3) instanceof MenuButton);
         assertTrue(children.get(7) instanceof ChoiceBox);
-        assertTrue(children.get(9) instanceof ChoiceBox);
+        assertTrue(children.get(9) instanceof Spinner);
         assertTrue(children.get(11) instanceof CheckBox);
         assertTrue(children.get(15) instanceof ChoiceBox);
-        assertTrue(children.get(17) instanceof ChoiceBox);
+        assertTrue(children.get(17) instanceof Spinner);
         assertTrue(children.get(21) instanceof ChoiceBox);
         assertTrue(children.get(23) instanceof CheckBox);
         assertTrue(children.get(25) instanceof ChoiceBox);
@@ -202,6 +200,46 @@ class ConfigurationContextTest {
         assertEquals(HPos.RIGHT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
         assertTrue(grid.getChildren().contains(input));
         assertEquals(HPos.RIGHT, grid.getChildren().get(1).getProperties().get("gridpane-halignment"));
+    }
+
+    @Test
+    void shouldBuildSpinner() {
+        SimpleIntegerProperty length = new SimpleIntegerProperty();
+
+        Spinner<Double> result = ConfigurationContext.buildSpinner(0.3, 10, 0.5, 0.1, length);
+        assertEquals(0.5, result.getValue());
+
+        result.increment(5);
+        assertEquals(1, result.getValue());
+        assertEquals(1000, length.get());
+    }
+
+    @Test
+    void shouldSetSpinnerValueToMaxIfHigher() {
+        SimpleIntegerProperty length = new SimpleIntegerProperty();
+
+        Spinner<Double> result = ConfigurationContext.buildSpinner(0.3, 10, 0.5, 0.1, length);
+        assertEquals(0.5, result.getValue());
+
+        result.getEditor().setText("11");
+        result.commitValue();
+
+        assertEquals(10, result.getValue());
+        assertEquals(10000, length.get());
+    }
+
+    @Test
+    void shouldSetSpinnerValueToMinIfLower() {
+        SimpleIntegerProperty length = new SimpleIntegerProperty();
+
+        Spinner<Double> result = ConfigurationContext.buildSpinner(0.3, 10, 0.5, 0.1, length);
+        assertEquals(0.5, result.getValue());
+
+        result.getEditor().setText("0.2");
+        result.commitValue();
+
+        assertEquals(0.3, result.getValue());
+        assertEquals(300, length.get());
     }
 
     @Test

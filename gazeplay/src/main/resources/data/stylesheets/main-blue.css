@@ -64,3 +64,19 @@
     -fx-background-color: linear-gradient(#98fb98, #008000);
     -fx-text-fill: white;
 }
+
+.spinner {
+    -fx-body-color: linear-gradient(#9898fb, #000080);
+    -fx-text-fill: black;
+    -fx-mark-color: orange;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-body-color: linear-gradient(#9898fb, #000080);
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-body-color: orange;
+}

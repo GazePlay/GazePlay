@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.configuration;
 
+import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -23,6 +24,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
@@ -50,10 +52,13 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.UnaryOperator;
 
 @Slf4j
 public class ConfigurationContext extends GraphicalContext<BorderPane> {
@@ -197,7 +202,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "QuestionLength", COLON);
 
-            ChoiceBox<Double> input = buildQuestionLengthChooserMenu(config);
+            Spinner<Double> input = buildSpinner(0.5, 20, (double) config.getQuestionLength() / 1000,
+                0.5, config.getQuestionLengthProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -221,7 +227,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "FixationLength", COLON);
 
-            ChoiceBox<Double> input = buildFixLengthChooserMenu(config);
+            Spinner<Double> input = buildSpinner(0.3, 10, (double) config.getFixationLength() / 1000,
+                0.1, config.getFixationlengthProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -423,61 +430,32 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private static ChoiceBox<Double> buildFixLengthChooserMenu(
-        Configuration configuration
+    static Spinner<Double> buildSpinner(
+        double min,
+        double max,
+        double initialValue,
+        double step,
+        Property<Number> configProperty
     ) {
-        ChoiceBox<Double> choiceBox = new ChoiceBox<>();
+        Spinner<Double> spinner = new Spinner<>(min, max, initialValue, step);
+        spinner.setEditable(true);
+        spinner.setPrefWidth(PREF_WIDTH);
+        spinner.setPrefHeight(PREF_HEIGHT);
 
-        int i = 300;
-
-        choiceBox.getItems().add((double) configuration.getFixationLength() / 1000);
-        while (i <= 30000) {
-
-            choiceBox.getItems().add(((double) i) / 1000);
-            i = i + 100;
-        }
-
-        choiceBox.getSelectionModel().select(0);
-        choiceBox.setPrefWidth(PREF_WIDTH);
-        choiceBox.setPrefHeight(PREF_HEIGHT);
-
-        choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            final int newPropertyValue = (int) (1000
-                * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
-            configuration.getFixationlengthProperty().setValue(newPropertyValue);
+        spinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue >= min || newValue <= max) {
+                final int newPropertyValue = (int) (1000 * spinner.getValue());
+                configProperty.setValue(newPropertyValue);
+            } else if (newValue > max) {
+                final int newPropertyValue = (int) (1000 * max);
+                configProperty.setValue(newPropertyValue);
+            } else if (newValue < min) {
+                final int newPropertyValue = (int) (1000 * min);
+                configProperty.setValue(newPropertyValue);
+            }
         });
 
-        return choiceBox;
-    }
-
-    private static ChoiceBox<Double> buildQuestionLengthChooserMenu(
-        Configuration configuration
-    ) {
-
-        ChoiceBox<Double> choiceBox = new ChoiceBox<>();
-
-        int i = 500;
-
-        choiceBox.getItems().add((double) configuration.getQuestionLength() / 1000);
-        while (i <= 20000) {
-
-            choiceBox.getItems().add(((double) i) / 1000);
-            i += 500;
-        }
-
-        choiceBox.getSelectionModel().select(0);
-        choiceBox.setPrefWidth(PREF_WIDTH);
-        choiceBox.setPrefHeight(PREF_HEIGHT);
-
-        choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-
-            final int newPropertyValue = (int) (1000
-                * choiceBox.getItems().get(Integer.parseInt(newValue.intValue() + "")));
-
-            configuration.getQuestionLengthProperty().setValue(newPropertyValue);
-        });
-
-        return choiceBox;
+        return spinner;
     }
 
     /**
@@ -649,7 +627,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         String currentCodeLanguage = configuration.getLanguage();
         String currentCodeCountry = configuration.getCountry();
-        Locale currentLocale = new Locale(currentCodeLanguage,currentCodeCountry);
+        Locale currentLocale = new Locale(currentCodeLanguage, currentCodeCountry);
         LanguageDetails currentLanguageDetails = Languages.getLocale(currentLocale);
 
         Image currentFlag = new Image(currentLanguageDetails.getFlags().get(0));

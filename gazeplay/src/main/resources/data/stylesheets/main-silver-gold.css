@@ -64,3 +64,19 @@
     -fx-background-color: linear-gradient(goldenrod, gold);
     -fx-text-fill: black;
 }
+
+.spinner {
+    -fx-body-color: linear-gradient(#c0c0c0, #a0c0c0);
+    -fx-text-fill: black;
+    -fx-mark-color: silver;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-body-color: linear-gradient(#c0c0c0, #a0c0c0);
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-body-color: silver;
+}
