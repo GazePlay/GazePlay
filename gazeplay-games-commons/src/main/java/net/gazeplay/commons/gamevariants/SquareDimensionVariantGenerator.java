@@ -16,8 +16,8 @@ public class SquareDimensionVariantGenerator implements GameSpec.GameVariantGene
     @Getter
     @Setter
     private String variantChooseText = "Choose size";
-    
-    public SquareDimensionVariantGenerator(int minSize, int maxSize) {
+
+    public SquareDimensionVariantGenerator(final int minSize, final int maxSize) {
         super();
         this.minSize = minSize;
         this.maxSize = maxSize;
@@ -25,7 +25,7 @@ public class SquareDimensionVariantGenerator implements GameSpec.GameVariantGene
 
     @Override
     public Set<GameSpec.GameVariant> getVariants() {
-        Set<GameSpec.GameVariant> result = Sets.newLinkedHashSet();
+        final Set<GameSpec.GameVariant> result = Sets.newLinkedHashSet();
         for (int i = minSize; i <= maxSize; i++) {
             result.add(new GameSpec.DimensionGameVariant(i, i));
         }

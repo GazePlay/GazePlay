@@ -131,7 +131,7 @@ subprojects {
 
     pmd {
         ignoreFailures = true
-        rulePriority = 2
+        rulePriority = 5
         sourceSets = [sourceSets.main, sourceSets.test]
         reportsDir = file("$project.buildDir/reports/pmd")
         ruleSets = []
@@ -156,9 +156,9 @@ subprojects {
                     def violationsThresholds = [
                             1: 42,
                             2: 9,
-                            3: 7572,
-                            4: 208,
-                            5: 437
+                            3: 5969,
+                            4: 199,
+                            5: 438
                     ]
                     violationsThresholds.each {
                         priorityLevel, violationsThreshold ->

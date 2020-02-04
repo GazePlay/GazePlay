@@ -37,7 +37,6 @@ import java.util.*;
  * rather do literally anything else than get back into this mess. But if you are courageous (or stupid?) enough, and
  * still want to tinker with the abominable physics involved, then please come on in, I applaud your bravery.
  */
-@SuppressWarnings("ALL")
 @Slf4j
 public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
@@ -300,10 +299,10 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         Platform p;
         if (!moving) {
             p = new Platform(
-                centerX - platformWidth / 2, centerY - platformHeight / 2, 
+                centerX - platformWidth / 2, centerY - platformHeight / 2,
                 platformWidth, platformHeight,
-                "bounce.wav", 
-                3, 
+                "bounce.wav",
+                3,
                 0.5, 0, 0, 0
             );
         } else {

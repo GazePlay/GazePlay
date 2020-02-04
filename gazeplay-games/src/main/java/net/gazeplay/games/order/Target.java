@@ -18,7 +18,6 @@ import net.gazeplay.components.Position;
 
 
 /**
- *
  * @author vincent
  */
 public class Target extends Parent {
@@ -32,7 +31,7 @@ public class Target extends Parent {
     private Timeline timelineProgressBar;
     private double fixationLength;
 
-    public Target(Order gameInstance, IGameContext gameContext, int num, double fixLength) {
+    public Target(final Order gameInstance, final IGameContext gameContext, final int num, final double fixLength) {
         this.num = num;
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
@@ -40,7 +39,7 @@ public class Target extends Parent {
         this.radius = 75;
         this.fixationLength = fixLength;
 
-        Circle cercle = new Circle(pos.getX(), pos.getY(), this.radius);
+        final Circle cercle = new Circle(pos.getX(), pos.getY(), this.radius);
         cercle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
         this.getChildren().add(cercle);
 
@@ -51,8 +50,9 @@ public class Target extends Parent {
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
                 enter();
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                if (timelineProgressBar != null)
+                if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
+                }
 
                 progressIndicator.setOpacity(0);
                 progressIndicator.setProgress(0);
@@ -65,7 +65,7 @@ public class Target extends Parent {
         progressIndicator.setProgress(0);
         timelineProgressBar = new Timeline();
         timelineProgressBar.getKeyFrames()
-                .add(new KeyFrame(Duration.millis(fixationLength), new KeyValue(progressIndicator.progressProperty(), 1)));
+            .add(new KeyFrame(Duration.millis(fixationLength), new KeyValue(progressIndicator.progressProperty(), 1)));
         timelineProgressBar.setOnFinished(actionEvent -> {
             progressIndicator.setOpacity(0);
             Target.this.gameInstance.enter(Target.this);
@@ -73,8 +73,8 @@ public class Target extends Parent {
         timelineProgressBar.play();
     }
 
-    private ProgressIndicator createProgressIndicator(double diameter) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
+    private ProgressIndicator createProgressIndicator(final double diameter) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(this.pos.getX() - (diameter / 2));
         indicator.setTranslateY(this.pos.getY() - (diameter / 2));
         indicator.setMinWidth(diameter * 0.9);

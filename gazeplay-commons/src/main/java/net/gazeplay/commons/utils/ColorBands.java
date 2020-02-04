@@ -27,8 +27,7 @@ public class ColorBands {
     /**
      * Saves the fixation Sequence to a PNG file
      *
-     * @param outputFile
-     *            The output file (Must be open and writable)
+     * @param outputFile The output file (Must be open and writable)
      */
     // creates a clear background image
     public void saveToFile(File outputFile) {

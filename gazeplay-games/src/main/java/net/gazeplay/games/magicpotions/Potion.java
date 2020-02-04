@@ -30,16 +30,16 @@ import java.io.IOException;
 class Potion extends Parent {
 
     private final double fixationLength;
-    
+
     @Getter
     private final Rectangle potion;
-    
+
     @Getter
     private Color potionColor;
-    
+
     @Getter
     private final Image image;
-    
+
     /**
      * true if the potion has been used/chosen for the mixture
      */
@@ -48,7 +48,7 @@ class Potion extends Parent {
     private boolean chosen;
 
     private final ProgressIndicator progressIndicator;
-    
+
     private Timeline timelineProgressBar; // used to make a selection long = fixation length
 
     private final MagicPotions gameInstance;
@@ -61,12 +61,12 @@ class Potion extends Parent {
 
     private Timeline currentTimeline;
 
-    Potion(double positionX, double positionY, double width, double height, Image image, Color color,
-           IGameContext gameContext, MagicPotionsStats stats, MagicPotions gameInstance, int fixationlength) {
+    Potion(final double positionX, final double positionY, final double width, final double height, final Image image, final Color color,
+           final IGameContext gameContext, final MagicPotionsStats stats, final MagicPotions gameInstance, final int fixationlength) {
         this.potion = new Rectangle((int) positionX, (int) positionY, (int) width, (int) height);
         this.potion.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
 
-        DropShadow shadow = new DropShadow();
+        final DropShadow shadow = new DropShadow();
         shadow.setColor(Color.BLACK);
         shadow.setWidth(10);
         shadow.setHeight(10);
@@ -98,8 +98,8 @@ class Potion extends Parent {
         this.getChildren().add(this.progressIndicator);
     }
 
-    private ProgressIndicator createProgressIndicator(double width) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
+    private ProgressIndicator createProgressIndicator(final double width) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(potion.getX());
         indicator.setTranslateY(potion.getY() + width * 0.75);
         indicator.setMinWidth(width * 0.9);
@@ -147,7 +147,7 @@ class Potion extends Parent {
         currentTimeline.stop();
         currentTimeline = new Timeline();
 
-        Explosion exp = new Explosion(gameContext, gameContext.getGamePanelDimensionProvider().getDimension2D());
+        final Explosion exp = new Explosion(gameContext, gameContext.getGamePanelDimensionProvider().getDimension2D());
         gameContext.getChildren().add(exp);
         gameContext.getChildren().removeAll(gameInstance.currentRoundDetails.getMixPot(), gameInstance.currentRoundDetails.getMixPotColor());
 
@@ -160,7 +160,7 @@ class Potion extends Parent {
             gameInstance.launch();
             try {
                 stats.saveStats();
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 log.info("Io exception");
             }
 
@@ -170,8 +170,9 @@ class Potion extends Parent {
 
     private EventHandler<Event> buildEvent() {
         return event -> {
-            if (chosen)
+            if (chosen) {
                 return;
+            }
             if (event.getEventType() == MouseEvent.MOUSE_ENTERED
                 || event.getEventType() == GazeEvent.GAZE_ENTERED) {
                 progressIndicator.setOpacity(1);
@@ -203,11 +204,12 @@ class Potion extends Parent {
                             gameInstance.currentRoundDetails.getMixPotColor().setFill(gameInstance.currentRoundDetails.getMixture().get(0));
                             break;
                         case 2:
-                            if (gameInstance.currentRoundDetails.getPotionsToMix().size() == 2)
+                            if (gameInstance.currentRoundDetails.getPotionsToMix().size() == 2) {
                                 gameInstance.currentRoundDetails.getMixPotColor()
                                     .setFill(gameInstance.currentRoundDetails.getRequest().getColor());
-                            else
+                            } else {
                                 gameInstance.currentRoundDetails.getMixPotColor().setFill(gameInstance.currentRoundDetails.getMixture().get(1));
+                            }
                             break;
                         case 3:
                             gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.BLACK);

@@ -18,7 +18,7 @@ public class Ninja implements GameLifeCycle {
 
     private NinjaGameVariant gameVariant;
 
-    public Ninja(IGameContext gameContext, Stats stats, NinjaGameVariant gameVariant) {
+    public Ninja(final IGameContext gameContext, final Stats stats, final NinjaGameVariant gameVariant) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
@@ -28,7 +28,7 @@ public class Ninja implements GameLifeCycle {
     @Override
     public void launch() {
         portrait = new Target(gameContext, gameContext.getRandomPositionGenerator(), stats,
-                Portrait.createImageLibrary(), gameVariant);
+            Portrait.createImageLibrary(), gameVariant);
 
         gameContext.getChildren().add(portrait);
     }

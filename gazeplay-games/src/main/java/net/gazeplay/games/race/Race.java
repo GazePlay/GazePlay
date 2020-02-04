@@ -27,7 +27,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@SuppressWarnings("ALL")
 @Slf4j
 public class Race extends Parent implements GameLifeCycle {
 
@@ -556,7 +555,7 @@ public class Race extends Parent implements GameLifeCycle {
         ParallelTransition pt = new ParallelTransition();
         pt.getChildren().addAll(tt1);
         pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-        
+
         frogRacer.t = pt;
         pt.setOnFinished(event -> {
 

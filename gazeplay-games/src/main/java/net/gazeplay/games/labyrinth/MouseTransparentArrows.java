@@ -8,15 +8,15 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /*
- * MouseTransparentArrows : 
+ * MouseTransparentArrows :
  * Arrows are around the mouse but there are transparent.
- * This version is the same as MouseV0 for the player 
+ * This version is the same as MouseV0 for the player
  */
 
 public class MouseTransparentArrows extends MouseArrows {
 
-    public MouseTransparentArrows(double positionX, double positionY, double width, double height,
-            IGameContext gameContext, Stats stats, Labyrinth gameInstance) {
+    public MouseTransparentArrows(final double positionX, final double positionY, final double width, final double height,
+                                  final IGameContext gameContext, final Stats stats, final Labyrinth gameInstance) {
         super(positionX, positionY, width, height, gameContext, stats, gameInstance);
 
     }
@@ -31,40 +31,40 @@ public class MouseTransparentArrows extends MouseArrows {
         buttonDimHeight = gameInstance.caseHeight;
         buttonDimWidth = gameInstance.caseWidth;
 
-        double x = gameInstance.positionX(indiceX);
-        double y = gameInstance.positionY(indiceY);
+        final double x = gameInstance.positionX(indiceX);
+        final double y = gameInstance.positionY(indiceY);
 
-        double dx = gameInstance.caseWidth;
-        double dy = gameInstance.caseHeight;
+        final double dx = gameInstance.caseWidth;
+        final double dy = gameInstance.caseHeight;
 
         this.buttonUp = new Rectangle(x, y - dy, buttonDimWidth, buttonDimHeight);
         this.buttonUp
-                .setFill(new ImagePattern(new Image("data/labyrinth/images/TransparentArrow.png"), 5, 5, 1, 1, true));
+            .setFill(new ImagePattern(new Image("data/labyrinth/images/TransparentArrow.png"), 5, 5, 1, 1, true));
         this.indicatorUp = createProgressIndicator(x, y - dy, buttonDimWidth, buttonDimHeight);
 
         this.buttonDown = new Rectangle(x, y + dy, buttonDimWidth, buttonDimHeight);
         this.buttonDown
-                .setFill(new ImagePattern(new Image("data/labyrinth/images/TransparentArrow.png"), 5, 5, 1, 1, true));
+            .setFill(new ImagePattern(new Image("data/labyrinth/images/TransparentArrow.png"), 5, 5, 1, 1, true));
         this.indicatorDown = createProgressIndicator(x, y + dy, buttonDimWidth, buttonDimHeight);
 
         this.buttonLeft = new Rectangle(x - dx, y, buttonDimHeight, buttonDimWidth);
         this.buttonLeft
-                .setFill(new ImagePattern(new Image("data/labyrinth/images/TransparentArrow.png"), 5, 5, 1, 1, true));
+            .setFill(new ImagePattern(new Image("data/labyrinth/images/TransparentArrow.png"), 5, 5, 1, 1, true));
         this.indicatorLeft = createProgressIndicator(x - dx, y, buttonDimWidth, buttonDimHeight);
 
         this.buttonRight = new Rectangle(x + dx, y, buttonDimHeight, buttonDimWidth);
         this.buttonRight
-                .setFill(new ImagePattern(new Image("data/labyrinth/images/TransparentArrow.png"), 5, 5, 1, 1, true));
+            .setFill(new ImagePattern(new Image("data/labyrinth/images/TransparentArrow.png"), 5, 5, 1, 1, true));
         this.indicatorRight = createProgressIndicator(x + dx, y, buttonDimWidth, buttonDimHeight);
     }
 
     @Override
     protected void recomputeArrowsPositions() {
 
-        double x = gameInstance.positionX(indiceX);
-        double y = gameInstance.positionY(indiceY);
-        double dx = gameInstance.caseWidth;
-        double dy = gameInstance.caseHeight;
+        final double x = gameInstance.positionX(indiceX);
+        final double y = gameInstance.positionY(indiceY);
+        final double dx = gameInstance.caseWidth;
+        final double dy = gameInstance.caseHeight;
 
         this.buttonUp.setX(x);
         this.buttonUp.setY(y - dy);
@@ -89,8 +89,8 @@ public class MouseTransparentArrows extends MouseArrows {
     }
 
     @Override
-    protected ProgressIndicator createProgressIndicator(double x, double y, double width, double height) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
+    protected ProgressIndicator createProgressIndicator(final double x, final double y, final double width, final double height) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(x);
         indicator.setTranslateY(y);
         indicator.setMouseTransparent(true);

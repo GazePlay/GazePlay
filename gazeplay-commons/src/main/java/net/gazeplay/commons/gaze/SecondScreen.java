@@ -73,7 +73,7 @@ public class SecondScreen implements GazeMotionListener {
         for (int i = 0; i < lightings.length; i++) {
             for (int j = 0; j < lightings[i].length; j++) {
                 lightings[i][j] = new Lighting(i * pixelWidth, j * pixelWidth, pixelWidth, lightingLength,
-                        lightingColor);
+                    lightingColor);
                 root.getChildren().add(lightings[i][j]);
             }
         }

@@ -7,22 +7,22 @@ import javafx.scene.shape.Rectangle;
 
 public class AspectRatioImageRectangleUtil {
 
-    public void setFillImageKeepingAspectRatio(Rectangle rectangle, String imageResourceLocation,
-            Dimension2D gamingContextDimension2D) {
-        Image image = new Image(imageResourceLocation);
+    public void setFillImageKeepingAspectRatio(final Rectangle rectangle, final String imageResourceLocation,
+                                               final Dimension2D gamingContextDimension2D) {
+        final Image image = new Image(imageResourceLocation);
         setFillImageKeepingAspectRatio(rectangle, image, gamingContextDimension2D);
     }
 
-    public void setFillImageKeepingAspectRatio(Rectangle rectangle, Image image, Dimension2D gamingContextDimension2D) {
-        double imageWidth = image.getWidth();
-        double imageHeight = image.getHeight();
-        double imageHeightToWidthRatio = imageHeight / imageWidth;
+    public void setFillImageKeepingAspectRatio(final Rectangle rectangle, final Image image, final Dimension2D gamingContextDimension2D) {
+        final double imageWidth = image.getWidth();
+        final double imageHeight = image.getHeight();
+        final double imageHeightToWidthRatio = imageHeight / imageWidth;
 
-        double initialHeight = rectangle.getHeight();
-        double initialWidth = initialHeight / imageHeightToWidthRatio;
+        final double initialHeight = rectangle.getHeight();
+        final double initialWidth = initialHeight / imageHeightToWidthRatio;
 
-        double positionX = (gamingContextDimension2D.getWidth() - initialWidth) / 2;
-        double positionY = (gamingContextDimension2D.getHeight() - initialHeight) / 2;
+        final double positionX = (gamingContextDimension2D.getWidth() - initialWidth) / 2;
+        final double positionY = (gamingContextDimension2D.getHeight() - initialHeight) / 2;
 
         rectangle.setFill(new ImagePattern(image));
 

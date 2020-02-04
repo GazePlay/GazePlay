@@ -43,22 +43,22 @@ public class RushHour extends Parent implements GameLifeCycle {
     private int level;
     private int numberLevels = 33;
 
-    public RushHour(IGameContext gameContext) {
+    public RushHour(final IGameContext gameContext) {
         this.gameContext = gameContext;
         level = 0;
         size = new SimpleIntegerProperty();
         gameContext.getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
 
-            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                    ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         });
         gameContext.getPrimaryStage().heightProperty().addListener((observable, oldValue, newValue) -> {
 
-            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                    ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         });
 
@@ -66,21 +66,21 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     }
 
-    private void setLevel(int i) {
+    private void setLevel(final int i) {
 
         garage = new LinkedList<>();
 
         size = new SimpleIntegerProperty();
 
-        ProgressIndicator pi = new ProgressIndicator(0);
+        final ProgressIndicator pi = new ProgressIndicator(0);
         pi.setMouseTransparent(true);
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             pi.setPrefSize(newValue.intValue(), newValue.intValue());
-            for (Car car : garage) {
+            for (final Car car : garage) {
                 car.update(newValue.intValue());
             }
 
-            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
             ground.setHeight(newValue.intValue() * (garageHeight + 2));
             ground.setWidth(newValue.intValue() * (garageWidth + 2));
@@ -163,7 +163,7 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         toWinListener();
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         p.setLayoutX(dimension2D.getWidth() / 2 - ground.getWidth() / 2);
         p.setLayoutY(dimension2D.getHeight() / 2 - ground.getHeight() / 2);
@@ -175,18 +175,18 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     }
 
-    private void setLevel0(Pane p, ProgressIndicator pi) {
+    private void setLevel0(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -197,42 +197,42 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(0, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(0, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(1, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
     }
 
-    private void setLevel1(Pane p, ProgressIndicator pi) {
+    private void setLevel1(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -243,54 +243,54 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(0, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(0, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(3, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
     }
 
-    public void setLevel2(Pane p, ProgressIndicator pi) {
+    public void setLevel2(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -301,42 +301,42 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c7 = new Car(2, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(2, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
     }
 
-    public void setLevel3(Pane p, ProgressIndicator pi) {
+    public void setLevel3(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -347,54 +347,54 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(1, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(1, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(5, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(5, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
     }
 
-    public void setLevel4(Pane p, ProgressIndicator pi) {
+    public void setLevel4(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -405,65 +405,65 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(3, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(3, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(3, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(3, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(3, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
     }
 
-    public void setLevel5(Pane p, ProgressIndicator pi) {
+    public void setLevel5(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -474,70 +474,70 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(2, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(4, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(4, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c11 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
     }
 
-    public void setLevel6(Pane p, ProgressIndicator pi) {
+    public void setLevel6(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -548,66 +548,66 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(5, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(5, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
     }
 
-    public void setLevel7(Pane p, ProgressIndicator pi) {
+    public void setLevel7(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -618,66 +618,66 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(2, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(2, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(2, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(3, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(3, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
     }
 
-    public void setLevel8(Pane p, ProgressIndicator pi) {
+    public void setLevel8(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -688,58 +688,58 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
     }
 
-    public void setLevel9(Pane p, ProgressIndicator pi) {
+    public void setLevel9(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -750,62 +750,62 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(1, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(1, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(3, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(3, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
     }
 
-    public void setLevel10(Pane p, ProgressIndicator pi) {
+    public void setLevel10(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -816,62 +816,62 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(4, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(4, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(2, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(2, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(1, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(1, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(3, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(2, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(2, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
     }
 
-    public void setLevel11(Pane p, ProgressIndicator pi) {
+    public void setLevel11(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -882,66 +882,66 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(2, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
     }
 
-    public void setLevel12(Pane p, ProgressIndicator pi) {
+    public void setLevel12(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -952,62 +952,62 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(1, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(1, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(2, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
     }
 
-    public void setLevel13(Pane p, ProgressIndicator pi) {
+    public void setLevel13(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1018,62 +1018,62 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(3, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(4, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
     }
 
-    public void setLevel14(Pane p, ProgressIndicator pi) {
+    public void setLevel14(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1084,74 +1084,74 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(2, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c11 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        Car c12 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c12 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c12);
         p.getChildren().add(c12);
 
     }
 
-    public void setLevel15(Pane p, ProgressIndicator pi) {
+    public void setLevel15(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1162,74 +1162,74 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(2, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(1, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(1, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c11 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        Car c12 = new Car(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c12 = new Car(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c12);
         p.getChildren().add(c12);
 
     }
 
-    public void setLevel16(Pane p, ProgressIndicator pi) {
+    public void setLevel16(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1240,62 +1240,62 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(2, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(2, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
     }
 
-    public void setLevel17(Pane p, ProgressIndicator pi) {
+    public void setLevel17(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1306,62 +1306,62 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(1, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(1, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
     }
 
-    public void setLevel18(Pane p, ProgressIndicator pi) {
+    public void setLevel18(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1372,66 +1372,66 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(4, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(4, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
     }
 
-    public void setLevel19(Pane p, ProgressIndicator pi) {
+    public void setLevel19(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1442,82 +1442,82 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c11 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        Car c12 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c12 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c12);
         p.getChildren().add(c12);
 
-        Car c13 = new Car(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c13 = new Car(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c13);
         p.getChildren().add(c13);
 
-        Car c14 = new Car(3, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c14 = new Car(3, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c14);
         p.getChildren().add(c14);
 
     }
 
-    public void setLevel20(Pane p, ProgressIndicator pi) {
+    public void setLevel20(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1528,62 +1528,62 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(3, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(4, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(5, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(5, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
     }
 
-    public void setLevel21(Pane p, ProgressIndicator pi) {
+    public void setLevel21(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1594,70 +1594,70 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(0, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(0, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(1, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(1, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(2, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(2, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(2, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(2, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(3, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c11 = new Car(3, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
     }
 
-    public void setLevel22(Pane p, ProgressIndicator pi) {
+    public void setLevel22(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1668,66 +1668,66 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
     }
 
-    public void setLevel23(Pane p, ProgressIndicator pi) {
+    public void setLevel23(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1738,66 +1738,66 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(3, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(3, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
     }
 
-    public void setLevel24(Pane p, ProgressIndicator pi) {
+    public void setLevel24(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1808,66 +1808,66 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(3, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(3, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(2, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(2, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
     }
 
-    public void setLevel25(Pane p, ProgressIndicator pi) {
+    public void setLevel25(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1878,62 +1878,62 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
     }
 
-    public void setLevel26(Pane p, ProgressIndicator pi) {
+    public void setLevel26(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -1944,62 +1944,62 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(2, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
     }
 
-    public void setLevel27(Pane p, ProgressIndicator pi) {
+    public void setLevel27(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2010,58 +2010,58 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
     }
 
-    public void setLevel28(Pane p, ProgressIndicator pi) {
+    public void setLevel28(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2072,70 +2072,70 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c11 = new Car(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
     }
 
-    public void setLevel29(Pane p, ProgressIndicator pi) {
+    public void setLevel29(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2146,70 +2146,70 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(3, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(3, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c11 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
     }
 
-    public void setLevel30(Pane p, ProgressIndicator pi) {
+    public void setLevel30(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2220,66 +2220,66 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(0, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(0, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
     }
 
-    public void setLevel31(Pane p, ProgressIndicator pi) {
+    public void setLevel31(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2290,74 +2290,74 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(2, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(2, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        Car c11 = new Car(3, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c11 = new Car(3, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        Car c12 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c12 = new Car(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c12);
         p.getChildren().add(c12);
 
     }
 
-    public void setLevel32(Pane p, ProgressIndicator pi) {
+    public void setLevel32(final Pane p, final ProgressIndicator pi) {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         garageWidth = 6;
         garageHeight = 6;
 
         size.set((int) ((dimension2D.getWidth() > dimension2D.getHeight())
-                ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
+            ? dimension2D.getHeight() / (garageHeight + 2) : dimension2D.getWidth() / (garageWidth + 2)));
 
         door = new Rectangle((garageWidth + 1) * size.getValue(), ((garageHeight / 2)) * size.getValue(),
-                size.getValue(), size.getValue());
+            size.getValue(), size.getValue());
 
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             door.setX((garageWidth + 1) * newValue.intValue());
@@ -2368,49 +2368,49 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final Car red = new Car(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c1 = new Car(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c2 = new Car(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        Car c3 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c3 = new Car(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        Car c4 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c4 = new Car(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        Car c5 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c5 = new Car(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        Car c6 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c6 = new Car(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        Car c7 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c7 = new Car(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        Car c8 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final Car c8 = new Car(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        Car c9 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c9 = new Car(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        Car c10 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final Car c10 = new Car(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -2458,7 +2458,7 @@ public class RushHour extends Parent implements GameLifeCycle {
     }
 
     private void setIntersections() {
-        for (Car car : garage) {
+        for (final Car car : garage) {
             if (car.isDirection()) {
                 car.xProperty().addListener((o) -> checkIntersections(car));
             } else {
@@ -2467,8 +2467,8 @@ public class RushHour extends Parent implements GameLifeCycle {
         }
     }
 
-    private void checkIntersections(Car car) {
-        for (Car car2 : garage) {
+    private void checkIntersections(final Car car) {
+        for (final Car car2 : garage) {
             if (car2 != car) {
                 if (Shape.intersect(car, car2).getBoundsInLocal().getWidth() != -1) {
                     log.debug("intersect");
@@ -2480,9 +2480,9 @@ public class RushHour extends Parent implements GameLifeCycle {
         if (Shape.intersect(car, door).getBoundsInLocal().getWidth() != -1) {
             // do nothingnothing
         } else if ((Shape.intersect(car, up).getBoundsInLocal().getWidth() != -1)
-                || (Shape.intersect(car, down).getBoundsInLocal().getWidth() != -1)
-                || (Shape.intersect(car, left).getBoundsInLocal().getWidth() != -1)
-                || (Shape.intersect(car, right).getBoundsInLocal().getWidth() != -1)) {
+            || (Shape.intersect(car, down).getBoundsInLocal().getWidth() != -1)
+            || (Shape.intersect(car, left).getBoundsInLocal().getWidth() != -1)
+            || (Shape.intersect(car, right).getBoundsInLocal().getWidth() != -1)) {
             log.debug("intersect");
             car.setIntersect(true);
             car.setSelected(false);
@@ -2490,9 +2490,9 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     }
 
-    private void createGarage(Pane p) {
-        int longueur = garageWidth;
-        int hauteur = garageHeight;
+    private void createGarage(final Pane p) {
+        final int longueur = garageWidth;
+        final int hauteur = garageHeight;
 
         up = new Rectangle(0, 0, (longueur + 2) * size.getValue(), size.getValue());
         down = new Rectangle(0, (hauteur + 1) * size.getValue(), (longueur + 2) * size.getValue(), size.getValue());

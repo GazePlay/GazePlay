@@ -11,9 +11,9 @@ public class QuickControl {
     private static QuickControl instance = new QuickControl();
 
     protected static final double ICON_SIZE = 64;
-    
+
     public static final double CONTENT_SPACING = 5;
-    
+
     public static final int PREF_HEIGHT = 120;
 
 

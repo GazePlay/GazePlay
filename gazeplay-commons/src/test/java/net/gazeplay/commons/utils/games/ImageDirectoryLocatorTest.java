@@ -37,15 +37,15 @@ class ImageDirectoryLocatorTest {
 
     @Test
     void canLocateImagesDirectoryInUnpackedDistDirectory() {
-        File expected = new File("." + FILESEPARATOR, folderName);
-        File result = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(folderName);
+        final File expected = new File("." + FILESEPARATOR, folderName);
+        final File result = ImageDirectoryLocator.locateImagesDirectoryInUnpackedDistDirectory(folderName);
         assert (result.equals(expected));
     }
 
     @Test
     void canLocateImagesDirectoryInExplodedClassPath() {
-        String pathName = "data/common/default";
-        File result = ImageDirectoryLocator.locateImagesDirectoryInExplodedClassPath(pathName);
+        final String pathName = "data/common/default";
+        final File result = ImageDirectoryLocator.locateImagesDirectoryInExplodedClassPath(pathName);
         assert (result.getAbsolutePath().contains("data" + FILESEPARATOR + "common" + FILESEPARATOR + "default"));
     }
 }

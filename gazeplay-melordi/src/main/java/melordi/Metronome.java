@@ -17,7 +17,7 @@ public class Metronome extends Parent {
     public Metronome() {
         // création du fond du métronome
         ImageView fond_metronome = new ImageView(
-                new Image(Metronome.class.getResourceAsStream("images/metronome.png")));
+            new Image(Metronome.class.getResourceAsStream("images/metronome.png")));
         fond_metronome.setFitHeight(40);
         fond_metronome.setPreserveRatio(true);
 
@@ -35,7 +35,7 @@ public class Metronome extends Parent {
         // création de l'animation de l'aiguille
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().addAll(new KeyFrame(Duration.ZERO, new KeyValue(rotation.angleProperty(), 45)),
-                new KeyFrame(new Duration(1000), new KeyValue(rotation.angleProperty(), -45)));
+            new KeyFrame(new Duration(1000), new KeyValue(rotation.angleProperty(), -45)));
         timeline.setAutoReverse(true);
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();

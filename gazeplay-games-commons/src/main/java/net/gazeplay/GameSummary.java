@@ -39,7 +39,7 @@ public class GameSummary {
      * Priority is used in the comparator chain : after the categories, but before the nameCode .
      * So the priority will be used to sort games in the same categories.
      * When priorities for multiple games is equal, then the nameCode is used to order them.
-     * 
+     * <p>
      * higher priority means games is sorted first (so comparator will compare on reversed order)
      */
     @Getter

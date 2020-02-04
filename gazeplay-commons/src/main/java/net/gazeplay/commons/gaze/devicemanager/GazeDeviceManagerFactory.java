@@ -55,7 +55,7 @@ public class GazeDeviceManagerFactory {
             default:
                 gazeDeviceManager = new AbstractGazeDeviceManager() {
                     @Override
-                    public void init(Supplier<Dimension2D> currentScreenDimensionSupplier) {
+                    public void init(final Supplier<Dimension2D> currentScreenDimensionSupplier) {
                     }
 
                     @Override

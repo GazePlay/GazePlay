@@ -50,18 +50,14 @@ public class Car extends Rectangle {
 
     /**
      * Creates a new instance of a Car with the size and direction.
-     * 
-     * @param l
-     *            length of the car
-     * @param h
-     *            height of the car
-     * @param direction
-     *            of the car, true for horizontal, false for vertical
-     * @param size,
-     *            the size of one block
+     *
+     * @param l         length of the car
+     * @param h         height of the car
+     * @param direction of the car, true for horizontal, false for vertical
+     * @param size,     the size of one block
      */
-    Car(int x, int y, int l, int h, Color c, boolean direction, int size, ProgressIndicator pi,
-            IGameContext gameContext) {
+    Car(final int x, final int y, final int l, final int h, final Color c, final boolean direction, final int size, final ProgressIndicator pi,
+        final IGameContext gameContext) {
         super(0, 0, l * size, h * size);
         if (direction) {
             this.setFill(new ImagePattern(new Image("data/rushHour/carH.png")));
@@ -69,7 +65,7 @@ public class Car extends Rectangle {
             this.setFill(new ImagePattern(new Image("data/rushHour/carV.png")));
         }
 
-        Lighting lighting = new Lighting();
+        final Lighting lighting = new Lighting();
         lighting.setDiffuseConstant(100.0);
         lighting.setSpecularConstant(0.0);
         lighting.setSpecularExponent(0.0);
@@ -89,7 +85,7 @@ public class Car extends Rectangle {
 
         log.debug("" + x + " " + y + " " + l + " " + h + " " + c);
 
-        EventHandler<Event> enterEvent = e -> {
+        final EventHandler<Event> enterEvent = e -> {
             pi.setLayoutX(getX() + getWidth() / 2 - pi.getWidth() / 2);
             pi.setLayoutY(getY() + getHeight() / 2 - pi.getHeight() / 2);
             pi.setOpacity(1);
@@ -105,15 +101,15 @@ public class Car extends Rectangle {
         this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterEvent);
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
 
-        EventHandler<Event> exitEvent = e -> {
+        final EventHandler<Event> exitEvent = e -> {
             Point mouse = MouseInfo.getPointerInfo().getLocation();
             if (e.getEventType() == GazeEvent.GAZE_EXITED) {
-                Screen mainScreen = Screen.getMainScreen();
+                final Screen mainScreen = Screen.getMainScreen();
 
-                double screenWidth = mainScreen.getWidth();
-                double screenHeight = mainScreen.getHeight();
+                final double screenWidth = mainScreen.getWidth();
+                final double screenHeight = mainScreen.getHeight();
 
-                float[] pointAsFloatArray = Tobii.gazePosition();
+                final float[] pointAsFloatArray = Tobii.gazePosition();
 
                 final float xRatio = pointAsFloatArray[0];
                 final float yRatio = pointAsFloatArray[1];
@@ -125,7 +121,7 @@ public class Car extends Rectangle {
                 mouse.setLocation(positionX, positionY);
             }
 
-            int way = checkPos(mouse);
+            final int way = checkPos(mouse);
             if (selected && !endOfGame && !intersect && !onMouse(mouse)) {
                 // moveToMouse(mouse);
                 moveTo(way, mouse);
@@ -148,7 +144,7 @@ public class Car extends Rectangle {
 
     }
 
-    public void update(int size) {
+    public void update(final int size) {
         this.size = size;
         this.setWidth(l * size);
         this.setHeight(h * size);
@@ -156,12 +152,12 @@ public class Car extends Rectangle {
         this.setToY(y);
     }
 
-    private int checkPos(Point mouse) {
-        Point2D coord = this.sceneToLocal(
-                mouse.getX() - gameContext.getPrimaryScene().getX()
-                        - gameContext.getPrimaryStage().getX(),
-                mouse.getY() - gameContext.getPrimaryScene().getY()
-                        - gameContext.getPrimaryStage().getY());
+    private int checkPos(final Point mouse) {
+        final Point2D coord = this.sceneToLocal(
+            mouse.getX() - gameContext.getPrimaryScene().getX()
+                - gameContext.getPrimaryStage().getX(),
+            mouse.getY() - gameContext.getPrimaryScene().getY()
+                - gameContext.getPrimaryStage().getY());
 
         if (!direction && (this.getX() < coord.getX()) && (coord.getX() < this.getX() + this.getWidth())) {
             return (this.getY() > coord.getY()) ? -1 : 1;
@@ -176,11 +172,11 @@ public class Car extends Rectangle {
         return 0;
     }
 
-    private void moveTo(int way, Point mouse) {
-        double saveX = this.getX();
-        double saveY = this.getY();
-        int prevx = x;
-        int prevy = y;
+    private void moveTo(final int way, final Point mouse) {
+        final double saveX = this.getX();
+        final double saveY = this.getY();
+        final int prevx = x;
+        final int prevy = y;
         if (this.isDirection()) {
             this.setX(saveX + way * size);
             x = x + way;
@@ -196,27 +192,27 @@ public class Car extends Rectangle {
         }
     }
 
-    private boolean onMouse(Point mouse) {
-        Point2D coord = this.sceneToLocal(
-                mouse.getX() - gameContext.getPrimaryScene().getX()
-                        - gameContext.getPrimaryStage().getX(),
-                mouse.getY() - gameContext.getPrimaryScene().getY()
-                        - gameContext.getPrimaryStage().getY());
+    private boolean onMouse(final Point mouse) {
+        final Point2D coord = this.sceneToLocal(
+            mouse.getX() - gameContext.getPrimaryScene().getX()
+                - gameContext.getPrimaryStage().getX(),
+            mouse.getY() - gameContext.getPrimaryScene().getY()
+                - gameContext.getPrimaryStage().getY());
         return (this.getX() < coord.getX()) && (coord.getX() < this.getX() + this.getWidth())
-                && (this.getY() < coord.getY()) && (coord.getY() < this.getY() + this.getHeight());
+            && (this.getY() < coord.getY()) && (coord.getY() < this.getY() + this.getHeight());
     }
 
-    public void setToX(int i) {
+    public void setToX(final int i) {
         super.setX(size + i * size);
         x = i;
     }
 
-    public void setToY(int i) {
+    public void setToY(final int i) {
         super.setY(size + i * size);
         y = i;
     }
 
-    public void setSelected(boolean b) {
+    public void setSelected(final boolean b) {
         selected = b;
 
         if (selected) {

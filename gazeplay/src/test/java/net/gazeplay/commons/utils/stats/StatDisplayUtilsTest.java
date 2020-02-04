@@ -134,8 +134,8 @@ class StatDisplayUtilsTest {
         lineChart.fireEvent(mouseClickEvent(lineChart));
 
         // These assertions are a bit rubbish - need to find a way to set the parent bounds.
-        assertEquals( 0, lineChart.getTranslateX());
-        assertEquals( 0, lineChart.getTranslateY());
+        assertEquals(0, lineChart.getTranslateX());
+        assertEquals(0, lineChart.getTranslateY());
     }
 
     @Test
@@ -153,8 +153,8 @@ class StatDisplayUtilsTest {
         lineChart.fireEvent(mouseClickEvent(lineChart));
         lineChart.fireEvent(mouseClickEvent(lineChart));
 
-        assertEquals( 1, lineChart.getScaleX());
-        assertEquals( 1, lineChart.getScaleY());
+        assertEquals(1, lineChart.getScaleX());
+        assertEquals(1, lineChart.getScaleY());
     }
 
     @Test
@@ -206,8 +206,8 @@ class StatDisplayUtilsTest {
         areaChart.fireEvent(mouseClickEvent(areaChart));
 
         // These assertions are a bit rubbish - need to find a way to set the parent bounds.
-        assertEquals( 0, areaChart.getTranslateX());
-        assertEquals( 0, areaChart.getTranslateY());
+        assertEquals(0, areaChart.getTranslateX());
+        assertEquals(0, areaChart.getTranslateY());
     }
 
     @Test
@@ -225,8 +225,8 @@ class StatDisplayUtilsTest {
         areaChart.fireEvent(mouseClickEvent(areaChart));
         areaChart.fireEvent(mouseClickEvent(areaChart));
 
-        assertEquals( 1, areaChart.getScaleX());
-        assertEquals( 1, areaChart.getScaleY());
+        assertEquals(1, areaChart.getScaleX());
+        assertEquals(1, areaChart.getScaleY());
     }
 
     @Test
@@ -264,8 +264,8 @@ class StatDisplayUtilsTest {
         imageView.fireEvent(mouseClickEvent(imageView));
 
         // These assertions are a bit rubbish - need to find a way to set the parent bounds.
-        assertEquals( 0, imageView.getTranslateX());
-        assertEquals( 0, imageView.getTranslateY());
+        assertEquals(0, imageView.getTranslateX());
+        assertEquals(0, imageView.getTranslateY());
     }
 
     @Test
@@ -282,8 +282,8 @@ class StatDisplayUtilsTest {
         imageView.fireEvent(mouseClickEvent(imageView));
         imageView.fireEvent(mouseClickEvent(imageView));
 
-        assertEquals( 1, imageView.getScaleX());
-        assertEquals( 1, imageView.getScaleY());
+        assertEquals(1, imageView.getScaleX());
+        assertEquals(1, imageView.getScaleY());
     }
 
     @Test

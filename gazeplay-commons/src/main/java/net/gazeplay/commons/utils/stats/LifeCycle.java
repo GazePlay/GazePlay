@@ -9,11 +9,11 @@ public class LifeCycle {
 
     public static class LifeCycleControlException extends RuntimeException {
 
-        public LifeCycleControlException(String message) {
+        public LifeCycleControlException(final String message) {
             super(message);
         }
 
-        public LifeCycleControlException(String message, Throwable cause) {
+        public LifeCycleControlException(final String message, final Throwable cause) {
             super(message, cause);
         }
 
@@ -29,7 +29,7 @@ public class LifeCycle {
 
     private final AtomicBoolean stopped = new AtomicBoolean(false);
 
-    public void start(Runnable onBeforeStart) {
+    public void start(final Runnable onBeforeStart) {
         if (started.compareAndSet(false, true)) {
             onBeforeStart.run();
             startTime = System.currentTimeMillis();
@@ -41,7 +41,7 @@ public class LifeCycle {
         }
     }
 
-    public void stop(Runnable onAfterStop) {
+    public void stop(final Runnable onAfterStop) {
         if (stopped.compareAndSet(false, true)) {
             if (started.get()) {
                 stopTime = System.currentTimeMillis();

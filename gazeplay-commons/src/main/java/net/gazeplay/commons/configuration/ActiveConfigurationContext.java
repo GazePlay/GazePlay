@@ -7,7 +7,7 @@ public class ActiveConfigurationContext {
     @Getter
     private static Configuration instance = ConfigurationSource.createFromDefaultProfile();
 
-    public static void switchToUser(String userId) {
+    public static void switchToUser(final String userId) {
         instance = ConfigurationSource.createFromProfile(userId);
     }
 
