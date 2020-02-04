@@ -2,12 +2,9 @@ package net.gazeplay.ui.scenes.ingame;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import mockit.Expectations;
 import mockit.MockUp;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GazePlay;
@@ -28,7 +25,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
