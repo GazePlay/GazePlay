@@ -39,7 +39,7 @@ public class GazePlayFxApp extends Application {
     @Setter
     private static ReusableOptions applicationOptions;
 
-	private ReusableOptions options;
+    private ReusableOptions options;
 
     private GazePlay gazePlay;
 
@@ -51,7 +51,7 @@ public class GazePlayFxApp extends Application {
 
     @Override
     public void init() {
-		final ApplicationContext context = applicationContext;
+        final ApplicationContext context = applicationContext;
         this.options = applicationOptions;
         //
         log.info("options = {}", options);

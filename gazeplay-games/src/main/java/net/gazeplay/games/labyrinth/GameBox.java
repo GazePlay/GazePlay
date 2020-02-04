@@ -9,7 +9,7 @@ import lombok.Setter;
 
 public class GameBox extends Parent {
 
-	@Getter
+    @Getter
     private final ProgressIndicator indicator;
 
     private final double x;
@@ -33,7 +33,7 @@ public class GameBox extends Parent {
         this.numCol = numCol;
         this.numRow = numRow;
 
-		final Rectangle r = new Rectangle();
+        final Rectangle r = new Rectangle();
         if (wall == 0) {
             r.setStrokeWidth(0.5);
             r.setStroke(Color.DARKORANGE);

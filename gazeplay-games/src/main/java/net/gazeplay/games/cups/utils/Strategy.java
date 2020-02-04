@@ -8,7 +8,7 @@ import java.util.Random;
 
 @Slf4j
 public class Strategy {
-	private final int nbExchanges;
+    private final int nbExchanges;
     @Getter
     private final ArrayList<Action> actions;
     private final int maxCellsX;
@@ -19,7 +19,7 @@ public class Strategy {
     }
 
     public Strategy(final int nbCups, final int nbExchanges, final int maxCellsX, final int maxCellsY) {
-		this.nbExchanges = nbExchanges;
+        this.nbExchanges = nbExchanges;
         this.actions = new ArrayList<>();
         this.maxCellsX = maxCellsX;
         this.maxCellsY = maxCellsY;

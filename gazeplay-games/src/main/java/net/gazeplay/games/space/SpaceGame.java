@@ -519,14 +519,14 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         // ex.execute(new Runnable() {
         // @Override
-        // public void run() {
+        // public  void run() {
         // computeBulletPlayer();
         // }
         // });
 
         // ex.execute((new Runnable() {
         // @Override
-        // public void run() {
+        // public  void run() {
         // computeBulletBiboule();
         // }
         // }));

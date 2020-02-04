@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
  */
 public class Touche extends Parent {
 
-    public final String lettre;// lettre de la touche, c'est une variable public pour qu'elle puisse être lue depuis les
+    public final String lettre;// lettre de la touche, c'est une variable public  pour qu'elle puisse être lue depuis les
     private final int positionY;// ordonnée de la touche
     private final int note;// note correspond au numéro MIDI de la note qui doit être jouée quand on appuie sur la touche
     private final Instru instru;

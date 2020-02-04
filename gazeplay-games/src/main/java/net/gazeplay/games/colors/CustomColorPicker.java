@@ -39,14 +39,14 @@ public class CustomColorPicker extends Pane {
 
     final GridPane colorGrid;
 
-	@Getter
+    @Getter
     private ColorBox selectedColor;
 
     public CustomColorPicker(final IGameContext gameContext, final Pane root, final ColorToolBox toolBox, final ColorBox representingBox,
                              final Stage stage) {
         super();
 
-		this.getStyleClass().add("bg-colored");
+        this.getStyleClass().add("bg-colored");
 
         final VBox mainNode = new VBox();
         mainNode.setSpacing(5);
@@ -60,7 +60,7 @@ public class CustomColorPicker extends Pane {
 
         final ToggleGroup colorGroup = new ToggleGroup();
 
-		final AbstractGazeIndicator progressIndicator = new GazeFollowerIndicator(gameContext, this);
+        final AbstractGazeIndicator progressIndicator = new GazeFollowerIndicator(gameContext, this);
 
         for (int i = 0; i < COLOR_LIST.length / NB_COLOR_PER_ROW; ++i) {
 

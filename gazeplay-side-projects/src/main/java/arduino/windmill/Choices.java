@@ -60,10 +60,10 @@ public class Choices extends Parent {
         currentChoice.add(R1);
         currentChoice.add(R2);
 
-        double sep = 100d;
-        double min_X = 100d;
+        final double sep = 100d;
+        final double min_X = 100d;
         final double imagesWidth = scene.getWidth() / 2 - min_X / 2d - sep / 2d;
-        double min_Y = 50d;
+        final double min_Y = 50d;
         final double imagesHeight = scene.getHeight() - min_Y * 2d;
 
         for (int i = 0; i < currentChoice.size(); i++) {
@@ -74,7 +74,7 @@ public class Choices extends Parent {
             R.rectangle.setTranslateY(min_Y);
             R.rectangle.setWidth(imagesWidth);
             R.rectangle.setHeight(imagesHeight);
-            float strokeFactor = 0.01f;
+            final float strokeFactor = 0.01f;
             R.rectangle.setStrokeWidth(imagesWidth * strokeFactor);
 
             this.getChildren().add(R.rectangle);

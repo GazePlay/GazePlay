@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 public class ShootGamesStats extends Stats {
 
-    public ShootGamesStats(Scene scene) {
+    public ShootGamesStats(final Scene scene) {
         super(scene);
         setAccidentalShotPreventionPeriod(100);
     }
