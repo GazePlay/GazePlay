@@ -1,7 +1,6 @@
 package net.gazeplay.commons.configuration;
 
 import com.google.common.collect.Sets;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -53,6 +52,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
     private static final String PROPERTY_NAME_VIDEO_FOLDER = "VIDEO_FOLDER";
     private static final String PROPERTY_NAME_COLORS_DEFAULT_IMAGE = "COLORS_DEFAULT_IMAGE";
+    private static final String PROPERTY_NAME_FORCE_DISPLAY_NEWS = "FORCE_DISPLAY_NEWS";
 
     private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
 
@@ -81,6 +81,7 @@ public class Configuration {
     public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
     public static final String DEFAULT_VALUE_BACKGROUND_MUSIC = "songidea(copycat)_0.mp3";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
+    private static final boolean DEFAULT_VALUE_FORCE_DISPLAY_NEWS = false;
 
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
@@ -196,6 +197,9 @@ public class Configuration {
     @Getter
     private final StringProperty colorsDefaultImageProperty;
 
+    @Getter
+    private final BooleanProperty latestNewsDisplayForced;
+
     private final File configFile;
 
     private final ApplicationConfig applicationConfig;
@@ -254,6 +258,7 @@ public class Configuration {
         favoriteGamesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_FAVORITE_GAMES, Sets.newLinkedHashSet(), propertyChangeListener);
         hiddenCategoriesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_HIDDEN_CATEGORIES, Sets.newLinkedHashSet(), propertyChangeListener);
 
+        latestNewsDisplayForced = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FORCE_DISPLAY_NEWS, DEFAULT_VALUE_FORCE_DISPLAY_NEWS, propertyChangeListener);
         populateFromApplicationConfig(applicationConfig);
 
     }
@@ -386,6 +391,10 @@ public class Configuration {
 
     public void setUserPicture(String newPicture) {
         userPictureProperty.setValue(newPicture);
+    }
+
+    public Boolean isLatestNewsDisplayForced() {
+        return latestNewsDisplayForced.getValue();
     }
 
 }
