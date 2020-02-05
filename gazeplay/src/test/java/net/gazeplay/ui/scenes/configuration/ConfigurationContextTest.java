@@ -3,11 +3,15 @@ package net.gazeplay.ui.scenes.configuration;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -15,10 +19,12 @@ import mockit.Verifications;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,8 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Slf4j
 @RunWith(MockitoJUnitRunner.class)
@@ -47,6 +52,12 @@ class ConfigurationContextTest {
 
     @Mock
     private Translator mockTranslator;
+
+    @Mock
+    private Configuration mockConfig;
+
+    @Mock
+    private ConfigurationContext mockContext;
 
     @BeforeEach
     void setup() {
@@ -240,6 +251,97 @@ class ConfigurationContextTest {
 
         assertEquals(0.3, result.getValue());
         assertEquals(300, length.get());
+    }
+
+    @Test
+    void shouldCreateThemeChooserNonDefault() {
+        StringProperty cssFileProperty = new SimpleStringProperty("builtin:BLUE");
+        ObservableList<String> stylesheets = FXCollections.observableArrayList();
+        Scene mockScene = mock(Scene.class);
+
+        when(mockConfig.getCssFile()).thenReturn("builtin:BLUE");
+        when(mockConfig.getCssfileProperty()).thenReturn(cssFileProperty);
+        when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
+        when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
+        when(mockScene.getStylesheets()).thenReturn(stylesheets);
+
+        ChoiceBox<BuiltInUiTheme> result = ConfigurationContext.buildStyleThemeChooser(mockConfig, mockContext);
+
+        assertEquals(BuiltInUiTheme.values().length, result.getItems().size());
+        assertEquals(BuiltInUiTheme.BLUE, result.getValue());
+        assertEquals(cssFileProperty.getValue(), "builtin:BLUE");
+
+        result.setValue(BuiltInUiTheme.GREEN);
+
+        assertEquals(BuiltInUiTheme.GREEN, result.getValue());
+        assertEquals(cssFileProperty.getValue(), "builtin:GREEN");
+    }
+
+    @Test
+    void shouldCreateThemeChooserDefault() {
+        StringProperty cssFileProperty = new SimpleStringProperty("builtin:WRONG");
+        ObservableList<String> stylesheets = FXCollections.observableArrayList();
+        Scene mockScene = mock(Scene.class);
+
+        when(mockConfig.getCssFile()).thenReturn("builtin:WRONG");
+        when(mockConfig.getCssfileProperty()).thenReturn(cssFileProperty);
+        when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
+        when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
+        when(mockScene.getStylesheets()).thenReturn(stylesheets);
+
+        ChoiceBox<BuiltInUiTheme> result = ConfigurationContext.buildStyleThemeChooser(mockConfig, mockContext);
+
+        assertEquals(BuiltInUiTheme.values().length, result.getItems().size());
+        assertEquals(BuiltInUiTheme.SILVER_AND_GOLD, result.getValue());
+
+        result.setValue(BuiltInUiTheme.GREEN);
+
+        assertEquals(BuiltInUiTheme.GREEN, result.getValue());
+        assertEquals(cssFileProperty.getValue(), "builtin:GREEN");
+    }
+
+    @Test
+    void shouldCreateFileDirectoryChooser() {
+        StringProperty fileDirProperty = new SimpleStringProperty(System.getProperty("user.home") + "/GazePlay");
+        Scene mockScene = mock(Scene.class);
+        Window mockWindow = mock(Window.class);
+
+        when(mockConfig.getFileDir()).thenReturn(fileDirProperty.getValue());
+        when(mockConfig.getFiledirProperty()).thenReturn(fileDirProperty);
+        when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
+        when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
+        when(mockScene.getWindow()).thenReturn(mockWindow);
+
+        HBox result = (HBox) ConfigurationContext.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, ConfigurationContext.DirectoryType.FILE);
+        Button loadButton = (Button) result.getChildren().get(0);
+        Button resetButton = (Button) result.getChildren().get(1);
+
+        assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
+
+        resetButton.fire();
+        assertEquals(GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), fileDirProperty.getValue());
+    }
+
+    @Test
+    void shouldCreateWhereIsItDirectoryChooser() {
+        StringProperty fileDirProperty = new SimpleStringProperty(System.getProperty("user.home") + "/GazePlay/whereisit");
+        Scene mockScene = mock(Scene.class);
+        Window mockWindow = mock(Window.class);
+
+        when(mockConfig.getWhereIsItDir()).thenReturn(fileDirProperty.getValue());
+        when(mockConfig.getWhereIsItDirProperty()).thenReturn(fileDirProperty);
+        when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
+        when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
+        when(mockScene.getWindow()).thenReturn(mockWindow);
+
+        HBox result = (HBox) ConfigurationContext.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, ConfigurationContext.DirectoryType.WHERE_IS_IT);
+        Button loadButton = (Button) result.getChildren().get(0);
+        Button resetButton = (Button) result.getChildren().get(1);
+
+        assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
+
+        resetButton.fire();
+        assertEquals(Configuration.DEFAULT_VALUE_WHEREISIT_DIR, fileDirProperty.getValue());
     }
 
     @Test

@@ -261,7 +261,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "FileDir", COLON);
 
-            Node input = buildDirectoryChooser(config, configurationContext, translator);
+            Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.FILE);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -280,7 +280,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "WhereIsItDirectory", COLON);
 
-            Node input = buildWhereIsItDirectoryChooser(config, configurationContext, translator);
+            Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.WHERE_IS_IT);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -461,15 +461,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     /**
      * Function to use to permit to user to select between several theme
      */
-    private static ChoiceBox<BuiltInUiTheme> buildStyleThemeChooser(Configuration configuration, ConfigurationContext configurationContext) {
+    static ChoiceBox<BuiltInUiTheme> buildStyleThemeChooser(Configuration configuration, ConfigurationContext configurationContext) {
         ChoiceBox<BuiltInUiTheme> themesBox = new ChoiceBox<>();
 
-        final String cssfile = configuration.getCssFile();
-
+        final String cssFile = configuration.getCssFile();
         themesBox.getItems().addAll(BuiltInUiTheme.values());
-
-        Optional<BuiltInUiTheme> configuredTheme = BuiltInUiTheme.findFromConfigPropertyValue(cssfile);
-
+        Optional<BuiltInUiTheme> configuredTheme = BuiltInUiTheme.findFromConfigPropertyValue(cssFile);
         BuiltInUiTheme selected = configuredTheme.orElse(BuiltInUiTheme.DEFAULT_THEME);
 
         themesBox.setConverter(new StringConverter<>() {
@@ -485,17 +482,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         });
 
         themesBox.getSelectionModel().select(selected);
-
         themesBox.setPrefWidth(PREF_WIDTH);
         themesBox.setPrefHeight(PREF_HEIGHT);
 
         themesBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             String newPropertyValue = newValue.getPreferredConfigPropertyValue();
-
             configuration.getCssfileProperty().setValue(newPropertyValue);
-
             final GazePlay gazePlay = configurationContext.getGazePlay();
-
             CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
         });
 
@@ -533,18 +526,40 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return buttonLoad;
     }
 
-    private static Node buildDirectoryChooser(Configuration configuration, ConfigurationContext configurationContext, Translator translator) {
+    enum DirectoryType {
+        FILE, WHERE_IS_IT
+    }
 
+    static Node buildDirectoryChooser(
+        Configuration configuration,
+        ConfigurationContext configurationContext,
+        Translator translator,
+        DirectoryType type
+    ) {
         final HBox pane = new HBox(5);
+        final String fileDir;
+        Button buttonLoad;
 
-        final String filedir = configuration.getFileDir();
-
-        Button buttonLoad = new Button(filedir);
-        buttonLoad.textProperty().bind(configuration.getFiledirProperty());
+        if (type == DirectoryType.FILE) {
+            fileDir = configuration.getFileDir();
+            buttonLoad = new Button(fileDir);
+            buttonLoad.textProperty().bind(configuration.getFiledirProperty());
+        } else {
+            fileDir = configuration.getWhereIsItDir();
+            buttonLoad = new Button(fileDir);
+            buttonLoad.textProperty().bind(configuration.getWhereIsItDirProperty());
+        }
 
         buttonLoad.setOnAction(arg0 -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
-            final File currentFolder = new File(configuration.getFileDir());
+            final File currentFolder;
+
+            if (type == DirectoryType.FILE) {
+                currentFolder = new File(configuration.getFileDir());
+            } else {
+                currentFolder = new File(configuration.getWhereIsItDir());
+            }
+
             if (currentFolder.isDirectory()) {
                 directoryChooser.setInitialDirectory(currentFolder);
             }
@@ -561,61 +576,27 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
 
-            configuration.getFiledirProperty().setValue(newPropertyValue);
+            if (type == DirectoryType.FILE) {
+                configuration.getFiledirProperty().setValue(newPropertyValue);
+            } else {
+                configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
+            }
+
         });
 
         pane.getChildren().add(buttonLoad);
 
         final I18NButton resetButton = new I18NButton(translator, "reset");
-        resetButton.setOnAction((event) -> configuration.getFiledirProperty().setValue(GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath()));
 
-        pane.getChildren().add(resetButton);
-
-        return pane;
-    }
-
-    private Node buildWhereIsItDirectoryChooser(Configuration configuration,
-                                                ConfigurationContext configurationContext,
-                                                Translator translator) {
-
-        final HBox pane = new HBox(5);
-
-        // Arabic Alignment
-        if (!currentLanguageAlignmentIsLeftAligned) {
-            pane.setAlignment(Pos.BASELINE_RIGHT);
+        if (type == DirectoryType.FILE) {
+            resetButton.setOnAction(
+                (event) -> configuration.getFiledirProperty()
+                    .setValue(GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath()));
+        } else {
+            resetButton.setOnAction(
+                (event) -> configuration.getWhereIsItDirProperty()
+                    .setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR));
         }
-
-        final String whereIsItDir = configuration.getWhereIsItDir();
-        Button buttonLoad = new Button(whereIsItDir);
-        buttonLoad.textProperty().bind(configuration.getWhereIsItDirProperty());
-
-        buttonLoad.setOnAction((ActionEvent arg0) -> {
-
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            final File currentFolder = new File(configuration.getWhereIsItDir());
-            if (currentFolder.isDirectory()) {
-                directoryChooser.setInitialDirectory(currentFolder);
-            }
-            final GazePlay gazePlay = configurationContext.getGazePlay();
-            final Scene scene = gazePlay.getPrimaryScene();
-            File file = directoryChooser.showDialog(scene.getWindow());
-            if (file == null) {
-                return;
-            }
-
-            String newPropertyValue = file.getAbsolutePath();
-
-            if (Utils.isWindows()) {
-                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-            }
-
-            configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
-        });
-
-        pane.getChildren().add(buttonLoad);
-
-        final I18NButton resetButton = new I18NButton(translator, "reset");
-        resetButton.setOnAction((event) -> configuration.getWhereIsItDirProperty().setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR));
 
         pane.getChildren().add(resetButton);
 
