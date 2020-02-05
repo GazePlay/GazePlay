@@ -603,9 +603,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return pane;
     }
 
-    private MenuButton buildLanguageChooser(Configuration configuration,
-                                            ConfigurationContext configurationContext) {
-
+    MenuButton buildLanguageChooser(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
         String currentCodeLanguage = configuration.getLanguage();
         String currentCodeCountry = configuration.getCountry();
         Locale currentLocale = new Locale(currentCodeLanguage, currentCodeCountry);
@@ -629,7 +630,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 imageView.setPreserveRatio(true);
                 imageView.setFitHeight(25);
 
-
                 MenuItem languagesItem = new MenuItem(language.getLabel(), imageView);
 
                 languagesItem.setOnAction(eventMenuLanguages -> {
@@ -650,14 +650,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Language information");
                         alert.setHeaderText(
-                            "Alignment settings have just changed for your language, please restart the game for the new changes to take effect.");
+                            "Alignment settings have just changed for your language, please restart GazePlay for the new changes to take effect.");
                         alert.show();
                     }
                     if (!language.isStableTranslationAvailable()) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Language information");
                         alert.setHeaderText(
-                            "Translation has just been performed for your language. If you think that some words sound odd in the games, it is maybe a problem of translation. \nPlease contact us to propose better ones (gazeplay.net) and they will be in the next version.");
+                            "Translation has just been performed for your language. If you think that some words sound odd in the games, it is maybe a problem of translation. \nPlease contact us to propose better ones at www.gazeplay.net and they will be in the next version.");
                         alert.show();
                     }
                 });

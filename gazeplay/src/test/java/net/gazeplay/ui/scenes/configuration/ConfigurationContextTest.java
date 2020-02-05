@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.configuration;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -9,6 +10,7 @@ import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Window;
@@ -342,6 +344,32 @@ class ConfigurationContextTest {
 
         resetButton.fire();
         assertEquals(Configuration.DEFAULT_VALUE_WHEREISIT_DIR, fileDirProperty.getValue());
+    }
+
+    @Test
+    void shouldBuildLanguageChooser() throws InterruptedException {
+        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+        StringProperty languageProperty = new SimpleStringProperty("eng");
+        StringProperty countryProperty = new SimpleStringProperty("GB");
+
+        when(mockConfig.getLanguage()).thenReturn(languageProperty.getValue());
+        when(mockConfig.getCountry()).thenReturn(countryProperty.getValue());
+        when(mockConfig.getLanguageProperty()).thenReturn(languageProperty);
+        when(mockConfig.getCountryProperty()).thenReturn(countryProperty);
+        when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
+
+        MenuButton result = context.buildLanguageChooser(mockConfig, context);
+
+        assertEquals(23, result.getItems().size());
+
+        Platform.runLater(() -> {
+            result.getItems().get(1).fire();
+        });
+        TestingUtils.waitForRunLater();
+
+        ImageView image = (ImageView) result.getGraphic();
+        assertTrue(image.getImage().getUrl().contains("Arab"));
+        assertEquals("ara", languageProperty.getValue());
     }
 
     @Test
