@@ -30,7 +30,7 @@ public class CachingSupplier<T> implements Supplier<T> {
     @Override
     public T get() {
         try {
-            return cache.get("UNIQ", () -> this.supplier.get());
+            return cache.get("UNIQ", this.supplier::get);
         } catch (final ExecutionException e) {
             throw new RuntimeExecutionException(e);
         }

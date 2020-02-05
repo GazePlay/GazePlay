@@ -64,7 +64,7 @@ public class Pictos extends Parent {
         // log.info(scene.getHeight());
         final int sep = 100;
         final int min_X = 100;
-        final double imagesWidth = scene.getWidth() / 2 - min_X / 2 - sep / 2;
+        final double imagesWidth = scene.getWidth() / 2 - min_X / 2d - sep / 2d;
         final int min_Y = 50;
         final double imagesHeight = scene.getHeight() - min_Y * 2;
 

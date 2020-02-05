@@ -260,7 +260,7 @@ public class Bubble extends Parent implements GameLifeCycle {
             centerY = dimension2D.getHeight();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
-                    new KeyValue(circle.centerYProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
+                    new KeyValue(circle.centerYProperty(), -maxRadius, Interpolator.EASE_IN)));
         } else if (this.direction == BubblesGameVariant.BOTTOM) {
             centerX = (dimension2D.getWidth() - maxRadius) * Math.random() + maxRadius;
             centerY = 0;
@@ -278,7 +278,7 @@ public class Bubble extends Parent implements GameLifeCycle {
             centerY = (dimension2D.getHeight() - maxRadius) * Math.random() + maxRadius;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
-                    new KeyValue(circle.centerXProperty(), 0 - maxRadius, Interpolator.EASE_IN)));
+                    new KeyValue(circle.centerXProperty(), -maxRadius, Interpolator.EASE_IN)));
         }
 
 

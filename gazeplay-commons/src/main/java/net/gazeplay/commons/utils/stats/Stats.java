@@ -468,12 +468,12 @@ public class Stats implements GazeMotionListener {
 
     private void saveHeatMapAsCsv(final File file) throws IOException {
         try (PrintWriter out = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            for (int i = 0; i < heatMap.length; i++) {
+            for (final double[] doubles : heatMap) {
                 for (int j = 0; j < heatMap[0].length - 1; j++) {
-                    out.print((int) heatMap[i][j]);
+                    out.print((int) doubles[j]);
                     out.print(", ");
                 }
-                out.print((int) heatMap[i][heatMap[i].length - 1]);
+                out.print((int) doubles[doubles.length - 1]);
                 out.println("");
             }
         }

@@ -71,12 +71,12 @@ public class FixationSequence {
 
         double duration;
 
-        for (int j = 0; j < fixSeq.size(); j++) {
+        for (final FixationPoint point : fixSeq) {
 
             gc.setStroke(Color.RED);
-            x = fixSeq.get(j).getY();
-            y = fixSeq.get(j).getX();
-            duration = fixSeq.get(j).getGazeDuration();
+            x = point.getY();
+            y = point.getX();
+            duration = point.getGazeDuration();
 
             // modify this value in order to change the number of fixation points (Johanna put 20 ; Didier 100)
             if (duration > 100) {
@@ -90,7 +90,7 @@ public class FixationSequence {
                 gc.fillText(Integer.toString(label_count), x, y, 80);
 
             } else {
-                fixSeq.get(j).setGazeDuration(-1);
+                point.setGazeDuration(-1);
             }
         }
 

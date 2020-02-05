@@ -209,7 +209,6 @@ public class MemoryCard extends Parent {
                         progressIndicator.setOpacity(isOpen ? 0.35 : 0);
 
                     });
-                    timelineProgressBar.play();
                 } else { /* 2nd card */
 
                     progressIndicator.setOpacity(1);
@@ -256,8 +255,8 @@ public class MemoryCard extends Parent {
                             timelineCard.play();
                         }
                     });
-                    timelineProgressBar.play();
                 }
+                timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 

@@ -1,7 +1,6 @@
 package net.gazeplay.games.race;
 
 import javafx.animation.*;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
@@ -90,26 +89,20 @@ public class Race extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
 
-        final EventHandler<MouseEvent> handEvent = new EventHandler<>() {
-            @Override
-            public void handle(final MouseEvent e) {
-                if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                    final double x = e.getX();
-                    final double y = e.getY();
-                    hand.setRotate(getAngle(new Point(x, y)));
-                }
+        final EventHandler<MouseEvent> handEvent = e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                final double x = e.getX();
+                final double y = e.getY();
+                hand.setRotate(getAngle(new Point(x, y)));
             }
         };
 
         racers = new Target[3];
 
-        handEventGaze = new EventHandler<>() {
-            @Override
-            public void handle(final GazeEvent e) {
-                final double x = e.getX();
-                final double y = e.getY();
-                hand.setRotate(getAngle(new Point(x, y)));
-            }
+        handEventGaze = e -> {
+            final double x = e.getX();
+            final double y = e.getY();
+            hand.setRotate(getAngle(new Point(x, y)));
         };
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
         this.addEventFilter(GazeEvent.ANY, handEventGaze);
@@ -140,17 +133,14 @@ public class Race extends Parent implements GameLifeCycle {
             updatePoints(imageRectangle);
         });
 
-        enterEvent = new EventHandler<>() {
-            @Override
-            public void handle(final Event e) {
-                if (e.getTarget() instanceof Target) {
-                    if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                        if (!((Target) e.getTarget()).done && !raceIsFinished) {
-                            ((Target) e.getTarget()).done = true;
-                            enter((Target) e.getTarget());
-                            stats.incNbGoals();
-                            stats.notifyNewRoundReady();
-                        }
+        enterEvent = e -> {
+            if (e.getTarget() instanceof Target) {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    if (!((Target) e.getTarget()).done && !raceIsFinished) {
+                        ((Target) e.getTarget()).done = true;
+                        enter((Target) e.getTarget());
+                        stats.incNbGoals();
+                        stats.notifyNewRoundReady();
                     }
                 }
             }
@@ -306,21 +296,17 @@ public class Race extends Parent implements GameLifeCycle {
 
         final Timeline waitbeforestart = new Timeline();
         waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
-        waitbeforestart.setOnFinished(new EventHandler<>() {
-            @Override
-            public void handle(final ActionEvent actionEvent) {
-                if (!raceIsFinished) {
-                    for (int i = 0; i < bugsAmount; i++) {
-                        newCircle();
-                    }
+        waitbeforestart.setOnFinished(actionEvent -> {
+            if (!raceIsFinished) {
+                for (int i = 0; i < bugsAmount; i++) {
+                    newCircle();
                 }
-
-                makePlayer(0.6);
-                racers[0] = makeRacers(0.7);
-                racers[1] = makeRacers(0.8);
-                racers[2] = makeRacers(0.9);
             }
 
+            makePlayer(0.6);
+            racers[0] = makeRacers(0.7);
+            racers[1] = makeRacers(0.8);
+            racers[2] = makeRacers(0.9);
         });
         waitbeforestart.play();
 
@@ -396,27 +382,19 @@ public class Race extends Parent implements GameLifeCycle {
             st2.setToY(1);
             final SequentialTransition seqt = new SequentialTransition();
             seqt.getChildren().addAll(st, st2);
-            seqt.setOnFinished(new EventHandler<>() {
-                @Override
-                public void handle(final ActionEvent actionEvent) {
-                    t.animDone = true;
-                }
-            });
+            seqt.setOnFinished(actionEvent -> t.animDone = true);
             seqt.play();
         }
 
         final ParallelTransition pt = new ParallelTransition();
         pt.getChildren().addAll(ft, ft2);
-        pt.setOnFinished(new EventHandler<>() {
-            @Override
-            public void handle(final ActionEvent actionEvent) {
-                final int i = getChildren().indexOf(t);
-                if (i != -1) {
-                    getChildren().remove(i);
-                }
-                if (!raceIsFinished) {
-                    newCircle();
-                }
+        pt.setOnFinished(actionEvent -> {
+            final int i = getChildren().indexOf(t);
+            if (i != -1) {
+                getChildren().remove(i);
+            }
+            if (!raceIsFinished) {
+                newCircle();
             }
         });
         pt.play();
@@ -428,21 +406,18 @@ public class Race extends Parent implements GameLifeCycle {
             racerMovement = 0;
             raceIsFinished = true;
 
-            gameContext.playWinTransition(500, new EventHandler<>() {
-                @Override
-                public void handle(final ActionEvent actionEvent) {
+            gameContext.playWinTransition(500, actionEvent -> {
 
-                    movementPerBug++;
-                    raceFinished();
-                    gameContext.endWinTransition();
-                    raceIsFinished = false;
-                    makePlayer(0.6);
-                    racers[0] = makeRacers(0.7);
-                    racers[1] = makeRacers(0.8);
-                    racers[2] = makeRacers(0.9);
-                    for (int i = 0; i < bugsAmount; i++) {
-                        newCircle();
-                    }
+                movementPerBug++;
+                raceFinished();
+                gameContext.endWinTransition();
+                raceIsFinished = false;
+                makePlayer(0.6);
+                racers[0] = makeRacers(0.7);
+                racers[1] = makeRacers(0.8);
+                racers[2] = makeRacers(0.9);
+                for (int i = 0; i < bugsAmount; i++) {
+                    newCircle();
                 }
             });
         }
@@ -645,15 +620,12 @@ public class Race extends Parent implements GameLifeCycle {
         sp.t = pt;
 
         pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-        pt.setOnFinished(new EventHandler<>() {
-            @Override
-            public void handle(final ActionEvent actionEvent) {
-                final int index = (getChildren().indexOf(sp));
-                if (index != -1) {
-                    getChildren().remove(index);
-                    if (!raceIsFinished) {
-                        newCircle();
-                    }
+        pt.setOnFinished(actionEvent -> {
+            final int index = (getChildren().indexOf(sp));
+            if (index != -1) {
+                getChildren().remove(index);
+                if (!raceIsFinished) {
+                    newCircle();
                 }
             }
         });

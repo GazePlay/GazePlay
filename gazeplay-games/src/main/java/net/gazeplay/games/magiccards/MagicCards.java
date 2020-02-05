@@ -136,7 +136,7 @@ public class MagicCards implements GameLifeCycle {
                 }
 
                 final double positionX = width / 2 + (width + cardWidth) * currentColumnIndex;
-                final double positionY = minHeight / 2 + (minHeight + cardHeight) * currentLineIndex;
+                final double positionY = minHeight / 2d + (minHeight + cardHeight) * currentLineIndex;
 
                 log.debug("positionX : {} ; positionY : {}", positionX, positionY);
 
