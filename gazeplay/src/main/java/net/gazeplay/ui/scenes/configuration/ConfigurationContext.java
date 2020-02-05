@@ -249,7 +249,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "WhiteBackground", COLON);
-            CheckBox input = buildEnabledWhiteBackground(config, configurationContext);
+            HBox input = buildEnabledWhiteBackground(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
+            CheckBox input = buildEnabledBackground(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -839,13 +845,35 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private CheckBox buildEnabledWhiteBackground(
+    private HBox buildEnabledWhiteBackground(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
+        ToggleGroup group = new ToggleGroup();
+        ToggleButton blackButton = new ToggleButton("Black");
+        ToggleButton whiteButton = new ToggleButton("White");
+        blackButton.setToggleGroup(group);
+        whiteButton.setToggleGroup(group);
+
+        boolean isWhite= configuration.getWhiteBackgroundProperty().getValue();
+
+        blackButton.setSelected(!isWhite);
+        whiteButton.setSelected(isWhite);
+
+        whiteButton.selectedProperty().bindBidirectional(configuration.getWhiteBackgroundProperty());
+        HBox hb = new HBox();
+        hb.getChildren().addAll(blackButton,whiteButton);
+
+        return hb;
+    }
+
+    private CheckBox buildEnabledBackground(
         Configuration configuration,
         ConfigurationContext configurationContext
     ) {
         CheckBox checkBox = new CheckBox();
-        checkBox.setSelected(configuration.getWhiteBackgroundProperty().getValue());
-        checkBox.selectedProperty().bindBidirectional(configuration.getWhiteBackgroundProperty());
+        checkBox.setSelected(configuration.getBackgroundEnabledProperty().getValue());
+        checkBox.selectedProperty().bindBidirectional(configuration.getBackgroundEnabledProperty());
         return checkBox;
     }
 

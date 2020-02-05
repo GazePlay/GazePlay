@@ -51,7 +51,7 @@ public class SoundsOfLife implements GameLifeCycle {
         double scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
             dimensions.getHeight() / backgroundImage.getHeight());
 
-        if (!config.isBackgroundWhite()) {
+        if (config.isBackgroundEnabled()) {
             createBackground(background, dimensions, scaleRatio, gameContext);
         }
 

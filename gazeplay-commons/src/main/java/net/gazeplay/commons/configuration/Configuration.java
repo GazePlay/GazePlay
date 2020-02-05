@@ -46,6 +46,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_GAZE_MENU = "GAZE_MENU";
     private static final String PROPERTY_NAME_GAZE_MOUSE = "GAZE_MOUSE";
     private static final String PROPERTY_NAME_WHITE_BCKGRD = "WHITE_BACKGROUND";
+    private static final String PROPERTY_NAME_BCKGRD_ENABLED = "BACKGROUND_ENABLED";
     private static final String PROPERTY_NAME_ANIMATION_SPEED_RATIO = "ANIMATION_SPEED_RATIO";
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
@@ -86,6 +87,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     private static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
+    private static final boolean DEFAULT_VALUE_BCKGRD_ENABLED = true;
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
@@ -171,7 +173,10 @@ public class Configuration {
     private final BooleanProperty gazeMouseEnabledProperty;
 
     @Getter
-    private final BooleanProperty whiteBackgroundProperty;
+    private final  BooleanProperty whiteBackgroundProperty;
+
+    @Getter
+    private final  BooleanProperty backgroundEnabledProperty;
 
     @Getter
     private final DoubleProperty musicVolumeProperty;
@@ -236,6 +241,7 @@ public class Configuration {
         gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
         gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
         whiteBackgroundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
+        backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BCKGRD_ENABLED, DEFAULT_VALUE_BCKGRD_ENABLED, propertyChangeListener);
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
         cssfileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
@@ -373,9 +379,9 @@ public class Configuration {
         return gazeMouseEnabledProperty.getValue();
     }
 
-    public Boolean isBackgroundWhite() {
-        return whiteBackgroundProperty.getValue();
-    }
+    public Boolean isBackgroundWhite() { return whiteBackgroundProperty.getValue(); }
+
+    public Boolean isBackgroundEnabled() { return backgroundEnabledProperty.getValue(); }
 
     public String getUserName() {
         return userNameProperty.getValue();
