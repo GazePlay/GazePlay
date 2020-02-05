@@ -46,7 +46,7 @@ public class GazePlayCommandLineRunner implements CommandLineRunner, ExitCodeGen
 
     @Override
     public void run(String... args) {
-        
+
         CommandLine commandLine = new CommandLine(command, factory);
         //
         commandLine.addSubcommand("hello", applicationContext.getBean(HelloCommand.class));

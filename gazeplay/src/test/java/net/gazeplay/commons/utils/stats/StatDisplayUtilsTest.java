@@ -33,8 +33,7 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(ApplicationExtension.class)
@@ -73,8 +72,8 @@ class StatDisplayUtilsTest {
         when(gazePlay.getCurrentScreenDimensionSupplier()).thenReturn(screenDimensionSupplier);
         when(screenDimensionSupplier.get()).thenReturn(new Dimension2D(1024, 768));
 
-        DoubleProperty mockWidth = new SimpleDoubleProperty(100);
-        DoubleProperty mockHeight = new SimpleDoubleProperty(100);
+        final DoubleProperty mockWidth = new SimpleDoubleProperty(100);
+        final DoubleProperty mockHeight = new SimpleDoubleProperty(100);
 
         when(mockRegion.widthProperty()).thenReturn(mockWidth);
         when(mockRegion.heightProperty()).thenReturn(mockHeight);
@@ -82,14 +81,14 @@ class StatDisplayUtilsTest {
         when(mockRegion.getHeight()).thenReturn(500d);
     }
 
-    MouseEvent mouseClickEvent(EventTarget target) {
+    MouseEvent mouseClickEvent(final EventTarget target) {
         return new MouseEvent(MouseEvent.MOUSE_CLICKED, 1, 1, 1, 1, MouseButton.PRIMARY, 1, false, false, false, false,
             false, false, false, false, false, false, new PickResult(target, 0d, 0d));
     }
 
     @Test
     void shouldCreateHomeButton() {
-        HomeButton button = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, mockStatsContext);
+        final HomeButton button = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, mockStatsContext);
         assert button.isVisible();
     }
 
@@ -104,13 +103,13 @@ class StatDisplayUtilsTest {
 
     @Test
     void shouldBuildLineChartForNormalGame() {
-        List<Long> mockShots = new ArrayList<>(List.of(1L, 2L, 3L));
+        final List<Long> mockShots = new ArrayList<>(List.of(1L, 2L, 3L));
 
         when(mockStats.getOriginalDurationsBetweenGoals()).thenReturn(mockShots);
         when(mockStats.computeRoundsDurationStandardDeviation()).thenReturn(0d);
         when(mockStats.computeRoundsDurationAverageDuration()).thenReturn(2L);
 
-        LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(mockStats, mockRegion);
+        final LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(mockStats, mockRegion);
 
         assertEquals(4, lineChart.getData().size());
         assertEquals(5, lineChart.getData().get(0).getData().size());
@@ -121,51 +120,51 @@ class StatDisplayUtilsTest {
 
     @Test
     void shouldZoomInToLineChart() {
-        List<Long> mockShots = new ArrayList<>(List.of(1L, 2L, 3L));
+        final List<Long> mockShots = new ArrayList<>(List.of(1L, 2L, 3L));
 
         when(mockStats.getOriginalDurationsBetweenGoals()).thenReturn(mockShots);
         when(mockStats.computeRoundsDurationStandardDeviation()).thenReturn(0d);
         when(mockStats.computeRoundsDurationAverageDuration()).thenReturn(2L);
 
-        LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(mockStats, mockRegion);
-        VBox parent = new VBox();
+        final LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(mockStats, mockRegion);
+        final VBox parent = new VBox();
         parent.getChildren().add(lineChart);
 
         lineChart.fireEvent(mouseClickEvent(lineChart));
 
         // These assertions are a bit rubbish - need to find a way to set the parent bounds.
-        assertEquals( 0, lineChart.getTranslateX());
-        assertEquals( 0, lineChart.getTranslateY());
+        assertEquals(0, lineChart.getTranslateX());
+        assertEquals(0, lineChart.getTranslateY());
     }
 
     @Test
     void shouldZoomOutOfLineChart() {
-        List<Long> mockShots = new ArrayList<>(List.of(1L, 2L, 3L));
+        final List<Long> mockShots = new ArrayList<>(List.of(1L, 2L, 3L));
 
         when(mockStats.getOriginalDurationsBetweenGoals()).thenReturn(mockShots);
         when(mockStats.computeRoundsDurationStandardDeviation()).thenReturn(0d);
         when(mockStats.computeRoundsDurationAverageDuration()).thenReturn(2L);
 
-        LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(mockStats, mockRegion);
-        VBox parent = new VBox();
+        final LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(mockStats, mockRegion);
+        final VBox parent = new VBox();
         parent.getChildren().add(lineChart);
 
         lineChart.fireEvent(mouseClickEvent(lineChart));
         lineChart.fireEvent(mouseClickEvent(lineChart));
 
-        assertEquals( 1, lineChart.getScaleX());
-        assertEquals( 1, lineChart.getScaleY());
+        assertEquals(1, lineChart.getScaleX());
+        assertEquals(1, lineChart.getScaleY());
     }
 
     @Test
     void shouldBuildLineChartForShootingGame() {
-        List<Long> mockShots = new ArrayList<>(List.of(1L, 2L, 3L));
+        final List<Long> mockShots = new ArrayList<>(List.of(1L, 2L, 3L));
 
         when(mockShootStats.getSortedDurationsBetweenGoals()).thenReturn(mockShots);
         when(mockShootStats.computeRoundsDurationStandardDeviation()).thenReturn(0d);
         when(mockShootStats.computeRoundsDurationAverageDuration()).thenReturn(2L);
 
-        LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(mockShootStats, mockRegion);
+        final LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(mockShootStats, mockRegion);
 
         assertEquals(4, lineChart.getData().size());
         assertEquals(5, lineChart.getData().get(0).getData().size());
@@ -176,13 +175,13 @@ class StatDisplayUtilsTest {
 
     @Test
     void shouldBuildAreaChartWithPoints() {
-        LinkedList<FixationPoint> mockPoints = new LinkedList<>(List.of(
+        final LinkedList<FixationPoint> mockPoints = new LinkedList<>(List.of(
             new FixationPoint(50, 50, 1, 2),
             new FixationPoint(100, 100, 2, 3),
             new FixationPoint(150, 150, 4, 5)
         ));
 
-        AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(mockPoints, mockRegion);
+        final AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(mockPoints, mockRegion);
 
         assertEquals(2, areaChart.getData().size());
         assertEquals(3, areaChart.getData().get(0).getData().size());
@@ -193,106 +192,106 @@ class StatDisplayUtilsTest {
 
     @Test
     void shouldZoomInToAreaChart() {
-        LinkedList<FixationPoint> mockPoints = new LinkedList<>(List.of(
+        final LinkedList<FixationPoint> mockPoints = new LinkedList<>(List.of(
             new FixationPoint(50, 50, 1, 2),
             new FixationPoint(100, 100, 2, 3),
             new FixationPoint(150, 150, 4, 5)
         ));
 
-        AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(mockPoints, mockRegion);
-        VBox parent = new VBox();
+        final AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(mockPoints, mockRegion);
+        final VBox parent = new VBox();
         parent.getChildren().add(areaChart);
 
         areaChart.fireEvent(mouseClickEvent(areaChart));
 
         // These assertions are a bit rubbish - need to find a way to set the parent bounds.
-        assertEquals( 0, areaChart.getTranslateX());
-        assertEquals( 0, areaChart.getTranslateY());
+        assertEquals(0, areaChart.getTranslateX());
+        assertEquals(0, areaChart.getTranslateY());
     }
 
     @Test
     void shouldZoomOutOfAreaChart() {
-        LinkedList<FixationPoint> mockPoints = new LinkedList<>(List.of(
+        final LinkedList<FixationPoint> mockPoints = new LinkedList<>(List.of(
             new FixationPoint(50, 50, 1, 2),
             new FixationPoint(100, 100, 2, 3),
             new FixationPoint(150, 150, 4, 5)
         ));
 
-        AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(mockPoints, mockRegion);
-        VBox parent = new VBox();
+        final AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(mockPoints, mockRegion);
+        final VBox parent = new VBox();
         parent.getChildren().add(areaChart);
 
         areaChart.fireEvent(mouseClickEvent(areaChart));
         areaChart.fireEvent(mouseClickEvent(areaChart));
 
-        assertEquals( 1, areaChart.getScaleX());
-        assertEquals( 1, areaChart.getScaleY());
+        assertEquals(1, areaChart.getScaleX());
+        assertEquals(1, areaChart.getScaleY());
     }
 
     @Test
     void shouldReturnNullBuildAreaWithNoPoints() {
-        LinkedList<FixationPoint> mockPoints = new LinkedList<>();
+        final LinkedList<FixationPoint> mockPoints = new LinkedList<>();
 
-        AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(mockPoints, mockRegion);
+        final AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(mockPoints, mockRegion);
 
-        assertEquals(null, areaChart);
+        assertNull(areaChart);
     }
 
     @Test
     void shouldBuildGazeMetrics() {
-        File mockFile = new File("bear.jpg");
-        SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile);
+        final File mockFile = new File("bear.jpg");
+        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile);
 
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
 
-        ImageView imageView = StatDisplayUtils.buildGazeMetrics(mockStats, mockRegion);
+        final ImageView imageView = StatDisplayUtils.buildGazeMetrics(mockStats, mockRegion);
 
         assertTrue(imageView.getImage().getUrl().contains("bear.jpg"));
     }
 
     @Test
     void shouldZoomInToGazeMetrics() {
-        File mockFile = new File("bear.jpg");
-        SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile);
+        final File mockFile = new File("bear.jpg");
+        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile);
 
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
 
-        ImageView imageView = StatDisplayUtils.buildGazeMetrics(mockStats, mockRegion);
+        final ImageView imageView = StatDisplayUtils.buildGazeMetrics(mockStats, mockRegion);
 
-        VBox parent = new VBox();
+        final VBox parent = new VBox();
         parent.getChildren().add(imageView);
         imageView.fireEvent(mouseClickEvent(imageView));
 
         // These assertions are a bit rubbish - need to find a way to set the parent bounds.
-        assertEquals( 0, imageView.getTranslateX());
-        assertEquals( 0, imageView.getTranslateY());
+        assertEquals(0, imageView.getTranslateX());
+        assertEquals(0, imageView.getTranslateY());
     }
 
     @Test
     void shouldZoomOutOfGazeMetrics() {
-        File mockFile = new File("bear.jpg");
-        SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile);
+        final File mockFile = new File("bear.jpg");
+        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile);
 
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
 
-        ImageView imageView = StatDisplayUtils.buildGazeMetrics(mockStats, mockRegion);
-        VBox parent = new VBox();
+        final ImageView imageView = StatDisplayUtils.buildGazeMetrics(mockStats, mockRegion);
+        final VBox parent = new VBox();
         parent.getChildren().add(imageView);
 
         imageView.fireEvent(mouseClickEvent(imageView));
         imageView.fireEvent(mouseClickEvent(imageView));
 
-        assertEquals( 1, imageView.getScaleX());
-        assertEquals( 1, imageView.getScaleY());
+        assertEquals(1, imageView.getScaleX());
+        assertEquals(1, imageView.getScaleY());
     }
 
     @Test
     void shouldConvertTimeToString() {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.set(2020, Calendar.JANUARY, 28, 13, 25, 20);
-        long input = cal.getTimeInMillis();
+        final long input = cal.getTimeInMillis();
 
-        String result = StatDisplayUtils.convert(input);
+        final String result = StatDisplayUtils.convert(input);
 
         assertTrue(result.contains("28 d 13 h 25 m 20 s"));
     }

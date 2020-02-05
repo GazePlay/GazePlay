@@ -9,30 +9,30 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class I18NTest {
 
-    private static String FILESEPARATOR = File.separator;
+    private static final String FILESEPARATOR = File.separator;
 
     @Test
     void shouldLoadTranslationsFromResource() {
-        Map<I18N.Entry, String> translations = I18N.loadFromFile("data/multilinguism/translation.csv");
+        final Map<I18N.Entry, String> translations = I18N.loadFromFile("data/multilinguism/translation.csv");
         assert translations.size() == 6;
     }
 
     @Test
     void shouldLoadTranslationsFromLocalFile() {
-        String file = System.getProperty("user.dir") +
+        final String file = System.getProperty("user.dir") +
             FILESEPARATOR + "src" +
             FILESEPARATOR + "test" +
             FILESEPARATOR + "resources" +
             FILESEPARATOR + "data" +
             FILESEPARATOR + "multilinguism" +
             FILESEPARATOR + "translation.csv";
-        Map<I18N.Entry, String> translations = I18N.loadFromFile(file);
+        final Map<I18N.Entry, String> translations = I18N.loadFromFile(file);
         assert translations.size() == 6;
     }
 
     @Test
     void shouldThrowAnErrorWhenCantReadFromLocalFile() {
-        String file = System.getProperty("user.dir") +
+        final String file = System.getProperty("user.dir") +
             FILESEPARATOR + "src" +
             FILESEPARATOR + "test" +
             FILESEPARATOR + "resources" +
@@ -53,13 +53,13 @@ class I18NTest {
 
     @Test
     void shouldGetTranslationForExistingKey() {
-        I18N translator = new I18N("data/multilinguism/translation.csv");
+        final I18N translator = new I18N("data/multilinguism/translation.csv");
         assert translator.translate("item1", "eng").equals("English");
     }
 
     @Test
     void shouldThrowExceptionForNonExistingKey() {
-        I18N translator = new I18N("data/multilinguism/translation.csv");
+        final I18N translator = new I18N("data/multilinguism/translation.csv");
         assert translator.translate("item9", "eng") == null;
     }
 }

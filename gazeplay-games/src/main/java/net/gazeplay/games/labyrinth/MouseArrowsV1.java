@@ -8,16 +8,16 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /*
- * MouseArrowsV1 : 
+ * MouseArrowsV1 :
  * Arrows are at the left of the Labyrinth.
  * This version is not accessible for the menu
- * This version is not suitable for eye tracking. 
+ * This version is not suitable for eye tracking.
  */
 
 public class MouseArrowsV1 extends MouseArrows {
 
-    public MouseArrowsV1(double positionX, double positionY, double width, double height, IGameContext gameContext,
-            Stats stats, Labyrinth gameInstance) {
+    public MouseArrowsV1(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext,
+                         final Stats stats, final Labyrinth gameInstance) {
 
         super(positionX, positionY, width, height, gameContext, stats, gameInstance);
     }
@@ -26,10 +26,11 @@ public class MouseArrowsV1 extends MouseArrows {
     protected void recomputeArrowsPositions() {
     }
 
+    @Override
     protected void placementFleche() {
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        double delta = dimension2D.getWidth() * 0.01;
+        final double delta = dimension2D.getWidth() * 0.01;
 
         double x = dimension2D.getWidth() * 0.05;
         double y = dimension2D.getHeight() * 0.4;

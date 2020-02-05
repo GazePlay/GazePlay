@@ -22,9 +22,9 @@ import java.util.Random;
 @Slf4j
 public class MolesChar extends Parent {
 
-    private Rectangle mole;
+    private final Rectangle mole;
 
-    private Rectangle moleMoved;
+    private final Rectangle moleMoved;
 
     private final IGameContext gameContext;
 
@@ -37,7 +37,7 @@ public class MolesChar extends Parent {
     boolean canGoOut;
     public boolean out;
 
-    private ProgressIndicator progressIndicator;
+    private final ProgressIndicator progressIndicator;
 
     private Timeline timeMinToWhackTheMole;
 
@@ -48,11 +48,11 @@ public class MolesChar extends Parent {
     public final EventHandler<Event> enterEvent;
 
     MolesChar(
-        double positionX, double positionY,
-        double width, double height,
-        double distTrans,
-        IGameContext gameContext,
-        Moles gameInstance
+        final double positionX, final double positionY,
+        final double width, final double height,
+        final double distTrans,
+        final IGameContext gameContext,
+        final Moles gameInstance
     ) {
         this.gameContext = gameContext;
 
@@ -84,8 +84,8 @@ public class MolesChar extends Parent {
 
     }
 
-    private ProgressIndicator createProgressIndicator(double width, double height) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
+    private ProgressIndicator createProgressIndicator(final double width, final double height) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setMinWidth(width * 0.9);
         indicator.setMinHeight(width * 0.9);
         indicator.setOpacity(0);
@@ -96,7 +96,9 @@ public class MolesChar extends Parent {
         return e -> {
 
             if (!canTouched || !out || touched) // If the mole is not out or already touched: nothing append
+            {
                 return;
+            }
 
             /* If the mole is out and touched */
             if (
@@ -113,7 +115,7 @@ public class MolesChar extends Parent {
                 }
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                Timeline timeline = new Timeline();
+                final Timeline timeline = new Timeline();
 
                 timeline.play();
                 if (timeMinToWhackTheMole != null) {
@@ -132,10 +134,10 @@ public class MolesChar extends Parent {
 
         gameInstance.getNbMolesOut().incrementAndGet();
 
-        TranslateTransition translation = new TranslateTransition(new Duration(1500), this);
+        final TranslateTransition translation = new TranslateTransition(new Duration(1500), this);
         translation.setByX(0);
         translation.setByY(-this.distTranslation);
-        
+
         this.mole.opacityProperty().set(1);
 
         translation.setOnFinished(actionEvent -> {
@@ -150,8 +152,8 @@ public class MolesChar extends Parent {
             out = true;
 
             timeMoleOut = new Timeline(); // New time this mole go out
-            Random r = new Random();
-            int time = r.nextInt(timeMoleStayOut) + 2000;
+            final Random r = new Random();
+            final int time = r.nextInt(timeMoleStayOut) + 2000;
 
             timeMoleOut.getKeyFrames()
                 .add(new KeyFrame(new Duration(time),
@@ -183,7 +185,7 @@ public class MolesChar extends Parent {
             timeGoIn = 500;
         }
         touched = false;
-        TranslateTransition translation = new TranslateTransition(new Duration(timeGoIn), this);
+        final TranslateTransition translation = new TranslateTransition(new Duration(timeGoIn), this);
         translation.setByX(0);
         translation.setByY(this.distTranslation);
         translation.setOnFinished(actionEvent -> {

@@ -16,6 +16,6 @@ public class AsyncUiTaskExecutor {
 
     @Getter
     private final ExecutorService executorService = new ThreadPoolExecutor(0, 4, 1, TimeUnit.MINUTES,
-            new LinkedBlockingQueue<>(), new CustomThreadFactory("AsyncUi", new GroupingThreadFactory("AsyncUi")));
+        new LinkedBlockingQueue<>(), new CustomThreadFactory("AsyncUi", new GroupingThreadFactory("AsyncUi")));
 
 }

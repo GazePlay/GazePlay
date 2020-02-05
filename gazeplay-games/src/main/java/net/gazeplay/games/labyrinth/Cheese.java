@@ -9,7 +9,7 @@ import java.util.Random;
 
 class Cheese extends Parent {
 
-    private Rectangle cheese;
+    private final Rectangle cheese;
     private final Labyrinth gameInstance;
 
     private int indexY;
@@ -17,7 +17,7 @@ class Cheese extends Parent {
 
     private Random r;
 
-    Cheese(double entiereRecX, double entiereRecY, double width, double height, Labyrinth gameInstance) {
+    Cheese(final double entiereRecX, final double entiereRecY, final double width, final double height, final Labyrinth gameInstance) {
         this.gameInstance = gameInstance;
         cheese = new Rectangle(entiereRecX, entiereRecY, width, height);
         cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/cheese.png"), 5, 5, 1, 1, true));
@@ -42,8 +42,8 @@ class Cheese extends Parent {
         indexY = y;
         indexX = x;
 
-        double coordX = gameInstance.positionX(indexX) - gameInstance.adjustmentCaseWidth;
-        double coordY = gameInstance.positionY(indexY) + gameInstance.adjustmentCaseHeight;
+        final double coordX = gameInstance.positionX(indexX) - gameInstance.adjustmentCaseWidth;
+        final double coordY = gameInstance.positionY(indexY) + gameInstance.adjustmentCaseHeight;
 
         cheese.setX(coordX);
         cheese.setY(coordY);
@@ -51,7 +51,7 @@ class Cheese extends Parent {
 
     }
 
-    boolean isTheCheese(int i, int j) {
+    boolean isTheCheese(final int i, final int j) {
         return (i == indexY && j == indexX);
     }
 

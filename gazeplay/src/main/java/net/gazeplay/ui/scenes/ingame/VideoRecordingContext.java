@@ -10,13 +10,13 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 public class VideoRecordingContext {
 
-    private EventHandler<Event> pointerEvent;
-    private Circle mousePointer;
-    private Circle gazePointer;
-    private Pane root;
-    private GameContext gameContext;
+    private final EventHandler<Event> pointerEvent;
+    private final Circle mousePointer;
+    private final Circle gazePointer;
+    private final Pane root;
+    private final GameContext gameContext;
 
-    public VideoRecordingContext(Pane originalRoot, GameContext gameCtxt) {
+    public VideoRecordingContext(final Pane originalRoot, final GameContext gameCtxt) {
 
         root = originalRoot;
         gameContext = gameCtxt;

@@ -7,19 +7,19 @@ import net.gazeplay.components.Position;
 
 public class FinalPathStart extends Square {
 
-    private Horses.TEAMS team;
+    private final Horses.TEAMS team;
     @Getter
     @Setter
     private Square pathStart;
 
-    public FinalPathStart(Position pawnPosition, Horses game, Horses.TEAMS team, Square pathStart) {
+    public FinalPathStart(final Position pawnPosition, final Horses game, final Horses.TEAMS team, final Square pathStart) {
         super(pawnPosition, game);
         this.team = team;
         this.pathStart = pathStart;
     }
 
     @Override
-    protected Square getNextSquare(Pawn pawn) {
+    protected Square getNextSquare(final Pawn pawn) {
         if (pawn.getTeam() == team) {
             return pathStart;
         } else {

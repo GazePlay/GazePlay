@@ -682,7 +682,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         String currentCodeLanguage = configuration.getLanguage();
         String currentCodeCountry = configuration.getCountry();
-        Locale currentLocale = new Locale(currentCodeLanguage,currentCodeCountry);
+        Locale currentLocale = new Locale(currentCodeLanguage, currentCodeCountry);
         LanguageDetails currentLanguageDetails = Languages.getLocale(currentLocale);
 
         Image currentFlag = new Image(currentLanguageDetails.getFlags().get(0));

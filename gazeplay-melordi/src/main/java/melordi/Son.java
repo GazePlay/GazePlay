@@ -11,19 +11,16 @@ import javafx.scene.control.Slider;
  */
 public class Son extends Parent {
 
-    public Slider slider;
-    private Clavier clavier;
+    public final Slider slider;
 
-    public Son(Clavier clavier) {
-
-        this.clavier = clavier;
+    public Son(final Clavier clavier) {
 
         slider = new Slider(0, 127, 60);
         slider.setOrientation(Orientation.VERTICAL);
         slider.setTranslateY(35);
         slider.valueProperty().addListener((ChangeListener) (o, oldVal, newVal) -> clavier.requestFocus());
 
-        ProgressIndicator indicateur = new ProgressIndicator(0.0);
+        final ProgressIndicator indicateur = new ProgressIndicator(0.0);
         indicateur.progressProperty().bind(slider.valueProperty().divide(127.0));
         indicateur.setTranslateX(-15);
 

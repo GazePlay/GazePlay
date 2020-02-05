@@ -19,6 +19,7 @@ public abstract class AbstractImageLibrary implements ImageLibrary {
 
     private final Random random = new Random();
 
+    @Override
     public abstract int getImagesCount();
 
     protected abstract Image loadImageAtIndex(int index);
@@ -29,20 +30,20 @@ public abstract class AbstractImageLibrary implements ImageLibrary {
     }
 
     @Override
-    public Set<Image> pickMultipleRandomDistinctImages(int requestedPickCount) {
+    public Set<Image> pickMultipleRandomDistinctImages(final int requestedPickCount) {
         final int distinctImagesCount = getImagesCount();
         if (distinctImagesCount < requestedPickCount) {
 
             final int defaultLibraryPickCount = requestedPickCount - distinctImagesCount;
             final int defaultLibraryAvailableCount = (fallbackImageLibrary == null) ? 0
-                    : fallbackImageLibrary.getImagesCount();
+                : fallbackImageLibrary.getImagesCount();
             if (defaultLibraryAvailableCount < defaultLibraryPickCount) {
                 throw new IllegalArgumentException(String.format(
-                        "There are not enough distinct Images in the %s : requested : %d, available : %d+%d",
-                        this.getClass().getSimpleName(), requestedPickCount, distinctImagesCount,
-                        defaultLibraryAvailableCount));
+                    "There are not enough distinct Images in the %s : requested : %d, available : %d+%d",
+                    this.getClass().getSimpleName(), requestedPickCount, distinctImagesCount,
+                    defaultLibraryAvailableCount));
             }
-            Set<Image> result = collectRandom(distinctImagesCount, distinctImagesCount);
+            final Set<Image> result = collectRandom(distinctImagesCount, distinctImagesCount);
             result.addAll(fallbackImageLibrary.pickMultipleRandomDistinctImages(defaultLibraryPickCount));
             return result;
 
@@ -50,10 +51,10 @@ public abstract class AbstractImageLibrary implements ImageLibrary {
         return collectRandom(requestedPickCount, distinctImagesCount);
     }
 
-    private Set<Image> collectRandom(int limit, int distinctImagesCount) {
+    private Set<Image> collectRandom(final int limit, final int distinctImagesCount) {
         return IntStream.generate(() -> random.nextInt(distinctImagesCount)).distinct().limit(limit).boxed()
-                .peek(i -> log.debug("Picking Image at random index {} in ImageLibrary", i)).map(this::loadImageAtIndex)
-                .collect(Collectors.toSet());
+            .peek(i -> log.debug("Picking Image at random index {} in ImageLibrary", i)).map(this::loadImageAtIndex)
+            .collect(Collectors.toSet());
     }
 
 }

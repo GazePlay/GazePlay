@@ -15,7 +15,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.DiceRoller;
@@ -27,29 +26,28 @@ import java.util.ArrayList;
 @Slf4j
 public class Dice implements GameLifeCycle {
 
-    private IGameContext gameContext;
-    private Stats stats;
-    private GridPane gridpane;
+    private final IGameContext gameContext;
+    private final Stats stats;
+    private final GridPane gridpane;
     private ArrayList<DiceRoller> diceRollers;
-    private Dimension2D dimensions;
     private Text totalText;
     private boolean active;
-    private int[] rolls;
-    private ProgressButton rollButton;
+    private final int[] rolls;
+    private final ProgressButton rollButton;
 
-    public Dice(IGameContext gameContext, Stats stats, int nbDice) {
+    public Dice(final IGameContext gameContext, final Stats stats, final int nbDice) {
         this.gameContext = gameContext;
         this.stats = stats;
-        dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         active = true;
 
         rolls = new int[nbDice];
 
-        Configuration config = gameContext.getConfiguration();
+        final Configuration config = gameContext.getConfiguration();
 
         // Roll button is used to roll all the dice at once
         rollButton = new ProgressButton();
-        ImageView nextImage = new ImageView("data/dice/roll.png");
+        final ImageView nextImage = new ImageView("data/dice/roll.png");
         nextImage.setFitHeight(dimensions.getHeight() / 6);
         nextImage.setFitWidth(dimensions.getHeight() / 6);
         rollButton.setLayoutX(dimensions.getWidth() / 2 - nextImage.getFitWidth() / 2);
@@ -84,30 +82,30 @@ public class Dice implements GameLifeCycle {
             dieWidth = (float) (dimensions.getHeight() / 4);
         }
         for (int i = 0; i < nbDice; i++) {
-            DiceRoller dr = new DiceRoller(dieWidth);
+            final DiceRoller dr = new DiceRoller(dieWidth);
             diceRollers.add(dr);
 
             // init rolls to 1s
             rolls[i] = 1;
 
             // DiceRoller in a ProgressPane, so the dice can be rolled individually when gazed at
-            ProgressPane pp = new ProgressPane();
+            final ProgressPane pp = new ProgressPane();
             pp.button.setCenter(dr);
             gridpane.add(pp, i, 0);
-            int finalI = i;
+            final int finalI = i;
             pp.assignIndicator(e -> rolls[finalI] = dr.roll(action -> addUp()));
         }
     }
 
     private void addUp() {
         int total = 0;
-        for (int roll : rolls) {
+        for (final int roll : rolls) {
             total += roll;
         }
         totalText.setText("" + total);
         totalText.setOpacity(0);
-        Timeline showTotal = new Timeline(
-                new KeyFrame(Duration.seconds(2), new KeyValue(totalText.opacityProperty(), 1)));
+        final Timeline showTotal = new Timeline(
+            new KeyFrame(Duration.seconds(2), new KeyValue(totalText.opacityProperty(), 1)));
         showTotal.play();
         active = true;
     }

@@ -51,9 +51,9 @@ public class Languages {
     private static final String flagsPath = "data/common/flags/";
 
     private static SortedMap<Locale, LanguageDetails> createLanguagesMap() {
-        SortedMap<Locale, LanguageDetails> result = new TreeMap<Locale, LanguageDetails>(
+        final SortedMap<Locale, LanguageDetails> result = new TreeMap<>(
             (o1, o2) -> {
-                int languageComparison = o1.getLanguage().compareTo(o2.getLanguage());
+                final int languageComparison = o1.getLanguage().compareTo(o2.getLanguage());
                 if (languageComparison != 0) {
                     return languageComparison;
                 } else {
@@ -86,11 +86,11 @@ public class Languages {
         return result;
     }
 
-    private static void put(SortedMap<Locale, LanguageDetails> result, LanguageDetails languageDetails) {
+    private static void put(final SortedMap<Locale, LanguageDetails> result, final LanguageDetails languageDetails) {
         result.put(languageDetails.getLocale(), languageDetails);
     }
 
-    private static LanguageDetails build(Locale locale, String language, boolean stableTranslationAvailable, boolean leftAligned, String... flags) {
+    private static LanguageDetails build(final Locale locale, final String language, final boolean stableTranslationAvailable, final boolean leftAligned, final String... flags) {
         return LanguageDetails.builder()
             .locale(locale)
             .label(language)
@@ -100,9 +100,9 @@ public class Languages {
             .build();
     }
 
-    private static List<String> toFlagsLocations(String[] flags) {
-        List<String> flagsList = new ArrayList<>(flags.length);
-        for (String flag : flags) {
+    private static List<String> toFlagsLocations(final String[] flags) {
+        final List<String> flagsList = new ArrayList<>(flags.length);
+        for (final String flag : flags) {
             flagsList.add(flagsPath + flag);
         }
         return Collections.unmodifiableList(flagsList);
@@ -113,7 +113,7 @@ public class Languages {
             locale = DEFAULT_CODE;
         }
 
-        LanguageDetails localeValue = languageMap.get(locale);
+        final LanguageDetails localeValue = languageMap.get(locale);
 
         if (localeValue == null) {
             locale = DEFAULT_CODE;

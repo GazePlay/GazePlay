@@ -5,7 +5,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 public class SelectionGamesStats extends Stats {
 
-    public SelectionGamesStats(Scene gameContextScene) {
+    public SelectionGamesStats(final Scene gameContextScene) {
         super(gameContextScene);
     }
 

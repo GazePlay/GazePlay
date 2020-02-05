@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
 class LogoFactoryTest {
-    
+
     @Mock
     private GazePlay gazePlay;
 

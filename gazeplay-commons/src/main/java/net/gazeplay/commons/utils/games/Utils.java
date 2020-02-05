@@ -17,7 +17,7 @@ import java.util.Enumeration;
 @Slf4j
 public class Utils {
 
-    public static InputStream getInputStream(String ressource) {
+    public static InputStream getInputStream(final String ressource) {
         log.debug("Try to play " + ressource);
         return ClassLoader.getSystemResourceAsStream(ressource);
     }
@@ -29,8 +29,8 @@ public class Utils {
 
     private static String getFilesFolder() {
 
-        Configuration config = ActiveConfigurationContext.getInstance();
-        String filesFolder = config.getFileDir();
+        final Configuration config = ActiveConfigurationContext.getInstance();
+        final String filesFolder = config.getFileDir();
 
         log.info("filesFolder : " + filesFolder);
         return filesFolder;
@@ -41,12 +41,12 @@ public class Utils {
      */
 
     public static File getBaseImagesDirectory() {
-        File filesDirectory = new File(getFilesFolder());
+        final File filesDirectory = new File(getFilesFolder());
         return new File(filesDirectory, "images");
     }
 
-    public static File getImagesSubDirectory(String subfolderName) {
-        File baseImagesDirectory = getBaseImagesDirectory();
+    public static File getImagesSubDirectory(final String subfolderName) {
+        final File baseImagesDirectory = getBaseImagesDirectory();
         log.info("baseImagesDirectory {}", baseImagesDirectory);
         log.info("subfolderName {}", subfolderName);
         return new File(baseImagesDirectory, subfolderName);
@@ -56,8 +56,8 @@ public class Utils {
      * @return current date with respect to the format yyyy-MM-dd
      */
     public static String today() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        final Date date = new Date();
         return dateFormat.format(date);
     }
 
@@ -65,8 +65,8 @@ public class Utils {
      * @return current date with respect to the format dd/MM/yyyy
      */
     public static String todayCSV() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
+        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final Date date = new Date();
         return dateFormat.format(date);
     }
 
@@ -74,8 +74,8 @@ public class Utils {
      * @return current time with respect to the format HH:MM:ss
      */
     public static String time() {
-        DateFormat dateFormat = new SimpleDateFormat("HH:MM:ss");
-        Date date = new Date();
+        final DateFormat dateFormat = new SimpleDateFormat("HH:MM:ss");
+        final Date date = new Date();
         return dateFormat.format(date);
     }
 
@@ -83,12 +83,12 @@ public class Utils {
      * @return current time with respect to the format yyyy-MM-dd-HH-MM-ss
      */
     public static String now() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        Date date = new Date();
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        final Date date = new Date();
         return dateFormat.format(date);
     }
 
-    public static boolean copyFromJar(String filePath, String destinationPath) {
+    public static boolean copyFromJar(final String filePath, final String destinationPath) {
         InputStream sourceFile = null;
         OutputStream destinationFile = null;
         try {
@@ -98,7 +98,7 @@ public class Utils {
             }
             destinationFile = new FileOutputStream(destinationPath);
             org.apache.commons.io.IOUtils.copy(sourceFile, destinationFile);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.error("Exception", e);
             return false; // Erreur
         } finally {
@@ -122,9 +122,9 @@ public class Utils {
     }
 
     public static void logSystemProperties() {
-        Enumeration<?> E = System.getProperties().propertyNames();
+        final Enumeration<?> E = System.getProperties().propertyNames();
         while (E.hasMoreElements()) {
-            String element = (String) E.nextElement();
+            final String element = (String) E.nextElement();
             log.info(String.format("%s: %s", element, System.getProperty(element)));
         }
     }

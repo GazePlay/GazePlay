@@ -38,7 +38,7 @@ public class TobiiDllUtils {
     }
 
     public boolean loadTobiiDllsFromClassPath() {
-        ClassLoader classLoader = TobiiDllUtils.class.getClassLoader();
+        final ClassLoader classLoader = TobiiDllUtils.class.getClassLoader();
         //
         boolean success;
         success = DllUtils.getSingleton().loadDllAsResource(classLoader, DLL1_NAME);
@@ -49,7 +49,7 @@ public class TobiiDllUtils {
     }
 
     public boolean loadTobiiDllsFromDLLDirectoryUnderWorkingDirectory() {
-        File dllDirectory = DllUtils.getSingleton().locateDLLDirectoryInDist();
+        final File dllDirectory = DllUtils.getSingleton().locateDLLDirectoryInDist();
         //
         boolean success;
         success = DllUtils.getSingleton().loadDllAsFile(dllDirectory, DLL1_NAME);
@@ -60,7 +60,7 @@ public class TobiiDllUtils {
     }
 
     protected void printWarningMessage() {
-        File dllDirectory = DllUtils.getSingleton().locateDLLDirectoryInDist();
+        final File dllDirectory = DllUtils.getSingleton().locateDLLDirectoryInDist();
 
         log.info("******************************************************");
         log.info("If you wish to Use a Tobii 4C or a Tobii EyeX");

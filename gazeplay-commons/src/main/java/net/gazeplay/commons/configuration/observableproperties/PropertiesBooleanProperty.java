@@ -33,7 +33,7 @@ public abstract class PropertiesBooleanProperty extends BooleanPropertyBase {
 
     @Override
     public boolean get() {
-        String propertyValue = getProperty(propertyName);
+        final String propertyValue = getProperty(propertyName);
         if (propertyValue == null) {
             return defaultValue;
         }
@@ -41,7 +41,7 @@ public abstract class PropertiesBooleanProperty extends BooleanPropertyBase {
     }
 
     @Override
-    public void set(boolean value) {
+    public void set(final boolean value) {
         log.info("Set property {} to {}", propertyName, value);
         setProperty(propertyName, Boolean.toString(value));
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));

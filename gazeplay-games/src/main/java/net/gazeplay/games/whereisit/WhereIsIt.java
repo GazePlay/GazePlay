@@ -65,7 +65,7 @@ public class WhereIsIt implements GameLifeCycle {
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
-        Random random = new Random();
+        final Random random = new Random();
         final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
@@ -74,27 +74,28 @@ public class WhereIsIt implements GameLifeCycle {
 
         if (currentRoundDetails != null) {
 
-            Transition animation = createQuestionTransition(currentRoundDetails.getQuestion(), currentRoundDetails.getPictos());
+            final Transition animation = createQuestionTransition(currentRoundDetails.getQuestion(), currentRoundDetails.getPictos());
             animation.play();
-            if (currentRoundDetails.getQuestionSoundPath() != null)
+            if (currentRoundDetails.getQuestionSoundPath() != null) {
                 playQuestionSound();
+            }
         }
 
     }
 
-    private Transition createQuestionTransition(String question, List<Image> Pictos) {
+    private Transition createQuestionTransition(final String question, final List<Image> Pictos) {
 
         questionText = new Text(question);
 
         questionText.setTranslateY(0);
 
-        String color = (gameContext.getConfiguration().isBackgroundWhite()) ? "titleB" : "titleW";
+        final String color = (gameContext.getConfiguration().isBackgroundWhite()) ? "titleB" : "titleW";
         questionText.setId(color);
 
         final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        double positionX = gamePaneDimension2D.getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
-        double positionY = gamePaneDimension2D.getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
+        final double positionX = gamePaneDimension2D.getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
+        final double positionY = gamePaneDimension2D.getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
 
         questionText.setX(positionX);
         questionText.setY(positionY);
@@ -103,16 +104,16 @@ public class WhereIsIt implements GameLifeCycle {
 
         gameContext.getChildren().add(questionText);
 
-        List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
+        final List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
         // them
         // from the group later
 
         if (Pictos != null && !Pictos.isEmpty() && Pictos.size() <= NBMAXPICTO) {
 
             final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
-            double screenWidth = screenDimension.getWidth();
+            final double screenWidth = screenDimension.getWidth();
 
-            double nbPicto = Pictos.size();
+            final double nbPicto = Pictos.size();
 
             double pictoSize = screenWidth / (nbPicto + 1);
 
@@ -123,13 +124,13 @@ public class WhereIsIt implements GameLifeCycle {
             log.debug("Picto Size: {}", pictoSize);
 
             int i = 0;
-            double shift = screenWidth / 2 - ((nbPicto / 2) * pictoSize * 1.1);
+            final double shift = screenWidth / 2 - ((nbPicto / 2) * pictoSize * 1.1);
 
             log.debug("shift Size: {}", shift);
 
-            for (Image I : Pictos) {
+            for (final Image I : Pictos) {
 
-                Rectangle R = new Rectangle(pictoSize, pictoSize);
+                final Rectangle R = new Rectangle(pictoSize, pictoSize);
                 R.setFill(new ImagePattern(I));
                 R.setY(positionY + 100);
                 R.setX(shift + (i++ * pictoSize * 1.1));
@@ -139,12 +140,12 @@ public class WhereIsIt implements GameLifeCycle {
             gameContext.getChildren().addAll(pictogramesList);
         }
 
-        TranslateTransition fullAnimation = new TranslateTransition(
+        final TranslateTransition fullAnimation = new TranslateTransition(
             Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2.0), questionText);
 
         fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
 
-        double bottomCenter = (0.9 * gamePaneDimension2D.getHeight()) - questionText.getY()
+        final double bottomCenter = (0.9 * gamePaneDimension2D.getHeight()) - questionText.getY()
             + questionText.getBoundsInParent().getHeight() * 3;
         fullAnimation.setToY(bottomCenter);
 
@@ -156,7 +157,7 @@ public class WhereIsIt implements GameLifeCycle {
             //log.debug("Adding {} pictures", currentRoundDetails.getPictureCardList().size());
             gameContext.getChildren().addAll(currentRoundDetails.getPictureCardList());
 
-            for (PictureCard p : currentRoundDetails.getPictureCardList()) {
+            for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
                 //  log.debug("p = {}", p);
                 p.toFront();
                 p.setOpacity(1);
@@ -176,7 +177,7 @@ public class WhereIsIt implements GameLifeCycle {
         try {
             log.debug("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.getQuestionSoundPath());
             ForegroundSoundsUtils.playSound(currentRoundDetails.getQuestionSoundPath());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
         }
     }
@@ -201,8 +202,8 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         // Collect all items to be removed from the User Interface
-        List<PictureCard> pictureCardsToHide = new ArrayList<>();
-        for (PictureCard pictureCard : this.currentRoundDetails.getPictureCardList()) {
+        final List<PictureCard> pictureCardsToHide = new ArrayList<>();
+        for (final PictureCard pictureCard : this.currentRoundDetails.getPictureCardList()) {
             if (!pictureCard.isWinner()) {
                 pictureCardsToHide.add(pictureCard);
             }
@@ -215,20 +216,20 @@ public class WhereIsIt implements GameLifeCycle {
     RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final Random random,
                                             final int winnerImageIndexAmongDisplayedImages) {
 
-        Configuration config = gameContext.getConfiguration();
+        final Configuration config = gameContext.getConfiguration();
 
-        int filesCount;
-        String directoryName;
+        final int filesCount;
+        final String directoryName;
         File[] imagesFolders = new File[1];
         Set<String> resourcesFolders = Collections.emptySet();
 
         if (this.gameType == CUSTOMIZED) {
-            File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
+            final File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
             directoryName = imagesDirectory.getPath();
             imagesFolders = imagesDirectory.listFiles();
             filesCount = imagesFolders == null ? 0 : imagesFolders.length;
         } else {
-            String imagesDirectory = "data/" + this.gameType.getResourcesDirectoryName() + "/images/";
+            final String imagesDirectory = "data/" + this.gameType.getResourcesDirectoryName() + "/images/";
             directoryName = imagesDirectory;
             resourcesFolders = ResourceFileManager.getResourceFolders(imagesDirectory);
             filesCount = resourcesFolders.size();
@@ -243,7 +244,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
         final int randomFolderIndex = random.nextInt(filesCount);
 
-        int step = 1;
+        final int step = 1;
 
         int posX = 0;
         int posY = 0;
@@ -265,35 +266,35 @@ public class WhereIsIt implements GameLifeCycle {
                     index = ((randomFolderIndex + step) % filesCount) + 1;
                 }
 
-                String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
-                String folderName = (new File(folder)).getName();
+                final String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
+                final String folderName = (new File(folder)).getName();
 
-                Set<String> files = ResourceFileManager.getResourcePaths(folder);
+                final Set<String> files = ResourceFileManager.getResourcePaths(folder);
 
                 final int numFile = random.nextInt(files.size());
 
-                String randomImageFile = (String) files.toArray()[numFile];
+                final String randomImageFile = (String) files.toArray()[numFile];
 
                 if (winnerImageIndexAmongDisplayedImages == i) {
 
-                     // TODO for now the line under is commented to avoid freeze
+                    // TODO for now the line under is commented to avoid freeze
                     //questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
 
-                    question = Multilinguism.getSingleton().getTrad("findodd",config.getLanguage());
+                    question = Multilinguism.getSingleton().getTrad("findodd", config.getLanguage());
 
                     pictograms = getPictogramms(folderName);
 
                 }
 
-                PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
                     randomImageFile + "", stats, this);
 
                 pictureCardList.add(pictureCard);
 
-                if ((i + 1) % nbColumns != 0)
+                if ((i + 1) % nbColumns != 0) {
                     posX++;
-                else {
+                } else {
                     posY++;
                     posX = 0;
                 }
@@ -306,8 +307,9 @@ public class WhereIsIt implements GameLifeCycle {
 
                 final File folder = imagesFolders[(index) % filesCount];
 
-                if (!folder.isDirectory())
+                if (!folder.isDirectory()) {
                     continue;
+                }
 
                 final File[] files = getFiles(folder);
 
@@ -326,16 +328,16 @@ public class WhereIsIt implements GameLifeCycle {
                 }
 
                 // The image file needs 'file:' prepended as this will get images from a local source, not resources.
-                PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
                     winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
 
                 pictureCardList.add(pictureCard);
 
 
-                if ((i + 1) % nbColumns != 0)
+                if ((i + 1) % nbColumns != 0) {
                     posX++;
-                else {
+                } else {
                     posY++;
                     posX = 0;
                 }
@@ -345,14 +347,14 @@ public class WhereIsIt implements GameLifeCycle {
 
                 final int index = (randomFolderIndex + step * i) % filesCount;
 
-                String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
-                String folderName = (new File(folder)).getName();
+                final String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
+                final String folderName = (new File(folder)).getName();
 
-                Set<String> files = ResourceFileManager.getResourcePaths(folder);
+                final Set<String> files = ResourceFileManager.getResourcePaths(folder);
 
                 final int numFile = random.nextInt(files.size());
 
-                String randomImageFile = (String) files.toArray()[numFile];
+                final String randomImageFile = (String) files.toArray()[numFile];
 
                 if (winnerImageIndexAmongDisplayedImages == i) {
 
@@ -364,16 +366,16 @@ public class WhereIsIt implements GameLifeCycle {
 
                 }
 
-                PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
                     winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
 
                 pictureCardList.add(pictureCard);
 
 
-                if ((i + 1) % nbColumns != 0)
+                if ((i + 1) % nbColumns != 0) {
                     posX++;
-                else {
+                } else {
                     posY++;
                     posX = 0;
                 }
@@ -386,18 +388,18 @@ public class WhereIsIt implements GameLifeCycle {
     /**
      * Return all files which don't start with a point
      */
-    private File[] getFiles(File folder) {
+    private File[] getFiles(final File folder) {
         return folder.listFiles(file -> !file.getName().startsWith("."));
     }
 
-    private void error(String language) {
+    private void error(final String language) {
 
         gameContext.clear();
         // HomeUtils.home(scene, group, choiceBox, null);
 
-        Multilinguism multilinguism = Multilinguism.getSingleton();
+        final Multilinguism multilinguism = Multilinguism.getSingleton();
 
-        Text error = new Text(multilinguism.getTrad("WII-error", language));
+        final Text error = new Text(multilinguism.getTrad("WII-error", language));
         final Region root = gameContext.getRoot();
         error.setX(root.getWidth() / 2. - 100);
         error.setY(root.getHeight() / 2.);
@@ -405,26 +407,26 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().addAll(error);
     }
 
-    private String getPathSound(final String folder, String language) {
+    private String getPathSound(final String folder, final String language) {
         if (this.gameType == CUSTOMIZED) {
             final Configuration config = gameContext.getConfiguration();
             try {
                 log.debug("CUSTOMIZED");
-                String path = config.getWhereIsItDir() + "sounds/";
-                File soundsDirectory = new File(path);
-                String[] soundsDirectoryFiles = soundsDirectory.list();
+                final String path = config.getWhereIsItDir() + "sounds/";
+                final File soundsDirectory = new File(path);
+                final String[] soundsDirectoryFiles = soundsDirectory.list();
                 if (soundsDirectoryFiles != null) {
-                    for (String file : soundsDirectoryFiles) {
+                    for (final String file : soundsDirectoryFiles) {
                         log.debug("file " + file);
                         log.debug("folder " + folder);
                         if (file.contains(folder)) {
-                            File f = new File(path + file);
+                            final File f = new File(path + file);
                             log.debug("file " + f.getAbsolutePath());
                             return f.getAbsolutePath();
                         }
                     }
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 log.debug("Problem with customized folder");
                 error(config.getLanguage());
             }
@@ -455,7 +457,7 @@ public class WhereIsIt implements GameLifeCycle {
             + "." + language + ".mp3";
     }
 
-    private String getQuestionText(final String folder, String language) {
+    private String getQuestionText(final String folder, final String language) {
 
         log.debug("folder: {}", folder);
         log.debug("language: {}", language);
@@ -464,14 +466,14 @@ public class WhereIsIt implements GameLifeCycle {
 
             final Configuration config = gameContext.getConfiguration();
 
-            File F = new File(config.getWhereIsItDir() + "/questions.csv");
+            final File F = new File(config.getWhereIsItDir() + "/questions.csv");
 
-            Multilinguism localMultilinguism = Multilinguism.getForResource(F.toString());
+            final Multilinguism localMultilinguism = Multilinguism.getForResource(F.toString());
 
             return localMultilinguism.getTrad(folder, language);
         }
 
-        Multilinguism localMultilinguism = Multilinguism.getForResource(gameType.getLanguageResourceLocation());
+        final Multilinguism localMultilinguism = Multilinguism.getForResource(gameType.getLanguageResourceLocation());
 
         return localMultilinguism.getTrad(folder, language);
     }
@@ -487,22 +489,22 @@ public class WhereIsIt implements GameLifeCycle {
 
         final Configuration config = gameContext.getConfiguration();
 
-        File questionFile = new File(config.getWhereIsItDir(), "questions.csv");
+        final File questionFile = new File(config.getWhereIsItDir(), "questions.csv");
 
-        Multilinguism localMultilinguism = Multilinguism.getForResource(questionFile.toString());
+        final Multilinguism localMultilinguism = Multilinguism.getForResource(questionFile.toString());
 
-        String traduction = localMultilinguism.getTrad(folder, language);
+        final String traduction = localMultilinguism.getTrad(folder, language);
 
         log.debug("traduction: {}", traduction);
 
-        StringTokenizer st = new StringTokenizer(traduction, ";");
+        final StringTokenizer st = new StringTokenizer(traduction, ";");
 
-        List<Image> imageList = new ArrayList<>(20);
+        final List<Image> imageList = new ArrayList<>(20);
 
         while (st.hasMoreTokens()) {
-            String token = config.getWhereIsItDir() + "/pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
+            final String token = config.getWhereIsItDir() + "/pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
             log.debug("token \"{}\"", token);
-            File tokenFile = new File(token);
+            final File tokenFile = new File(token);
             log.debug("Exists {}", tokenFile.exists());
             if (tokenFile.exists()) {
                 imageList.add(new Image(tokenFile.toURI().toString(), 500, 500, true, false));

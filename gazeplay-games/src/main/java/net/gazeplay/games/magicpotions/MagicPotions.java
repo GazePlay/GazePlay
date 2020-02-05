@@ -35,14 +35,14 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         private final PotionMix request;
 
         private final List<Color> mixture = new LinkedList<>(); // what we select to mix we put it in this list
-        
+
         private Rectangle mixPot;
 
         private Ellipse mixPotColor;
 
         private Color colorRequest;
-        
-        public RoundDetails(List<Color> potionsToMix, PotionMix request) {
+
+        public RoundDetails(final List<Color> potionsToMix, final PotionMix request) {
             this.potionsToMix = potionsToMix;
             this.request = request;
         }
@@ -56,7 +56,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
     public MagicPotions.RoundDetails currentRoundDetails;
 
-    private Dimension2D gameDimension2D;
+    private final Dimension2D gameDimension2D;
 
 
     @Getter
@@ -71,7 +71,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     @Setter
     private Potion potionBlue;
 
-    MagicPotions(IGameContext gameContext, Stats stats) {
+    MagicPotions(final IGameContext gameContext, final Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = (MagicPotionsStats) stats;
@@ -82,29 +82,29 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     public void launch() {
 
         /* BACKGROUND */
-        Rectangle background = new Rectangle(0, 0, (int) gameDimension2D.getWidth(), (int) gameDimension2D.getHeight());
+        final Rectangle background = new Rectangle(0, 0, (int) gameDimension2D.getWidth(), (int) gameDimension2D.getHeight());
         background.widthProperty().bind(gameContext.getRoot().widthProperty());
         background.heightProperty().bind(gameContext.getRoot().heightProperty());
-        String image_PATH = "data/potions/images/";
+        final String image_PATH = "data/potions/images/";
         background.setFill(new ImagePattern(new Image(image_PATH + "background-potions.jpg")));
 
-        int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
+        final int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
         background.setOpacity(1 - coef * 0.9);
 
         gameContext.getChildren().add(background);
         /* BIBOULE - CLIENT */
-        Image bibouleClient = new Image(image_PATH + "Biboule-Client.png");
+        final Image bibouleClient = new Image(image_PATH + "Biboule-Client.png");
 
-        double bibX = gameDimension2D.getWidth() * 2 / 3 - bibouleClient.getWidth() / 2;
-        double bibY = 50;//
+        final double bibX = gameDimension2D.getWidth() * 2 / 3 - bibouleClient.getWidth() / 2;
+        final double bibY = 50;//
 
         // make random potion request
-        PotionMix request = PotionMix.getRandomPotionRequest();
+        final PotionMix request = PotionMix.getRandomPotionRequest();
 
-        Client client = new Client(bibX, bibY, bibouleClient.getWidth(), bibouleClient.getHeight(), bibouleClient, request);
+        final Client client = new Client(bibX, bibY, bibouleClient.getWidth(), bibouleClient.getHeight(), bibouleClient, request);
 
         // since the background of the image is transparent this color will fill it
-        Circle clientColor = new Circle(gameDimension2D.getWidth() * 3 / 4, bibouleClient.getHeight() / 2.2,
+        final Circle clientColor = new Circle(gameDimension2D.getWidth() * 3 / 4, bibouleClient.getHeight() / 2.2,
             bibouleClient.getHeight() / 5);
         clientColor.setFill(request.getColor());
 
@@ -115,9 +115,9 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         currentRoundDetails.colorRequest = request.getColor();
 
         // 3 potions
-        Image red = new Image(image_PATH + "potionRed.png");
-        Image yellow = new Image(image_PATH + "potionYellow.png");
-        Image blue = new Image(image_PATH + "potionBlue.png");
+        final Image red = new Image(image_PATH + "potionRed.png");
+        final Image yellow = new Image(image_PATH + "potionYellow.png");
+        final Image blue = new Image(image_PATH + "potionBlue.png");
         potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (red.getWidth() + red.getWidth()) * 1.5,
             gameDimension2D.getHeight() - red.getHeight() - 10, red.getWidth(), red.getHeight(), red, Color.RED,
             gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
@@ -130,14 +130,14 @@ public class MagicPotions extends Parent implements GameLifeCycle {
             blue.getWidth(), blue.getHeight(), blue, Color.BLUE, gameContext, stats, this,
             gameContext.getConfiguration().getFixationLength());
 
-        LinkedList<Potion> potionsOnTable = new LinkedList<>();
+        final LinkedList<Potion> potionsOnTable = new LinkedList<>();
         potionsOnTable.add(potionBlue);
         potionsOnTable.add(potionRed);
         potionsOnTable.add(potionYellow);
         gameContext.getChildren().addAll(potionsOnTable);
 
         // mixing Pot
-        Image mixPotImage = new Image(image_PATH + "mixingPot.png");
+        final Image mixPotImage = new Image(image_PATH + "mixingPot.png");
         currentRoundDetails.mixPot = new Rectangle(gameDimension2D.getWidth() * 2 / 7,
             gameDimension2D.getHeight() - mixPotImage.getHeight(), mixPotImage.getWidth(), mixPotImage.getHeight());
         currentRoundDetails.mixPot.setFill(new ImagePattern(mixPotImage, 0, 0, 1, 1, true));

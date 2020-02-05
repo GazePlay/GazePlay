@@ -42,8 +42,8 @@ public class Egg extends Parent {
 
     private final EventHandler<Event> enterEvent;
 
-    public Egg(double positionX, double positionY, double width, double height, IGameContext gameContext, Stats stats,
-               EggGame gameInstance, int fixationlength, int numberOfTurn) {
+    public Egg(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
+               final EggGame gameInstance, final int fixationlength, final int numberOfTurn) {
 
         this.totalNumberOfTurns = numberOfTurn;
 
@@ -53,15 +53,15 @@ public class Egg extends Parent {
         this.cards.setPrefWidth(width);
         this.cards.setPrefHeight(height);
 
-        Rectangle image1 = new Rectangle(positionX, positionY, width, height);
+        final Rectangle image1 = new Rectangle(positionX, positionY, width, height);
         image1.setFill(new ImagePattern(new Image("data/egg/images/egg1.jpg"), 0, 0, 1, 1, true));
         image1.setMouseTransparent(true);
 
-        Rectangle image2 = new Rectangle(positionX, positionY, width, height);
+        final Rectangle image2 = new Rectangle(positionX, positionY, width, height);
         image2.setFill(new ImagePattern(new Image("data/egg/images/egg2.jpg"), 0, 0, 1, 1, true));
         image2.setMouseTransparent(true);
 
-        Rectangle image3 = new Rectangle(positionX, positionY, width, height);
+        final Rectangle image3 = new Rectangle(positionX, positionY, width, height);
         image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
 
         this.cards.getChildren().addAll(image3, image2, image1);
@@ -88,8 +88,8 @@ public class Egg extends Parent {
 
     }
 
-    private ProgressIndicator createProgressIndicator(double width, double height) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
+    private ProgressIndicator createProgressIndicator(final double width, final double height) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(cards.getLayoutX() + width / 2);
         indicator.setTranslateY(cards.getLayoutY() + height / 2);
         indicator.setMinWidth(width);
@@ -100,7 +100,7 @@ public class Egg extends Parent {
     }
 
     private EventHandler<Event> buildEvent() {
-        Egg that = this;
+        final Egg that = this;
 
         return e -> {
 
@@ -140,7 +140,7 @@ public class Egg extends Parent {
                             stats.incNbGoals();
                             playSound(2);
 
-                            PauseTransition t = new PauseTransition(Duration.seconds(2));
+                            final PauseTransition t = new PauseTransition(Duration.seconds(2));
 
                             t.setOnFinished(actionEvent1 -> {
 
@@ -173,8 +173,8 @@ public class Egg extends Parent {
         };
     }
 
-    public void playSound(int i) {
-        String soundResource = "data/egg/sounds/" + i + ".mp3";
+    public void playSound(final int i) {
+        final String soundResource = "data/egg/sounds/" + i + ".mp3";
         ForegroundSoundsUtils.playSound(soundResource);
     }
 

@@ -154,17 +154,17 @@ subprojects {
                     // as we progressively fix existing violations (or exclude them in pmd-ruleset.xml), we should lower the threshold accordingly
                     // until the threshold is zero
                     def violationsThresholds = [
-                            1: 42,
-                            2: 9,
-                            3: 7572,
-                            4: 208,
-                            5: 437
+                            1: 40,
+                            2: 6,
+                            3: 5201,
+                            4: 197,
+                            5: 449
                     ]
                     violationsThresholds.each {
                         priorityLevel, violationsThreshold ->
 
                             def violationsCount = rootNode.children().children().findAll({ node -> node.name() == 'violation' && node.@priority == priorityLevel }).size()
-                            def violationsMessage = "$violationsCount PMD rule 'priority $priorityLevel' violations were found. See the report at: file://$pmdReportHtml";
+                            def violationsMessage = "$violationsCount PMD rule 'priority $priorityLevel' violations were found. See the report at: file://$pmdReportHtml" 
                             if (violationsCount > violationsThreshold) {
                                 throw new GradleException(violationsMessage)
                             } else {
@@ -172,7 +172,7 @@ subprojects {
                                     println violationsMessage
                                 }
                             }
-                    };
+                    }
                 }
             }
         }

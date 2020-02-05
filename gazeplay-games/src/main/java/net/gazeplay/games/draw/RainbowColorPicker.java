@@ -15,7 +15,7 @@ public class RainbowColorPicker implements ColorPicker {
     }
 
     private List<Color> createRainbow() {
-        List<Color> rainbow = new ArrayList<>();
+        final List<Color> rainbow = new ArrayList<>();
         rainbow.add(Color.web("#9400D3"));
         rainbow.add(Color.web("#4B0082"));
         rainbow.add(Color.web("#0000FF"));
@@ -26,7 +26,7 @@ public class RainbowColorPicker implements ColorPicker {
         return rainbow;
     }
 
-    private AtomicInteger currentColorIndex = new AtomicInteger(0);
+    private final AtomicInteger currentColorIndex = new AtomicInteger(0);
 
     @Override
     public Color pickColor() {

@@ -20,14 +20,14 @@ public class GroupingThreadFactory implements ThreadFactory {
     @Setter
     private Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new LoggingUncaughtExceptionHandler();
 
-    public GroupingThreadFactory(String groupName) {
+    public GroupingThreadFactory(final String groupName) {
         super();
         threadGroup = new ThreadGroup(groupName);
     }
 
     @Override
-    public Thread newThread(Runnable r) {
-        Thread thread = new Thread(threadGroup, r);
+    public Thread newThread(final Runnable r) {
+        final Thread thread = new Thread(threadGroup, r);
         thread.setUncaughtExceptionHandler(uncaughtExceptionHandler);
         thread.setDaemon(daemon);
         thread.setName("Thread-" + threadIndex.incrementAndGet());

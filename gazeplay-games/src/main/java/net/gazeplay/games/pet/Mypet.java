@@ -48,7 +48,7 @@ class Mypet extends Pane {
 
     private int eatingBool = 10;
 
-    private boolean[] eyeTouched = {false, false};
+    private final boolean[] eyeTouched = {false, false};
     private boolean bodyTouched = false;
     private boolean mouthTouched = false;
 
@@ -60,13 +60,13 @@ class Mypet extends Pane {
 
     private ParallelTransition pt;
     private Timeline t;
-    private PetHouse ph;
+    private final PetHouse ph;
 
     @Getter
     private boolean eyesAreOpen = true;
 
-    Mypet(double height, double width, PetHouse ph) {
-        Image tmp = new Image("data/pet/images/body.png");
+    Mypet(final double height, final double width, final PetHouse ph) {
+        final Image tmp = new Image("data/pet/images/body.png");
 
         hRatio = height / 4d / tmp.getHeight();
         wRatio = width / 4d / tmp.getWidth();
@@ -83,7 +83,7 @@ class Mypet extends Pane {
     }
 
     private void init() {
-        Image corps = new Image("data/pet/images/body.png");
+        final Image corps = new Image("data/pet/images/body.png");
         setBody(new Rectangle(0, 0, corps.getWidth() * wRatio, corps.getHeight() * hRatio));
 
         getBody().setFill(new ImagePattern(corps));
@@ -94,7 +94,7 @@ class Mypet extends Pane {
         getBody().setLayoutX(biboulew / 2 - getBody().getWidth() / 2);
         getBody().setLayoutY(bibouleh - getBody().getHeight());
 
-        Image wings = new Image("data/pet/images/wing.png");
+        final Image wings = new Image("data/pet/images/wing.png");
 
         setLeftWing((new ImageView(wings)));
         getLeftWing().setPreserveRatio(true);
@@ -108,7 +108,7 @@ class Mypet extends Pane {
         getRightWing().setLayoutX(biboulew / 2 + getBody().getWidth() / 3);
         getRightWing().setRotate(30);
 
-        Image mouth = new Image("data/pet/images/mouth.png");
+        final Image mouth = new Image("data/pet/images/mouth.png");
         setMouth(new Rectangle(0, 0, mouth.getWidth() * wRatio, mouth.getHeight() * hRatio));
         getMouth().setX(biboulew / 2 - getMouth().getWidth() / 2);
         getMouth().setY(3 * bibouleh / 4);
@@ -116,7 +116,7 @@ class Mypet extends Pane {
         // getMouth().setFHeight(mouth.getHeight() * hratio);
         // getMouth().setFitWidth(mouth.getWidth() * wratio);
 
-        Image eyes = new Image("data/pet/images/eye.png");
+        final Image eyes = new Image("data/pet/images/eye.png");
 
         setRightEye(new Rectangle(0, 0, eyes.getWidth() * wRatio, eyes.getHeight() * hRatio));
         getRightEye().setLayoutX(biboulew / 2 - biboulew / 8 - getRightEye().getWidth() / 2);
@@ -159,13 +159,13 @@ class Mypet extends Pane {
         eatingBool = 10;
 
         ph.refill(1);
-        Timeline eat = new Timeline();
+        final Timeline eat = new Timeline();
         eat.getKeyFrames().add(new KeyFrame(Duration.millis(200),
             new KeyValue(getMouth().fillProperty(), new ImagePattern(new Image("data/pet/images/mouth.png")))));
 
         eat.setOnFinished(e -> {
             if (eatingBool > 0) {
-                String imagePath;
+                final String imagePath;
                 if (eatingBool % 2 == 0) {
                     imagePath = "data/pet/images/smile.png";
                 } else {
@@ -194,19 +194,19 @@ class Mypet extends Pane {
         eyesAreOpen = false;
     }
 
-    private void setMovingWings(Boolean isMoving) {
+    private void setMovingWings(final Boolean isMoving) {
         if (isMoving) {
-            int duration = 150;
+            final int duration = 150;
 
-            TranslateTransition tt = new TranslateTransition(new Duration(duration), getLeftWing());
-            TranslateTransition tt2 = new TranslateTransition(new Duration(duration), getRightWing());
+            final TranslateTransition tt = new TranslateTransition(new Duration(duration), getLeftWing());
+            final TranslateTransition tt2 = new TranslateTransition(new Duration(duration), getRightWing());
             tt.setAutoReverse(true);
             tt2.setAutoReverse(true);
             tt.setToY(getBody().getLayoutY());
             tt2.setToY(getBody().getLayoutY());
 
-            RotateTransition rt = new RotateTransition(new Duration(duration), getLeftWing());
-            RotateTransition rt2 = new RotateTransition(new Duration(duration), getRightWing());
+            final RotateTransition rt = new RotateTransition(new Duration(duration), getLeftWing());
+            final RotateTransition rt2 = new RotateTransition(new Duration(duration), getRightWing());
             rt.setAutoReverse(true);
             rt2.setAutoReverse(true);
             rt.setToAngle(-120);
@@ -231,7 +231,7 @@ class Mypet extends Pane {
             new KeyValue(getRightEye().fillProperty(), new ImagePattern(new Image("data/pet/images/eye.png")))));
 
         t.setOnFinished(e -> {
-            double time = Math.random() * 10000;
+            final double time = Math.random() * 10000;
             t.getKeyFrames().clear();
             if (eyesAreOpen) {
                 t.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getLeftEye().fillProperty(),
@@ -251,7 +251,7 @@ class Mypet extends Pane {
 
     }
 
-    void setBlinkingEnabled(boolean b) {
+    void setBlinkingEnabled(final boolean b) {
         if (b) {
             t.play();
         } else {
@@ -270,7 +270,7 @@ class Mypet extends Pane {
 
         ph.getHand().xProperty().addListener((o) -> {
             if (ph.getMode() == PetHouse.EAT_MODE) {
-                Shape intersect = Shape.intersect(ph.getHand(), getMouth());
+                final Shape intersect = Shape.intersect(ph.getHand(), getMouth());
                 if ((intersect.getBoundsInLocal().getWidth() != -1) && !mouthTouched) {
                     setBlinkingEnabled(false);
                     setHappy();
@@ -290,7 +290,7 @@ class Mypet extends Pane {
         ph.getHand().xProperty().addListener((o) -> {
             if (ph.getMode() == PetHouse.INIT_MODE) {
 
-                Shape intersect = Shape.intersect(ph.getHand(), getBody());
+                final Shape intersect = Shape.intersect(ph.getHand(), getBody());
                 if ((intersect.getBoundsInLocal().getWidth() != -1) && !bodyTouched && !eyeTouched[0]
                     && !eyeTouched[1]) {
                     t.stop();
@@ -303,20 +303,20 @@ class Mypet extends Pane {
                 }
             } else if ((ph.getMode() == PetHouse.SPORT_MODE)) {
 
-                Shape intersect = Shape.intersect(ph.getHand(), getBody());
+                final Shape intersect = Shape.intersect(ph.getHand(), getBody());
                 if (!ph.getBaloonGone() && (intersect.getBoundsInLocal().getWidth() != -1)) {
                     log.debug("enter baloon");
                     ph.setBaloonGone(true);
                     ph.rd.stop();
-                    ImageView baloon = new ImageView("data/pet/images/ball.png");
+                    final ImageView baloon = new ImageView("data/pet/images/ball.png");
                     baloon.setPreserveRatio(true);
                     baloon.fitWidthProperty().bind(ph.getHand().widthProperty());
                     ph.getGameContext().getChildren().add(baloon);
-                    Dimension2D dimension2D = ph.getGameContext().getGamePanelDimensionProvider().getDimension2D();
+                    final Dimension2D dimension2D = ph.getGameContext().getGamePanelDimensionProvider().getDimension2D();
                     baloon.setX(0);
 
-                    TranslateTransition tt = new TranslateTransition(Duration.millis(1000), baloon);
-                    Random random = new Random();
+                    final TranslateTransition tt = new TranslateTransition(Duration.millis(1000), baloon);
+                    final Random random = new Random();
                     int nombreAleatoire = random.nextInt(4);
                     switch (nombreAleatoire) {
                         case 0:
@@ -347,7 +347,7 @@ class Mypet extends Pane {
                     tt.setToX(getLayoutX() + (getWidth() / 3));
                     tt.setToY(getLayoutY());
 
-                    TranslateTransition t2 = new TranslateTransition(Duration.millis(500), baloon);
+                    final TranslateTransition t2 = new TranslateTransition(Duration.millis(500), baloon);
                     nombreAleatoire = random.nextInt(4);
                     switch (nombreAleatoire) {
                         case 0:
@@ -372,17 +372,17 @@ class Mypet extends Pane {
 
                     // TODO random position of the baloon exit
 
-                    SequentialTransition st = new SequentialTransition();
+                    final SequentialTransition st = new SequentialTransition();
 
                     st.getChildren().addAll(tt, t2);
 
                     tt.setOnFinished(e -> setSmiling());
 
-                    RotateTransition rt = new RotateTransition(Duration.millis(500), baloon);
+                    final RotateTransition rt = new RotateTransition(Duration.millis(500), baloon);
                     rt.setByAngle(360);
                     rt.setCycleCount(Animation.INDEFINITE);
 
-                    ParallelTransition pt = new ParallelTransition();
+                    final ParallelTransition pt = new ParallelTransition();
                     pt.getChildren().addAll(st, rt);
                     st.setOnFinished(e -> {
                         ph.rd.play();
@@ -407,8 +407,8 @@ class Mypet extends Pane {
 
         ph.getHand().xProperty().addListener((o) -> {
             if (ph.getMode() == PetHouse.INIT_MODE) {
-                Shape intersect = Shape.intersect(ph.getHand(), getLeftEye());
-                Shape intersect2 = Shape.intersect(ph.getHand(), getRightEye());
+                final Shape intersect = Shape.intersect(ph.getHand(), getLeftEye());
+                final Shape intersect2 = Shape.intersect(ph.getHand(), getRightEye());
 
                 if ((intersect.getBoundsInLocal().getWidth() == -1) && (intersect2.getBoundsInLocal().getWidth() == -1)
                     && (eyeTouched[0]) && (eyeTouched[1])) {

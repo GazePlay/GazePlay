@@ -20,7 +20,7 @@ public class GazeEvent extends InputEvent {
         "GAZE_EXITED_TARGET");
 
     public static final EventType<GazeEvent> GAZE_ENTERED = new EventType<>(GazeEvent.GAZE_ENTERED_TARGET,
-            "GAZE_ENTERED");
+        "GAZE_ENTERED");
 
     public static final EventType<GazeEvent> GAZE_EXITED = new EventType<>(GazeEvent.GAZE_EXITED_TARGET, "GAZE_EXITED");
 
@@ -41,15 +41,15 @@ public class GazeEvent extends InputEvent {
         this(GAZE_ENTERED);
     }
 
-    public GazeEvent(EventType<GazeEvent> et) {
+    public GazeEvent(final EventType<GazeEvent> et) {
         this(et, 0);
     }
 
-    public GazeEvent(EventType<GazeEvent> et, long time) {
+    public GazeEvent(final EventType<GazeEvent> et, final long time) {
         this(et, time, 0, 0);
     }
 
-    public GazeEvent(EventType<GazeEvent> et, long time, double x, double y) {
+    public GazeEvent(final EventType<GazeEvent> et, final long time, final double x, final double y) {
         super(et);
         this.time = time;
         this.x = x;
@@ -61,12 +61,10 @@ public class GazeEvent extends InputEvent {
      * to {@code null}, it is replaced by the {@code NULL_SOURCE_TARGET} value. All LightningEvents have their type set
      * to {@code PLASMA_STRIKE}.
      *
-     * @param source
-     *            the event source which sent the event
-     * @param target
-     *            the event Target to associate with the event
+     * @param source the event source which sent the event
+     * @param target the event Target to associate with the event
      */
-    public GazeEvent(Object source, EventTarget target) {
+    public GazeEvent(final Object source, final EventTarget target) {
         super(source, target, GAZE_ENTERED);
         this.time = 0;
         this.x = 0;
@@ -74,7 +72,7 @@ public class GazeEvent extends InputEvent {
     }
 
     @Override
-    public GazeEvent copyFor(Object newSource, EventTarget newTarget) {
+    public GazeEvent copyFor(final Object newSource, final EventTarget newTarget) {
         return (GazeEvent) super.copyFor(newSource, newTarget);
     }
 

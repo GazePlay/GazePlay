@@ -16,7 +16,7 @@ public class ScreenCake extends LinkedList {
 
     public IGameContext gameContext;
 
-    public ScreenCake(int i, CakeFactory cakef) {
+    public ScreenCake(final int i, final CakeFactory cakef) {
         super();
         /*
          * gameContext = cakef.getGameContext(); Dimension2D dimension2D =
@@ -30,17 +30,17 @@ public class ScreenCake extends LinkedList {
         }
     }
 
-    public void createScreenZero(CakeFactory cakef) {
+    public void createScreenZero(final CakeFactory cakef) {
         gameContext = cakef.getGameContext();
-        double buttonSize = cakef.getButtonSize();
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final double buttonSize = cakef.getButtonSize();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         for (int i = 0; i < 6; i++) { // HomePage of the game
-            ProgressButton bt = new ProgressButton();
+            final ProgressButton bt = new ProgressButton();
             bt.getButton().setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
-                    + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
-                    + "-fx-max-height: " + buttonSize + "px;");
+                + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
+                + "-fx-max-height: " + buttonSize + "px;");
             bt.setLayoutX((i + 1) * dimension2D.getWidth() / 6 - buttonSize / 2);
-            EventHandler<Event> buttonHandler = createprogessButtonHandler(i, cakef);
+            final EventHandler<Event> buttonHandler = createprogessButtonHandler(i, cakef);
             if (i != 5) {
                 createButton(i, bt, buttonHandler, cakef);
             } else {
@@ -50,9 +50,9 @@ public class ScreenCake extends LinkedList {
         }
     }
 
-    public void createButton(int i, ProgressButton bt, EventHandler<Event> buttonHandler, CakeFactory cakef) {
-        double buttonSize = cakef.getButtonSize();
-        ImageView iv = new ImageView(new Image("data/cake/images/menu" + i + ".png"));
+    public void createButton(final int i, final ProgressButton bt, final EventHandler<Event> buttonHandler, final CakeFactory cakef) {
+        final double buttonSize = cakef.getButtonSize();
+        final ImageView iv = new ImageView(new Image("data/cake/images/menu" + i + ".png"));
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
         bt.setImage(iv);
@@ -68,17 +68,17 @@ public class ScreenCake extends LinkedList {
 
     }
 
-    public void createValidationButton(int i, ProgressButton bt, CakeFactory cakef) {
-        double buttonSize = cakef.getButtonSize();
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        ImageView iv = new ImageView(new Image("data/cake/images/validate.png"));
+    public void createValidationButton(final int i, final ProgressButton bt, final CakeFactory cakef) {
+        final double buttonSize = cakef.getButtonSize();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final ImageView iv = new ImageView(new Image("data/cake/images/validate.png"));
         iv.setFitWidth(2 * buttonSize / 3);
         iv.setPreserveRatio(true);
         bt.setImage(iv);
         bt.getButton().setRadius(buttonSize / 2);
         bt.setLayoutX(dimension2D.getWidth() - buttonSize);
         bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
-        EventHandler<Event> buttonHandler = e -> cakef.winFunction();
+        final EventHandler<Event> buttonHandler = e -> cakef.winFunction();
         bt.assignIndicator(buttonHandler, cakef.getFixationLength());
         bt.active();
         cakef.getButtons()[i] = bt;
@@ -86,11 +86,11 @@ public class ScreenCake extends LinkedList {
         gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());
     }
 
-    public EventHandler<Event> createprogessButtonHandler(int i, CakeFactory cakef) {
-        EventHandler<Event> buttonHandler;
+    public EventHandler<Event> createprogessButtonHandler(final int i, final CakeFactory cakef) {
+        final EventHandler<Event> buttonHandler;
         if (i != 4) {
             buttonHandler = e -> {
-                for (Node child : cakef.getP()[i + 1]) {
+                for (final Node child : cakef.getP()[i + 1]) {
                     child.toFront();
                 }
                 for (int c = 0; c <= cakef.getMaxCake(); c++) {

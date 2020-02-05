@@ -11,7 +11,7 @@ public class PuzzleGameVariantGenerator extends GameSpec.EnumGameVariantGenerato
     }
 
     @RequiredArgsConstructor
-    public static enum PuzzleGameVariant {
+    public enum PuzzleGameVariant {
         NUMBERS("Numbers", "data/sliding-puzzle/tiles/tile"),
         MONA_LISA("Mona Lisa", "data/sliding-puzzle/monalisa/p"),
         FISH("Fish", "data/sliding-puzzle/fish/p"),

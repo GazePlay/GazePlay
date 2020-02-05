@@ -30,12 +30,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Peter Bardawil
  */
 @Slf4j
 class SlidingPuzzleCard extends Parent {
-    
+
     private final double fixationlength;
 
     private final Rectangle card;
@@ -77,9 +76,9 @@ class SlidingPuzzleCard extends Parent {
     private Timeline currentTimeline;
 
 
-    SlidingPuzzleCard(int id, double positionX, double positionY, double width, double height, String fileName,
-                      double fixationlength, IGameContext gameContext, SlidingPuzzle gameInstance, Stats stats, double kingPosX,
-                      double kingPosY) {
+    SlidingPuzzleCard(final int id, final double positionX, final double positionY, final double width, final double height, final String fileName,
+                      final double fixationlength, final IGameContext gameContext, final SlidingPuzzle gameInstance, final Stats stats, final double kingPosX,
+                      final double kingPosY) {
         this.fixationlength = fixationlength;
         this.CardId = id;
         this.card = new Rectangle(positionX, positionY, width, height);
@@ -96,7 +95,7 @@ class SlidingPuzzleCard extends Parent {
         this.isKing = false;
         this.kingPosX = (int) kingPosX;
         this.kingPosY = (int) kingPosY;
-        EventHandler<Event> enterEvent;
+        final EventHandler<Event> enterEvent;
         if (id != 9) {
             enterEvent = buildEvent();
         } else {
@@ -110,9 +109,9 @@ class SlidingPuzzleCard extends Parent {
         // Prevent null pointer exception
         currentTimeline = new Timeline();
     }
-    
-    private ProgressIndicator createProgressIndicator(double width) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
+
+    private ProgressIndicator createProgressIndicator(final double width) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(initX);
         indicator.setTranslateY(initY);
         indicator.setMinWidth(width);
@@ -124,10 +123,12 @@ class SlidingPuzzleCard extends Parent {
 
     private Boolean checkIfNeighbor() {
 
-        if (this.initX == kingPosX && ((this.initY == kingPosY + initWidth) || (this.initY == kingPosY - initWidth)))
+        if (this.initX == kingPosX && ((this.initY == kingPosY + initWidth) || (this.initY == kingPosY - initWidth))) {
             return true;
-        else return this.initY == kingPosY
-            && ((this.initX == kingPosX + initWidth) || (this.initX == kingPosX - initWidth));
+        } else {
+            return this.initY == kingPosY
+                && ((this.initX == kingPosX + initWidth) || (this.initX == kingPosX - initWidth));
+        }
     }
 
     private void isMyNeighborEvent() {
@@ -135,21 +136,21 @@ class SlidingPuzzleCard extends Parent {
         progressIndicator.setOpacity(0.7);
         // currentTimeline.stop();
         currentTimeline = new Timeline();
-        KeyValue xValue = new KeyValue(card.xProperty(), kingPosX);
-        KeyValue yValue = new KeyValue(card.yProperty(), kingPosY);
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(100), xValue, yValue);
+        final KeyValue xValue = new KeyValue(card.xProperty(), kingPosX);
+        final KeyValue yValue = new KeyValue(card.yProperty(), kingPosY);
+        final KeyFrame keyFrame = new KeyFrame(Duration.millis(100), xValue, yValue);
         currentTimeline.getKeyFrames().add(keyFrame);
         currentTimeline.play();
 
     }
 
-    void isKingCardEvent(double x, double y) {
+    void isKingCardEvent(final double x, final double y) {
         progressIndicator.setOpacity(0);
         // currentTimeline.stop();
         currentTimeline = new Timeline();
-        KeyValue xValue = new KeyValue(card.xProperty(), x);
-        KeyValue yValue = new KeyValue(card.yProperty(), y);
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(200), xValue, yValue);
+        final KeyValue xValue = new KeyValue(card.xProperty(), x);
+        final KeyValue yValue = new KeyValue(card.yProperty(), y);
+        final KeyFrame keyFrame = new KeyFrame(Duration.millis(200), xValue, yValue);
         currentTimeline.getKeyFrames().add(keyFrame);
         currentTimeline.play();
     }
@@ -171,7 +172,7 @@ class SlidingPuzzleCard extends Parent {
 
             try {
                 stats.saveStats();
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 Logger.getLogger(SlidingPuzzleCard.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -180,8 +181,9 @@ class SlidingPuzzleCard extends Parent {
             gameContext.onGameStarted();
         }));
 
-        if (!currentTimeline.getStatus().equals(Timeline.Status.RUNNING))
+        if (!currentTimeline.getStatus().equals(Timeline.Status.RUNNING)) {
             currentTimeline.playFromStart();
+        }
     }
 
     private EventHandler<Event> buildEvent() {
@@ -205,20 +207,21 @@ class SlidingPuzzleCard extends Parent {
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
 
-                        progressIndicator.setTranslateX(kingPosX);
-                        progressIndicator.setTranslateY(kingPosY);
+                    progressIndicator.setTranslateX(kingPosX);
+                    progressIndicator.setTranslateY(kingPosY);
 
-                        // gameInstance.showCards();
+                    // gameInstance.showCards();
 
-                        gameInstance.replaceCards(fixationlength, initX, initY, CardId);
+                    gameInstance.replaceCards(fixationlength, initX, initY, CardId);
 
-                        isMyNeighborEvent();
+                    isMyNeighborEvent();
 
-                        gameInstance.fixCoord(CardId, initX, initY, kingPosX, kingPosY);
-                        // gameInstance.showCards();
+                    gameInstance.fixCoord(CardId, initX, initY, kingPosX, kingPosY);
+                    // gameInstance.showCards();
 
-                        if (gameInstance.isGameOver())
-                            onGameOver();
+                    if (gameInstance.isGameOver()) {
+                        onGameOver();
+                    }
 
                 });
 

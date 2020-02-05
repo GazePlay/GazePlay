@@ -13,7 +13,7 @@ public class VideoPlayerGameVariantGenerator implements GameSpec.GameVariantGene
     @Getter
     @Setter
     private String variantChooseText = "Choose Video";
-    
+
     @Override
     public Set<GameSpec.GameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
