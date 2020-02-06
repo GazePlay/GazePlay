@@ -15,10 +15,5 @@ task downloadWindowsJRE(type: Download, group: 'custom jre') {
 
 task downloadAndExtractWindowsJRE(dependsOn: downloadWindowsJRE, type: Copy, group: 'custom jre') {
     from zipTree(downloadWindowsJRE.dest)
-    into "${downloadLocation}/jre/windows-x64"
-}
-
-task copyWindowsJRE(type: Copy, group: 'custom jre') {
-    from "${downloadAndExtractWindowsJRE.destinationDir}/${x64filename}"
     into "${jreFolder}/windows-x64"
 }

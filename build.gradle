@@ -246,9 +246,9 @@ distributions {
     }
 }
 
-macosDistTar.dependsOn(copyMacosJRE)
-linuxDistTar.dependsOn(copyLinuxJRE)
-windowsDistZip.dependsOn(copyWindowsJRE)
+macosDistTar.dependsOn(downloadAndExtractMacosJRE)
+linuxDistTar.dependsOn(downloadAndExtractLinuxJRE)
+windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
 
 tasks.withType(Tar){
     compression = Compression.GZIP

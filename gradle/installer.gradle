@@ -1,4 +1,4 @@
-task generateWindowsInstaller(dependsOn: ['unzipx64Distribution', 'unzipx86Distribution', 'prepareInnoSetupFiles'], group: 'distribution') {
+task generateWindowsInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
     doLast {
 
         def innoSetupDir = new File("${buildDir}/innosetup")
@@ -13,7 +13,7 @@ task generateWindowsInstaller(dependsOn: ['unzipx64Distribution', 'unzipx86Distr
     }
 }
 
-task generateWindowsInstallerInDocker(dependsOn: ['unzipx64Distribution', 'unzipx86Distribution', 'prepareInnoSetupFiles'], group: 'distribution') {
+task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
     doLast {
         exec {
             workingDir rootDir
@@ -34,7 +34,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
             rename("setup.iss.skel", "setup.iss")
             expand([
                     applicationVersion: "${version}",
-                    unpackedDirectory : "gazeplay-project-windows-${version}"
+                    unpackedDirectory : "gazeplay-project-windows-x64-${version}"
             ])
             into(innoSetupDir)
         }

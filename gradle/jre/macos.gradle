@@ -15,10 +15,5 @@ task downloadMacosJRE(type: Download, group: 'custom jre') {
 
 task downloadAndExtractMacosJRE(dependsOn: downloadMacosJRE, type: Copy, group: 'custom jre') {
     from tarTree(downloadMacosJRE.dest)
-    into "${downloadLocation}/jre/macos"
-}
-
-task copyMacosJRE(type: Copy, group: 'custom jre') {
-    from "${downloadAndExtractMacosJRE.destinationDir}/${filename}"
     into "${jreFolder}/macos"
 }

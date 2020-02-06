@@ -15,10 +15,5 @@ task downloadLinuxJRE(type: Download, group: 'custom jre') {
 
 task downloadAndExtractLinuxJRE(dependsOn: downloadLinuxJRE, type: Copy, group: 'custom jre') {
     from tarTree(downloadLinuxJRE.dest)
-    into "${downloadLocation}/jre/linux-x64"
-}
-
-task copyLinuxJRE(type: Copy, group: 'custom jre') {
-    from "${downloadAndExtractLinuxJRE.destinationDir}/${filename}"
     into "${jreFolder}/linux-x64"
 }

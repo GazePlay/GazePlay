@@ -9,13 +9,6 @@ apply from: "${rootDir}/gradle/jre/linux.gradle"
 apply from: "${rootDir}/gradle/jre/macos.gradle"
 apply from: "${rootDir}/gradle/jre/windows.gradle"
 
-task clearJREFolder(type: Delete) {
-    delete fileTree("${project.ext.downloadLocation}/jre") {
-        include '*.zip', '*.tar.gz'
-    }
-}
-
 task('downloadAndExtractJREs', group: 'custom jre') {
     dependsOn downloadAndExtractLinuxJRE, downloadAndExtractWindowsJRE, downloadAndExtractMacosJRE
-    finalizedBy clearJREFolder
 }
