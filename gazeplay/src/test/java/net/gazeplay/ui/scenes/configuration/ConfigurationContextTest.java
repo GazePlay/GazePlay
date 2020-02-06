@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 import mockit.Expectations;
+import mockit.MockUp;
 import mockit.Mocked;
 import mockit.Verifications;
 import net.gazeplay.GazePlay;
@@ -26,9 +27,12 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -36,7 +40,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -301,48 +307,48 @@ class ConfigurationContextTest {
         assertEquals(cssFileProperty.getValue(), "builtin:GREEN");
     }
 
-    @Test
-    void shouldCreateFileDirectoryChooser() {
-        StringProperty fileDirProperty = new SimpleStringProperty(System.getProperty("user.home") + "/GazePlay");
+    @ParameterizedTest
+    @EnumSource(ConfigurationContext.DirectoryType.class)
+    void shouldCreateDirectoryChooser(ConfigurationContext.DirectoryType type) {
+        new MockUp<BackgroundMusicManager>() {
+            public BackgroundMusicManager getInstance() {
+                return mock(BackgroundMusicManager.class);
+            }
+        };
+
+        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+        StringProperty fileDirProperty = new SimpleStringProperty(System.getProperty("user.home") + "/GazePlay/");
         Scene mockScene = mock(Scene.class);
         Window mockWindow = mock(Window.class);
 
-        when(mockConfig.getFileDir()).thenReturn(fileDirProperty.getValue());
-        when(mockConfig.getFiledirProperty()).thenReturn(fileDirProperty);
-        when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
-        when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
-        when(mockScene.getWindow()).thenReturn(mockWindow);
+        Map<ConfigurationContext.DirectoryType, String> answers = Map.of(
+            ConfigurationContext.DirectoryType.FILE, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(),
+            ConfigurationContext.DirectoryType.WHERE_IS_IT, Configuration.DEFAULT_VALUE_WHEREISIT_DIR,
+            ConfigurationContext.DirectoryType.MUSIC, new File(System.getProperty("user.home") + "/GazePlay/", "music").getAbsolutePath(),
+            ConfigurationContext.DirectoryType.VIDEO, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath()
+        );
 
-        HBox result = (HBox) ConfigurationContext.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, ConfigurationContext.DirectoryType.FILE);
-        Button loadButton = (Button) result.getChildren().get(0);
-        Button resetButton = (Button) result.getChildren().get(1);
-
-        assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
-
-        resetButton.fire();
-        assertEquals(GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), fileDirProperty.getValue());
-    }
-
-    @Test
-    void shouldCreateWhereIsItDirectoryChooser() {
-        StringProperty fileDirProperty = new SimpleStringProperty(System.getProperty("user.home") + "/GazePlay/whereisit");
-        Scene mockScene = mock(Scene.class);
-        Window mockWindow = mock(Window.class);
-
+        when(mockConfig.getVideoFolder()).thenReturn(fileDirProperty.getValue());
+        when(mockConfig.getVideoFolderProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getWhereIsItDir()).thenReturn(fileDirProperty.getValue());
         when(mockConfig.getWhereIsItDirProperty()).thenReturn(fileDirProperty);
+        when(mockConfig.getFileDir()).thenReturn(fileDirProperty.getValue());
+        when(mockConfig.getFiledirProperty()).thenReturn(fileDirProperty);
+        when(mockConfig.getMusicFolder()).thenReturn(fileDirProperty.getValue());
+        when(mockConfig.getMusicFolderProperty()).thenReturn(fileDirProperty);
+
         when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockScene.getWindow()).thenReturn(mockWindow);
 
-        HBox result = (HBox) ConfigurationContext.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, ConfigurationContext.DirectoryType.WHERE_IS_IT);
+        HBox result = (HBox) context.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, type);
         Button loadButton = (Button) result.getChildren().get(0);
         Button resetButton = (Button) result.getChildren().get(1);
 
         assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
 
         resetButton.fire();
-        assertEquals(Configuration.DEFAULT_VALUE_WHEREISIT_DIR, fileDirProperty.getValue());
+        assertEquals(answers.get(type), fileDirProperty.getValue());
     }
 
     @Test
@@ -398,6 +404,20 @@ class ConfigurationContextTest {
         TestingUtils.waitForRunLater();
 
         assertFalse(testProperty.getValue());
+    }
+
+    @Test
+    void shouldBuildGameButtonOrientationChooser() {
+        StringProperty buttonOrientationProperty = new SimpleStringProperty("HORIZONTAL");
+        when(mockConfig.getMenuButtonsOrientationProperty()).thenReturn(buttonOrientationProperty);
+        when(mockConfig.getMenuButtonsOrientation()).thenReturn(buttonOrientationProperty.getValue());
+
+        ChoiceBox<GameButtonOrientation> result = ConfigurationContext.buildGameButtonOrientationChooser(mockConfig);
+
+        assertEquals(2, result.getItems().size());
+        result.setValue(GameButtonOrientation.VERTICAL);
+
+        assertEquals("VERTICAL", buttonOrientationProperty.getValue());
     }
 
     @Test

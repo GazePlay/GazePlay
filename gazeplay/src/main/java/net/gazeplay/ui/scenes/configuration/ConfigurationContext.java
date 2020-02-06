@@ -268,13 +268,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "MusicFolder", COLON);
-            final Node input = buildMusicInput(config, configurationContext, translator);
+            final Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.MUSIC);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "VideoFolder", COLON);
-            final Node input = buildVideoFolderChooser(config, configurationContext, translator);
+            final Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.VIDEO);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -342,6 +342,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // Beta settings
         {
             I18NText label = new I18NText(translator, "EnableGazeMenu", COLON);
+            //TODO: When the gaze menu is ready, convert this to buildCheckBox(config.getGazeMenuEnabledProperty())
             CheckBox input = buildGazeMenu(config);
 
             addToGrid(grid, currentFormRow, label, input);
@@ -528,10 +529,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     enum DirectoryType {
-        FILE, WHERE_IS_IT
+        FILE, WHERE_IS_IT, MUSIC, VIDEO
     }
 
-    static Node buildDirectoryChooser(
+    Node buildDirectoryChooser(
         Configuration configuration,
         ConfigurationContext configurationContext,
         Translator translator,
@@ -541,24 +542,50 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         final String fileDir;
         Button buttonLoad;
 
-        if (type == DirectoryType.FILE) {
-            fileDir = configuration.getFileDir();
-            buttonLoad = new Button(fileDir);
-            buttonLoad.textProperty().bind(configuration.getFiledirProperty());
-        } else {
-            fileDir = configuration.getWhereIsItDir();
-            buttonLoad = new Button(fileDir);
-            buttonLoad.textProperty().bind(configuration.getWhereIsItDirProperty());
+        // Arabic Alignment
+        if (!currentLanguageAlignmentIsLeftAligned) {
+            pane.setAlignment(Pos.BASELINE_RIGHT);
+        }
+
+        switch (type) {
+            case WHERE_IS_IT:
+                fileDir = configuration.getWhereIsItDir();
+                buttonLoad = new Button(fileDir);
+                buttonLoad.textProperty().bind(configuration.getWhereIsItDirProperty());
+                break;
+            case MUSIC:
+                changeMusicFolder(configuration.getMusicFolder(), configuration);
+                fileDir = configuration.getMusicFolder();
+                buttonLoad = new Button(fileDir);
+                buttonLoad.textProperty().bind(configuration.getMusicFolderProperty());
+                break;
+            case VIDEO:
+                fileDir = configuration.getVideoFolder();
+                buttonLoad = new Button(fileDir);
+                buttonLoad.textProperty().bind(configuration.getVideoFolderProperty());
+                break;
+            default:
+                fileDir = configuration.getFileDir();
+                buttonLoad = new Button(fileDir);
+                buttonLoad.textProperty().bind(configuration.getFiledirProperty());
         }
 
         buttonLoad.setOnAction(arg0 -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             final File currentFolder;
 
-            if (type == DirectoryType.FILE) {
-                currentFolder = new File(configuration.getFileDir());
-            } else {
-                currentFolder = new File(configuration.getWhereIsItDir());
+            switch(type) {
+                case WHERE_IS_IT:
+                    currentFolder = new File(configuration.getWhereIsItDir());
+                    break;
+                case MUSIC:
+                    currentFolder = new File(configuration.getMusicFolder());
+                    break;
+                case VIDEO:
+                    currentFolder = new File(configuration.getVideoFolder());
+                    break;
+                default:
+                    currentFolder = new File(configuration.getFileDir());
             }
 
             if (currentFolder.isDirectory()) {
@@ -577,29 +604,46 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
 
-            if (type == DirectoryType.FILE) {
-                configuration.getFiledirProperty().setValue(newPropertyValue);
-            } else {
-                configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
+            switch (type) {
+                case WHERE_IS_IT:
+                    configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
+                    break;
+                case MUSIC:
+                    changeMusicFolder(newPropertyValue, configuration);
+                    break;
+                case VIDEO:
+                    configuration.getVideoFolderProperty().setValue(newPropertyValue);
+                    break;
+                default:
+                    configuration.getFiledirProperty().setValue(newPropertyValue);
             }
 
         });
 
-        pane.getChildren().add(buttonLoad);
-
         final I18NButton resetButton = new I18NButton(translator, "reset");
 
-        if (type == DirectoryType.FILE) {
-            resetButton.setOnAction(
-                (event) -> configuration.getFiledirProperty()
-                    .setValue(GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath()));
-        } else {
-            resetButton.setOnAction(
-                (event) -> configuration.getWhereIsItDirProperty()
-                    .setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR));
+        switch (type) {
+            case WHERE_IS_IT:
+                resetButton.setOnAction(
+                    e -> configuration.getWhereIsItDirProperty()
+                        .setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR));
+                break;
+            case MUSIC:
+                resetButton.setOnAction(
+                    e -> changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER, configuration));
+                break;
+            case VIDEO:
+                resetButton.setOnAction(
+                    e -> configuration.getVideoFolderProperty()
+                        .setValue(GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath()));
+                break;
+            default:
+                resetButton.setOnAction(
+                    e -> configuration.getFiledirProperty()
+                        .setValue(GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath()));
         }
 
-        pane.getChildren().add(resetButton);
+        pane.getChildren().addAll(buttonLoad, resetButton);
 
         return pane;
     }
@@ -721,7 +765,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(
+    static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(
         Configuration configuration
     ) {
         ChoiceBox<GameButtonOrientation> choiceBox = new ChoiceBox<>();
@@ -735,57 +779,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             configuration.getMenuButtonsOrientationProperty().setValue(newPropertyValue);
         });
         return choiceBox;
-    }
-
-    private Node buildMusicInput(Configuration config, ConfigurationContext configurationContext, Translator translator) {
-
-        changeMusicFolder(config.getMusicFolder(), config);
-
-        final HBox pane = new HBox(5);
-
-        // Arabic Alignment
-        if (!currentLanguageAlignmentIsLeftAligned) {
-            pane.setAlignment(Pos.BASELINE_RIGHT);
-        }
-
-        final String musicFolder = config.getMusicFolder();
-        Button buttonLoad = new Button(musicFolder);
-
-        buttonLoad.textProperty().bind(config.getMusicFolderProperty());
-
-        buttonLoad.setOnAction((ActionEvent arg0) -> {
-            final Configuration configuration = ActiveConfigurationContext.getInstance();
-
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-
-            final File currentMusicFolder = new File(configuration.getMusicFolder());
-            if (currentMusicFolder.isDirectory()) {
-                directoryChooser.setInitialDirectory(currentMusicFolder);
-            }
-            final GazePlay gazePlay = configurationContext.getGazePlay();
-            final Scene scene = gazePlay.getPrimaryScene();
-            File file = directoryChooser.showDialog(scene.getWindow());
-            if (file == null) {
-                return;
-            }
-
-            String newPropertyValue = file.getAbsolutePath();
-
-            if (Utils.isWindows()) {
-                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-            }
-
-            changeMusicFolder(newPropertyValue, config);
-        });
-
-        pane.getChildren().add(buttonLoad);
-
-        final I18NButton resetButton = new I18NButton(translator, "reset");
-        resetButton.setOnAction((event) -> changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER, config));
-
-        pane.getChildren().add(resetButton);
-
-        return pane;
     }
 
     static void changeMusicFolder(final String newMusicFolder, Configuration config) {
@@ -838,38 +831,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         } catch (IOException ie) {
             log.debug(String.format("Could not copy file at %s to %s: %s", resourcePath, gazePlayMusicFolder, ie.toString()));
         }
-    }
-
-    private static HBox buildVideoFolderChooser(Configuration config, ConfigurationContext configurationContext, Translator translator) {
-        HBox hbox = new HBox(5);
-
-        Button buttonFolder = new Button(config.getVideoFolder());
-        buttonFolder.textProperty().bind(config.getVideoFolderProperty());
-        I18NButton buttonReset = new I18NButton(translator, "reset");
-        hbox.getChildren().addAll(buttonFolder, buttonReset);
-
-        buttonFolder.setOnAction(e -> {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            final File currentVideoFolder = new File(config.getVideoFolder());
-            if (currentVideoFolder.isDirectory()) {
-                directoryChooser.setInitialDirectory(currentVideoFolder);
-            }
-            final GazePlay gazePlay = configurationContext.getGazePlay();
-            final Scene scene = gazePlay.getPrimaryScene();
-            File file = directoryChooser.showDialog(scene.getWindow());
-            if (file == null) {
-                return;
-            }
-            String newPropertyValue = file.getAbsolutePath();
-            if (Utils.isWindows()) {
-                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-            }
-            config.getVideoFolderProperty().setValue(newPropertyValue);
-        });
-
-        buttonReset.setOnAction(e -> config.getVideoFolderProperty().setValue(GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath()));
-
-        return hbox;
     }
 
     private static GameButtonOrientation findSelectedGameButtonOrientation(Configuration configuration) {
