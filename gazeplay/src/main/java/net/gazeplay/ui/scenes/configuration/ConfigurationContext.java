@@ -846,7 +846,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private ChoiceBox<String> buildQuitKeyChooser(
+    ChoiceBox<String> buildQuitKeyChooser(
         Configuration configuration
     ) {
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
@@ -859,7 +859,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
-    private ChoiceBox<Double> buildHeatMapOpacityChoiceBox(Configuration config) {
+    ChoiceBox<Double> buildHeatMapOpacityChoiceBox(Configuration config) {
         ChoiceBox<Double> choiceBox = new ChoiceBox<>();
         for (double i = 0; i <= 10; i++) {
             choiceBox.getItems().add(i / 10);
@@ -881,14 +881,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private HBox buildHeatMapColorHBox(Configuration config, Translator translator) {
+    HBox buildHeatMapColorHBox(Configuration config, Translator translator) {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
         final I18NButton resetButton = new I18NButton(translator, "reset");
-
         Button plusButton = new Button("+");
-
         Button minusButton = new Button("-");
 
         hbox.getChildren().addAll(resetButton, plusButton, minusButton);

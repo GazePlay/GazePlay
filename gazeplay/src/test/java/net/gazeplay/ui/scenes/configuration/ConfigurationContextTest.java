@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 import mockit.Expectations;
@@ -40,9 +41,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -421,52 +420,6 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldSetupANewMusicFolder() {
-        String songName = "songidea(copycat)_0.mp3";
-        File testFolder = new File("music_test");
-        File expectedFile = new File(testFolder, songName);
-
-        ConfigurationContext.setupNewMusicFolder(testFolder, songName);
-
-        assertTrue(testFolder.isDirectory());
-        assertTrue(expectedFile.exists());
-
-        assertTrue(expectedFile.delete());
-        assertTrue(testFolder.delete());
-    }
-
-    @Test
-    void shouldSetupANewMusicFolderIfTheFolderExists() {
-        String songName = "songidea(copycat)_0.mp3";
-        File testFolder = new File("music_test");
-        assertTrue(testFolder.mkdir());
-        File expectedFile = new File(testFolder, songName);
-
-        ConfigurationContext.setupNewMusicFolder(testFolder, songName);
-
-        assertTrue(testFolder.isDirectory());
-        assertTrue(expectedFile.exists());
-
-        assertTrue(expectedFile.delete());
-        assertTrue(testFolder.delete());
-    }
-
-    @Test
-    void shouldSetupANewMusicFolderIfTheSongDoesntExist() {
-        String songName = "fakesong.mp3";
-        File testFolder = new File("music_test");
-        assertTrue(testFolder.mkdir());
-        File expectedFile = new File(testFolder, songName);
-
-        ConfigurationContext.setupNewMusicFolder(testFolder, songName);
-
-        assertTrue(testFolder.isDirectory());
-        assertFalse(expectedFile.exists());
-
-        assertTrue(testFolder.delete());
-    }
-
-    @Test
     void shouldChangeTheMusicFolderAndPlayIfWasPlaying(@Mocked BackgroundMusicManager mockMusicManager,
                                                        @Mocked Configuration mockConfiguration) {
         StringProperty mockMusicFolderProperty = new SimpleStringProperty();
@@ -536,5 +489,113 @@ class ConfigurationContextTest {
         new Verifications() {{
             mockMusicManager.getAudioFromFolder(expectedFolder);
         }};
+    }
+
+    @Test
+    void shouldSetupANewMusicFolder() {
+        String songName = "songidea(copycat)_0.mp3";
+        File testFolder = new File("music_test");
+        File expectedFile = new File(testFolder, songName);
+
+        ConfigurationContext.setupNewMusicFolder(testFolder, songName);
+
+        assertTrue(testFolder.isDirectory());
+        assertTrue(expectedFile.exists());
+
+        assertTrue(expectedFile.delete());
+        assertTrue(testFolder.delete());
+    }
+
+    @Test
+    void shouldSetupANewMusicFolderIfTheFolderExists() {
+        String songName = "songidea(copycat)_0.mp3";
+        File testFolder = new File("music_test");
+        assertTrue(testFolder.mkdir());
+        File expectedFile = new File(testFolder, songName);
+
+        ConfigurationContext.setupNewMusicFolder(testFolder, songName);
+
+        assertTrue(testFolder.isDirectory());
+        assertTrue(expectedFile.exists());
+
+        assertTrue(expectedFile.delete());
+        assertTrue(testFolder.delete());
+    }
+
+    @Test
+    void shouldSetupANewMusicFolderIfTheSongDoesntExist() {
+        String songName = "fakesong.mp3";
+        File testFolder = new File("music_test");
+        assertTrue(testFolder.mkdir());
+        File expectedFile = new File(testFolder, songName);
+
+        ConfigurationContext.setupNewMusicFolder(testFolder, songName);
+
+        assertTrue(testFolder.isDirectory());
+        assertFalse(expectedFile.exists());
+
+        assertTrue(testFolder.delete());
+    }
+
+    @Test
+    void shouldBuildQuitKeyChooser() {
+        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+        StringProperty quitProperty = new SimpleStringProperty("Y");
+
+        when(mockConfig.getQuitKeyProperty()).thenReturn(quitProperty);
+
+        ChoiceBox<String> result = context.buildQuitKeyChooser(mockConfig);
+        assertEquals(6, result.getItems().size());
+
+        result.setValue("Q");
+        assertEquals("Q", quitProperty.getValue());
+    }
+
+    @Test
+    void shouldBuildHeatMapOpacityChoiceBox() {
+        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+        DoubleProperty heatMapProperty = new SimpleDoubleProperty(1);
+
+        when(mockConfig.getHeatMapOpacityProperty()).thenReturn(heatMapProperty);
+        when(mockConfig.getHeatMapOpacity()).thenReturn(heatMapProperty.getValue());
+
+        ChoiceBox<Double> result = context.buildHeatMapOpacityChoiceBox(mockConfig);
+
+        assertEquals(11, result.getItems().size());
+
+        result.setValue(0.2);
+        assertEquals(0.2, heatMapProperty.getValue());
+    }
+
+    @Test
+    void shouldBuildHeatMapColorHBox() throws InterruptedException {
+        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+        StringProperty heatMapProperty = new SimpleStringProperty("001122, 110022, 002211, 112200");
+        List<Color> colors = List.of(Color.web("001122"), Color.web("110022"), Color.web("002211"), Color.web("112200"));
+
+        when(mockConfig.getHeatMapColorsProperty()).thenReturn(heatMapProperty);
+        when(mockConfig.getHeatMapColors()).thenReturn(colors);
+
+        HBox result = context.buildHeatMapColorHBox(mockConfig, mockTranslator);
+        assertEquals(7, result.getChildren().size());
+
+        Button reset = (Button) result.getChildren().get(0);
+        Button plus = (Button) result.getChildren().get(1);
+        Button minus = (Button) result.getChildren().get(2);
+
+        Platform.runLater(plus::fire);
+        TestingUtils.waitForRunLater();
+
+        assertEquals(8, result.getChildren().size());
+
+        Platform.runLater(reset::fire);
+        TestingUtils.waitForRunLater();
+
+        assertEquals(7, result.getChildren().size());
+
+        Platform.runLater(minus::fire);
+        TestingUtils.waitForRunLater();
+
+        assertEquals(6, result.getChildren().size());
     }
 }
